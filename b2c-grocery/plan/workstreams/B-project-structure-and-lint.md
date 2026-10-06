@@ -32,12 +32,12 @@ Every file in `lib/ct/**`, `lib/session.ts`, `lib/mappers/**` and `lib/env.ts` s
 `scripts/check-tokens.mjs` exports `findHardcodedColors(dir)` and fails the build if any `.ts`, `.tsx`, `.css` file under `app/`, `components/` contains a hex colour `#[0-9a-fA-F]{3,8}\b` — except `app/globals.css`, `*.test.*` and `app/icon*`/`opengraph-image*`. Wired into `verify` as `check:tokens` before `lint`.
 
 ## Tasks
-- [ ] B-01 Create the directory structure above (with `.gitkeep`). Build still passes.
-- [ ] B-02 Add the `server-only` alias stub for Vitest and a unit test proving a file importing `server-only` can be imported under Vitest (`test/server-only.test.ts`).
-- [ ] B-03 Add ESLint blocks 1 and 2; write `eslint-rules.test.ts` using ESLint's `Linter`/`ESLint` API on in-memory snippets: client file importing `@/lib/ct/cart` errors; component importing `@commercetools/platform-sdk` errors; a second `ClientBuilder` import errors; `lib/ct/client.ts` does not.
-- [ ] B-04 Add ESLint blocks 3 and 4 and tests: `next/link` errors, `@/i18n/routing` import ok, `useRouter` from `next/navigation` errors, `notFound` allowed, `redirect()` inside `try {} catch {}` errors, `redirect()` outside ok, `unstable_rethrow` inside catch ok.
-- [ ] B-05 Add blocks 5 and 6 and tests: `fetch('https://api…commercetools.com/x')` and a template-literal URL are both flagged outside `lib/ct/checkout-session.ts`; `fetch('/api/cart')` inside `components/` is flagged, inside `hooks/` it is allowed.
-- [ ] B-06 Add `scripts/check-tokens.mjs` with `scripts/check-tokens.test.ts` (temp-dir fixtures: a `.tsx` with `#fff` fails; `globals.css` ignored) and append `npm run check:tokens` to `verify`.
+- [x] B-01 Create the directory structure above (with `.gitkeep`). Build still passes.
+- [x] B-02 Add the `server-only` alias stub for Vitest and a unit test proving a file importing `server-only` can be imported under Vitest (`test/server-only.test.ts`).
+- [x] B-03 Add ESLint blocks 1 and 2; write `eslint-rules.test.ts` using ESLint's `Linter`/`ESLint` API on in-memory snippets: client file importing `@/lib/ct/cart` errors; component importing `@commercetools/platform-sdk` errors; a second `ClientBuilder` import errors; `lib/ct/client.ts` does not.
+- [x] B-04 Add ESLint blocks 3 and 4 and tests (note: flat config replaces a rule per file group, so `eslint.config.mjs` lists the full restriction set per group; `scripts/seed/lib.ts` is allowed a ClientBuilder for the admin client): `next/link` errors, `@/i18n/routing` import ok, `useRouter` from `next/navigation` errors, `notFound` allowed, `redirect()` inside `try {} catch {}` errors, `redirect()` outside ok, `unstable_rethrow` inside catch ok.
+- [x] B-05 Add blocks 5 and 6 and tests: `fetch('https://api…commercetools.com/x')` and a template-literal URL are both flagged outside `lib/ct/checkout-session.ts`; `fetch('/api/cart')` inside `components/` is flagged, inside `hooks/` it is allowed.
+- [x] B-06 Add `scripts/check-tokens.mjs` with `scripts/check-tokens.test.ts` (temp-dir fixtures: a `.tsx` with `#fff` fails; `globals.css` ignored) and append `npm run check:tokens` to `verify`.
 
 ## Unit tests (scenario → test)
 | Spec scenario | Test |
