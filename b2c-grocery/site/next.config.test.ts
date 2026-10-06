@@ -11,4 +11,8 @@ describe('next.config', () => {
     expect(hosts).toContain('storage.googleapis.com');
     expect(hosts).toContain('**');
   });
+
+  it('bundles the markdown content with the server functions', () => {
+    expect(config.outputFileTracingIncludes?.['/**']).toContain('./content/**/*');
+  });
 });

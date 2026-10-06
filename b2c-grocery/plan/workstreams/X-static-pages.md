@@ -16,7 +16,7 @@ About, FAQ, policies, Journal (one article) and Contact (stub submit) pages in b
 - Footer links (H) point to these pages (verified).
 
 ## Tasks
-- [ ] X-01 Add `marked` and the `outputFileTracingIncludes` setting; write `lib/content.ts` + tests (reads both locales; missing page → null; front matter parsed; HTML produced).
+- [x] X-01 Add `marked` and the `outputFileTracingIncludes` setting; write `lib/content.ts` + tests (reads both locales; missing page → null; front matter parsed; HTML produced).
 - [ ] X-02 Write content files for both locales (concise, grocery-appropriate placeholder text; mark in `plan/IDEAS.md` that copy needs owner review) and static routes + tests (title from front matter; unknown policy slug → `notFound`; `de-DE` serves German).
 - [ ] X-03 Write `lib/faq.ts` and `FaqList` + tests (grouped by topic; `aria-expanded` toggles; one open at a time; ids wired).
 - [ ] X-04 Write the Journal page + tests (layout columns; product grid fed by search call).
