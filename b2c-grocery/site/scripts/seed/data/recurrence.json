@@ -1,0 +1,38 @@
+[
+  {
+    "key": "weekly",
+    "name": {
+      "en-US": "Every week",
+      "de-DE": "Jede Woche"
+    },
+    "schedule": {
+      "type": "standard",
+      "value": 1,
+      "intervalUnit": "Weeks"
+    }
+  },
+  {
+    "key": "every-2-weeks",
+    "name": {
+      "en-US": "Every 2 weeks",
+      "de-DE": "Alle 2 Wochen"
+    },
+    "schedule": {
+      "type": "standard",
+      "value": 2,
+      "intervalUnit": "Weeks"
+    }
+  },
+  {
+    "key": "monthly",
+    "name": {
+      "en-US": "Every month",
+      "de-DE": "Jeden Monat"
+    },
+    "schedule": {
+      "type": "standard",
+      "value": 1,
+      "intervalUnit": "Months"
+    }
+  }
+]

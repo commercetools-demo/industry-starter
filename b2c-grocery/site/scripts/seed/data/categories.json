@@ -1,0 +1,74 @@
+[
+  {
+    "key": "fresh-produce",
+    "name": {
+      "en-US": "Fresh Produce",
+      "de-DE": "Frisches Obst & Gemüse"
+    },
+    "slug": {
+      "en-US": "fresh-produce",
+      "de-DE": "obst-gemuese"
+    },
+    "orderHint": "0.1"
+  },
+  {
+    "key": "dairy-eggs",
+    "name": {
+      "en-US": "Dairy & Eggs",
+      "de-DE": "Milch & Eier"
+    },
+    "slug": {
+      "en-US": "dairy-eggs",
+      "de-DE": "milch-eier"
+    },
+    "orderHint": "0.2"
+  },
+  {
+    "key": "bakery",
+    "name": {
+      "en-US": "Bakery",
+      "de-DE": "Backwaren"
+    },
+    "slug": {
+      "en-US": "bakery",
+      "de-DE": "backwaren"
+    },
+    "orderHint": "0.30"
+  },
+  {
+    "key": "pantry",
+    "name": {
+      "en-US": "Pantry",
+      "de-DE": "Vorrat"
+    },
+    "slug": {
+      "en-US": "pantry",
+      "de-DE": "vorrat"
+    },
+    "orderHint": "0.4"
+  },
+  {
+    "key": "drinks",
+    "name": {
+      "en-US": "Drinks",
+      "de-DE": "Getränke"
+    },
+    "slug": {
+      "en-US": "drinks",
+      "de-DE": "getraenke"
+    },
+    "orderHint": "0.5"
+  },
+  {
+    "key": "household",
+    "name": {
+      "en-US": "Household",
+      "de-DE": "Haushalt"
+    },
+    "slug": {
+      "en-US": "household",
+      "de-DE": "haushalt"
+    },
+    "orderHint": "0.60"
+  }
+]

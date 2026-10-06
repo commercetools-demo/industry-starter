@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "check:lockfile": "node scripts/check-lockfile.mjs",
-    "verify": "npm run check:lockfile && npm run lint && npm run typecheck && npm test && npm run build"
+    "verify": "npm run check:lockfile && npm run lint && npm run typecheck && npm test && npm run build",
+    "seed": "tsx scripts/seed/seed.ts",
+    "seed:verify": "tsx scripts/seed/verify.ts"
   },
   "dependencies": {
     "@commercetools/checkout-browser-sdk": "^1.7.5",

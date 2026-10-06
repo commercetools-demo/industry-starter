@@ -60,3 +60,6 @@ test/.auth/
 .envrc
 .env.seed
 .env.seed.*
+
+# decor catalog backup (D-048)
+plan/backup/
