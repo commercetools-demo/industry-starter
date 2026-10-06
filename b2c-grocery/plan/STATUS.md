@@ -22,7 +22,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | P | Search | 5 | 5 | Verified | Claude (verify + Chrome) | 2026-10-06 |
 | Q | Delivery slots and address step | 9 | 9 | Verified | Claude (verify + Chrome; M-Q-3/4 unit-tested only) | 2026-10-06 |
 | R | Account shell, orders | 8 | 8 | Verified | Claude (verify + Chrome + live QA data) | 2026-10-06 |
-| S | Address book | 6 | 6 | Ready for review | | |
+| S | Address book | 6 | 6 | Verified | Claude (verify + Chrome + live data) | 2026-10-06 |
 | T | Saved lists | 6 | 6 | Verified | Claude (verify + Chrome) | 2026-10-06 |
 | U | Substitutions | 8 | 8 | Verified | Claude (verify + Chrome + live Order Edits) | 2026-10-06 |
 | V | Hosted checkout and confirmation | 9 | 0 | Not started | | |
