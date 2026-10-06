@@ -11,8 +11,7 @@ import { getAdminRoot, type Root } from './lib';
  * Prints only non-secret ids, the QA email and the fixed throwaway password. Delete everything with
  * `npx tsx scripts/seed/cleanup-qa.ts` (customers `qa-*@example.com`, their orders and carts).
  *
- * `--final-cents N` records the weighed amount (`finalTotal`, USD). An order has only ONE custom type, so this replaces
- * `cart-delivery` by `order-final` on that order and the order loses its slot fields (see plan/QUESTIONS.md Q-R-2).
+ * `--final-cents N` records the weighed amount (`finalTotal`, USD) as a custom field of the `cart-delivery` type (D-051).
  */
 export const QA_PASSWORD = 'Qa-Throwaway-9Xq!';
 export const QA_SKUS = ['BANANAS-500G', 'WHOLE-MILK-1EACH'] as const;
@@ -120,9 +119,10 @@ export async function createQaOrder(root: Root, options: QaOptions): Promise<{ e
     const actions: Parameters<typeof updateOrder>[2] = [...statusActions(options.status)];
     if (options.finalCents !== undefined) {
       actions.push({
-        action: 'setCustomType',
-        type: { typeId: 'type', key: 'order-final' },
-        fields: { finalTotal: { type: 'centPrecision', currencyCode: 'USD', centAmount: options.finalCents, fractionDigits: 2 } },
+        // D-051: `finalTotal` lives on the `cart-delivery` type, so the order keeps its slot fields.
+        action: 'setCustomField',
+        name: 'finalTotal',
+        value: { type: 'centPrecision', currencyCode: 'USD', centAmount: options.finalCents, fractionDigits: 2 },
       });
     }
     if (actions.length > 0) order = await updateOrder(root, order, actions);
