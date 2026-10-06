@@ -73,6 +73,36 @@
       "body": "Entfernen Sie einen Filter oder zwei, oder sagen Sie uns, was Sie suchen, und wir helfen Ihnen.",
       "clear": "Filter zurücksetzen",
       "contact": "Kontakt"
+    },
+    "count": "{count, plural, one {# Produkt} other {# Produkte}}",
+    "filters": {
+      "title": "Filter",
+      "category": "Kategorie",
+      "price": "Preis",
+      "availability": "Verfügbarkeit",
+      "clearAll": "Alle zurücksetzen"
+    },
+    "band": {
+      "any": "Jeder Preis",
+      "under": "Unter {max}",
+      "range": "{min}–{max}",
+      "over": "Über {min}"
+    },
+    "availability": {
+      "all": "Alles",
+      "in": "Vorrätig",
+      "out": "Nicht vorrätig"
+    },
+    "applied": {
+      "label": "Aktive Filter",
+      "remove": "Filter entfernen: {label}"
+    },
+    "sort": {
+      "label": "Sortieren nach",
+      "relevance": "Relevanz",
+      "newest": "Neueste",
+      "priceAsc": "Preis ↑",
+      "priceDesc": "Preis ↓"
     }
   },
   "pdp": {},
