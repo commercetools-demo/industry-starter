@@ -57,13 +57,13 @@ describe('CartView', () => {
     expect(screen.getByText('Calculated at checkout')).toBeInTheDocument();
   });
 
-  it('Checkout is disabled with the explanation text', () => {
+  it('Checkout is disabled until there is an address (Q), with the explanation text', () => {
     const cart = makeCart({ lines: [milk] });
     stubFetch(() => ({ body: { cart } }));
     renderWithCart(<CartView />, { cart });
     const checkout = screen.getByRole('button', { name: 'Checkout' });
     expect(checkout).toBeDisabled();
-    expect(checkout).toHaveAccessibleDescription('Checkout opens soon. Your bag is saved in the meantime.');
+    expect(checkout).toHaveAccessibleDescription('Add a delivery address to continue.');
   });
 
   it('Out of stock line: inline notice, "Out of stock" tag and Checkout disabled with the reason', () => {
