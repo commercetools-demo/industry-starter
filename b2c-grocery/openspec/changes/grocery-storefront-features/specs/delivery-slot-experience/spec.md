@@ -14,11 +14,11 @@ The app SHALL define a `SlotService` interface in `lib/slots/` with `listSlots(a
 
 ### Requirement: Cart pre-checkout step
 
-The cart page SHALL show, above the summary, a delivery step with the delivery address form (or saved address for signed-in customers) and, after a deliverable address is set, a slot picker grouped by day with times and charges. The selected slot SHALL be written to the cart `cart-delivery` custom fields.
+The cart page SHALL show, above the summary, a delivery step with the delivery address form (or saved address for signed-in customers) and, after a deliverable address is set, a slot picker grouped by day with times. The selected slot SHALL be written to the cart `cart-delivery` custom fields.
 
 #### Scenario: Pick a slot
 - **WHEN** a shopper with a deliverable address selects Tuesday 10:00–12:00
-- **THEN** the cart stores the slot fields and the summary shows the slot and its charge
+- **THEN** the cart stores the slot fields and the summary shows the slot
 
 #### Scenario: No capacity
 - **WHEN** no slot has capacity for the address
@@ -46,8 +46,20 @@ Starting checkout SHALL require a selected slot, SHALL re-check capacity and hol
 
 ### Requirement: Slot display on orders
 
-Order detail SHALL show the booked slot and its charge.
+Order detail SHALL show the booked slot.
 
 #### Scenario: Order with slot
 - **WHEN** an order carries slot fields
 - **THEN** order detail displays them
+
+### Requirement: Delivery cost from the shipping method
+
+A slot SHALL carry no price in v1 (D-046). Once a deliverable address is set, the cart SHALL have the `standard` shipping method applied so cart totals include delivery, and delivery SHALL read "Included" when the cart total reaches the free-above threshold of the shipping rate.
+
+#### Scenario: Below the threshold
+- **WHEN** a deliverable address is set and the subtotal is below the free-above threshold
+- **THEN** the cart shows the shipping rate price as delivery
+
+#### Scenario: Above the threshold
+- **WHEN** the subtotal reaches the threshold
+- **THEN** delivery shows "Included" and adds nothing to the total

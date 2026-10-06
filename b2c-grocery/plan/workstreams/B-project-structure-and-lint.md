@@ -10,7 +10,7 @@ The folder layout from the spec exists, and ESLint plus two tiny scripts make th
 
 ### Directories (create with a `.gitkeep` where empty)
 ```
-site/app/[locale]/        site/app/api/{auth,account,cart,checkout,shipping-methods,channels}/
+site/app/[locale]/        site/app/api/{auth,account,cart,checkout}/
 site/lib/ct/  site/lib/mappers/  site/hooks/  site/context/
 site/components/{ui,layout,product}/  site/i18n/  site/messages/  site/test/
 ```
@@ -25,7 +25,8 @@ Every file in `lib/ct/**`, `lib/session.ts`, `lib/mappers/**` and `lib/env.ts` s
 3. **Locale-aware navigation** — all files except `i18n/**`: restrict `next/link` (default import) and, from `next/navigation`, the names `useRouter`, `usePathname`, `redirect`, `permanentRedirect`. Message: "Use Link/useRouter/redirect from @/i18n/routing." (`notFound`, `useSearchParams`, `useParams` stay allowed.)
 4. **No navigation control-flow in try/catch** — `no-restricted-syntax` with selector
    `TryStatement[handler] > BlockStatement.block CallExpression[callee.name=/^(redirect|notFound|forbidden|unauthorized|permanentRedirect)$/]` and message "Call outside try/catch or rethrow with unstable_rethrow."
-5. **No raw commercetools fetch** — `no-restricted-syntax` selector `CallExpression[callee.name='fetch'] > Literal[value=/commercetools\.com/]` (hosts allowed only in `lib/ct/checkout-session.ts`; add a per-file override).
+5. **No raw commercetools fetch** — `no-restricted-syntax` selectors `CallExpression[callee.name='fetch'] > Literal[value=/commercetools\.com/]` and `CallExpression[callee.name='fetch'] > TemplateLiteral[quasis.0.value.raw=/commercetools\.com/]` (string and template-literal URLs; allowed only in `lib/ct/checkout-session.ts` via a per-file override).
+6. **Components never fetch the API directly** — in `components/**` only: selectors `CallExpression[callee.name='fetch'] > Literal[value=/^\/api\//]` and `CallExpression[callee.name='fetch'] > TemplateLiteral[quasis.0.value.raw=/^\/api\//]`. Components call hooks (`hooks/*`), hooks call `fetchJson`/`sendJson` (`lib/fetcher.ts`).
 
 ### Token check script
 `scripts/check-tokens.mjs` exports `findHardcodedColors(dir)` and fails the build if any `.ts`, `.tsx`, `.css` file under `app/`, `components/` contains a hex colour `#[0-9a-fA-F]{3,8}\b` — except `app/globals.css`, `*.test.*` and `app/icon*`/`opengraph-image*`. Wired into `verify` as `check:tokens` before `lint`.
@@ -35,7 +36,7 @@ Every file in `lib/ct/**`, `lib/session.ts`, `lib/mappers/**` and `lib/env.ts` s
 - [ ] B-02 Add the `server-only` alias stub for Vitest and a unit test proving a file importing `server-only` can be imported under Vitest (`test/server-only.test.ts`).
 - [ ] B-03 Add ESLint blocks 1 and 2; write `eslint-rules.test.ts` using ESLint's `Linter`/`ESLint` API on in-memory snippets: client file importing `@/lib/ct/cart` errors; component importing `@commercetools/platform-sdk` errors; a second `ClientBuilder` import errors; `lib/ct/client.ts` does not.
 - [ ] B-04 Add ESLint blocks 3 and 4 and tests: `next/link` errors, `@/i18n/routing` import ok, `useRouter` from `next/navigation` errors, `notFound` allowed, `redirect()` inside `try {} catch {}` errors, `redirect()` outside ok, `unstable_rethrow` inside catch ok.
-- [ ] B-05 Add block 5 (raw commercetools `fetch`) and its test.
+- [ ] B-05 Add blocks 5 and 6 and tests: `fetch('https://api…commercetools.com/x')` and a template-literal URL are both flagged outside `lib/ct/checkout-session.ts`; `fetch('/api/cart')` inside `components/` is flagged, inside `hooks/` it is allowed.
 - [ ] B-06 Add `scripts/check-tokens.mjs` with `scripts/check-tokens.test.ts` (temp-dir fixtures: a `.tsx` with `#fff` fails; `globals.css` ignored) and append `npm run check:tokens` to `verify`.
 
 ## Unit tests (scenario → test)

@@ -8,7 +8,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | B | Project structure and lint rules | 6 | 0 | Not started | | |
 | C | Styling foundation and tokens | 6 | 0 | Not started | | |
 | D | Locale routing and messages | 7 | 0 | Not started | | |
-| E | BFF core | 8 | 0 | Not started | | |
+| E | BFF core | 9 | 0 | Not started | | |
 | F | Catalog data model | 11 | 0 | Not started | | |
 | G | Data-loading foundation | 9 | 0 | Not started | | |
 | H | Design system primitives and chrome | 10 | 0 | Not started | | |
@@ -25,8 +25,8 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | S | Address book | 6 | 0 | Not started | | |
 | T | Saved lists | 6 | 0 | Not started | | |
 | U | Substitutions | 8 | 0 | Not started | | |
-| V | Subscriptions | 9 | 0 | Not started | | |
-| W | Hosted checkout and confirmation | 9 | 0 | Not started | | |
+| V | Hosted checkout and confirmation | 9 | 0 | Not started | | |
+| W | Subscriptions | 9 | 0 | Not started | | |
 | X | Static pages | 6 | 0 | Not started | | |
 | Y | Netlify deployment | 5 | 0 | Not started | | |
 | Z | Release readiness | 7 | 0 | Not started | | |

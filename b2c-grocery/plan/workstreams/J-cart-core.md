@@ -1,7 +1,7 @@
 # J — Cart core: API, hooks, bag, availability, toast
 
 **Specs:** `cart-design` (Bag layout, Bag lines, Summary, Empty bag, Unavailable lines), `storefront-design-system` (Bag count, Add-to-bag toast), `storefront-data-loading` (Client state hooks, Hydration, Cart concurrency and totals, Availability-aware cart mutations), `storefront-bff-and-session` (Inventory mode on carts)
-**Depends on:** G, H · **Unblocks:** K, L, N, O, Q, R, U, V, W · **Decisions:** D-031, D-037 (guests)
+**Depends on:** G, H · **Unblocks:** K, L, N, O, Q, R, U, W, V · **Decisions:** D-031, D-037 (guests)
 **Skill refs:** `commercetools-storefront` `core/cart.md`
 
 ## Goal
@@ -15,7 +15,7 @@ export interface CartLine { id: string; productId: string; sku: string; name: st
 export interface CartSlot { id: string; start: string; end: string; charge?: Money; holdExpires?: string }
 export interface Cart { id: string; version: number; currencyCode: string; lines: CartLine[]; itemCount: number /* distinct lines */; subtotal: Money; shipping?: { name?: string; price: Money; free: boolean }; tax?: Money; total: Money; isProvisional: boolean; shippingAddress?: Address; slot?: CartSlot }
 ```
-(`Address` is declared here minimally: `{ firstName?, lastName?, streetName?, additionalStreetInfo?, postalCode?, city?, country, phone?, email? }`; S extends usage.)
+(`Address` is declared **here** (J owns it; S only uses it): `{ firstName?, lastName?, streetName?, additionalStreetInfo?, postalCode?, city?, country, phone?, email? }`; S extends usage.)
 
 ### `lib/mappers/cart.ts` — `mapCart(ctCart, ctx): Cart`
 `isProvisional = lines.some(l => l.approximateWeight)`; `approximateWeight` and increment from the line's variant attributes; `substitutionPreference` from `line.custom.fields.substitutionPreference` (default `'none'`); `slot` from cart custom fields `cart-delivery`; `recurrence` from `line.recurrenceInfo`; `shipping.free` = shipping price is 0.
@@ -27,15 +27,15 @@ Default substitution preference: `product.storage === 'chilled'` or category `fr
 
 ### Routes (validate session → ct → JSON; always return the full mapped `Cart`)
 - `GET /api/cart` — no cartId → `{ cart: null }`; non-Active cart → clear `cartId` in session, `{ cart: null }`.
-- `POST /api/cart/line-items` `{ sku, quantity, recurrencePolicyKey? }` — quantity integer ≥ 1 else 400; compute `requested = existing line quantity + quantity`; `getAvailableQuantity`; if `requested > available` → **409** `{ error: 'INSUFFICIENT_STOCK', available }`; create cart if none (anonymous allowed) and write `cartId` (and `anonymousId`) to the session.
+- `POST /api/cart/line-items` `{ sku, quantity, recurrencePolicyKey? }` — quantity integer ≥ 1 else 400; the route loads the product with `getProductBySku` (G) to compute `defaultSubstitutionPreference(product)` and passes it to `addLineItem`; compute `requested = existing line quantity + quantity`; `getAvailableQuantity`; if `requested > available` → **409** `{ error: 'INSUFFICIENT_STOCK', available }`; create cart if none (anonymous allowed) and write `cartId` (and `anonymousId`) to the session.
 - `PATCH /api/cart/line-items/[lineId]` `{ quantity }` (same availability rule), `DELETE /api/cart/line-items/[lineId]`.
 
 ### Client
 - `hooks/useCart.ts` **(client)**: `useCart()` → `useSWR(KEY_CART, fetch /api/cart → cart|null, { revalidateOnFocus: true })`; `useCartMutations()` → `addItem(sku, qty, opts?)`, `setQuantity(lineId, qty)`, `removeLine(lineId)`; each mutation updates the cache from the response (`mutate(KEY_CART, cart, { revalidate: false })`) and **throws `ApiError`** on failure.
 - `context/CartProvider.tsx`: exposes `useCart` values + `addItemWithToast` (adds then `toast.show({ message: t('cart.added'), actionLabel: t('cart.viewBag'), href: '/cart' })`; on `INSUFFICIENT_STOCK` shows a message with the available quantity).
-- Root layout seeds `SWRConfig fallback` `{[KEY_CART]: initialCart}`: server-side `getCart(session.cartId)` in `app/layout.tsx`.
+- `app/[locale]/layout.tsx` (see D's provider order) fetches `getCart(session.cartId)` on the server and passes it as the `SWRConfig fallback` `{[KEY_CART]: initialCart}`; `CartProvider` sits inside `ToastProvider` and `NextIntlClientProvider`.
 - `components/layout/BagButton.tsx` **(client)** (the `bag` slot of the header): primary button, label `Bag` when `itemCount === 0` else `Bag · N` (N = distinct lines, as in the prototype); links to `/cart`.
-- Cart page `app/[locale]/cart/page.tsx` (client island inside a server page): H1 "Your bag" (52px); lines (150×180 `Photo`, name h3, line total, stock `Tag` ("In stock"/"Out of stock"), `QuantityStepper`, ghost Remove); sticky summary `Card` (subtotal, delivery with slot placeholder, total in heading font, `Checkout` button **disabled for now** — enabled by W), returns note; empty state; remove shows undo toast ("Removed — Undo" re-adds sku/qty). Extension points for later workstreams: `<CartDeliveryStep/>` (Q), `<SubstitutionControl line/>` (U), `<ProvisionalNotice/>` (N), `<RecurrenceBadge line/>` (V) — render nothing in J.
+- Cart page `app/[locale]/cart/page.tsx` (client island inside a server page): H1 "Your bag" (52px); lines (150×180 `Photo`, name h3, line total, stock `Tag` ("In stock"/"Out of stock"), `QuantityStepper`, ghost Remove); sticky summary `Card` (subtotal, delivery with slot placeholder, total in heading font, `Checkout` button **disabled for now** — enabled by V), returns note; empty state; remove shows undo toast ("Removed — Undo" re-adds sku/qty). Extension points for later workstreams: `<CartDeliveryStep/>` (Q), `<SubstitutionControl line/>` (U), `<ProvisionalNotice/>` (N), `<RecurrenceBadge line/>` (W) — render nothing in J.
 
 ## Tasks
 - [ ] J-01 Append cart types; write `lib/mappers/cart.ts` + fixtures + tests (provisional when any approximate line; free shipping flag; default preference `none`; slot mapping; recurrence mapping).
@@ -44,7 +44,7 @@ Default substitution preference: `product.storage === 'chilled'` or category `fr
 - [ ] J-04 Write `lib/config/substitution.ts` (`defaultSubstitutionPreference`) + tests (chilled → allow-similar; ambient household → none).
 - [ ] J-05 Write routes `GET /api/cart`, `POST /api/cart/line-items`, `PATCH/DELETE /api/cart/line-items/[lineId]` + tests per route: unauthorized-free (anonymous ok); 400 for bad quantity; 409 `INSUFFICIENT_STOCK` with `available`; cart created on first add and cookie updated; non-Active cart clears session.
 - [ ] J-06 Write `hooks/useCart.ts` + tests (mock fetch): read default null; mutation updates cache without refetch; failure throws `ApiError` and cache unchanged.
-- [ ] J-07 Write `CartProvider`, `BagButton`, and wire the header `bag` slot and root `SWRConfig` fallback; tests: label "Bag"/"Bag · 2"; toast shown on add with "View bag"; insufficient stock message shows available quantity.
+- [ ] J-07 Write `CartProvider`, `BagButton`, and wire the header `bag` slot and the locale layout's `SWRConfig` fallback; tests: label "Bag"/"Bag · 2"; toast shown on add with "View bag"; insufficient stock message shows available quantity.
 - [ ] J-08 Write the cart page UI (no checkout yet) + messages (both locales) + tests: renders lines/totals from the cart; stepper changes call mutation; remove shows undo toast and undo re-adds; empty state with browse link; Checkout disabled with explanation text key `cart.checkoutDisabled`.
 - [ ] J-09 Report manual tests M-J-1…M-J-4 and sign-off SO-02 (partly, final in Q).
 

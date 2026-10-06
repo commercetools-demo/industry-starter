@@ -18,7 +18,7 @@ There is no CI in v1. `npm run verify` in `site/` SHALL run lint, typecheck, uni
 
 ### Requirement: Environment validation
 
-The app SHALL validate required environment variables at startup (commercetools settings, `CTP_CHECKOUT_APP_KEY` and `SESSION_SECRET` ≥ 32 characters) and SHALL name the missing variable in the error. `.env.example` SHALL list every variable without values.
+The app SHALL validate required environment variables at startup (commercetools settings, `CTP_CHECKOUT_APP_KEY` and `SESSION_SECRET` ≥ 32 characters) and SHALL name the missing variable in the error; a Netlify build (`NETLIFY=true`) SHALL fail when one is missing. `.env.example` SHALL list every variable without values.
 
 #### Scenario: Missing variable
 - **WHEN** `CTP_CLIENT_SECRET` is unset
@@ -26,7 +26,7 @@ The app SHALL validate required environment variables at startup (commercetools 
 
 ### Requirement: Dev-only routes removed before deploy
 
-`app/api/health/route.ts` and any other development-only route SHALL be absent from deployed builds.
+`app/api/health/route.ts` SHALL be absent from deployed builds, and any other development-only route SHALL respond 404 unless `NODE_ENV` is `development`.
 
 #### Scenario: Production build
 - **WHEN** a production build is produced

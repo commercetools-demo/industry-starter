@@ -1,7 +1,7 @@
 # O — Auth pages and identity
 
 **Specs:** `auth-pages-design` (all), `storefront-bff-and-session` (Customer login and anonymous cart merge), existing behavior `authentication-and-identity`, `account-sign-in`, `password-reset`, `email-verification`
-**Depends on:** E, H, J · **Unblocks:** Q, R, S, T, V, W · **Decisions:** D-037, D-038 · **Sign-off:** SO-06
+**Depends on:** E, H, J · **Unblocks:** Q, R, S, T, W, V · **Decisions:** D-037, D-038 · **Sign-off:** SO-06
 **Skill refs:** `commercetools-storefront` `core/customer-auth.md`, `b2c/customer-auth.md`
 
 ## Goal
@@ -24,18 +24,21 @@ Verify the exact SDK call shapes against `api-Customer-write` OAS (`node scripts
 - `/api/auth/register` `{ firstName, lastName, email, password }` — password ≥ 8 chars else 400 `{ error:'WEAK_PASSWORD' }`; duplicate email (commercetools `DuplicateField`) → 409 `{ error: 'ACCOUNT_EXISTS' }`; success → customer created, **verified immediately**, signed in, cart merged (call `signIn`).
 - `/api/auth/logout` → clears `customerId`, `customer*`, `cartId`; returns `{ ok: true }`.
 - `/api/auth/me` `GET` → `{ user: {id,email,firstName,lastName} | null }` from the session only.
-- `/api/auth/forgot-password` `{ email }` → always `{ ok: true }` (same body); when a token is created and `NODE_ENV === 'development'`, store it in `lib/dev-stub.ts` (in-memory `setLastResetLink(email, url)`); in production nothing is stored or logged.
+- `/api/auth/forgot-password` `{ email }` → always `{ ok: true }` (same body); when a token is created and `NODE_ENV === 'development'`, store it in `lib/dev-stub.ts` (`setLastResetLink(email, url)` storing in `globalThis.__devResetLinks`, a `Map`, so route handlers and pages share it under `next dev` bundling); in production nothing is stored or logged.
 - `/api/auth/reset-password` `{ token, password }` → resets, signs in, `{ ok: true }`; expired/invalid token → 400 `{ error: 'INVALID_TOKEN' }`.
+
+### Rate limiting
+`/api/auth/login` (10/min), `/register` (5/min), `/forgot-password` and `/reset-password` (5/min) call `rateLimit(clientKey(req, route), …)` from E-09 first; blocked → **429** `{ error: 'RATE_LIMITED' }` with `Retry-After`. Add one test per route.
 
 ### Client
 - `hooks/useAccount.ts` **(client)**: `useAccount()` → `useSWR(KEY_ACCOUNT, /api/auth/me)`; `useAuthMutations()` → `login`, `register`, `logout`, each: on success `mutate(KEY_ACCOUNT)`, `mutate(KEY_CART)` and `router.refresh()`; **logout also clears** KEY_CART/KEY_ORDERS/KEY_ADDRESSES/KEY_WISHLIST/KEY_RECURRING caches.
 - `components/layout/AccountLink.tsx` **(client)**: anonymous → icon button "Sign in" → `/account/sign-in`; signed in → icon/first name → `/account`.
-- Root `SWRConfig fallback` also seeds `KEY_ACCOUNT` from the session fields (no commercetools call).
+- The `SWRConfig fallback` in `app/[locale]/layout.tsx` also seeds `KEY_ACCOUNT` from the session fields (no commercetools call).
 - Safe redirect helper `lib/safe-redirect.ts`: `safeRedirectPath(input, locale)` returns the path only if it starts with `/`, not `//`, not containing `://`, and starts with `/<locale>/`; else `/<locale>/account`.
 
 ### Pages (`app/[locale]/account/…`)
 `sign-in`, `register`, `forgot-password`, `reset-password` (token in query), and the dev stub `dev/reset-link` (`notFound()` unless `NODE_ENV === 'development'`; shows the last link). Layout `components/auth/AuthCard` = 440 px `Card` (`lg×1.15` radius, surface), H2, `Field`s, primary block button, secondary links.
-Protected group: `app/[locale]/account/(protected)/layout.tsx` (Server): `const session = await getSession(); if (!session.customerId) redirect({ href: '/account/sign-in?redirect=' + encodeURIComponent(currentPath), locale })` (**outside try/catch**; use i18n `redirect`). Pages under `(protected)`: R, S, T, V.
+Protected group: `app/[locale]/account/(protected)/layout.tsx` (Server): `const session = await getSession(); const path = (await headers()).get('x-pathname') ?? '/' + locale + '/account'` (header set by `proxy.ts`, D-04); `if (!session.customerId) redirect({ href: '/account/sign-in?redirect=' + encodeURIComponent(path), locale })` (**outside try/catch**; use i18n `redirect`). Pages under `(protected)`: R, S, T, V.
 
 ## Tasks
 - [ ] O-01 Write `lib/ct/auth.ts` + tests (mock root): login uses `login().post` with merge mode and anonymous cart; signUp then email token and confirm called in order; `createPasswordResetToken` returns null for unknown email; verify call shapes against OAS and record in findings.

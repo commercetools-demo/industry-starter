@@ -4,33 +4,33 @@ Letters are in a valid **build order**: every workstream depends only on earlier
 
 ## Workstreams
 
-| ID | Workstream | Implements specs | Depends on | Owner prerequisites | Parallel with |
+| ID | Workstream | Implements specs | Depends on | Owner prerequisites | Unblocks (generated) |
 | --- | --- | --- | --- | --- | --- |
-| A | Scaffold, tooling, verify script | storefront-platform-stack, storefront-delivery-quality (verify) | — | — | F (inspection only) |
-| B | Project structure and lint rules | storefront-project-structure | A | — | C |
-| C | Styling foundation and tokens | storefront-styling-foundation | A | — | B |
-| D | Locale routing and messages | storefront-locale-routing | A, B | — | E |
-| E | BFF core: client, session, env, health | storefront-bff-and-session (core) | A, B | OA-02 | D |
-| F | Catalog data model: inspect + seed | catalog-data-model | A | OA-01, OA-03, OA-04 | B, C, D, E |
-| G | Data-loading foundation: types, mappers, catalog reads | storefront-data-loading | D, E, F | — | H |
-| H | Design system primitives and chrome | storefront-design-system | B, C, D | — | G |
-| I | Error pages, env validation, secret guards | storefront-delivery-quality (errors, env) | E, H | — | J |
-| J | Cart core: API, hooks, bag, availability, toast | cart-design, storefront-data-loading (cart) | G, H | — | I |
-| K | Product listing (PLP) | plp-design | G, H, J | — | L, O, X |
-| L | Product detail (PDP) | pdp-design | G, H, J | — | K, O, X |
-| M | Homepage | homepage-design | G, H, K | — | N, P |
-| N | Weight pricing | weight-pricing-experience | F, J, K, L | — | M, P |
-| O | Auth pages and identity | auth-pages-design, storefront-bff-and-session (login) | E, H, J | — | K, L, X |
-| P | Search | search-design | G, H, K | — | M, N |
-| Q | Delivery slots and address step | delivery-slot-experience | F, J, O | — | M, N, P, T |
-| R | Account shell, orders list and detail | account-design | G, J, N, O, Q | — | — |
-| S | Address book | address-book-design | O, Q, R | — | T |
-| T | Saved lists | saved-lists-design | K, L, O | — | S, U |
-| U | Substitutions | substitution-experience | F, J, R | OA-07 | S, T, V |
-| V | Subscriptions | subscription-experience | F, J, L, O, R | OA-05 (spike) | S, T, U |
-| W | Hosted checkout and confirmation | checkout-design, storefront-bff-and-session (session), storefront-data-loading (order) | E, J, N, O, Q, R | OA-05 | X |
-| X | Static pages | static-pages-design | D, H | — | K, L, O, W |
-| Y | Netlify deployment | storefront-delivery-quality (deploy) | I, W, X (and all shipped features) | OA-06 | — |
+| A | Scaffold, tooling, verify script | storefront-platform-stack, storefront-delivery-quality (verify) | — | — | B, C, D, E, F, Z |
+| B | Project structure and lint rules | storefront-project-structure | A | — | D, E, H, Z |
+| C | Styling foundation and tokens | storefront-styling-foundation | A | — | H, Z |
+| D | Locale routing and messages | storefront-locale-routing | A, B | — | G, H, X, Z |
+| E | BFF core: client, session, env, health | storefront-bff-and-session (core) | A, B | OA-02 | G, H, I, O, V, Z |
+| F | Catalog data model: inspect + seed | catalog-data-model | A | OA-01, OA-03, OA-04 | G, N, Q, U, W, Z |
+| G | Data-loading foundation: types, mappers, catalog reads | storefront-data-loading | D, E, F | — | J, K, L, M, P, R, X, Z |
+| H | Design system primitives and chrome | storefront-design-system | B, C, D, E | — | I, J, K, L, M, O, P, X, Z |
+| I | Error pages, env validation, secret guards | storefront-delivery-quality (errors, env) | E, H | — | Y, Z |
+| J | Cart core: API, hooks, bag, availability, toast | cart-design, storefront-data-loading (cart) | G, H | — | K, L, N, O, Q, R, U, V, W, Y, Z |
+| K | Product listing (PLP) | plp-design | G, H, J | — | L, M, N, P, T, X, Y, Z |
+| L | Product detail (PDP) | pdp-design | G, H, J, K | — | N, T, W, Y, Z |
+| M | Homepage | homepage-design | G, H, K | — | Y, Z |
+| N | Weight pricing | weight-pricing-experience | F, J, K, L | — | R, V, Y, Z |
+| O | Auth pages and identity | auth-pages-design, storefront-bff-and-session (login) | E, H, J | — | Q, R, S, T, V, W, Y, Z |
+| P | Search | search-design | G, H, K | — | Y, Z |
+| Q | Delivery slots and address step | delivery-slot-experience | F, J, O | — | R, S, V, Y, Z |
+| R | Account shell, orders list and detail | account-design | G, J, N, O, Q | — | S, U, V, W, Y, Z |
+| S | Address book | address-book-design | O, Q, R | — | Y, Z |
+| T | Saved lists | saved-lists-design | K, L, O | — | Y, Z |
+| U | Substitutions | substitution-experience | F, J, R | OA-07 | Y, Z |
+| V | Hosted checkout and confirmation | checkout-design, storefront-bff-and-session (session), storefront-data-loading (order) | E, J, N, O, Q, R | OA-05 | W, Y, Z |
+| W | Subscriptions | subscription-experience | F, J, L, O, R, V | OA-05 (spike) | Y, Z |
+| X | Static pages | static-pages-design | D, G, H, K | — | Y, Z |
+| Y | Netlify deployment | storefront-delivery-quality (deploy) | I–X | OA-06 | Z |
 | Z | Release readiness and final verification | all | A–Y | all OA-* | — |
 
 ## Graph (generated)
@@ -59,8 +59,8 @@ graph LR
   S["S address book"]
   T["T saved lists"]
   U["U substitutions"]
-  V["V subscriptions"]
-  W["W hosted checkout"]
+  V["V hosted checkout"]
+  W["W subscriptions"]
   X["X static pages"]
   Y["Y netlify deployment"]
   Z["Z release readiness"]
@@ -77,6 +77,7 @@ graph LR
   B --> H
   C --> H
   D --> H
+  E --> H
   E --> I
   H --> I
   G --> J
@@ -87,6 +88,7 @@ graph LR
   G --> L
   H --> L
   J --> L
+  K --> L
   G --> M
   H --> M
   K --> M
@@ -117,20 +119,36 @@ graph LR
   F --> U
   J --> U
   R --> U
-  F --> V
+  E --> V
   J --> V
-  L --> V
+  N --> V
   O --> V
+  Q --> V
   R --> V
-  E --> W
+  F --> W
   J --> W
-  N --> W
+  L --> W
   O --> W
-  Q --> W
   R --> W
+  V --> W
   D --> X
+  G --> X
   H --> X
+  K --> X
   I --> Y
+  J --> Y
+  K --> Y
+  L --> Y
+  M --> Y
+  N --> Y
+  O --> Y
+  P --> Y
+  Q --> Y
+  R --> Y
+  S --> Y
+  T --> Y
+  U --> Y
+  V --> Y
   W --> Y
   X --> Y
   A --> Z
@@ -162,7 +180,7 @@ graph LR
 <!-- GRAPH:END -->
 
 ## Critical path
-A → B → D → G → J → O → Q → R → W → Y → Z (11 steps; F and E join before G). Everything else hangs off it.
+A → B → D → G → J → O → Q → R → V → W → Y → Z (11 steps; E, F and H join before J). Everything else hangs off it.
 
 ## Suggested team schedule (two developers)
 
@@ -175,16 +193,16 @@ A → B → D → G → J → O → Q → R → W → Y → Z (11 steps; F and E
 | 5 | L | O |
 | 6 | M, N | P, X |
 | 7 | Q → R | T |
-| 8 | S, U | V (spike first, Gate 3) |
-| 9 | W | (support/tests) |
+| 8 | S, U | V |
+| 9 | W (spike first, Gate 3) | (support/tests) |
 | 10 | Y → Z | Z |
 
 ## Gates (owner checks before the next phase)
 - **Gate 1 (after F):** `PROJECT-FINDINGS.md` reviewed; seeded data visible in Merchant Center (M-F-*).
 - **Gate 2 (after K, L, J):** catalog → cart flow works against the real project (M-K-*, M-L-*, M-J-*).
-- **Gate 3 (before V):** R-1 spike result approved (hosted Checkout + recurring carts).
-- **Gate 4 (before W):** OA-05 complete (Checkout application + Adyen test connector).
+- **Gate 3 (after V, before W's UI):** the R-1 spike (task W-01, runs on the finished hosted checkout) is approved by the owner.
+- **Gate 4 (before V):** OA-05 complete (Checkout application + Adyen test connector).
 - **Gate 5 (before Y):** all `SO-*` sign-offs approved.
 
 ## Blocking owner actions
-OA-01 (.envrc for MCP) blocks F inspection and Claude verification. OA-02 blocks E tests against the live project (unit tests do not need it). OA-03 blocks the seed run in F. OA-05 blocks W/V spike. OA-06 blocks Y.
+OA-01 (.envrc for MCP) blocks F inspection and Claude verification. OA-02 blocks E tests against the live project (unit tests do not need it). OA-03 blocks the seed run in F. OA-05 blocks V (hosted checkout) and the W subscription spike. OA-06 blocks Y.

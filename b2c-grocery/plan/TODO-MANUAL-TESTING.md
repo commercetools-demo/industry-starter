@@ -10,7 +10,7 @@ Status values: `TODO` · `BLOCKED` · `IN PROGRESS` · `DONE` / `PASS` / `APPROV
 | ID | Action | Why / blocks | Status |
 | --- | --- | --- | --- |
 | OA-01 | Provide `.envrc` so the commerce MCP connects (without pasting secrets into chat) | Claude inspects `spec-test-b2c` (F) and verifies work | TODO |
-| OA-02 | Create a **Frontend B2C** API client in `spec-test-b2c` incl. `manage_sessions`, `manage_orders`; put values in `site/.env.local` (gitignored) | E, G, J… live checks | TODO |
+| OA-02 | Create a **Frontend B2C** API client in `spec-test-b2c`; put values in `site/.env.local` (gitignored). `CTP_SCOPES` (each suffixed `:spec-test-b2c`, space-separated): `manage_sessions manage_orders manage_order_edits manage_customers manage_shopping_lists create_anonymous_token view_published_products view_products view_categories view_standalone_prices view_product_selections view_shipping_methods view_tax_categories view_cart_discounts view_discount_codes view_types view_project_settings view_sessions` plus the **recurring orders and recurrence policies** read/write scopes (names to verify in Merchant Center → API client scopes; developer W-02 records them in `PROJECT-FINDINGS.md`) | E, G, J… live checks | TODO |
 | OA-03 | Create a **seed/admin** API client (scopes listed in `workstreams/F-*.md`); put values in `site/.env.seed` (gitignored). Revoke after seeding | F seed run | TODO |
 | OA-04 | In Merchant Center: enable countries US, DE; currencies USD, EUR; languages en-US, de-DE | F, D | TODO |
 | OA-05 | Create a **Complete** Checkout application, install the **Adyen** connector (test mode), give the junior its application key (`CTP_CHECKOUT_APP_KEY`); allow `http://localhost:3000` and the Netlify URL as return/allowed origins | W, V spike | TODO |
@@ -36,6 +36,8 @@ Status values: `TODO` · `BLOCKED` · `IN PROGRESS` · `DONE` / `PASS` / `APPROV
 | SO-12 | **Deviation D-042**: slot is validated/held at checkout-session creation, not at order placement | delivery-slot-experience | TODO |
 | SO-13 | German (de-DE) translations of all messages | all | TODO |
 | SO-14 | Weight pricing display and provisional notice | weight-pricing-experience | TODO |
+| SO-16 | **Decision D-046:** slots carry no price; delivery cost = `standard` shipping method rate (free above threshold) | delivery-slot-experience | TODO |
+| SO-17 | **Accepted risks D-047** (session JWT with PII for 30 days, in-memory rate limit/slots, hold can expire while paying) | all | TODO |
 | SO-15 | **Decision D-045:** page-builder block registry is not built in v1 (pages composed in code, sections named after blocks) | storefront-design-system | TODO |
 
 ## 3. Manual tests
@@ -46,19 +48,19 @@ Rows are generated from the "Manual tests to report" sections of `plan/workstrea
 | ID | WS | Manual test (what to do → expected) | Needs | Status |
 | --- | --- | --- | --- | --- |
 | M-A-1 | A | In `site/` run `npm ci && npm run verify` → all steps pass, exit code 0 (Node 22 via `nvm use`). | — | TODO |
-| M-A-2 | A | `npm run dev`, open `http://localhost:3000` → redirects to `/en-US`; page renders without console errors. | — | TODO |
+| M-A-2 | A | `npm run dev`, open `http://localhost:3000` → the "Bootstrap OK" page renders without console errors (the `/en-US` redirect arrives in D). | — | TODO |
 | M-C-1 | C | `npm run dev`, open `/`, DevTools → Network: no request to `fonts.googleapis.com`/`fonts.gstatic.com`; headings render in Caprasimo, body in Figtree. | — | TODO |
 | M-C-2 | C | Tab through the demo page: focus ring is a 2px terracotta outline, not the browser default. | — | TODO |
 | M-D-1 | D | Open `http://localhost:3000/` → lands on `/en-US`. Open `/de-DE` → German title/language attribute `de-DE`. | — | TODO |
 | M-D-2 | D | Set cookie `your-shop-country-locale=de-DE`, open `/` → `/de-DE`. | — | TODO |
-| M-D-3 | D | Visit `/fr-FR/x` → redirected under `/en-US/…` and shows not-found page. | — | TODO |
+| M-D-3 | D | Visit `/fr-FR/x` → redirected under `/en-US/…` and shows a 404 (the localized not-found page arrives in I). | — | TODO |
 | M-E-1 | E | `curl http://localhost:3000/api/health` → `{"ok":true,"projectKey":"spec-test-b2c"}`. | OA-02 | TODO |
 | M-E-2 | E | In the browser POST `/api/locale` `{"locale":"de-DE"}` (fetch in DevTools) → response `{locale:'de-DE',currency:'EUR',country:'DE'}` and cookies `malva-session`, `your-shop-country-locale` are set, `HttpOnly` for the first. | — | TODO |
-| M-E-3 | E | Remove `manage_sessions` from the API client scopes (or use a throwaway client) → `/api/health` still ok but checkout session creation (W) fails with a named-scope error. (Run later with W; keep row `BLOCKED` until then.) | OA-02 | TODO |
+| M-E-3 | E | Remove `manage_sessions` from the API client scopes (or use a throwaway client) → `/api/health` still ok but checkout session creation (V) fails with a named-scope error. (Run later with V; keep row `BLOCKED` until then.) | OA-02 | TODO |
 | M-F-1 | F | Merchant Center → Settings → Shipping methods: `standard` with US and DE zone rates. | — | TODO |
 | M-F-2 | F | Merchant Center → Products: 36 products; open Bananas: variants 500 g/1 kg with USD and EUR prices; Cheddar shows 0 stock. | — | TODO |
 | M-F-3 | F | Product images load (placeholder service reachable); owner decides whether to replace with real images. | — | TODO |
-| M-F-4 | F | Merchant Center → Custom types: the three types; Recurrence policies: weekly/every-2-weeks/monthly; Settings → search indexing active. | — | TODO |
+| M-F-4 | F | Merchant Center → Custom types: the four types; Recurrence policies: weekly/every-2-weeks/monthly; Settings → search indexing active. | — | TODO |
 | M-G-1 | G | With a one-off script or the dev server page created in K, confirm that searching "milk" returns Whole milk and that page 2 of all products is non-empty. | OA-02 | TODO |
 | M-G-2 | G | Confirm EUR prices for `de-DE`: first product price in a German session is shown with `€`. | — | TODO |
 | M-H-1 | H | Open `/en-US` at 1440 px: header, nav, footer match `design/source/MALVA Web.dc.html` rendered in Claude Design (side-by-side). | — | TODO |
@@ -94,11 +96,11 @@ Rows are generated from the "Manual tests to report" sections of `plan/workstrea
 | M-P-1 | P | Search "milk": Whole milk and Oat drink appear; count line correct. | — | TODO |
 | M-P-2 | P | Search "zzzz": no-match message with link to shop. | — | TODO |
 | M-P-3 | P | Open `/de-DE/search?q=milch` (if German names seeded): results appear; suggestions are German. | — | TODO |
-| M-Q-1 | Q | With items in the bag, enter a valid US address: slots for 7 days appear; pick one: summary shows slot and charge. | — | TODO |
+| M-Q-1 | Q | With items in the bag, enter a valid US address: slots for 7 days appear; pick one: summary shows the slot and the delivery price ("Included" when above the free threshold). | — | TODO |
 | M-Q-2 | Q | Change postcode to `99999`: error "not deliverable"; the picked slot is cleared with a notice. | — | TODO |
 | M-Q-3 | Q | Fill a window (pick the same slot from 11 browsers/sessions or temporarily lower capacity in `lib/config/slots.ts` to 1): the next shopper does not see it. | — | TODO |
 | M-Q-4 | Q | Reload after a redeploy/dev restart: slot hold may be gone (documented limitation) — confirm the cart shows "choose a slot". | — | TODO |
-| M-R-1 | R | After W (or by creating a test order in Merchant Center for your customer): dashboard lists it with the right status tag. | — | TODO |
+| M-R-1 | R | After V (or by creating a test order in Merchant Center for your customer): dashboard lists it with the right status tag. | — | TODO |
 | M-R-2 | R | Open another customer's order id in the URL: not-found page. | — | TODO |
 | M-R-3 | R | Response headers of `/api/account/orders` include `Cache-Control: private, no-store`. | — | TODO |
 | M-R-4 | R | Compare dashboard/order detail with the design at 1440 px and 390 px. | — | TODO |
@@ -112,17 +114,17 @@ Rows are generated from the "Manual tests to report" sections of `plan/workstrea
 | M-U-2 | U | Create a proposal with the recipe on that order: notice appears with price difference. | OA-07 | TODO |
 | M-U-3 | U | Accept: line shows the substitute and total changes; Merchant Center shows the edit applied. | — | TODO |
 | M-U-4 | U | Create another proposal and Decline: "Removal requested"; the edit is not applied in Merchant Center. | — | TODO |
-| M-V-1 | V | spike steps and result (see V-01). | OA-05 | TODO |
-| M-V-2 | V | PDP of Whole milk shows the selector; Bananas (not eligible) does not. | — | TODO |
-| M-V-3 | V | Subscribe "Every 2 weeks": cart line badge and notice; after checkout a Recurring Order exists. | — | TODO |
-| M-V-4 | V | `/account/subscriptions`: change cadence, pause, resume — same recurring order id each time. | — | TODO |
-| M-V-5 | V | Cancel: confirmation states the last order date. | — | TODO |
-| M-W-1 | W | Merchant Center: Checkout application branding applied; Adyen connector in test mode. | — | TODO |
-| M-W-2 | W | Cart with address + slot → "Checkout": hosted flow opens inline between our header/footer. | — | TODO |
-| M-W-3 | W | Pay with an Adyen test card: confirmation page shows order number, slot, thank-you name; bag is empty afterward. | — | TODO |
-| M-W-4 | W | Guest flow (signed out): same, no Track button. | — | TODO |
-| M-W-5 | W | Make the slot full before clicking Checkout (lower capacity or fill it): cart shows "slot just filled" and the hosted flow does not open. | — | TODO |
-| M-W-6 | W | Weighed item in bag: provisional notice on checkout summary and confirmation. | — | TODO |
+| M-V-1 | V | Merchant Center: Checkout application branding applied; Adyen connector in test mode. | — | TODO |
+| M-V-2 | V | Cart with address + slot → "Checkout": hosted flow opens inline between our header/footer. | — | TODO |
+| M-V-3 | V | Pay with an Adyen test card: confirmation page shows order number, slot, thank-you name; bag is empty afterward. | — | TODO |
+| M-V-4 | V | Guest flow (signed out): same, no Track button. | — | TODO |
+| M-V-5 | V | Make the slot full before clicking Checkout (lower capacity or fill it): cart shows "slot just filled" and the hosted flow does not open. | — | TODO |
+| M-V-6 | V | Weighed item in bag: provisional notice on checkout summary and confirmation. | — | TODO |
+| M-W-1 | W | spike steps and result (see W-01). | OA-05 | TODO |
+| M-W-2 | W | PDP of Whole milk shows the selector; Bananas (not eligible) does not. | — | TODO |
+| M-W-3 | W | Subscribe "Every 2 weeks": cart line badge and notice; after checkout a Recurring Order exists. | — | TODO |
+| M-W-4 | W | `/account/subscriptions`: change cadence, pause, resume — same recurring order id each time. | — | TODO |
+| M-W-5 | W | Cancel: confirmation states the last order date. | — | TODO |
 | M-X-1 | X | Visit About, FAQ, each policy, Journal in both locales; footer links work. | — | TODO |
 | M-X-2 | X | Submit the contact form: confirmation shown; server log shows topic and length only. | — | TODO |
 | M-X-3 | X | Owner reviews copy (SO-10, SO-13). | — | TODO |
@@ -130,7 +132,7 @@ Rows are generated from the "Manual tests to report" sections of `plan/workstrea
 | M-Y-2 | Y | `https://<site>/api/health` → 404. | — | TODO |
 | M-Y-3 | Y | `https://<site>/` redirects to `/en-US`; shop, product, cart work against the real project. | — | TODO |
 | M-Y-4 | Y | Complete one Adyen test checkout on the deployed site (Checkout allowed origin includes the Netlify URL). | — | TODO |
-| M-Y-5 | Y | Remove one env var in a deploy preview: build/start fails naming the variable (then restore). | — | TODO |
+| M-Y-5 | Y | Remove one env var in a deploy preview: the Netlify **build** fails naming the variable (then restore). | — | TODO |
 <!-- M-TESTS:END -->
 
 ## 4. Questions to the owner

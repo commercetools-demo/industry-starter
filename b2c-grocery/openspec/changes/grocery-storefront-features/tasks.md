@@ -7,7 +7,7 @@
 - [ ] 2.1 N — Weight pricing (`N-weight-pricing.md`)
 - [ ] 2.2 Q — Delivery slots and cart delivery step (`Q-delivery-slots.md`)
 - [ ] 2.3 U — Substitutions (`U-substitutions.md`)
-- [ ] 2.4 V — Subscriptions, after spike and Gate 3 (`V-subscriptions.md`)
+- [ ] 2.4 V — Subscriptions, after spike and Gate 3 (`W-subscriptions.md`)
 
 ## 3. Pages
 

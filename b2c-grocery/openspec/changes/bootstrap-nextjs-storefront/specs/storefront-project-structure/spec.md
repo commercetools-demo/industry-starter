@@ -22,7 +22,7 @@ Modules under `lib/ct/` SHALL be server-only and SHALL NOT be imported from any 
 
 ### Requirement: Route organization
 
-Locale-prefixed UI SHALL live under `app/[locale]/`. BFF Route Handlers SHALL live under `app/api/{auth,account,cart,checkout,shipping-methods,channels}/` as `route.ts`. Each locale segment SHALL provide `error.tsx` and `not-found.tsx`.
+Locale-prefixed UI SHALL live under `app/[locale]/`. BFF Route Handlers SHALL live under `app/api/` (`auth`, `account`, `cart`, `checkout`, `locale` and the development-only `health`) as `route.ts`. Each locale segment SHALL provide `error.tsx` and `not-found.tsx`.
 
 #### Scenario: Unknown product
 - **WHEN** a product slug does not exist

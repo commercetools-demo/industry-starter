@@ -8,7 +8,7 @@
 
 ## Design
 - Route `app/[locale]/search/page.tsx` (Server): reads `q` (trimmed, max 100 chars) and `page`; `q` empty → suggestions only (no search call); else `searchProducts({ text: q, page, pageSize: 24, … })`. Result label `search.found` ("{count} found for “{query}”"); zero results message with link to `/shop`.
-- Input `components/search/SearchInput.tsx` **(client)**: 58 px high, 20 px font, pill, padding-inline 24 px; updates `?q=` via `router.replace` **debounced 300 ms** (`lib/useDebouncedCallback.ts`); `type="search"`, `aria-label` from messages; Enter submits immediately.
+- Input `components/search/SearchInput.tsx` **(client)**: 58 px high, 20 px font, pill, padding-inline 24 px; updates `?q=` via `router.replace(`${pathname}?${qs}`)` (`usePathname`/`useRouter` from `@/i18n/routing`) **debounced 300 ms** (`lib/useDebouncedCallback.ts`); `type="search"`, `aria-label` from messages; Enter submits immediately.
 - Suggestions `search.suggestions` array in messages as outline `Tag` links to `?q=<term>` (en-US: Fresh, Vegan, Bakery, Organic, Gifts, "Under $5"; de-DE: Frisch, Vegan, Backwaren, Bio, Geschenke, "Unter 5 €"); the "Under" term is a plain text search, not a filter.
 - Results reuse `ProductGrid` and `Pagination` from K (pagination base path `/search` with `q` preserved).
 - Header search pill (H) already links to `/search`.

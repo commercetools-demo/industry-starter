@@ -14,7 +14,7 @@ Before any page work, the project `spec-test-b2c` SHALL be inspected and its cur
 
 ### Requirement: Product type model
 
-The project SHALL have a product type `grocery-product` with product-level attributes `brand` (text), `origin` (text), `dietary` (set of enum: vegan, vegetarian, gluten-free, organic), `storage` (enum: ambient, chilled, frozen), `allergens` (set of text), `substituteProducts` (set of reference to product), `recurringEligible` (boolean) and variant-level attributes `incrementValue` (number), `incrementUnit` (enum: g, kg, ml, l, each), `approximateWeight` (boolean), and `packLabel` (localized text, for example "500 g"). All text attributes SHALL be localized for `en-US` and `de-DE`.
+The project SHALL have a product type `grocery-product` with product-level attributes `brand` (text), `origin` (text), `dietary` (set of enum: vegan, vegetarian, gluten-free, organic), `storage` (enum: ambient, chilled, frozen), `allergens` (set of text), `substituteProducts` (set of reference to product), `recurringEligible` (boolean) and variant-level attributes `incrementValue` (number), `incrementUnit` (enum: g, kg, ml, l, each), `approximateWeight` (boolean), and `packLabel` (localized text, for example "500 g"). Only `packLabel` SHALL be localized (`en-US` and `de-DE`); `brand`, `origin` and `allergens` are plain text.
 
 #### Scenario: Weighed product
 - **WHEN** a product sold by weight is created
@@ -50,7 +50,7 @@ Every variant SHALL have an inventory entry so `ProductVariantAvailability` can 
 
 ### Requirement: Custom types
 
-The project SHALL define custom types: `cart-delivery` for carts (`slotId`, `slotStart`, `slotEnd`, `slotCharge` as money, `slotHoldExpires`), `line-substitution` for line items (`substitutionPreference` enum `allow-similar` | `none`, default `allow-similar` for chilled and fresh products), and `substitution-proposal` for order edits (`originalLineItemId`, `substituteSku`, `status` enum `pending` | `declined` | `applied`, `note`).
+The project SHALL define custom types: `cart-delivery` for carts and orders (`slotId`, `slotStart`, `slotEnd`, `slotHoldExpires`), `order-final` for orders (`finalTotal` as money), `line-substitution` for line items (`substitutionPreference` enum `allow-similar` | `none`, default `allow-similar` for chilled and fresh products), and `substitution-proposal` for order edits (`originalLineItemId`, `substituteSku`, `status` enum `pending` | `declined` | `applied`, `note`).
 
 #### Scenario: Cart with slot
 - **WHEN** a slot is selected
@@ -58,7 +58,7 @@ The project SHALL define custom types: `cart-delivery` for carts (`slotId`, `slo
 
 ### Requirement: Shipping and tax
 
-The project SHALL have zones for US and DE, a shipping method `standard` with rates in each zone and a free-delivery threshold from configuration, tax categories for food and non-food with country rates (DE 7% and 19%; US 0% placeholder per state-less demo), and `taxMode: 'Platform'` on carts.
+The project SHALL have zones for US and DE, a shipping method `standard` (tax category `non-food`) with rates in each zone and a free-above threshold stored in the rate, tax categories for food and non-food with country rates (DE 7% and 19%; US 0% placeholder per state-less demo), and `taxMode: 'Platform'` on carts.
 
 #### Scenario: Shipping methods for a cart
 - **WHEN** a cart has a German address

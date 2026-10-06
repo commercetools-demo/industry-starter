@@ -9,7 +9,7 @@
 - [ ] 2.2 L — Product detail (`L-product-detail.md`)
 - [ ] 2.3 M — Homepage (`M-homepage.md`)
 - [ ] 2.4 J — Cart (`J-cart-core.md`)
-- [ ] 2.5 W — Hosted checkout and confirmation (`W-hosted-checkout.md`)
+- [ ] 2.5 W — Hosted checkout and confirmation (`V-hosted-checkout.md`)
 - [ ] 2.6 R — Account dashboard, orders, order detail (`R-account-shell-and-orders.md`)
 
 ## 3. Verification

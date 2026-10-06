@@ -29,12 +29,18 @@ for (const f of wsFiles) {
   if (!depLine) err(`${f}: missing "**Depends on:**"`);
   else {
     const raw = depLine[1].trim();
-    if (/^A–Y$/.test(raw)) deps = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split('');
-    else if (raw === '—' || raw === '-') deps = [];
-    else deps = raw.match(/\b[A-Z]\b/g) ?? [];
+    deps = expandDeps(raw);
   }
   const tasks = [...text.matchAll(/^- \[( |x)\] ([A-Z])-(\d{2}) /gm)].map((m) => ({ done: m[1] === 'x', letter: m[2], n: Number(m[3]) }));
   ws[id] = { file: f, text, deps, tasks };
+}
+function expandDeps(raw) {
+  raw = raw.trim();
+  if (raw === '—' || raw === '-') return [];
+  const out = new Set();
+  for (const m of raw.matchAll(/\b([A-Z])\s*–\s*([A-Z])\b/g)) for (let c = m[1].charCodeAt(0); c <= m[2].charCodeAt(0); c++) out.add(String.fromCharCode(c));
+  for (const m of raw.replace(/\b[A-Z]\s*–\s*[A-Z]\b/g, '').matchAll(/\b[A-Z]\b/g)) out.add(m[0]);
+  return [...out].sort();
 }
 const expectedLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 for (const L of expectedLetters) if (!ws[L]) err(`workstream ${L} missing`);
@@ -57,15 +63,24 @@ let depPlan = read(depPlanPath);
 const rows = [...depPlan.matchAll(/^\| ([A-Z]) \| ([^|]+)\| ([^|]+)\| ([^|]+)\|/gm)];
 const tableDeps = {};
 for (const m of rows) {
-  const raw = m[4].trim();
-  tableDeps[m[1]] = raw === '—' ? [] : raw === 'A–Y' ? 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split('') : (raw.match(/\b[A-Z]\b/g) ?? []);
+  tableDeps[m[1]] = expandDeps(m[4]);
 }
 for (const L of expectedLetters) {
   if (!tableDeps[L]) err(`DEPENDENCY-PLAN: missing row for ${L}`);
-  else if (ws[L] && tableDeps[L].join() !== ws[L].deps.join()) err(`DEPENDENCY-PLAN: ${L} depends [${tableDeps[L]}] but workstream file says [${ws[L].deps}]`);
+  else if (ws[L] && [...tableDeps[L]].sort().join() !== [...ws[L].deps].sort().join()) err(`DEPENDENCY-PLAN: ${L} depends [${tableDeps[L]}] but workstream file says [${ws[L].deps}]`);
 }
 
 if (SYNC) {
+  // regenerate the 'Unblocks' column (direct dependents)
+  depPlan = depPlan.split('\n').map((l) => {
+    const m = l.match(/^\| ([A-Z]) \|/);
+    if (!m || !ws[m[1]]) return l;
+    const c = l.split('|');
+    if (c.length < 8) return l;
+    const dependents = expectedLetters.filter((x) => ws[x]?.deps.includes(m[1]));
+    c[6] = ` ${dependents.length ? dependents.join(', ') : '—'} `;
+    return c.join('|');
+  }).join('\n');
   const edges = [];
   for (const L of expectedLetters) for (const d of ws[L]?.deps ?? []) edges.push(`  ${d} --> ${L}`);
   const names = expectedLetters.map((L) => `  ${L}["${L} ${(ws[L]?.file ?? '').slice(2, -3).replace(/-/g, ' ')}"]`);

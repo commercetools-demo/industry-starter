@@ -13,7 +13,7 @@
 `/[locale]/shop?category=<slug>&price=<bandId>&stock=in|out&sort=relevance|newest|price-asc|price-desc&page=<n>` — all optional; invalid values are ignored (not errors). Parsing lives in `lib/listing-params.ts`: `parseListingParams(searchParams): ListingParams` and `toQueryString(params): string` (omits defaults; resets `page` to 1 when any filter/sort changes).
 
 ### Server page `app/[locale]/shop/page.tsx` (Server Component)
-`const sp = await searchParams;` `const { country, currency, locale } = await getLocale();` run in parallel (`Promise.all`): `getCategoryTree(locale)`, `searchProducts({...})`. Resolve `category` slug → id from the tree (unknown slug → ignored). Heading = category name or `plp.everything`. `generateMetadata` for title. Page cache: dynamic (reads cookies).
+`const sp = await searchParams;` `const { country, currency, locale } = await getMarket();` (E) run in parallel (`Promise.all`): `getCategoryTree(locale)`, `searchProducts({...})`. Resolve `category` slug → id from the tree (unknown slug → ignored). Heading = category name or `plp.everything`. `generateMetadata` for title. Page cache: dynamic (reads cookies).
 
 ### Components (`components/product/`)
 - `ProductTile` (server): washed `Photo` (330 px), top-right `SaveButton` (client, see below), top-left `Tag` "Out of stock" when the default variant is not in stock, name (card-title) + `PriceBlock` on one baseline row, brand line (`card-meta`), `lift` hover; whole tile is a locale `Link` to `/p/<slug>`.
@@ -23,7 +23,7 @@
 - `FilterRail` (client): category rows (`name` + count; active = accent fill), price-band tags, availability radios (Everything / In stock / Out of stock), "Clear all" ghost; every change `router.replace(`/shop?${toQueryString(...)}`)` with locale-aware router; sticky `top-[110px]` at `desktop`.
 - `ListingToolbar`: "N products" (ICU plural: "1 product"), `Segmented` sort (Relevance, Newest, Price ↑, Price ↓).
 - `AppliedFilters`: removable chips for active filters (above the grid).
-- `Pagination`: Previous · numbers (ellipsis for long lists) · Next; current page `aria-current="page"`; links are real URLs (`Link`).
+- `Pagination({ basePath, params, page, pageCount })`: `basePath` is e.g. `/shop` or `/search`, `params` the other query parameters to preserve (e.g. `{ q }`); Previous · numbers (ellipsis for long lists) · Next; current page `aria-current="page"`; links are real URLs (`Link`). Reused by P.
 - `ListingEmpty`: heading "Nothing under those terms", text, `Clear filters` (secondary) and "Contact us" link.
 - `Breadcrumbs`: Home / Shop / <Category>, last item not a link.
 - Tablet/mobile (`<desktop`): rail hidden; "Filters" button opens a `Dialog`-based sheet containing `FilterRail` content.
@@ -39,7 +39,7 @@
 - [ ] K-04 Write `FilterRail` + `AppliedFilters` + `ListingToolbar` + tests: selecting a band calls `router.replace` with `price=…&page` removed; "Clear all" resets to `/shop`; counts displayed; active styles via `aria-pressed/checked`; single result label "1 product".
 - [ ] K-05 Write the server page with `Promise.all` and param resolution + tests (mock `getCategoryTree`, `searchProducts`): both calls start before either resolves; unknown category ignored; heading uses category name; page 2 passes `page: 2`.
 - [ ] K-06 Tablet filter sheet (`FiltersSheet` client) + tests (button opens dialog containing filters; applying closes).
-- [ ] K-07 Add all message keys (both locales); add nav links (`/shop`, `/shop?sort=newest`) active-state logic using `usePathname` + search params; test active item.
+- [ ] K-07 Add all message keys (both locales); verify the header links `/shop` and `/shop?sort=newest` exist (the active state is H's `PrimaryNav`; add a test here only for the link targets).
 - [ ] K-08 Report manual tests M-K-1…M-K-5 and sign-off SO-01 follow-up.
 
 ## Unit tests (scenario → test)

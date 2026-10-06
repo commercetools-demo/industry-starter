@@ -14,7 +14,7 @@ Every commercetools call SHALL originate on the server. The browser SHALL reach 
 
 ### Requirement: Client singleton
 
-`lib/ct/client.ts` SHALL export a single module-level `apiRoot` built with `ClientBuilder` using client-credentials flow, and every helper SHALL import it from there.
+`lib/ct/client.ts` SHALL build exactly one commercetools API root, lazily on first use, with `ClientBuilder` using client-credentials flow and expose it through `getApiRoot()`, and every helper SHALL use that accessor.
 
 #### Scenario: Second builder
 - **WHEN** `new ClientBuilder()` appears outside `lib/ct/client.ts`

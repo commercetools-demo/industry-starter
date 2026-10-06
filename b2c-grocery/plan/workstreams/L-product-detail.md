@@ -1,7 +1,7 @@
 # L — Product detail page (PDP)
 
 **Specs:** `pdp-design` (all), `storefront-design-system` (Product tile parts reused), `storefront-data-loading` (React cache dedup, availability check on add)
-**Depends on:** G, H, J · **Unblocks:** N, T, V · **Decisions:** D-021, D-023, D-039 (reviews placeholder)
+**Depends on:** G, H, J, K · **Unblocks:** N, T, W · **Decisions:** D-021, D-023, D-039 (reviews placeholder)
 **Skill refs:** `commercetools-storefront` `b2c/product-detail.md`, `b2c/variant-config.md`
 
 ## Goal
@@ -18,12 +18,12 @@
 export const VARIANT_CONFIG = { blocklist: ['approximateWeight', 'incrementValue', 'incrementUnit'], swatch: {} as Record<string, Record<string, string>>, sort: { packLabel: 'increment' } as Record<string, 'increment' | 'alpha'>, primary: 'packLabel' };
 export function buildSelectors(product: Product): Selector[]; // pure
 ```
-`Selector = { name: string; label: string; kind: 'segmented' | 'swatch' | 'radio'; options: { value: string; label: string; sku: string | null; disabled: boolean }[]; selected: string }`. Rule: attributes whose values vary across variants and are not blocklisted become selectors; `packLabel` first, sorted by `incrementValue` ascending (per `sort`); an option is `disabled` when no variant with that value + the other current selections exists, or that variant is out of stock **and** `disabled` only when no purchasable variant exists. Selecting an option navigates to `?sku=<variantSku>` (client island via `router.replace`, `scroll:false`).
+`Selector = { name: string; label: string; kind: 'segmented' | 'swatch' | 'radio'; options: { value: string; label: string; sku: string | null; disabled: boolean }[]; selected: string }`. Rule: attributes whose values vary across variants and are not blocklisted become selectors; `packLabel` first, sorted by `incrementValue` ascending (per `sort`); an option is `disabled` when no variant with that value + the other current selections exists, or that variant is out of stock **and** `disabled` only when no purchasable variant exists. Selecting an option navigates to `?sku=<variantSku>` (client island: `router.replace(`${pathname}?sku=${sku}`, { scroll: false })` with `usePathname`/`useRouter` from `@/i18n/routing` — never a bare query string).
 
 ### Components
 - `ProductGallery` (server): primary image 600 px spanning 2 columns + two 290 px secondary images (use images 2 and 3, or repeat/omit if fewer — omit); `Photo` with `priority` on the primary.
 - `BuyBox` (server) composing: identity (category + sku `Tag`s, H1 48px, brand line), `PriceBlock` (30px heading font), description, `VariantSelectors` (client), `AddToBag` (client), `Availability` (server: "In stock" / "Out of stock"), optional contact strip (`Questions? Contact us` → `/contact`), `SpecsTable` (Brand, Origin, Storage, Dietary, Allergens; only rows with data).
-- `AddToBag` (client): `QuantityStepper` (min 1, max = `availability.availableQuantity` when known), primary "Add to bag" (disabled when out of stock), `SaveButton` (K). Calls `addItemWithToast(sku, qty)` from J; on `INSUFFICIENT_STOCK` shows an inline message "Only N available". Extension slot `<RecurrenceSelector product variant/>` (V) renders nothing in L.
+- `AddToBag` (client): `QuantityStepper` (min 1, max = `availability.availableQuantity` when known), primary "Add to bag" (disabled when out of stock), `SaveButton` (K). Calls `addItemWithToast(sku, qty)` from J; on `INSUFFICIENT_STOCK` shows an inline message "Only N available". Extension slot `<RecurrenceSelector product variant/>` (W) renders nothing in L.
 - `RelatedProducts` (server): H2 "Pairs with", 4-column tile grid.
 - `Reviews` (server): renders **only** if `product.reviews` exists (type `ProductReviews = { average: number; count: number; distribution: number[]; items: {…}[] }`, never populated in v1) — otherwise returns `null` (no heading, no gap).
 
@@ -32,7 +32,7 @@ export function buildSelectors(product: Product): Selector[]; // pure
 - [ ] L-02 Write the page skeleton, `generateMetadata`, not-found handling, variant choice by `?sku=` + tests (mock `getProductBySlug`): unknown slug calls `notFound`; default variant is first in stock; `sku` param selects that variant; metadata title.
 - [ ] L-03 Write `ProductGallery` + tests (primary has `priority`; ≤3 images; alt text from product name).
 - [ ] L-04 Write `BuyBox` parts (`Availability`, `SpecsTable`, contact strip) + tests (out of stock text; specs rows omitted when empty; strip links to `/contact`).
-- [ ] L-05 Write `VariantSelectors` (client) + tests: choosing "1 kg" calls `router.replace('?sku=…')`; arrow keys on segmented; disabled option not clickable; swatch/radio kinds render via config.
+- [ ] L-05 Write `VariantSelectors` (client) + tests: choosing "1 kg" calls `router.replace(`${pathname}?sku=…`, { scroll: false })`; arrow keys on segmented; disabled option not clickable; swatch/radio kinds render via config.
 - [ ] L-06 Write `AddToBag` + tests: quantity min 1 and max; disabled when out of stock with `aria-disabled` and text; success calls mutation once and shows toast; `INSUFFICIENT_STOCK` shows "Only 3 available" and does not change the cart; heart present.
 - [ ] L-07 Write `RelatedProducts` and `Reviews` + tests (related excludes current product, max 4; reviews returns nothing without data).
 - [ ] L-08 Compose the page in two columns at `desktop` (`1.15fr/1fr`, gap ≈ 49 px), buy box sticky `top-[110px]`; single column at `<desktop`. Add message keys (both locales). Test breadcrumbs (Home / Shop / Category / Product).

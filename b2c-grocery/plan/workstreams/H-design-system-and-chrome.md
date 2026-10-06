@@ -1,7 +1,7 @@
 # H — Design system primitives and site chrome
 
 **Specs:** `malva-storefront-design/storefront-design-system` (Rounded/washed, Themed interaction states, Shared component set, Site chrome, Layout and motion, Responsive behavior, Page-builder block model — chrome blocks only), `storefront-styling-foundation` (Product image handling)
-**Depends on:** B, C, D · **Unblocks:** I, J, K, L, M, O, P, X · **Decisions:** D-021 (nav: Shop, New in, Journal), SO-01
+**Depends on:** B, C, D, E · **Unblocks:** I, J, K, L, M, O, P, X · **Decisions:** D-021 (nav: Shop, New in, Journal), SO-01
 **Source:** `design/source/MALVA Web.dc.html` (header/footer/toast/tile markup), `design/DESIGN.md`.
 
 ## Goal
@@ -34,10 +34,10 @@ All in `site/components/`. Server Components unless marked **(client)**. Props a
 
 Breakpoints: add to `globals.css` `@theme { --breakpoint-tablet: 48rem; --breakpoint-desktop: 75rem; }` (utilities `tablet:` `desktop:`) matching the spec (768 / 1200). Header shows the full nav at `desktop`, `CompactNav` below.
 
-Compose in `app/[locale]/layout.tsx`: `ToastProvider` → `AnnouncementBar` → `Header` → `main` → `Footer`.
+Compose in `app/[locale]/layout.tsx` using the provider order defined in D (`NextIntlClientProvider` > `SWRConfig` > `ToastProvider` > `CartProvider` > chrome): `AnnouncementBar` → `Header` → `<main className="page-enter">` → `Footer`. `LocaleSwitcher` receives `markets` = `Object.values(COUNTRY_CONFIG)` for now (G-08 switches the layout to `getValidMarkets()`).
 
 ## Tasks
-- [ ] H-01 Add breakpoints to `globals.css`; write `Button`, `Tag`, `Blob`, `Container`, `Card` (+ sub parts) with tests (variant → class; link rendering; disabled → `disabled` attribute and no click).
+- [ ] H-01 Add breakpoints to `globals.css`; write `Icon` (Lucide wrapper `components/ui/Icon.tsx`: stroke width 2.75, `aria-hidden`, `size` prop), `Button`, `Tag`, `Blob`, `Container`, `Card` (+ sub parts) with tests (variant → class; link rendering; disabled → `disabled` attribute and no click).
 - [ ] H-02 Write `Field`/`Input`/`Textarea`/`Select` with tests (label association; error → `aria-invalid`, `aria-describedby` points to error id and error text visible).
 - [ ] H-03 Write `Radio` and `Segmented` with tests (keyboard arrow keys change selection natively; `onChange` called once; disabled option not selectable).
 - [ ] H-04 Write `QuantityStepper` and `HeartButton` with tests (min 1 clamp; max disables +; `aria-pressed` toggles; accessible names from props).
@@ -45,7 +45,7 @@ Compose in `app/[locale]/layout.tsx`: `ToastProvider` → `AnnouncementBar` → 
 - [ ] H-06 Write `Dialog` with tests (focus moves into dialog; Tab cycles inside; Esc calls `onClose`; focus returns to trigger; backdrop click closes).
 - [ ] H-07 Write `Toast` system with fake timers: appears with message and action; auto-dismiss after exactly 2800 ms; second toast replaces first.
 - [ ] H-08 Write `SectionHeading`, `Table`, `AnnouncementBar` (tests: kicker/heading/link; table header semantics).
-- [ ] H-09 Write `Header`, `CompactNav`, `LocaleSwitcher`, `Footer` with tests: nav items from messages in both locales; active item has `aria-current`; slots render; locale switch calls `/api/locale` (mock fetch) and router; footer links locale-aware (`getPathname`).
+- [ ] H-09 Write `Header`, `PrimaryNav` (**client leaf**, `components/layout/PrimaryNav.tsx`: uses `usePathname`/`useSearchParams` to set `aria-current` — the rest of `Header` stays a Server Component), `CompactNav`, `LocaleSwitcher` (receives a `markets` prop; calls the hook `hooks/useLocaleSwitch.ts`, never `fetch` directly), `Footer` with tests: nav items from messages in both locales; active item has `aria-current`; slots render; locale switch calls `/api/locale` (mock fetch) and router; footer links locale-aware (`getPathname`).
 - [ ] H-10 Compose the chrome in `app/[locale]/layout.tsx`; add message keys (both locales) for every string; update `test/utils.tsx` so `renderWithProviders` also includes `ToastProvider`. Report manual tests M-H-1…M-H-4 and sign-off SO-01.
 
 ## Unit tests (scenario → test)

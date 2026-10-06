@@ -24,9 +24,9 @@ Tailwind v4 compiles with the Organic tokens; fonts are self-hosted by Next at b
 - [ ] C-01 Write `postcss.config.mjs` and a new `app/globals.css` skeleton (import tailwind, safelists). Remove old scaffold CSS. `npm run build` passes.
 - [ ] C-02 Add the `@theme` and `:root` tokens exactly as in the design CSS. Test `app/globals.css.test.ts`: reads the file and asserts presence of `--color-accent: #c67139`, `--color-bg: #f5ead8`, `--radius-lg: 28px`, `--space-4: 17.6px`, and absence of `cream`, `terra`, `Inter`.
 - [ ] C-03 Add fonts in `app/layout.tsx` via `next/font/google` as designed; mock `next/font/google` in Vitest (`vitest.setup.ts`) returning `{ variable: 'font-var', className: 'font-cls' }`. Test the layout renders `<html>` with both variable classes.
-- [ ] C-04 Port the Organic component classes into `app/organic-components.css` (list above) using only token variables; add `.page`. Test (`organic-components.css.test.ts`): asserts each class name appears and no hex literal exists in the file.
-- [ ] C-05 Add reduced-motion rules and `:focus-visible`, `::selection`, `:disabled` base rules. Test asserts `prefers-reduced-motion` block exists and covers `.lift`, `orgIn`.
-- [ ] C-06 Confirm `images.unoptimized: true` and `remotePatterns` in `next.config.ts`; test `next.config.test.ts` imports the config and asserts them. Report manual tests M-C-1, M-C-2.
+- [ ] C-04 Port the Organic component classes into `app/organic-components.css` (list above) using only token variables; add `.page`. Test (`organic-components.css.test.ts`): asserts each class name appears, no hex literal exists in the file, and the themed states exist: `.btn-primary:hover`, `.btn-primary:active`, `.btn-secondary:hover`, `.btn-ghost:hover`.
+- [ ] C-05 Add reduced-motion rules and `:focus-visible`, `::selection`, `:disabled` base rules, plus class `.page-enter { animation: orgIn .35s ease both }` (H applies it to `<main>`). Test asserts the `prefers-reduced-motion` block covers `.lift`, `.page-enter`, `orgIn`, and that `.page-enter` uses `orgIn`.
+- [ ] C-06 Add `images: { unoptimized: true, remotePatterns }` to `next.config.ts` (the scaffold does not have it); test `next.config.test.ts` imports the config and asserts them. Report manual tests M-C-1, M-C-2.
 
 ## Unit tests (scenario → test)
 | Scenario | Test |

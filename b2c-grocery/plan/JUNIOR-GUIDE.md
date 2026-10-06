@@ -22,7 +22,8 @@ Read this once, then follow one workstream file at a time (`plan/workstreams/<LE
 ## 3. Tests (unit only — D-004)
 - Vitest + Testing Library + jsdom. Test files sit next to the code: `thing.ts` → `thing.test.ts`.
 - **Never call the real commercetools API in a unit test.** Mock `@/lib/ct/*` (server code) or `fetch` (hooks). Route handlers: import `GET/POST` and call with `new Request(url, {method, body})`; mock `@/lib/session` and `@/lib/ct/*`.
-- Components needing translations: use `renderWithProviders` from `site/test/utils.tsx` (created in workstream A: wraps `NextIntlClientProvider` with `messages/en-US.json` and a fresh `SWRConfig provider: () => new Map()`).
+- Components needing translations: use `renderWithProviders` from `site/test/utils.tsx`. It is created in A as a stub (fresh `SWRConfig provider: () => new Map()` only), extended in D (`NextIntlClientProvider` with `messages/<locale>.json`) and in H (`ToastProvider`).
+- Worked examples for async Server Components, route handlers, `next/headers`/`next-intl` mocks and hooks: `plan/recipes/testing-patterns.md`. Copy them; do not invent new mocking styles.
 - Name tests after the scenario: `it('Wrong password: shows the generic message', ...)`.
 - A bug fix needs a failing test first.
 

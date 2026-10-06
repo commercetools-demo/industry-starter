@@ -1,7 +1,7 @@
 # Y — Netlify deployment
 
 **Specs:** `storefront-delivery-quality` — Deploy configuration, Dev-only routes removed before deploy, Environment validation (production)
-**Depends on:** I, W, X (and every shipped feature) · **Unblocks:** Z · **Decisions:** D-003 · **Owner prerequisites:** OA-06
+**Depends on:** I–X · **Unblocks:** Z · **Decisions:** D-003 · **Owner prerequisites:** OA-06
 
 ## Goal
 A production build of `site/` deploys on Netlify with env vars from the Netlify UI, with dev-only routes gone and production guards active.
@@ -42,7 +42,7 @@ A production build of `site/` deploys on Netlify with env vars from the Netlify 
 - M-Y-2: `https://<site>/api/health` → 404.
 - M-Y-3: `https://<site>/` redirects to `/en-US`; shop, product, cart work against the real project.
 - M-Y-4: Complete one Adyen test checkout on the deployed site (Checkout allowed origin includes the Netlify URL).
-- M-Y-5: Remove one env var in a deploy preview: build/start fails naming the variable (then restore).
+- M-Y-5: Remove one env var in a deploy preview: the Netlify **build** fails naming the variable (then restore).
 
 ## Definition of done
 `verify:release` passes; owner reports successful deploy; URL recorded; `verify` passes.

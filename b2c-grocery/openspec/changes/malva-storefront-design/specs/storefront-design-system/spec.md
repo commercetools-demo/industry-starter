@@ -74,4 +74,4 @@ Pages SHALL be composed in code from standalone section components named after t
 
 #### Scenario: Hero as a component
 - **WHEN** a page needs a hero
-- **THEN** it renders a hero component with headline, body, image and button props, and a missing headline is rejected by the component's types
+- **THEN** it renders a hero component with headline, body, image and button props

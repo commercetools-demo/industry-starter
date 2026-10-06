@@ -22,7 +22,7 @@ export interface ListingFacets { categories: { id: string; count: number }[]; pr
 export interface SearchResult { products: Product[]; total: number; page: number; pageSize: number; facets: ListingFacets }
 export type SortKey = 'relevance' | 'newest' | 'price-asc' | 'price-desc';
 ```
-(J adds `Cart`, `CartLine`; R adds `Order`; S adds `Address`.)
+(J adds `Cart`, `CartLine` and `Address`; R adds `Order`.)
 
 ### Mappers (`lib/mappers/*`, `server-only`, pure functions)
 - `mapProduct(projection: ProductProjection, ctx: {locale, currency, country}): Product` — localized strings via `getLocalizedString`; attribute values by name from product-level attributes (master variant attributes in projection) and variant attributes `incrementValue`, `incrementUnit` (enum key), `approximateWeight`, `packLabel` (ltext); price = variant `price` (scoped) with `discounted`; images = `variant.images[].url`; availability from `variant.availability` (`isOnStock`, `availableQuantity` default 0).
@@ -37,6 +37,7 @@ export type SortKey = 'relevance' | 'newest' | 'price-asc' | 'price-desc';
   export async function searchProducts(p: SearchParams): Promise<SearchResult>;
   export const getProductBySlug: (slug: string, ctx: Ctx) => Promise<Product | null>; // React cache() wrapped
   export async function getProductsByIds(ids: string[], ctx: Ctx): Promise<Product[]>;
+  export async function getProductBySku(sku: string, ctx: Ctx): Promise<Product | null>; // exact variants.sku
   ```
   Use **only** `apiRoot.products().search().post({ body })` (never `productProjections().search()`). Category filter via `exact categoriesSubTree`; text via `fullText` on `name` with `language: locale`; `productProjectionParameters: { priceCurrency, priceCountry }`; `limit = pageSize`, `offset = (page-1)*pageSize`; facets: distinct `categories.id`; price ranges on `variants.prices.centAmount`; availability facet field verified in G-05. Sort: `relevance` omits `sort`; `newest` → `createdAt desc`; `price-asc/desc` → `variants.prices.centAmount`.
 - `lib/ct/locale-validation.ts`: `getValidCountryConfig()` per skill (`unstable_cache` 300 s).
@@ -52,10 +53,10 @@ export type SortKey = 'relevance' | 'newest' | 'price-asc' | 'price-desc';
 - [ ] G-02 Write `lib/fetcher.ts` with tests (mock `fetch`: ok JSON; non-2xx → `ApiError` with message from body; network error propagates).
 - [ ] G-03 Write `lib/mappers/product.ts` + fixtures + tests: weighed variant (increment 500 g, label "500 g", `approximateWeight`), `each` product, missing price → `price` undefined, de-DE localization with fallback, availability default 0, discounted price.
 - [ ] G-04 Write `lib/mappers/category.ts` + tests (tree building, orderHint sorting, locale fallback, orphan parents handled).
-- [ ] G-05 Write `lib/ct/search.ts`: `searchProducts` request builder as a **pure function** `buildSearchRequest(params)` (tested thoroughly: text, category subtree, price band, availability, sorts, pagination offset for page 2 = 24) plus `searchProducts` calling `apiRoot.products().search().post` (tested with mocked root). **Spike (needs OA-02):** run one real search, confirm the field names used for the availability facet and price-band filter, record them in `PROJECT-FINDINGS.md` §4; if a field is not supported, adapt and note the adaptation.
-- [ ] G-06 Write `getProductBySlug` (exact `slug` match with `language`, wrapped in React `cache`) and `getProductsByIds`; tests for not-found → `null` and dedupe within a request.
+- [ ] G-05 Write `lib/ct/search.ts`: `searchProducts` request builder as a **pure function** `buildSearchRequest(params)` (tested thoroughly: text, category subtree, price band, availability, sorts, pagination offset for page 2 = 24) plus `searchProducts` calling `apiRoot.products().search().post` (tested with mocked root). **Spike (needs OA-02):** run one real search, confirm the field names used for the availability facet and price-band filter, also confirm that `fullText.language` accepts `en-US`, and that a price-band filter on `variants.prices.centAmount` must be combined with the price's `currencyCode` and `country` (record the working query shape); record all in `PROJECT-FINDINGS.md` §4; if a field is not supported, adapt and note the adaptation.
+- [ ] G-06 Write `getProductBySku` (used by J to find the product behind a SKU), `getProductBySlug` (exact `slug` match with `language`, wrapped in React `cache`) and `getProductsByIds`; tests for not-found → `null` and dedupe within a request.
 - [ ] G-07 Write `lib/ct/categories.ts` with `unstable_cache` TTL 60 and `getCategoryBySlug`; test that the cache wrapper is configured with `revalidate: 60` and key includes the locale (mock `next/cache`).
-- [ ] G-08 Write `lib/ct/locale-validation.ts` (TTL 300) + test; add a **lint-style test** `lib/ct/no-session-in-cache.test.ts` that greps files under `lib/ct/` and fails if a file importing `unstable_cache` also imports `@/lib/session`.
+- [ ] G-08 Write `lib/ct/locale-validation.ts` (TTL 300) + test; export `getValidMarkets()` (filtered `COUNTRY_CONFIG`), and use it inside `POST /api/locale` (E) to reject unsupported markets (test: invalid market → 400), and change `app/[locale]/layout.tsx` to pass `getValidMarkets()` to `LocaleSwitcher` (test: a market missing from the project is not offered); add a **lint-style test** `lib/ct/no-session-in-cache.test.ts` that greps files under `lib/ct/` and fails if a file importing `unstable_cache` also imports `@/lib/session`.
 - [ ] G-09 Report manual tests M-G-1, M-G-2; update `PROJECT-FINDINGS.md` with the verified search field names.
 
 ## Unit tests (scenario → test)

@@ -11,7 +11,7 @@
 - [ ] 2.1 G — Data-loading foundation (`G-data-loading-foundation.md`)
 - [ ] 2.2 I — Error pages, env validation, secret guards (`I-errors-env-guards.md`)
 - [ ] 2.3 J — Cart core, availability-aware mutations (`J-cart-core.md`)
-- [ ] 2.4 W — Hosted checkout session and confirmation (`W-hosted-checkout.md`)
+- [ ] 2.4 W — Hosted checkout session and confirmation (`V-hosted-checkout.md`)
 
 ## 3. Delivery
 

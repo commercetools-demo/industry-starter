@@ -1,7 +1,7 @@
 # N — Weight pricing experience
 
 **Specs:** `grocery-storefront-features` → `weight-pricing-experience` (all); touches `plp-design` (unit price on tiles), `pdp-design`, `cart-design`
-**Depends on:** F, J, K, L · **Unblocks:** R, W · **Decisions:** D-030 · **Sign-off:** SO-14
+**Depends on:** F, J, K, L · **Unblocks:** R, V · **Decisions:** D-030 · **Sign-off:** SO-14
 
 ## Goal
 Weighed goods show an increment price and a per-kg/per-litre price; carts with approximate-weight lines label the total "provisional"; the order detail can show a recorded final amount.
@@ -20,7 +20,7 @@ Rules: `inc.unit === 'each'` → `null`; `g` → per kg: `centAmount × (1000 / 
 - PDP (L): increment selector already exists; unit price displays beside the price.
 - Cart line (J): show increment label ("500 g") and unit price under the name.
 - `components/cart/ProvisionalNotice.tsx` (server-safe): `variant: 'inline' | 'total'`; text `pricing.provisionalNote` ("The final amount depends on the weight we pick."). Replace J's extension point `<ProvisionalNotice/>` in the cart summary: total label becomes "Total (provisional)" (`pricing.totalProvisional`) when `cart.isProvisional`.
-- Order detail (R) and confirmation (W) reuse `ProvisionalNotice`; R shows the final amount when order custom field `finalTotal` (Money) exists: component `FinalAmount({ provisional: Money, final?: Money })` here in N, rendering "Final amount €X · difference +€Y" (difference = final − provisional with sign). Not rendered when `final` is undefined.
+- Order detail (R) and confirmation (V) reuse `ProvisionalNotice`; R shows the final amount when order custom field `finalTotal` (Money, custom type `order-final` from F) exists: component `FinalAmount({ provisional: Money, final?: Money })` here in N, rendering "Final amount €X · difference +€Y" (difference = final − provisional with sign). Not rendered when `final` is undefined.
 - Quantity is always an integer count of increments (existing stepper behavior).
 
 ## Tasks

@@ -1,7 +1,7 @@
 # F — Catalog data model: inspect, seed, verify
 
 **Specs:** `grocery-storefront-features` → `catalog-data-model` (all requirements)
-**Depends on:** A · **Unblocks:** G, N, Q, U, V (and every page against real data)
+**Depends on:** A · **Unblocks:** G, N, Q, U, W (and every page against real data)
 **Decisions:** D-011, D-012, D-030, D-031, D-034 · **Owner prerequisites:** OA-01 (MCP), OA-03 (seed client), OA-04 (project settings)
 **Skill refs:** `commercetools-commerce-patterns` (catalog architecture), `commercetools-platform` (SDK)
 
@@ -25,11 +25,11 @@
 
 ### Data to create (matches `catalog-data-model` spec)
 - **Project settings (verify only):** countries US, DE; currencies USD, EUR; languages en-US, de-DE; **product search indexing activated** (`searchIndexing.products`); if not, ask owner (OA-04) — indexing takes minutes.
-- **Custom types** (`key`): `cart-delivery` on `order`+`cart`? (resourceTypeIds `order`, `cart`) fields `slotId` String, `slotStart` String (ISO), `slotEnd` String (ISO), `slotCharge` Money, `slotHoldExpires` String (ISO); `line-substitution` on `line-item` field `substitutionPreference` Enum(`allow-similar`,`none`); `substitution-proposal` on `order-edit` fields `originalLineItemId` String, `substituteSku` String, `status` Enum(`pending`,`declined`,`applied`), `note` String.
-- **Product type** `grocery-product`: product-level `brand` text, `origin` text, `dietary` set(enum vegan|vegetarian|gluten-free|organic), `storage` enum ambient|chilled|frozen, `allergens` set(text), `substituteProducts` set(reference product), `recurringEligible` boolean; variant-level `incrementValue` number, `incrementUnit` enum g|kg|ml|l|each, `approximateWeight` boolean, `packLabel` ltext. Localized text attributes carry `en-US` and `de-DE`.
+- **Custom types** (`key`): `cart-delivery` (resourceTypeIds `cart` and `order`, so values are copied to the order) fields `slotId` String, `slotStart` String (ISO), `slotEnd` String (ISO), `slotHoldExpires` String (ISO); `order-final` (resourceTypeId `order`) field `finalTotal` Money; `line-substitution` on `line-item` field `substitutionPreference` Enum(`allow-similar`,`none`); `substitution-proposal` on `order-edit` fields `originalLineItemId` String, `substituteSku` String, `status` Enum(`pending`,`declined`,`applied`), `note` String.
+- **Product type** `grocery-product`: product-level `brand` text, `origin` text, `dietary` set(enum vegan|vegetarian|gluten-free|organic), `storage` enum ambient|chilled|frozen, `allergens` set(text), `substituteProducts` set(reference product), `recurringEligible` boolean; variant-level `incrementValue` number, `incrementUnit` enum g|kg|ml|l|each, `approximateWeight` boolean, `packLabel` ltext. Only `packLabel` is localized (ltext with `en-US` and `de-DE`); `brand`, `origin` and `allergens` are plain text.
 - **Categories** (key = slug): `fresh-produce`, `dairy-eggs`, `bakery`, `pantry`, `drinks`, `household` with names en-US / de-DE (Fresh Produce/Frisches Obst & Gemüse, Dairy & Eggs/Milch & Eier, Bakery/Backwaren, Pantry/Vorrat, Drinks/Getränke, Household/Haushalt).
 - **Tax:** categories `food` (DE 7%, US 0%), `non-food` (DE 19%, US 0%); zones `US`, `DE`.
-- **Shipping:** method `standard` (default) with zone rates US ($5.00, free above $50.00) and DE (€4.90, free above €45.00); the free-above values live in the shipping rate's `freeAbove`.
+- **Shipping:** method `standard` (default, `taxCategory` = `non-food`) with zone rates US ($5.00, free above $50.00) and DE (€4.90, free above €45.00); the free-above values live in the shipping rate's `freeAbove`.
 - **Recurrence policies** keys `weekly` (every 1 week), `every-2-weeks`, `monthly` — names en-US/de-DE.
 - **Products (36):** 6 per category. Each has en-US/de-DE `name`, `slug`, `description`, `metaTitle`; images (stable URLs, e.g. `https://picsum.photos/seed/<sku>/800/800` — placeholder, see M-F-3); variants (weighed ones have 2–3 increments). Prices for every variant: USD/US and EUR/DE (EUR ≈ USD × 0.9, rounded to cents; weighed prices are per increment). Inventory entry for every SKU: quantity 50, except the out-of-stock items = 0.
 
@@ -50,7 +50,7 @@
 - [ ] F-02 Write the gap list (section 12) with a resolution for each gap and get **owner approval** in `plan/QUESTIONS.md`/chat. If the model must change, update `openspec/changes/grocery-storefront-features/specs/catalog-data-model/spec.md` first.
 - [ ] F-03 Write `scripts/seed/lib.ts` (admin client, `ensure*` helpers, diff stop) with tests using a mocked admin root: existing equal resource → `'ok'`; missing → `'created'`; different attribute type → returns diff and the runner stops.
 - [ ] F-04 Write `scripts/seed/verify-settings.ts`: read-only check of countries/currencies/languages/search indexing; prints a table; test with mocked project.
-- [ ] F-05 Write `data/types.json` + seeding of the three custom types. Test the data shape (keys, field names, enum values exactly as above).
+- [ ] F-05 Write `data/types.json` + seeding of the four custom types (`cart-delivery`, `line-substitution`, `substitution-proposal`, `order-final`). Test the data shape (keys, field names, enum values exactly as above).
 - [ ] F-06 Write `data/product-type.json` + seeding. Test attribute names/types/localization.
 - [ ] F-07 Write `data/categories.json` (+ en/de names) and seeding. Test unique keys and both locales present.
 - [ ] F-08 Write `data/shipping-tax.json` (zones, tax, `standard` method) and seeding. Test rates and free-above values.
@@ -75,7 +75,7 @@
 - M-F-1: Merchant Center → Settings → Shipping methods: `standard` with US and DE zone rates.
 - M-F-2: Merchant Center → Products: 36 products; open Bananas: variants 500 g/1 kg with USD and EUR prices; Cheddar shows 0 stock.
 - M-F-3: Product images load (placeholder service reachable); owner decides whether to replace with real images.
-- M-F-4: Merchant Center → Custom types: the three types; Recurrence policies: weekly/every-2-weeks/monthly; Settings → search indexing active.
+- M-F-4: Merchant Center → Custom types: the four types; Recurrence policies: weekly/every-2-weeks/monthly; Settings → search indexing active.
 
 ## Definition of done
 `npm run seed:verify` all green; findings file complete; Gate 1 approved by the owner.

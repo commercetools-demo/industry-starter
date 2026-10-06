@@ -30,7 +30,7 @@ SDK responses SHALL be mapped in `lib/mappers/` to app types in `lib/types.ts` b
 
 ### Requirement: Server-side caching of stable data only
 
-`unstable_cache` SHALL be used only for stable public data with a TTL: project locale validation 300s, category tree 60s, shipping methods 60s. Product prices, carts, account data and anything reading the session SHALL NOT be cached in it.
+`unstable_cache` SHALL be used only for stable public data with a TTL: project locale validation 300s and category tree 60s. Product prices, carts, account data and anything reading the session SHALL NOT be cached in it.
 
 #### Scenario: Cached function reads session
 - **WHEN** a function wrapped in `unstable_cache` calls `getSession()`

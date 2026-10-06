@@ -1,7 +1,7 @@
 # R — Account shell, orders list and order detail
 
 **Specs:** `malva-storefront-design/account-design` (Dashboard layout, Orders table, Address and details cards, Order detail, Account data is never shared), `grocery-storefront-features/weight-pricing-experience` (Final amount), `delivery-slot-experience` (Slot display on orders); `storefront-data-loading` (Order placement and confirmation — fetch by id, server side)
-**Depends on:** G, J, N, O, Q · **Unblocks:** S, U, V, W · **Decisions:** D-041 · **Sign-off:** SO-11
+**Depends on:** G, J, N, O, Q · **Unblocks:** S, U, W, V · **Decisions:** D-041 · **Sign-off:** SO-11
 
 ## Goal
 A signed-in customer sees their dashboard, a list of their orders, and an order detail with slot, lines, totals and extension points for substitutions.
@@ -26,7 +26,7 @@ export interface OrderListItem { id: string; orderNumber?: string; createdAt: st
 
 ### Pages (`(protected)` group from O)
 - Layout `components/account/AccountShell`: H1 = customer name, kicker "Member since {year}" (`customer.createdAt`), 2-col grid `1.6fr/1fr` at `desktop`.
-- `/account` dashboard: left "Orders" `Table` with columns Items, Order number, Placed, Total, Status (right-aligned `Tag`), each row a link to `/account/orders/<id>`; empty state "No orders yet" + browse button; right column: default-address `Card` (kicker, address lines, ghost Edit → `/account/addresses`) and "Details" `Card` with rows Orders, Addresses, Saved lists, Subscriptions, Contact us (trailing →, hover accent).
+- `/account` dashboard: left "Orders" `Table` with columns Items, Order number, Placed, Total, Status (right-aligned `Tag`), each row a link to `/account/orders/<id>`; empty state "No orders yet" + browse button; right column: default-address `Card` (from `/api/account/profile`; empty state when none; "Member since" from `createdAt`) (kicker, address lines, ghost Edit → `/account/addresses`) and "Details" `Card` with rows Orders, Addresses, Saved lists, Subscriptions, Contact us (trailing →, hover accent).
 - `/account/orders` full list with pagination 10 per page.
 - `/account/orders/[orderId]`: heading "Order <number>", date, status `Tag`, slot (`Delivery: Tue 10:00–12:00`), lines table (image, name, increment label, quantity, unit price, line total, substitution preference text "Allow similar"/"No substitution"), totals with `ProvisionalNotice` (N) and `FinalAmount` (N) when `finalTotal`, shipping address. Extension slot `<OrderSubstitutions order/>` (U) renders nothing here.
 - Hooks `useOrders()` / `useOrder(id)` (SWR, `KEY_ORDERS`, `keyOrder(id)`); the account pages are **client-fetched** (per-user data, never cached).
@@ -34,7 +34,7 @@ export interface OrderListItem { id: string; orderNumber?: string; createdAt: st
 ## Tasks
 - [ ] R-01 Append order types; write `lib/mappers/order.ts` + fixtures + tests (status mapping table incl. unknown fallback; item summary text; provisional flag; slot and `finalTotal` from custom fields).
 - [ ] R-02 Write `lib/ct/orders.ts` + tests (ownership: other customer's order → null; sorted desc; mocked root).
-- [ ] R-03 Write `GET /api/account/orders` and `[orderId]` + tests (401 anonymous; 404 for another customer's order; pagination params).
+- [ ] R-03 Write `lib/api/private-json.ts` (`privateJson(body, init?)` sets `Cache-Control: private, no-store`), `lib/ct/customer.ts` (`getCustomer(customerId)`), `GET /api/account/profile` (`{ createdAt, firstName, lastName, email, defaultShippingAddress? }`), `GET /api/account/orders` and `[orderId]` + tests (401 anonymous; 404 for another customer's order; pagination params).
 - [ ] R-04 Write hooks `useOrders`, `useOrder` + tests (cache keys; safe defaults).
 - [ ] R-05 Write `AccountShell` + dashboard cards + tests (name/kicker; details rows and hrefs; default address shown or empty state).
 - [ ] R-06 Write the orders table + empty state + status `Tag` tones + tests (each status → tone; row link; "No orders yet").
@@ -52,7 +52,7 @@ export interface OrderListItem { id: string; orderNumber?: string; createdAt: st
 | Order with slot / Final amount recorded | R-07 |
 
 ## Manual tests to report
-- M-R-1: After W (or by creating a test order in Merchant Center for your customer): dashboard lists it with the right status tag.
+- M-R-1: After V (or by creating a test order in Merchant Center for your customer): dashboard lists it with the right status tag.
 - M-R-2: Open another customer's order id in the URL: not-found page.
 - M-R-3: Response headers of `/api/account/orders` include `Cache-Control: private, no-store`.
 - M-R-4: Compare dashboard/order detail with the design at 1440 px and 390 px.
