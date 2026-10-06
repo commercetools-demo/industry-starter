@@ -184,3 +184,26 @@ export interface ProposalsResponse {
   proposals: Proposal[];
   removalRequested: string[];
 }
+
+/** A recurring order (subscription) of the signed-in customer (workstream W). `Other` covers Expired and Failed (`stateRaw` has the real value). */
+export interface RecurringOrderSummary {
+  id: string;
+  state: 'Active' | 'Paused' | 'Canceled' | 'Other';
+  stateRaw: string;
+  /** Localized policy name such as "Every 2 weeks". */
+  cadenceLabel: string;
+  /** Key of the recurrence policy the lines use, when known. */
+  policyKey?: string;
+  lines: { id: string; sku: string; name: string; quantity: number; image?: string }[];
+  /** ISO date of the next generated order; absent when paused or canceled. */
+  nextOrderAt?: string;
+  /** ISO date of the last order: the last generated one, else the original order. */
+  lastOrderAt?: string;
+}
+
+/** `GET /api/account/recurring`. */
+export interface RecurringOrdersResponse {
+  recurringOrders: RecurringOrderSummary[];
+  /** Cadences the customer can switch to (localized). */
+  policies: { key: string; name: string }[];
+}

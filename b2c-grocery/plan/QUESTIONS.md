@@ -101,6 +101,6 @@ Resolved by D-051: `finalTotal` added to the `cart-delivery` custom type (live p
 **Answer (owner):**
 
 ## Q-W-1 (workstream W, task W-01)
-**Question:** The spike (Gate 3) could not be run end to end by the developer (no browser/Adyen run, no `.env.seed`). Docs say "Create Order from Cart" creates the Recurring Order by itself, so W was built on that and stays behind `FEATURE_SUBSCRIPTIONS` (default true). Please run `npx tsx scripts/seed/create-qa-recurring.ts` (M-W-1) and, if it prints "NO Recurring Order was created", set the default to `false` and tell the owner. Also confirm that a quantity change on the recurring cart (`changeLineItemQuantity` on `recurringOrder.cart`) is accepted (M-W-4).
+**Question:** The spike (Gate 3) passed at API level (live: order from a cart with a `recurrenceInfo` line created one Recurring Order, see `PROJECT-FINDINGS.md` §19) but the developer did not run the hosted Checkout hand-off in a browser with Adyen. Please confirm it with M-W-3 (a subscribed line, pay, check Merchant Center, Orders, Recurring orders) and tell the orchestrator if no Recurring Order appears (then set the `FEATURE_SUBSCRIPTIONS` default to false).
 **Blocking:** no
 **Answer (owner):**

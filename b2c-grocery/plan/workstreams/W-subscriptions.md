@@ -26,7 +26,7 @@ Eligible products can be bought on a cadence; customers see and manage their rec
 - [x] W-03 Write `lib/config/features.ts` + `lib/ct/recurrence-policies.ts` + tests (flag parsing; policies localized; cached 300 s).
 - [x] W-04 Extend `addLineItem` for `recurrenceInfo` + route validation + tests (eligible product + valid key → request contains Dynamic; ineligible → 400; unknown key → 400; one-time → no recurrenceInfo).
 - [x] W-05 Write `RecurrenceSelector` + `RecurrenceBadge` + tests (hidden when ineligible or flag off; notice visible for cadence; selection passed to add).
-- [ ] W-06 Write `lib/ct/recurring-orders.ts` + tests (ownership; mapping; each action maps to the right update call; cancel returns last order date).
+- [x] W-06 Write `lib/ct/recurring-orders.ts` + tests (ownership; mapping; each action maps to the right update call; cancel returns last order date).
 - [ ] W-07 Write the recurring routes + tests (401; 404 not owner; 400 invalid action; success returns the refreshed summary).
 - [ ] W-08 Write the subscriptions page + dialogs + hook `useRecurring` (`KEY_RECURRING`) + tests (next order date shown; change cadence updates same order; cancel dialog shows last-order date; empty state).
 - [ ] W-09 Messages (both locales); report manual tests M-W-1…M-W-5 and sign-off SO-05.
