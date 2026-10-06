@@ -48,6 +48,17 @@ describe('CartView', () => {
     expect(within(summary).getByText('$8.96')).toBeInTheDocument(); // total is the server's, not recomputed
   });
 
+  it('Desktop bag (1440 px): lines and a sticky summary sit side by side in a 1.5fr / 1fr grid', () => {
+    const cart = makeCart({ lines: [bananas, milk] });
+    stubFetch(() => ({ body: { cart } }));
+    renderWithCart(<CartView />, { cart });
+    const grid = screen.getAllByRole('listitem')[0].closest('.grid') as HTMLElement;
+    expect(grid).toHaveClass('desktop:grid-cols-[1.5fr_1fr]');
+    const summary = screen.getByRole('heading', { level: 3, name: 'Summary' }).closest('[aria-labelledby="cart-summary-title"]') as HTMLElement;
+    expect(grid).toContainElement(summary);
+    expect(summary).toHaveClass('desktop:sticky');
+  });
+
   it('Free delivery: reads "Included"', () => {
     const cart = makeCart({ lines: [milk], shipping: { price: { centAmount: 0, currencyCode: 'USD' }, free: true } });
     stubFetch(() => ({ body: { cart } }));
