@@ -13,6 +13,9 @@ describe('validateEnv', () => {
   it('names the first missing variable', () => {
     expect(() => validateEnv({ ...full, CTP_CLIENT_ID: undefined, SESSION_SECRET: undefined })).toThrow('Missing environment variable: CTP_CLIENT_ID');
   });
+  it('Missing variable: CTP_CHECKOUT_APP_KEY is required', () => {
+    expect(() => validateEnv({ ...full, CTP_CHECKOUT_APP_KEY: undefined })).toThrow('Missing environment variable: CTP_CHECKOUT_APP_KEY');
+  });
   it('Short secret in production: SESSION_SECRET under 32 characters is rejected', () => {
     expect(() => validateEnv({ ...full, SESSION_SECRET: 'short' })).toThrow('SESSION_SECRET must be at least 32 characters');
   });
