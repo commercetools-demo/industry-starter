@@ -5,14 +5,49 @@
   },
   "nav": {
     "shop": "Shop",
-    "new": "New",
+    "new": "New in",
     "journal": "Journal",
     "search": "Search",
     "saved": "Saved",
     "bag": "Bag",
-    "account": "Account"
+    "account": "Account",
+    "searchPill": "Search the shop",
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "primary": "Main navigation",
+    "home": "MALVA home"
   },
-  "footer": {},
+  "footer": {
+    "blurb": "Honest groceries from growers and bakers we have met, packed fresh and brought to your door.",
+    "shop": {
+      "title": "Shop",
+      "freshProduce": "Fresh produce",
+      "dairyEggs": "Dairy & eggs",
+      "bakery": "Bakery",
+      "pantry": "Pantry",
+      "drinks": "Drinks",
+      "household": "Household"
+    },
+    "slugs": {
+      "freshProduce": "fresh-produce",
+      "dairyEggs": "dairy-eggs",
+      "bakery": "bakery",
+      "pantry": "pantry",
+      "drinks": "drinks",
+      "household": "household"
+    },
+    "house": {
+      "title": "House",
+      "about": "About us",
+      "journal": "The journal"
+    },
+    "help": {
+      "title": "Help",
+      "faq": "FAQ",
+      "delivery": "Delivery",
+      "contact": "Contact us"
+    }
+  },
   "home": {},
   "plp": {},
   "pdp": {},
@@ -25,5 +60,7 @@
   "errors": {
     "title": "Something went wrong"
   },
-  "a11y": {}
+  "a11y": {
+    "language": "Language"
+  }
 }

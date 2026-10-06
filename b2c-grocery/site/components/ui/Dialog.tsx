@@ -11,12 +11,14 @@ type DialogProps = {
   title: string;
   children: ReactNode;
   className?: string;
+  /** `right` renders a full-height drawer (used by the compact navigation). */
+  placement?: 'center' | 'right';
 };
 
 const FOCUSABLE = 'a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])';
 
 /** Modal dialog: moves focus in, traps Tab, closes on Esc or backdrop press, and returns focus to the opener. */
-export function Dialog({ open, onClose, title, children, className }: DialogProps) {
+export function Dialog({ open, onClose, title, children, className, placement = 'center' }: DialogProps) {
   const titleId = useId();
   const panel = useRef<HTMLDivElement>(null);
   const onCloseRef = useRef(onClose);
@@ -65,7 +67,7 @@ export function Dialog({ open, onClose, title, children, className }: DialogProp
 
   return createPortal(
     <div
-      className="dialog-backdrop z-[100]"
+      className={cx('dialog-backdrop z-[100]', placement === 'right' && 'justify-items-end p-0')}
       data-testid="dialog-backdrop"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onCloseRef.current();
@@ -77,7 +79,7 @@ export function Dialog({ open, onClose, title, children, className }: DialogProp
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className={cx('dialog', className)}
+        className={cx('dialog', placement === 'right' && 'h-full w-[min(340px,100%)] overflow-y-auto rounded-none', className)}
         onKeyDown={onKeyDown}
       >
         <h2 id={titleId} className="dialog-title m-0">

@@ -10,7 +10,7 @@ type Common = {
   children?: ReactNode;
 };
 type AsButton = Common & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Common> & { href?: undefined };
-type AsLink = Common & { href: string; 'aria-label'?: string; 'aria-current'?: 'page' };
+type AsLink = Common & { href: string; 'aria-label'?: string; 'aria-current'?: 'page'; onClick?: () => void };
 
 export type ButtonProps = AsButton | AsLink;
 

@@ -10,9 +10,44 @@
     "search": "Suche",
     "saved": "Gemerkt",
     "bag": "Warenkorb",
-    "account": "Konto"
+    "account": "Konto",
+    "searchPill": "Im Shop suchen",
+    "menu": "Menü",
+    "closeMenu": "Menü schließen",
+    "primary": "Hauptnavigation",
+    "home": "MALVA Startseite"
   },
-  "footer": {},
+  "footer": {
+    "blurb": "Ehrliche Lebensmittel von Erzeugern und Bäckern, die wir kennen, frisch gepackt und bis an deine Tür gebracht.",
+    "shop": {
+      "title": "Shop",
+      "freshProduce": "Obst & Gemüse",
+      "dairyEggs": "Milch & Eier",
+      "bakery": "Backwaren",
+      "pantry": "Vorrat",
+      "drinks": "Getränke",
+      "household": "Haushalt"
+    },
+    "slugs": {
+      "freshProduce": "obst-gemuese",
+      "dairyEggs": "milch-eier",
+      "bakery": "backwaren",
+      "pantry": "vorrat",
+      "drinks": "getraenke",
+      "household": "haushalt"
+    },
+    "house": {
+      "title": "Haus",
+      "about": "Über uns",
+      "journal": "Das Journal"
+    },
+    "help": {
+      "title": "Hilfe",
+      "faq": "FAQ",
+      "delivery": "Lieferung",
+      "contact": "Kontakt"
+    }
+  },
   "home": {},
   "plp": {},
   "pdp": {},
@@ -25,5 +60,7 @@
   "errors": {
     "title": "Etwas ist schiefgelaufen"
   },
-  "a11y": {}
+  "a11y": {
+    "language": "Sprache"
+  }
 }
