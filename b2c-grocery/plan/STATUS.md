@@ -28,7 +28,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | V | Hosted checkout and confirmation | 9 | 8 | Verified (payment pending OA-05) | Claude (verify + Chrome up to the payment step); V-09 = paying with a card, blocked by OA-05 | 2026-10-06 |
 | W | Subscriptions | 9 | 0 | Not started | | |
 | X | Static pages | 6 | 6 | Verified | Claude (verify + Chrome) | 2026-10-06 |
-| Y | Netlify deployment | 5 | 0 | Not started | | |
+| Y | Netlify deployment | 5 | 4 | Ready for review (Y-05 waits for owner deploy report, Q-Y-1) | | |
 | Z | Release readiness | 7 | 0 | Not started | | |
 
 Task counts are checked by `node plan/verify-plan.mjs` against the checkbox lists in each workstream file.

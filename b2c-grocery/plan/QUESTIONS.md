@@ -103,4 +103,7 @@ Resolved by D-051: `finalTotal` added to the `cart-delivery` custom type (live p
 ## Q-ORCH-2 (OA-05 incomplete: no payment integration)
 **Question:** The Checkout application used by the storefront (`demo-commercetools-checkout-taxes`) is a sample PaymentOnly app for GB/US and the project has zero payment integrations, so a card payment cannot complete. Please create a Complete-checkout application for US and DE with an Adyen test integration (details in TODO-MANUAL-TESTING.md, OA-05) and give me its key. I will then run M-V-3..M-V-8 myself in the browser.
 **Blocking:** yes for the payment part of v1 acceptance only
+## Q-Y-1 (workstream Y, task Y-05)
+**Question:** Y-05 (record the Netlify site URL in `site/README.md`) needs your report of a successful deploy and the public URL (OA-06 only says the site exists). Please run M-Y-1 to M-Y-5 and send the URL. Also, `/api/health` is gone now, so the PASS of M-E-1 cannot be repeated; it stays valid as history.
+**Blocking:** no
 **Answer (owner):**

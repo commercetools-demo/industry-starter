@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { Container } from '@/components/layout/Container';
-import { getLastResetLink, isDevStubEnabled } from '@/lib/dev-stub';
+import { getLastResetLink } from '@/lib/dev-stub';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export default async function DevResetLinkPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  if (!isDevStubEnabled()) notFound();
+  if (process.env.NODE_ENV !== 'development') notFound();
   const last = getLastResetLink();
   return (
     <Container className="py-12">
