@@ -1,7 +1,8 @@
 {
   "common": {
     "brand": "MALVA",
-    "announcement": "Frische Lebensmittel von Erzeugern, denen wir vertrauen, direkt zu dir nach Hause."
+    "announcement": "Frische Lebensmittel von Erzeugern, denen wir vertrauen, direkt zu dir nach Hause.",
+    "metaDescription": "Frische Lebensmittel von Erzeugern und Bäckern, die wir kennen – gepackt und bis an deine Tür geliefert."
   },
   "nav": {
     "shop": "Shop",

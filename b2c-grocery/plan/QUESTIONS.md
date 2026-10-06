@@ -124,3 +124,8 @@ Resolved by D-052 (MarketSync). Verified in the browser: an EUR cart on /de-DE, 
 **Question:** The repeat orders are created by commercetools with the recurring cart as it is: there is no stock check, no new delivery slot (the recurring cart inherits the first cart's configuration, so the slot custom fields are probably copied and every repeat order would carry the first order's slot; not verified) and no step for substitution choices. Is that acceptable for v1 (the grocery flow would normally ask for a slot per delivery)?
 **Blocking:** no
 **Answer (owner):**
+
+## Q-ORCH-3 (accessibility finding from Lighthouse, home page, 2026-10-06)
+**Question:** Lighthouse accessibility is 90. Remaining failures: (1) **colour contrast** of `.btn-primary` (cream `#f5ead8` on terracotta `#c67139` is about 3.3:1, below the 4.5:1 for 14 px text) and the selected `.seg-opt`; (2) footer headings use `h6` directly after `h1` (heading order). Both come from the Claude Design tokens. Options: darken the primary button background to `accent-600 #b2622d` (about 4.2:1) or `accent-700 #8c491a` (about 6.3:1), or enlarge button text to 18.7 px bold (large text rule, 3:1). Recommend `accent-700` hover-state look for the resting state or `accent-600` with 16 px text; footer headings can become `p` with the same class. Decision needed because it changes the approved look.
+**Blocking:** no
+**Answer (owner):**

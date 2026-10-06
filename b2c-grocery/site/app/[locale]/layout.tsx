@@ -1,7 +1,8 @@
 import { Suspense, type ReactNode } from 'react';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { AccountLink } from '@/components/layout/AccountLink';
 import { AnnouncementBar } from '@/components/layout/AnnouncementBar';
 import { BagButton } from '@/components/layout/BagButton';
@@ -18,6 +19,14 @@ import { getValidMarkets } from '@/lib/ct/locale-validation';
 import { KEY_ACCOUNT, KEY_CART } from '@/lib/cache-keys';
 import { getMarket, getSession } from '@/lib/session';
 import type { AccountUser, Cart } from '@/lib/types';
+
+/** Site-wide defaults (pages with their own metadata override them): title and description for search engines. */
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) return {};
+  const t = await getTranslations({ locale, namespace: 'common' });
+  return { title: t('brand'), description: t('metaDescription') };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

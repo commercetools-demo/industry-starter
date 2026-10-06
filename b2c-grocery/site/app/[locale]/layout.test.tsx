@@ -6,7 +6,7 @@ import { SWRProvider } from '@/context/SWRProvider';
 import de from '@/messages/de-DE.json';
 import en from '@/messages/en-US.json';
 import { COUNTRY_CONFIG } from '@/lib/utils';
-import LocaleLayout, { generateStaticParams } from './layout';
+import LocaleLayout, { generateMetadata, generateStaticParams } from './layout';
 
 const notFound = vi.fn(() => {
   throw new Error('NEXT_NOT_FOUND');
@@ -124,5 +124,12 @@ describe('LocaleLayout', () => {
 
   it('generates static params for both locales', () => {
     expect(generateStaticParams()).toEqual([{ locale: 'en-US' }, { locale: 'de-DE' }]);
+  });
+
+  it('provides a default title and description (Lighthouse: every page needs both)', async () => {
+    const meta = await generateMetadata({ params: Promise.resolve({ locale: 'en-US' }) });
+    expect(meta.title).toBeTruthy();
+    expect(meta.description).toBeTruthy();
+    expect(await generateMetadata({ params: Promise.resolve({ locale: 'xx-YY' }) })).toEqual({});
   });
 });
