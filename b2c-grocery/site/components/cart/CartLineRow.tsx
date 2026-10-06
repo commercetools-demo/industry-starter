@@ -16,12 +16,14 @@ type CartLineRowProps = {
   /** Quantity to show while a change is in flight (optimistic); falls back to the server quantity. */
   displayQuantity: number;
   busy: boolean;
+  /** Checkout found less stock than the bag holds (`UNAVAILABLE_LINES`): show how many are available. */
+  short?: boolean;
   onQuantityChange: (line: CartLine, quantity: number) => void;
   onRemove: (line: CartLine) => void;
 };
 
 /** One bag line: 150x180 photo, name, line total, stock tag, quantity stepper, ghost Remove. */
-export function CartLineRow({ line, displayQuantity, busy, onQuantityChange, onRemove }: CartLineRowProps) {
+export function CartLineRow({ line, displayQuantity, busy, short = false, onQuantityChange, onRemove }: CartLineRowProps) {
   const t = useTranslations('cart');
   const locale = useLocale();
   return (
@@ -48,6 +50,11 @@ export function CartLineRow({ line, displayQuantity, busy, onQuantityChange, onR
             {t('lineUnavailable')}
           </p>
         )}
+        {line.inStock && short ? (
+          <p role="alert" data-testid="line-short" className="m-0 text-[13px] text-accent-700">
+            {t('insufficientStock', { available: line.availableQuantity ?? 0 })}
+          </p>
+        ) : null}
         <SubstitutionControl line={line} />
         <div className="mt-auto flex items-center gap-(--space-3)">
           <QuantityStepper

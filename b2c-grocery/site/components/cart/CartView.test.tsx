@@ -4,6 +4,11 @@ import type { Cart } from '@/lib/types';
 import { cartLine, makeCart, renderWithCart } from '@/test/cart';
 import { CartView } from './CartView';
 
+vi.mock('@/i18n/routing', async (orig) => ({
+  ...(await orig<typeof import('@/i18n/routing')>()),
+  useRouter: () => ({ replace: vi.fn(), push: vi.fn(), refresh: vi.fn() }),
+}));
+
 type Handler = (url: string, init?: RequestInit) => { body: unknown; status?: number };
 
 /** Stubs `fetch` with a handler that plays the server (keep server state in the test so revalidation sees it). */

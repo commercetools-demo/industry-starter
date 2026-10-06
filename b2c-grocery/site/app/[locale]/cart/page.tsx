@@ -9,8 +9,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /** Server page, client island: the bag state lives in SWR (seeded by the locale layout). */
-export default async function CartPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function CartPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams?: Promise<{ checkoutError?: string | string[] }>;
+}) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <CartView />;
+  const { checkoutError } = (await searchParams) ?? {};
+  return <CartView checkoutError={typeof checkoutError === 'string' ? checkoutError : undefined} />;
 }
