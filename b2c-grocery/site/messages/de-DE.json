@@ -144,6 +144,36 @@
   "static": {
     "journal": {
       "shopTheStory": "Die Geschichte shoppen"
+    },
+    "contact": {
+      "kicker": "Hilfe",
+      "title": "Kontakt",
+      "intro": "Fragen zu einer Bestellung, einer Lieferung oder einem Produkt? Schreiben Sie uns unten.",
+      "name": "Ihr Name",
+      "email": "E-Mail",
+      "topic": "Thema",
+      "topicPlaceholder": "Thema wählen",
+      "topics": {
+        "order": "Bestellung",
+        "delivery": "Lieferung",
+        "product": "Produkt",
+        "other": "Sonstiges"
+      },
+      "message": "Nachricht",
+      "submit": "Nachricht senden",
+      "sending": "Wird gesendet...",
+      "errors": {
+        "required": "Dieses Feld ist erforderlich.",
+        "invalidEmail": "Geben Sie eine gültige E-Mail-Adresse ein.",
+        "tooShort": "Ihre Nachricht muss mindestens 10 Zeichen lang sein.",
+        "tooLong": "Das ist zu lang."
+      },
+      "formErrors": {
+        "rateLimited": "Zu viele Nachrichten. Bitte warten Sie eine Minute und versuchen Sie es erneut.",
+        "failed": "Wir konnten Ihre Nachricht nicht entgegennehmen. Bitte versuchen Sie es erneut."
+      },
+      "successTitle": "Nachricht erhalten",
+      "successBody": "Wir haben Ihre Nachricht erhalten. Dieser Shop leitet Nachrichten noch nicht an eine Person weiter, eine Antwort ist daher nicht garantiert."
     }
   },
   "errors": {

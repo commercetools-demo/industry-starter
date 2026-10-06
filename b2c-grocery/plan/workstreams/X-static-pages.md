@@ -20,7 +20,7 @@ About, FAQ, policies, Journal (one article) and Contact (stub submit) pages in b
 - [x] X-02 Write content files for both locales (concise, grocery-appropriate placeholder text; mark in `plan/IDEAS.md` that copy needs owner review) and static routes + tests (title from front matter; unknown policy slug → `notFound`; `de-DE` serves German).
 - [x] X-03 Write `lib/faq.ts` and `FaqList` + tests (grouped by topic; `aria-expanded` toggles; one open at a time; ids wired).
 - [x] X-04 Write the Journal page + tests (layout columns; product grid fed by search call).
-- [ ] X-05 Write `lib/contact-validation.ts`, `POST /api/contact` (uses `rateLimit` from E-09 → 429), hook `hooks/useContact.ts`, `ContactForm` + tests (invalid email inline error; message too short; honeypot ignored; logs contain no PII; success message wording).
+- [x] X-05 Write `lib/contact-validation.ts`, `POST /api/contact` (uses `rateLimit` from E-09 → 429), hook `hooks/useContact.ts`, `ContactForm` + tests (invalid email inline error; message too short; honeypot ignored; logs contain no PII; success message wording).
 - [ ] X-06 Messages (both locales); report manual tests M-X-1…M-X-3 and sign-off SO-10.
 
 ## Unit tests (scenario → test)

@@ -144,6 +144,36 @@
   "static": {
     "journal": {
       "shopTheStory": "Shop the story"
+    },
+    "contact": {
+      "kicker": "Help",
+      "title": "Contact us",
+      "intro": "Questions about an order, a delivery or a product? Write to us below.",
+      "name": "Your name",
+      "email": "Email",
+      "topic": "Topic",
+      "topicPlaceholder": "Choose a topic",
+      "topics": {
+        "order": "Order",
+        "delivery": "Delivery",
+        "product": "Product",
+        "other": "Other"
+      },
+      "message": "Message",
+      "submit": "Send message",
+      "sending": "Sending...",
+      "errors": {
+        "required": "This field is required.",
+        "invalidEmail": "Enter a valid email address.",
+        "tooShort": "Your message must be at least 10 characters.",
+        "tooLong": "This is too long."
+      },
+      "formErrors": {
+        "rateLimited": "Too many messages. Please wait a minute and try again.",
+        "failed": "We could not receive your message. Please try again."
+      },
+      "successTitle": "Message received",
+      "successBody": "We have received your message. This store does not forward messages to a person yet, so a reply is not guaranteed."
     }
   },
   "errors": {
