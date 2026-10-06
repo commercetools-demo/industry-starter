@@ -9,3 +9,7 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [H] Machine-translated German keys to review: `common.announcement`, `nav.searchPill/menu/closeMenu/primary/home`, `footer.*`, `a11y.language`.
 - [H] Announcement bar text is generic ("Fresh groceries ... delivered to your door") because delivery thresholds must not be hard-coded (D-021, D-049); owner may want a different message.
 - [H] Header on compact widths hides the search pill and saved icon below `tablet` (they are in the menu drawer); revisit when SO-01 is reviewed.
+- [G] Migrate `unstable_cache` (category tree, project locale settings) to the `use cache` directive if Cache Components is enabled later; Next 16 docs mark `unstable_cache` as replaced.
+- [G] `products().search()` projections need the deprecated `productProjectionParameters`; revisit when commercetools offers a non-deprecated way to get scoped prices in search results.
+- [G] German `fullText` search is token based ("milch" does not find "Vollmilch"); consider a `wildcard` query for P (search) if compound words matter.
+- [G] Listing without text and sort has no explicit tiebreaker; if pagination ever shows duplicates add a secondary sort (e.g. `createdAt`).

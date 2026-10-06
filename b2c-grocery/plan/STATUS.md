@@ -10,7 +10,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | D | Locale routing and messages | 7 | 7 | Ready for review | | |
 | E | BFF core | 9 | 9 | Ready for review | | |
 | F | Catalog data model | 12 | 12 | Verified | Claude (seed:verify) + owner (M-F-1..4, Gate 1) | 2026-10-06 |
-| G | Data-loading foundation | 9 | 0 | Not started | | |
+| G | Data-loading foundation | 9 | 9 | Ready for review | | |
 | H | Design system primitives and chrome | 10 | 10 | Ready for review | | |
 | I | Error pages, env validation, guards | 5 | 0 | Not started | | |
 | J | Cart core | 9 | 0 | Not started | | |

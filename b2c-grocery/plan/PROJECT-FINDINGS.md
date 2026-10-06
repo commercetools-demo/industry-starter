@@ -29,7 +29,19 @@ Roots: `home-decor`, `furniture`, `kitchen`, `new-arrivals`. Children: home-deco
 - Variants: master variant plus variants by color/finish; prices: embedded, per country — EUR/DE, GBP/GB, USD/US, **same numeric amount in every currency** (e.g. 2599 = 25.99).
 - `masterVariant.recurrencePrices` is present in projections; `availability` is populated (`isOnStock`, `availableQuantity` e.g. 99).
 - No weight/increment attributes; no `approximateWeight`; no substitutes.
-- Product Search field names and price-filter shape: **not yet verified** (task G-05 spike needs the storefront API client, OA-02).
+- Product Search field names and price-filter shape: **verified 2026-10-06 against the grocery catalog (workstream G, task G-05)**; see section 4a.
+
+### 4a. Product Search API (`products().search()`), verified live (read-only, grocery catalog)
+- **Projection:** results only contain `productProjection` when `productProjectionParameters: { priceCurrency, priceCountry }` is sent (that field is marked deprecated in the SDK but is the only way to get the projection in the same call; the plan mandates it). With it, `masterVariant.price`/`variants[].price` are the scoped price and `availability` is present.
+- **Fields that work:** `name` (fullText, `language` accepts `en-US` and `de-DE`), `categoriesSubTree` (exact, value = category id), `slug` (exact with `language`), `variants.sku` (exact), `id` (exact; `values: [...]` also works), `createdAt` (sort), `variants.prices.centAmount|currencyCode|country`, `variants.availability.isOnStock` (boolean, `exact` works without `fieldType`).
+- **fullText is token based:** `milk` matches "Whole milk 1 L"; German `milch` returns 0 for "Vollmilch 1 l" (no substring match), `Vollmilch` matches.
+- **Price band filter:** `and: [exact currencyCode, exact country, range centAmount {gte, lt}]` matches the same price object (counts equal an independent client-side computation for EUR/DE and USD/US). The plain `range` on `centAmount` alone mixes currencies and over-counts (10 vs 9).
+- **Availability:** in stock = `exact isOnStock true`; out of stock = `{ not: [ exact isOnStock true ] }` (3 products: Cheddar, Sourdough loaf, Orange juice). A product is "in stock" when any variant is.
+- **Facets:** `distinct` on `categories` with `fieldType: 'reference'` (direct categories only; `categories.id` is an unknown field); price bands via a `ranges` facet on `variants.prices.centAmount` (`fieldType: 'long'`, bucket `key` = band id) with `filter` = single `and` expression of currency and country, otherwise buckets mix currencies; availability via two `count` facets with a `filter` (the `count` facet takes `filter`, not `query`; result is `{ name, value }`). Facets are computed over the main query result.
+- **Sort:** `createdAt desc`; price: `{ field: 'variants.prices.centAmount', order, mode: 'min', filter: and(currency, country) }`. Without `sort` and text the order is not meaningful relevance but was stable across pages.
+- **Other reads verified with the storefront client (read-only):** `GET /{project}` (project settings: countries, currencies, languages) works, so `getValidCountryConfig()` needs no extra scope; `categories().get({ sort: 'orderHint asc' })` returns the 6 grocery roots in order (all are root categories, no children yet).
+- Next.js 16 marks `unstable_cache` as replaced by `use cache` (Cache Components). It still works without that flag and is what the plan prescribes; migration is parked in `IDEAS.md`.
+- Localized slugs can differ per locale (`bananas` en-US, `bananas-de` de-DE); the PDP must look up with the locale's language.
 
 ## 5. Inventory
 134 inventory entries, quantity 100 each (e.g. `SCG-09`, `MCP-01`, `WCS-09`), no supply channels observed.

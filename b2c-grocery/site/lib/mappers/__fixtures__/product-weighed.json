@@ -1,0 +1,312 @@
+{
+  "id": "36f90d64-3915-47f7-b5c5-1e82fde378ae",
+  "version": 7,
+  "productType": {
+    "typeId": "product-type",
+    "id": "ae49111b-7e44-482f-9f7f-457d441b788f"
+  },
+  "name": {
+    "en-US": "Bananas",
+    "de-DE": "Bananen"
+  },
+  "description": {
+    "en-US": "Bananas from Orchard Fresh. Sold by weight in fixed increments.",
+    "de-DE": "Bananen von Orchard Fresh. Verkauf nach Gewicht in festen Mengen."
+  },
+  "categories": [
+    {
+      "typeId": "category",
+      "id": "59959194-b059-45d2-8140-f65ed6bdf044"
+    }
+  ],
+  "categoryOrderHints": {},
+  "slug": {
+    "en-US": "bananas",
+    "de-DE": "bananas-de"
+  },
+  "metaTitle": {
+    "en-US": "Bananas | MALVA",
+    "de-DE": "Bananen | MALVA"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "BANANAS-500G",
+    "key": "BANANAS-500G",
+    "prices": [
+      {
+        "id": "8f09de0f-61b8-4312-827e-6e1d9aa70d32",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 149,
+          "fractionDigits": 2
+        },
+        "country": "US"
+      },
+      {
+        "id": "5259aa13-5239-4259-bcc6-d5d201a250fa",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 134,
+          "fractionDigits": 2
+        },
+        "country": "DE"
+      }
+    ],
+    "images": [
+      {
+        "url": "https://picsum.photos/seed/bananas-500g/800/800",
+        "dimensions": {
+          "w": 800,
+          "h": 800
+        }
+      }
+    ],
+    "attributes": [
+      {
+        "name": "allergens",
+        "value": []
+      },
+      {
+        "name": "dietary",
+        "value": [
+          {
+            "key": "vegan",
+            "label": "vegan"
+          },
+          {
+            "key": "organic",
+            "label": "organic"
+          }
+        ]
+      },
+      {
+        "name": "approximateWeight",
+        "value": true
+      },
+      {
+        "name": "brand",
+        "value": "Orchard Fresh"
+      },
+      {
+        "name": "incrementValue",
+        "value": 500
+      },
+      {
+        "name": "origin",
+        "value": "Various"
+      },
+      {
+        "name": "storage",
+        "value": {
+          "key": "ambient",
+          "label": "ambient"
+        }
+      },
+      {
+        "name": "recurringEligible",
+        "value": false
+      },
+      {
+        "name": "packLabel",
+        "value": {
+          "en-US": "500 g",
+          "de-DE": "500 g"
+        }
+      },
+      {
+        "name": "substituteProducts",
+        "value": [
+          {
+            "typeId": "product",
+            "id": "bf2c6db0-6dd0-43d1-a7d1-65f9f4731dc6"
+          }
+        ]
+      },
+      {
+        "name": "incrementUnit",
+        "value": {
+          "key": "g",
+          "label": "g"
+        }
+      }
+    ],
+    "price": {
+      "id": "5259aa13-5239-4259-bcc6-d5d201a250fa",
+      "value": {
+        "type": "centPrecision",
+        "currencyCode": "EUR",
+        "centAmount": 134,
+        "fractionDigits": 2
+      },
+      "country": "DE"
+    },
+    "assets": [],
+    "recurrencePrices": [
+      {
+        "id": "5259aa13-5239-4259-bcc6-d5d201a250fa",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 134,
+          "fractionDigits": 2
+        },
+        "country": "DE"
+      }
+    ],
+    "availability": {
+      "isOnStock": true,
+      "availableQuantity": 50,
+      "version": 1,
+      "id": "4741cd3c-c67b-4197-b3b2-a3410719f96f"
+    }
+  },
+  "variants": [
+    {
+      "id": 2,
+      "sku": "BANANAS-1KG",
+      "key": "BANANAS-1KG",
+      "prices": [
+        {
+          "id": "191219db-d8d8-40d4-a29e-644a39a0e218",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 279,
+            "fractionDigits": 2
+          },
+          "country": "US"
+        },
+        {
+          "id": "56d59201-0c03-4de0-8701-020aaa38f0db",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 251,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://picsum.photos/seed/bananas-1kg/800/800",
+          "dimensions": {
+            "w": 800,
+            "h": 800
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "name": "allergens",
+          "value": []
+        },
+        {
+          "name": "dietary",
+          "value": [
+            {
+              "key": "vegan",
+              "label": "vegan"
+            },
+            {
+              "key": "organic",
+              "label": "organic"
+            }
+          ]
+        },
+        {
+          "name": "approximateWeight",
+          "value": true
+        },
+        {
+          "name": "brand",
+          "value": "Orchard Fresh"
+        },
+        {
+          "name": "incrementValue",
+          "value": 1
+        },
+        {
+          "name": "origin",
+          "value": "Various"
+        },
+        {
+          "name": "storage",
+          "value": {
+            "key": "ambient",
+            "label": "ambient"
+          }
+        },
+        {
+          "name": "recurringEligible",
+          "value": false
+        },
+        {
+          "name": "packLabel",
+          "value": {
+            "en-US": "1 kg",
+            "de-DE": "1 kg"
+          }
+        },
+        {
+          "name": "substituteProducts",
+          "value": [
+            {
+              "typeId": "product",
+              "id": "bf2c6db0-6dd0-43d1-a7d1-65f9f4731dc6"
+            }
+          ]
+        },
+        {
+          "name": "incrementUnit",
+          "value": {
+            "key": "kg",
+            "label": "kg"
+          }
+        }
+      ],
+      "price": {
+        "id": "56d59201-0c03-4de0-8701-020aaa38f0db",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 251,
+          "fractionDigits": 2
+        },
+        "country": "DE"
+      },
+      "assets": [],
+      "recurrencePrices": [
+        {
+          "id": "56d59201-0c03-4de0-8701-020aaa38f0db",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 251,
+            "fractionDigits": 2
+          },
+          "country": "DE"
+        }
+      ],
+      "availability": {
+        "isOnStock": true,
+        "availableQuantity": 50,
+        "version": 1,
+        "id": "21a80c1f-41d0-4865-bd9d-c87568d5beb7"
+      }
+    }
+  ],
+  "searchKeywords": {},
+  "attributes": [],
+  "hasStagedChanges": false,
+  "published": true,
+  "key": "bananas",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "8b6d5df6-9f48-48e6-8cff-e44583ca138d"
+  },
+  "createdAt": "2026-10-06T19:28:43.145Z",
+  "lastModifiedAt": "2026-10-06T19:29:15.980Z"
+}

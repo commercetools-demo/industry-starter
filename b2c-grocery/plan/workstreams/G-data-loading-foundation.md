@@ -49,15 +49,16 @@ export type SortKey = 'relevance' | 'newest' | 'price-asc' | 'price-desc';
 - `lib/config/price-bands.ts`: bands per currency in minor units: `USD` and `EUR` both `[{id:'lt-500',max:500},{id:'500-1500',min:500,max:1500},{id:'1500-3000',min:1500,max:3000},{id:'gt-3000',min:3000}]`, `getPriceBands(currency)`.
 
 ## Tasks
-- [ ] G-01 Write `lib/types.ts`, `lib/cache-keys.ts`, `lib/config/price-bands.ts` with tests (`getPriceBands('EUR')` ids; unknown currency → throws).
-- [ ] G-02 Write `lib/fetcher.ts` with tests (mock `fetch`: ok JSON; non-2xx → `ApiError` with message from body; network error propagates).
-- [ ] G-03 Write `lib/mappers/product.ts` + fixtures + tests: weighed variant (increment 500 g, label "500 g", `approximateWeight`), `each` product, missing price → `price` undefined, de-DE localization with fallback, availability default 0, discounted price.
-- [ ] G-04 Write `lib/mappers/category.ts` + tests (tree building, orderHint sorting, locale fallback, orphan parents handled).
-- [ ] G-05 Write `lib/ct/search.ts`: `searchProducts` request builder as a **pure function** `buildSearchRequest(params)` (tested thoroughly: text, category subtree, price band, availability, sorts, pagination offset for page 2 = 24) plus `searchProducts` calling `apiRoot.products().search().post` (tested with mocked root). **Spike (needs OA-02):** run one real search, confirm the field names used for the availability facet and price-band filter, also confirm that `fullText.language` accepts `en-US`, and that a price-band filter on `variants.prices.centAmount` must be combined with the price's `currencyCode` and `country` (record the working query shape); record all in `PROJECT-FINDINGS.md` §4; if a field is not supported, adapt and note the adaptation.
-- [ ] G-06 Write `getProductBySku` (used by J to find the product behind a SKU), `getProductBySlug` (exact `slug` match with `language`, wrapped in React `cache`) and `getProductsByIds`; tests for not-found → `null` and dedupe within a request.
-- [ ] G-07 Write `lib/ct/categories.ts` with `unstable_cache` TTL 60 and `getCategoryBySlug`; test that the cache wrapper is configured with `revalidate: 60` and key includes the locale (mock `next/cache`).
-- [ ] G-08 Write `lib/ct/locale-validation.ts` (TTL 300) + test; export `getValidMarkets()` (filtered `COUNTRY_CONFIG`), and use it inside `POST /api/locale` (E) to reject unsupported markets (test: invalid market → 400), and change `app/[locale]/layout.tsx` to pass `getValidMarkets()` to `LocaleSwitcher` (test: a market missing from the project is not offered); add a **lint-style test** `lib/ct/no-session-in-cache.test.ts` that greps files under `lib/ct/` and fails if a file importing `unstable_cache` also imports `@/lib/session`.
-- [ ] G-09 Report manual tests M-G-1, M-G-2; update `PROJECT-FINDINGS.md` with the verified search field names.
+- [x] G-01 Write `lib/types.ts`, `lib/cache-keys.ts`, `lib/config/price-bands.ts` with tests (`getPriceBands('EUR')` ids; unknown currency → throws).
+- [x] G-02 Write `lib/fetcher.ts` with tests (mock `fetch`: ok JSON; non-2xx → `ApiError` with message from body; network error propagates).
+- [x] G-03 Write `lib/mappers/product.ts` + fixtures + tests: weighed variant (increment 500 g, label "500 g", `approximateWeight`), `each` product, missing price → `price` undefined, de-DE localization with fallback, availability default 0, discounted price.
+- [x] G-04 Write `lib/mappers/category.ts` + tests (tree building, orderHint sorting, locale fallback, orphan parents handled).
+- [x] G-05 Write `lib/ct/search.ts`: `searchProducts` request builder as a **pure function** `buildSearchRequest(params)` (tested thoroughly: text, category subtree, price band, availability, sorts, pagination offset for page 2 = 24) plus `searchProducts` calling `apiRoot.products().search().post` (tested with mocked root). **Spike (needs OA-02):** run one real search, confirm the field names used for the availability facet and price-band filter, also confirm that `fullText.language` accepts `en-US`, and that a price-band filter on `variants.prices.centAmount` must be combined with the price's `currencyCode` and `country` (record the working query shape); record all in `PROJECT-FINDINGS.md` §4; if a field is not supported, adapt and note the adaptation.
+- [x] G-06 Write `getProductBySku` (used by J to find the product behind a SKU), `getProductBySlug` (exact `slug` match with `language`, wrapped in React `cache`) and `getProductsByIds`; tests for not-found → `null` and dedupe within a request.
+- [x] G-07 Write `lib/ct/categories.ts` with `unstable_cache` TTL 60 and `getCategoryBySlug`; test that the cache wrapper is configured with `revalidate: 60` and key includes the locale (mock `next/cache`).
+- [x] G-08 Write `lib/ct/locale-validation.ts` (TTL 300) + test; export `getValidMarkets()` (filtered `COUNTRY_CONFIG`), and use it inside `POST /api/locale` (E) to reject unsupported markets (test: invalid market → 400), and change `app/[locale]/layout.tsx` to pass `getValidMarkets()` to `LocaleSwitcher` (test: a market missing from the project is not offered); add a **lint-style test** `lib/ct/no-session-in-cache.test.ts` that greps files under `lib/ct/` and fails if a file importing `unstable_cache` also imports `@/lib/session`.
+  - **Deviation (G-08):** `LocaleSwitcher` and the chrome do not exist until H-09/H-10, so the `app/[locale]/layout.tsx` half of G-08 could not be done in G. `getValidMarkets()` (tested: a market missing from the project is not offered) and the `POST /api/locale` check (tested: 400) are done; **H must pass `await getValidMarkets()` (from `@/lib/ct/locale-validation`) as `markets` instead of `Object.values(COUNTRY_CONFIG)`** and add the layout test. See `QUESTIONS.md` Q-G-001.
+- [x] G-09 Report manual tests M-G-1, M-G-2; update `PROJECT-FINDINGS.md` with the verified search field names.
 
 ## Unit tests (scenario → test)
 | Scenario | Test |
@@ -70,8 +71,8 @@ export type SortKey = 'relevance' | 'newest' | 'price-asc' | 'price-desc';
 | Listing page size | G-05 offsets |
 
 ## Manual tests to report
-- M-G-1 (needs OA-02): With a one-off script or the dev server page created in K, confirm that searching "milk" returns Whole milk and that page 2 of all products is non-empty.
-- M-G-2: Confirm EUR prices for `de-DE`: first product price in a German session is shown with `€`.
+- M-G-1 (needs OA-02): In `site/` run `npx tsx --conditions=react-server --env-file=.env.local scripts/search-check.ts` → the `"milk"` line shows `total=1` with first `Whole milk 1 L`; the `page 2` line shows `returned=12` (36 products, 24 per page).
+- M-G-2: Same script (needs OA-02) → the `de-DE all, page 1` line shows the first product price with the euro sign, e.g. `Erdbeeren 2,96 €`.
 
 ## Definition of done
 No SDK type leaves `lib/ct`/`lib/mappers`; every search path is covered by `buildSearchRequest` tests; findings updated.

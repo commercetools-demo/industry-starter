@@ -1,0 +1,173 @@
+{
+  "id": "296a182a-8812-4b9d-bb46-9bf8f361f3fb",
+  "version": 4,
+  "productType": {
+    "typeId": "product-type",
+    "id": "ae49111b-7e44-482f-9f7f-457d441b788f"
+  },
+  "name": {
+    "en-US": "Whole milk 1 L",
+    "de-DE": "Vollmilch 1 l"
+  },
+  "description": {
+    "en-US": "Whole milk 1 L from Meadow. Sold as a single unit.",
+    "de-DE": "Vollmilch 1 l von Meadow. Verkauf als Einzelartikel."
+  },
+  "categories": [
+    {
+      "typeId": "category",
+      "id": "0509b7bc-316e-4f1d-aaef-dd4baa12aa9a"
+    }
+  ],
+  "categoryOrderHints": {},
+  "slug": {
+    "en-US": "whole-milk",
+    "de-DE": "whole-milk-de"
+  },
+  "metaTitle": {
+    "en-US": "Whole milk 1 L | MALVA",
+    "de-DE": "Vollmilch 1 l | MALVA"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "WHOLE-MILK-1EACH",
+    "key": "WHOLE-MILK-1EACH",
+    "prices": [
+      {
+        "id": "dc9aeb30-0b5c-494b-9776-51cbdadcf912",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 199,
+          "fractionDigits": 2
+        },
+        "country": "US"
+      },
+      {
+        "id": "c7496c35-e8bc-4bf6-a09b-e6b30eb78d0d",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 179,
+          "fractionDigits": 2
+        },
+        "country": "DE"
+      }
+    ],
+    "images": [
+      {
+        "url": "https://picsum.photos/seed/whole-milk-1each/800/800",
+        "dimensions": {
+          "w": 800,
+          "h": 800
+        }
+      }
+    ],
+    "attributes": [
+      {
+        "name": "allergens",
+        "value": []
+      },
+      {
+        "name": "dietary",
+        "value": [
+          {
+            "key": "vegetarian",
+            "label": "vegetarian"
+          }
+        ]
+      },
+      {
+        "name": "approximateWeight",
+        "value": false
+      },
+      {
+        "name": "brand",
+        "value": "Meadow"
+      },
+      {
+        "name": "incrementValue",
+        "value": 1
+      },
+      {
+        "name": "origin",
+        "value": "Various"
+      },
+      {
+        "name": "storage",
+        "value": {
+          "key": "chilled",
+          "label": "chilled"
+        }
+      },
+      {
+        "name": "recurringEligible",
+        "value": true
+      },
+      {
+        "name": "packLabel",
+        "value": {
+          "en-US": "1 L",
+          "de-DE": "1 L"
+        }
+      },
+      {
+        "name": "substituteProducts",
+        "value": [
+          {
+            "typeId": "product",
+            "id": "211f05dd-f480-4916-81a3-bb95a2c6945b"
+          }
+        ]
+      },
+      {
+        "name": "incrementUnit",
+        "value": {
+          "key": "each",
+          "label": "each"
+        }
+      }
+    ],
+    "price": {
+      "id": "c7496c35-e8bc-4bf6-a09b-e6b30eb78d0d",
+      "value": {
+        "type": "centPrecision",
+        "currencyCode": "EUR",
+        "centAmount": 179,
+        "fractionDigits": 2
+      },
+      "country": "DE"
+    },
+    "assets": [],
+    "recurrencePrices": [
+      {
+        "id": "c7496c35-e8bc-4bf6-a09b-e6b30eb78d0d",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 179,
+          "fractionDigits": 2
+        },
+        "country": "DE"
+      }
+    ],
+    "availability": {
+      "isOnStock": true,
+      "availableQuantity": 50,
+      "version": 1,
+      "id": "7f731837-f44f-414c-a75d-0080c0a098e1"
+    }
+  },
+  "variants": [],
+  "searchKeywords": {},
+  "attributes": [],
+  "hasStagedChanges": false,
+  "published": true,
+  "key": "whole-milk",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "8b6d5df6-9f48-48e6-8cff-e44583ca138d"
+  },
+  "createdAt": "2026-10-06T19:28:44.329Z",
+  "lastModifiedAt": "2026-10-06T19:29:16.350Z"
+}

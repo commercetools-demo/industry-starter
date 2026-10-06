@@ -1,7 +1,11 @@
 // @vitest-environment node
 import { POST } from './route';
 
+import { getValidCountryConfig } from '@/lib/ct/locale-validation';
 import { createSessionToken } from '@/lib/session';
+import { COUNTRY_CONFIG } from '@/lib/utils';
+
+vi.mock('@/lib/ct/locale-validation', () => ({ getValidCountryConfig: vi.fn() }));
 
 let token: string | undefined;
 vi.mock('next/headers', () => ({
@@ -21,6 +25,7 @@ async function sessionFrom(res: Response) {
 
 beforeEach(() => {
   vi.stubEnv('SESSION_SECRET', '');
+  vi.mocked(getValidCountryConfig).mockResolvedValue(COUNTRY_CONFIG);
 });
 afterEach(() => vi.unstubAllEnvs());
 
@@ -46,6 +51,14 @@ describe('POST /api/locale', () => {
     const cookies = res.headers.getSetCookie();
     expect(cookies.some((c) => c.startsWith('your-shop-country-locale=de-DE'))).toBe(true);
     expect(cookies.find((c) => c.startsWith('malva-session='))).toMatch(/HttpOnly/i);
+  });
+
+  it('Invalid market: a configured market that the project does not support is rejected with 400 and the session is untouched', async () => {
+    vi.mocked(getValidCountryConfig).mockResolvedValue({ 'en-US': COUNTRY_CONFIG['en-US'] });
+    await setSession({ locale: 'en-US', currency: 'USD', country: 'US', cartId: 'c1' });
+    const res = await post({ locale: 'de-DE' });
+    expect(res.status).toBe(400);
+    expect(res.headers.getSetCookie()).toEqual([]);
   });
 
   it('rejects unknown locales and invalid bodies with 400', async () => {

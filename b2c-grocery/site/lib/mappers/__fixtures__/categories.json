@@ -1,0 +1,128 @@
+[
+  {
+    "id": "59959194-b059-45d2-8140-f65ed6bdf044",
+    "version": 1,
+    "versionModifiedAt": "2026-10-06T19:28:21.099Z",
+    "lastMessageSequenceNumber": 1,
+    "createdAt": "2026-10-06T19:28:21.099Z",
+    "lastModifiedAt": "2026-10-06T19:28:21.099Z",
+    "key": "fresh-produce",
+    "name": {
+      "en-US": "Fresh Produce",
+      "de-DE": "Frisches Obst & Gemüse"
+    },
+    "slug": {
+      "en-US": "fresh-produce",
+      "de-DE": "obst-gemuese"
+    },
+    "ancestors": [],
+    "orderHint": "0.1",
+    "assets": [],
+    "stores": []
+  },
+  {
+    "id": "0509b7bc-316e-4f1d-aaef-dd4baa12aa9a",
+    "version": 1,
+    "versionModifiedAt": "2026-10-06T19:28:21.271Z",
+    "lastMessageSequenceNumber": 1,
+    "createdAt": "2026-10-06T19:28:21.271Z",
+    "lastModifiedAt": "2026-10-06T19:28:21.271Z",
+    "key": "dairy-eggs",
+    "name": {
+      "en-US": "Dairy & Eggs",
+      "de-DE": "Milch & Eier"
+    },
+    "slug": {
+      "en-US": "dairy-eggs",
+      "de-DE": "milch-eier"
+    },
+    "ancestors": [],
+    "orderHint": "0.2",
+    "assets": [],
+    "stores": []
+  },
+  {
+    "id": "fafc97d7-27de-4c1a-ab1f-c553faa58996",
+    "version": 1,
+    "versionModifiedAt": "2026-10-06T19:28:21.440Z",
+    "lastMessageSequenceNumber": 1,
+    "createdAt": "2026-10-06T19:28:21.440Z",
+    "lastModifiedAt": "2026-10-06T19:28:21.440Z",
+    "key": "bakery",
+    "name": {
+      "en-US": "Bakery",
+      "de-DE": "Backwaren"
+    },
+    "slug": {
+      "en-US": "bakery",
+      "de-DE": "backwaren"
+    },
+    "ancestors": [],
+    "orderHint": "0.30",
+    "assets": [],
+    "stores": []
+  },
+  {
+    "id": "49135c75-35f0-4a9e-9117-608920941747",
+    "version": 1,
+    "versionModifiedAt": "2026-10-06T19:28:21.610Z",
+    "lastMessageSequenceNumber": 1,
+    "createdAt": "2026-10-06T19:28:21.610Z",
+    "lastModifiedAt": "2026-10-06T19:28:21.610Z",
+    "key": "pantry",
+    "name": {
+      "en-US": "Pantry",
+      "de-DE": "Vorrat"
+    },
+    "slug": {
+      "en-US": "pantry",
+      "de-DE": "vorrat"
+    },
+    "ancestors": [],
+    "orderHint": "0.4",
+    "assets": [],
+    "stores": []
+  },
+  {
+    "id": "6b19c52d-a8bf-464b-9485-6f52bbb763d0",
+    "version": 1,
+    "versionModifiedAt": "2026-10-06T19:28:21.773Z",
+    "lastMessageSequenceNumber": 1,
+    "createdAt": "2026-10-06T19:28:21.773Z",
+    "lastModifiedAt": "2026-10-06T19:28:21.773Z",
+    "key": "drinks",
+    "name": {
+      "en-US": "Drinks",
+      "de-DE": "Getränke"
+    },
+    "slug": {
+      "en-US": "drinks",
+      "de-DE": "getraenke"
+    },
+    "ancestors": [],
+    "orderHint": "0.5",
+    "assets": [],
+    "stores": []
+  },
+  {
+    "id": "dc11a0c1-99d6-4128-8a88-24512cef739c",
+    "version": 1,
+    "versionModifiedAt": "2026-10-06T19:28:21.942Z",
+    "lastMessageSequenceNumber": 1,
+    "createdAt": "2026-10-06T19:28:21.942Z",
+    "lastModifiedAt": "2026-10-06T19:28:21.942Z",
+    "key": "household",
+    "name": {
+      "en-US": "Household",
+      "de-DE": "Haushalt"
+    },
+    "slug": {
+      "en-US": "household",
+      "de-DE": "haushalt"
+    },
+    "ancestors": [],
+    "orderHint": "0.60",
+    "assets": [],
+    "stores": []
+  }
+]
