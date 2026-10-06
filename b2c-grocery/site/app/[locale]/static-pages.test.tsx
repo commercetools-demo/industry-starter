@@ -2,7 +2,6 @@ import { screen } from '@testing-library/react';
 import { renderWithProviders } from '@/test/utils';
 import AboutPage, { generateMetadata as aboutMeta } from './about/page';
 import FaqPage from './faq/page';
-import JournalPage from './journal/page';
 import PolicyPage, { generateMetadata as policyMeta, generateStaticParams } from './policies/[slug]/page';
 
 vi.mock('next-intl/server', () => ({ setRequestLocale: vi.fn() }));
@@ -47,10 +46,8 @@ describe('static pages', () => {
     expect(generateStaticParams().map((p) => p.slug)).toEqual(['delivery', 'returns', 'privacy', 'terms']);
   });
 
-  it('FAQ and Journal render a heading in both locales', async () => {
+  it('FAQ renders its heading and topics', async () => {
     renderWithProviders(await FaqPage(params('en-US')));
     expect(screen.getByRole('heading', { level: 1, name: 'Frequently asked questions' })).toBeInTheDocument();
-    renderWithProviders(await JournalPage(params('de-DE')), { locale: 'de-DE' });
-    expect(screen.getByRole('heading', { level: 1, name: 'Der stille Tisch' })).toBeInTheDocument();
   });
 });

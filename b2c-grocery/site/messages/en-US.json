@@ -141,7 +141,11 @@
   "account": {},
   "auth": {},
   "search": {},
-  "static": {},
+  "static": {
+    "journal": {
+      "shopTheStory": "Shop the story"
+    }
+  },
   "errors": {
     "kicker": "Oops",
     "title": "Something went wrong",
