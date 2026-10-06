@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { AppliedFilters } from '@/components/product/AppliedFilters';
 import { Breadcrumbs } from '@/components/product/Breadcrumbs';
 import { FilterRail } from '@/components/product/FilterRail';
+import { FiltersSheet } from '@/components/product/FiltersSheet';
 import { ListingEmpty } from '@/components/product/ListingEmpty';
 import { ListingToolbar } from '@/components/product/ListingToolbar';
 import { Pagination } from '@/components/product/Pagination';
@@ -83,6 +84,7 @@ export default async function ShopPage({ params, searchParams }: PageProps) {
           <FilterRail data={filters} params={effective} />
         </aside>
         <div className="min-w-0">
+          <FiltersSheet data={filters} params={effective} className="mb-(--space-4) desktop:hidden" />
           <ListingToolbar total={listing.total} params={effective} />
           <AppliedFilters data={filters} params={effective} />
           {listing.products.length > 0 ? <ProductGrid products={listing.products} /> : <ListingEmpty />}
