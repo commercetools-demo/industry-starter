@@ -353,7 +353,24 @@
       "address": "Delivery address",
       "loading": "Loading your order…",
       "notFoundTitle": "We could not find that order",
-      "notFoundBody": "It may belong to another account, or it no longer exists."
+      "notFoundBody": "It may belong to another account, or it no longer exists.",
+      "substitution": {
+        "title": "Substitution proposals",
+        "groupLabel": "Substitution proposal for {name}",
+        "notice": "We couldn't find {original}. Proposed: {substitute} ({difference})",
+        "newTotal": "New total: {total}",
+        "noDifference": "no price difference",
+        "accept": "Accept",
+        "decline": "Decline",
+        "acceptLabel": "Accept the substitute for {name}",
+        "declineLabel": "Decline the substitute for {name}",
+        "readOnly": "This order can no longer be changed, so the proposal is shown for information only.",
+        "contact": "Contact us",
+        "stale": "This order changed since the proposal was made. We refreshed it, please check the current state.",
+        "notEditable": "This order can no longer be changed. We refreshed it.",
+        "failed": "We could not save your choice. Please try again.",
+        "removalRequested": "Removal requested"
+      }
     }
   },
   "auth": {
