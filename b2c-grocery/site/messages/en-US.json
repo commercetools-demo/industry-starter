@@ -105,7 +105,9 @@
       "priceDesc": "Price ↓"
     }
   },
-  "pdp": {},
+  "pdp": {
+    "photoAlt": "{name}, photo {number}"
+  },
   "cart": {
     "added": "Added to your bag",
     "viewBag": "View bag",
