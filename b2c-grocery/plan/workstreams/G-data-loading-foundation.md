@@ -50,7 +50,7 @@ export type SortKey = 'relevance' | 'newest' | 'price-asc' | 'price-desc';
 
 ## Tasks
 - [x] G-01 Write `lib/types.ts`, `lib/cache-keys.ts`, `lib/config/price-bands.ts` with tests (`getPriceBands('EUR')` ids; unknown currency → throws).
-- [ ] G-02 Write `lib/fetcher.ts` with tests (mock `fetch`: ok JSON; non-2xx → `ApiError` with message from body; network error propagates).
+- [x] G-02 Write `lib/fetcher.ts` with tests (mock `fetch`: ok JSON; non-2xx → `ApiError` with message from body; network error propagates).
 - [ ] G-03 Write `lib/mappers/product.ts` + fixtures + tests: weighed variant (increment 500 g, label "500 g", `approximateWeight`), `each` product, missing price → `price` undefined, de-DE localization with fallback, availability default 0, discounted price.
 - [ ] G-04 Write `lib/mappers/category.ts` + tests (tree building, orderHint sorting, locale fallback, orphan parents handled).
 - [ ] G-05 Write `lib/ct/search.ts`: `searchProducts` request builder as a **pure function** `buildSearchRequest(params)` (tested thoroughly: text, category subtree, price band, availability, sorts, pagination offset for page 2 = 24) plus `searchProducts` calling `apiRoot.products().search().post` (tested with mocked root). **Spike (needs OA-02):** run one real search, confirm the field names used for the availability facet and price-band filter, also confirm that `fullText.language` accepts `en-US`, and that a price-band filter on `variants.prices.centAmount` must be combined with the price's `currencyCode` and `country` (record the working query shape); record all in `PROJECT-FINDINGS.md` §4; if a field is not supported, adapt and note the adaptation.
