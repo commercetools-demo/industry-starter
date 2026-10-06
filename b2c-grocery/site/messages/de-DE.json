@@ -141,7 +141,14 @@
     "quantity": "Menge",
     "decrease": "Menge verringern",
     "increase": "Menge erhöhen",
-    "onlyAvailable": "Nur {available} verfügbar"
+    "onlyAvailable": "Nur {available} verfügbar",
+    "related": "Passt dazu",
+    "reviews": {
+      "title": "Bewertungen",
+      "count": "{count, plural, one {# Bewertung} other {# Bewertungen}}",
+      "stars": "{stars} Sterne",
+      "rated": "Bewertet mit {rating} von 5"
+    }
   },
   "cart": {
     "added": "Zum Warenkorb hinzugefügt",

@@ -141,7 +141,14 @@
     "quantity": "Quantity",
     "decrease": "Decrease quantity",
     "increase": "Increase quantity",
-    "onlyAvailable": "Only {available} available"
+    "onlyAvailable": "Only {available} available",
+    "related": "Pairs with",
+    "reviews": {
+      "title": "Reviews",
+      "count": "{count, plural, one {# review} other {# reviews}}",
+      "stars": "{stars} stars",
+      "rated": "Rated {rating} out of 5"
+    }
   },
   "cart": {
     "added": "Added to your bag",
