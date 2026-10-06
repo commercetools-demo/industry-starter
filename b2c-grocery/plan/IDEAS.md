@@ -106,3 +106,10 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [V] Pass `styles` / `languageOverrides` to `checkoutFlow` so the hosted UI follows the tokens even without Merchant Center branding (M-V-1 checks the branding only).
 - [V] German keys to review (machine-translated): the whole `checkout.*` namespace (e.g. "Zur Kasse", "Danke, {name}", "Bewahre deine Bestellnummer auf").
 - [V] The SDK only knows `de` (not `de-DE`); `CheckoutFlow` maps `de-*` to `de`. Other locales added later must be checked against the SDK's locale list.
+- [W] German keys to review (machine-translated): the whole `subscription.*` namespace (e.g. "Wiederholt sich alle 2 Wochen", "Abo kündigen", "Rhythmus ändern").
+- [W] "Skip next order": the API supports it (`setOrderSkipConfiguration` Counter, verified live) but the plan has no route or button for it. Add `action: 'skip-next'` and a card button.
+- [W] Show a banner for a `Failed` Recurring Order (it stops creating orders until fixed; today it is just a neutral "Not active" tag) and offer "Reactivate" (`setRecurringOrderState` active with `resumesAt`).
+- [W] The seed has no recurrence-specific prices (embedded price with `recurrencePolicy`), so a subscription costs the same as a one-time buy. A small saving per cadence would make "subscribe and save" real.
+- [W] Order detail could say "Part of subscription X" via `originOrder` and link to `/account/subscriptions`; the checkout confirmation could mention that repeat orders were set up.
+- [W] A quantity change on a subscription is not checked against stock (the repeat order is created later anyway). A soft maximum (available quantity) in the stepper would avoid obviously impossible values.
+- [W] Delete or hide Canceled/Expired subscriptions after some time; they stay in the list forever today.
