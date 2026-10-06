@@ -56,7 +56,7 @@ Rows are generated from the "Manual tests to report" sections of `plan/workstrea
 | M-D-1 | D | Open `http://localhost:3000/` → lands on `/en-US`. Open `/de-DE` → German title/language attribute `de-DE`. | — | PASS (Claude via Chrome, 2026-10-06) |
 | M-D-2 | D | Set cookie `your-shop-country-locale=de-DE`, open `/` → `/de-DE`. | — | PASS (Claude via Chrome, 2026-10-06) |
 | M-D-3 | D | Visit `/fr-FR/x` → redirected under `/en-US/…` and shows a 404 (the localized not-found page arrives in I). | — | PASS (Claude via Chrome, 2026-10-06) |
-| M-E-1 | E | `curl http://localhost:3000/api/health` → `{"ok":true,"projectKey":"spec-test-b2c"}`. | OA-02 | PASS (Claude via Chrome, 2026-10-06) |
+| M-E-1 | E | `curl http://localhost:3000/api/health` → `{"ok":true,"projectKey":"spec-test-b2c"}`. | OA-02 | RETIRED (the /api/health route was removed in Y-02; PASS on 2026-10-06 stands as history) |
 | M-E-2 | E | In the browser POST `/api/locale` `{"locale":"de-DE"}` (fetch in DevTools) → response `{locale:'de-DE',currency:'EUR',country:'DE'}` and cookies `malva-session`, `your-shop-country-locale` are set, `HttpOnly` for the first. | — | PASS (Claude via Chrome, 2026-10-06) |
 | M-E-3 | E | Remove `manage_sessions` from the API client scopes (or use a throwaway client) → `/api/health` still ok but checkout session creation (V) fails with a named-scope error. (Run later with V; keep row `BLOCKED` until then.) | OA-02 | DEFERRED (owner, later) |
 | M-F-1 | F | Merchant Center → Settings → Shipping methods: `standard` with US and DE zone rates. | — | PASS (owner reported 2026-10-06) |

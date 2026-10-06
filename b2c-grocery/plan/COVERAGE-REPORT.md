@@ -361,3 +361,9 @@ Covered by manual test   : grep -c '| Covered by manual test M' plan/COVERAGE-RE
 Covered (new)            : grep -c '| Covered (new) |' plan/COVERAGE-REPORT.md
 Covered                  : grep -c '| Covered |' plan/COVERAGE-REPORT.md
 ```
+
+
+## Z-02 / Z-03 verification summary (2026-10-06, orchestrator)
+- `rm -rf node_modules .next && npm ci && npm run verify:release` on a clean install: **198 test files, 1469 tests passed**, build compiled, `check:lockfile`, `check:tokens`, `check:secrets`, `check:bundle` and `check:release` all exit 0.
+- `npm run seed:verify` against `spec-test-b2c`: **all 25 checks PASS** (custom types incl. `finalTotal` on `cart-delivery`, `grocery-product`, 6 categories, tax categories, `standard` shipping method, recurrence policies, 36 products, inventory, search indexing).
+- Secret hygiene (Z-05, part 1): none of the API client ids/secrets or the session secret appear anywhere in `git log -p --all`; the only tracked env file is `.env.example`. Part 2 (delete the seed/admin API client before launch) is an owner action after the last seed/QA run.
