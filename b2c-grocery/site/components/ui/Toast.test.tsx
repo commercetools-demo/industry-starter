@@ -30,9 +30,7 @@ describe('Toast', () => {
 
   it('action with href renders a locale-aware link', () => {
     renderWithProviders(
-      <ToastProvider>
-        <Trigger toast={{ message: 'Added', actionLabel: 'View bag', href: '/cart' }} />
-      </ToastProvider>,
+      <Trigger toast={{ message: 'Added', actionLabel: 'View bag', href: '/cart' }} />,
       { locale: 'de-DE' },
     );
     fireEvent.click(screen.getByText('show'));

@@ -2,5 +2,6 @@ import { useTranslations } from 'next-intl';
 
 export default function HomePage() {
   const t = useTranslations('common');
-  return <main>{t('brand')}</main>;
+  // The locale layout already renders <main>.
+  return <div>{t('brand')}</div>;
 }

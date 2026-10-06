@@ -46,7 +46,7 @@ Compose in `app/[locale]/layout.tsx` using the provider order defined in D (`Nex
 - [x] H-07 Write `Toast` system with fake timers: appears with message and action; auto-dismiss after exactly 2800 ms; second toast replaces first.
 - [x] H-08 Write `SectionHeading`, `Table`, `AnnouncementBar` (tests: kicker/heading/link; table header semantics).
 - [x] H-09 Write `Header`, `PrimaryNav` (**client leaf**, `components/layout/PrimaryNav.tsx`: uses `usePathname`/`useSearchParams` to set `aria-current` — the rest of `Header` stays a Server Component), `CompactNav`, `LocaleSwitcher` (receives a `markets` prop; calls the hook `hooks/useLocaleSwitch.ts`, never `fetch` directly), `Footer` with tests: nav items from messages in both locales; active item has `aria-current`; slots render; locale switch calls `/api/locale` (mock fetch) and router; footer links locale-aware (`getPathname`).
-- [ ] H-10 Compose the chrome in `app/[locale]/layout.tsx`; add message keys (both locales) for every string; update `test/utils.tsx` so `renderWithProviders` also includes `ToastProvider`. Report manual tests M-H-1…M-H-4 and sign-off SO-01.
+- [x] H-10 Compose the chrome in `app/[locale]/layout.tsx`; add message keys (both locales) for every string; update `test/utils.tsx` so `renderWithProviders` also includes `ToastProvider`. Report manual tests M-H-1…M-H-4 and sign-off SO-01.
 
 ## Unit tests (scenario → test)
 | Scenario | Test |
@@ -60,10 +60,19 @@ Compose in `app/[locale]/layout.tsx` using the provider order defined in D (`Nex
 | Tablet filters collapse | K |
 
 ## Manual tests to report
-- M-H-1: Open `/en-US` at 1440 px: header, nav, footer match `design/source/MALVA Web.dc.html` rendered in Claude Design (side-by-side).
-- M-H-2: Resize to 1000 px and 390 px: header switches to compact nav; menu opens/closes with keyboard.
-- M-H-3: Switch language with the locale switcher: URL prefix, texts and `<html lang>` change.
-- M-H-4: Tab through the header: visible focus ring on every control.
+- M-H-1: Run `cd site && npm run dev`, open `http://localhost:3000/en-US` in a 1440 px wide window; compare announcement bar, sticky header (wordmark, Shop / New in / Journal, search pill, heart, Bag, account, EN/DE) and footer (blurb + Shop, House, Help) with `design/source/MALVA Web.dc.html` rendered in Claude Design; scroll and hover nav items → matches the prototype in layout, tokens, radii and fonts (copy is grocery; Bag/account are plain placeholder links until J/O); header stays on top, translucent and blurred; hover turns nav items accent.
+- M-H-2: Open `/en-US` at 1000 px then 390 px wide → below 1200 px nav links, search pill and EN/DE disappear from the header and a menu icon appears; Tab to it and press Enter → right-hand drawer with Shop / New in / Journal, Search the shop, EN/DE, Close menu; Tab cycles inside, Esc closes and focus returns to the menu button; no horizontal overflow at 390 px; also review SO-01.
+- M-H-3: At `http://localhost:3000/en-US` click `DE` in the header switch, then `EN` → URL becomes `/de-DE` then `/en-US`, announcement/nav/footer texts change language, `<html lang>` follows (DevTools), cookie `your-shop-country-locale` updates, current page and query string are kept.
+- M-H-4: At 1440 px on `/en-US` press Tab from the top through every header control (wordmark, nav links, search pill, heart, Bag, account, EN, DE) and the footer links → each shows a 2 px accent outline with 2 px offset, no browser-default ring.
 
 ## Definition of done
 All components documented above exist with tests; no hex colours; no data fetching; sign-off SO-01 requested.
+
+## Implementation notes (deviations, recorded by the developer)
+- `NavLinks.tsx` (presentational, shared by `PrimaryNav`, `CompactNav` and the `Suspense` fallback in `Header`) and `ui/cx.ts` (class joiner) were added; `Header` also takes a `markets` prop and renders `LocaleSwitcher` (desktop) while `CompactNav` renders it inside the drawer (below `desktop`).
+- `Dialog` has an extra `placement: 'center' | 'right'` prop (drawer for `CompactNav`).
+- `useLocaleSwitch` uses `fetch('/api/locale')` directly: `lib/fetcher.ts` belongs to G-02 (not merged). See `plan/IDEAS.md`.
+- `app/[locale]/layout.tsx` fills the `bag`/`account` slots with plain placeholder links (`/cart`, `/account`) until J and O replace them; the provider chain here is `NextIntlClientProvider > ToastProvider > chrome` (J adds `SWRConfig` and `CartProvider`).
+- `app/[locale]/page.tsx` renders a `<div>` instead of `<main>` (the layout now owns `<main>`).
+- `nav.new` value changed to "New in" (en-US) per D-021; the key is unchanged. Footer shop links use per-locale slugs stored in `footer.slugs.*`.
+- Announcement text is generic (no delivery threshold, D-021/D-049): see Q-H-1.
