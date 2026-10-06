@@ -37,7 +37,7 @@ Breakpoints: add to `globals.css` `@theme { --breakpoint-tablet: 48rem; --breakp
 Compose in `app/[locale]/layout.tsx` using the provider order defined in D (`NextIntlClientProvider` > `SWRConfig` > `ToastProvider` > `CartProvider` > chrome): `AnnouncementBar` → `Header` → `<main className="page-enter">` → `Footer`. `LocaleSwitcher` receives `markets` = `Object.values(COUNTRY_CONFIG)` for now (G-08 switches the layout to `getValidMarkets()`).
 
 ## Tasks
-- [ ] H-01 Add breakpoints to `globals.css`; write `Icon` (Lucide wrapper `components/ui/Icon.tsx`: stroke width 2.75, `aria-hidden`, `size` prop), `Button`, `Tag`, `Blob`, `Container`, `Card` (+ sub parts) with tests (variant → class; link rendering; disabled → `disabled` attribute and no click).
+- [x] H-01 Add breakpoints to `globals.css`; write `Icon` (Lucide wrapper `components/ui/Icon.tsx`: stroke width 2.75, `aria-hidden`, `size` prop), `Button`, `Tag`, `Blob`, `Container`, `Card` (+ sub parts) with tests (variant → class; link rendering; disabled → `disabled` attribute and no click).
 - [ ] H-02 Write `Field`/`Input`/`Textarea`/`Select` with tests (label association; error → `aria-invalid`, `aria-describedby` points to error id and error text visible).
 - [ ] H-03 Write `Radio` and `Segmented` with tests (keyboard arrow keys change selection natively; `onChange` called once; disabled option not selectable).
 - [ ] H-04 Write `QuantityStepper` and `HeartButton` with tests (min 1 clamp; max disables +; `aria-pressed` toggles; accessible names from props).
