@@ -58,7 +58,7 @@ export type SortKey = 'relevance' | 'newest' | 'price-asc' | 'price-desc';
 - [x] G-07 Write `lib/ct/categories.ts` with `unstable_cache` TTL 60 and `getCategoryBySlug`; test that the cache wrapper is configured with `revalidate: 60` and key includes the locale (mock `next/cache`).
 - [x] G-08 Write `lib/ct/locale-validation.ts` (TTL 300) + test; export `getValidMarkets()` (filtered `COUNTRY_CONFIG`), and use it inside `POST /api/locale` (E) to reject unsupported markets (test: invalid market → 400), and change `app/[locale]/layout.tsx` to pass `getValidMarkets()` to `LocaleSwitcher` (test: a market missing from the project is not offered); add a **lint-style test** `lib/ct/no-session-in-cache.test.ts` that greps files under `lib/ct/` and fails if a file importing `unstable_cache` also imports `@/lib/session`.
   - **Deviation (G-08):** `LocaleSwitcher` and the chrome do not exist until H-09/H-10, so the `app/[locale]/layout.tsx` half of G-08 could not be done in G. `getValidMarkets()` (tested: a market missing from the project is not offered) and the `POST /api/locale` check (tested: 400) are done; **H must pass `await getValidMarkets()` (from `@/lib/ct/locale-validation`) as `markets` instead of `Object.values(COUNTRY_CONFIG)`** and add the layout test. See `QUESTIONS.md` Q-G-001.
-- [ ] G-09 Report manual tests M-G-1, M-G-2; update `PROJECT-FINDINGS.md` with the verified search field names.
+- [x] G-09 Report manual tests M-G-1, M-G-2; update `PROJECT-FINDINGS.md` with the verified search field names.
 
 ## Unit tests (scenario → test)
 | Scenario | Test |
@@ -71,8 +71,8 @@ export type SortKey = 'relevance' | 'newest' | 'price-asc' | 'price-desc';
 | Listing page size | G-05 offsets |
 
 ## Manual tests to report
-- M-G-1 (needs OA-02): With a one-off script or the dev server page created in K, confirm that searching "milk" returns Whole milk and that page 2 of all products is non-empty.
-- M-G-2: Confirm EUR prices for `de-DE`: first product price in a German session is shown with `€`.
+- M-G-1 (needs OA-02): In `site/` run `npx tsx --conditions=react-server --env-file=.env.local scripts/search-check.ts` → the `"milk"` line shows `total=1` with first `Whole milk 1 L`; the `page 2` line shows `returned=12` (36 products, 24 per page).
+- M-G-2: Same script (needs OA-02) → the `de-DE all, page 1` line shows the first product price with the euro sign, e.g. `Erdbeeren 2,96 €`.
 
 ## Definition of done
 No SDK type leaves `lib/ct`/`lib/mappers`; every search path is covered by `buildSearchRequest` tests; findings updated.

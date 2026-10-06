@@ -60,8 +60,8 @@ Rows are generated from the "Manual tests to report" sections of `plan/workstrea
 | M-F-2 | F | Merchant Center → Products: 36 products; open Bananas: variants 500 g/1 kg with USD and EUR prices; Cheddar shows 0 stock. | — | PASS (owner reported 2026-10-06) |
 | M-F-3 | F | Product images load (placeholder service reachable); owner decides whether to replace with real images. | — | PASS (owner reported 2026-10-06) |
 | M-F-4 | F | Merchant Center → Custom types: the four types; Recurrence policies: weekly/every-2-weeks/monthly; Settings → search indexing active. | — | PASS (owner reported 2026-10-06) |
-| M-G-1 | G | With a one-off script or the dev server page created in K, confirm that searching "milk" returns Whole milk and that page 2 of all products is non-empty. | OA-02 | TODO |
-| M-G-2 | G | Confirm EUR prices for `de-DE`: first product price in a German session is shown with `€`. | — | TODO |
+| M-G-1 | G | In `site/` run `npx tsx --conditions=react-server --env-file=.env.local scripts/search-check.ts` → the `"milk"` line shows `total=1` with first `Whole milk 1 L`; the `page 2` line shows `returned=12` (36 products, 24 per page). | OA-02 | TODO |
+| M-G-2 | G | Same script (needs OA-02) → the `de-DE all, page 1` line shows the first product price with the euro sign, e.g. `Erdbeeren 2,96 €`. | OA-02 | TODO |
 | M-H-1 | H | Open `/en-US` at 1440 px: header, nav, footer match `design/source/MALVA Web.dc.html` rendered in Claude Design (side-by-side). | — | TODO |
 | M-H-2 | H | Resize to 1000 px and 390 px: header switches to compact nav; menu opens/closes with keyboard. | — | TODO |
 | M-H-3 | H | Switch language with the locale switcher: URL prefix, texts and `<html lang>` change. | — | TODO |

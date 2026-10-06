@@ -39,6 +39,8 @@ Roots: `home-decor`, `furniture`, `kitchen`, `new-arrivals`. Children: home-deco
 - **Availability:** in stock = `exact isOnStock true`; out of stock = `{ not: [ exact isOnStock true ] }` (3 products: Cheddar, Sourdough loaf, Orange juice). A product is "in stock" when any variant is.
 - **Facets:** `distinct` on `categories` with `fieldType: 'reference'` (direct categories only; `categories.id` is an unknown field); price bands via a `ranges` facet on `variants.prices.centAmount` (`fieldType: 'long'`, bucket `key` = band id) with `filter` = single `and` expression of currency and country, otherwise buckets mix currencies; availability via two `count` facets with a `filter` (the `count` facet takes `filter`, not `query`; result is `{ name, value }`). Facets are computed over the main query result.
 - **Sort:** `createdAt desc`; price: `{ field: 'variants.prices.centAmount', order, mode: 'min', filter: and(currency, country) }`. Without `sort` and text the order is not meaningful relevance but was stable across pages.
+- **Other reads verified with the storefront client (read-only):** `GET /{project}` (project settings: countries, currencies, languages) works, so `getValidCountryConfig()` needs no extra scope; `categories().get({ sort: 'orderHint asc' })` returns the 6 grocery roots in order (all are root categories, no children yet).
+- Next.js 16 marks `unstable_cache` as replaced by `use cache` (Cache Components). It still works without that flag and is what the plan prescribes; migration is parked in `IDEAS.md`.
 - Localized slugs can differ per locale (`bananas` en-US, `bananas-de` de-DE); the PDP must look up with the locale's language.
 
 ## 5. Inventory
