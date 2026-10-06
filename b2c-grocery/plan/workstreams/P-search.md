@@ -16,7 +16,7 @@
 
 ## Tasks
 - [x] P-01 Write `lib/useDebouncedCallback.ts` + tests (fake timers: 300 ms; latest call wins; cancel on unmount).
-- [ ] P-02 Write `SearchInput` + tests: typing updates URL once after 300 ms; Enter updates immediately; accessible name present.
+- [x] P-02 Write `SearchInput` + tests: typing updates URL once after 300 ms; Enter updates immediately; accessible name present.
 - [ ] P-03 Write the page + suggestions + messages (both locales) + tests (mock `searchProducts`): empty query shows tags and does not call search; query shows label/count and grid; no match shows message and shop link; `page=2` passes page 2; `q` longer than 100 chars is truncated.
 - [ ] P-04 Extend `buildSearchRequest` (G) for the SKU-OR clause with tests; keep K's tests green.
 - [ ] P-05 Report manual tests M-P-1…M-P-3 and sign-off SO-09.

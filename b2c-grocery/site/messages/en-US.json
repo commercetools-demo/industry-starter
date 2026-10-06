@@ -140,7 +140,9 @@
   "checkout": {},
   "account": {},
   "auth": {},
-  "search": {},
+  "search": {
+    "inputLabel": "Search the shop"
+  },
   "static": {},
   "errors": {
     "kicker": "Oops",

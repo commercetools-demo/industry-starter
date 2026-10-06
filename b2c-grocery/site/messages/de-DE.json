@@ -140,7 +140,9 @@
   "checkout": {},
   "account": {},
   "auth": {},
-  "search": {},
+  "search": {
+    "inputLabel": "Im Shop suchen"
+  },
   "static": {},
   "errors": {
     "kicker": "Hoppla",
