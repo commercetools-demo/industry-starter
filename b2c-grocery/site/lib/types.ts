@@ -103,3 +103,47 @@ export interface Cart {
   shippingAddress?: Address;
   slot?: CartSlot;
 }
+
+export type OrderStatus = 'processing' | 'packing' | 'on-its-way' | 'delivered' | 'cancelled' | 'unknown';
+export interface OrderLine {
+  id: string;
+  name: string;
+  sku: string;
+  image?: string;
+  quantity: number;
+  unitPrice: Price;
+  total: Money;
+  increment: Increment;
+  approximateWeight: boolean;
+  substitutionPreference: SubstitutionPreference;
+  substitute?: { sku: string; name: string };
+}
+export interface Order {
+  id: string;
+  orderNumber?: string;
+  createdAt: string;
+  status: OrderStatus;
+  statusRaw: string;
+  lines: OrderLine[];
+  subtotal: Money;
+  shipping?: Money;
+  tax?: Money;
+  total: Money;
+  isProvisional: boolean;
+  /** Amount recorded after weighing (order custom field `finalTotal`, type `order-final`). */
+  finalTotal?: Money;
+  shippingAddress?: Address;
+  slot?: CartSlot;
+  inventoryMode: string;
+  version: number;
+  customerId?: string;
+}
+export interface OrderListItem {
+  id: string;
+  orderNumber?: string;
+  createdAt: string;
+  status: OrderStatus;
+  total: Money;
+  /** "Whole milk, Bananas +2" */
+  itemSummary: string;
+}

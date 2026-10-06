@@ -32,7 +32,7 @@ export interface OrderListItem { id: string; orderNumber?: string; createdAt: st
 - Hooks `useOrders()` / `useOrder(id)` (SWR, `KEY_ORDERS`, `keyOrder(id)`); the account pages are **client-fetched** (per-user data, never cached).
 
 ## Tasks
-- [ ] R-01 Append order types; write `lib/mappers/order.ts` + fixtures + tests (status mapping table incl. unknown fallback; item summary text; provisional flag; slot and `finalTotal` from custom fields).
+- [x] R-01 Append order types; write `lib/mappers/order.ts` + fixtures + tests (status mapping table incl. unknown fallback; item summary text; provisional flag; slot and `finalTotal` from custom fields).
 - [ ] R-02 Write `lib/ct/orders.ts` + tests (ownership: other customer's order → null; sorted desc; mocked root).
 - [ ] R-03 Write `lib/api/private-json.ts` (`privateJson(body, init?)` sets `Cache-Control: private, no-store`), `lib/ct/customer.ts` (`getCustomer(customerId)`), `GET /api/account/profile` (`{ createdAt, firstName, lastName, email, defaultShippingAddress? }`), `GET /api/account/orders` and `[orderId]` + tests (401 anonymous; 404 for another customer's order; pagination params).
 - [ ] R-04 Write hooks `useOrders`, `useOrder` + tests (cache keys; safe defaults).
