@@ -1,6 +1,6 @@
 # H — Design system primitives and site chrome
 
-**Specs:** `malva-storefront-design/storefront-design-system` (Rounded/washed, Themed interaction states, Shared component set, Site chrome, Layout and motion, Responsive behavior, Page-builder block model — chrome blocks only), `storefront-styling-foundation` (Product image handling)
+**Specs:** `malva-storefront-design/storefront-design-system` (Rounded/washed, Themed interaction states, Shared component set, Site chrome, Layout and motion, Responsive behavior), `storefront-styling-foundation` (Product image handling)
 **Depends on:** B, C, D, E · **Unblocks:** I, J, K, L, M, O, P, X · **Decisions:** D-021 (nav: Shop, New in, Journal), SO-01
 **Source:** `design/source/MALVA Web.dc.html` (header/footer/toast/tile markup), `design/DESIGN.md`.
 

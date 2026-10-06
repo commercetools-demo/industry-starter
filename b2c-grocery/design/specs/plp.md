@@ -1,6 +1,6 @@
 # Product listing page (PLP) — design spec
 
-Source: `MALVA Web.dc.html` (screen `browse`), Canvas group *Category listing* (9 blocks).
+Source: `MALVA Web.dc.html` (screen `browse`), Canvas frames for the listing states.
 Behavior: `openspec/specs/product-listing-page/spec.md`, `discovery-and-browse`, `search-results-page` (for the search variant).
 Foundations: `../DESIGN.md`.
 

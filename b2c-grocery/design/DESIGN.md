@@ -8,7 +8,7 @@ Shared by every page spec in `design/specs/`. Imported from the Claude Design pr
 | File | Role | Persisted |
 | --- | --- | --- |
 | `MALVA Web.dc.html` | Full desktop storefront prototype (1440px): home, browse, PDP, editorial, search, wishlist, cart, checkout, confirmation, account | `design/source/` |
-| `Canvas.dc.html` | Page-builder block library: 43 blocks (7 palette + 36 system) with authored-field schemas | `design/source/` |
+| `Canvas.dc.html` | Visual reference frames for header/footer, listing and product-page states. Its page-builder metadata (block names, authored-field schemas) is **ignored: there is no page builder, ever (D-045)** | `design/source/` |
 | `_ds/organic-…/styles.css` | "Organic" design-system tokens and component classes | `design/source/_ds/styles.css` (excerpt, tokens + components used) |
 | `_ds/organic-…/readme.md` | Design-system guidance (summarised below) | not copied; summarised here |
 | `_ds/organic-…/_ds_bundle.js`, `support.js` | Prototype runtime (`DCLogic`, `<sc-if>`, `<sc-for>`) | **not copied** — prototype tooling, not product code |
@@ -64,29 +64,16 @@ disabled 45% opacity.
 | Toast | Fixed bottom-right card `elev-lg`, message + "View bag" button, auto-dismiss 2.8s |
 | Header | MALVA wordmark (26px) · primary nav (Shop, New in, Made to order, Journal; active = accent + 2px underline) · search pill (190px) · saved (heart) · Bag primary button with count · account icon |
 | Footer | `--color-surface` band, 4-col grid (brand blurb 1.6fr + Shop / House / Help) |
-| Announcement bar (Canvas) | "Complimentary white-glove delivery over €600 · See how it works" |
+| Announcement bar (Canvas frame) | "Complimentary white-glove delivery over €600 · See how it works" |
 
 ## Responsive (not drawn in the web prototype — to be decided)
 
 The web prototype is desktop-only (1440 preview). Canvas shows `chrome/compactNav` and an expanded/collapsed (mobile) search.
 Proposed breakpoints and collapse rules live in `PLAN.md` § Responsive; each page spec lists its intended collapse.
 
-## Page-builder blocks (from Canvas)
+## Page structure
 
-Pages are composed of blocks. Each page spec lists the blocks it uses and their authored fields.
-
-| Group | Blocks |
-| --- | --- |
-| Content (7, all pages) | `hero`, `sectionHeading`, `categoryShowcase`, `curatedProducts`, `editorial`, `promoBanner`, `newsletterSignup` |
-| Listing (9, `category` pages) | `listing/breadcrumbs`, `header` (showDescription), `filters`, `resultCount`, `appliedFilters`, `sort`, `grid` (columns 3\|4), `pagination`, `empty` |
-| PDP (12, `pdp` pages) | `pdp/breadcrumbs`, `gallery`, `identity` (showBrand, showRating), `price` (showSaving), `description`, `options`, `addToBag`, `saveControl`, `availability`, `specs` (defaultOpen specs\|none), `related` (count), `reviews` |
-| Chrome (15, all pages, no settings) | `announcement`, `wordmark`, `primaryNav`, `staticLinks`, `search`, `accountLink`, `wishlistLink`, `bagIndicator`, `compactNav`, `footerBrand`, `footerNewsletter`, `footerColumns`, `socialLinks`, `languageControl`, `copyright` |
-
-Field schemas, verbatim from Canvas (`*` = required): `hero` eyebrow, headline*, body, image, imageAlt, primaryLabel/Href, secondaryLabel/Href ·
-`sectionHeading` eyebrow, title, linkLabel/Href · `categoryShowcase` eyebrow, title, linkLabel/Href, count, categories(picks) ·
-`curatedProducts` same with products(picks) · `editorial` eyebrow, title, body, image, imageAlt, actionLabel/Href, imageSide(left|right) ·
-`promoBanner` eyebrow, title, body, actionLabel/Href, emphasis(primary|accent) · `newsletterSignup` eyebrow, title, body.
-Resolver-driven blocks (listing/pdp/chrome) have no authored settings except those named above.
+Pages are ordinary React components composed in code (D-045: no page builder, block registry or merchandiser-authored layout — never). Visual states for listing, product page and site chrome are taken from the Canvas frames; their block names and field schemas are not part of the product.
 
 ## Brand/data mismatch to resolve
 

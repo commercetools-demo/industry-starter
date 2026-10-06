@@ -1,6 +1,6 @@
 # Product detail page (PDP) — design spec
 
-Source: `MALVA Web.dc.html` (screen `pdp`), Canvas group *Product detail* (12 blocks).
+Source: `MALVA Web.dc.html` (screen `pdp`), Canvas frames for the product-page states.
 Behavior: `openspec/specs/product-detail-page/spec.md`, plus `weight-based-pricing`, `out-of-stock-substitutions`, `saved-lists`, `subscriptions-and-recurring-orders` where applicable.
 Foundations: `../DESIGN.md`.
 

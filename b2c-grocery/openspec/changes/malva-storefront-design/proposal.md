@@ -1,6 +1,6 @@
 ## Why
 
-The storefront has behavioral specs but no visual or interaction design contract. A design now exists in Claude Design (project "MALVA Luxury Decor App", `4174979d-389a-49a2-be07-5a9c6875a8eb`) covering the web storefront and a page-builder block library. Without capturing it as specs, implementers will rebuild layout, tokens and states from screenshots and drift from the design.
+The storefront has behavioral specs but no visual or interaction design contract. A design now exists in Claude Design (project "MALVA Luxury Decor App", `4174979d-389a-49a2-be07-5a9c6875a8eb`) covering the web storefront and reference frames for its key states. Without capturing it as specs, implementers will rebuild layout, tokens and states from screenshots and drift from the design.
 
 ## What Changes
 

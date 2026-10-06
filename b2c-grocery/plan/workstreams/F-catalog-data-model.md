@@ -43,7 +43,7 @@
 | household | Dish soap 500 ml, Paper towels 4 rolls (R), Laundry liquid 1.5 L, Sponges 6, Trash bags 20, Beeswax wraps |
 
   Totals required by the spec: ≥8 weighed (Bananas, Tomatoes, Apples, Strawberries, Potatoes, Carrots, Cheddar, Basmati = 8 ✓), 6 approximate (first six produce ✓), ≥3 out of stock (Cheddar, Sourdough, Orange juice ✓), ≥6 with substitutes (Milk, Oat drink→Milk, Sourdough, Orange juice, Bananas, Apples→Bananas ✓), ≥6 recurring-eligible (Milk, Oat, Eggs, Wholemeal, Rice, Spaghetti, Oats, Sparkling water, Paper towels ✓). Non-weighed variants: `incrementUnit='each'`, `incrementValue=1`. `storage`: produce/dairy/bakery chilled or ambient as sensible; `dietary` as sensible.
-  If the existing project already has products, **do not duplicate**: F-02 decides (adapt or add only missing).
+  The existing 117 home-decor products are **replaced** (D-048): task F-11 exports then deletes decor products, product types `furniture-and-decor`, `bedding-bundle`, `product-sets`, the 29 decor categories and their inventory, **before** F-06/F-07 run. Shipping methods and `standard-tax` are **not** touched (D-049); `standard` is created with `isDefault: false`.
 
 ## Tasks
 - [ ] F-01 (Claude with MCP, or junior with owner) Inspect `spec-test-b2c` and fill every section of `plan/PROJECT-FINDINGS.md` (no secrets).
@@ -56,7 +56,8 @@
 - [ ] F-08 Write `data/shipping-tax.json` (zones, tax, `standard` method) and seeding. Test rates and free-above values.
 - [ ] F-09 Write `data/recurrence.json` and seeding of the three policies. Test keys and schedules.
 - [ ] F-10 Write `data/products.json` (36 products per the table), generate prices/inventory, seeding with publish. Test with a validator: 36 products, 6 per category, ≥8 weighed, 6 approximate, ≥3 OOS, ≥6 substitutes, ≥6 recurring, both locales on name/description/slug, each variant has USD/US and EUR/DE prices, weighed variants have `incrementUnit` ≠ `each`.
-- [ ] F-11 Write `verify.ts` (read back everything; pass/fail table; non-zero exit on failure), run it after seeding, paste the **non-secret** summary into `PROJECT-FINDINGS.md`, report manual tests M-F-1…M-F-4. Wait for Gate 1.
+- [ ] F-11 Write `scripts/seed/export-decor.ts` (read-only dump of decor products, product types, categories, inventory to gitignored `plan/backup/`) and `scripts/seed/remove-decor.ts` (deletes only keys listed in PROJECT-FINDINGS §2–§5; refuses to run without `--confirm` and without a backup file; unpublish → delete products, then inventory, categories deepest first, product types last). Tests with mocked admin root: dry run deletes nothing; missing backup → exit 1; deletion order; unknown keys never touched. **Run only after the owner says go in chat (D-048); order: F-11 before F-06.**
+- [ ] F-12 Write `verify.ts` (read back everything; pass/fail table; non-zero exit on failure), run it after seeding, paste the **non-secret** summary into `PROJECT-FINDINGS.md`, report manual tests M-F-1…M-F-4. Wait for Gate 1.
 
 ## Unit tests (scenario → test)
 | Scenario | Test |

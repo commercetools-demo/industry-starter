@@ -2,7 +2,7 @@
 
 Design artifacts imported from Claude Design project **MALVA Luxury Decor App** (`4174979d-389a-49a2-be07-5a9c6875a8eb`).
 
-- `DESIGN.md` — tokens, components, page-builder blocks, source inventory
+- `DESIGN.md` — tokens, components, source inventory
 - `PLAN.md` — phases, open decisions, mapping to `openspec/specs/`
 - `specs/` — `homepage.md`, `plp.md`, `pdp.md`, `cart.md`, `checkout.md`, `account.md`
 - `source/` — raw imports: `MALVA Web.dc.html`, `Canvas.dc.html`, `_ds/styles.css` (excerpt)

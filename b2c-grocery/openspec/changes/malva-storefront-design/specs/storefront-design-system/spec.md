@@ -67,11 +67,3 @@ At ≥1200px layouts SHALL match the desktop design. Between 768px and 1199px si
 #### Scenario: Tablet filters
 - **WHEN** the viewport is 1000px wide on a listing page
 - **THEN** the filter rail is replaced by a "Filters" button that opens a sheet
-
-### Requirement: Block-aligned page composition
-
-Pages SHALL be composed in code from standalone section components named after the design's blocks — content (hero, sectionHeading, categoryShowcase, curatedProducts, editorial, promoBanner, newsletterSignup), listing (breadcrumbs, header, filters, resultCount, appliedFilters, sort, grid, pagination, empty), pdp (breadcrumbs, gallery, identity, price, description, options, addToBag, saveControl, availability, specs, related, reviews) and chrome (announcement, wordmark, primaryNav, search, accountLink, wishlistLink, bagIndicator, compactNav, footer parts) — each taking its authorable fields as props. A runtime block registry with authored-field validation is out of v1 (D-045).
-
-#### Scenario: Hero as a component
-- **WHEN** a page needs a hero
-- **THEN** it renders a hero component with headline, body, image and button props

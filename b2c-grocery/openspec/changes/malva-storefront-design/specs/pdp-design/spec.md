@@ -10,10 +10,10 @@ The product page SHALL show a two-column layout (1.15fr/1fr): a gallery with one
 
 ### Requirement: Product identity, price and description
 
-The buy box SHALL show category and reference tags, a 48px name, the maker line, the price in the heading font at 30px, and a description. Optional brand, rating and saving display SHALL follow block settings.
+The buy box SHALL show category and reference tags, a 48px name, the maker line, the price in the heading font at 30px, and a description. The brand SHALL be shown when present, the original price and saving SHALL be shown when a reduced price exists, and a rating SHALL be shown only when review data exists.
 
 #### Scenario: Saving shown
-- **WHEN** `showSaving` is on and the product has a reduced price
+- **WHEN** the product has a reduced price
 - **THEN** the original price and saving appear next to the price
 
 ### Requirement: Option selectors

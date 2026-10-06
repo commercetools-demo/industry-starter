@@ -11,12 +11,12 @@ Status values: `TODO` · `BLOCKED` · `IN PROGRESS` · `DONE` / `PASS` / `APPROV
 | --- | --- | --- | --- |
 | OA-01 | Provide `.envrc` so the commerce MCP connects (without pasting secrets into chat) | Claude inspects `spec-test-b2c` (F) and verifies work | TODO |
 | OA-02 | Create a **Frontend B2C** API client in `spec-test-b2c`; put values in `site/.env.local` (gitignored). `CTP_SCOPES` (each suffixed `:spec-test-b2c`, space-separated): `manage_sessions manage_orders manage_order_edits manage_customers manage_shopping_lists create_anonymous_token view_published_products view_products view_categories view_standalone_prices view_product_selections view_shipping_methods view_tax_categories view_cart_discounts view_discount_codes view_types view_project_settings view_sessions` plus the **recurring orders and recurrence policies** read/write scopes (names to verify in Merchant Center → API client scopes; developer W-02 records them in `PROJECT-FINDINGS.md`) | E, G, J… live checks | TODO |
-| OA-03 | Create a **seed/admin** API client (scopes listed in `workstreams/F-*.md`); put values in `site/.env.seed` (gitignored). Revoke after seeding | F seed run | TODO |
+| OA-03 | Create a **seed/admin** API client (scopes listed in `workstreams/F-*.md`); put values in `site/.env.seed` (gitignored). Needs create/delete rights on products, categories, product types, inventory (D-048). Revoke after seeding | F seed run | TODO |
 | OA-04 | In Merchant Center: enable countries US, DE; currencies USD, EUR; languages en-US, de-DE | F, D | TODO |
 | OA-05 | Create a **Complete** Checkout application, install the **Adyen** connector (test mode), give the junior its application key (`CTP_CHECKOUT_APP_KEY`); allow `http://localhost:3000` and the Netlify URL as return/allowed origins | W, V spike | TODO |
 | OA-06 | Create the Netlify site from this repo (base `site`), add env vars in the Netlify UI | Y | TODO |
 | OA-07 | Confirm how testers create substitution Order Edits (Merchant Center feature or API recipe in `plan/recipes/`) | U manual tests | TODO |
-| OA-08 | Merge the planning branch (`design/malva-specs`) to `main` | juniors branch from `main` | TODO |
+| OA-08 | Merge the planning branch (`design/malva-specs`) to `main` | juniors branch from `main` | IN PROGRESS (origin/main is still at e25eb2c; planning branch not on main yet) |
 
 ## 2. Design sign-offs (undrawn designs, proposals)
 
@@ -33,12 +33,11 @@ Status values: `TODO` · `BLOCKED` · `IN PROGRESS` · `DONE` / `PASS` / `APPROV
 | SO-09 | Search page | search-design | TODO |
 | SO-10 | Static pages, contact form, journal placeholder | static-pages-design | TODO |
 | SO-11 | Account dashboard, orders list and order detail | account-design | TODO |
-| SO-12 | **Deviation D-042**: slot is validated/held at checkout-session creation, not at order placement | delivery-slot-experience | TODO |
+| SO-12 | **Deviation D-042**: slot is validated/held at checkout-session creation, not at order placement | delivery-slot-experience | APPROVED |
 | SO-13 | German (de-DE) translations of all messages | all | TODO |
 | SO-14 | Weight pricing display and provisional notice | weight-pricing-experience | TODO |
-| SO-16 | **Decision D-046:** slots carry no price; delivery cost = `standard` shipping method rate (free above threshold) | delivery-slot-experience | TODO |
-| SO-17 | **Accepted risks D-047** (session JWT with PII for 30 days, in-memory rate limit/slots, hold can expire while paying) | all | TODO |
-| SO-15 | **Decision D-045:** page-builder block registry is not built in v1 (pages composed in code, sections named after blocks) | storefront-design-system | TODO |
+| SO-16 | **Decision D-046:** slots carry no price; delivery cost = `standard` shipping method rate (free above threshold) | delivery-slot-experience | APPROVED |
+| SO-17 | **Accepted risks D-047** (session JWT with PII for 30 days, in-memory rate limit/slots, hold can expire while paying) | all | APPROVED |
 
 ## 3. Manual tests
 

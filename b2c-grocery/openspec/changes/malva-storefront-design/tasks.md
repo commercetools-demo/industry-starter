@@ -14,7 +14,7 @@
 
 ## 3. Verification
 
-- [ ] 3.1 Owner sign-offs SO-01, SO-02, SO-03, SO-11, SO-15 in `plan/TODO-MANUAL-TESTING.md`
+- [ ] 3.1 Owner sign-offs SO-01, SO-02, SO-03, SO-11 in `plan/TODO-MANUAL-TESTING.md`
 - [ ] 3.2 Z — Release readiness (`Z-release-readiness.md`)
 
 Detailed tasks, tests and manual-test reports live in the workstream files; progress is tracked in `plan/STATUS.md`.

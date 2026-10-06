@@ -1,6 +1,6 @@
 # Homepage — design spec
 
-Source: `MALVA Web.dc.html` (screen `home`), Canvas groups *Content* + *Site chrome*.
+Source: `MALVA Web.dc.html` (screen `home`), Canvas frames for content sections and site chrome.
 Behavior: `openspec/specs/home-landing-page/spec.md` (session-resolved buyer context, `[STATIC]/[CACHED]/[MIDDLEWARE]` tags).
 Foundations: `../DESIGN.md`.
 
@@ -23,10 +23,6 @@ Two merchandiser-selectable hero variants (`homeLayout`):
 | 6 | Footer | See DESIGN.md |
 
 Vertical rhythm: sections separated by `space-8 × 1.6` (≈56px); bottom page padding 120px.
-
-## Blocks used (Canvas)
-`hero` (hero 1a), `sectionHeading`, `categoryShowcase` (count default 6), `curatedProducts` (count 4), `editorial` (imageSide), `promoBanner`
-(emphasis primary|accent, e.g. "Two rooms, one delivery"), `newsletterSignup` ("One note a month, no noise"), plus all `chrome/*`.
 
 ## Interactions
 - Whole tiles/cards are click targets; hover lifts 4px.

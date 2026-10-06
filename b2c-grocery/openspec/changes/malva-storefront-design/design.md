@@ -9,13 +9,13 @@ The prototype is desktop only, uses hard-coded data (12 products, one fake custo
 **Goals:**
 - Make the design implementable and testable as requirements.
 - Keep one token source so pages never hard-code color, font, spacing or radius.
-- Preserve the page-builder block model (content, listing, pdp, chrome groups) so merchandisers can compose pages.
 
 **Non-Goals:**
 - Choosing the frontend framework or data layer.
 - Mobile-app screens (`MALVA App.dc.html`) and the freshness variant.
 - Superseded by D-022: grocery behaviors are now in v1 and specified in `grocery-storefront-features`; checkout is the hosted Complete Checkout (D-035).
 - Changing behavioral specs in `openspec/specs/`.
+- Any page builder, block registry or merchandiser-authored layout — never (D-045).
 
 ## Decisions
 
