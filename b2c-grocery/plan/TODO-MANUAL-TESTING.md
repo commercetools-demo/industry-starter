@@ -48,6 +48,7 @@ Rows are generated from the "Manual tests to report" sections of `plan/workstrea
 | --- | --- | --- | --- | --- |
 | M-A-1 | A | In `site/` run `npm ci && npm run verify` → all steps pass, exit code 0 (Node 22 via `nvm use`). | — | PASS (owner reported 2026-10-06) |
 | M-A-2 | A | `npm run dev`, open `http://localhost:3000` → the "Bootstrap OK" page renders without console errors (the `/en-US` redirect arrives in D). | — | PASS (owner reported 2026-10-06) |
+| M-B-1 | B | "Open `site/components/ui/x.tsx`, add `import { apiRoot } from '@/lib/ct/client'`, run `npm run lint` → expect an error naming the rule; undo." | — | PASS (Claude, lint run 2026-10-06) |
 | M-C-1 | C | `npm run dev`, open `/`, DevTools → Network: no request to `fonts.googleapis.com`/`fonts.gstatic.com`; headings render in Caprasimo, body in Figtree. | — | PASS (Claude via Chrome, 2026-10-06) |
 | M-C-2 | C | Tab through the demo page: focus ring is a 2px terracotta outline, not the browser default. | — | PASS (Claude via Chrome, 2026-10-06) |
 | M-D-1 | D | Open `http://localhost:3000/` → lands on `/en-US`. Open `/de-DE` → German title/language attribute `de-DE`. | — | PASS (Claude via Chrome, 2026-10-06) |

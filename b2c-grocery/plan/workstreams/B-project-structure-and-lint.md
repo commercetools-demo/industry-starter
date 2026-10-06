@@ -50,7 +50,7 @@ Every file in `lib/ct/**`, `lib/session.ts`, `lib/mappers/**` and `lib/env.ts` s
 | Unknown product (notFound) | tested in L |
 
 ## Manual tests to report
-M-B-1: "Open `site/components/ui/x.tsx`, add `import { apiRoot } from '@/lib/ct/client'`, run `npm run lint` → expect an error naming the rule; undo."
+- M-B-1: "Open `site/components/ui/x.tsx`, add `import { apiRoot } from '@/lib/ct/client'`, run `npm run lint` → expect an error naming the rule; undo."
 
 ## Definition of done
 All five rules are proven by lint tests; `verify` includes `check:tokens`; structure test passes.
