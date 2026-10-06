@@ -39,7 +39,9 @@ const availableOf = (error: ApiError): number | undefined => {
 export function CartProvider({ children }: { children: ReactNode }) {
   const t = useTranslations('cart');
   const toast = useToast();
-  const { cart, isLoading } = useCart();
+  const { cart, data, isLoading: revalidating } = useCart();
+  // SWR reports `isLoading` while revalidating seeded fallback data too; only an unseeded, unloaded cart is "loading".
+  const isLoading = data === undefined && revalidating;
   const { addItem, setQuantity, removeLine } = useCartMutations();
 
   const addItemWithToast = useCallback(
