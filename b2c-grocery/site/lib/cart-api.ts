@@ -1,15 +1,20 @@
 import 'server-only';
 import { NextResponse } from 'next/server';
 import type { Cart as CtCart } from '@commercetools/platform-sdk';
-import { CartNotActiveError } from './ct/cart';
+import { CartNotActiveError, getCart } from './ct/cart';
 import { mapCart } from './mappers/cart';
-import { getMarket, updateSession, type Session } from './session';
+import { getMarket, getSession, updateSession, type Session } from './session';
 
 export type Market = Awaited<ReturnType<typeof getMarket>>;
 
 /** Every cart route answers with the full server cart so the client never recomputes totals. */
-export async function cartJson(cart: CtCart, market: Market, patch: Partial<Session> = {}): Promise<NextResponse> {
-  const res = NextResponse.json({ cart: mapCart(cart, market) });
+export async function cartJson(
+  cart: CtCart,
+  market: Market,
+  patch: Partial<Session> = {},
+  options: { extra?: Record<string, unknown>; status?: number } = {},
+): Promise<NextResponse> {
+  const res = NextResponse.json({ ...options.extra, cart: mapCart(cart, market) }, options.status ? { status: options.status } : undefined);
   await updateSession({ cartId: cart.id, ...patch }, res);
   return res;
 }
@@ -42,4 +47,16 @@ export async function cartFailure(e: unknown): Promise<NextResponse> {
   const status = typeof e === 'object' && e !== null ? (e as { statusCode?: unknown }).statusCode : undefined;
   console.error('Cart request failed', e instanceof Error ? e.message : e);
   return jsonError('CART_ERROR', status === 409 ? 409 : 500);
+}
+
+/** The Active cart of the session, or `null` when the session has none (or it is no longer Active). */
+export async function getSessionCart(): Promise<CtCart | null> {
+  const { cartId } = await getSession();
+  return cartId ? getCart(cartId) : null;
+}
+
+/** The slot id stored on the cart (custom field `slotId`), if any. */
+export function cartSlotId(cart: CtCart): string | undefined {
+  const value: unknown = cart.custom?.fields?.slotId;
+  return typeof value === 'string' && value !== '' ? value : undefined;
 }
