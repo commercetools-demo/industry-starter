@@ -50,7 +50,13 @@
     }
   },
   "home": {},
-  "plp": {},
+  "plp": {
+    "outOfStock": "Out of stock",
+    "save": "Save {name} to a list",
+    "unsave": "Remove {name} from your saved items",
+    "was": "Was {price}",
+    "now": "Now {price}"
+  },
   "pdp": {},
   "cart": {
     "added": "Added to your bag",

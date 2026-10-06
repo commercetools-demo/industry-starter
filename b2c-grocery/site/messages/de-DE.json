@@ -50,7 +50,13 @@
     }
   },
   "home": {},
-  "plp": {},
+  "plp": {
+    "outOfStock": "Nicht vorrätig",
+    "save": "{name} in einer Liste speichern",
+    "unsave": "{name} aus den gespeicherten Artikeln entfernen",
+    "was": "Vorher {price}",
+    "now": "Jetzt {price}"
+  },
   "pdp": {},
   "cart": {
     "added": "Zum Warenkorb hinzugefügt",
