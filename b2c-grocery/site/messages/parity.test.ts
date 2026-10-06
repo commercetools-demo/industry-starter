@@ -12,7 +12,7 @@ describe('message catalogs', () => {
   });
   it('have the required top-level namespaces', () => {
     expect(Object.keys(en).sort()).toEqual(
-      ['a11y', 'account', 'auth', 'cart', 'checkout', 'common', 'errors', 'footer', 'home', 'nav', 'pdp', 'plp', 'pricing', 'search', 'static'],
+      ['a11y', 'account', 'auth', 'cart', 'checkout', 'common', 'errors', 'footer', 'home', 'nav', 'pdp', 'plp', 'pricing', 'search', 'static', 'subscription'],
     );
   });
 });

@@ -26,7 +26,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | T | Saved lists | 6 | 6 | Verified | Claude (verify + Chrome) | 2026-10-06 |
 | U | Substitutions | 8 | 8 | Verified | Claude (verify + Chrome + live Order Edits) | 2026-10-06 |
 | V | Hosted checkout and confirmation | 9 | 8 | Verified (payment pending OA-05) | Claude (verify + Chrome up to the payment step); V-09 = paying with a card, blocked by OA-05 | 2026-10-06 |
-| W | Subscriptions | 9 | 0 | Not started | | |
+| W | Subscriptions | 9 | 9 | Ready for review | Spike passed live at API level; hosted-Checkout hand-off (M-W-3), M-W-1…M-W-5 and SO-05 are the owner's | |
 | X | Static pages | 6 | 6 | Verified | Claude (verify + Chrome) | 2026-10-06 |
 | Y | Netlify deployment | 5 | 4 | Ready for review (Y-05 waits for owner deploy report, Q-Y-1) | | |
 | Z | Release readiness | 7 | 0 | Not started | | |

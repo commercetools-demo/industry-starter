@@ -15,6 +15,15 @@ async function main() {
       console.log('deleted wishlist', l.id);
     }
     const where = `customerId="${c.id}"`;
+    // Recurring Orders (workstream W): only Canceled/Expired ones can be deleted. Their recurring carts carry the customer id.
+    for (const ro of (await root.recurringOrders().get({ queryArgs: { where: `customer(id="${c.id}")`, limit: 500 } }).execute()).body.results) {
+      let version = ro.version;
+      if (ro.recurringOrderState !== 'Canceled' && ro.recurringOrderState !== 'Expired') {
+        version = (await root.recurringOrders().withId({ ID: ro.id }).post({ body: { version, actions: [{ action: 'setRecurringOrderState', recurringOrderState: { type: 'canceled' } }] } }).execute()).body.version;
+      }
+      await root.recurringOrders().withId({ ID: ro.id }).delete({ queryArgs: { version } }).execute();
+      console.log('deleted recurring order', ro.id);
+    }
     for (const o of (await root.orders().get({ queryArgs: { where, limit: 500 } }).execute()).body.results) {
       // substitution proposals (Order Edits, workstream U) of the order go first
       for (const edit of (await root.orders().edits().get({ queryArgs: { where: `resource(id="${o.id}")`, limit: 500 } }).execute()).body.results) {

@@ -110,3 +110,17 @@ Resolved by D-051: `finalTotal` added to the `cart-delivery` custom type (live p
 
 ## Q-ORCH-1 resolution (orchestrator, 2026-10-06)
 Resolved by D-052 (MarketSync). Verified in the browser: an EUR cart on /de-DE, then opening /en-US/shop directly, ends with the en-US cookie, no cart and an empty bag.
+## Q-W-1 (workstream W, task W-01)
+**Question:** The spike (Gate 3) passed at API level (live: order from a cart with a `recurrenceInfo` line created one Recurring Order, see `PROJECT-FINDINGS.md` §19) but the developer did not run the hosted Checkout hand-off in a browser with Adyen. Please confirm it with M-W-3 (a subscribed line, pay, check Merchant Center, Orders, Recurring orders) and tell the orchestrator if no Recurring Order appears (then set the `FEATURE_SUBSCRIPTIONS` default to false).
+**Blocking:** no
+**Answer (owner):**
+
+## Q-W-2 (workstream W, task W-05)
+**Question:** A guest can choose a cadence and pay in the hosted checkout. The Recurring Order is then created without a customer (only `customerEmail`), so it can never be listed or managed on `/account/subscriptions`. W did not block guests (the plan does not say to). Should "Repeat" require a signed-in customer (for example a "Sign in to subscribe" note instead of the selector for guests), or should guest subscriptions be allowed and managed by e-mail link later?
+**Blocking:** no
+**Answer (owner):**
+
+## Q-W-3 (workstream W, task W-06)
+**Question:** The repeat orders are created by commercetools with the recurring cart as it is: there is no stock check, no new delivery slot (the recurring cart inherits the first cart's configuration, so the slot custom fields are probably copied and every repeat order would carry the first order's slot; not verified) and no step for substitution choices. Is that acceptable for v1 (the grocery flow would normally ask for a slot per delivery)?
+**Blocking:** no
+**Answer (owner):**

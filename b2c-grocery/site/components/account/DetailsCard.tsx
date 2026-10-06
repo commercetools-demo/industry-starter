@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Card, CardKicker } from '@/components/ui/Card';
 import { Link } from '@/i18n/routing';
+import { subscriptionsEnabled } from '@/lib/config/features';
 
 export const DETAIL_ROWS = [
   { key: 'orders', href: '/account/orders' },
@@ -18,7 +19,7 @@ export function DetailsCard({ current }: { current?: (typeof DETAIL_ROWS)[number
       <CardKicker>{t('kicker')}</CardKicker>
       <nav aria-label={t('nav')}>
         <ul className="m-0 flex list-none flex-col p-0">
-          {DETAIL_ROWS.map(({ key, href }) => (
+          {DETAIL_ROWS.filter(({ key }) => key !== 'subscriptions' || subscriptionsEnabled()).map(({ key, href }) => (
             <li key={key} className="border-b border-divider last:border-b-0">
               <Link
                 href={href}

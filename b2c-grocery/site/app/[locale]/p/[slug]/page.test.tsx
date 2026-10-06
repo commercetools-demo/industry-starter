@@ -12,6 +12,8 @@ const mocks = vi.hoisted(() => ({
   getProductBySlug: vi.fn(),
   searchProducts: vi.fn(),
   getCategoryTree: vi.fn(),
+  getRecurrencePolicies: vi.fn(),
+  subscriptionsEnabled: vi.fn(() => true),
   notFound: vi.fn(() => {
     throw new Error('NOT_FOUND');
   }),
@@ -19,6 +21,8 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/lib/ct/search', () => ({ getProductBySlug: mocks.getProductBySlug, searchProducts: mocks.searchProducts }));
 vi.mock('@/lib/ct/categories', () => ({ getCategoryTree: mocks.getCategoryTree }));
+vi.mock('@/lib/ct/recurrence-policies', () => ({ getRecurrencePolicies: mocks.getRecurrencePolicies }));
+vi.mock('@/lib/config/features', async (orig) => ({ ...(await orig<typeof import('@/lib/config/features')>()), subscriptionsEnabled: mocks.subscriptionsEnabled }));
 vi.mock('@/lib/session', () => ({ getMarket: async () => ({ country: 'US', currency: 'USD', locale: 'en-US' }) }));
 vi.mock('next/navigation', async (orig) => ({ ...(await orig<typeof import('next/navigation')>()), notFound: mocks.notFound }));
 vi.mock('next-intl/server', () => ({
@@ -64,6 +68,7 @@ beforeEach(() => {
   vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ cart: null }), { status: 200 })));
   mocks.getProductBySlug.mockResolvedValue(bananas());
   mocks.getCategoryTree.mockResolvedValue(tree);
+  mocks.subscriptionsEnabled.mockReturnValue(true);
   mocks.searchProducts.mockResolvedValue({
     products: [bananas(), ...['Apples', 'Pears', 'Plums', 'Kiwis', 'Limes'].map((name) => makeProduct({ id: name, name, slug: name.toLowerCase() }))],
     total: 6,
@@ -76,6 +81,45 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('ProductPage', () => {
+  describe('subscriptions (W)', () => {
+    const policies = [
+      { key: 'weekly', id: 'p1', name: 'Every week', schedule: null },
+      { key: 'every-2-weeks', id: 'p2', name: 'Every 2 weeks', schedule: null },
+    ];
+    const milk = () => ({ ...bananas(), recurringEligible: true });
+
+    it('eligible product: the Repeat selector lists One-time and the policies in the URL locale', async () => {
+      mocks.getProductBySlug.mockResolvedValue(milk());
+      mocks.getRecurrencePolicies.mockResolvedValue(policies);
+      await render();
+      expect(mocks.getRecurrencePolicies).toHaveBeenCalledWith('en-US');
+      expect(within(buyBox()).getByRole('radiogroup', { name: 'Repeat' })).toBeInTheDocument();
+      expect(within(buyBox()).getByLabelText('Every 2 weeks')).toBeInTheDocument();
+    });
+
+    it('ineligible product: no selector and policies are not even read', async () => {
+      await render();
+      expect(mocks.getRecurrencePolicies).not.toHaveBeenCalled();
+      expect(screen.queryByRole('radiogroup', { name: 'Repeat' })).not.toBeInTheDocument();
+    });
+
+    it('flag off: no selector and policies are not read', async () => {
+      mocks.subscriptionsEnabled.mockReturnValue(false);
+      mocks.getProductBySlug.mockResolvedValue(milk());
+      await render();
+      expect(mocks.getRecurrencePolicies).not.toHaveBeenCalled();
+      expect(screen.queryByRole('radiogroup', { name: 'Repeat' })).not.toBeInTheDocument();
+    });
+
+    it('policies failing to load hides the selector but not the page', async () => {
+      mocks.getProductBySlug.mockResolvedValue(milk());
+      mocks.getRecurrencePolicies.mockRejectedValue(new Error('boom'));
+      await render();
+      expect(screen.getByRole('heading', { level: 1, name: 'Bananas' })).toBeInTheDocument();
+      expect(screen.queryByRole('radiogroup', { name: 'Repeat' })).not.toBeInTheDocument();
+    });
+  });
+
   it('unknown slug: calls notFound', async () => {
     mocks.getProductBySlug.mockResolvedValue(null);
     await expect(render({}, 'nope')).rejects.toThrow('NOT_FOUND');
