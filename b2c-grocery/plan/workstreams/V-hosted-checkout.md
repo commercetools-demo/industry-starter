@@ -43,7 +43,7 @@ Loads the order by id; verifies `order.cart.id === session.cartId` (else 403); s
 Checkout application (Complete mode) branding (logo, colors from tokens: accent #c67139, bg #f5ead8, font Figtree), Adyen test connector, allowed origins. Reported as manual test M-V-1.
 
 ## Tasks
-- [ ] V-01 **Spike (docs):** using `/commercetools:commercetools-checkout` and the Browser SDK docs, find the `checkoutFlow` options for inline mode and the exact event/callback delivering "order created" + order id; write sample payloads and findings into `PROJECT-FINDINGS.md` §13; implement `lib/checkout-events.ts` + tests on those payloads.
+- [x] V-01 **Spike (docs):** using `/commercetools:commercetools-checkout` and the Browser SDK docs, find the `checkoutFlow` options for inline mode and the exact event/callback delivering "order created" + order id; write sample payloads and findings into `PROJECT-FINDINGS.md` §13; implement `lib/checkout-events.ts` + tests on those payloads.
 - [ ] V-02 Write `lib/ct/checkout-session.ts` + tests (mock `fetch`): token request body/headers; sessions request body incl. `metadata.applicationKey`; region derived; non-2xx → `CheckoutSessionError`; never logs the token.
 - [ ] V-03 Write `POST /api/checkout/session` + tests for each check in order (NO_CART, EMPTY_CART, UNAVAILABLE_LINES, NO_ADDRESS, NO_SLOT, SLOT_FULL clears slot and returns days, success returns ids; hold called before create; session not created on any failure).
 - [ ] V-04 Write `POST /api/checkout/complete` + tests (cart mismatch 403; sets `lastOrderId`, clears `cartId`; booking confirm failure tolerated; idempotent second call).
