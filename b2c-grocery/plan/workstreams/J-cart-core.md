@@ -41,7 +41,7 @@ Default substitution preference: `product.storage === 'chilled'` or category `fr
 - [x] J-01 Append cart types; write `lib/mappers/cart.ts` + fixtures + tests (provisional when any approximate line; free shipping flag; default preference `none`; slot mapping; recurrence mapping).
 - [x] J-02 Write `lib/ct/availability.ts` + tests (quantity from entry; no entry → 0; mocked root).
 - [x] J-03 Write `lib/ct/cart.ts` (`getCart` Active check, `createCart`, `addLineItem` with custom substitution field, quantity/remove, `withCartRetry`) + tests: retry once on 409 then succeed; second 409 throws; non-Active returns null; anonymous cart has `anonymousId`.
-- [ ] J-04 Write `lib/config/substitution.ts` (`defaultSubstitutionPreference`) + tests (chilled → allow-similar; ambient household → none).
+- [x] J-04 Write `lib/config/substitution.ts` (`defaultSubstitutionPreference`) + tests (chilled → allow-similar; ambient household → none).
 - [ ] J-05 Write routes `GET /api/cart`, `POST /api/cart/line-items`, `PATCH/DELETE /api/cart/line-items/[lineId]` + tests per route: unauthorized-free (anonymous ok); 400 for bad quantity; 409 `INSUFFICIENT_STOCK` with `available`; cart created on first add and cookie updated; non-Active cart clears session.
 - [ ] J-06 Write `hooks/useCart.ts` + tests (mock fetch): read default null; mutation updates cache without refetch; failure throws `ApiError` and cache unchanged.
 - [ ] J-07 Write `CartProvider`, `BagButton`, and wire the header `bag` slot and the locale layout's `SWRConfig` fallback; tests: label "Bag"/"Bag · 2"; toast shown on add with "View bag"; insufficient stock message shows available quantity.
