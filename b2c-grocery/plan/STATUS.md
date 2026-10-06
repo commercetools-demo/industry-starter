@@ -14,7 +14,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | H | Design system primitives and chrome | 10 | 10 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
 | I | Error pages, env validation, guards | 5 | 5 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
 | J | Cart core | 9 | 9 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
-| K | Product listing | 8 | 8 | Ready for review | | |
+| K | Product listing | 8 | 8 | Verified | Claude (verify + Chrome) | 2026-10-06 |
 | L | Product detail | 9 | 0 | Not started | | |
 | M | Homepage | 6 | 0 | Not started | | |
 | N | Weight pricing | 6 | 0 | Not started | | |
