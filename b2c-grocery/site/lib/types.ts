@@ -15,6 +15,13 @@ export interface Variant {
   approximateWeight: boolean;
   availability: Availability;
 }
+/** Static placeholder data (D-039): never populated in v1, so the PDP reviews block stays hidden. `distribution[i]` counts (i + 1)-star reviews. */
+export interface ProductReviews {
+  average: number;
+  count: number;
+  distribution: number[];
+  items: { id: string; author: string; rating: number; meta?: string; title: string; body: string }[];
+}
 /** `variants[0]` is the master/default variant. */
 export interface Product {
   type: 'Product';
@@ -32,6 +39,7 @@ export interface Product {
   categoryIds: string[];
   substituteProductIds: string[];
   variants: Variant[];
+  reviews?: ProductReviews;
 }
 export interface Category { id: string; key: string; name: string; slug: string; parentId?: string; children?: Category[] }
 export interface ListingFacets {

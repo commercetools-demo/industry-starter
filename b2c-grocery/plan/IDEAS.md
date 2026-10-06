@@ -27,6 +27,11 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [K] German keys to review (machine-translated): all of `plp.*`.
 - [K] `SaveButton` and `useSaved` are stubs until T; T must replace `hooks/useSaved.ts` only.
 - [K] Quick add-to-bag on tiles (not drawn) could use `useCartContext().addItemWithToast`.
+- [L] German keys to review (machine-translated): all of `pdp.*`.
+- [L] Mobile PDP from `design/specs/pdp.md` ("Responsive (proposed)"): the swipe carousel with dots and the sticky bottom bar (price + Add to bag) below 768 px are not built; the page stacks gallery and buy box instead.
+- [L] `addItemWithToast` could return `{ ok, available }` (or take an `onInsufficient` callback) so the PDP can show the inline "Only N available" for a server-side 409 too, not only for the client-side check.
+- [L] `marketFor(locale)` (`lib/market.ts`) duplicates the private helper in `app/[locale]/shop/page.tsx`; switch the shop page to it, or fix the root cause in Q-K-1.
+- [L] "Pairs with" shows the first 4 other products of the first category; it could use `substituteProductIds` or an explicit pairing attribute later.
 - [K] Facet counts cost up to 3 extra lean searches when category, price and stock are all active; cache or merge if search latency becomes an issue.
 ## From workstream O
 - [O] German keys to review (machine-translated): all of `auth.*`.

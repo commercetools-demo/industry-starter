@@ -105,7 +105,51 @@
       "priceDesc": "Preis ↓"
     }
   },
-  "pdp": {},
+  "pdp": {
+    "photoAlt": "{name}, Foto {number}",
+    "questions": "Fragen zu diesem Produkt?",
+    "contact": "Kontakt aufnehmen →",
+    "availability": {
+      "in": "Auf Lager",
+      "out": "Nicht auf Lager"
+    },
+    "specs": {
+      "caption": "Produktdetails",
+      "property": "Merkmal",
+      "value": "Wert",
+      "brand": "Marke",
+      "origin": "Herkunft",
+      "storage": "Lagerung",
+      "dietary": "Ernährung",
+      "allergens": "Allergene",
+      "storageValues": {
+        "ambient": "Bei Raumtemperatur lagern",
+        "chilled": "Gekühlt lagern",
+        "frozen": "Gefroren lagern"
+      },
+      "dietaryValues": {
+        "vegan": "Vegan",
+        "vegetarian": "Vegetarisch",
+        "gluten-free": "Glutenfrei",
+        "organic": "Bio"
+      }
+    },
+    "options": {
+      "packLabel": "Packungsgröße"
+    },
+    "addToBag": "In den Warenkorb",
+    "quantity": "Menge",
+    "decrease": "Menge verringern",
+    "increase": "Menge erhöhen",
+    "onlyAvailable": "Nur {available} verfügbar",
+    "related": "Passt dazu",
+    "reviews": {
+      "title": "Bewertungen",
+      "count": "{count, plural, one {# Bewertung} other {# Bewertungen}}",
+      "stars": "{stars} Sterne",
+      "rated": "Bewertet mit {rating} von 5"
+    }
+  },
   "cart": {
     "added": "Zum Warenkorb hinzugefügt",
     "viewBag": "Warenkorb ansehen",
