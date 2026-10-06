@@ -6,7 +6,6 @@
       "de-DE": "Lieferung (Warenkorb)"
     },
     "resourceTypeIds": [
-      "cart",
       "order"
     ],
     "fieldDefinitions": [

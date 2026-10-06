@@ -33,7 +33,7 @@ async function linkSubstitutes(root: Root): Promise<void> {
   for (const [key, sub] of Object.entries(substituteMap())) {
     const product = (await root.products().withKey({ key }).get().execute()).body;
     await root.products().withKey({ key }).post({
-      body: { version: product.version, actions: [{ action: 'setProductAttribute', name: 'substituteProducts', value: [{ typeId: 'product', id: ids.get(sub) }], staged: false }] },
+      body: { version: product.version, actions: [{ action: 'setAttributeInAllVariants', name: 'substituteProducts', value: [{ typeId: 'product', id: ids.get(sub) }], staged: false }] },
     }).execute();
   }
 }

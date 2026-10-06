@@ -39,8 +39,8 @@
   ],
   "zones": [
     {
-      "key": "zone-us",
-      "name": "United States",
+      "key": "usa",
+      "name": "USA",
       "locations": [
         {
           "country": "US"
@@ -48,9 +48,12 @@
       ]
     },
     {
-      "key": "zone-de",
-      "name": "Germany",
+      "key": "europe",
+      "name": "Europe",
       "locations": [
+        {
+          "country": "GB"
+        },
         {
           "country": "DE"
         }
@@ -68,13 +71,13 @@
     "isDefault": false,
     "rates": [
       {
-        "zoneKey": "zone-us",
+        "zoneKey": "usa",
         "currency": "USD",
         "centAmount": 500,
         "freeAboveCentAmount": 5000
       },
       {
-        "zoneKey": "zone-de",
+        "zoneKey": "europe",
         "currency": "EUR",
         "centAmount": 490,
         "freeAboveCentAmount": 4500

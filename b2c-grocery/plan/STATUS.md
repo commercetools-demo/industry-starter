@@ -9,7 +9,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | C | Styling foundation and tokens | 6 | 0 | Not started | | |
 | D | Locale routing and messages | 7 | 0 | Not started | | |
 | E | BFF core | 9 | 0 | Not started | | |
-| F | Catalog data model | 12 | 0 | Not started | | |
+| F | Catalog data model | 12 | 12 | Ready for review | | |
 | G | Data-loading foundation | 9 | 0 | Not started | | |
 | H | Design system primitives and chrome | 10 | 0 | Not started | | |
 | I | Error pages, env validation, guards | 5 | 0 | Not started | | |

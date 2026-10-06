@@ -66,3 +66,9 @@ Not readable through the MCP (names only would be visible in Merchant Center).
 | 6 | Checkout applications unknown | Owner checks Merchant Center (OA-05) | — |
 | 7 | Trial project ends 2026-11 | Owner awareness; plan for a permanent project before launch | — |
 | 8 | Prices identical across currencies | Seed grocery prices with the planned EUR ≈ USD × 0.9 | — |
+
+## 13. After seeding (2026-10-06, `npm run seed:verify`: all 25 checks PASS)
+- Decor catalog removed (D-048) after export to gitignored `plan/backup/decor-backup.json`: 117 products, 134 inventory entries, 29 categories, 3 product types.
+- Created: custom types `cart-delivery`, `order-final`, `line-substitution`, `substitution-proposal`; product type `grocery-product`; 6 categories; tax categories `food`, `non-food`; shipping method `standard` (not default); recurrence policies `weekly`, `every-2-weeks`, `monthly`; 36 published products (substitutes linked); inventory for every SKU (CHEDDAR, SOURDOUGH-LOAF, ORANGE-JUICE = 0).
+- Corrections to the plan found while seeding: (1) commercetools has no `cart` custom-type resource id — `order` covers carts and orders; (2) a country can only be in one zone, so the seed reuses the existing zones `usa` and `europe` (GB, DE); (3) product-level (SameForAll) attributes must be present on every variant; (4) `substituteProducts` is set with `setAttributeInAllVariants`; (5) `.env.seed` uses `CTP_SEED_CLIENT_ID/SECRET/AUTH_URL/PROJECT_KEY/API_URL` (no scopes variable).
+- Existing `standard-shipping` (500.00) and `express-shipping` (750.00) remain active (D-049).

@@ -12,7 +12,8 @@ describe('custom types (F-05)', () => {
   const byKey = Object.fromEntries(types.map((t) => [t.key, t]));
   it('has the four types with the specified resources and fields', () => {
     expect(Object.keys(byKey).sort()).toEqual(['cart-delivery', 'line-substitution', 'order-final', 'substitution-proposal']);
-    expect(byKey['cart-delivery'].resourceTypeIds.sort()).toEqual(['cart', 'order']);
+    // commercetools uses the resource type id 'order' for both carts and orders
+    expect(byKey['cart-delivery'].resourceTypeIds).toEqual(['order']);
     expect(byKey['cart-delivery'].fieldDefinitions.map((f) => f.name)).toEqual(['slotId', 'slotStart', 'slotEnd', 'slotHoldExpires']);
     expect(byKey['order-final'].fieldDefinitions[0]).toMatchObject({ name: 'finalTotal', type: { name: 'Money' } });
     expect(byKey['line-substitution'].resourceTypeIds).toEqual(['line-item']);
@@ -68,8 +69,8 @@ describe('shipping and tax (F-08)', () => {
     expect(m.key).toBe('standard');
     expect(m.isDefault).toBe(false);
     expect(m.rates).toEqual([
-      { zoneKey: 'zone-us', currency: 'USD', centAmount: 500, freeAboveCentAmount: 5000 },
-      { zoneKey: 'zone-de', currency: 'EUR', centAmount: 490, freeAboveCentAmount: 4500 },
+      { zoneKey: 'usa', currency: 'USD', centAmount: 500, freeAboveCentAmount: 5000 },
+      { zoneKey: 'europe', currency: 'EUR', centAmount: 490, freeAboveCentAmount: 4500 },
     ]);
   });
 });

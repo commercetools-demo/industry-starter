@@ -80,6 +80,7 @@ export function buildProductDrafts(): Record<string, unknown>[] {
       ],
       images: [{ url: `https://picsum.photos/seed/${skuOf(d.key, v).toLowerCase()}/800/800`, dimensions: { w: 800, h: 800 } }],
       attributes: [
+        ...productAttrs(d),
         attr('incrementValue', v.value),
         attr('incrementUnit', v.unit),
         attr('approximateWeight', d.flags.includes('A')),
@@ -99,7 +100,7 @@ export function buildProductDrafts(): Record<string, unknown>[] {
         `${d.de} von ${d.brand}. ${weighed ? 'Verkauf nach Gewicht in festen Mengen.' : 'Verkauf als Einzelartikel.'}`,
       ),
       metaTitle: loc(`${d.en} | MALVA`, `${d.de} | MALVA`),
-      masterVariant: { ...master, attributes: [...(master.attributes ?? []), ...productAttrs(d)] },
+      masterVariant: master,
       variants: rest,
       publish: true,
     };
