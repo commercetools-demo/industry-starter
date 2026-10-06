@@ -8,6 +8,7 @@ import { BagButton } from '@/components/layout/BagButton';
 import { PendingSaveRunner } from '@/components/product/PendingSaveRunner';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
+import { MarketSync } from '@/components/layout/MarketSync';
 import { ToastProvider } from '@/components/ui/Toast';
 import { CartProvider } from '@/context/CartProvider';
 import { SWRProvider } from '@/context/SWRProvider';
@@ -70,6 +71,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
             <Header bag={<BagButton />} account={<AccountLink />} markets={markets} />
             <main className="page-enter">{children}</main>
             <Footer />
+            <MarketSync locale={locale} />
             <Suspense fallback={null}>
               <PendingSaveRunner />
             </Suspense>

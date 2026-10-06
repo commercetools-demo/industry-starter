@@ -11,6 +11,7 @@ import LocaleLayout, { generateStaticParams } from './layout';
 const notFound = vi.fn(() => {
   throw new Error('NEXT_NOT_FOUND');
 });
+vi.mock('@/components/layout/MarketSync', () => ({ MarketSync: () => null }));
 vi.mock('next/navigation', async (orig) => ({ ...(await orig<typeof import('next/navigation')>()), notFound: () => notFound() }));
 vi.mock('next-intl/server', () => ({
   setRequestLocale: vi.fn(),

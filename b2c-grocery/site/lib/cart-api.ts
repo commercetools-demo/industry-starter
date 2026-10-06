@@ -15,7 +15,10 @@ export async function cartJson(
   options: { extra?: Record<string, unknown>; status?: number } = {},
 ): Promise<NextResponse> {
   const res = NextResponse.json({ ...options.extra, cart: mapCart(cart, market) }, options.status ? { status: options.status } : undefined);
-  await updateSession({ cartId: cart.id, ...patch }, res);
+  // Do not rewrite the session cookie on plain reads: a concurrent market switch would be overwritten by this stale copy (D-052).
+  if (Object.keys(patch).length > 0 || (await getSession())?.cartId !== cart.id) {
+    await updateSession({ cartId: cart.id, ...patch }, res);
+  }
   return res;
 }
 

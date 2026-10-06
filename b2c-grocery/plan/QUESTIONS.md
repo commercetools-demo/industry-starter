@@ -107,3 +107,6 @@ Resolved by D-051: `finalTotal` added to the `cart-delivery` custom type (live p
 **Question:** Y-05 (record the Netlify site URL in `site/README.md`) needs your report of a successful deploy and the public URL (OA-06 only says the site exists). Please run M-Y-1 to M-Y-5 and send the URL. Also, `/api/health` is gone now, so the PASS of M-E-1 cannot be repeated; it stays valid as history.
 **Blocking:** no
 **Answer (owner):**
+
+## Q-ORCH-1 resolution (orchestrator, 2026-10-06)
+Resolved by D-052 (MarketSync). Verified in the browser: an EUR cart on /de-DE, then opening /en-US/shop directly, ends with the en-US cookie, no cart and an empty bag.
