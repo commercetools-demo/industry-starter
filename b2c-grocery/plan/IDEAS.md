@@ -68,3 +68,6 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [Q] The address form always shows; a collapsed "Deliver to Ada, 10001 New York · Change" summary after saving would be tidier (the signed-in saved-address picker comes in S).
 - [Q] Changing the country should switch the market (see Q-Q-1) instead of blocking.
 - [Q] Slot capacity is global in the stub; per-postcode-area capacity would need the `country`/`postalCode` arguments that the interface already carries.
+## From workstream N
+- [N] German keys to review (machine-translated): `pricing.*` (e.g. "Gesamt (vorläufig)", "Der Endbetrag hängt vom Gewicht ab, das wir abwiegen.").
+- [N] Mark approximate-weight lines ("about 500 g" / "approx.") on tile, PDP and cart line, not only in the cart summary.

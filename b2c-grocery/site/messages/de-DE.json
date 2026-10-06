@@ -370,6 +370,15 @@
     "notFoundBody": "Die Seite wurde vielleicht verschoben oder hat nie existiert. Wir bringen dich zurück zu den guten Sachen.",
     "contact": "Kontakt"
   },
+  "pricing": {
+    "perKg": "{price} / kg",
+    "perL": "{price} / l",
+    "provisionalNote": "Der Endbetrag hängt vom Gewicht ab, das wir abwiegen.",
+    "totalProvisional": "Gesamt (vorläufig)",
+    "finalAmount": "Endbetrag {amount}",
+    "difference": "Differenz {delta}",
+    "noDifference": "Keine Differenz"
+  },
   "a11y": {
     "language": "Sprache"
   }

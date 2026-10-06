@@ -29,7 +29,7 @@ export function ProductTile({
         <Photo src={variant?.images[0] ?? ''} alt={product.name} sizes="(min-width: 75rem) 330px, 50vw" priority={priority} className={imageHeight === 340 ? 'h-[340px]' : 'h-[330px]'} />
         <div className="mt-(--space-3) flex items-baseline justify-between gap-(--space-3)">
           <h3 className="card-title m-0">{product.name}</h3>
-          <PriceBlock price={variant?.price} className="flex-none text-[15px]" />
+          <PriceBlock price={variant?.price} increment={variant?.increment} className="flex-none items-end text-[15px]" />
         </div>
         {product.brand ? <div className="card-meta mt-(--space-1)">{product.brand}</div> : null}
       </Link>

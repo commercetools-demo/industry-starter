@@ -30,7 +30,7 @@ describe('ProductTile', () => {
   it('German locale: euro price and German links', () => {
     const product = makeProduct({ variants: [makeVariant({ price: { centAmount: 296, currencyCode: 'EUR' } })] });
     renderWithProviders(<ProductTile product={product} />, { locale: 'de-DE' });
-    expect(screen.getByText(/2,96\s€/)).toBeInTheDocument();
+    expect(screen.getByText(/^2,96\s€$/)).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', '/de-DE/p/bananas');
   });
 

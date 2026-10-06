@@ -48,7 +48,7 @@ export function CartSummary({ cart, onCheckout }: { cart: Cart; onCheckout?: () 
       <ProvisionalNotice cart={cart} />
       <hr className="m-0 border-0 border-t border-divider" />
       <div className="flex items-baseline justify-between font-heading text-[24px]">
-        <span>{t('total')}</span>
+        {cart.isProvisional ? <ProvisionalNotice cart={cart} variant="total" /> : <span>{t('total')}</span>}
         <span>{money(cart.total)}</span>
       </div>
       <Button block disabled={block !== null || !onCheckout} onClick={onCheckout} aria-describedby={note ? 'cart-checkout-note' : undefined} className="text-[15px]">
