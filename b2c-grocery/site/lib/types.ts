@@ -42,6 +42,14 @@ export interface ListingFacets {
 export interface SearchResult { products: Product[]; total: number; page: number; pageSize: number; facets: ListingFacets }
 export type SortKey = 'relevance' | 'newest' | 'price-asc' | 'price-desc';
 
+/** The signed-in shopper as exposed to client code (from the session cookie, never a full commercetools customer). */
+export interface AccountUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
 export interface Address {
   firstName?: string;
   lastName?: string;

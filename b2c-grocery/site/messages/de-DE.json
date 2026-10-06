@@ -101,5 +101,10 @@
   },
   "a11y": {
     "language": "Sprache"
+  },
+  "auth": {
+    "signInLink": "Anmelden",
+    "accountLink": "Konto",
+    "accountLinkNamed": "Konto, {name}"
   }
 }
