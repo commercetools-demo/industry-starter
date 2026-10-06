@@ -6,9 +6,6 @@ export const KEY_ADDRESSES = 'addresses';
 export const KEY_WISHLIST = 'wishlist';
 export const KEY_RECURRING = 'recurring';
 export const keyOrder = (id: string): string => `order:${id}`;
-<<<<<<< HEAD
 export const keySlots = (country: string, postalCode: string): string => `slots:${country}:${postalCode}`;
-=======
 /** Saved products of the saved page, per locale (prefix `wishlist:`; the whole prefix is cleared on logout). */
 export const keyWishlistProducts = (locale: string): string => `wishlist:products:${locale}`;
->>>>>>> ws/t-saved-lists
