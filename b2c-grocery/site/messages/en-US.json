@@ -155,5 +155,47 @@
   },
   "a11y": {
     "language": "Language"
+  },
+  "auth": {
+    "signInLink": "Sign in",
+    "accountLink": "Account",
+    "accountLinkNamed": "Account, {name}",
+    "signInTitle": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "passwordNew": "Password",
+    "passwordHint": "At least 8 characters",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "signInSubmit": "Sign in",
+    "signInPending": "Signing in…",
+    "forgotLink": "Forgot your password?",
+    "registerLink": "New here? Create an account",
+    "invalid": "Email or password is incorrect",
+    "registerTitle": "Create your account",
+    "registerSubmit": "Create account",
+    "registerPending": "Creating your account…",
+    "exists": "We could not create an account with these details.",
+    "signInInstead": "Sign in instead",
+    "signInLinkLong": "Already have an account? Sign in",
+    "forgotTitle": "Reset your password",
+    "forgotIntro": "Enter your email and we will prepare a link to choose a new password.",
+    "forgotSubmit": "Send reset link",
+    "forgotPending": "Sending…",
+    "forgotSent": "If an account exists for that email, a reset link has been prepared.",
+    "devLink": "Development only: open the reset link",
+    "backToSignIn": "Back to sign in",
+    "resetTitle": "Choose a new password",
+    "resetSubmit": "Save and sign in",
+    "resetPending": "Saving…",
+    "invalidToken": "This reset link is invalid or has expired.",
+    "requestNewLink": "Request a new link",
+    "errors": {
+      "required": "This field is required",
+      "email": "Enter a valid email address",
+      "passwordShort": "Use at least 8 characters",
+      "rateLimited": "Too many attempts. Please wait a minute and try again.",
+      "generic": "Something went wrong. Please try again."
+    }
   }
 }

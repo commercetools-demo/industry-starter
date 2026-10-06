@@ -92,3 +92,11 @@ Not readable through the MCP (names only would be visible in Merchant Center).
 - A stale version gives an error object with `statusCode: 409` and `code: 'ConcurrentModification'`.
 - Inventory endpoint: `where: sku="X"` and `sku in (...)` work; entries expose `availableQuantity`. A cart without shipping address has no `shippingInfo` (no delivery price), so "Delivery" shows "Calculated at checkout" until Q sets the address and shipping method.
 - Carts with zero lines stay `Active`; the UI treats them as empty. One throwaway cart from the manual API smoke test (id 7458529a-d35d-4b04-bf8e-4686ad69165c, anonymous, empty or one Bananas line) was left in the project; carts are deleted automatically after 90 days.
+
+## 15. Customer auth API, verified live by workstream O (2026-10-06, throwaway customer `qa-*@example.com`, deleted afterwards)
+- `customers().post({ body: draft })` returns `{ customer }` (no token); `isEmailVerified` is `false`. A duplicate email is **HTTP 400** with error code `DuplicateField` (field `email`), not 409; the route maps it to 409 `ACCOUNT_EXISTS`.
+- `customers().emailToken().post({ body: { id, version, ttlMinutes: 5 } })` returns a token with `value`; `customers().emailConfirm().post({ body: { tokenValue } })` returns the customer with `isEmailVerified: true`. Shapes match the plan; pass the version from the sign-up response.
+- `login().post({ body: { email, password, anonymousCart: { id, typeId: 'cart' }, anonymousCartSignInMode: 'MergeWithExistingCustomerCart' } })` returns `{ customer, cart }`. For a customer without a cart the anonymous cart is adopted (same id, `customerId` set, `Active`, lines kept). Without `anonymousCart` the response still contains the customer's existing Active cart when there is one.
+- Wrong password and unknown email are both **HTTP 400 `InvalidCredentials`** (identical), not 401; the route returns 401 `INVALID_CREDENTIALS`.
+- `customers().passwordToken().post({ body: { email, ttlMinutes: 60 } })` returns `{ value, ... }`; unknown email is **404 `ResourceNotFound`**.
+- `customers().passwordReset().post({ body: { tokenValue, newPassword } })` returns a bare `Customer`. A token that was already used, or a bogus token, is **404 `ResourceNotFound`** (mapped to `InvalidToken`).

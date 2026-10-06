@@ -155,5 +155,47 @@
   },
   "a11y": {
     "language": "Sprache"
+  },
+  "auth": {
+    "signInLink": "Anmelden",
+    "accountLink": "Konto",
+    "accountLinkNamed": "Konto, {name}",
+    "signInTitle": "Anmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "passwordNew": "Passwort",
+    "passwordHint": "Mindestens 8 Zeichen",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "signInSubmit": "Anmelden",
+    "signInPending": "Anmeldung läuft…",
+    "forgotLink": "Passwort vergessen?",
+    "registerLink": "Neu hier? Konto erstellen",
+    "invalid": "E-Mail oder Passwort ist falsch",
+    "registerTitle": "Konto erstellen",
+    "registerSubmit": "Konto erstellen",
+    "registerPending": "Konto wird erstellt…",
+    "exists": "Mit diesen Angaben konnten wir kein Konto erstellen.",
+    "signInInstead": "Stattdessen anmelden",
+    "signInLinkLong": "Schon ein Konto? Anmelden",
+    "forgotTitle": "Passwort zurücksetzen",
+    "forgotIntro": "Gib deine E-Mail-Adresse ein, dann bereiten wir einen Link für ein neues Passwort vor.",
+    "forgotSubmit": "Link zum Zurücksetzen senden",
+    "forgotPending": "Wird gesendet…",
+    "forgotSent": "Falls zu dieser E-Mail-Adresse ein Konto existiert, wurde ein Link zum Zurücksetzen vorbereitet.",
+    "devLink": "Nur Entwicklung: Link zum Zurücksetzen öffnen",
+    "backToSignIn": "Zurück zur Anmeldung",
+    "resetTitle": "Neues Passwort wählen",
+    "resetSubmit": "Speichern und anmelden",
+    "resetPending": "Wird gespeichert…",
+    "invalidToken": "Dieser Link zum Zurücksetzen ist ungültig oder abgelaufen.",
+    "requestNewLink": "Neuen Link anfordern",
+    "errors": {
+      "required": "Dieses Feld ist erforderlich",
+      "email": "Gib eine gültige E-Mail-Adresse ein",
+      "passwordShort": "Verwende mindestens 8 Zeichen",
+      "rateLimited": "Zu viele Versuche. Bitte warte eine Minute und versuche es erneut.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+    }
   }
 }

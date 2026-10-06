@@ -29,5 +29,12 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 **Blocking:** no (default for now: explicit switch only; see IDEAS)
 ## Q-K-1 (workstream K, task K-05)
 **Question:** The market (currency/country) comes from the session or the `your-shop-country-locale` cookie, but the proxy does not set it when someone opens `/de-DE/...` directly, so the cart layout (J) and `getMarket()` would give USD under a German URL. K avoids it by deriving currency/country from the URL locale (`COUNTRY_CONFIG[locale]`). Should `proxy.ts`/`getMarket()` do this for everyone (L, M, P, cart), or is the locale switcher the only intended way to change market?
+## Q-O-1 (workstream O, tasks O-01..O-06)
+**Question:** Live checks show commercetools answers HTTP 400 (not 401/409) for wrong credentials (`InvalidCredentials`) and duplicate email (`DuplicateField`), and 404 for unknown email on password token and for used/expired reset tokens (details in `PROJECT-FINDINGS.md` section 15). I map them to the plan responses (401 INVALID_CREDENTIALS, 409 ACCOUNT_EXISTS, 400 INVALID_TOKEN). Also: sign-in retries without the anonymous cart if the first attempt fails for a non-credential reason, so a stale cart cannot block login. OK?
+**Blocking:** no
+**Answer (owner):**
+
+## Q-O-2 (workstream O, task O-09)
+**Question:** `/en-US/account` and `/en-US/account/orders` do not exist until R, so after register, sign-in without `redirect` or password reset the shopper lands on a 404 page for now. Should the default landing be changed (for example to `/`) until R merges? I kept `/account` as specified.
 **Blocking:** no
 **Answer (owner):**

@@ -28,3 +28,9 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [K] `SaveButton` and `useSaved` are stubs until T; T must replace `hooks/useSaved.ts` only.
 - [K] Quick add-to-bag on tiles (not drawn) could use `useCartContext().addItemWithToast`.
 - [K] Facet counts cost up to 3 extra lean searches when category, price and stock are all active; cache or merge if search latency becomes an issue.
+## From workstream O
+- [O] German keys to review (machine-translated): all of `auth.*`.
+- [O] Signed-in visitors who open sign-in, register or forgot-password still see the form; redirecting them to `/account` would be friendlier.
+- [O] No "sign out" control exists yet (the account area arrives in R); `useAuthMutations().logout` and `/api/auth/logout` are ready.
+- [O] The email-verified banner with "resend" from `design/specs/account.md` is moot while registration auto-verifies (D-038); `isEmailVerified` is not kept in the session.
+- [O] Password rules are length only (8+), as specified; a breached-password or strength check could be added.

@@ -69,15 +69,23 @@ describe('LocaleLayout', () => {
     const cart = { id: 'cart-1', itemCount: 2 };
     getMappedCart.mockResolvedValue(cart);
     const el = await render('en-US');
-    expect(el.props.children.props.fallback).toEqual({ cart });
+    expect(el.props.children.props.fallback).toEqual({ cart, account: null });
     expect(getMappedCart).toHaveBeenCalledWith('cart-1', { country: 'US', currency: 'USD', locale: 'en-US' });
   });
 
   it('no cart id in the session: fallback cart is null and commercetools is not called', async () => {
     (globalThis as { __msgs?: unknown }).__msgs = en;
     const el = await render('en-US');
-    expect(el.props.children.props.fallback).toEqual({ cart: null });
+    expect(el.props.children.props.fallback).toEqual({ cart: null, account: null });
     expect(getMappedCart).not.toHaveBeenCalled();
+  });
+
+  it('Signed-in session: the account fallback is seeded from the session fields (no commercetools call)', async () => {
+    (globalThis as { __msgs?: unknown }).__msgs = en;
+    getSession.mockResolvedValue({ customerId: 'c-1', customerEmail: 'a@b.co', customerFirstName: 'Ada', customerLastName: 'L' });
+    const el = await render('en-US');
+    expect(el.props.children.props.fallback.account).toEqual({ id: 'c-1', email: 'a@b.co', firstName: 'Ada', lastName: 'L' });
+    expect(renderToStaticMarkup(el)).toContain('aria-label="Account, Ada"');
   });
 
   it('a failing cart read does not break the page', async () => {
@@ -85,7 +93,7 @@ describe('LocaleLayout', () => {
     getSession.mockResolvedValue({ cartId: 'cart-1' });
     getMappedCart.mockRejectedValue(new Error('down'));
     const el = await render('en-US');
-    expect(el.props.children.props.fallback).toEqual({ cart: null });
+    expect(el.props.children.props.fallback).toEqual({ cart: null, account: null });
   });
 
   it('renders announcement, header, main (page-enter) and footer in that order', async () => {
@@ -104,7 +112,7 @@ describe('LocaleLayout', () => {
     const html = renderToStaticMarkup(el);
     expect(html).toContain(`data-markets="${Object.keys(COUNTRY_CONFIG).length}"`);
     expect(html).toContain('data-slot="bag"');
-    expect(html).toContain('aria-label="nav.account"');
+    expect(html).toContain('aria-label="Sign in"');
   });
 
   it('Unsupported locale: invalid locale calls notFound', async () => {
