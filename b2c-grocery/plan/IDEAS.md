@@ -55,3 +55,9 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 ## Orchestrator notes (2026-10-06)
 - Product images are picsum.photos landscapes (random, not food). Replace with real grocery photos (owner or a stock set) before launch; `washed` styling is already applied.
 - Fixed by orchestrator: locale switch on a PDP produced a 404 (slugs differ per locale). `getProductBySlug` now tries every market language and the PDP redirects to the canonical slug of the URL locale.
+## From workstream M
+- [M] German keys to review (machine-translated): all of `home.*` (hero, grid tiles, categories, new in, editorial, contact).
+- [M] Real photography (hero, six categories, five magazine tiles, editorial) is an owner item (M-M-3); the homepage currently uses picsum placeholders. A small content file or per-image env could replace the code map in `lib/config/home-images.ts`.
+- [M] The homepage fails as a whole if the product search or category tree fails (the `error.tsx` boundary shows). Rendering the other sections without the failed one would be more resilient.
+- [M] "Recently ordered / Recommended for you" and quick order from `home-landing-page` have no drawn design (D-022) and are not built. The newsletter and promo banner from the Canvas are not built either.
+- [M] The editorial panel copy ("A morning at the bakery") is static placeholder; its link target `/journal` depends on workstream X.

@@ -49,7 +49,49 @@
       "contact": "Contact us"
     }
   },
-  "home": {},
+  "home": {
+    "hero": {
+      "tag": "Autumn 26 · Fresh from the farm",
+      "title": "Good food, quietly sourced",
+      "body": "Seasonal produce, honest bread and pantry staples from growers and bakers we know by name, delivered to your door.",
+      "shop": "Shop the collection",
+      "story": "Read the story",
+      "imageAlt": "A wooden table with seasonal vegetables and fresh bread"
+    },
+    "grid": {
+      "title": "Aisle by aisle",
+      "tiles": {
+        "a": "The table, set for autumn",
+        "b": "Fresh produce",
+        "c": "Bakery",
+        "d": "Pantry",
+        "e": "Meet the growers"
+      }
+    },
+    "categories": {
+      "kicker": "The aisles",
+      "title": "Browse by category",
+      "all": "Everything →",
+      "count": "{count} items"
+    },
+    "newIn": {
+      "kicker": "New in",
+      "title": "Just picked and just baked",
+      "all": "See all →"
+    },
+    "editorial": {
+      "kicker": "From the journal · No. 14",
+      "title": "A morning at the bakery",
+      "body": "Before the shutters go up, the ovens have been running for hours. We spent a morning with the baker who makes our sourdough, and learned why slow dough tastes better.",
+      "button": "Read the journal",
+      "imageAlt": "Loaves of sourdough cooling on a wooden rack"
+    },
+    "contact": {
+      "title": "Questions? Contact us",
+      "body": "Allergies, substitutions or a delivery that did not go to plan: we read every message and reply within a working day.",
+      "button": "Contact us"
+    }
+  },
   "plp": {
     "outOfStock": "Out of stock",
     "save": "Save {name} to a list",

@@ -1,0 +1,26 @@
+diff --git a/site/components/product/BuyBox.tsx b/site/components/product/BuyBox.tsx
+index 05c79d3..8ca0863 100644
+--- a/site/components/product/BuyBox.tsx
++++ b/site/components/product/BuyBox.tsx
+@@ -36,7 +36,7 @@ export function BuyBox({
+         <h1 className="mt-(--space-3) mb-0 text-[34px] leading-[1.02] tablet:text-[48px]">{product.name}</h1>
+         {product.brand ? <p className="mt-(--space-2) mb-0 text-[15px] text-muted">{product.brand}</p> : null}
+       </div>
+-      <PriceBlock price={variant.price} className="font-heading text-[30px]" />
++      <PriceBlock price={variant.price} increment={variant.increment} className="font-heading text-[30px]" />
+       {product.description ? <p className="m-0 text-[16px] leading-[1.7] text-text/75">{product.description}</p> : null}
+       <VariantSelectors selectors={selectors} />
+       <AddToBag key={variant.sku} product={product} variant={variant} />
+diff --git a/site/components/product/ProductTile.tsx b/site/components/product/ProductTile.tsx
+index f029fc8..0f69951 100644
+--- a/site/components/product/ProductTile.tsx
++++ b/site/components/product/ProductTile.tsx
+@@ -17,7 +17,7 @@ export function ProductTile({ product, priority }: { product: Product; priority?
+         <Photo src={variant?.images[0] ?? ''} alt={product.name} sizes="(min-width: 75rem) 330px, 50vw" priority={priority} className="h-[330px]" />
+         <div className="mt-(--space-3) flex items-baseline justify-between gap-(--space-3)">
+           <h3 className="card-title m-0">{product.name}</h3>
+-          <PriceBlock price={variant?.price} className="flex-none text-[15px]" />
++          <PriceBlock price={variant?.price} increment={variant?.increment} className="flex-none items-end text-[15px]" />
+         </div>
+         {product.brand ? <div className="card-meta mt-(--space-1)">{product.brand}</div> : null}
+       </Link>

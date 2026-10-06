@@ -46,5 +46,7 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 
 ## Q-L-1 (workstream L, task L-06)
 **Question:** The plan says AddToBag calls `addItemWithToast` and shows an inline "Only N available" on `INSUFFICIENT_STOCK`, but J's `addItemWithToast` swallows the error (toast only, resolves `true/false`). I check stock on the client (stepper max = available quantity; units already in the bag count) and show the inline message from that check; a server-side 409 (race) still gets J's toast "Only N available right now." Should J's helper expose the available quantity so the PDP can show the inline message for the 409 too (see IDEAS)?
+## Q-M-1 (workstream M, task M-05)
+**Question:** The plan says the page uses `getMarket()` for the market. As in K and P I used the URL locale's market (`COUNTRY_CONFIG`) and fall back to `getMarket()` only for unknown locales, because `getMarket()` reads the session cookie and a fresh visit to `/de-DE` would show USD. Result: the homepage reads no session at all. OK?
 **Blocking:** no
 **Answer (owner):**

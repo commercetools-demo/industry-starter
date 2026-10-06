@@ -33,7 +33,7 @@ export function findCategoryById(tree: Category[], id: string): Category | undef
 }
 
 /** The facet counts direct categories only; a parent shows its own products plus those of its subcategories. */
-function rolledUp(node: Category, direct: Map<string, number>): number {
+export function rolledUp(node: Category, direct: Map<string, number>): number {
   return (direct.get(node.id) ?? 0) + (node.children ?? []).reduce((sum, child) => sum + rolledUp(child, direct), 0);
 }
 
