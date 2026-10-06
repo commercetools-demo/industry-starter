@@ -48,5 +48,17 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 **Question:** The plan says AddToBag calls `addItemWithToast` and shows an inline "Only N available" on `INSUFFICIENT_STOCK`, but J's `addItemWithToast` swallows the error (toast only, resolves `true/false`). I check stock on the client (stepper max = available quantity; units already in the bag count) and show the inline message from that check; a server-side 409 (race) still gets J's toast "Only N available right now." Should J's helper expose the available quantity so the PDP can show the inline message for the 409 too (see IDEAS)?
 ## Q-M-1 (workstream M, task M-05)
 **Question:** The plan says the page uses `getMarket()` for the market. As in K and P I used the URL locale's market (`COUNTRY_CONFIG`) and fall back to `getMarket()` only for unknown locales, because `getMarket()` reads the session cookie and a fresh visit to `/de-DE` would show USD. Result: the homepage reads no session at all. OK?
+## Q-Q-1 (workstream Q, task Q-04)
+**Question:** A live check (`PROJECT-FINDINGS.md` section 16) shows commercetools rejects a shipping address whose country has no `standard` rate in the cart currency (USD cart, DE address: HTTP 400 `InvalidOperation`). `PUT /api/cart/address` therefore answers 422 `COUNTRY_MISMATCH` when the address country differs from the cart's market, and the country select in the cart only works for the active market's country (the other option shows "switch the region in the header"). Is that acceptable, or should choosing the other country switch the market (and drop the cart, like the header switch)?
+**Blocking:** no
+**Answer (owner):**
+
+## Q-Q-2 (workstream Q, task Q-04)
+**Question:** The plan says an undeliverable address answers 422 and also clears the slot. I save the undeliverable address on the cart anyway (so the cart is truthful and `canCheckout` blocks), release and clear the slot, set no shipping method, and answer 422 `UNDELIVERABLE` with `{ cart, slotCleared }`. OK?
+**Blocking:** no
+**Answer (owner):**
+
+## Q-Q-3 (workstream Q, task Q-07/Q-08)
+**Question:** The slot hold lives only in process memory but the slot fields live on the cart, so after a restart the cart still shows a slot whose capacity was never re-reserved (until the 15-minute `slotHoldExpires` passes). The UI treats a slot as chosen only while `slotHoldExpires` is in the future, and V must re-hold at session creation (D-042). OK to keep this behaviour for v1?
 **Blocking:** no
 **Answer (owner):**

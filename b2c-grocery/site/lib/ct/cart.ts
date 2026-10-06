@@ -47,7 +47,7 @@ export async function createCart(session: Session & { currency: string; country:
   return res.body;
 }
 
-async function update(cartId: string, version: number, actions: CartUpdateAction[]): Promise<CtCart> {
+export async function updateCart(cartId: string, version: number, actions: CartUpdateAction[]): Promise<CtCart> {
   const { body } = await getApiRoot()
     .carts()
     .withId({ ID: cartId })
@@ -64,7 +64,7 @@ export interface AddLineItemInput {
 }
 
 export function addLineItem(cartId: string, version: number, input: AddLineItemInput): Promise<CtCart> {
-  return update(cartId, version, [
+  return updateCart(cartId, version, [
     {
       action: 'addLineItem',
       sku: input.sku,
@@ -82,11 +82,11 @@ export function addLineItem(cartId: string, version: number, input: AddLineItemI
 }
 
 export function changeLineItemQuantity(cartId: string, version: number, lineItemId: string, quantity: number): Promise<CtCart> {
-  return update(cartId, version, [{ action: 'changeLineItemQuantity', lineItemId, quantity }]);
+  return updateCart(cartId, version, [{ action: 'changeLineItemQuantity', lineItemId, quantity }]);
 }
 
 export function removeLineItem(cartId: string, version: number, lineItemId: string): Promise<CtCart> {
-  return update(cartId, version, [{ action: 'removeLineItem', lineItemId }]);
+  return updateCart(cartId, version, [{ action: 'removeLineItem', lineItemId }]);
 }
 
 /**

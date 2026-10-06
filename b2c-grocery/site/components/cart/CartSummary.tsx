@@ -3,19 +3,30 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { checkoutBlock, isSlotActive } from '@/lib/cart-rules';
 import type { Cart } from '@/lib/types';
 import { formatMoney } from '@/lib/utils';
 import { ProvisionalNotice } from './ProvisionalNotice';
+import { dayLabel, windowLabel } from './SlotPicker';
 
 /**
  * Sticky summary. Every amount is the server cart's value; nothing is recomputed here.
- * Checkout stays disabled in J (workstream V enables it) and also whenever a line is out of stock.
+ * Checkout needs `canCheckout(cart)` (address, slot, stock, Q) and an `onCheckout` handler (workstream V provides it).
  */
-export function CartSummary({ cart }: { cart: Cart }) {
+export function CartSummary({ cart, onCheckout }: { cart: Cart; onCheckout?: () => void }) {
   const t = useTranslations('cart');
   const locale = useLocale();
   const money = (m: { centAmount: number; currencyCode: string }) => formatMoney(m.centAmount, m.currencyCode, locale);
-  const hasUnavailable = cart.lines.some((l) => !l.inStock);
+  const block = checkoutBlock(cart);
+  const slot = isSlotActive(cart.slot) ? cart.slot : undefined;
+  const explanation = {
+    EMPTY: t('checkoutDisabled'),
+    OUT_OF_STOCK: t('checkoutBlocked'),
+    NO_ADDRESS: t('addAddress'),
+    UNDELIVERABLE: t('step.undeliverable'),
+    NO_SLOT: t('chooseSlot'),
+  };
+  const note = block ? explanation[block] : onCheckout ? null : t('checkoutDisabled');
   return (
     <Card elev="md" className="gap-(--space-3) p-[26px] desktop:sticky desktop:top-[110px]" aria-labelledby="cart-summary-title">
       <h3 id="cart-summary-title" className="m-0 text-[24px]">
@@ -31,18 +42,23 @@ export function CartSummary({ cart }: { cart: Cart }) {
           <dd className="m-0">{cart.shipping ? (cart.shipping.free ? t('deliveryIncluded') : money(cart.shipping.price)) : t('deliveryPending')}</dd>
         </div>
       </dl>
+      {slot ? (
+        <p className="m-0 text-[13px] text-muted">{t('slotLine', { day: dayLabel(slot.start.slice(0, 10), locale), time: windowLabel(slot) })}</p>
+      ) : null}
       <ProvisionalNotice cart={cart} />
       <hr className="m-0 border-0 border-t border-divider" />
       <div className="flex items-baseline justify-between font-heading text-[24px]">
         <span>{t('total')}</span>
         <span>{money(cart.total)}</span>
       </div>
-      <Button block disabled aria-describedby="cart-checkout-note" className="text-[15px]">
+      <Button block disabled={block !== null || !onCheckout} onClick={onCheckout} aria-describedby={note ? 'cart-checkout-note' : undefined} className="text-[15px]">
         {t('checkout')}
       </Button>
-      <p id="cart-checkout-note" className="m-0 text-[13px] text-muted">
-        {hasUnavailable ? t('checkoutBlocked') : t('checkoutDisabled')}
-      </p>
+      {note ? (
+        <p id="cart-checkout-note" className="m-0 text-[13px] text-muted">
+          {note}
+        </p>
+      ) : null}
       <p className="m-0 text-[13px] text-muted">{t('returnsNote')}</p>
     </Card>
   );

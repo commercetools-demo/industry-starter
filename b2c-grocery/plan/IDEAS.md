@@ -61,3 +61,10 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [M] The homepage fails as a whole if the product search or category tree fails (the `error.tsx` boundary shows). Rendering the other sections without the failed one would be more resilient.
 - [M] "Recently ordered / Recommended for you" and quick order from `home-landing-page` have no drawn design (D-022) and are not built. The newsletter and promo banner from the Canvas are not built either.
 - [M] The editorial panel copy ("A morning at the bakery") is static placeholder; its link target `/journal` depends on workstream X.
+## From workstream Q
+- [Q] German keys to review (machine-translated): `cart.step.*`, `cart.slotCleared`, `cart.noSlots`, `cart.nextAvailable`, `cart.slotTaken`, `cart.slotExpired`, `cart.chooseSlot`, `cart.addAddress`, `cart.slotLine`.
+- [Q] Slot times are UTC in the stub; real slots need the delivery area's time zone (and a day boundary in local time).
+- [Q] Show a hold countdown ("held for 12 min") next to the chosen slot.
+- [Q] The address form always shows; a collapsed "Deliver to Ada, 10001 New York · Change" summary after saving would be tidier (the signed-in saved-address picker comes in S).
+- [Q] Changing the country should switch the market (see Q-Q-1) instead of blocking.
+- [Q] Slot capacity is global in the stub; per-postcode-area capacity would need the `country`/`postalCode` arguments that the interface already carries.

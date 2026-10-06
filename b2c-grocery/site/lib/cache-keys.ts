@@ -6,3 +6,4 @@ export const KEY_ADDRESSES = 'addresses';
 export const KEY_WISHLIST = 'wishlist';
 export const KEY_RECURRING = 'recurring';
 export const keyOrder = (id: string): string => `order:${id}`;
+export const keySlots = (country: string, postalCode: string): string => `slots:${country}:${postalCode}`;
