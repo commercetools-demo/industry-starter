@@ -1,10 +1,11 @@
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { AccountLink } from '@/components/layout/AccountLink';
 import { AnnouncementBar } from '@/components/layout/AnnouncementBar';
 import { BagButton } from '@/components/layout/BagButton';
+import { PendingSaveRunner } from '@/components/product/PendingSaveRunner';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { ToastProvider } from '@/components/ui/Toast';
@@ -69,6 +70,9 @@ export default async function LocaleLayout({ children, params }: { children: Rea
             <Header bag={<BagButton />} account={<AccountLink />} markets={markets} />
             <main className="page-enter">{children}</main>
             <Footer />
+            <Suspense fallback={null}>
+              <PendingSaveRunner />
+            </Suspense>
           </CartProvider>
         </ToastProvider>
       </SWRProvider>
