@@ -52,3 +52,8 @@ test-results/
 
 # Playwright gate session (test/gate-setup.ts) — a live cookie, regenerated each run
 test/.auth/
+
+# direnv file used to connect the commerce MCP (contains secrets - never commit)
+.envrc
+.env.seed
+.env.seed.*
