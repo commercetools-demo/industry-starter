@@ -99,3 +99,8 @@ Resolved by D-051: `finalTotal` added to the `cart-delivery` custom type (live p
 **Question:** The hosted checkout lists every applicable shipping method (D-049), so the old 500.00 / 750.00 methods are visible next to `standard`, and the shopper may pick one there even though the cart summary on our page shows the `standard` cost. Our summary is a snapshot taken when the page loads. Accepted for v1 (Z-05 checklist), or should the cart totals refresh on our side after the hosted step (not possible without a message from the SDK)?
 **Blocking:** no
 **Answer (owner):**
+
+## Q-ORCH-2 (OA-05 incomplete: no payment integration)
+**Question:** The Checkout application used by the storefront (`demo-commercetools-checkout-taxes`) is a sample PaymentOnly app for GB/US and the project has zero payment integrations, so a card payment cannot complete. Please create a Complete-checkout application for US and DE with an Adyen test integration (details in TODO-MANUAL-TESTING.md, OA-05) and give me its key. I will then run M-V-3..M-V-8 myself in the browser.
+**Blocking:** yes for the payment part of v1 acceptance only
+**Answer (owner):**
