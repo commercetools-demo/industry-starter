@@ -48,3 +48,8 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 **Question:** The plan says AddToBag calls `addItemWithToast` and shows an inline "Only N available" on `INSUFFICIENT_STOCK`, but J's `addItemWithToast` swallows the error (toast only, resolves `true/false`). I check stock on the client (stepper max = available quantity; units already in the bag count) and show the inline message from that check; a server-side 409 (race) still gets J's toast "Only N available right now." Should J's helper expose the available quantity so the PDP can show the inline message for the 409 too (see IDEAS)?
 **Blocking:** no
 **Answer (owner):**
+
+## Q-T-1 (workstream T, task T-02)
+**Question:** `privateJson()` was planned in R-03 but R is not merged, so T created `site/lib/api/private-json.ts` with the planned signature. Merging R will give an add/add conflict on that file (and its test); both copies behave the same, keep either. Also, the plan's `addProduct(listId, version, productId)` could not skip duplicates without the line items, so it takes the loaded `ShoppingList` instead. OK?
+**Blocking:** no
+**Answer (owner):**

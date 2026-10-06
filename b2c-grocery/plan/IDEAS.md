@@ -51,3 +51,10 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [X] Footer links only to `/policies/delivery`; add returns, privacy and terms (H owns the footer). The homepage contact strip (M) should link to `/contact`.
 - [X] German keys to review (machine-translated): `static.*` and the German markdown in `content/de-DE`.
 - [X] Contact form has no CAPTCHA; in-memory rate limit only (D-047). Real delivery (email/CRM) is out of v1 (D-044).
+
+## From workstream T
+- [T] German keys to review (machine-translated, informal "du"): all of `account.saved.*`.
+- [T] A failed heart toggle only rolls back silently; show a toast ("We could not save that. Please try again.") once `useSaved` can reach the toast context safely.
+- [T] The header "Saved" entry (`nav.saved`) and the account hub should link to `/account/saved`; R owns the account hub, H the header.
+- [T] Deleting a customer leaves its `wishlist-<customerId>` shopping list behind in commercetools; the QA cleanup script should delete those lists too.
+- [T] Saved cards always add quantity 1 of the first variant; weight products (N) may need their increment instead.

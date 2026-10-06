@@ -23,7 +23,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | Q | Delivery slots and address step | 9 | 0 | Not started | | |
 | R | Account shell, orders | 8 | 0 | Not started | | |
 | S | Address book | 6 | 0 | Not started | | |
-| T | Saved lists | 6 | 0 | Not started | | |
+| T | Saved lists | 6 | 6 | Ready for review | | |
 | U | Substitutions | 8 | 0 | Not started | | |
 | V | Hosted checkout and confirmation | 9 | 0 | Not started | | |
 | W | Subscriptions | 9 | 0 | Not started | | |
