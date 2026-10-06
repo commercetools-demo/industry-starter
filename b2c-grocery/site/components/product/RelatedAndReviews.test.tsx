@@ -4,6 +4,8 @@ import { renderWithProviders } from '@/test/utils';
 import { RelatedProducts } from './RelatedProducts';
 import { Reviews } from './Reviews';
 
+vi.mock('@/hooks/useSaved', () => ({ useSaved: () => ({ isSaved: () => false, toggle: async () => {} }) }));
+
 const many = (n: number) => Array.from({ length: n }, (_, i) => makeProduct({ id: `p-${i}`, name: `Product ${i}`, slug: `product-${i}` }));
 
 describe('RelatedProducts', () => {
