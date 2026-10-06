@@ -24,7 +24,7 @@ Rules: `inc.unit === 'each'` → `null`; `g` → per kg: `centAmount × (1000 / 
 - Quantity is always an integer count of increments (existing stepper behavior).
 
 ## Tasks
-- [ ] N-01 Write `lib/pricing.ts` + tests: all unit conversions above, discounted price used, `each` → null, undefined price → null, rounding half-up on cents.
+- [x] N-01 Write `lib/pricing.ts` + tests: all unit conversions above, discounted price used, `each` → null, undefined price → null, rounding half-up on cents.
 - [ ] N-02 Extend `PriceBlock` to render the unit line + tests (500 g example; `each` shows none; EUR/de-DE formatting).
 - [ ] N-03 Pass `increment` through tile, PDP and cart line; tests assert the unit price appears in each (render with fixture product).
 - [ ] N-04 Write `ProvisionalNotice` and wire into the cart summary (total label + note); tests: approximate line → "Total (provisional)" + note; exact lines → "Total", no note.
