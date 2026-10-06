@@ -1,18 +1,10 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { listingHref, withListingChange, type ListingParams } from '@/lib/listing-params';
+import type { ListingFilterData } from '@/lib/listing-view';
 import { formatMoney } from '@/lib/utils';
 
-/** Serializable data the server page hands to the client filter components. */
-export interface ListingFilterData {
-  currency: string;
-  /** Flattened category tree (depth-first); `count` includes the subcategories. */
-  categories: { slug: string; name: string; count: number; depth: number }[];
-  /** Products matching the other filters, shown on the "Everything" category row. */
-  total: number;
-  priceBands: { id: string; min?: number; max?: number; count: number }[];
-  availability: { inStock: number; outOfStock: number };
-}
+export type { ListingFilterData };
 
 export type FilterPatch = Partial<Pick<ListingParams, 'category' | 'price' | 'stock' | 'sort'>>;
 
