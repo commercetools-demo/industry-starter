@@ -147,6 +147,17 @@
       "priceDesc": "Price ↓"
     }
   },
+  "subscription": {
+    "repeatLabel": "Repeat",
+    "oneTime": "One-time",
+    "priceNotice": "The price of each repeat order follows the current price and may change.",
+    "badge": {
+      "weekly": "Repeats every week",
+      "every-2-weeks": "Repeats every 2 weeks",
+      "monthly": "Repeats every month",
+      "other": "Repeats on a schedule"
+    }
+  },
   "pdp": {
     "photoAlt": "{name}, photo {number}",
     "questions": "Questions about this product?",

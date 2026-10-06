@@ -147,6 +147,17 @@
       "priceDesc": "Preis ↓"
     }
   },
+  "subscription": {
+    "repeatLabel": "Wiederholen",
+    "oneTime": "Einmalig",
+    "priceNotice": "Der Preis jeder Folgebestellung richtet sich nach dem aktuellen Preis und kann sich ändern.",
+    "badge": {
+      "weekly": "Wiederholt sich jede Woche",
+      "every-2-weeks": "Wiederholt sich alle 2 Wochen",
+      "monthly": "Wiederholt sich jeden Monat",
+      "other": "Wiederholt sich regelmäßig"
+    }
+  },
   "pdp": {
     "photoAlt": "{name}, Foto {number}",
     "questions": "Fragen zu diesem Produkt?",

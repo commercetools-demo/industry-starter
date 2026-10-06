@@ -3,6 +3,7 @@ import type { Product, Variant } from '@/lib/types';
 import { Tag } from '@/components/ui/Tag';
 import { cx } from '@/components/ui/cx';
 import { AddToBag } from './AddToBag';
+import type { RecurrenceOption } from './RecurrenceSelector';
 import { Availability } from './Availability';
 import { ContactStrip } from './ContactStrip';
 import { PriceBlock } from './PriceBlock';
@@ -18,12 +19,15 @@ export function BuyBox({
   variant,
   selectors,
   categoryName,
+  recurrencePolicies,
   className,
 }: {
   product: Product;
   variant: Variant;
   selectors: Selector[];
   categoryName?: string;
+  /** Offered cadences (workstream W); empty or missing when the product is not eligible or subscriptions are off. */
+  recurrencePolicies?: RecurrenceOption[];
   className?: string;
 }) {
   return (
@@ -39,7 +43,7 @@ export function BuyBox({
       <PriceBlock price={variant.price} increment={variant.increment} className="font-heading text-[30px]" />
       {product.description ? <p className="m-0 text-[16px] leading-[1.7] text-text/75">{product.description}</p> : null}
       <VariantSelectors selectors={selectors} />
-      <AddToBag key={variant.sku} product={product} variant={variant} />
+      <AddToBag key={variant.sku} product={product} variant={variant} recurrencePolicies={recurrencePolicies} />
       <Availability variant={variant} />
       <ContactStrip />
       <SpecsTable product={product} />

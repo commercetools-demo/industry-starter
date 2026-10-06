@@ -8,7 +8,9 @@ import { BuyBox } from '@/components/product/BuyBox';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { RelatedProducts, RELATED_MAX } from '@/components/product/RelatedProducts';
 import { Reviews } from '@/components/product/Reviews';
+import { subscriptionsEnabled } from '@/lib/config/features';
 import { getCategoryTree } from '@/lib/ct/categories';
+import { getRecurrencePolicies } from '@/lib/ct/recurrence-policies';
 import { getProductBySlug, searchProducts } from '@/lib/ct/search';
 import { buildSelectors, pickVariant } from '@/lib/config/variant-config';
 import { findCategoryById } from '@/lib/listing-view';
@@ -60,7 +62,7 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
   }
 
   const categoryId = product.categoryIds[0];
-  const [tree, related] = await Promise.all([
+  const [tree, related, policies] = await Promise.all([
     getCategoryTree(locale).catch((): Category[] => []),
     categoryId
       ? searchProducts({ ...market, categoryId, pageSize: RELATED_MAX + 1 }).then(
@@ -68,6 +70,13 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
           (): Product[] => [],
         )
       : Promise.resolve<Product[]>([]),
+    // Subscribe-and-save choices (W): only for eligible products and only while the flag is on. A failure hides the selector.
+    subscriptionsEnabled() && product.recurringEligible
+      ? getRecurrencePolicies(locale).then(
+          (list) => list.map(({ key, name }) => ({ key, name })),
+          () => [],
+        )
+      : Promise.resolve([]),
   ]);
 
   const sku = Array.isArray(sp.sku) ? sp.sku[0] : sp.sku;
@@ -86,6 +95,7 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
           variant={variant}
           selectors={buildSelectors(product, variant.sku)}
           categoryName={category?.name}
+          recurrencePolicies={policies}
           className="desktop:sticky desktop:top-[110px]"
         />
       </div>

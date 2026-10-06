@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
 import { useCartContext } from '@/context/CartProvider';
 import type { Product, Variant } from '@/lib/types';
-import { RecurrenceSelector } from './RecurrenceSelector';
+import { ONE_TIME, RecurrenceSelector, type RecurrenceOption } from './RecurrenceSelector';
 import { SaveButton } from './SaveButton';
 
 /**
@@ -15,12 +15,13 @@ import { SaveButton } from './SaveButton';
  * request that would exceed it is not sent. A race with other shoppers is still answered by the cart API (409) and
  * shown by the toast of `addItemWithToast`.
  */
-export function AddToBag({ product, variant }: { product: Product; variant: Variant }) {
+export function AddToBag({ product, variant, recurrencePolicies = [] }: { product: Product; variant: Variant; recurrencePolicies?: RecurrenceOption[] }) {
   const t = useTranslations('pdp');
   const { addItemWithToast, cart } = useCartContext();
   const [quantity, setQuantity] = useState(1);
   const [busy, setBusy] = useState(false);
   const [limit, setLimit] = useState<number | null>(null);
+  const [recurrence, setRecurrence] = useState(ONE_TIME);
   const noteId = useId();
 
   const inStock = variant.availability.isOnStock;
@@ -37,7 +38,7 @@ export function AddToBag({ product, variant }: { product: Product; variant: Vari
     setLimit(null);
     setBusy(true);
     try {
-      await addItemWithToast(variant.sku, quantity);
+      await addItemWithToast(variant.sku, quantity, recurrence === ONE_TIME ? {} : { recurrencePolicyKey: recurrence });
     } finally {
       setBusy(false);
     }
@@ -45,7 +46,7 @@ export function AddToBag({ product, variant }: { product: Product; variant: Vari
 
   return (
     <div>
-      <RecurrenceSelector product={product} variant={variant} />
+      <RecurrenceSelector product={product} variant={variant} policies={recurrencePolicies} value={recurrence} onChange={setRecurrence} />
       <div className="flex items-center gap-(--space-3)">
         <QuantityStepper
           value={quantity}
