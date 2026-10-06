@@ -10,6 +10,7 @@
     "search": "Suche",
     "saved": "Gemerkt",
     "bag": "Warenkorb",
+    "bagCount": "Warenkorb · {count}",
     "account": "Konto",
     "searchPill": "Im Shop suchen",
     "menu": "Menü",
@@ -51,7 +52,13 @@
   "home": {},
   "plp": {},
   "pdp": {},
-  "cart": {},
+  "cart": {
+    "added": "Zum Warenkorb hinzugefügt",
+    "viewBag": "Warenkorb ansehen",
+    "insufficientStock": "Aktuell sind nur {available} verfügbar.",
+    "outOfStock": "Leider ist dieser Artikel ausverkauft.",
+    "addFailed": "Wir konnten deinen Warenkorb nicht aktualisieren. Bitte versuche es erneut."
+  },
   "checkout": {},
   "account": {},
   "auth": {},

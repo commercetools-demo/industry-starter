@@ -10,6 +10,7 @@
     "search": "Search",
     "saved": "Saved",
     "bag": "Bag",
+    "bagCount": "Bag · {count}",
     "account": "Account",
     "searchPill": "Search the shop",
     "menu": "Menu",
@@ -51,7 +52,13 @@
   "home": {},
   "plp": {},
   "pdp": {},
-  "cart": {},
+  "cart": {
+    "added": "Added to your bag",
+    "viewBag": "View bag",
+    "insufficientStock": "Only {available} available right now.",
+    "outOfStock": "Sorry, this item is out of stock.",
+    "addFailed": "We could not update your bag. Please try again."
+  },
   "checkout": {},
   "account": {},
   "auth": {},
