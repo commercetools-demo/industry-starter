@@ -349,6 +349,56 @@
       "loading": "Deine Bestellung wird geladen…",
       "notFoundTitle": "Diese Bestellung haben wir nicht gefunden",
       "notFoundBody": "Sie gehört vielleicht zu einem anderen Konto oder existiert nicht mehr."
+    },
+    "addresses": {
+      "title": "Adressen",
+      "metaTitle": "Adressen",
+      "loading": "Deine Adressen werden geladen ...",
+      "loadFailed": "Wir konnten deine Adressen nicht laden.",
+      "retry": "Erneut versuchen",
+      "empty": "Du hast noch keine Adresse gespeichert.",
+      "add": "Adresse hinzufügen",
+      "edit": "Bearbeiten",
+      "editLabel": "Adresse bearbeiten: {name}",
+      "delete": "Löschen",
+      "deleteLabel": "Adresse löschen: {name}",
+      "makeDefault": "Als Standard festlegen",
+      "makeDefaultLabel": "Als Standard festlegen: {name}",
+      "default": "Standard",
+      "list": "Gespeicherte Adressen",
+      "actionFailed": "Das hat nicht geklappt. Bitte versuche es erneut.",
+      "dialog": {
+        "addTitle": "Adresse hinzufügen",
+        "editTitle": "Adresse bearbeiten",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "street": "Straße und Hausnummer",
+        "additional": "Adresszusatz (optional)",
+        "postalCode": "Postleitzahl",
+        "city": "Ort",
+        "country": "Land",
+        "phone": "Telefon (optional)",
+        "save": "Adresse speichern",
+        "saving": "Speichern ...",
+        "cancel": "Abbrechen",
+        "saveFailed": "Wir konnten die Adresse nicht speichern. Bitte versuche es erneut."
+      },
+      "errors": {
+        "required": "Dieses Feld ist erforderlich.",
+        "invalidCountry": "Wähle United States oder Deutschland.",
+        "invalidPostcode": "Gib eine gültige Postleitzahl für das Land ein.",
+        "invalidPhone": "Gib eine gültige Telefonnummer ein.",
+        "tooLong": "Das ist zu lang (höchstens 100 Zeichen)."
+      },
+      "confirm": {
+        "title": "Diese Adresse löschen?",
+        "body": "Diese Adresse wird aus deinem Adressbuch entfernt.",
+        "defaultNote": "Es ist deine Standardadresse. Danach hast du keine Standardadresse.",
+        "cancel": "Behalten",
+        "confirm": "Adresse löschen",
+        "deleting": "Löschen ...",
+        "failed": "Wir konnten die Adresse nicht löschen. Bitte versuche es erneut."
+      }
     }
   },
   "auth": {

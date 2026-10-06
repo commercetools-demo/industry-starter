@@ -349,6 +349,56 @@
       "loading": "Loading your order…",
       "notFoundTitle": "We could not find that order",
       "notFoundBody": "It may belong to another account, or it no longer exists."
+    },
+    "addresses": {
+      "title": "Addresses",
+      "metaTitle": "Addresses",
+      "loading": "Loading your addresses...",
+      "loadFailed": "We could not load your addresses.",
+      "retry": "Try again",
+      "empty": "You have not saved an address yet.",
+      "add": "Add an address",
+      "edit": "Edit",
+      "editLabel": "Edit address: {name}",
+      "delete": "Delete",
+      "deleteLabel": "Delete address: {name}",
+      "makeDefault": "Make default",
+      "makeDefaultLabel": "Make default: {name}",
+      "default": "Default",
+      "list": "Saved addresses",
+      "actionFailed": "That did not work. Please try again.",
+      "dialog": {
+        "addTitle": "Add an address",
+        "editTitle": "Edit address",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "street": "Street and number",
+        "additional": "Address line 2 (optional)",
+        "postalCode": "Postcode",
+        "city": "City",
+        "country": "Country",
+        "phone": "Phone (optional)",
+        "save": "Save address",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "saveFailed": "We could not save the address. Please try again."
+      },
+      "errors": {
+        "required": "This field is required.",
+        "invalidCountry": "Choose United States or Deutschland.",
+        "invalidPostcode": "Enter a valid postcode for the country.",
+        "invalidPhone": "Enter a valid phone number.",
+        "tooLong": "That is too long (100 characters at most)."
+      },
+      "confirm": {
+        "title": "Delete this address?",
+        "body": "This address will be removed from your address book.",
+        "defaultNote": "It is your default address. You will have no default address afterwards.",
+        "cancel": "Keep it",
+        "confirm": "Delete address",
+        "deleting": "Deleting...",
+        "failed": "We could not delete the address. Please try again."
+      }
     }
   },
   "auth": {
