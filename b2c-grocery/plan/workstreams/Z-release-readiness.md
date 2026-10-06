@@ -12,7 +12,7 @@ Everything is verified against the specs, manual tests are executed by the owner
 - [ ] Z-03 Run `npm run seed:verify` and re-check `PROJECT-FINDINGS.md` is current.
 - [ ] Z-04 Consolidate the manual tests: every `M-*` row in the TODO file has a status set by the owner; list `FAIL` rows with notes and fix them (new tasks).
 - [ ] Z-05 Security hygiene: delete/disable the **seed/admin API client** (OA-03) and the throw-away local credentials; confirm `git log -p` contains no secrets (`git log -p | grep -iE "client_secret|session_secret"` finds only variable names); confirm Netlify env vars are the only copies in production.
-- [ ] Z-06 Update `openspec/changes/*/tasks.md` checkboxes to match reality; run `openspec validate <change> --strict` for the three changes; then ask the owner whether to archive (`/opsx:archive`) — do not archive yourself.
+- [x] Z-06 Update `openspec/changes/*/tasks.md` checkboxes to match reality; run `openspec validate <change> --strict` for the three changes; then ask the owner whether to archive (`/opsx:archive`) — do not archive yourself.
 - [x] Z-07 Write `site/README.md` final sections: architecture overview (BFF flow diagram in text), how to add a country/page/API (links to the skill references), known limitations (stub slots reset on cold start; no email sending; D-042; reviews placeholder; recurring orders beta).
 
 ## Definition of done (project)

@@ -29,6 +29,6 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | W | Subscriptions | 9 | 9 | Ready for review | Spike passed live at API level; hosted-Checkout hand-off (M-W-3), M-W-1…M-W-5 and SO-05 are the owner's | |
 | X | Static pages | 6 | 6 | Verified | Claude (verify + Chrome) | 2026-10-06 |
 | Y | Netlify deployment | 5 | 4 | Ready for review (Y-05 waits for owner deploy report, Q-Y-1) | | |
-| Z | Release readiness | 7 | 0 | Not started | | |
+| Z | Release readiness | 7 | 2 | Not started | | |
 
 Task counts are checked by `node plan/verify-plan.mjs` against the checkbox lists in each workstream file.
