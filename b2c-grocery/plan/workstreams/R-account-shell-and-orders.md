@@ -38,7 +38,7 @@ export interface OrderListItem { id: string; orderNumber?: string; createdAt: st
 - [x] R-04 Write hooks `useOrders`, `useOrder` + tests (cache keys; safe defaults).
 - [x] R-05 Write `AccountShell` + dashboard cards + tests (name/kicker; details rows and hrefs; default address shown or empty state).
 - [x] R-06 Write the orders table + empty state + status `Tag` tones + tests (each status → tone; row link; "No orders yet").
-- [ ] R-07 Write the order detail page + tests (slot text; lines; totals; provisional notice only when flagged; final amount block only when `finalTotal`; preference text; 404 UI for not owned).
+- [x] R-07 Write the order detail page + tests (slot text; lines; totals; provisional notice only when flagged; final amount block only when `finalTotal`; preference text; 404 UI for not owned).
 - [ ] R-08 Messages (both locales); `Cache-Control: private, no-store` on all `/api/account/*` responses (helper `privateJson()` + test); report manual tests M-R-1…M-R-4, sign-off SO-11.
 
 ## Unit tests (scenario → test)
