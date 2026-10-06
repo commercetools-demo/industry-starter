@@ -1,28 +1,6 @@
 import { SLOT_CONFIG } from '../config/slots';
 import type { HoldResult, Slot, SlotService } from './types';
-
-const HOUR_MS = 3_600_000;
-const DAY_MS = 24 * HOUR_MS;
-const SLOT_ID = /^(\d{4})(\d{2})(\d{2})-(\d{2})$/;
-
-const pad = (n: number) => String(n).padStart(2, '0');
-const startOfUtcDay = (d: Date) => Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-const slotIdOf = (dayMs: number, hour: number) => {
-  const d = new Date(dayMs);
-  return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}-${pad(hour)}`;
-};
-
-/** Start of the slot (UTC ms) when `id` is a configured window, else `null`. */
-function parseSlotId(id: string): { startMs: number; dayMs: number } | null {
-  const m = SLOT_ID.exec(id);
-  if (!m) return null;
-  const [, y, mo, d, h] = m;
-  const hour = Number(h);
-  if (!(SLOT_CONFIG.windows as readonly number[]).includes(hour)) return null;
-  const dayMs = Date.UTC(Number(y), Number(mo) - 1, Number(d));
-  if (slotIdOf(dayMs, hour) !== id) return null;
-  return { startMs: dayMs + hour * HOUR_MS, dayMs };
-}
+import { DAY_MS, HOUR_MS, parseSlotId, slotIdOf, startOfUtcDay } from './window';
 
 interface Hold { slotId: string; expires: number }
 
