@@ -16,7 +16,7 @@ Signed-in customers save products with the heart and see them on the "Put aside"
 - Page `/account/saved` (`(protected)`): kicker "N pieces saved", H1 "Put aside", 4-column grid of `Card`s (image 270, name, brand, price, primary "Add to bag", ghost "Remove"), empty state with browse button. "Add to bag": product has one variant → add default variant; multiple variants → link to the PDP; out-of-stock → disabled "Out of stock".
 
 ## Tasks
-- [ ] T-01 Write `lib/ct/shopping-lists.ts` + tests (key format; created once; add skips duplicates; remove by line item id).
+- [x] T-01 Write `lib/ct/shopping-lists.ts` + tests (key format; created once; add skips duplicates; remove by line item id).
 - [ ] T-02 Write the wishlist routes + tests (401 anonymous; add/remove update list; returns ids).
 - [ ] T-03 Replace `hooks/useSaved.ts` with the real implementation + tests: signed-in toggle adds/removes with optimistic cache update and rollback on error; anonymous toggle navigates with `redirect` and `save`.
 - [ ] T-04 Write `PendingSaveRunner` + tests (adds once; strips `save`; does nothing when anonymous).
