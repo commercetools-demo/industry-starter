@@ -4,21 +4,27 @@ import { unitPrice } from '@/lib/pricing';
 import type { Increment, Price } from '@/lib/types';
 import { formatMoney } from '@/lib/utils';
 
+/** Muted "€4.80 / kg" line for weighed or measured goods; renders nothing for `each` or a missing price (D-030). */
+export function UnitPriceLine({ price, increment, className }: { price?: Price; increment?: Increment; className?: string }) {
+  const locale = useLocale();
+  const tp = useTranslations('pricing');
+  const unit = increment ? unitPrice(price, increment) : null;
+  if (!unit) return null;
+  return (
+    <span className={cx('block font-body text-[12px] leading-snug font-normal whitespace-nowrap text-muted', className)} data-testid="unit-price">
+      {tp(unit.per === 'kg' ? 'perKg' : 'perL', { price: formatMoney(unit.money.centAmount, unit.money.currencyCode, locale) })}
+    </span>
+  );
+}
+
 /**
  * Price with `formatMoney`; a discounted price shows the original struck through.
- * With an `increment` of a weighed or measured good it adds a muted per-kg / per-litre line (D-030).
+ * With an `increment` of a weighed or measured good it adds a muted per-kg / per-litre line below.
  */
 export function PriceBlock({ price, increment, className }: { price?: Price; increment?: Increment; className?: string }) {
   const locale = useLocale();
   const t = useTranslations('plp');
-  const tp = useTranslations('pricing');
   if (!price) return null;
-  const unit = increment ? unitPrice(price, increment) : null;
-  const unitLine = unit ? (
-    <span className="block font-body text-[12px] leading-snug font-normal whitespace-nowrap text-muted" data-testid="unit-price">
-      {tp(unit.per === 'kg' ? 'perKg' : 'perL', { price: formatMoney(unit.money.centAmount, unit.money.currencyCode, locale) })}
-    </span>
-  ) : null;
   const original = formatMoney(price.centAmount, price.currencyCode, locale);
   const main = price.discounted ? (
     <span className="inline-flex items-baseline gap-(--space-2) whitespace-nowrap">
@@ -34,11 +40,10 @@ export function PriceBlock({ price, increment, className }: { price?: Price; inc
   ) : (
     <span className="whitespace-nowrap">{original}</span>
   );
-  if (!unitLine) return <span className={cx('inline-flex', className)}>{main}</span>;
   return (
     <span className={cx('inline-flex flex-col', className)}>
       {main}
-      {unitLine}
+      <UnitPriceLine price={price} increment={increment} />
     </span>
   );
 }

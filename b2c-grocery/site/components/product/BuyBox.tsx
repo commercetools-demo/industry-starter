@@ -36,7 +36,7 @@ export function BuyBox({
         <h1 className="mt-(--space-3) mb-0 text-[34px] leading-[1.02] tablet:text-[48px]">{product.name}</h1>
         {product.brand ? <p className="mt-(--space-2) mb-0 text-[15px] text-muted">{product.brand}</p> : null}
       </div>
-      <PriceBlock price={variant.price} className="font-heading text-[30px]" />
+      <PriceBlock price={variant.price} increment={variant.increment} className="font-heading text-[30px]" />
       {product.description ? <p className="m-0 text-[16px] leading-[1.7] text-text/75">{product.description}</p> : null}
       <VariantSelectors selectors={selectors} />
       <AddToBag key={variant.sku} product={product} variant={variant} />

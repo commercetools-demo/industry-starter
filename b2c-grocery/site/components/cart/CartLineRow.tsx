@@ -7,6 +7,7 @@ import { QuantityStepper } from '@/components/ui/QuantityStepper';
 import { Tag } from '@/components/ui/Tag';
 import type { CartLine } from '@/lib/types';
 import { formatMoney } from '@/lib/utils';
+import { UnitPriceLine } from '@/components/product/PriceBlock';
 import { RecurrenceBadge } from './RecurrenceBadge';
 import { SubstitutionControl } from './SubstitutionControl';
 
@@ -37,6 +38,7 @@ export function CartLineRow({ line, displayQuantity, busy, onQuantityChange, onR
           <span className="flex-none text-[17px]">{formatMoney(line.total.centAmount, line.total.currencyCode, locale)}</span>
         </div>
         {line.increment.label ? <div className="card-meta">{line.increment.label}</div> : null}
+        <UnitPriceLine price={line.unitPrice} increment={line.increment} />
         <div className="flex flex-wrap items-center gap-(--space-2)">
           <Tag tone="neutral">{line.inStock ? t('inStockTag') : t('outOfStockTag')}</Tag>
           <RecurrenceBadge line={line} />
