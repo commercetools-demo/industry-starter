@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "check:lockfile": "node scripts/check-lockfile.mjs",
-    "verify": "npm run check:lockfile && npm run check:tokens && npm run lint && npm run typecheck && npm test && npm run build",
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "check:bundle": "node scripts/check-bundle-secrets.mjs",
+    "verify": "npm run check:secrets && npm run check:lockfile && npm run check:tokens && npm run lint && npm run typecheck && npm test && npm run build && npm run check:bundle",
     "seed": "tsx scripts/seed/seed.ts",
     "seed:verify": "tsx scripts/seed/verify.ts",
     "check:tokens": "node scripts/check-tokens.mjs"
