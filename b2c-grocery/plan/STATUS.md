@@ -27,7 +27,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | U | Substitutions | 8 | 0 | Not started | | |
 | V | Hosted checkout and confirmation | 9 | 0 | Not started | | |
 | W | Subscriptions | 9 | 0 | Not started | | |
-| X | Static pages | 6 | 0 | Not started | | |
+| X | Static pages | 6 | 6 | Ready for review | | |
 | Y | Netlify deployment | 5 | 0 | Not started | | |
 | Z | Release readiness | 7 | 0 | Not started | | |
 

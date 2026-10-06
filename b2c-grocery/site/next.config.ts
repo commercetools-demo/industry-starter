@@ -8,6 +8,8 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 if (shouldValidateAtBuild()) validateEnv();
 
 const nextConfig: NextConfig = {
+  // The markdown pages are read from disk at request time; make Netlify bundle them with the functions.
+  outputFileTracingIncludes: { '/**': ['./content/**/*'] },
   images: {
     unoptimized: true,
     remotePatterns: [

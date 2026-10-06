@@ -42,3 +42,7 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 
 ## German tone consistency (orchestrator, 2026-10-06)
 - German copy mixes informal "du" (cart: "Dein Warenkorb", footer "deine Tür") and formal "Sie" (search: "Finden Sie es", "Probieren Sie es mit"). Decide one register (recommend informal "du" to match the brand voice) and align all `de-DE.json` keys in the final copy review.
+- [X] All copy in `site/content/**` (about, faq, journal, policies) is placeholder and needs owner review (SO-10, SO-13); legal pages (privacy, terms) need real legal text. German is a faithful translation by the developer; please have it reviewed.
+- [X] Footer links only to `/policies/delivery`; add returns, privacy and terms (H owns the footer). The homepage contact strip (M) should link to `/contact`.
+- [X] German keys to review (machine-translated): `static.*` and the German markdown in `content/de-DE`.
+- [X] Contact form has no CAPTCHA; in-memory rate limit only (D-047). Real delivery (email/CRM) is out of v1 (D-044).

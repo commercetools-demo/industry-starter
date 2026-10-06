@@ -16,12 +16,12 @@ About, FAQ, policies, Journal (one article) and Contact (stub submit) pages in b
 - Footer links (H) point to these pages (verified).
 
 ## Tasks
-- [ ] X-01 Add `marked` and the `outputFileTracingIncludes` setting; write `lib/content.ts` + tests (reads both locales; missing page → null; front matter parsed; HTML produced).
-- [ ] X-02 Write content files for both locales (concise, grocery-appropriate placeholder text; mark in `plan/IDEAS.md` that copy needs owner review) and static routes + tests (title from front matter; unknown policy slug → `notFound`; `de-DE` serves German).
-- [ ] X-03 Write `lib/faq.ts` and `FaqList` + tests (grouped by topic; `aria-expanded` toggles; one open at a time; ids wired).
-- [ ] X-04 Write the Journal page + tests (layout columns; product grid fed by search call).
-- [ ] X-05 Write `lib/contact-validation.ts`, `POST /api/contact` (uses `rateLimit` from E-09 → 429), hook `hooks/useContact.ts`, `ContactForm` + tests (invalid email inline error; message too short; honeypot ignored; logs contain no PII; success message wording).
-- [ ] X-06 Messages (both locales); report manual tests M-X-1…M-X-3 and sign-off SO-10.
+- [x] X-01 Add `marked` and the `outputFileTracingIncludes` setting; write `lib/content.ts` + tests (reads both locales; missing page → null; front matter parsed; HTML produced).
+- [x] X-02 Write content files for both locales (concise, grocery-appropriate placeholder text; mark in `plan/IDEAS.md` that copy needs owner review) and static routes + tests (title from front matter; unknown policy slug → `notFound`; `de-DE` serves German).
+- [x] X-03 Write `lib/faq.ts` and `FaqList` + tests (grouped by topic; `aria-expanded` toggles; one open at a time; ids wired).
+- [x] X-04 Write the Journal page + tests (layout columns; product grid fed by search call).
+- [x] X-05 Write `lib/contact-validation.ts`, `POST /api/contact` (uses `rateLimit` from E-09 → 429), hook `hooks/useContact.ts`, `ContactForm` + tests (invalid email inline error; message too short; honeypot ignored; logs contain no PII; success message wording).
+- [x] X-06 Messages (both locales); report manual tests M-X-1…M-X-3 and sign-off SO-10.
 
 ## Unit tests (scenario → test)
 | Scenario | Test |
@@ -33,9 +33,17 @@ About, FAQ, policies, Journal (one article) and Contact (stub submit) pages in b
 | Contact strip link | M, X (href check) |
 
 ## Manual tests to report
-- M-X-1: Visit About, FAQ, each policy, Journal in both locales; footer links work.
-- M-X-2: Submit the contact form: confirmation shown; server log shows topic and length only.
-- M-X-3: Owner reviews copy (SO-10, SO-13).
+- M-X-1: 1. Open `/en-US/about`, `/en-US/faq`, `/en-US/journal` and `/en-US/policies/delivery`, `/returns`, `/privacy`, `/terms`: each shows kicker, H1 and a text column no wider than 720 px (check at 1440 px and 390 px). 2. Repeat under `/de-DE/...`: German title and text. 3. Open `/en-US/policies/nope`: not-found page. 4. In the footer click About us, The journal, FAQ, Delivery, Contact us: each opens in the same locale. 5. FAQ: click a question, it expands; click another, the first closes; Tab then Enter/Space also work. 6. Journal at 1440 px: the title stays sticky on the left while the article scrolls; "Shop the story" shows 4 product tiles (2 per row at 390 px).
+- M-X-2: 1. With `npm run dev` open `/en-US/contact`. 2. Submit empty: four inline "required" errors and no request in the Network tab. 3. Email `abc` and a 5-character message: inline errors, no request. 4. Valid name, email, topic Order, message of 20+ characters: heading "Message received" and text saying it was received (no claim that a person reads it). 5. The dev server terminal shows one line `contact { topic: 'order', length: N }` and no name, email or message text. 6. Submit 6 times within a minute: the 6th shows "Too many messages" (HTTP 429). 7. Repeat step 4 once on `/de-DE/contact`.
+- M-X-3: Owner reviews the placeholder copy in `site/content/en-US` and `site/content/de-DE` (about, faq, journal, four policies) and the `static.*` message keys; legal pages need real legal text (SO-10, SO-13).
 
 ## Definition of done
 All pages render in both locales; contact logging PII-free; `verify` passes; SO-10 requested.
+
+## Implementation notes (deviations, recorded by the developer)
+- `marked` ^18 added (small, maintained). `lib/content.ts` exports `getPage`, `parseFrontMatter`, `POLICY_SLUGS`; `getPage` rejects slugs/locales that do not match a strict pattern (no path traversal). Front matter also carries an optional `kicker` (localized, so no message keys are needed for the page kickers).
+- Shared `components/content/ContentArticle.tsx` (`ContentArticle`, `Prose`). FAQ answers are plain text paragraphs (the client `FaqList` never imports `marked`); `lib/faq.ts` `parseFaq` drops topics without answered questions.
+- Journal "Shop the story" uses `searchProducts({ sort: 'newest', pageSize: 4 })` with the market from the URL locale (like K, Q-K-1) in its own 4-column grid (not `ProductGrid`, which is 3 columns); a search failure omits the grid instead of failing the page.
+- Contact: `lib/contact-validation.ts` returns error codes (`required|invalidEmail|tooShort|tooLong`), mapped to messages `static.contact.errors.*` on the client; the API answers `400 { error: 'VALIDATION', fields }`, `429 { error: 'RATE_LIMITED' }` with `Retry-After`. The honeypot is checked before the rate limit and validation. `useContact` is a plain state hook (a one-off POST, no SWR cache needed) over `sendJson`.
+- Message keys live under `static.journal.*` and `static.contact.*` (both locales). The success text states the message was received and that a reply is not guaranteed.
+- Footer (H) only links `/policies/delivery`; returns, privacy and terms are reachable by URL only (see `plan/IDEAS.md`). The homepage "Contact us" strip belongs to M.
