@@ -53,7 +53,5 @@ The repo already holds 33 behavioral specs (partly B2B-flavored: 18 mention busi
 
 ## Open Questions
 
-- Which commercetools project/region and API client template (Frontend B2C) will be used, and who provisions Checkout applications?
-- Initial locale set (skill default: `en-US`, `en-GB`, `de-DE`); MALVA copy suggests EUR/France — confirm.
-- Deployment target (Vercel or Netlify)?
-- Test stack (unit: Vitest; e2e: Playwright) — not covered by the skill; confirm before scaffolding tests.
+- Answered (`plan/DECISIONS.md`): project `spec-test-b2c` us-central1.gcp (D-001); `en-US`/USD and `de-DE`/EUR (D-002, D-012); Netlify (D-003); Vitest unit tests only, no CI (D-004, D-013); npm (D-023); hosted Complete Checkout with Adyen (D-035).
+- Still open (owner TODO): Frontend B2C API client credentials, Checkout application key and Adyen connector setup.

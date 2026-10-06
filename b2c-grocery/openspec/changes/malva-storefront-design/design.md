@@ -14,6 +14,7 @@ The prototype is desktop only, uses hard-coded data (12 products, one fake custo
 **Non-Goals:**
 - Choosing the frontend framework or data layer.
 - Mobile-app screens (`MALVA App.dc.html`) and the freshness variant.
+- Superseded by D-022: grocery behaviors are now in v1 and specified in `grocery-storefront-features`; checkout is the hosted Complete Checkout (D-035).
 - Changing behavioral specs in `openspec/specs/`.
 
 ## Decisions
@@ -33,7 +34,6 @@ The prototype is desktop only, uses hard-coded data (12 products, one fake custo
 
 ## Open Questions
 
-- Is MALVA the intended skin for the grocery starter? Who designs delivery-slot picker, weight pricing, substitutions, recently ordered, quick order?
-- Next.js or Nuxt?
-- Is responsive web sufficient on mobile, or does the app design govern small screens?
-- What product attributes back finish/size/fitting options, "made to order" and reviews?
+- Answered (see `plan/DECISIONS.md`): grocery content in the MALVA look (D-010); Next.js (bootstrap change); product attributes come from the variant attributes in `catalog-data-model` (D-023); reviews are a static placeholder (D-039).
+- Still open: is responsive web enough on mobile, or does the app design govern small screens? (Assumed: responsive web with the proposed breakpoints.)
+- Recently ordered and quick order are not in v1.

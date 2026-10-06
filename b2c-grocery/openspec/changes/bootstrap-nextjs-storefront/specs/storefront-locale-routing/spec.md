@@ -2,7 +2,7 @@
 
 ### Requirement: Single country configuration
 
-`lib/utils.ts` SHALL define `COUNTRY_CONFIG` keyed by BCP-47 locale (`en-US`, `en-GB`, `de-DE` initially), each entry with `locale`, `currency`, `country` and `label`, plus `DEFAULT_LOCALE`. No other file SHALL hard-code a currency, country or locale. The same BCP-47 key SHALL be used for URL segments, the locale cookie, commercetools calls and message files.
+`lib/utils.ts` SHALL define `COUNTRY_CONFIG` keyed by BCP-47 locale (`en-US` with USD/US and `de-DE` with EUR/DE only), each entry with `locale`, `currency`, `country` and `label`, plus `DEFAULT_LOCALE`. No other file SHALL hard-code a currency, country or locale. The same BCP-47 key SHALL be used for URL segments, the locale cookie, commercetools calls and message files.
 
 #### Scenario: Add a market
 - **WHEN** a country is added

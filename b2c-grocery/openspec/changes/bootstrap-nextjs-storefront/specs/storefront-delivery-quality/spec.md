@@ -2,7 +2,7 @@
 
 ### Requirement: Deploy configuration
 
-Root `vercel.json` (`buildCommand: npm run build`, `outputDirectory: .next`, framework `nextjs`) and `netlify.toml` (`base = "site"`, `command = "npm run build"`, `publish = ".next"`, `NODE_VERSION = "22"`) SHALL exist, with the platform project root scoped to `site/`.
+A root `netlify.toml` (`base = "site"`, `command = "npm run build"`, `publish = ".next"`, `NODE_VERSION = "22"`) SHALL exist, with the Netlify project root scoped to `site/`. No `vercel.json` SHALL be added. Netlify environment variables SHALL be set in the Netlify UI and never committed.
 
 #### Scenario: Netlify build
 - **WHEN** Netlify builds the repository
@@ -10,15 +10,15 @@ Root `vercel.json` (`buildCommand: npm run build`, `outputDirectory: .next`, fra
 
 ### Requirement: Quality gates
 
-CI SHALL run install, lint, typecheck and `npm run build` for `site/` on every pull request and SHALL fail on any error. Lint rules SHALL enforce the layering rules in `storefront-project-structure`.
+There is no CI in v1. `npm run verify` in `site/` SHALL run lint, typecheck, unit tests and `npm run build` in that order and stop at the first failure, and SHALL be run and pass before every commit that completes a task. Lint rules SHALL enforce the layering rules in `storefront-project-structure`.
 
 #### Scenario: Failing typecheck
-- **WHEN** a pull request introduces a type error
-- **THEN** CI fails and merge is blocked
+- **WHEN** a type error exists
+- **THEN** `npm run verify` exits non-zero before running tests
 
 ### Requirement: Environment validation
 
-The app SHALL validate required environment variables at startup (commercetools settings and `SESSION_SECRET` ≥ 32 characters) and SHALL name the missing variable in the error. `.env.example` SHALL list every variable without values.
+The app SHALL validate required environment variables at startup (commercetools settings, `CTP_CHECKOUT_APP_KEY` and `SESSION_SECRET` ≥ 32 characters) and SHALL name the missing variable in the error. `.env.example` SHALL list every variable without values.
 
 #### Scenario: Missing variable
 - **WHEN** `CTP_CLIENT_SECRET` is unset

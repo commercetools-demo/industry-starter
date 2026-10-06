@@ -10,7 +10,7 @@ The repository SHALL keep `openspec/`, `design/` and root deploy files at the ro
 
 ### Requirement: Layering and import rules
 
-Modules under `lib/ct/` SHALL be server-only and SHALL NOT be imported from any `'use client'` module. Components SHALL import types only from `lib/types.ts`, never from `lib/ct/*` or SDK packages. Only `lib/ct/client.ts` SHALL construct `ClientBuilder`.
+Modules under `lib/ct/` SHALL be server-only and SHALL NOT be imported from any `'use client'` module. Components SHALL import types only from `lib/types.ts`, never from `lib/ct/*` or SDK packages. Only `lib/ct/client.ts` SHALL construct `ClientBuilder`. Every module in `lib/ct/`, `lib/mappers/` and `lib/session.ts` SHALL begin with `import 'server-only'` so that a client-side import fails the build.
 
 #### Scenario: Client importing server code
 - **WHEN** a `'use client'` file imports from `@/lib/ct/*`

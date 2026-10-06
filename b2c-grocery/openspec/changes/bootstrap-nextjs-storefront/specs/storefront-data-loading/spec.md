@@ -66,7 +66,7 @@ Cart mutations SHALL be performed with the current cart version, SHALL retry onc
 
 ### Requirement: Order placement and confirmation
 
-The payment step SHALL be rendered by the commercetools Checkout frontend SDK, which creates the order; the app SHALL NOT create the order itself. After the SDK signals completion the app SHALL clear `cartId` from the session, invalidate `KEY_CART`, and redirect to a confirmation page that fetches the order on the server by id.
+Checkout SHALL be the commercetools Complete Checkout (`checkoutFlow` from `@commercetools/checkout-browser-sdk`) hosted with Adyen in test mode, which creates the order; the app SHALL NOT create the order itself. After the SDK signals completion the app SHALL clear `cartId` from the session, invalidate `KEY_CART`, and redirect to a confirmation page that fetches the order on the server by id.
 
 #### Scenario: Successful payment
 - **WHEN** the SDK reports order completion
@@ -79,3 +79,11 @@ Product search and listing SHALL use the Product Search API (`apiRoot.products()
 #### Scenario: Search call
 - **WHEN** a listing query executes
 - **THEN** it uses `products().search()`
+
+### Requirement: Availability-aware cart mutations
+
+Because carts use inventory mode None, add-to-bag and quantity changes SHALL read `ProductVariantAvailability` for the variant (server-side, uncached) and refuse a quantity above the available quantity with the maximum in the error.
+
+#### Scenario: Over-ask
+- **WHEN** a quantity above available stock is requested
+- **THEN** the endpoint responds 409 with `{ error, available }` and the cart is unchanged

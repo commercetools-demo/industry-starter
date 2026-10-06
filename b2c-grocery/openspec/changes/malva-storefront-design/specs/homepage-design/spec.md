@@ -28,11 +28,11 @@ The homepage SHALL show a four-column grid of product tiles with 340px images, f
 - **WHEN** a visitor clicks a curated tile
 - **THEN** the product detail page opens
 
-### Requirement: Concierge strip
+### Requirement: Contact strip
 
-The homepage SHALL show a bordered "Ask a stylist" strip with a blob icon, heading, copy and primary button when the concierge setting is on, and SHALL omit it without leaving a gap when off.
+The homepage SHALL show a bordered "Questions? Contact us" strip with a blob icon, heading, copy and a primary "Contact us" button linking to the contact page when the concierge setting is on, and SHALL omit it without leaving a gap when off.
 
-#### Scenario: Concierge off
+#### Scenario: Contact strip off
 - **WHEN** the setting is false
 - **THEN** the strip is absent from the DOM
 

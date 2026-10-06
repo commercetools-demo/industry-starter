@@ -22,7 +22,7 @@ The project SHALL be created in `site/` with `create-next-app@^16` using `--type
 
 ### Requirement: Runtime dependency set
 
-`site/package.json` SHALL include `@commercetools/platform-sdk`, `@commercetools/ts-client`, `next-intl`, `swr`, `jose`, `tailwindcss`, `@tailwindcss/postcss` and `postcss`. Initial commercetools SDK majors SHALL be `@commercetools/platform-sdk@^8` and `@commercetools/ts-client@^4` as verified by the skill; moving to the latest majors SHALL be a separate, tested change.
+`site/package.json` SHALL include `@commercetools/platform-sdk`, `@commercetools/ts-client`, `@commercetools/checkout-browser-sdk`, `next-intl`, `swr`, `jose`, `tailwindcss`, `@tailwindcss/postcss` and `postcss`; dev dependencies SHALL include `vitest`, `@vitejs/plugin-react`, `jsdom`, `@testing-library/react`, `@testing-library/jest-dom` and `@testing-library/user-event`. Initial commercetools SDK majors SHALL be `@commercetools/platform-sdk@^8` and `@commercetools/ts-client@^4` as verified by the skill; moving to the latest majors SHALL be a separate, tested change.
 
 #### Scenario: SDK upgrade
 - **WHEN** the SDK majors are raised
@@ -35,3 +35,19 @@ New runtime dependencies SHALL be justified in the change that adds them, SHALL 
 #### Scenario: Lockfile
 - **WHEN** dependencies change
 - **THEN** `package-lock.json` is updated in the same commit
+
+### Requirement: Package manager
+
+The project SHALL use npm (`package-lock.json` committed); yarn and pnpm lockfiles SHALL NOT exist.
+
+#### Scenario: Wrong lockfile
+- **WHEN** a `pnpm-lock.yaml` or `yarn.lock` is added
+- **THEN** the `verify` script fails
+
+### Requirement: Unit-test tooling
+
+Tests SHALL use Vitest with the jsdom environment and Testing Library, co-located as `*.test.ts(x)` next to the code, run with `npm test`. No end-to-end test framework SHALL be added in v1. Server modules that call commercetools SHALL be tested with the SDK mocked at the `lib/ct/*` boundary; no unit test SHALL call the real commercetools API.
+
+#### Scenario: Offline tests
+- **WHEN** `npm test` runs without network or credentials
+- **THEN** all tests pass

@@ -22,11 +22,11 @@ Every commercetools call SHALL originate on the server. The browser SHALL reach 
 
 ### Requirement: Server-only secrets and environment
 
-All commercetools settings (`CTP_PROJECT_KEY`, `CTP_AUTH_URL`, `CTP_API_URL`, `CTP_CLIENT_ID`, `CTP_CLIENT_SECRET`, `CTP_SCOPES`) and `SESSION_SECRET` SHALL be server-only environment variables without a `NEXT_PUBLIC_` prefix. `.env` SHALL be git-ignored and a `.env.example` with placeholders SHALL be committed. The API client SHALL use the Frontend B2C template scopes including `manage_sessions` and `manage_orders`, and SHALL NOT be an admin client.
+All commercetools settings (`CTP_PROJECT_KEY`, `CTP_AUTH_URL`, `CTP_API_URL`, `CTP_CLIENT_ID`, `CTP_CLIENT_SECRET`, `CTP_SCOPES`), `CTP_CHECKOUT_APP_KEY` and `SESSION_SECRET` SHALL be server-only environment variables without a `NEXT_PUBLIC_` prefix. `.env` SHALL be git-ignored and a `.env.example` with placeholders SHALL be committed. The API client SHALL use the Frontend B2C template scopes including `manage_sessions` and `manage_orders`, and SHALL NOT be an admin client.
 
 #### Scenario: Secret in client bundle
 - **WHEN** a build output or env file exposes a `NEXT_PUBLIC_CTP_*` or session secret value
-- **THEN** the CI secret check fails
+- **THEN** the `check:secrets` step of `npm run verify` fails
 
 #### Scenario: Missing scopes
 - **WHEN** the API client lacks `manage_sessions`
@@ -63,3 +63,19 @@ During development `app/api/health/route.ts` SHALL call `apiRoot.get().execute()
 #### Scenario: Valid credentials
 - **WHEN** `GET /api/health` runs with valid credentials
 - **THEN** it returns `{"ok":true,"projectKey":"<key>"}`
+
+### Requirement: Checkout session endpoint
+
+`POST /api/checkout/session` SHALL read `cartId` from the session, verify the cart is non-empty and Active, obtain a token with `manage_sessions`, create a Checkout Session at `https://session.us-central1.gcp.commercetools.com/spec-test-b2c/sessions` with the cart reference and `metadata.applicationKey = CTP_CHECKOUT_APP_KEY`, and return `{ sessionId, projectKey, region }`. The region SHALL be derived from `CTP_API_URL`.
+
+#### Scenario: No cart
+- **WHEN** the session has no `cartId`
+- **THEN** the endpoint responds 400 and no session is created
+
+### Requirement: Inventory mode on carts
+
+Every cart the app creates SHALL be created with `inventoryMode: 'None'`, `taxMode: 'Platform'`, the session country and currency, and `locale`.
+
+#### Scenario: New cart
+- **WHEN** the first line is added by an anonymous visitor
+- **THEN** a cart is created with inventory mode None and the session country and currency

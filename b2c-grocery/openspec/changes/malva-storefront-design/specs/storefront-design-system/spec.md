@@ -42,7 +42,7 @@ The storefront SHALL provide Button (primary, secondary, ghost, icon, block), Ta
 
 ### Requirement: Site chrome
 
-Every page SHALL render a sticky header (background at 92% with 10px blur) with wordmark, primary navigation (Shop, New in, Made to order, Journal) with the active item in accent with a 2px underline, a search entry, a saved link, a bag button showing the count, and an account link; and a footer on the surface color with brand blurb and link columns. An announcement bar MAY render above the header.
+Every page SHALL render a sticky header (background at 92% with 10px blur) with wordmark, primary navigation (Shop, New in, Journal) with the active item in accent with a 2px underline, a search entry, a saved link, a bag button showing the count, and an account link; and a footer on the surface color with brand blurb and link columns. An announcement bar MAY render above the header.
 
 #### Scenario: Bag count
 - **WHEN** the session cart has items
@@ -68,10 +68,10 @@ At ≥1200px layouts SHALL match the desktop design. Between 768px and 1199px si
 - **WHEN** the viewport is 1000px wide on a listing page
 - **THEN** the filter rail is replaced by a "Filters" button that opens a sheet
 
-### Requirement: Page-builder block model
+### Requirement: Block-aligned page composition
 
-Pages SHALL be composable from registry blocks in four groups: content (hero, sectionHeading, categoryShowcase, curatedProducts, editorial, promoBanner, newsletterSignup), listing (nine blocks), pdp (twelve blocks) and chrome (fifteen blocks). Content blocks SHALL render from authored fields; listing, pdp and chrome blocks SHALL be resolver-driven with only the settings named in the design.
+Pages SHALL be composed in code from standalone section components named after the design's blocks — content (hero, sectionHeading, categoryShowcase, curatedProducts, editorial, promoBanner, newsletterSignup), listing (breadcrumbs, header, filters, resultCount, appliedFilters, sort, grid, pagination, empty), pdp (breadcrumbs, gallery, identity, price, description, options, addToBag, saveControl, availability, specs, related, reviews) and chrome (announcement, wordmark, primaryNav, search, accountLink, wishlistLink, bagIndicator, compactNav, footer parts) — each taking its authorable fields as props. A runtime block registry with authored-field validation is out of v1 (D-045).
 
-#### Scenario: Authored hero
-- **WHEN** a merchandiser provides a headline and image for a hero block
-- **THEN** the hero renders them, and a missing headline fails validation because it is required
+#### Scenario: Hero as a component
+- **WHEN** a page needs a hero
+- **THEN** it renders a hero component with headline, body, image and button props, and a missing headline is rejected by the component's types

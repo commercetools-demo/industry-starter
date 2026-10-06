@@ -14,10 +14,10 @@ The account page SHALL show a kicker ("Member since …"), the customer name as 
 
 ### Requirement: Orders table
 
-The orders table SHALL have columns Piece, Reference, Placed and a right-aligned Status shown as a tag: neutral for delivered, accent for in production, accent-2 for shipped or packing, and neutral for unknown states.
+The orders table SHALL have columns Items, Order number, Placed, Total and a right-aligned Status shown as a tag: neutral for delivered or unknown, accent for processing, accent-2 for packing or on its way; each row SHALL link to the order detail.
 
 #### Scenario: Status mapping
-- **WHEN** an order is in production
+- **WHEN** an order is processing
 - **THEN** its status tag uses the accent style
 
 #### Scenario: No orders
@@ -26,15 +26,15 @@ The orders table SHALL have columns Piece, Reference, Placed and a right-aligned
 
 ### Requirement: Address and details cards
 
-The dashboard SHALL show a default-address card with an "Edit" action and a details card listing Addresses, Payment methods, Returns, Concierge and Trade programme as rows with trailing arrows that turn accent on hover.
+The dashboard SHALL show a default-address card with an "Edit" action and a details card listing Orders, Addresses, Saved lists, Subscriptions and Contact us as rows with trailing arrows that turn accent on hover.
 
-#### Scenario: Open payment methods
-- **WHEN** a customer selects "Payment methods"
-- **THEN** the payment methods page opens
+#### Scenario: Open addresses
+- **WHEN** a customer selects "Addresses"
+- **THEN** the address book opens
 
 ### Requirement: Account sub-pages follow shared patterns
 
-Sub-pages (order detail, address book, payment methods, sign-in, registration, password reset) SHALL reuse the shared components: addresses as cards with dialog editing, payment methods as rows with removal, authentication forms as centred cards with block primary buttons. (Proposed; not drawn.)
+Sub-pages (order detail, address book, saved lists, subscriptions) SHALL reuse the shared components and are specified in `grocery-storefront-features`; there is no payment methods or profile page in v1. (Proposed; not drawn.)
 
 #### Scenario: Edit address
 - **WHEN** a customer chooses "Edit" on an address card
@@ -47,3 +47,11 @@ Account-specific content SHALL be resolved per session and SHALL NOT appear in c
 #### Scenario: Shared cache
 - **WHEN** an account page is requested
 - **THEN** the response is marked non-cacheable for shared caches
+
+### Requirement: Order detail
+
+`/[locale]/account/orders/[orderId]` SHALL show the order number, date, status tag, delivery slot, lines with image, name, quantity, unit and line total, substitution preference per line, any pending substitution proposal, totals (with provisional label when applicable and final amount when recorded) and the shipping address.
+
+#### Scenario: Another customer's order
+- **WHEN** a customer opens an order id that is not theirs
+- **THEN** a not-found page is shown

@@ -1,49 +1,45 @@
 ## ADDED Requirements
 
-### Requirement: Checkout layout
+### Requirement: Hosted checkout handoff
 
-Checkout SHALL show a step kicker (for example "Step 2 of 3 · Delivery"), a 52px "Checkout" heading, and a 1.4fr/1fr grid of stacked form sections and a sticky order summary.
+Checkout SHALL be the commercetools Complete Checkout (`checkoutFlow`, Adyen test connector), which owns contact, shipping address confirmation, shipping method and payment. The app SHALL NOT render the single-page checkout form drawn in the MALVA prototype. The cart "Checkout" button SHALL be enabled only when the cart has a deliverable address, a selected delivery slot and no unavailable lines, then SHALL create a checkout session server-side and open the hosted flow in the inline container of a branded page (`data-ctc`), showing the MALVA header and footer around it.
 
-#### Scenario: Desktop checkout
-- **WHEN** checkout opens at 1440px
-- **THEN** form sections and a sticky summary render side by side
+#### Scenario: Ready cart
+- **WHEN** the cart has an address, a slot and available lines and the shopper clicks "Checkout"
+- **THEN** a checkout session is created server-side and the hosted checkout opens on `/[locale]/checkout`
 
-### Requirement: Contact and shipping address
+#### Scenario: Missing slot
+- **WHEN** no slot is selected
+- **THEN** the button is disabled and the cart explains that a delivery slot is needed
 
-Checkout SHALL collect first name, last name and email, and street, city and postcode, with visible labels and autocomplete attributes, prefilled for signed-in customers.
+#### Scenario: Guest
+- **WHEN** an anonymous visitor checks out
+- **THEN** the hosted flow collects their email and the order is created for the anonymous cart
 
-#### Scenario: Invalid email
-- **WHEN** the email is invalid at submit
-- **THEN** an inline error tied to the field is shown and the order is not placed
+### Requirement: Checkout page frame
 
-### Requirement: Delivery options
+`/[locale]/checkout` SHALL show a kicker "Checkout", the 52px heading "Checkout", a compact order summary (lines, subtotal, delivery with slot, total with provisional label when applicable) and the hosted checkout container, and SHALL redirect to the cart when the session has no cart.
 
-Checkout SHALL present delivery methods as radio cards with name, note and price, the selected card marked by accent border and `accent-100` fill, and selection SHALL immediately update the summary delivery line and total.
+#### Scenario: Empty session cart
+- **WHEN** the checkout page is opened without a cart
+- **THEN** the visitor is redirected to the cart
 
-#### Scenario: Choose collection
-- **WHEN** a customer selects "Collect in Paris"
-- **THEN** delivery shows Free and the total updates
+### Requirement: Checkout failure handling
 
-### Requirement: Payment
+If the checkout session cannot be created (slot filled, unavailable line, API error), the app SHALL return to the cart with a message naming the reason and SHALL NOT open the hosted flow.
 
-Checkout SHALL show the payment method in a bordered row with a "Change" action, backed by the real payment provider and never by demo values.
-
-#### Scenario: Payment fails
-- **WHEN** authorization fails
-- **THEN** a banner appears above the payment section and no order is created
-
-### Requirement: Order summary and placement
-
-The summary SHALL list lines with thumbnail, name × quantity and total, then subtotal, delivery and total, and a primary "Place order" button that is disabled with a spinner while submitting and safe against double submit.
-
-#### Scenario: Double click
-- **WHEN** a customer clicks "Place order" twice
-- **THEN** exactly one order is created
+#### Scenario: Slot filled
+- **WHEN** the selected slot is no longer available at handoff
+- **THEN** the cart shows "That delivery slot just filled" with new slots offered
 
 ### Requirement: Order confirmation
 
-After success the page SHALL show a centred confirmation with a check blob, the real order number kicker, a heading "Thank you, {first name}", next-steps copy, and "Track this order" and "Back to the shop" buttons.
+After the hosted flow completes, the app SHALL clear `cartId` from the session, invalidate cart state and redirect to `/[locale]/checkout/confirmation/[orderId]`, a server-rendered page that fetches the order by id and shows the check blob, "Order <number>", "Thank you, {first name}", delivery slot, provisional-total notice when applicable, and buttons "Track this order" and "Back to the shop".
 
 #### Scenario: Track order
 - **WHEN** a customer clicks "Track this order"
-- **THEN** the account orders view opens
+- **THEN** the order detail in the account opens (guests are shown the order number only)
+
+#### Scenario: Unknown order id
+- **WHEN** the order id does not belong to the session's customer or recent guest order
+- **THEN** a not-found page is shown

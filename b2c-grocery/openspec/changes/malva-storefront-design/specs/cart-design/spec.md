@@ -10,7 +10,7 @@ The cart page SHALL be titled "Your bag" (52px) with lines on the left and a sti
 
 ### Requirement: Bag lines
 
-Each line SHALL show a 150×180 image, name, line total, maker, a lead-time tag ("In stock" or "Made to order · 6–8 weeks"), a quantity stepper (minimum 1) and a ghost "Remove" button.
+Each line SHALL show a 150×180 image, name, line total, maker, a stock tag ("In stock" or "Out of stock"), a quantity stepper (minimum 1) and a ghost "Remove" button.
 
 #### Scenario: Increase quantity
 - **WHEN** a visitor increases a line's quantity
@@ -22,7 +22,7 @@ Each line SHALL show a 150×180 image, name, line total, maker, a lead-time tag 
 
 ### Requirement: Summary
 
-The summary SHALL show subtotal, delivery ("Included" when free), a divider, the total in the heading font at 24px, a primary "Checkout" button and the returns and lead-time note. Totals SHALL be the server cart's values, and thresholds and prices SHALL come from configuration.
+The summary SHALL show subtotal, delivery with the selected slot ("Included" when free), a divider, the total in the heading font at 24px, a primary "Checkout" button and the returns note. Totals SHALL be the server cart's values, and thresholds and prices SHALL come from configuration.
 
 #### Scenario: Free delivery
 - **WHEN** the subtotal meets the configured threshold
@@ -51,3 +51,11 @@ The saved screen SHALL show "N pieces saved" with the heading "Put aside" and a 
 #### Scenario: Move to bag
 - **WHEN** a visitor clicks "Add to bag" on a saved card
 - **THEN** the item is added and the toast appears
+
+### Requirement: Pre-checkout delivery step
+
+The cart SHALL include the delivery address, slot picker, per-line substitution preference and provisional-total notice as specified in `delivery-slot-experience`, `substitution-experience` and `weight-pricing-experience`; "Checkout" SHALL be disabled until a deliverable address and a slot are set.
+
+#### Scenario: Incomplete delivery step
+- **WHEN** no slot is selected
+- **THEN** the Checkout button is disabled with an explanation
