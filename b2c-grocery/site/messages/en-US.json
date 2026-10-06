@@ -260,7 +260,38 @@
       "release": "Remove slot"
     }
   },
-  "checkout": {},
+  "checkout": {
+    "kicker": "Checkout",
+    "title": "Checkout",
+    "summaryTitle": "{count, plural, one {# item} other {# items}}",
+    "paymentRegion": "Payment",
+    "loading": "Opening secure payment...",
+    "completing": "Payment received. Finishing your order...",
+    "completeFailed": "Your payment went through, but we could not finish opening your order. Please try again.",
+    "retry": "Try again",
+    "error": {
+      "SLOT_FULL": "That delivery slot just filled. Please pick another one.",
+      "UNAVAILABLE_LINES": "Some items are no longer available in the quantity you chose. Please update your bag.",
+      "NO_ADDRESS": "Please add a delivery address we can deliver to.",
+      "NO_SLOT": "Please choose a delivery slot.",
+      "SHIPPING_UNAVAILABLE": "We cannot deliver to that address right now. Please check it.",
+      "NO_CART": "Your bag is empty.",
+      "EMPTY_CART": "Your bag is empty.",
+      "generic": "We could not start checkout. Please try again."
+    },
+    "confirmation": {
+      "kicker": "Order {number}",
+      "title": "Thank you, {name}",
+      "titleNoName": "Thank you",
+      "body": "We have your order and we are getting it ready.",
+      "guestNumber": "Keep your order number for reference: {number}.",
+      "delivery": "Delivery: {day}, {time}",
+      "track": "Track this order",
+      "shop": "Back to the shop",
+      "total": "Total: {amount}",
+      "totalProvisional": "Total (provisional): {amount}"
+    }
+  },
   "account": {
     "saved": {
       "title": "Put aside",
