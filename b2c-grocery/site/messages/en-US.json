@@ -261,7 +261,80 @@
     }
   },
   "checkout": {},
-  "account": {},
+  "account": {
+    "memberSince": "Member since {year}",
+    "loading": "Loading…",
+    "loadFailed": "We could not load this. Please try again.",
+    "retry": "Try again",
+    "orders": {
+      "title": "Orders",
+      "caption": "Your orders",
+      "colItems": "Items",
+      "colNumber": "Order number",
+      "colPlaced": "Placed",
+      "colTotal": "Total",
+      "colStatus": "Status",
+      "empty": "No orders yet",
+      "browse": "Browse the shop",
+      "viewAll": "All orders",
+      "pagination": "Orders pages",
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {page} of {pages}",
+      "loadingRows": "Loading your orders…"
+    },
+    "status": {
+      "processing": "Processing",
+      "packing": "Packing",
+      "on-its-way": "On its way",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "unknown": "Status unknown"
+    },
+    "address": {
+      "kicker": "Default address",
+      "empty": "No default address yet",
+      "add": "Add an address",
+      "edit": "Edit"
+    },
+    "details": {
+      "kicker": "Details",
+      "nav": "Account sections",
+      "orders": "Orders",
+      "addresses": "Addresses",
+      "saved": "Saved lists",
+      "subscriptions": "Subscriptions",
+      "contact": "Contact us"
+    },
+    "order": {
+      "title": "Order {number}",
+      "kicker": "Order",
+      "placed": "Placed {date}",
+      "delivery": "Delivery: {day}, {time}",
+      "back": "All orders",
+      "itemsCaption": "Items in this order",
+      "colItem": "Item",
+      "colQuantity": "Quantity",
+      "colUnitPrice": "Unit price",
+      "colTotal": "Total",
+      "colSubstitution": "Substitution",
+      "preference": {
+        "allow-similar": "Allow similar",
+        "none": "No substitution"
+      },
+      "totals": "Totals",
+      "subtotal": "Subtotal",
+      "shipping": "Delivery",
+      "shippingFree": "Included",
+      "tax": "Tax included",
+      "total": "Total",
+      "address": "Delivery address",
+      "loading": "Loading your order…",
+      "notFoundTitle": "We could not find that order",
+      "notFoundBody": "It may belong to another account, or it no longer exists.",
+      "unitFallback": "Each"
+    }
+  },
   "auth": {
     "signInLink": "Sign in",
     "accountLink": "Account",
