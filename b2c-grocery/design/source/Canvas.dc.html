@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/organic-ade09aa4-c6c1-425a-bbe9-5d695b75473f/styles.css">
+<script src="_ds/organic-ade09aa4-c6c1-425a-bbe9-5d695b75473f/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a:hover{color:var(--color-accent-700)}
+.ph{position:relative;overflow:hidden;background:var(--color-neutral-200);border-radius:calc(var(--radius-lg) * 1.15);filter:saturate(.6) contrast(.85) brightness(1.1) opacity(.94)}
+.ph::after{content:attr(data-shot);position:absolute;left:14px;bottom:12px;right:14px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)}
+.blob{background:var(--color-accent-2-200);border-radius:50%}
+.lift{transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+.lift:hover{transform:translateY(-4px)}
+@keyframes orgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ── the block frame: every page-builder block is presented in one of these ── */
+.frame{border:1px solid var(--color-divider);border-radius:calc(var(--radius-lg) * 1.15);overflow:hidden;background:var(--color-bg);margin-bottom:var(--space-4)}
+.frame-bar{display:flex;align-items:baseline;gap:var(--space-3);padding:var(--space-2) var(--space-4);border-bottom:1px solid var(--color-divider);background:color-mix(in srgb, var(--color-surface) 50%, transparent);flex-wrap:wrap}
+.frame-type{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:var(--color-accent-800);background:var(--color-accent-100);padding:3px 10px;border-radius:999px;white-space:nowrap}
+.frame-name{font-family:var(--font-heading);font-size:15px}
+.frame-schema{margin-left:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;line-height:1.5;color:color-mix(in srgb, var(--color-text) 46%, transparent);text-align:right;max-width:54%}
+.frame-body{padding:var(--space-6)}
+.frame-flush{padding:0}
+.frame-tight{padding:var(--space-4)}
+
+/* group heading */
+.grp{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-6);margin:calc(var(--space-8) * 1.5) 0 var(--space-6);padding-bottom:var(--space-3);border-bottom:1px solid var(--color-divider)}
+.tile-title{font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:17px;line-height:1.2}
+.swatch{height:52px;border-radius:var(--radius-md);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--color-text) 10%, transparent)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 50%, transparent)}
+
+/* specSheet=false — drop the annotation chrome and read it as pure design */
+.bare .frame-bar{display:none}
+.bare .frame{border-color:transparent;margin-bottom:var(--space-8)}
+</style>
+</helmet>
+
+<div class="{{ mode }}" style="min-height:100vh;background:var(--color-bg);font-family:var(--font-body);color:var(--color-text)">
+
+  <!-- ══════════════════════════ CANVAS HEADER ══════════════════════════ -->
+  <div style="position:sticky;top:0;z-index:60;background:color-mix(in srgb, var(--color-bg) 92%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--color-divider)">
+    <div style="max-width:1400px;margin:0 auto;padding:var(--space-4) var(--space-8);display:flex;align-items:center;gap:var(--space-6);flex-wrap:wrap">
+      <div style="font-family:var(--font-heading);font-size:26px;letter-spacing:-.02em">MALVA</div>
+      <div style="align-self:stretch;width:1px;background:var(--color-divider)"></div>
+      <div style="margin-right:auto">
+        <div class="mono" style="color:var(--color-accent-700)">PAGE BUILDER</div>
+        <div style="font-family:var(--font-heading);font-size:19px;line-height:1.1">Block library</div>
+      </div>
+      <div class="mono">{{ totalLabel }}</div>
+      <div class="seg">
+        <sc-for list="{{ groupOpts }}" as="grp" hint-placeholder-count="5">
+          <div onClick="{{ grp.on }}" class="seg-opt" style="background:{{ grp.bg }};color:{{ grp.fg }}">{{ grp.name }}</div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1400px;margin:0 auto;padding:0 var(--space-8) 120px">
+
+    <!-- ══════════════════════════ FOUNDATIONS ══════════════════════════ -->
+    <div style="padding:calc(var(--space-8) * 1.2) 0 0">
+      <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:calc(var(--space-8) * 1.2);align-items:center">
+        <div>
+          <span class="tag tag-accent-2" style="margin-bottom:var(--space-4)">Organic · design tokens</span>
+          <h1 style="font-size:64px;line-height:.98;margin:var(--space-3) 0 var(--space-4);max-width:11em;text-wrap:pretty">Forty-three blocks, one warm room</h1>
+          <p style="font-size:17px;line-height:1.65;max-width:36em;color:color-mix(in srgb, var(--color-text) 72%, transparent)">Every page-builder block from <code style="font-family:ui-monospace,Menlo,monospace;font-size:14px">features/page-builder/registry.tsx</code>, redrawn on the MALVA palette — cream ground, terracotta accent, sage counterpoint, Caprasimo display over Figtree text. Each frame carries the block's <code style="font-family:ui-monospace,Menlo,monospace;font-size:14px">type</code> and the schema it is authored through.</p>
+        </div>
+        <div style="display:grid;gap:var(--space-4)">
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-2)">
+            <sc-for list="{{ swatches }}" as="sw" hint-placeholder-count="12">
+              <div>
+                <div class="swatch" style="background:{{ sw.v }}"></div>
+                <div class="mono" style="margin-top:5px">{{ sw.n }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div class="card elev-sm" style="gap:var(--space-3)">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-4)">
+              <div style="font-family:var(--font-heading);font-size:34px;line-height:1">Caprasimo</div>
+              <div class="mono">--font-heading · h1—h6</div>
+            </div>
+            <div class="hr" style="margin:0"></div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-4)">
+              <div style="font-size:20px;font-weight:500">Figtree — the reading voice</div>
+              <div class="mono">--font-body · 15px/1.55</div>
+            </div>
+            <div class="hr" style="margin:0"></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+              <span class="tag tag-accent">tag-accent</span>
+              <span class="tag tag-accent-2">tag-accent-2</span>
+              <span class="tag tag-neutral">tag-neutral</span>
+              <span class="tag tag-outline">tag-outline</span>
+              <span class="btn btn-primary" style="font-size:13px">Primary</span>
+              <span class="btn btn-secondary" style="font-size:13px">Secondary</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ GROUP · CONTENT ══════════════════════════ -->
+    <sc-if value="{{ showContent }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:orgIn .35s ease both">
+      <div class="grp">
+        <div>
+          <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">Group · content</h6>
+          <h2 style="font-size:38px;margin:0">Content</h2>
+        </div>
+        <div class="mono">7 blocks · palette · pageTypes: all</div>
+      </div>
+
+      <!-- ─── hero ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">hero</span><span class="frame-name">Hero</span>
+          <span class="frame-schema">{{ sc.hero }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:var(--space-8);align-items:center">
+            <div style="position:relative">
+              <div class="blob" style="position:absolute;width:190px;height:190px;left:-80px;top:-56px;opacity:.5"></div>
+              <div style="position:relative">
+                <span class="tag tag-accent-2">Autumn 26 · Chapter one</span>
+                <h1 style="font-size:66px;line-height:.98;margin:var(--space-3) 0 var(--space-4);max-width:9em;text-wrap:pretty">The quiet table</h1>
+                <p style="font-size:18px;line-height:1.6;max-width:32em;color:color-mix(in srgb, var(--color-text) 72%, transparent)">Stoneware thrown in Puglia, unbleached linen from Donegal and a single stem. Objects that ask nothing of the room — and give it everything.</p>
+                <div style="display:flex;gap:var(--space-3);margin-top:var(--space-6)">
+                  <div class="btn btn-primary" style="font-size:15px;padding:var(--space-3) var(--space-6)">Shop the collection</div>
+                  <div class="btn btn-secondary" style="font-size:15px;padding:var(--space-3) var(--space-6)">Read the story</div>
+                </div>
+              </div>
+            </div>
+            <div class="ph" data-shot="image — alabaster lamp on travertine, morning light" style="height:440px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── sectionHeading ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">sectionHeading</span><span class="frame-name">Section heading</span>
+          <span class="frame-schema">{{ sc.sectionHeading }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-6)">
+            <div>
+              <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">The rooms</h6>
+              <h2 style="font-size:38px;margin:0">Browse by what it does</h2>
+            </div>
+            <div class="btn btn-ghost" style="font-size:14px">Everything →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── categoryShowcase ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">categoryShowcase</span><span class="frame-name">Category showcase</span>
+          <span class="frame-schema">{{ sc.categoryShowcase }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-6);margin-bottom:var(--space-6)">
+            <div>
+              <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">The rooms</h6>
+              <h2 style="font-size:32px;margin:0">Browse by what it does</h2>
+            </div>
+            <div class="btn btn-ghost" style="font-size:14px">Everything →</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-3)">
+            <sc-for list="{{ cats }}" as="cat" hint-placeholder-count="6">
+              <div class="card lift elev-sm" style="cursor:pointer;padding:var(--space-3);gap:var(--space-3)">
+                <div class="ph" data-shot="{{ cat.shot }}" style="height:126px;border-radius:var(--radius-md)"></div>
+                <div>
+                  <div class="tile-title" style="font-size:15px">{{ cat.name }}</div>
+                  <div class="card-meta">{{ cat.pieces }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── curatedProducts ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">curatedProducts</span><span class="frame-name">Curated products</span>
+          <span class="frame-schema">{{ sc.curatedProducts }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-6);margin-bottom:var(--space-6)">
+            <div>
+              <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">New in</h6>
+              <h2 style="font-size:32px;margin:0">Just off the loom and wheel</h2>
+            </div>
+            <div class="btn btn-ghost" style="font-size:14px">See all →</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4)">
+            <sc-for list="{{ newIn }}" as="nw" hint-placeholder-count="4">
+              <div class="lift" style="cursor:pointer">
+                <div class="ph" data-shot="{{ nw.shot }}" style="height:300px;margin-bottom:var(--space-3)"></div>
+                <div style="display:flex;justify-content:space-between;gap:var(--space-3);align-items:baseline">
+                  <div class="tile-title">{{ nw.name }}</div>
+                  <div style="font-size:15px;white-space:nowrap">{{ nw.priceLabel }}</div>
+                </div>
+                <div class="card-meta">{{ nw.maker }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── editorial ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">editorial</span><span class="frame-name">Editorial</span>
+          <span class="frame-schema">{{ sc.editorial }}</span>
+        </div>
+        <div class="frame-bar" style="border-bottom:1px solid var(--color-divider);background:transparent">
+          <span class="mono">imageSide</span>
+          <div class="seg">
+            <sc-for list="{{ sideOpts }}" as="side" hint-placeholder-count="2">
+              <div onClick="{{ side.on }}" class="seg-opt" style="background:{{ side.bg }};color:{{ side.fg }}">{{ side.name }}</div>
+            </sc-for>
+          </div>
+        </div>
+        <div class="frame-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--space-8) * 1.2);align-items:center;background:var(--color-accent-2-700);border-radius:calc(var(--radius-lg) * 1.4);padding:var(--space-8)">
+            <div style="order:{{ imgOrder }}">
+              <div class="ph" data-shot="image — puglia workshop, hands at the wheel" style="height:340px;background:var(--color-accent-2-300)"></div>
+            </div>
+            <div>
+              <h6 style="color:var(--color-accent-2-200);margin-bottom:var(--space-3)">From the journal · No. 14</h6>
+              <h2 style="font-size:42px;color:var(--color-bg);margin-bottom:var(--space-4);text-wrap:pretty">Living with alabaster</h2>
+              <p style="font-size:17px;line-height:1.65;color:color-mix(in srgb, #f5ead8 78%, transparent);max-width:30em">Sofia Renaldi on why the softest stone in the quarry makes the hardest-working light in a house — and how to keep it looking like it was always there.</p>
+              <div class="btn" style="background:var(--color-bg);color:var(--color-accent-2-800);margin-top:var(--space-4);font-size:15px;padding:var(--space-3) var(--space-6)">Read the story</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── promoBanner ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">promoBanner</span><span class="frame-name">Promotional banner</span>
+          <span class="frame-schema">{{ sc.promoBanner }}</span>
+        </div>
+        <div class="frame-bar" style="background:transparent">
+          <span class="mono">emphasis</span>
+          <div class="seg">
+            <sc-for list="{{ empOpts }}" as="emp" hint-placeholder-count="2">
+              <div onClick="{{ emp.on }}" class="seg-opt" style="background:{{ emp.bg }};color:{{ emp.fg }}">{{ emp.name }}</div>
+            </sc-for>
+          </div>
+        </div>
+        <div class="frame-body">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-8);border-radius:calc(var(--radius-lg) * 1.4);padding:var(--space-8);background:{{ promo.bg }}">
+            <div>
+              <h6 style="color:{{ promo.kicker }};margin-bottom:var(--space-2)">Ends Sunday</h6>
+              <h2 style="font-size:40px;margin-bottom:var(--space-3);color:{{ promo.fg }};text-wrap:pretty">Two rooms, one delivery</h2>
+              <p style="margin:0;max-width:40ch;font-size:16px;line-height:1.6;color:{{ promo.body }}">White-glove delivery included on every order over €600 — placed, unpacked and the boxes taken away.</p>
+            </div>
+            <div class="btn" style="flex:none;font-size:15px;padding:var(--space-3) var(--space-6);background:{{ promo.btnBg }};color:{{ promo.btnFg }}">Shop the offer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── newsletterSignup ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">newsletterSignup</span><span class="frame-name">Newsletter sign-up</span>
+          <span class="frame-schema">{{ sc.newsletterSignup }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="max-width:640px;margin:0 auto;text-align:center;padding:var(--space-6) 0">
+            <div class="blob" style="width:56px;height:56px;margin:0 auto var(--space-4);display:grid;place-items:center;color:var(--color-accent-2-800)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M3 7h18v10H3z"></path><path d="m3 8 9 6 9-6"></path></svg>
+            </div>
+            <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">The letter</h6>
+            <h2 style="font-size:34px;margin-bottom:var(--space-3);text-wrap:pretty">One note a month, no noise</h2>
+            <p style="font-size:16px;line-height:1.65;color:color-mix(in srgb, var(--color-text) 68%, transparent);max-width:34em;margin:0 auto var(--space-6)">New makers, the journal, and the occasional thing we only made twelve of.</p>
+            <div style="display:flex;gap:var(--space-2);max-width:440px;margin:0 auto">
+              <input class="input" placeholder="you@house.com" style="flex:1">
+              <div class="btn btn-primary" style="flex:none;padding-inline:var(--space-6)">Subscribe</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ══════════════════════════ GROUP · LISTING ══════════════════════════ -->
+    <sc-if value="{{ showListing }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:orgIn .35s ease both">
+      <div class="grp">
+        <div>
+          <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">Group · listing</h6>
+          <h2 style="font-size:38px;margin:0">Category listing</h2>
+        </div>
+        <div class="mono">9 system blocks · pageTypes: category</div>
+      </div>
+
+      <!-- ─── listing/breadcrumbs ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">listing/breadcrumbs</span><span class="frame-name">Breadcrumbs</span>
+          <span class="frame-schema">{{ sc.listingBreadcrumbs }}</span>
+        </div>
+        <div class="frame-tight">
+          <div style="display:flex;align-items:center;gap:var(--space-2);font-size:13px;flex-wrap:wrap">
+            <sc-for list="{{ crumbs }}" as="cr" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:var(--space-2)">
+                <span style="color:{{ cr.fg }};cursor:pointer;font-weight:{{ cr.weight }}" style-hover="color:var(--color-accent)">{{ cr.name }}</span>
+                <sc-if value="{{ cr.sep }}" hint-placeholder-val="{{ true }}">
+                  <span style="color:color-mix(in srgb, var(--color-text) 30%, transparent)">/</span>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── listing/header ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">listing/header</span><span class="frame-name">Listing header</span>
+          <span class="frame-schema">{{ sc.listingHeader }}</span>
+        </div>
+        <div class="frame-bar" style="background:transparent">
+          <span class="mono">showDescription</span>
+          <div class="seg">
+            <sc-for list="{{ descOpts }}" as="desc" hint-placeholder-count="2">
+              <div onClick="{{ desc.on }}" class="seg-opt" style="background:{{ desc.bg }};color:{{ desc.fg }}">{{ desc.name }}</div>
+            </sc-for>
+          </div>
+        </div>
+        <div class="frame-body">
+          <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">The shop</h6>
+          <h1 style="font-size:56px;margin-bottom:var(--space-3)">Lighting</h1>
+          <sc-if value="{{ showDesc }}" hint-placeholder-val="{{ true }}">
+            <p style="font-size:17px;line-height:1.7;max-width:42em;color:color-mix(in srgb, var(--color-text) 72%, transparent);margin:0">Alabaster, unlacquered brass and blown glass — light sources chosen for the quality of their shadow as much as their glow. Most are made to order in small workshops in Lyon, Milan and Murano.</p>
+          </sc-if>
+        </div>
+      </div>
+
+      <!-- ─── listing/filters ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">listing/filters</span><span class="frame-name">Filter panel</span>
+          <span class="frame-schema">{{ sc.listingFilters }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="width:250px;display:flex;flex-direction:column;gap:var(--space-6)">
+            <div>
+              <h6 style="margin-bottom:var(--space-3)">Category</h6>
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <sc-for list="{{ catChips }}" as="chip" hint-placeholder-count="6">
+                  <div onClick="{{ chip.on }}" style="display:flex;justify-content:space-between;padding:7px 12px;border-radius:999px;cursor:pointer;font-size:14px;font-weight:{{ chip.weight }};background:{{ chip.bg }};color:{{ chip.fg }}" style-hover="background:color-mix(in srgb, var(--color-text) 7%, transparent)">
+                    <span>{{ chip.name }}</span><span style="opacity:.6">{{ chip.n }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <h6 style="margin-bottom:var(--space-3)">Price</h6>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ priceBands }}" as="band" hint-placeholder-count="4">
+                  <div onClick="{{ band.on }}" class="tag" style="cursor:pointer;padding:6px 12px;font-size:12px;background:{{ band.bg }};color:{{ band.fg }};border:1px solid {{ band.border }}">{{ band.name }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <h6 style="margin-bottom:var(--space-3)">Availability</h6>
+              <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+                <sc-for list="{{ availability }}" as="av" hint-placeholder-count="3">
+                  <div onClick="{{ av.on }}" class="radio">
+                    <span class="dot" style="border-color:{{ av.border }};background:{{ av.fill }};box-shadow:{{ av.inset }}"></span>{{ av.name }}
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div onClick="{{ reset }}" class="btn btn-ghost" style="align-self:flex-start;font-size:13px">Clear all</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── listing/resultCount ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">listing/resultCount</span><span class="frame-name">Result count</span>
+          <span class="frame-schema">{{ sc.listingResultCount }}</span>
+        </div>
+        <div class="frame-tight">
+          <div style="font-size:14px;color:color-mix(in srgb, var(--color-text) 60%, transparent)">{{ resultLabel }}</div>
+        </div>
+      </div>
+
+      <!-- ─── listing/appliedFilters ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">listing/appliedFilters</span><span class="frame-name">Applied filters</span>
+          <span class="frame-schema">{{ sc.listingAppliedFilters }}</span>
+        </div>
+        <div class="frame-tight">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <span class="mono" style="margin-right:var(--space-2)">FILTERING BY</span>
+            <sc-for list="{{ applied }}" as="app" hint-placeholder-count="3">
+              <div class="tag tag-accent" style="gap:7px;padding-right:7px;cursor:pointer">
+                {{ app.name }}
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" style="opacity:.65"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+              </div>
+            </sc-for>
+            <div onClick="{{ reset }}" class="btn btn-ghost" style="font-size:12.5px">Clear all</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── listing/sort ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">listing/sort</span><span class="frame-name">Sort control</span>
+          <span class="frame-schema">{{ sc.listingSort }}</span>
+        </div>
+        <div class="frame-tight">
+          <div class="seg">
+            <sc-for list="{{ sortOptions }}" as="sort" hint-placeholder-count="4">
+              <div onClick="{{ sort.on }}" class="seg-opt" style="background:{{ sort.bg }};color:{{ sort.fg }}">{{ sort.name }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── listing/grid ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">listing/grid</span><span class="frame-name">Product grid</span>
+          <span class="frame-schema">{{ sc.listingGrid }}</span>
+        </div>
+        <div class="frame-bar" style="background:transparent">
+          <span class="mono">columns</span>
+          <div class="seg">
+            <sc-for list="{{ colOpts }}" as="cols" hint-placeholder-count="2">
+              <div onClick="{{ cols.on }}" class="seg-opt" style="background:{{ cols.bg }};color:{{ cols.fg }}">{{ cols.name }}</div>
+            </sc-for>
+          </div>
+        </div>
+        <div class="frame-body">
+          <div style="display:grid;grid-template-columns:{{ gridCols }};gap:var(--space-6) var(--space-4)">
+            <sc-for list="{{ visible }}" as="vis" hint-placeholder-count="8">
+              <div class="lift" style="cursor:pointer">
+                <div class="ph" data-shot="{{ vis.shot }}" style="height:{{ tileH }};margin-bottom:var(--space-3)">
+                  <div onClick="{{ vis.wish }}" class="btn btn-icon" style="position:absolute;right:12px;top:12px;background:var(--color-bg);color:{{ vis.wishColor }};box-shadow:var(--shadow-sm)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="{{ vis.wishFill }}" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M12 20s-7-4.6-7-9.4A4 4 0 0 1 12 7.6 4 4 0 0 1 19 10.6c0 4.8-7 9.4-7 9.4Z"></path></svg>
+                  </div>
+                  <sc-if value="{{ vis.madeToOrder }}" hint-placeholder-val="{{ false }}">
+                    <span class="tag tag-accent" style="position:absolute;left:12px;top:12px">Made to order</span>
+                  </sc-if>
+                </div>
+                <div style="display:flex;justify-content:space-between;gap:var(--space-3);align-items:baseline">
+                  <div class="tile-title">{{ vis.name }}</div>
+                  <div style="font-size:15px;white-space:nowrap">{{ vis.priceLabel }}</div>
+                </div>
+                <div class="card-meta">{{ vis.maker }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── listing/pagination ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">listing/pagination</span><span class="frame-name">Pagination</span>
+          <span class="frame-schema">{{ sc.listingPagination }}</span>
+        </div>
+        <div class="frame-tight">
+          <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+            <div class="btn btn-secondary" style="font-size:13px;gap:7px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M15 6l-6 6 6 6"></path></svg>
+              Previous
+            </div>
+            <sc-for list="{{ pages }}" as="pg" hint-placeholder-count="5">
+              <div onClick="{{ pg.on }}" class="btn btn-icon" style="background:{{ pg.bg }};color:{{ pg.fg }};border:1px solid {{ pg.border }};font-size:13.5px">{{ pg.name }}</div>
+            </sc-for>
+            <div class="btn btn-secondary" style="font-size:13px;gap:7px">
+              Next
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M9 6l6 6-6 6"></path></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── listing/empty ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">listing/empty</span><span class="frame-name">Empty state</span>
+          <span class="frame-schema">{{ sc.listingEmpty }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="text-align:center;padding:var(--space-8) 0">
+            <div class="blob" style="width:72px;height:72px;margin:0 auto var(--space-4);display:grid;place-items:center;color:var(--color-accent-2-800)">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+            </div>
+            <h3 style="font-size:28px;margin-bottom:var(--space-2);text-wrap:pretty">Nothing under those terms</h3>
+            <p style="color:color-mix(in srgb, var(--color-text) 62%, transparent);max-width:34em;margin:0 auto var(--space-4);font-size:15.5px;line-height:1.65">Try a wider price band, or let a stylist find it for you — they know what is still on the shelf in Puglia.</p>
+            <div style="display:flex;gap:var(--space-2);justify-content:center">
+              <div onClick="{{ reset }}" class="btn btn-secondary">Clear filters</div>
+              <div class="btn btn-primary">Ask a stylist</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ══════════════════════════ GROUP · PRODUCT ══════════════════════════ -->
+    <sc-if value="{{ showProduct }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:orgIn .35s ease both">
+      <div class="grp">
+        <div>
+          <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">Group · product</h6>
+          <h2 style="font-size:38px;margin:0">Product detail</h2>
+        </div>
+        <div class="mono">12 system blocks · pageTypes: pdp</div>
+      </div>
+
+      <!-- ─── pdp/breadcrumbs ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/breadcrumbs</span><span class="frame-name">Breadcrumbs</span>
+          <span class="frame-schema">{{ sc.pdpBreadcrumbs }}</span>
+        </div>
+        <div class="frame-tight">
+          <div style="display:flex;align-items:center;gap:var(--space-2);font-size:13px;flex-wrap:wrap">
+            <sc-for list="{{ pdpCrumbs }}" as="pcr" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:var(--space-2)">
+                <span style="color:{{ pcr.fg }};cursor:pointer;font-weight:{{ pcr.weight }}" style-hover="color:var(--color-accent)">{{ pcr.name }}</span>
+                <sc-if value="{{ pcr.sep }}" hint-placeholder-val="{{ true }}">
+                  <span style="color:color-mix(in srgb, var(--color-text) 30%, transparent)">/</span>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── pdp/gallery ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/gallery</span><span class="frame-name">Image gallery</span>
+          <span class="frame-schema">{{ sc.pdpGallery }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);max-width:720px">
+            <div class="ph" data-shot="image — lamp lit, low angle" style="grid-column:span 2;height:460px"></div>
+            <div class="ph" data-shot="image — detail, surface" style="height:240px"></div>
+            <div class="ph" data-shot="image — in situ, room" style="height:240px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── pdp/identity ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/identity</span><span class="frame-name">Product identity</span>
+          <span class="frame-schema">{{ sc.pdpIdentity }}</span>
+        </div>
+        <div class="frame-bar" style="background:transparent">
+          <span class="mono">showBrand</span>
+          <div class="seg">
+            <sc-for list="{{ brandOpts }}" as="brand" hint-placeholder-count="2">
+              <div onClick="{{ brand.on }}" class="seg-opt" style="background:{{ brand.bg }};color:{{ brand.fg }}">{{ brand.name }}</div>
+            </sc-for>
+          </div>
+          <span class="mono" style="margin-left:var(--space-3)">showRating</span>
+          <div class="seg">
+            <sc-for list="{{ ratingOpts }}" as="rate" hint-placeholder-count="2">
+              <div onClick="{{ rate.on }}" class="seg-opt" style="background:{{ rate.bg }};color:{{ rate.fg }}">{{ rate.name }}</div>
+            </sc-for>
+          </div>
+        </div>
+        <div class="frame-body">
+          <div style="max-width:520px">
+            <div style="display:flex;gap:6px;margin-bottom:var(--space-3)">
+              <span class="tag tag-accent-2">Lighting</span>
+              <span class="tag tag-neutral">MLV-LT-041</span>
+            </div>
+            <h1 style="font-size:46px;line-height:1.02;margin-bottom:var(--space-3);text-wrap:pretty">Cassia alabaster lamp</h1>
+            <sc-if value="{{ showBrand }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:15px;color:color-mix(in srgb, var(--color-text) 60%, transparent);margin-bottom:var(--space-3)">Studio Cassia · Milan</div>
+            </sc-if>
+            <sc-if value="{{ showRating }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:var(--space-2)">
+                <div style="display:flex;gap:2px;color:var(--color-accent)">
+                  <sc-for list="{{ stars }}" as="star" hint-placeholder-count="5">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="{{ star.fill }}" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z"></path></svg>
+                  </sc-for>
+                </div>
+                <span style="font-size:14px;font-weight:600">4.8</span>
+                <span style="font-size:14px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">· 36 reviews</span>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── pdp/price ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/price</span><span class="frame-name">Price</span>
+          <span class="frame-schema">{{ sc.pdpPrice }}</span>
+        </div>
+        <div class="frame-bar" style="background:transparent">
+          <span class="mono">showSaving</span>
+          <div class="seg">
+            <sc-for list="{{ savingOpts }}" as="sav" hint-placeholder-count="2">
+              <div onClick="{{ sav.on }}" class="seg-opt" style="background:{{ sav.bg }};color:{{ sav.fg }}">{{ sav.name }}</div>
+            </sc-for>
+          </div>
+        </div>
+        <div class="frame-tight">
+          <div style="display:flex;align-items:baseline;gap:var(--space-3);flex-wrap:wrap">
+            <div style="font-family:var(--font-heading);font-size:32px;line-height:1">€480</div>
+            <sc-if value="{{ showSaving }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:16px;text-decoration:line-through;color:color-mix(in srgb, var(--color-text) 45%, transparent)">€540</div>
+              <span class="tag tag-accent">Save €60 · 11%</span>
+            </sc-if>
+            <div style="font-size:13px;color:color-mix(in srgb, var(--color-text) 55%, transparent);margin-left:var(--space-2)">Incl. VAT · duties at checkout</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── pdp/description ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/description</span><span class="frame-name">Description</span>
+          <span class="frame-schema">{{ sc.pdpDescription }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="max-width:60ch">
+            <p style="font-size:17px;line-height:1.7;color:color-mix(in srgb, var(--color-text) 80%, transparent)">A single block of Volterra alabaster, turned until the light passes through it like skin. Dimmable brass switch on a woven cord.</p>
+            <p style="font-size:16px;line-height:1.75;color:color-mix(in srgb, var(--color-text) 72%, transparent)">The stone is quarried in Tuscany and worked wet, so the veining you see was decided a few million years before we got to it. No two shades match, and we do not try to make them.</p>
+            <ul style="list-style:disc;padding-inline-start:var(--space-6);font-size:16px;line-height:1.8;color:color-mix(in srgb, var(--color-text) 72%, transparent);margin:0">
+              <li>Hand-turned alabaster shade, 34&nbsp;cm</li>
+              <li>Unlacquered brass fittings, will patina</li>
+              <li>E27 · dimmable · 2700K bulb included</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── pdp/options ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/options</span><span class="frame-name">Option selectors</span>
+          <span class="frame-schema">{{ sc.pdpOptions }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="max-width:460px;display:flex;flex-direction:column;gap:var(--space-6)">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:var(--space-3)">
+                <h6 style="margin:0">Finish</h6>
+                <span style="font-size:13px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">{{ finish }}</span>
+              </div>
+              <div style="display:flex;gap:var(--space-2)">
+                <sc-for list="{{ finishes }}" as="fin" hint-placeholder-count="3">
+                  <div onClick="{{ fin.on }}" style="width:44px;height:44px;border-radius:999px;cursor:pointer;background:{{ fin.swatch }};box-shadow:{{ fin.ring }}"></div>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <h6 style="margin-bottom:var(--space-3)">Size</h6>
+              <div class="seg">
+                <sc-for list="{{ sizes }}" as="siz" hint-placeholder-count="3">
+                  <div onClick="{{ siz.on }}" class="seg-opt" style="background:{{ siz.bg }};color:{{ siz.fg }}">{{ siz.name }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <h6 style="margin-bottom:var(--space-3)">Fitting</h6>
+              <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+                <sc-for list="{{ fittings }}" as="fit" hint-placeholder-count="2">
+                  <div onClick="{{ fit.on }}" class="radio">
+                    <span class="dot" style="border-color:{{ fit.border }};background:{{ fit.fill }};box-shadow:{{ fit.inset }}"></span>{{ fit.name }}
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── pdp/addToBag ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/addToBag</span><span class="frame-name">Add to bag</span>
+          <span class="frame-schema">{{ sc.pdpAddToBag }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="max-width:460px">
+            <div style="display:flex;gap:var(--space-3);align-items:center">
+              <div style="display:flex;align-items:center;border:1px solid var(--color-divider);border-radius:999px">
+                <div onClick="{{ decQty }}" class="btn btn-icon">−</div>
+                <div style="width:28px;text-align:center;font-size:14px">{{ pdpQty }}</div>
+                <div onClick="{{ incQty }}" class="btn btn-icon">+</div>
+              </div>
+              <div onClick="{{ addToBag }}" class="btn btn-primary" style="flex:1;font-size:15px;padding:var(--space-3) var(--space-6)">Add to bag · {{ lineTotal }}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:var(--space-3);font-size:13px;color:color-mix(in srgb, var(--color-text) 58%, transparent)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 8h14l-1.2 11H6.2Z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>
+              White-glove delivery included over €600
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── pdp/saveControl ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/saveControl</span><span class="frame-name">Save for later</span>
+          <span class="frame-schema">{{ sc.pdpSaveControl }}</span>
+        </div>
+        <div class="frame-tight">
+          <div style="display:flex;align-items:center;gap:var(--space-3)">
+            <div onClick="{{ toggleSave }}" class="btn btn-secondary" style="gap:9px;color:{{ saveColor }}">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="{{ saveFill }}" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M12 20s-7-4.6-7-9.4A4 4 0 0 1 12 7.6 4 4 0 0 1 19 10.6c0 4.8-7 9.4-7 9.4Z"></path></svg>
+              {{ saveLabel }}
+            </div>
+            <div onClick="{{ toggleSave }}" class="btn btn-secondary btn-icon" style="width:44px;height:44px;color:{{ saveColor }}" title="Save">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="{{ saveFill }}" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M12 20s-7-4.6-7-9.4A4 4 0 0 1 12 7.6 4 4 0 0 1 19 10.6c0 4.8-7 9.4-7 9.4Z"></path></svg>
+            </div>
+            <span class="mono">both presentations · icon-only for the sticky rail</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── pdp/availability ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/availability</span><span class="frame-name">Availability</span>
+          <span class="frame-schema">{{ sc.pdpAvailability }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="display:flex;flex-direction:column;gap:var(--space-2);max-width:460px">
+            <sc-for list="{{ availStates }}" as="avs" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-4);border-radius:999px;background:{{ avs.bg }}">
+                <span style="width:8px;height:8px;border-radius:999px;flex:none;background:{{ avs.dot }}"></span>
+                <span style="font-size:14px;font-weight:600;color:{{ avs.fg }}">{{ avs.name }}</span>
+                <span style="font-size:13.5px;color:color-mix(in srgb, var(--color-text) 58%, transparent)">{{ avs.note }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── pdp/specs ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/specs</span><span class="frame-name">Specifications</span>
+          <span class="frame-schema">{{ sc.pdpSpecs }}</span>
+        </div>
+        <div class="frame-bar" style="background:transparent">
+          <span class="mono">defaultOpen</span>
+          <div class="seg">
+            <sc-for list="{{ openOpts }}" as="opn" hint-placeholder-count="2">
+              <div onClick="{{ opn.on }}" class="seg-opt" style="background:{{ opn.bg }};color:{{ opn.fg }}">{{ opn.name }}</div>
+            </sc-for>
+          </div>
+        </div>
+        <div class="frame-body">
+          <div style="max-width:560px">
+            <div onClick="{{ toggleSpecs }}" style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);padding-bottom:var(--space-3);border-bottom:1px solid var(--color-divider);cursor:pointer">
+              <h4 style="margin:0;font-size:20px">Specifications</h4>
+              <span style="transform:rotate({{ specsArrow }});transition:transform .25s ease;display:grid;place-items:center">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M6 9l6 6 6-6"></path></svg>
+              </span>
+            </div>
+            <sc-if value="{{ specsOpen }}" hint-placeholder-val="{{ true }}">
+              <dl style="margin:var(--space-2) 0 0;display:grid;grid-template-columns:38% 1fr;font-size:14px">
+                <sc-for list="{{ specs }}" as="spec" hint-placeholder-count="5">
+                  <div style="display:contents">
+                    <dt style="margin:0;padding:var(--space-2);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 60%, transparent);border-bottom:1px solid color-mix(in srgb, var(--color-text) 8%, transparent)">{{ spec.k }}</dt>
+                    <dd style="margin:0;padding:var(--space-2);border-bottom:1px solid color-mix(in srgb, var(--color-text) 8%, transparent)">{{ spec.v }}</dd>
+                  </div>
+                </sc-for>
+              </dl>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── pdp/related ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/related</span><span class="frame-name">Related products</span>
+          <span class="frame-schema">{{ sc.pdpRelated }}</span>
+        </div>
+        <div class="frame-body">
+          <h2 style="font-size:34px;margin-bottom:var(--space-6)">Pairs with</h2>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4)">
+            <sc-for list="{{ related }}" as="rel" hint-placeholder-count="4">
+              <div class="lift" style="cursor:pointer">
+                <div class="ph" data-shot="{{ rel.shot }}" style="height:270px;margin-bottom:var(--space-3)"></div>
+                <div style="display:flex;justify-content:space-between;gap:var(--space-3);align-items:baseline">
+                  <div class="tile-title">{{ rel.name }}</div>
+                  <div style="font-size:15px;white-space:nowrap">{{ rel.priceLabel }}</div>
+                </div>
+                <div class="card-meta">{{ rel.maker }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── pdp/reviews ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">pdp/reviews</span><span class="frame-name">Reviews</span>
+          <span class="frame-schema">{{ sc.pdpReviews }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="display:grid;grid-template-columns:240px 1fr;gap:calc(var(--space-8) * 1.2);align-items:start">
+            <div>
+              <div style="font-family:var(--font-heading);font-size:56px;line-height:1">4.8</div>
+              <div style="display:flex;gap:2px;color:var(--color-accent);margin:var(--space-2) 0">
+                <sc-for list="{{ stars }}" as="star" hint-placeholder-count="5">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="{{ star.fill }}" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z"></path></svg>
+                </sc-for>
+              </div>
+              <div style="font-size:14px;color:color-mix(in srgb, var(--color-text) 58%, transparent);margin-bottom:var(--space-4)">36 reviews</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <sc-for list="{{ ratingBars }}" as="bar" hint-placeholder-count="5">
+                  <div style="display:flex;align-items:center;gap:var(--space-2)">
+                    <span class="mono" style="width:12px">{{ bar.n }}</span>
+                    <span style="flex:1;height:6px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden">
+                      <span style="display:block;height:100%;width:{{ bar.pct }};background:var(--color-accent)"></span>
+                    </span>
+                    <span class="mono" style="width:22px;text-align:right">{{ bar.c }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div class="btn btn-secondary btn-block" style="margin-top:var(--space-4)">Write a review</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+              <sc-for list="{{ reviews }}" as="rev" hint-placeholder-count="3">
+                <div class="card elev-sm" style="gap:var(--space-2)">
+                  <div style="display:flex;align-items:center;gap:var(--space-3)">
+                    <div class="blob" style="width:36px;height:36px;flex:none;display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--color-accent-2-800)">{{ rev.initials }}</div>
+                    <div style="flex:1">
+                      <div style="font-size:14.5px;font-weight:600">{{ rev.name }}</div>
+                      <div class="card-meta" style="margin:0">{{ rev.meta }}</div>
+                    </div>
+                    <div style="display:flex;gap:2px;color:var(--color-accent)">
+                      <sc-for list="{{ rev.stars }}" as="rstar" hint-placeholder-count="5">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="{{ rstar.fill }}" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z"></path></svg>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div class="tile-title" style="font-size:16px">{{ rev.title }}</div>
+                  <p style="margin:0;font-size:14.5px;line-height:1.65;color:color-mix(in srgb, var(--color-text) 74%, transparent)">{{ rev.body }}</p>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ══════════════════════════ GROUP · CHROME ══════════════════════════ -->
+    <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:orgIn .35s ease both">
+      <div class="grp">
+        <div>
+          <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">Group · chrome</h6>
+          <h2 style="font-size:38px;margin:0">Site chrome</h2>
+        </div>
+        <div class="mono">15 system blocks · no settings · pageTypes: all</div>
+      </div>
+
+      <!-- ─── chrome/announcement ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">chrome/announcement</span><span class="frame-name">Announcement bar</span>
+          <span class="frame-schema">{{ sc.chromeAnnouncement }}</span>
+        </div>
+        <div class="frame-flush">
+          <div style="background:var(--color-accent-600);color:var(--color-bg);padding:9px var(--space-4);display:flex;align-items:center;justify-content:center;gap:var(--space-3);font-size:12px;letter-spacing:.08em;text-transform:uppercase">
+            <span>Complimentary white-glove delivery over €600</span>
+            <span style="opacity:.5">·</span>
+            <span style="text-decoration:underline;text-underline-offset:3px;cursor:pointer">See how it works</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── chrome/wordmark ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">chrome/wordmark</span><span class="frame-name">Brand wordmark</span>
+          <span class="frame-schema">{{ sc.chromeWordmark }}</span>
+        </div>
+        <div class="frame-tight">
+          <div style="display:flex;align-items:baseline;gap:var(--space-8)">
+            <div style="font-family:var(--font-heading);font-size:34px;letter-spacing:-.02em;cursor:pointer">MALVA</div>
+            <div style="font-family:var(--font-heading);font-size:26px;letter-spacing:-.02em;cursor:pointer">MALVA</div>
+            <div style="font-family:var(--font-heading);font-size:19px;letter-spacing:-.01em;cursor:pointer">MALVA</div>
+            <span class="mono">Caprasimo · 34 / 26 / 19px</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── chrome/primaryNav ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">chrome/primaryNav</span><span class="frame-name">Primary navigation</span>
+          <span class="frame-schema">{{ sc.chromePrimaryNav }}</span>
+        </div>
+        <div class="frame-tight">
+          <div style="display:flex;gap:var(--space-6);align-items:center;flex-wrap:wrap">
+            <sc-for list="{{ navLinks }}" as="nav" hint-placeholder-count="5">
+              <div onClick="{{ nav.on }}" style="font-size:14px;font-weight:500;white-space:nowrap;cursor:pointer;color:{{ nav.color }};padding:var(--space-1) 0;border-bottom:2px solid {{ nav.rule }}" style-hover="color:var(--color-accent)">{{ nav.name }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── chrome/staticLinks ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">chrome/staticLinks</span><span class="frame-name">Static header links</span>
+          <span class="frame-schema">{{ sc.chromeStaticLinks }}</span>
+        </div>
+        <div class="frame-tight">
+          <div style="display:flex;gap:var(--space-4);align-items:center;flex-wrap:wrap">
+            <sc-for list="{{ staticLinks }}" as="slink" hint-placeholder-count="4">
+              <div style="font-size:13px;cursor:pointer;color:color-mix(in srgb, var(--color-text) 62%, transparent)" style-hover="color:var(--color-accent)">{{ slink.name }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── chrome/search ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">chrome/search</span><span class="frame-name">Search entry</span>
+          <span class="frame-schema">{{ sc.chromeSearch }}</span>
+        </div>
+        <div class="frame-tight">
+          <div style="display:flex;gap:var(--space-4);align-items:center;flex-wrap:wrap">
+            <div class="btn btn-secondary" style="gap:9px;width:210px;justify-content:flex-start;color:color-mix(in srgb, var(--color-text) 55%, transparent);font-family:var(--font-body);font-weight:400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+              Search the shop
+            </div>
+            <div class="btn btn-secondary btn-icon" title="Search">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+            </div>
+            <span class="mono">expanded · collapsed (mobile)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── chrome/accountLink · wishlistLink · bagIndicator ─── -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4)">
+        <div class="frame" style="margin:0">
+          <div class="frame-bar">
+            <span class="frame-type">chrome/accountLink</span><span class="frame-name">Account</span>
+          </div>
+          <div class="frame-tight">
+            <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
+              <div class="btn btn-secondary btn-icon" title="Account">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><circle cx="12" cy="9" r="3.2"></circle><path d="M5.5 19.5a6.8 6.8 0 0 1 13 0"></path></svg>
+              </div>
+              <div class="btn btn-secondary" style="gap:8px;font-size:13.5px">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><circle cx="12" cy="9" r="3.2"></circle><path d="M5.5 19.5a6.8 6.8 0 0 1 13 0"></path></svg>
+                Sofia
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="frame" style="margin:0">
+          <div class="frame-bar">
+            <span class="frame-type">chrome/wishlistLink</span><span class="frame-name">Wishlist</span>
+          </div>
+          <div class="frame-tight">
+            <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
+              <div onClick="{{ toggleSave }}" class="btn btn-secondary btn-icon" style="position:relative;color:{{ saveColor }}" title="Saved">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="{{ saveFill }}" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M12 20s-7-4.6-7-9.4A4 4 0 0 1 12 7.6 4 4 0 0 1 19 10.6c0 4.8-7 9.4-7 9.4Z"></path></svg>
+              </div>
+              <div class="btn btn-secondary" style="gap:8px;font-size:13.5px">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M12 20s-7-4.6-7-9.4A4 4 0 0 1 12 7.6 4 4 0 0 1 19 10.6c0 4.8-7 9.4-7 9.4Z"></path></svg>
+                Saved · 2
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="frame" style="margin:0">
+          <div class="frame-bar">
+            <span class="frame-type">chrome/bagIndicator</span><span class="frame-name">Bag</span>
+          </div>
+          <div class="frame-tight">
+            <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
+              <div class="btn btn-primary" style="gap:8px">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M5 8h14l-1.2 11H6.2Z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>
+                Bag · 3
+              </div>
+              <div class="btn btn-secondary btn-icon" style="position:relative" title="Bag">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M5 8h14l-1.2 11H6.2Z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>
+                <span style="position:absolute;top:-2px;right:-2px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:var(--color-accent-600);color:var(--color-bg);font-size:10px;font-weight:700;display:grid;place-items:center">3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── chrome/compactNav ─── -->
+      <div class="frame" style="margin-top:var(--space-4)">
+        <div class="frame-bar">
+          <span class="frame-type">chrome/compactNav</span><span class="frame-name">Compact navigation</span>
+          <span class="frame-schema">{{ sc.chromeCompactNav }}</span>
+        </div>
+        <div class="frame-body">
+          <div style="display:flex;gap:var(--space-6);align-items:flex-start;flex-wrap:wrap">
+            <div class="btn btn-secondary btn-icon" onClick="{{ toggleDrawer }}" title="Menu">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+            </div>
+            <div style="width:300px;background:var(--color-surface);border-radius:calc(var(--radius-lg) * 1.15);padding:var(--space-4);box-shadow:var(--shadow-md)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-3)">
+                <div style="font-family:var(--font-heading);font-size:20px">MALVA</div>
+                <div class="btn btn-icon" style="color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+                </div>
+              </div>
+              <div class="hr" style="margin:var(--space-2) 0"></div>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ navLinks }}" as="nav" hint-placeholder-count="5">
+                  <div onClick="{{ nav.on }}" style="display:flex;align-items:center;justify-content:space-between;padding:11px 4px;font-size:16px;font-family:var(--font-heading);cursor:pointer;color:{{ nav.color }};border-bottom:1px solid color-mix(in srgb, var(--color-text) 7%, transparent)">
+                    {{ nav.name }}
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" style="opacity:.4"><path d="M9 6l6 6-6 6"></path></svg>
+                  </div>
+                </sc-for>
+              </div>
+              <div class="btn btn-primary btn-block" style="margin-top:var(--space-4)">Ask a stylist</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── chrome/footerBrand ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">chrome/footerBrand</span><span class="frame-name">Footer brand</span>
+          <span class="frame-schema">{{ sc.chromeFooterBrand }}</span>
+        </div>
+        <div class="frame-flush">
+          <div style="background:var(--color-surface);padding:var(--space-6) var(--space-8)">
+            <div style="font-family:var(--font-heading);font-size:28px;margin-bottom:var(--space-3)">MALVA</div>
+            <p style="font-size:14.5px;line-height:1.7;max-width:28em;margin:0;color:color-mix(in srgb, var(--color-text) 65%, transparent)">Objects for the house, made slowly by people we've met. Paris showroom, rue des Archives.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── chrome/footerNewsletter ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">chrome/footerNewsletter</span><span class="frame-name">Footer newsletter</span>
+          <span class="frame-schema">{{ sc.chromeFooterNewsletter }}</span>
+        </div>
+        <div class="frame-flush">
+          <div style="background:var(--color-surface);padding:var(--space-6) var(--space-8)">
+            <h6 style="margin-bottom:var(--space-3)">The letter</h6>
+            <p style="font-size:14px;line-height:1.65;max-width:26em;color:color-mix(in srgb, var(--color-text) 65%, transparent);margin-bottom:var(--space-3)">One note a month. New makers, the journal, nothing else.</p>
+            <div style="display:flex;gap:var(--space-2);max-width:380px">
+              <input class="input" placeholder="you@house.com" style="flex:1;background:var(--color-bg)">
+              <div class="btn btn-primary" style="flex:none">Join</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── chrome/footerColumns ─── -->
+      <div class="frame">
+        <div class="frame-bar">
+          <span class="frame-type">chrome/footerColumns</span><span class="frame-name">Footer link columns</span>
+          <span class="frame-schema">{{ sc.chromeFooterColumns }}</span>
+        </div>
+        <div class="frame-flush">
+          <div style="background:var(--color-surface);padding:var(--space-6) var(--space-8)">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-8);max-width:760px">
+            <sc-for list="{{ footerCols }}" as="fcol" hint-placeholder-count="3">
+              <div>
+                <h6 style="margin-bottom:var(--space-3)">{{ fcol.title }}</h6>
+                <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+                  <sc-for list="{{ fcol.items }}" as="fitem" hint-placeholder-count="4">
+                    <div style="font-size:14px;color:color-mix(in srgb, var(--color-text) 68%, transparent);cursor:pointer" style-hover="color:var(--color-accent)">{{ fitem }}</div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── chrome/socialLinks · languageControl · copyright ─── -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-4)">
+        <div class="frame" style="margin:0">
+          <div class="frame-bar">
+            <span class="frame-type">chrome/socialLinks</span><span class="frame-name">Social</span>
+          </div>
+          <div class="frame-tight">
+            <div style="display:flex;gap:var(--space-2)">
+              <div class="btn btn-secondary btn-icon" title="Instagram">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3.5h8A4.5 4.5 0 0 1 20.5 8v8a4.5 4.5 0 0 1-4.5 4.5H8A4.5 4.5 0 0 1 3.5 16V8A4.5 4.5 0 0 1 8 3.5Zm4 5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"></path></svg>
+              </div>
+              <div class="btn btn-secondary btn-icon" title="Facebook">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13.6 21v-8h2.7l.4-3h-3.1V8.4c0-.9.3-1.5 1.6-1.5h1.6V4.2C16.3 4.1 15.4 4 14.3 4 12 4 10.6 5.4 10.6 8v2H8.1v3h2.5v8"></path></svg>
+              </div>
+              <div class="btn btn-secondary btn-icon" title="YouTube">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5a3 3 0 0 1 3-3h11a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3h-11a3 3 0 0 1-3-3ZM10.6 9.8 15 12l-4.4 2.2Z"></path></svg>
+              </div>
+              <div class="btn btn-secondary btn-icon" title="Journal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5a8.5 8.5 0 1 1 0-17 8.5 8.5 0 0 1 0 17ZM3.5 12h17M12 3.5c2.4 2.5 2.4 14 0 17M12 3.5c-2.4 2.5-2.4 14 0 17"></path></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="frame" style="margin:0">
+          <div class="frame-bar">
+            <span class="frame-type">chrome/languageControl</span><span class="frame-name">Language</span>
+          </div>
+          <div class="frame-tight">
+            <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
+              <div class="seg">
+                <sc-for list="{{ locales }}" as="loc" hint-placeholder-count="3">
+                  <div onClick="{{ loc.on }}" class="seg-opt" style="background:{{ loc.bg }};color:{{ loc.fg }}">{{ loc.name }}</div>
+                </sc-for>
+              </div>
+              <div class="btn btn-secondary" style="gap:8px;font-size:13px">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M3.5 12h17M12 3.5c2.4 2.5 2.4 14 0 17M12 3.5c-2.4 2.5-2.4 14 0 17"></path></svg>
+                {{ localeLabel }}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" style="opacity:.5"><path d="M6 9l6 6 6-6"></path></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="frame" style="margin:0">
+          <div class="frame-bar">
+            <span class="frame-type">chrome/copyright</span><span class="frame-name">Copyright</span>
+          </div>
+          <div class="frame-tight">
+            <div style="font-size:12.5px;color:color-mix(in srgb, var(--color-text) 52%, transparent)">© 2026 MALVA · Paris · All rights reserved</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── assembled: the chrome blocks composed ─── -->
+      <div class="frame" style="margin-top:var(--space-8)">
+        <div class="frame-bar">
+          <span class="frame-type">chrome/*</span><span class="frame-name">Assembled — header &amp; footer</span>
+          <span class="frame-schema">announcement · wordmark · primaryNav · search · accountLink · wishlistLink · bagIndicator · footerBrand · footerColumns · footerNewsletter · socialLinks · languageControl · copyright</span>
+        </div>
+        <div class="frame-flush">
+          <div style="background:var(--color-accent-600);color:var(--color-bg);padding:9px var(--space-4);text-align:center;font-size:12px;letter-spacing:.08em;text-transform:uppercase">Complimentary white-glove delivery over €600</div>
+          <div class="nav" style="padding:var(--space-4) var(--space-6);gap:var(--space-6);flex-wrap:nowrap">
+            <div class="nav-brand" style="font-size:26px;letter-spacing:-.02em;margin-right:0">MALVA</div>
+            <div style="display:flex;gap:var(--space-6);align-items:center;margin-right:auto;margin-left:var(--space-6);min-width:0;overflow:hidden">
+              <sc-for list="{{ navLinks }}" as="nav" hint-placeholder-count="5">
+                <div onClick="{{ nav.on }}" style="font-size:14px;font-weight:500;white-space:nowrap;cursor:pointer;color:{{ nav.color }};padding:var(--space-1) 0;border-bottom:2px solid {{ nav.rule }}" style-hover="color:var(--color-accent)">{{ nav.name }}</div>
+              </sc-for>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--space-2)">
+              <div class="btn btn-secondary" style="gap:8px;width:170px;flex:none;justify-content:flex-start;color:color-mix(in srgb, var(--color-text) 55%, transparent);font-family:var(--font-body);font-weight:400;overflow:hidden;white-space:nowrap">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+                Search the shop
+              </div>
+              <div class="btn btn-secondary btn-icon" style="color:{{ saveColor }}" title="Saved">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="{{ saveFill }}" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M12 20s-7-4.6-7-9.4A4 4 0 0 1 12 7.6 4 4 0 0 1 19 10.6c0 4.8-7 9.4-7 9.4Z"></path></svg>
+              </div>
+              <div class="btn btn-primary" style="gap:8px;white-space:nowrap;flex:none">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M5 8h14l-1.2 11H6.2Z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>
+                Bag · 3
+              </div>
+              <div class="btn btn-secondary btn-icon" title="Account">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><circle cx="12" cy="9" r="3.2"></circle><path d="M5.5 19.5a6.8 6.8 0 0 1 13 0"></path></svg>
+              </div>
+            </div>
+          </div>
+          <div style="height:var(--space-8);background:var(--color-bg);border-top:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider);display:grid;place-items:center">
+            <span class="mono">page content · authored grid</span>
+          </div>
+          <div style="background:var(--color-surface);padding:calc(var(--space-8) * 1.2) var(--space-6) var(--space-6)">
+            <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:var(--space-8)">
+              <div>
+                <div style="font-family:var(--font-heading);font-size:26px;margin-bottom:var(--space-3)">MALVA</div>
+                <p style="font-size:14px;line-height:1.7;max-width:24em;color:color-mix(in srgb, var(--color-text) 65%, transparent);margin-bottom:var(--space-4)">Objects for the house, made slowly by people we've met. Paris showroom, rue des Archives.</p>
+                <div style="display:flex;gap:var(--space-2)">
+                    <div class="btn btn-secondary btn-icon" title="Instagram">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3.5h8A4.5 4.5 0 0 1 20.5 8v8a4.5 4.5 0 0 1-4.5 4.5H8A4.5 4.5 0 0 1 3.5 16V8A4.5 4.5 0 0 1 8 3.5Zm4 5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"></path></svg>
+                    </div>
+                    <div class="btn btn-secondary btn-icon" title="Facebook">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13.6 21v-8h2.7l.4-3h-3.1V8.4c0-.9.3-1.5 1.6-1.5h1.6V4.2C16.3 4.1 15.4 4 14.3 4 12 4 10.6 5.4 10.6 8v2H8.1v3h2.5v8"></path></svg>
+                    </div>
+                    <div class="btn btn-secondary btn-icon" title="YouTube">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5a3 3 0 0 1 3-3h11a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3h-11a3 3 0 0 1-3-3ZM10.6 9.8 15 12l-4.4 2.2Z"></path></svg>
+                    </div>
+                    <div class="btn btn-secondary btn-icon" title="Journal">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5a8.5 8.5 0 1 1 0-17 8.5 8.5 0 0 1 0 17ZM3.5 12h17M12 3.5c2.4 2.5 2.4 14 0 17M12 3.5c-2.4 2.5-2.4 14 0 17"></path></svg>
+                    </div>
+                </div>
+              </div>
+              <sc-for list="{{ footerCols }}" as="fcol" hint-placeholder-count="3">
+                <div>
+                  <h6 style="margin-bottom:var(--space-3)">{{ fcol.title }}</h6>
+                  <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+                    <sc-for list="{{ fcol.items }}" as="fitem" hint-placeholder-count="4">
+                      <div style="font-size:14px;color:color-mix(in srgb, var(--color-text) 68%, transparent);cursor:pointer" style-hover="color:var(--color-accent)">{{ fitem }}</div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <div class="hr" style="margin:var(--space-6) 0 var(--space-4)"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);flex-wrap:wrap">
+              <div style="font-size:12.5px;color:color-mix(in srgb, var(--color-text) 52%, transparent)">© 2026 MALVA · Paris · All rights reserved</div>
+              <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
+                <div style="display:flex;gap:var(--space-4)">
+                  <sc-for list="{{ staticLinks }}" as="slink" hint-placeholder-count="4">
+                    <div style="font-size:12.5px;cursor:pointer;color:color-mix(in srgb, var(--color-text) 60%, transparent)" style-hover="color:var(--color-accent)">{{ slink.name }}</div>
+                  </sc-for>
+                </div>
+                <div class="seg">
+                  <sc-for list="{{ locales }}" as="loc" hint-placeholder-count="3">
+                    <div onClick="{{ loc.on }}" class="seg-opt" style="background:{{ loc.bg }};color:{{ loc.fg }};padding:5px 10px;font-size:12px">{{ loc.name }}</div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440},&quot;group&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;All&quot;,&quot;Content&quot;,&quot;Category listing&quot;,&quot;Product detail&quot;,&quot;Site chrome&quot;],&quot;default&quot;:&quot;All&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Canvas&quot;},&quot;specSheet&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Canvas&quot;}}">
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MALVA · page-builder block library
+   ---------------------------------------------------------------------------
+   Inventory comes from features/page-builder/registry.tsx (43 blocks: 7
+   palette + 36 system) and the field lists come from page-builder.catalog.json
+   — SCHEMA below is a transcription of that file's `schema` arrays, so each
+   frame can state what a merchandiser actually authors.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+const CAT = {
+  // [key, kind, required?] — verbatim from page-builder.catalog.json
+  hero: [['eyebrow','text'],['headline','text',1],['body','text'],['image','image'],['imageAlt','text'],['primaryLabel','text'],['primaryHref','link'],['secondaryLabel','text'],['secondaryHref','link']],
+  sectionHeading: [['eyebrow','text'],['title','text'],['linkLabel','text'],['linkHref','link']],
+  categoryShowcase: [['eyebrow','text'],['title','text'],['linkLabel','text'],['linkHref','link'],['count','number'],['categories','categoryPicks']],
+  curatedProducts: [['eyebrow','text'],['title','text'],['linkLabel','text'],['linkHref','link'],['count','number'],['products','productPicks']],
+  editorial: [['eyebrow','text'],['title','text'],['body','text'],['image','image'],['imageAlt','text'],['actionLabel','text'],['actionHref','link'],['imageSide','select left|right']],
+  promoBanner: [['eyebrow','text'],['title','text'],['body','text'],['actionLabel','text'],['actionHref','link'],['emphasis','select primary|accent']],
+  newsletterSignup: [['eyebrow','text'],['title','text'],['body','text']],
+
+  listingBreadcrumbs: [], listingFilters: [], listingResultCount: [],
+  listingAppliedFilters: [], listingSort: [], listingPagination: [], listingEmpty: [],
+  listingHeader: [['showDescription','boolean']],
+  listingGrid: [['columns','select 3|4']],
+
+  pdpBreadcrumbs: [], pdpGallery: [], pdpDescription: [], pdpOptions: [],
+  pdpAddToBag: [], pdpSaveControl: [], pdpAvailability: [], pdpReviews: [],
+  pdpIdentity: [['showBrand','boolean'],['showRating','boolean']],
+  pdpPrice: [['showSaving','boolean']],
+  pdpSpecs: [['defaultOpen','select specs|none']],
+  pdpRelated: [['count','number']],
+
+  chromeAnnouncement: [], chromeWordmark: [], chromePrimaryNav: [], chromeStaticLinks: [],
+  chromeSearch: [], chromeAccountLink: [], chromeWishlistLink: [], chromeBagIndicator: [],
+  chromeCompactNav: [], chromeFooterBrand: [], chromeFooterNewsletter: [],
+  chromeFooterColumns: [], chromeSocialLinks: [], chromeLanguageControl: [], chromeCopyright: []
+};
+
+const SC = (() => {
+  const out = {};
+  for (const k in CAT) {
+    const f = CAT[k];
+    out[k] = f.length
+      ? f.map(x => x[0] + (x[2] ? '*' : '') + ' : ' + x[1]).join('  ·  ')
+      : 'resolver-driven · no authored settings';
+  }
+  return out;
+})();
+
+const P = [
+  {id:1,name:'Cassia alabaster lamp',cat:'Lighting',price:480,maker:'Studio Cassia · Milan',shot:'image — lamp lit, low angle'},
+  {id:2,name:'Ossa ribbed vase',cat:'Vases',price:165,maker:'Bottega Ossa · Puglia',shot:'image — vase, single stem'},
+  {id:3,name:'Pale wool throw',cat:'Textiles',price:240,maker:'Mill No. 6 · Donegal',shot:'image — throw over linen chair'},
+  {id:4,name:'Marchetti travertine table',cat:'Furniture',price:1180,maker:'Marchetti · Tivoli',shot:'image — side table in situ'},
+  {id:5,name:'Lune dinner set, four',cat:'Tableware',price:320,maker:'Atelier Lune · Ostuni',shot:'image — plates stacked'},
+  {id:6,name:'Fig & cedar candle',cat:'Scent',price:78,maker:'MALVA · Grasse',shot:'image — candle, lit'},
+  {id:7,name:'Halo brass sconce',cat:'Lighting',price:395,maker:'Halo Works · Lyon',shot:'image — sconce on plaster wall'},
+  {id:8,name:'Onda glass carafe',cat:'Tableware',price:96,maker:'Vetri Onda · Murano',shot:'image — carafe, water, light'},
+  {id:9,name:'Rill linen curtain',cat:'Textiles',price:290,maker:'Mill No. 6 · Donegal',shot:'image — curtain, backlit'},
+  {id:10,name:'Terra bowl, large',cat:'Vases',price:145,maker:'Bottega Ossa · Puglia',shot:'image — bowl on travertine'},
+  {id:11,name:'Sabbia oak stool',cat:'Furniture',price:640,maker:'Marchetti · Tivoli',shot:'image — stool, side light'},
+  {id:12,name:'Vespro incense set',cat:'Scent',price:52,maker:'MALVA · Grasse',shot:'image — incense on ceramic dish'}
+];
+
+const fmt = n => '€' + n.toLocaleString('en-US');
+const mto = p => p.price > 500 || p.cat === 'Textiles';
+
+const ACCENT = 'var(--color-accent)';
+const INK    = 'var(--color-text)';
+const CREAM  = 'var(--color-bg)';
+const MUTED  = 'color-mix(in srgb, var(--color-text) 55%, transparent)';
+const DIV    = 'var(--color-divider)';
+
+/* A .seg option: selected fills terracotta, the rest stay on the ground. */
+const seg = (name, active, on) => ({
+  name, on,
+  bg: active ? ACCENT : 'transparent',
+  fg: active ? CREAM : INK
+});
+
+/* A .radio dot in the DS's checked/unchecked states. */
+const dot = (name, active, on) => ({
+  name, on,
+  border: active ? ACCENT : DIV,
+  fill: active ? ACCENT : 'transparent',
+  inset: active ? 'inset 0 0 0 4px var(--color-bg)' : 'none'
+});
+
+const starRow = n => [1,2,3,4,5].map(i => ({ fill: i <= n ? 'currentColor' : 'none' }));
+
+class Component extends DCLogic {
+  state = {
+    group: 'All', groupTouched: false,
+    side: 'left', emphasis: 'accent',
+    showDesc: true, cols: '3',
+    showBrand: true, showRating: true, showSaving: true,
+    defaultOpen: 'specs', specsOpen: true,
+    qty: 1, saved: true,
+    cat: 'Everything', band: 'Any price', avail: 'Everything', sort: 'Curated',
+    page: 2, nav: 'Shop', locale: 'EN',
+    finish: 'Alabaster', size: 'Medium', fitting: 'Plug-in',
+    wish: [3, 7], drawer: false
+  };
+
+  set = (k, v) => this.setState({ [k]: v });
+
+  pickGroup = (g) => this.setState({ group: g, groupTouched: true });
+
+  /* defaultOpen is the authored setting; changing it re-seeds the open state,
+     which is what a merchandiser toggling the field would actually see. */
+  pickOpen = (v) => this.setState({ defaultOpen: v, specsOpen: v === 'specs' });
+
+  wishToggle = (id) => this.setState(st => ({
+    wish: st.wish.includes(id) ? st.wish.filter(w => w !== id) : st.wish.concat(id)
+  }));
+
+  renderVals() {
+    const sig = JSON.stringify([this.state, this.props.group, this.props.specSheet]);
+    if (sig === this._sig) return this._vals;
+    this._sig = sig;
+    this._vals = this.build();
+    return this._vals;
+  }
+
+  build() {
+    const s = this.state;
+    const specSheet = this.props.specSheet ?? true;
+
+    /* The prop sets the default; clicking the segmented control overrides it. */
+    const group = s.groupTouched ? s.group : (this.props.group ?? 'All');
+    const GROUPS = ['All', 'Content', 'Category listing', 'Product detail', 'Site chrome'];
+
+    const deco = p => ({
+      ...p,
+      priceLabel: fmt(p.price),
+      madeToOrder: mto(p),
+      wish: (e) => { if (e) e.stopPropagation(); this.wishToggle(p.id); },
+      wishFill: s.wish.includes(p.id) ? 'currentColor' : 'none',
+      wishColor: s.wish.includes(p.id) ? ACCENT : INK
+    });
+
+    /* ── listing state ── */
+    const bandTest = p => s.band === 'Any price' ? true
+      : s.band === 'Under €150' ? p.price < 150
+      : s.band === '€150–400' ? p.price >= 150 && p.price <= 400
+      : p.price > 400;
+    const availTest = p => s.avail === 'Everything' ? true
+      : s.avail === 'In stock' ? !mto(p) : mto(p);
+
+    let list = P.filter(p => (s.cat === 'Everything' || p.cat === s.cat) && bandTest(p) && availTest(p));
+    if (s.sort === 'Price ↑') list = list.slice().sort((a, b) => a.price - b.price);
+    if (s.sort === 'Price ↓') list = list.slice().sort((a, b) => b.price - a.price);
+    if (s.sort === 'Newest') list = list.slice().reverse();
+
+    const CATS = ['Everything', 'Lighting', 'Textiles', 'Furniture', 'Tableware', 'Vases', 'Scent'];
+    const BANDS = ['Any price', 'Under €150', '€150–400', 'Over €400'];
+    const AVAIL = ['Everything', 'In stock', 'Made to order'];
+
+    const applied = [];
+    if (s.cat !== 'Everything') applied.push({ name: s.cat });
+    if (s.band !== 'Any price') applied.push({ name: s.band });
+    if (s.avail !== 'Everything') applied.push({ name: s.avail });
+    if (applied.length === 0) applied.push({ name: 'Lighting' }, { name: 'Under €500' }, { name: 'In stock' });
+
+    const crumb = (names) => names.map((n, i) => ({
+      name: n,
+      sep: i < names.length - 1,
+      fg: i === names.length - 1 ? INK : MUTED,
+      weight: i === names.length - 1 ? '600' : '400'
+    }));
+
+    return {
+      mode: specSheet ? '' : 'bare',
+      totalLabel: '43 BLOCKS · 4 GROUPS',
+      sc: SC,
+
+      groupOpts: GROUPS.map(g => seg(g, group === g, () => this.pickGroup(g))),
+      showContent: group === 'All' || group === 'Content',
+      showListing: group === 'All' || group === 'Category listing',
+      showProduct: group === 'All' || group === 'Product detail',
+      showChrome:  group === 'All' || group === 'Site chrome',
+
+      swatches: [
+        { n: 'bg',        v: 'var(--color-bg)' },
+        { n: 'surface',   v: 'var(--color-surface)' },
+        { n: 'text',      v: 'var(--color-text)' },
+        { n: 'accent',    v: 'var(--color-accent)' },
+        { n: 'accent-2',  v: 'var(--color-accent-2)' },
+        { n: 'n-300',     v: 'var(--color-neutral-300)' },
+        { n: 'a-200',     v: 'var(--color-accent-200)' },
+        { n: 'a-400',     v: 'var(--color-accent-400)' },
+        { n: 'a-600',     v: 'var(--color-accent-600)' },
+        { n: 'a2-200',    v: 'var(--color-accent-2-200)' },
+        { n: 'a2-400',    v: 'var(--color-accent-2-400)' },
+        { n: 'a2-700',    v: 'var(--color-accent-2-700)' }
+      ],
+
+      /* ── content ── */
+      cats: [
+        { name: 'Lighting',  n: 24, shot: 'image — lamp, plaster wall' },
+        { name: 'Textiles',  n: 18, shot: 'image — wool throw folded' },
+        { name: 'Furniture', n: 12, shot: 'image — stool, side light' },
+        { name: 'Tableware', n: 31, shot: 'image — ceramics in a row' },
+        { name: 'Vases',     n: 16, shot: 'image — vase, single stem' },
+        { name: 'Scent',     n: 9,  shot: 'image — candle, lit' }
+      /* one binding per text run: .card-meta is a gapped flex row, so
+         splitting "24 pieces" across two nodes would add a stray gap. */
+      ].map(c => ({ ...c, pieces: c.n + ' pieces' })),
+      newIn: [P[0], P[1], P[2], P[4]].map(deco),
+
+      sideOpts: ['left', 'right'].map(v => seg(v === 'left' ? 'Left' : 'Right', s.side === v, () => this.set('side', v))),
+      imgOrder: s.side === 'left' ? '0' : '2',
+
+      empOpts: ['primary', 'accent'].map(v => seg(v === 'primary' ? 'Primary' : 'Accent', s.emphasis === v, () => this.set('emphasis', v))),
+      promo: s.emphasis === 'accent'
+        ? { bg: 'var(--color-accent-600)', fg: CREAM, kicker: 'var(--color-accent-200)',
+            body: 'color-mix(in srgb, #f5ead8 82%, transparent)',
+            btnBg: CREAM, btnFg: 'var(--color-accent-800)' }
+        : { bg: 'var(--color-neutral-900)', fg: CREAM, kicker: 'var(--color-accent-300)',
+            body: 'color-mix(in srgb, #f5ead8 74%, transparent)',
+            btnBg: ACCENT, btnFg: CREAM },
+
+      /* ── listing ── */
+      crumbs: crumb(['Home', 'Shop', 'Lighting']),
+      descOpts: [true, false].map(v => seg(v ? 'On' : 'Off', s.showDesc === v, () => this.set('showDesc', v))),
+      showDesc: s.showDesc,
+
+      catChips: CATS.map(c => ({
+        name: c,
+        n: c === 'Everything' ? P.length : P.filter(p => p.cat === c).length,
+        on: () => this.set('cat', c),
+        weight: s.cat === c ? '600' : '400',
+        bg: s.cat === c ? 'var(--color-accent-100)' : 'transparent',
+        fg: s.cat === c ? 'var(--color-accent-800)' : INK
+      })),
+      priceBands: BANDS.map(b => ({
+        name: b,
+        on: () => this.set('band', b),
+        bg: s.band === b ? ACCENT : 'transparent',
+        fg: s.band === b ? CREAM : INK,
+        border: s.band === b ? ACCENT : DIV
+      })),
+      availability: AVAIL.map(a => dot(a, s.avail === a, () => this.set('avail', a))),
+      reset: () => this.setState({ cat: 'Everything', band: 'Any price', avail: 'Everything' }),
+
+      resultLabel: list.length + (list.length === 1 ? ' piece' : ' pieces') +
+        (s.cat === 'Everything' ? ' in the shop' : ' in ' + s.cat),
+      applied,
+      sortOptions: ['Curated', 'Newest', 'Price ↑', 'Price ↓']
+        .map(o => seg(o, s.sort === o, () => this.set('sort', o))),
+
+      colOpts: ['3', '4'].map(v => seg(v === '3' ? 'Three' : 'Four', s.cols === v, () => this.set('cols', v))),
+      gridCols: 'repeat(' + s.cols + ',1fr)',
+      tileH: s.cols === '3' ? '330px' : '260px',
+      visible: list.slice(0, s.cols === '3' ? 6 : 8).map(deco),
+
+      pages: ['1', '2', '3', '…', '7'].map(n => ({
+        name: n,
+        on: () => { if (n !== '…') this.set('page', Number(n)); },
+        bg: String(s.page) === n ? ACCENT : 'transparent',
+        fg: String(s.page) === n ? CREAM : INK,
+        border: String(s.page) === n ? ACCENT : DIV
+      })),
+
+      /* ── product ── */
+      pdpCrumbs: crumb(['Home', 'Shop', 'Lighting', 'Cassia alabaster lamp']),
+      brandOpts:  [true, false].map(v => seg(v ? 'On' : 'Off', s.showBrand === v,  () => this.set('showBrand', v))),
+      ratingOpts: [true, false].map(v => seg(v ? 'On' : 'Off', s.showRating === v, () => this.set('showRating', v))),
+      savingOpts: [true, false].map(v => seg(v ? 'On' : 'Off', s.showSaving === v, () => this.set('showSaving', v))),
+      showBrand: s.showBrand,
+      showRating: s.showRating,
+      showSaving: s.showSaving,
+      stars: starRow(5),
+
+      finish: s.finish,
+      finishes: [
+        { name: 'Alabaster', swatch: 'var(--color-neutral-200)' },
+        { name: 'Oat',       swatch: 'var(--color-accent-200)' },
+        { name: 'Olive',     swatch: 'var(--color-accent-2-400)' }
+      ].map(f => ({
+        on: () => this.set('finish', f.name),
+        swatch: f.swatch,
+        ring: s.finish === f.name
+          ? '0 0 0 2px var(--color-bg), 0 0 0 4px ' + ACCENT
+          : 'inset 0 0 0 1px color-mix(in srgb, var(--color-text) 14%, transparent)'
+      })),
+      sizes: ['Small', 'Medium', 'Large'].map(z => seg(z, s.size === z, () => this.set('size', z))),
+      fittings: ['Plug-in', 'Hardwired'].map(f => dot(f, s.fitting === f, () => this.set('fitting', f))),
+
+      pdpQty: s.qty,
+      incQty: () => this.set('qty', Math.min(9, s.qty + 1)),
+      decQty: () => this.set('qty', Math.max(1, s.qty - 1)),
+      addToBag: () => {},
+      lineTotal: fmt(480 * s.qty),
+
+      toggleSave: () => this.set('saved', !s.saved),
+      saveFill: s.saved ? 'currentColor' : 'none',
+      saveColor: s.saved ? ACCENT : INK,
+      saveLabel: s.saved ? 'Saved' : 'Save for later',
+
+      availStates: [
+        { name: 'In stock',      note: 'Ships in 3 days from Paris',
+          bg: 'var(--color-accent-2-100)', dot: 'var(--color-accent-2-600)', fg: 'var(--color-accent-2-800)' },
+        { name: 'Made to order', note: '6–8 weeks in the workshop',
+          bg: 'var(--color-accent-100)',   dot: 'var(--color-accent-600)',   fg: 'var(--color-accent-800)' },
+        { name: 'Last one',      note: 'One left at the showroom',
+          bg: 'var(--color-neutral-200)',  dot: 'var(--color-neutral-600)',  fg: 'var(--color-neutral-800)' }
+      ],
+
+      openOpts: ['specs', 'none'].map(v =>
+        seg(v === 'specs' ? 'Specifications' : 'All collapsed', s.defaultOpen === v, () => this.pickOpen(v))),
+      specsOpen: s.specsOpen,
+      specsArrow: s.specsOpen ? '180deg' : '0deg',
+      toggleSpecs: () => this.set('specsOpen', !s.specsOpen),
+      specs: [
+        { k: 'Maker',     v: 'Studio Cassia · Milan' },
+        { k: 'Reference', v: 'MLV-LT-041' },
+        { k: 'Material',  v: 'Volterra alabaster, unlacquered brass' },
+        { k: 'Dimensions',v: '34 cm h · 22 cm ø' },
+        { k: 'Care',      v: 'Wipe with a dry cloth' }
+      ],
+
+      related: [P[6], P[9], P[7], P[5]].map(deco),
+
+      ratingBars: [
+        { n: '5', pct: '78%', c: 28 },
+        { n: '4', pct: '14%', c: 5 },
+        { n: '3', pct: '6%',  c: 2 },
+        { n: '2', pct: '2%',  c: 1 },
+        { n: '1', pct: '0%',  c: 0 }
+      ],
+      reviews: [
+        { initials: 'SR', name: 'Sofia R.', meta: 'Two weeks ago · Paris', stars: starRow(5),
+          title: 'The light is the whole point',
+          body: 'It throws a warm pool rather than a beam, which is exactly what the corner needed. The veining is much more present in daylight than in the photographs — in a good way.' },
+        { initials: 'MK', name: 'Marc K.', meta: 'Last month · Antwerp', stars: starRow(5),
+          title: 'Heavier than expected, happily',
+          body: 'Feels like one solid piece of stone because it is. The brass has already started to go soft gold at the switch.' },
+        { initials: 'AL', name: 'Anna L.', meta: 'Two months ago · Copenhagen', stars: starRow(4),
+          title: 'Beautiful, slow to arrive',
+          body: 'Worth the wait, though the six weeks was closer to eight. Packaging was excellent and entirely paper.' }
+      ],
+
+      /* ── chrome ── */
+      navLinks: ['Shop', 'Lighting', 'Textiles', 'The journal', 'Showroom'].map(n => ({
+        name: n,
+        on: () => this.set('nav', n),
+        color: s.nav === n ? ACCENT : INK,
+        rule: s.nav === n ? ACCENT : 'transparent'
+      })),
+      staticLinks: ['Delivery', 'Returns', 'Care guide', 'Trade programme'].map(n => ({ name: n })),
+      locales: ['EN', 'FR', 'DE'].map(l => seg(l, s.locale === l, () => this.set('locale', l))),
+      localeLabel: s.locale === 'EN' ? 'English · €' : s.locale === 'FR' ? 'Français · €' : 'Deutsch · €',
+      footerCols: [
+        { title: 'Shop',  items: ['Lighting', 'Textiles', 'Furniture', 'Tableware', 'Scent'] },
+        { title: 'House', items: ['The journal', 'Our makers', 'Paris showroom', 'Trade programme'] },
+        { title: 'Help',  items: ['Delivery', 'Returns', 'Care guide', 'Ask a stylist'] }
+      ],
+      toggleDrawer: () => this.set('drawer', !s.drawer)
+    };
+  }
+}
+
+</script>
+</body>
+</html>
