@@ -44,8 +44,8 @@ Protected group: `app/[locale]/account/(protected)/layout.tsx` (Server): `const 
 - [x] O-01 Write `lib/ct/auth.ts` + tests (mock root): login uses `login().post` with merge mode and anonymous cart; signUp then email token and confirm called in order; `createPasswordResetToken` returns null for unknown email; verify call shapes against OAS and record in findings.
 - [x] O-02 Write `lib/safe-redirect.ts` + tests (relative ok; `//evil.com`, `https://evil.com`, `/other-locale/x`, missing locale → fallback).
 - [x] O-03 Write `/api/auth/login` + tests: success writes session fields and merged cart id; wrong password and unknown email return the **identical** 401 body; anonymous cart id is passed.
-- [ ] O-04 Write `/api/auth/register` + tests: weak password 400; duplicate 409; success → verified + signed in; no email is sent (no mail module imported).
-- [ ] O-05 Write `/api/auth/logout`, `/api/auth/me` + tests (session cleared; me null when anonymous).
+- [x] O-04 Write `/api/auth/register` + tests: weak password 400; duplicate 409; success → verified + signed in; no email is sent (no mail module imported).
+- [x] O-05 Write `/api/auth/logout`, `/api/auth/me` + tests (session cleared; me null when anonymous).
 - [ ] O-06 Write `/api/auth/forgot-password`, `/api/auth/reset-password`, `lib/dev-stub.ts`, dev page + tests: same response for known/unknown email; dev stores link, production does not (`NODE_ENV` stub); invalid token 400; dev page 404 outside development.
 - [ ] O-07 Write `useAccount`, `AccountLink`, header `account` slot, root fallback + tests (label states; logout clears caches).
 - [ ] O-08 Write the four pages + `AuthCard` + messages (both locales) + tests: validation errors with `aria-describedby`; wrong password shows `auth.invalid` ("Email or password is incorrect"); `?redirect=` honored after sign-in using `safeRedirectPath`; register success lands on account.
