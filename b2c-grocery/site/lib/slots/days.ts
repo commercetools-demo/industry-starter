@@ -1,13 +1,9 @@
 import { SLOT_CONFIG } from '../config/slots';
 import { isDeliverable } from './deliverable';
 import { getSlotService } from './index';
-import type { Slot, SlotService } from './types';
+import type { Slot, SlotDay, SlotService } from './types';
 
-export interface SlotDay {
-  /** `YYYY-MM-DD` (stub: UTC). */
-  date: string;
-  slots: Slot[];
-}
+export type { SlotDay } from './types';
 
 export type SlotDaysResult =
   | { ok: true; days: SlotDay[]; /** Only when no slot in the horizon has capacity and a later day exists. */ nextAvailableDate?: string }

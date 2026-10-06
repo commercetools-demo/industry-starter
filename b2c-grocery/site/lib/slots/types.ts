@@ -8,6 +8,18 @@ export interface Slot {
   remaining: number;
 }
 
+export interface SlotDay {
+  /** `YYYY-MM-DD` (stub: UTC). */
+  date: string;
+  slots: Slot[];
+}
+
+/** Body of `GET /api/slots` and of the `SLOT_FULL` answer. */
+export interface SlotDaysBody {
+  days: SlotDay[];
+  nextAvailableDate?: string;
+}
+
 export type HoldResult = { ok: true; expires: Date } | { ok: false; reason: 'FULL' | 'UNKNOWN' };
 
 export interface SlotArea {
