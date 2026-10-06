@@ -39,7 +39,7 @@
 - [x] K-04 Write `FilterRail` + `AppliedFilters` + `ListingToolbar` + tests: selecting a band calls `router.replace` with `price=…&page` removed; "Clear all" resets to `/shop`; counts displayed; active styles via `aria-pressed/checked`; single result label "1 product".
 - [x] K-05 Write the server page with `Promise.all` and param resolution + tests (mock `getCategoryTree`, `searchProducts`): both calls start before either resolves; unknown category ignored; heading uses category name; page 2 passes `page: 2`.
 - [x] K-06 Tablet filter sheet (`FiltersSheet` client) + tests (button opens dialog containing filters; applying closes).
-- [ ] K-07 Add all message keys (both locales); verify the header links `/shop` and `/shop?sort=newest` exist (the active state is H's `PrimaryNav`; add a test here only for the link targets).
+- [x] K-07 Add all message keys (both locales); verify the header links `/shop` and `/shop?sort=newest` exist (the active state is H's `PrimaryNav`; add a test here only for the link targets).
 - [ ] K-08 Report manual tests M-K-1…M-K-5 and sign-off SO-01 follow-up.
 
 ## Unit tests (scenario → test)
