@@ -39,8 +39,36 @@ describe('buildSearchRequest', () => {
     expect(build({ currency: 'EUR', country: 'DE' }).productProjectionParameters).toEqual({ priceCurrency: 'EUR', priceCountry: 'DE' });
   });
 
-  it('text: fullText on name in the locale', () => {
-    expect(build({ text: ' milk ', locale: 'de-DE' }).query).toEqual({ fullText: { field: 'name', language: 'de-DE', value: 'milk' } });
+  it('text: fullText and substring wildcard on name in the locale (OR)', () => {
+    expect(build({ text: ' oat milk ', locale: 'de-DE' }).query).toEqual({
+      or: [
+        { fullText: { field: 'name', language: 'de-DE', value: 'oat milk' } },
+        { wildcard: { field: 'name', language: 'de-DE', value: '*oat milk*', caseInsensitive: true } },
+      ],
+    });
+  });
+
+  it('text: wildcard characters typed by the shopper are escaped', () => {
+    const query = build({ text: 'a*b?c\\d' }).query as { or: { wildcard?: { value: string } }[] };
+    expect(query.or[1].wildcard?.value).toBe('*a\\*b\\?c\\\\d*');
+  });
+
+  it('text that looks like a SKU adds an exact, case-insensitive SKU clause', () => {
+    const query = build({ text: 'bananas-500g' }).query as { or: unknown[] };
+    expect(query.or).toHaveLength(3);
+    expect(query.or[2]).toEqual({ exact: { field: 'variants.sku', value: 'bananas-500g', caseInsensitive: true } });
+  });
+
+  it('text that does not look like a SKU has no SKU clause (too short, spaces, other characters)', () => {
+    for (const text of ['abc', 'oat drink', 'crème', 'a_b-c1']) {
+      expect((build({ text }).query as { or: unknown[] }).or).toHaveLength(2);
+    }
+  });
+
+  it('text combines with the other filters by AND', () => {
+    const query = build({ text: 'milk', categoryId: 'c1' }).query as { and: unknown[] };
+    expect(query.and).toHaveLength(2);
+    expect(query.and[0]).toHaveProperty('or');
   });
 
   it('blank text is ignored', () => {

@@ -44,6 +44,28 @@ const FIELD = {
   id: 'id',
 } as const;
 
+/** A SKU-like term: letters, digits and hyphens, at least 4 characters (e.g. `BANANAS-500G`). */
+const SKU_LIKE = /^[A-Za-z0-9-]{4,}$/;
+
+/** `*` and `?` are wildcard characters in the Product Search `wildcard` expression; `\` escapes them. */
+const escapeWildcard = (text: string): string => text.replace(/[\\*?]/g, (c) => `\\${c}`);
+
+/**
+ * Text search, three OR clauses (live behaviour in PROJECT-FINDINGS.md section 4a):
+ * - `fullText` on `name`: token based, ranks whole words ("milk" finds "Whole milk 1 L");
+ * - `wildcard` `*text*` on `name`, case-insensitive: substring match, so German compounds are found ("milch" finds
+ *   "Vollmilch 1 l") and partial words work ("mil"); `fullText` alone returns nothing for both;
+ * - exact `variants.sku` (case-insensitive) when the text looks like a SKU.
+ */
+function textQuery(text: string, locale: string): Expr {
+  const clauses: Expr[] = [
+    { fullText: { field: FIELD.name, language: locale, value: text } },
+    { wildcard: { field: FIELD.name, language: locale, value: `*${escapeWildcard(text)}*`, caseInsensitive: true } },
+  ];
+  if (SKU_LIKE.test(text)) clauses.push({ exact: { field: FIELD.sku, value: text, caseInsensitive: true } });
+  return { or: clauses };
+}
+
 const and = (expressions: Expr[]): Expr => (expressions.length === 1 ? expressions[0] : { and: expressions });
 
 /** Matches one price of the shopper's market. All three conditions must hold for the same price object. */
@@ -84,7 +106,7 @@ export function buildSearchRequest(p: SearchParams): ProductSearchRequest {
 
   const filters: Expr[] = [];
   const text = p.text?.trim();
-  if (text) filters.push({ fullText: { field: FIELD.name, language: p.locale, value: text } });
+  if (text) filters.push(textQuery(text, p.locale));
   if (p.categoryId) filters.push({ exact: { field: FIELD.categoriesSubTree, value: p.categoryId } });
   if (band) filters.push(and([...priceScope(p), priceRange(band)]));
   if (p.availability === 'in-stock') filters.push(inStock);
