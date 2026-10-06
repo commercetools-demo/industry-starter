@@ -54,7 +54,7 @@ describe('useAddresses', () => {
   });
 
   it('401 keeps the safe default and exposes the error', async () => {
-    const { result } = setup(async () => json({ error: 'UNAUTHENTICATED' }, 401));
+    const { result } = setup(async () => json({ error: 'Unauthorized' }, 401));
     await waitFor(() => expect(result.current.list.error).toBeDefined());
     expect(result.current.list.addresses).toEqual([]);
   });

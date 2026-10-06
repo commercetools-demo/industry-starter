@@ -76,6 +76,15 @@ describe('ShopPage', () => {
     expect(mocks.searchProducts).toHaveBeenCalledWith(expect.objectContaining({ page: 1, pageSize: 24, currency: 'USD', country: 'US', locale: 'en-US', sort: 'relevance' }));
   });
 
+  it('Tablet filters (1000 px): the rail only shows from the desktop breakpoint (1200 px) and the Filters button covers everything below', async () => {
+    await render();
+    const rail = screen.getByRole('button', { name: /^Bakery\s*6$/ }).closest('aside');
+    expect(rail).toHaveClass('hidden', 'desktop:block');
+    const sheetButton = screen.getByRole('button', { name: 'Filters' });
+    expect(sheetButton.closest('.desktop\\:hidden')).not.toBeNull();
+    expect(sheetButton.closest('aside')).toBeNull();
+  });
+
   it('Parallel fetches: the category tree and the search both start before either resolves', async () => {
     let resolveTree: (value: Category[]) => void = () => {};
     let resolveSearch: (value: SearchResult) => void = () => {};

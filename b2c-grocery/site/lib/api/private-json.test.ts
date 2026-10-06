@@ -17,10 +17,10 @@ describe('privateJson', () => {
     expect(res.headers.get('Cache-Control')).toBe('private, no-store');
   });
 
-  it('unauthenticated is a private 401', async () => {
+  it('Unauthorized request: a private 401 with { error: "Unauthorized" }', async () => {
     const res = unauthenticated();
     expect(res.status).toBe(401);
     expect(res.headers.get('Cache-Control')).toBe('private, no-store');
-    expect(await res.json()).toEqual({ error: 'UNAUTHENTICATED' });
+    expect(await res.json()).toEqual({ error: 'Unauthorized' });
   });
 });

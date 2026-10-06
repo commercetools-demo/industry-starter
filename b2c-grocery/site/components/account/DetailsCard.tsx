@@ -24,7 +24,7 @@ export function DetailsCard({ current }: { current?: (typeof DETAIL_ROWS)[number
               <Link
                 href={href}
                 aria-current={current === key ? 'page' : undefined}
-                className={`flex items-center justify-between py-[10px] text-[15px] no-underline hover:text-accent ${current === key ? 'text-accent' : 'text-text'}`}
+                className={`flex items-center justify-between py-[10px] text-[15px] no-underline hover:text-accent-700 ${current === key ? 'text-accent-700' : 'text-text'}`}
               >
                 <span>{t(key)}</span>
                 <span aria-hidden="true">→</span>
