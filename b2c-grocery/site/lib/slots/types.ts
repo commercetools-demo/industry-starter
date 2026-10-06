@@ -20,7 +20,7 @@ export interface SlotService {
   listSlots(a: SlotArea & { fromDate: Date; days: number }): Promise<Slot[]>;
   holdSlot(slotId: string, cartId: string, ttlMinutes: number): Promise<HoldResult>;
   releaseHold(cartId: string): Promise<void>;
-  /** Idempotent; converts the hold of that slot into a booking. */
-  confirmBooking(slotId: string, orderId: string): Promise<void>;
+  /** Idempotent per order; converts the hold of that slot (the given cart's, else the oldest) into a booking. */
+  confirmBooking(slotId: string, orderId: string, cartId?: string): Promise<void>;
   nextAvailableDate(a: SlotArea & { fromDate: Date }): Promise<Date | null>;
 }

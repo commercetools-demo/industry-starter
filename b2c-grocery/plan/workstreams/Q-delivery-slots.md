@@ -39,7 +39,7 @@ Card "Delivery": address form (`Field`s: first name, last name, street, addition
 
 ## Tasks
 - [x] Q-01 Write `lib/config/slots.ts`, `Slot`/`SlotService` types and `lib/slots/deliverable.ts` + tests (US/DE patterns; `00…` and `99…` undeliverable).
-- [ ] Q-02 Write `stub-service.ts` + tests with injected clock: only slots with capacity listed; started windows excluded; 11th hold on a window fails `FULL`; hold expires after 15 min and capacity returns; new hold for the same cart releases the previous; `confirmBooking` idempotent; `nextAvailableDate` when day full.
+- [x] Q-02 Write `stub-service.ts` + tests with injected clock: only slots with capacity listed; started windows excluded; 11th hold on a window fails `FULL`; hold expires after 15 min and capacity returns; new hold for the same cart releases the previous; `confirmBooking` idempotent; `nextAvailableDate` when day full.
 - [ ] Q-03 Write `lib/ct/cart-delivery.ts` + tests (custom type set once; fields written; clear removes fields; uses retry).
 - [ ] Q-04 Write `PUT /api/cart/address` + tests: undeliverable 422; valid address sets the address and the `standard` shipping method (cart `shipping` present; `free` follows the rate threshold) and returns the cart; slot cleared when address becomes undeliverable (`slotCleared: true`); unchanged-valid address keeps slot.
 - [ ] Q-05 Write `lib/slots/days.ts` `getSlotDays(cart)` (groups slots by day; used by the route and by V) and `GET /api/slots` + tests (400 without address; days grouping; nextAvailableDate only when none).
