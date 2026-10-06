@@ -291,6 +291,15 @@
     "notFoundBody": "The page may have moved or never existed. Let us get you back to the good stuff.",
     "contact": "Contact us"
   },
+  "pricing": {
+    "perKg": "{price} / kg",
+    "perL": "{price} / l",
+    "provisionalNote": "The final amount depends on the weight we pick.",
+    "totalProvisional": "Total (provisional)",
+    "finalAmount": "Final amount {amount}",
+    "difference": "difference {delta}",
+    "noDifference": "No difference"
+  },
   "a11y": {
     "language": "Language"
   }
