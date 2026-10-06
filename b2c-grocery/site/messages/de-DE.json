@@ -308,7 +308,6 @@
     },
     "order": {
       "title": "Bestellung {number}",
-      "kicker": "Bestellung",
       "placed": "Bestellt am {date}",
       "delivery": "Lieferung: {day}, {time}",
       "back": "Alle Bestellungen",
@@ -331,8 +330,7 @@
       "address": "Lieferadresse",
       "loading": "Deine Bestellung wird geladen…",
       "notFoundTitle": "Diese Bestellung haben wir nicht gefunden",
-      "notFoundBody": "Sie gehört vielleicht zu einem anderen Konto oder existiert nicht mehr.",
-      "unitFallback": "Stück"
+      "notFoundBody": "Sie gehört vielleicht zu einem anderen Konto oder existiert nicht mehr."
     }
   },
   "auth": {

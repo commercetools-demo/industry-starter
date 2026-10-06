@@ -308,7 +308,6 @@
     },
     "order": {
       "title": "Order {number}",
-      "kicker": "Order",
       "placed": "Placed {date}",
       "delivery": "Delivery: {day}, {time}",
       "back": "All orders",
@@ -331,8 +330,7 @@
       "address": "Delivery address",
       "loading": "Loading your order…",
       "notFoundTitle": "We could not find that order",
-      "notFoundBody": "It may belong to another account, or it no longer exists.",
-      "unitFallback": "Each"
+      "notFoundBody": "It may belong to another account, or it no longer exists."
     }
   },
   "auth": {

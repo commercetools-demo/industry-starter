@@ -67,3 +67,17 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 **Question:** `FinalAmount` is built and tested but not wired anywhere because the order detail (R) does not exist yet. R should render `<FinalAmount provisional={order.total} final={order.finalTotal} />` and `<ProvisionalNotice />` (no `cart` prop) for orders with approximate lines, and the order mapper must read custom field `finalTotal` (type `order-final`) into a `Money`. Please confirm R owns this wiring and the mapper change.
 **Blocking:** no
 **Answer (owner):**
+## Q-R-1 (workstream R, task R-07)
+**Question:** The plan says an order that is not the customer's shows a "not-found page", but the account pages are client-fetched, so the order page itself answers HTTP 200 and shows an inline "We could not find that order" state (the API answers 404). Is that enough, or should the page be a server component that checks ownership and calls `notFound()` (real 404 status, one more commercetools read per order view)?
+**Blocking:** no
+**Answer (owner):**
+
+## Q-R-2 (workstream R, task R-08)
+**Question:** `cart-delivery` (slot fields) and `order-final` (`finalTotal`) are both custom types for resource `order`, but an order can carry only ONE custom type. An order created from a cart keeps `cart-delivery`; `setCustomType` to `order-final` (what staff would do after weighing) replaces it and the slot fields disappear from the order (and `setCustomField finalTotal` on a `cart-delivery` order should fail: field not defined; not verified live). The order mapper reads `finalTotal` and the slot from whatever custom fields exist, so it works with either. Proposal: add a `finalTotal` (Money) field definition to `cart-delivery` through the seed script (`addFieldDefinition`) so one type carries both; V/Merchant Center staff then use `setCustomField`. Owner decision (touches project data, so not done by R).
+**Blocking:** no
+**Answer (owner):**
+
+## Q-R-3 (workstream R, task R-08)
+**Question:** The R developer could not read `site/.env.seed` (copying it into the worktree was refused), so `scripts/seed/create-qa-order.ts`, the extended `cleanup-qa.ts` and the order `Money` custom field shape were never run against the project. Please run `npx tsx scripts/seed/create-qa-order.ts --status packing` once from a checkout that has `.env.seed`, then `cleanup-qa.ts`, and record any error in `PROJECT-FINDINGS.md`.
+**Blocking:** no
+**Answer (owner):**

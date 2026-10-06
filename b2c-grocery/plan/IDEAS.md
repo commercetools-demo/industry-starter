@@ -71,3 +71,9 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 ## From workstream N
 - [N] German keys to review (machine-translated): `pricing.*` (e.g. "Gesamt (vorläufig)", "Der Endbetrag hängt vom Gewicht ab, das wir abwiegen.").
 - [N] Mark approximate-weight lines ("about 500 g" / "approx.") on tile, PDP and cart line, not only in the cart summary.
+## From workstream R
+- [R] German keys to review (machine-translated): the whole `account.*` namespace (e.g. "Kunde seit {year}", "Wird gepackt", "Ähnliches erlaubt").
+- [R] The theme has no `--color-muted`: `text-muted` (used in J/N components such as `CartSummary`, `PriceBlock`) is silently ignored. Define a muted token or switch those to `text-text/60`.
+- [R] Order detail: "Track", "Reorder" and a status timeline (design spec, `post-purchase-order-management`) are not built; neither are Returns or an unverified-email banner.
+- [R] The dashboard orders table could show skeleton rows while loading (spec) instead of the loading sentence.
+- [R] Order dates and slot times are UTC (like the slot stub); show them in the delivery area time zone once slots have one.
