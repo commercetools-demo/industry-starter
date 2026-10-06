@@ -49,7 +49,7 @@ export type SortKey = 'relevance' | 'newest' | 'price-asc' | 'price-desc';
 - `lib/config/price-bands.ts`: bands per currency in minor units: `USD` and `EUR` both `[{id:'lt-500',max:500},{id:'500-1500',min:500,max:1500},{id:'1500-3000',min:1500,max:3000},{id:'gt-3000',min:3000}]`, `getPriceBands(currency)`.
 
 ## Tasks
-- [ ] G-01 Write `lib/types.ts`, `lib/cache-keys.ts`, `lib/config/price-bands.ts` with tests (`getPriceBands('EUR')` ids; unknown currency → throws).
+- [x] G-01 Write `lib/types.ts`, `lib/cache-keys.ts`, `lib/config/price-bands.ts` with tests (`getPriceBands('EUR')` ids; unknown currency → throws).
 - [ ] G-02 Write `lib/fetcher.ts` with tests (mock `fetch`: ok JSON; non-2xx → `ApiError` with message from body; network error propagates).
 - [ ] G-03 Write `lib/mappers/product.ts` + fixtures + tests: weighed variant (increment 500 g, label "500 g", `approximateWeight`), `each` product, missing price → `price` undefined, de-DE localization with fallback, availability default 0, discounted price.
 - [ ] G-04 Write `lib/mappers/category.ts` + tests (tree building, orderHint sorting, locale fallback, orphan parents handled).
