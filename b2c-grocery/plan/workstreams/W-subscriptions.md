@@ -24,7 +24,7 @@ Eligible products can be bought on a cadence; customers see and manage their rec
 - [x] W-01 **Spike (needs OA-05, F done):** with a test cart containing a recurrence line, complete a hosted checkout in test mode and check whether a Recurring Order exists (Merchant Center/API). Record result + steps in `PROJECT-FINDINGS.md` §13 and the TODO file (M-W-1). **Stop for Gate 3.**
 - [x] W-02 Verify OAS names for `recurrenceInfo` draft and RecurringOrder update actions; record in findings; adjust design.
 - [x] W-03 Write `lib/config/features.ts` + `lib/ct/recurrence-policies.ts` + tests (flag parsing; policies localized; cached 300 s).
-- [ ] W-04 Extend `addLineItem` for `recurrenceInfo` + route validation + tests (eligible product + valid key → request contains Dynamic; ineligible → 400; unknown key → 400; one-time → no recurrenceInfo).
+- [x] W-04 Extend `addLineItem` for `recurrenceInfo` + route validation + tests (eligible product + valid key → request contains Dynamic; ineligible → 400; unknown key → 400; one-time → no recurrenceInfo).
 - [ ] W-05 Write `RecurrenceSelector` + `RecurrenceBadge` + tests (hidden when ineligible or flag off; notice visible for cadence; selection passed to add).
 - [ ] W-06 Write `lib/ct/recurring-orders.ts` + tests (ownership; mapping; each action maps to the right update call; cancel returns last order date).
 - [ ] W-07 Write the recurring routes + tests (401; 404 not owner; 400 invalid action; success returns the refreshed summary).

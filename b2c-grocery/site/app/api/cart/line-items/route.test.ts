@@ -10,11 +10,13 @@ vi.mock('@/lib/ct/cart', async (orig) => ({
   addLineItem: vi.fn(),
   withCartRetry: vi.fn(),
 }));
+vi.mock('@/lib/config/features', async (orig) => ({ ...(await orig<typeof import('@/lib/config/features')>()), subscriptionsEnabled: vi.fn(() => true) }));
 vi.mock('@/lib/ct/availability', () => ({ getAvailableQuantity: vi.fn() }));
 vi.mock('@/lib/ct/search', () => ({ getProductBySku: vi.fn() }));
 vi.mock('@/lib/ct/categories', () => ({ getCategoryTree: vi.fn().mockResolvedValue([]) }));
 
 import { POST } from './route';
+import { subscriptionsEnabled } from '@/lib/config/features';
 import { getAvailableQuantity } from '@/lib/ct/availability';
 import { addLineItem, createCart, getCart, withCartRetry } from '@/lib/ct/cart';
 import { getCategoryTree } from '@/lib/ct/categories';
@@ -31,7 +33,8 @@ beforeEach(() => {
   vi.mocked(getMarket).mockResolvedValue(market);
   vi.mocked(getSession).mockResolvedValue({});
   vi.mocked(getCategoryTree).mockResolvedValue([]);
-  vi.mocked(getProductBySku).mockResolvedValue({ storage: 'chilled', categoryIds: [] } as never);
+  vi.mocked(subscriptionsEnabled).mockReturnValue(true);
+  vi.mocked(getProductBySku).mockResolvedValue({ storage: 'chilled', categoryIds: [], recurringEligible: true } as never);
   vi.mocked(getAvailableQuantity).mockResolvedValue(10);
   vi.mocked(addLineItem).mockResolvedValue(cart());
   vi.mocked(withCartRetry).mockImplementation(async (id, fn) => fn(cart({ id })));
@@ -66,6 +69,44 @@ describe('POST /api/cart/line-items', () => {
     expect(res.status).toBe(200);
     expect(createCart).not.toHaveBeenCalled();
     expect(addLineItem).toHaveBeenCalledWith('cart-1', 4, { sku: 'MILK-1L', quantity: 1, substitutionPreference: 'allow-similar', recurrencePolicyKey: 'weekly' });
+  });
+
+  it('Subscribe: an eligible product with a valid key adds the line with that policy (the cart layer sets Dynamic)', async () => {
+    vi.mocked(getSession).mockResolvedValue({ cartId: 'cart-1' });
+    vi.mocked(getCart).mockResolvedValue(cart());
+    expect((await post({ sku: 'MILK-1L', quantity: 1, recurrencePolicyKey: 'every-2-weeks' })).status).toBe(200);
+    expect(addLineItem).toHaveBeenCalledWith('cart-1', 4, expect.objectContaining({ recurrencePolicyKey: 'every-2-weeks' }));
+  });
+
+  it('Ineligible product: 400 NOT_RECURRING_ELIGIBLE and nothing is added', async () => {
+    vi.mocked(getProductBySku).mockResolvedValue({ storage: 'ambient', categoryIds: [], recurringEligible: false } as never);
+    const res = await post({ sku: 'BANANAS-500G', quantity: 1, recurrencePolicyKey: 'weekly' });
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: 'NOT_RECURRING_ELIGIBLE' });
+    expect(addLineItem).not.toHaveBeenCalled();
+    expect(createCart).not.toHaveBeenCalled();
+  });
+
+  it.each(['daily', 'Weekly', 5, true])('Unknown key %s: 400 INVALID_RECURRENCE', async (key) => {
+    const res = await post({ sku: 'MILK-1L', quantity: 1, recurrencePolicyKey: key });
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: 'INVALID_RECURRENCE' });
+    expect(addLineItem).not.toHaveBeenCalled();
+  });
+
+  it.each([undefined, null, ''])('One-time (%s): the request carries no recurrence key', async (key) => {
+    vi.mocked(getSession).mockResolvedValue({ cartId: 'cart-1' });
+    vi.mocked(getCart).mockResolvedValue(cart());
+    expect((await post({ sku: 'MILK-1L', quantity: 1, recurrencePolicyKey: key })).status).toBe(200);
+    expect(vi.mocked(addLineItem).mock.calls[0][2]).not.toHaveProperty('recurrencePolicyKey');
+  });
+
+  it('flag off: a recurrence request is refused (400 INVALID_RECURRENCE), one-time still works', async () => {
+    vi.mocked(subscriptionsEnabled).mockReturnValue(false);
+    expect((await post({ sku: 'MILK-1L', quantity: 1, recurrencePolicyKey: 'weekly' })).status).toBe(400);
+    vi.mocked(getSession).mockResolvedValue({ cartId: 'cart-1' });
+    vi.mocked(getCart).mockResolvedValue(cart());
+    expect((await post({ sku: 'MILK-1L', quantity: 1 })).status).toBe(200);
   });
 
   it('Over-ask: 409 INSUFFICIENT_STOCK with the available quantity, cart unchanged', async () => {
