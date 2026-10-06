@@ -89,6 +89,21 @@ export function removeLineItem(cartId: string, version: number, lineItemId: stri
   return updateCart(cartId, version, [{ action: 'removeLineItem', lineItemId }]);
 }
 
+/** Sets the line's substitution preference; a line that has no custom type yet gets the type and the field in one action. */
+export function setLineItemSubstitution(cart: CtCart, lineItemId: string, preference: SubstitutionPreference): Promise<CtCart> {
+  const line = cart.lineItems.find((l) => l.id === lineItemId);
+  return updateCart(cart.id, cart.version, [
+    line?.custom
+      ? { action: 'setLineItemCustomField', lineItemId, name: 'substitutionPreference', value: preference }
+      : {
+          action: 'setLineItemCustomType',
+          lineItemId,
+          type: { key: 'line-substitution', typeId: 'type' },
+          fields: { substitutionPreference: preference },
+        },
+  ]);
+}
+
 /**
  * Runs `fn` with a fresh cart. On a 409 `ConcurrentModification` it re-fetches the cart and retries exactly once;
  * a second 409 propagates. Throws `CartNotActiveError` when the cart is gone or no longer Active.

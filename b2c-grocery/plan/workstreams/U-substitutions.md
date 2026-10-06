@@ -26,7 +26,7 @@ Shoppers set a per-line substitution preference in the cart; on order detail the
 
 ## Tasks
 - [x] U-01 **Spike (docs/OAS):** confirm SDK call names for listing/getting/applying Order Edits, staged actions available (`addLineItem`, `removeLineItem`/quantity change), custom type on edits, and whether Merchant Center can create them. Write findings in `PROJECT-FINDINGS.md` §13 and adjust this file's design if names differ (then tell the owner).
-- [ ] U-02 Write `PATCH /api/cart/line-items/[lineId]/substitution` + `SubstitutionControl` + tests (400 invalid value; optimistic update and rollback; accessible name; default shown from line).
+- [x] U-02 Write `PATCH /api/cart/line-items/[lineId]/substitution` + `SubstitutionControl` + tests (400 invalid value; optimistic update and rollback; accessible name; default shown from line).
 - [ ] U-03 Write `lib/ct/order-edits.ts` `getProposalsForOrder` + tests with fixtures: pending proposal included; declined/applied excluded; non-proposal edits excluded; price difference computed.
 - [ ] U-04 Write `acceptProposal`/`declineProposal` + tests: apply called with both versions; not owner rejected; order not editable → `NOT_EDITABLE`; conflict → `ProposalConflictError`; decline sets status and does **not** call apply.
 - [ ] U-05 Write the three proposal routes + tests (status codes above; ownership).

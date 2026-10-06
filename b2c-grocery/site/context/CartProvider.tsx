@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useToast } from '@/components/ui/Toast';
 import { useCart, useCartMutations, type AddItemOptions } from '@/hooks/useCart';
 import { ApiError } from '@/lib/fetcher';
-import type { Cart } from '@/lib/types';
+import type { Cart, SubstitutionPreference } from '@/lib/types';
 
 type CartContextValue = {
   /** `null` when there is no cart (or it has not loaded and was not seeded). */
@@ -17,6 +17,7 @@ type CartContextValue = {
   addItem: (sku: string, quantity: number, options?: AddItemOptions) => Promise<Cart | null>;
   setQuantity: (lineId: string, quantity: number) => Promise<Cart | null>;
   removeLine: (lineId: string) => Promise<Cart | null>;
+  setSubstitution: (lineId: string, preference: SubstitutionPreference) => Promise<Cart | null>;
   /** Adds, then shows the "Added to your bag" toast (or the failure message). Resolves `true` on success; never throws. */
   addItemWithToast: (sku: string, quantity: number, options?: AddItemOptions) => Promise<boolean>;
 };
@@ -42,7 +43,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const { cart, data, isLoading: revalidating } = useCart();
   // SWR reports `isLoading` while revalidating seeded fallback data too; only an unseeded, unloaded cart is "loading".
   const isLoading = data === undefined && revalidating;
-  const { addItem, setQuantity, removeLine } = useCartMutations();
+  const { addItem, setQuantity, removeLine, setSubstitution } = useCartMutations();
 
   const addItemWithToast = useCallback(
     async (sku: string, quantity: number, options?: AddItemOptions): Promise<boolean> => {
@@ -62,8 +63,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo<CartContextValue>(
-    () => ({ cart, isLoading, itemCount: cart?.itemCount ?? 0, addItem, setQuantity, removeLine, addItemWithToast }),
-    [cart, isLoading, addItem, setQuantity, removeLine, addItemWithToast],
+    () => ({ cart, isLoading, itemCount: cart?.itemCount ?? 0, addItem, setQuantity, removeLine, setSubstitution, addItemWithToast }),
+    [cart, isLoading, addItem, setQuantity, removeLine, setSubstitution, addItemWithToast],
   );
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

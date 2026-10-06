@@ -229,6 +229,11 @@
     "slotExpired": "Your slot reservation ran out. Please choose a slot again.",
     "chooseSlot": "Choose a delivery slot to continue.",
     "addAddress": "Add a delivery address to continue.",
+    "substitution": {
+      "label": "Substitution for {name}",
+      "allow-similar": "Allow similar",
+      "none": "No substitution"
+    },
     "slotLine": "Delivery slot: {day}, {time}",
     "step": {
       "title": "Delivery",

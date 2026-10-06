@@ -229,6 +229,11 @@
     "slotExpired": "Deine Reservierung ist abgelaufen. Bitte wähle das Lieferfenster erneut.",
     "chooseSlot": "Wähle ein Lieferfenster, um fortzufahren.",
     "addAddress": "Gib eine Lieferadresse an, um fortzufahren.",
+    "substitution": {
+      "label": "Ersatz für {name}",
+      "allow-similar": "Ähnliches erlauben",
+      "none": "Kein Ersatz"
+    },
     "slotLine": "Lieferfenster: {day}, {time}",
     "step": {
       "title": "Lieferung",
