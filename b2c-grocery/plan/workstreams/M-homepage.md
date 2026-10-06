@@ -20,7 +20,7 @@
 - Content (all copy) in `messages/*.json` under `home.*`; placeholder grocery copy (e.g. "Good food, quietly sourced", "Aisle by aisle"). Images: placeholders (`https://picsum.photos/seed/<name>/1200/900`) — real photography is an owner TODO (M-M-3).
 
 ## Tasks
-- [ ] M-01 Write `lib/config/site.ts` + tests (defaults; invalid env falls back). Use `Icon` from H (lucide is installed in A).
+- [x] M-01 Write `lib/config/site.ts` + tests (defaults; invalid env falls back). Use `Icon` from H (lucide is installed in A).
 - [ ] M-02 Write `HeroEditorial` and `HeroGrid` + messages; tests: editorial renders H1, two buttons with right hrefs; grid renders five tiles with spans; variant switch via config renders exactly one hero.
 - [ ] M-03 Write `CategoryShowcase` + tests: six cards, each links to `/shop?category=slug`; count formatted `NN`; missing count omitted.
 - [ ] M-04 Write `NewIn` and `EditorialPanel` + tests (four tiles; panel button → `/journal`).
