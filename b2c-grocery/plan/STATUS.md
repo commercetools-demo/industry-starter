@@ -5,15 +5,15 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | ID | Workstream | Tasks | Done | Status | Verified by | Date |
 | --- | --- | --- | --- | --- | --- | --- |
 | A | Scaffold, tooling, verify script | 9 | 9 | Verified | Claude (verify) + owner (M-A-1, M-A-2) | 2026-10-06 |
-| B | Project structure and lint rules | 6 | 6 | Ready for review | | |
-| C | Styling foundation and tokens | 6 | 6 | Ready for review | | |
-| D | Locale routing and messages | 7 | 7 | Ready for review | | |
-| E | BFF core | 9 | 9 | Ready for review | | |
+| B | Project structure and lint rules | 6 | 6 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
+| C | Styling foundation and tokens | 6 | 6 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
+| D | Locale routing and messages | 7 | 7 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
+| E | BFF core | 9 | 9 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
 | F | Catalog data model | 12 | 12 | Verified | Claude (seed:verify) + owner (M-F-1..4, Gate 1) | 2026-10-06 |
-| G | Data-loading foundation | 9 | 9 | Ready for review | | |
-| H | Design system primitives and chrome | 10 | 10 | Ready for review | | |
-| I | Error pages, env validation, guards | 5 | 5 | Ready for review | | |
-| J | Cart core | 9 | 9 | Ready for review | | |
+| G | Data-loading foundation | 9 | 9 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
+| H | Design system primitives and chrome | 10 | 10 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
+| I | Error pages, env validation, guards | 5 | 5 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
+| J | Cart core | 9 | 9 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
 | K | Product listing | 8 | 0 | Not started | | |
 | L | Product detail | 9 | 0 | Not started | | |
 | M | Homepage | 6 | 0 | Not started | | |

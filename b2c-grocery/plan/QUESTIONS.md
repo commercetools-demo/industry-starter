@@ -23,3 +23,8 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 **Question:** The add route returns 404 `UNKNOWN_SKU` for a SKU that is not in the catalog (the plan did not say). Also quantity must be an integer >= 1 for PATCH too (removing is DELETE). OK?
 **Blocking:** no
 **Answer (owner):**
+
+## Q-ORCH-1 (found by orchestrator while testing J)
+**Question:** The cart/currency comes from the *session* market, the page language from the *URL* locale. A visitor whose session says `de-DE`/EUR who opens `/en-US` directly sees English text but an EUR cart (and the catalog price currency follows the session too). Should the proxy/layout sync the session market to the URL locale on every request (recommended: yes, same rule as the locale switch: currency change drops the cart), or keep the explicit switch only?
+**Blocking:** no (default for now: explicit switch only; see IDEAS)
+**Answer (owner):**
