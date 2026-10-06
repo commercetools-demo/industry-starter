@@ -73,6 +73,18 @@
       "title": "Browse by category",
       "all": "Everything →",
       "count": "{count} items"
+    },
+    "newIn": {
+      "kicker": "New in",
+      "title": "Just picked and just baked",
+      "all": "See all →"
+    },
+    "editorial": {
+      "kicker": "From the journal · No. 14",
+      "title": "A morning at the bakery",
+      "body": "Before the shutters go up, the ovens have been running for hours. We spent a morning with the baker who makes our sourdough, and learned why slow dough tastes better.",
+      "button": "Read the journal",
+      "imageAlt": "Loaves of sourdough cooling on a wooden rack"
     }
   },
   "plp": {

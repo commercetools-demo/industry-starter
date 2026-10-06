@@ -73,6 +73,18 @@
       "title": "Nach Kategorie stöbern",
       "all": "Alles ansehen →",
       "count": "{count} Artikel"
+    },
+    "newIn": {
+      "kicker": "Neu im Sortiment",
+      "title": "Frisch geerntet, frisch gebacken",
+      "all": "Alle ansehen →"
+    },
+    "editorial": {
+      "kicker": "Aus dem Journal · Nr. 14",
+      "title": "Ein Morgen in der Bäckerei",
+      "body": "Bevor die Rollläden hochgehen, laufen die Öfen schon seit Stunden. Wir haben einen Morgen mit dem Bäcker verbracht, der unser Sauerteigbrot backt, und erfahren, warum langsamer Teig besser schmeckt.",
+      "button": "Zum Journal",
+      "imageAlt": "Sauerteigbrote kühlen auf einem Holzgitter aus"
     }
   },
   "plp": {
