@@ -110,6 +110,7 @@ Rows are generated from the "Manual tests to report" sections of `plan/workstrea
 | M-T-1 | T | Signed out, click a heart: sign-in page; after signing in you land back and the heart is filled. | — | TODO |
 | M-T-2 | T | `/en-US/account/saved` lists the item; remove it: empty state. | — | TODO |
 | M-T-3 | T | Merchant Center → Shopping lists: `wishlist-<customerId>` exists with one line. | — | TODO |
+| M-T-4 | T | Signed in, open `/en-US/shop?save=<any product id>` typed by hand (no heart click first): nothing is saved, the `save` parameter disappears from the URL. | — | TODO |
 | M-U-1 | U | Place a test order with a line set to "No substitution": order detail shows it (preference copied). | — | TODO |
 | M-U-2 | U | Create a proposal with the recipe on that order: notice appears with price difference. | OA-07 | TODO |
 | M-U-3 | U | Accept: line shows the substitute and total changes; Merchant Center shows the edit applied. | — | TODO |

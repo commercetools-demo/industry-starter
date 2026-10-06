@@ -67,3 +67,8 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 **Question:** `FinalAmount` is built and tested but not wired anywhere because the order detail (R) does not exist yet. R should render `<FinalAmount provisional={order.total} final={order.finalTotal} />` and `<ProvisionalNotice />` (no `cart` prop) for orders with approximate lines, and the order mapper must read custom field `finalTotal` (type `order-final`) into a `Money`. Please confirm R owns this wiring and the mapper change.
 **Blocking:** no
 **Answer (owner):**
+
+## Q-T-1 (workstream T, task T-02)
+**Question:** `privateJson()` was planned in R-03 but R is not merged, so T created `site/lib/api/private-json.ts` with the planned signature. Merging R will give an add/add conflict on that file (and its test); both copies behave the same, keep either. Also, the plan's `addProduct(listId, version, productId)` could not skip duplicates without the line items, so it takes the loaded `ShoppingList` instead. OK?
+**Blocking:** no
+**Answer (owner):**

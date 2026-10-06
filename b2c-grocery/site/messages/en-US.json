@@ -261,7 +261,26 @@
     }
   },
   "checkout": {},
-  "account": {},
+  "account": {
+    "saved": {
+      "title": "Put aside",
+      "metaTitle": "Put aside",
+      "count": "{count, plural, one {# piece saved} other {# pieces saved}}",
+      "empty": "Nothing put aside yet. Tap the heart on anything you like and it will wait for you here.",
+      "browse": "Browse the shop",
+      "addToBag": "Add to bag",
+      "remove": "Remove",
+      "outOfStock": "Out of stock",
+      "loading": "Loading your saved items...",
+      "loadFailed": "We could not load your saved items.",
+      "retry": "Try again",
+      "removeFailed": "We could not remove that item. Please try again.",
+      "removeLabel": "Remove {name} from your saved items",
+      "addLabel": "Add {name} to your bag",
+      "viewLabel": "Choose options for {name}",
+      "list": "Saved items"
+    }
+  },
   "auth": {
     "signInLink": "Sign in",
     "accountLink": "Account",

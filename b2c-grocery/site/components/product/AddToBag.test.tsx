@@ -4,6 +4,8 @@ import { cartLine, makeCart, renderWithCart } from '@/test/cart';
 import { makeProduct, makeVariant } from '@/test/product';
 import { AddToBag } from './AddToBag';
 
+vi.mock('@/hooks/useSaved', () => ({ useSaved: () => ({ isSaved: () => false, toggle: async () => {} }) }));
+
 const variant = (over: Partial<ReturnType<typeof makeVariant>> = {}) =>
   makeVariant({ sku: 'MILK-1L', availability: { isOnStock: true, availableQuantity: 5 }, ...over });
 const product = makeProduct({ id: 'p-milk', name: 'Whole milk' });

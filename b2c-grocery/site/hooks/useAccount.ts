@@ -68,8 +68,8 @@ export function useAuthMutations() {
       mutate(KEY_CART, null, { revalidate: false }),
       ...[KEY_ORDERS, KEY_ADDRESSES, KEY_WISHLIST, KEY_RECURRING].map((key) => mutate(key, undefined, { revalidate: false })),
     ]);
-    // Per-order caches (`order:<id>`) are keyed dynamically: drop them all.
-    await mutate((key) => typeof key === 'string' && key.startsWith('order:'), undefined, { revalidate: false });
+    // Per-order caches (`order:<id>`) and the saved products (`wishlist:products:<locale>`) are keyed dynamically: drop them all.
+    await mutate((key) => typeof key === 'string' && (key.startsWith('order:') || key.startsWith('wishlist:')), undefined, { revalidate: false });
     router.refresh();
   }, [mutate, router]);
 

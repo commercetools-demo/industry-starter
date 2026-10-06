@@ -71,3 +71,9 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 ## From workstream N
 - [N] German keys to review (machine-translated): `pricing.*` (e.g. "Gesamt (vorläufig)", "Der Endbetrag hängt vom Gewicht ab, das wir abwiegen.").
 - [N] Mark approximate-weight lines ("about 500 g" / "approx.") on tile, PDP and cart line, not only in the cart summary.
+## From workstream T
+- [T] German keys to review (machine-translated, informal "du"): all of `account.saved.*`.
+- [T] A failed heart toggle only rolls back silently; show a toast ("We could not save that. Please try again.") once `useSaved` can reach the toast context safely.
+- [T] The header "Saved" entry (`nav.saved`) and the account hub should link to `/account/saved`; R owns the account hub, H the header.
+- [T] Deleting a customer leaves its `wishlist-<customerId>` shopping list behind in commercetools; the QA cleanup script should delete those lists too.
+- [T] Saved cards always add quantity 1 of the first variant; weight products (N) may need their increment instead.

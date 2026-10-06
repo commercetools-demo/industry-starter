@@ -261,7 +261,26 @@
     }
   },
   "checkout": {},
-  "account": {},
+  "account": {
+    "saved": {
+      "title": "Zur Seite gelegt",
+      "metaTitle": "Zur Seite gelegt",
+      "count": "{count, plural, one {# Stück gemerkt} other {# Stücke gemerkt}}",
+      "empty": "Noch nichts zur Seite gelegt. Tippe bei allem, was dir gefällt, auf das Herz, dann wartet es hier auf dich.",
+      "browse": "Zum Shop",
+      "addToBag": "In den Warenkorb",
+      "remove": "Entfernen",
+      "outOfStock": "Nicht vorrätig",
+      "loading": "Deine gemerkten Artikel werden geladen ...",
+      "loadFailed": "Wir konnten deine gemerkten Artikel nicht laden.",
+      "retry": "Erneut versuchen",
+      "removeFailed": "Wir konnten den Artikel nicht entfernen. Bitte versuche es erneut.",
+      "removeLabel": "{name} aus den gemerkten Artikeln entfernen",
+      "addLabel": "{name} in den Warenkorb legen",
+      "viewLabel": "Optionen für {name} wählen",
+      "list": "Gemerkte Artikel"
+    }
+  },
   "auth": {
     "signInLink": "Anmelden",
     "accountLink": "Konto",
@@ -353,7 +372,7 @@
       },
       "formErrors": {
         "rateLimited": "Zu viele Nachrichten. Bitte warten Sie eine Minute und versuchen Sie es erneut.",
-        "failed": "Wir konnten Ihre Nachricht nicht entgegennehmen. Bitte versuchen Sie es erneut."
+        "failed": "Wir konnten Ihre Nachricht nicht entgegennehmen. Bitte versuche es erneut."
       },
       "successTitle": "Nachricht erhalten",
       "successBody": "Wir haben Ihre Nachricht erhalten. Dieser Shop leitet Nachrichten noch nicht an eine Person weiter, eine Antwort ist daher nicht garantiert."
