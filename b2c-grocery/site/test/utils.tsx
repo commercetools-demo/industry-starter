@@ -1,10 +1,19 @@
 import { render, type RenderOptions } from '@testing-library/react';
+import { NextIntlClientProvider } from 'next-intl';
 import type { ReactElement } from 'react';
 import { SWRConfig } from 'swr';
+import deMessages from '@/messages/de-DE.json';
+import enMessages from '@/messages/en-US.json';
 
-export function renderWithProviders(ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
+const MESSAGES: Record<string, typeof enMessages> = { 'en-US': enMessages, 'de-DE': deMessages };
+
+type Options = Omit<RenderOptions, 'wrapper'> & { locale?: 'en-US' | 'de-DE' };
+
+export function renderWithProviders(ui: ReactElement, { locale = 'en-US', ...options }: Options = {}) {
   return render(
-    <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>{ui}</SWRConfig>,
+    <NextIntlClientProvider locale={locale} messages={MESSAGES[locale]}>
+      <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>{ui}</SWRConfig>
+    </NextIntlClientProvider>,
     options,
   );
 }

@@ -1,0 +1,28 @@
+{
+  "common": {
+    "brand": "MALVA"
+  },
+  "nav": {
+    "shop": "Shop",
+    "new": "New",
+    "journal": "Journal",
+    "search": "Search",
+    "saved": "Saved",
+    "bag": "Bag",
+    "account": "Account"
+  },
+  "footer": {},
+  "home": {},
+  "plp": {},
+  "pdp": {},
+  "cart": {},
+  "checkout": {},
+  "account": {},
+  "auth": {},
+  "search": {},
+  "static": {},
+  "errors": {
+    "title": "Something went wrong"
+  },
+  "a11y": {}
+}

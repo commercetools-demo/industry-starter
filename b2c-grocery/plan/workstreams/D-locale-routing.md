@@ -37,13 +37,13 @@ export function getLocalizedString(obj: Record<string,string> | undefined, local
 Extend `test/utils.tsx`: `renderWithProviders(ui, { locale = 'en-US' })` wraps in `NextIntlClientProvider locale messages` (import the JSON) plus the SWR provider from A.
 
 ## Tasks
-- [ ] D-01 Write `lib/utils.ts` as designed. Tests: `formatMoney(480, 'USD', 'en-US')` → "$4.80"; `formatMoney(480, 'EUR', 'de-DE')` normalises NBSP and equals "4,80 €"; `getLocalizedString` fallback chain (exact, language-only `en`, first value, undefined → '').
-- [ ] D-02 Write `i18n/routing.ts`, `i18n/request.ts` and wrap `next.config.ts` with the plugin. Test `routing.locales` equals `['en-US','de-DE']`, default `en-US`.
-- [ ] D-03 Write `messages/en-US.json` and `messages/de-DE.json` (seed keys above) and `messages/parity.test.ts` asserting identical key sets (deep) in both files.
-- [ ] D-04 Write `proxy.ts`. Tests (`proxy.test.ts`, node env, build `NextRequest`s): `/` no cookie → 307 to `/en-US`; `/` cookie `de-DE` → `/de-DE`; `/de-DE/shop` passes through with headers `x-next-intl-locale: de-DE` and `x-pathname: /de-DE/shop`; `/api/cart`, `/_next/x`, `/logo.png` untouched; `/xx-YY/page` → redirected to `/en-US/xx-YY/page` (treated as unprefixed path).
-- [ ] D-05 Add `app/[locale]/layout.tsx`, `app/[locale]/page.tsx` (renders `t('common.brand')`) and update root `layout.tsx` to set `<html lang>`. Tests: layout with locale `de-DE` provides German message; invalid locale calls `notFound` (mock `next/navigation`).
-- [ ] D-06 Extend `test/utils.tsx` with the intl provider. Add a sample test using `Link` from `@/i18n/routing` rendering `/de-DE/…` when locale is `de-DE` (use `createNavigation`'s `getPathname` to assert).
-- [ ] D-07 Report M-D-1…M-D-3.
+- [x] D-01 Write `lib/utils.ts` as designed. Tests: `formatMoney(480, 'USD', 'en-US')` → "$4.80"; `formatMoney(480, 'EUR', 'de-DE')` normalises NBSP and equals "4,80 €"; `getLocalizedString` fallback chain (exact, language-only `en`, first value, undefined → '').
+- [x] D-02 Write `i18n/routing.ts`, `i18n/request.ts` and wrap `next.config.ts` with the plugin. Test `routing.locales` equals `['en-US','de-DE']`, default `en-US`.
+- [x] D-03 Write `messages/en-US.json` and `messages/de-DE.json` (seed keys above) and `messages/parity.test.ts` asserting identical key sets (deep) in both files.
+- [x] D-04 Write `proxy.ts`. Tests (`proxy.test.ts`, node env, build `NextRequest`s): `/` no cookie → 307 to `/en-US`; `/` cookie `de-DE` → `/de-DE`; `/de-DE/shop` passes through with headers `x-next-intl-locale: de-DE` and `x-pathname: /de-DE/shop`; `/api/cart`, `/_next/x`, `/logo.png` untouched; `/xx-YY/page` → redirected to `/en-US/xx-YY/page` (treated as unprefixed path).
+- [x] D-05 Add `app/[locale]/layout.tsx`, `app/[locale]/page.tsx` (renders `t('common.brand')`) and update root `layout.tsx` to set `<html lang>`. Tests: layout with locale `de-DE` provides German message; invalid locale calls `notFound` (mock `next/navigation`).
+- [x] D-06 Extend `test/utils.tsx` with the intl provider. Add a sample test using `Link` from `@/i18n/routing` rendering `/de-DE/…` when locale is `de-DE` (use `createNavigation`'s `getPathname` to assert).
+- [x] D-07 Report M-D-1…M-D-3.
 
 ## Unit tests (scenario → test)
 | Scenario | Test |

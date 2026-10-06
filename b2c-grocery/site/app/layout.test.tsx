@@ -1,14 +1,17 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import RootLayout from './layout';
 
-describe('RootLayout', () => {
-  const html = renderToStaticMarkup(<RootLayout>content</RootLayout>);
+vi.mock('next-intl/server', () => ({ getLocale: vi.fn(async () => 'de-DE') }));
 
-  it('puts both font variable classes on <html>', () => {
-    expect(html).toMatch(/^<html[^>]*class="font-var font-var"/);
+describe('RootLayout', () => {
+  it('sets <html lang> from the active locale and both font variable classes', async () => {
+    const html = renderToStaticMarkup(await RootLayout({ children: 'content' }));
+    expect(html).toMatch(/^<html[^>]*lang="de-DE"/);
+    expect(html).toMatch(/class="font-var font-var"/);
   });
 
-  it('Network requests: no runtime Google fonts link', () => {
+  it('Network requests: no runtime Google fonts link', async () => {
+    const html = renderToStaticMarkup(await RootLayout({ children: 'content' }));
     expect(html).not.toContain('fonts.googleapis.com');
     expect(html).not.toContain('fonts.gstatic.com');
   });
