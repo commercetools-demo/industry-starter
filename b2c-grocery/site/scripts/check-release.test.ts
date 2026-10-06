@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { checkRelease } from './check-release.mjs';
@@ -41,5 +41,24 @@ describe('checkRelease', () => {
 
   it('does not treat other files named like dev as dev routes', () => {
     expect(checkRelease(project({ 'app/api/devices/route.ts': 'export {};\n' }))).toEqual([]);
+  });
+});
+
+describe('netlify.toml (Y-01)', () => {
+  const root = path.resolve(import.meta.dirname, '..', '..');
+  const toml = readFileSync(path.join(root, 'netlify.toml'), 'utf8');
+  const value = (key: string) => new RegExp(`^\\s*${key}\\s*=\\s*"([^"]*)"`, 'm').exec(toml)?.[1];
+
+  it('Netlify build config: base, command, publish and Node version', () => {
+    expect(value('base')).toBe('site');
+    expect(value('command')).toBe('npm run build');
+    expect(value('publish')).toBe('.next');
+    expect(value('NODE_VERSION')).toBe('22');
+  });
+
+  it('declares no plugins and the repo has no vercel.json', () => {
+    expect(toml).not.toMatch(/\[\[plugins\]\]/);
+    expect(existsSync(path.join(root, 'vercel.json'))).toBe(false);
+    expect(existsSync(path.join(root, 'site', 'vercel.json'))).toBe(false);
   });
 });
