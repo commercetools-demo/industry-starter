@@ -258,6 +258,12 @@
       "timesLabel": "Delivery time",
       "slotsLeft": "{count} left",
       "release": "Remove slot"
+    },
+    "saved": {
+      "legend": "Saved addresses",
+      "new": "Add a new address",
+      "default": "Default",
+      "loading": "Loading your saved addresses..."
     }
   },
   "checkout": {},

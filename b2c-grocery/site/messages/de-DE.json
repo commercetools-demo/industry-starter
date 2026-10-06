@@ -258,6 +258,12 @@
       "timesLabel": "Lieferzeit",
       "slotsLeft": "noch {count}",
       "release": "Lieferfenster entfernen"
+    },
+    "saved": {
+      "legend": "Gespeicherte Adressen",
+      "new": "Neue Adresse hinzufügen",
+      "default": "Standard",
+      "loading": "Deine gespeicherten Adressen werden geladen ..."
     }
   },
   "checkout": {},

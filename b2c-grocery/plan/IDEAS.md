@@ -86,3 +86,12 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [R] Order detail: "Track", "Reorder" and a status timeline (design spec, `post-purchase-order-management`) are not built; neither are Returns or an unverified-email banner.
 - [R] The dashboard orders table could show skeleton rows while loading (spec) instead of the loading sentence.
 - [R] Order dates and slot times are UTC (like the slot stub); show them in the delivery area time zone once slots have one.
+
+## From workstream S
+- [S] German keys to review (machine-translated, informal "du"): all of `account.addresses.*` and `cart.saved.*`.
+- [S] The cart's manual address form could offer "Save to my address book" for signed-in customers; today a new address typed in the cart is only set on the cart.
+- [S] The cart `AddressForm` / `PUT /api/cart/address` and the address book use two validators with the same postcode rules; the cart form could use `lib/address-validation.ts` (and its error keys) so the rules live in one place.
+- [S] Setting the first saved address as default billing too (plan: shipping only) and promoting another address when the default is deleted were not done on purpose (commercetools clears the default, the spec says "no address marked default").
+- [S] Customers have no "billing address" UI; billing default only follows "Make default" (needed by hosted checkout later).
+- [S] QA cleanup: a throwaway customer registered with `qa-*@example.com` is removed by `cleanup-qa.ts` together with its addresses (they live on the customer).
+
