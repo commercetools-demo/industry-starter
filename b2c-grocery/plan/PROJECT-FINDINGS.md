@@ -100,3 +100,10 @@ Not readable through the MCP (names only would be visible in Merchant Center).
 - Wrong password and unknown email are both **HTTP 400 `InvalidCredentials`** (identical), not 401; the route returns 401 `INVALID_CREDENTIALS`.
 - `customers().passwordToken().post({ body: { email, ttlMinutes: 60 } })` returns `{ value, ... }`; unknown email is **404 `ResourceNotFound`**.
 - `customers().passwordReset().post({ body: { tokenValue, newPassword } })` returns a bare `Customer`. A token that was already used, or a bogus token, is **404 `ResourceNotFound`** (mapped to `InvalidToken`).
+
+## 16. Delivery address, shipping method and `cart-delivery` fields, verified live by workstream Q (2026-10-06, throwaway anonymous US cart, deleted afterwards)
+- `shippingMethods().matchingCart().get({ queryArgs: { cartId } })` (cart with a US shipping address and one line) returns all three active methods: `standard-shipping` (the default), `express-shipping` and `standard`. The storefront must pick key `standard` explicitly (D-049).
+- `setShippingMethod` with `{ typeId: 'shipping-method', id }` works. For `standard` in USD: price 5.00, `freeAbove` 50.00 (rate on `shippingInfo.shippingRate`); `taxedPrice` and `totalPrice` include the shipping price immediately. Before an address and method are set the cart has no `shippingInfo`.
+- Changing the shipping address (even to a postcode we consider undeliverable) keeps `shippingInfo` and the selected method on the cart.
+- `setCustomType` with key `cart-delivery` on a cart works and yields empty `fields`. **Applying `setCustomType` again with the same type resets (empties) all fields**, so it is only sent when `cart.custom` is absent.
+- `setCustomField` with a string value works for `slotId`, `slotStart`, `slotEnd`, `slotHoldExpires`. **`setCustomField` without a value on a field that is not set is HTTP 400 `InvalidOperation`** ("Cannot remove custom field ... because it does not exist"), so clearing removes only the fields present on the cart. The custom type stays on the cart after fields are removed.
