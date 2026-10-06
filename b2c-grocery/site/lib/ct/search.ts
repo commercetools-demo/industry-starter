@@ -10,6 +10,7 @@ import type {
 import { getPriceBands, type PriceBand } from '../config/price-bands';
 import { mapProduct } from '../mappers/product';
 import type { ListingFacets, Product, SearchResult, SortKey } from '../types';
+import { COUNTRY_CONFIG } from '../utils';
 import { getApiRoot } from './client';
 
 export interface Ctx { locale: string; currency: string; country: string }
@@ -190,8 +191,14 @@ async function lookup(query: Expr, ctx: Ctx, limit: number): Promise<Product[]> 
  * (`generateMetadata` and the page); it keys on arguments, so the context is flattened to primitives.
  */
 const productBySlug = cache(async (slug: string, locale: string, currency: string, country: string): Promise<Product | null> => {
-  const products = await lookup({ exact: { field: FIELD.slug, language: locale, value: slug } }, { locale, currency, country }, 1);
-  return products[0] ?? null;
+  const ctx = { locale, currency, country };
+  // Slugs differ per locale; a link or locale switch may carry another locale's slug, so try every market's language.
+  const languages = [locale, ...Object.keys(COUNTRY_CONFIG).filter((l) => l !== locale)];
+  for (const language of languages) {
+    const products = await lookup({ exact: { field: FIELD.slug, language, value: slug } }, ctx, 1);
+    if (products[0]) return products[0];
+  }
+  return null;
 });
 export const getProductBySlug = (slug: string, ctx: Ctx): Promise<Product | null> => productBySlug(slug, ctx.locale, ctx.currency, ctx.country);
 

@@ -84,8 +84,14 @@ describe('ProductPage', () => {
   });
 
   it('looks the product up with the URL locale market', async () => {
+    mocks.getProductBySlug.mockResolvedValue({ ...bananas(), slug: 'bananas-de' });
     await render({}, 'bananas-de', 'de-DE');
     expect(mocks.getProductBySlug).toHaveBeenCalledWith('bananas-de', { locale: 'de-DE', currency: 'EUR', country: 'DE' });
+  });
+
+  it("a slug from another locale redirects to this locale's canonical slug, keeping ?sku", async () => {
+    mocks.getProductBySlug.mockResolvedValue({ ...bananas(), slug: 'bananas-de' });
+    await expect(render({ sku: 'BANANAS-1KG' }, 'bananas', 'de-DE')).rejects.toThrow('NEXT_REDIRECT');
   });
 
   it('default variant is the first in stock', async () => {
@@ -157,7 +163,7 @@ describe('ProductPage', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Increase quantity' }));
     expect(within(screen.getByRole('group', { name: 'Quantity' })).getByRole('status')).toHaveTextContent('2');
     first.unmount();
-    mocks.getProductBySlug.mockResolvedValue(makeProduct({ id: 'p-milk', name: 'Milk', variants: [variant('MILK', 199, true, '1 L', 1)] }));
+    mocks.getProductBySlug.mockResolvedValue(makeProduct({ id: 'p-milk', name: 'Milk', slug: 'milk', variants: [variant('MILK', 199, true, '1 L', 1)] }));
     await render({}, 'milk');
     expect(within(screen.getByRole('group', { name: 'Quantity' })).getByRole('status')).toHaveTextContent('1');
   });

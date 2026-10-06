@@ -51,3 +51,7 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [X] Footer links only to `/policies/delivery`; add returns, privacy and terms (H owns the footer). The homepage contact strip (M) should link to `/contact`.
 - [X] German keys to review (machine-translated): `static.*` and the German markdown in `content/de-DE`.
 - [X] Contact form has no CAPTCHA; in-memory rate limit only (D-047). Real delivery (email/CRM) is out of v1 (D-044).
+
+## Orchestrator notes (2026-10-06)
+- Product images are picsum.photos landscapes (random, not food). Replace with real grocery photos (owner or a stock set) before launch; `washed` styling is already applied.
+- Fixed by orchestrator: locale switch on a PDP produced a 404 (slugs differ per locale). `getProductBySlug` now tries every market language and the PDP redirects to the canonical slug of the URL locale.

@@ -180,3 +180,17 @@ describe('searchProducts', () => {
     expect(result.products).toEqual([]);
   });
 });
+
+describe('getProductBySlug across locales', () => {
+  it('tries the URL locale first, then the other markets languages', async () => {
+    const calls: string[] = [];
+    vi.doMock('./client', () => ({
+      getApiRoot: () => ({ products: () => ({ search: () => ({ post: ({ body }: { body: { query: { exact?: { language?: string } } } }) => ({ execute: async () => { calls.push(String(body.query.exact?.language)); return { body: { total: 0, results: [], facets: [] } }; } }) }) }) }),
+    }));
+    vi.resetModules();
+    const { getProductBySlug } = await import('./search');
+    expect(await getProductBySlug('bananas', { locale: 'de-DE', currency: 'EUR', country: 'DE' })).toBeNull();
+    expect(calls).toEqual(['de-DE', 'en-US']);
+    vi.doUnmock('./client');
+  });
+});

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { redirect } from '@/i18n/routing';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Container } from '@/components/layout/Container';
 import { Breadcrumbs } from '@/components/product/Breadcrumbs';
@@ -52,6 +53,11 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
   const market = await marketFor(locale);
   const product = await getProductBySlug(decodeSlug(slug), market);
   if (!product) notFound();
+  // A slug from another locale (e.g. after a locale switch) resolves, then redirects to this locale's canonical slug.
+  if (product.slug !== decodeSlug(slug)) {
+    const sku = Array.isArray(sp.sku) ? sp.sku[0] : sp.sku;
+    redirect({ href: `/p/${encodeURIComponent(product.slug)}${sku ? `?sku=${encodeURIComponent(sku)}` : ''}`, locale });
+  }
 
   const categoryId = product.categoryIds[0];
   const [tree, related] = await Promise.all([
