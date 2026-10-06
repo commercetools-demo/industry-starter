@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { safeRedirectPath } from './safe-redirect';
+import { safeRedirectPath, withoutLocale } from './safe-redirect';
+
+describe('withoutLocale', () => {
+  it('strips the locale prefix for the i18n router', () => {
+    expect(withoutLocale('/en-US/account/orders?page=2', 'en-US')).toBe('/account/orders?page=2');
+    expect(withoutLocale('/en-US', 'en-US')).toBe('/');
+  });
+});
 
 describe('safeRedirectPath', () => {
   it('Return after sign-in: a relative path in the same locale is kept (with query)', () => {

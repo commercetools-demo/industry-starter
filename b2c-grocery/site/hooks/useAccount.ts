@@ -52,6 +52,15 @@ export function useAuthMutations() {
     [signedIn],
   );
 
+  /** The reset route signs the customer in on success (anonymous cart merged). */
+  const resetPassword = useCallback(
+    async (token: string, password: string) => {
+      await sendJson('/api/auth/reset-password', 'POST', { token, password });
+      await signedIn();
+    },
+    [signedIn],
+  );
+
   const logout = useCallback(async () => {
     await sendJson('/api/auth/logout', 'POST');
     await Promise.all([
@@ -64,5 +73,5 @@ export function useAuthMutations() {
     router.refresh();
   }, [mutate, router]);
 
-  return useMemo(() => ({ login, register, logout }), [login, register, logout]);
+  return useMemo(() => ({ login, register, resetPassword, logout }), [login, register, resetPassword, logout]);
 }

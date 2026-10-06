@@ -48,7 +48,7 @@ Protected group: `app/[locale]/account/(protected)/layout.tsx` (Server): `const 
 - [x] O-05 Write `/api/auth/logout`, `/api/auth/me` + tests (session cleared; me null when anonymous).
 - [x] O-06 Write `/api/auth/forgot-password`, `/api/auth/reset-password`, `lib/dev-stub.ts`, dev page + tests: same response for known/unknown email; dev stores link, production does not (`NODE_ENV` stub); invalid token 400; dev page 404 outside development.
 - [x] O-07 Write `useAccount`, `AccountLink`, header `account` slot, root fallback + tests (label states; logout clears caches).
-- [ ] O-08 Write the four pages + `AuthCard` + messages (both locales) + tests: validation errors with `aria-describedby`; wrong password shows `auth.invalid` ("Email or password is incorrect"); `?redirect=` honored after sign-in using `safeRedirectPath`; register success lands on account.
+- [x] O-08 Write the four pages + `AuthCard` + messages (both locales) + tests: validation errors with `aria-describedby`; wrong password shows `auth.invalid` ("Email or password is incorrect"); `?redirect=` honored after sign-in using `safeRedirectPath`; register success lands on account.
 - [ ] O-09 Write `(protected)/layout.tsx` + tests (anonymous → redirect with `redirect` param; signed-in renders children); report manual tests M-O-1…M-O-5 and sign-off SO-06.
 
 ## Unit tests (scenario → test)
