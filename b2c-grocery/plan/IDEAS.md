@@ -39,3 +39,6 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [P] German keys to review (machine-translated): all of `search.*` (title "Finden Sie es", suggestions).
 - [P] Search ranks by commercetools default (no sort). A relevance boost for whole-word matches over substring matches, and a "did you mean" for zero results, are not built.
 - [P] Search suggestions as typeahead dropdown (live results while typing) is not in the plan; the 300 ms URL update re-renders the page instead.
+
+## German tone consistency (orchestrator, 2026-10-06)
+- German copy mixes informal "du" (cart: "Dein Warenkorb", footer "deine Tür") and formal "Sie" (search: "Finden Sie es", "Probieren Sie es mit"). Decide one register (recommend informal "du" to match the brand voice) and align all `de-DE.json` keys in the final copy review.
