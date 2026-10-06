@@ -86,3 +86,9 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [R] Order detail: "Track", "Reorder" and a status timeline (design spec, `post-purchase-order-management`) are not built; neither are Returns or an unverified-email banner.
 - [R] The dashboard orders table could show skeleton rows while loading (spec) instead of the loading sentence.
 - [R] Order dates and slot times are UTC (like the slot stub); show them in the delivery area time zone once slots have one.
+## From workstream U
+- [U] German keys to review (machine-translated): `cart.substitution.*`, `account.order.substitution.*`.
+- [U] Email or in-app notification when a proposal is created (no emails per D-038); a badge on the orders list ("Action needed") for orders with a pending proposal.
+- [U] Show the declined or applied history of proposals on order detail (now only "Removal requested" is shown).
+- [U] Let the customer pick among several substitutes (the PDP `substituteProducts` list) instead of one proposed item.
+- [U] `OrderLine.substitute` in the order type is unused (the edit replaces the line); remove it or fill it from the proposal history.

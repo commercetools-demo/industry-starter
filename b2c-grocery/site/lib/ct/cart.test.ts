@@ -19,7 +19,7 @@ vi.mock('./client', () => ({
   }),
 }));
 
-import { addLineItem, changeLineItemQuantity, createCart, CartNotActiveError, getCart, getMappedCart, removeLineItem, withCartRetry } from './cart';
+import { addLineItem, changeLineItemQuantity, createCart, CartNotActiveError, getCart, getMappedCart, removeLineItem, setLineItemSubstitution, withCartRetry } from './cart';
 
 const cart = (over: Record<string, unknown> = {}) => ({ ...(fixture as Record<string, unknown>), ...over }) as never;
 const conflict = () => Object.assign(new Error('ConcurrentModification'), { statusCode: 409 });
@@ -117,6 +117,25 @@ describe('line item actions', () => {
     await removeLineItem('cart-1', 6, 'line-1');
     expect(postCall.mock.calls[0][1].body).toEqual({ version: 5, actions: [{ action: 'changeLineItemQuantity', lineItemId: 'line-1', quantity: 3 }] });
     expect(postCall.mock.calls[1][1].body).toEqual({ version: 6, actions: [{ action: 'removeLineItem', lineItemId: 'line-1' }] });
+  });
+});
+
+describe('setLineItemSubstitution', () => {
+  beforeEach(() => postExecute.mockResolvedValue({ body: cart() }));
+  const withLine = (custom: unknown) => cart({ id: 'c9', version: 7, lineItems: [{ id: 'l1', custom }] });
+
+  it('line with the custom type: sets the field', async () => {
+    await setLineItemSubstitution(withLine({ fields: {} }), 'l1', 'none');
+    const [id, arg] = postCall.mock.calls[0];
+    expect(id).toEqual({ ID: 'c9' });
+    expect(arg.body).toEqual({ version: 7, actions: [{ action: 'setLineItemCustomField', lineItemId: 'l1', name: 'substitutionPreference', value: 'none' }] });
+  });
+
+  it('line without custom type: sets type and field together', async () => {
+    await setLineItemSubstitution(withLine(undefined), 'l1', 'allow-similar');
+    expect(postCall.mock.calls[0][1].body.actions).toEqual([
+      { action: 'setLineItemCustomType', lineItemId: 'l1', type: { key: 'line-substitution', typeId: 'type' }, fields: { substitutionPreference: 'allow-similar' } },
+    ]);
   });
 });
 

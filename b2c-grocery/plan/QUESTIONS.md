@@ -87,3 +87,8 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 
 ## Q-R-2 resolution (orchestrator, 2026-10-06)
 Resolved by D-051: `finalTotal` added to the `cart-delivery` custom type (live project updated). `order-final` is now unused.
+
+## Q-U-1 (workstream U, tasks U-01, U-03, U-08)
+**Question:** The U developer had no live access, so the Order Edit calls (`orders().edits()` list/get/post/apply, custom fields on the edit, preview in a GET by id, `removeLineItem` + `addLineItem` staged actions) follow the OAS and docs only and `scripts/seed/create-qa-substitution.ts` was never run. Please run `npx tsx scripts/seed/create-qa-substitution.ts` once from a checkout that has `.env.seed`, then M-U-2 to M-U-5, and record differences in `PROJECT-FINDINGS.md` section 18. Also confirm for OA-07 that the API recipe (`plan/recipes/create-substitution-proposal.md`) is acceptable because Merchant Center has no screen for proposals with a custom type.
+**Blocking:** no
+**Answer (owner):**

@@ -156,3 +156,24 @@ export interface OrderListItem {
   /** "Whole milk, Bananas +2" */
   itemSummary: string;
 }
+
+/** A pending substitution proposal (Order Edit of custom type `substitution-proposal`) on an order. */
+export interface Proposal {
+  editId: string;
+  originalLineItemId: string;
+  originalName: string;
+  substituteSku: string;
+  substituteName: string;
+  /** New order total minus current order total (from the Order Edit preview). */
+  priceDifference: Money;
+  newTotal?: Money;
+  note?: string;
+  /** Accept and Decline are only offered when true (order editable and the preview succeeded). */
+  editable: boolean;
+}
+
+/** `GET /api/account/orders/[orderId]/proposals`. `removalRequested` are original line item ids of declined proposals. */
+export interface ProposalsResponse {
+  proposals: Proposal[];
+  removalRequested: string[];
+}

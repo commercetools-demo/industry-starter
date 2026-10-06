@@ -161,4 +161,19 @@ describe('OrderDetail', () => {
     expect(await screen.findByRole('heading', { level: 1, name: /Bestellung MLV-1001/ })).toBeInTheDocument();
     expect(screen.getByText('Ähnliches erlaubt')).toBeInTheDocument();
   });
+
+  it('Proposal exists: the notice shows above the table and a declined line is tagged "Removal requested"', async () => {
+    const proposals = {
+      proposals: [
+        { editId: 'e1', originalLineItemId: 'l2', originalName: 'Whole milk 1 L', substituteSku: 'OAT', substituteName: 'Oat drink', priceDifference: usd(50), newTotal: usd(1047), editable: true },
+      ],
+      removalRequested: ['l1'],
+    };
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => json(String(url).endsWith('/proposals') ? proposals : { order: order() })));
+    renderWithProviders(<OrderDetail orderId="order-1" />);
+    expect(await screen.findByText(/Proposed: Oat drink \(\+\$0\.50\)/)).toBeInTheDocument();
+    const rows = screen.getAllByRole('row').slice(1);
+    await within(rows[0]).findByText('Removal requested');
+    expect(within(rows[1]).queryByText('Removal requested')).not.toBeInTheDocument();
+  });
 });

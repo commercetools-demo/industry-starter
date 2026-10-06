@@ -25,14 +25,14 @@ Shoppers set a per-line substitution preference in the cart; on order detail the
 - **Test recipe (no dev route in the app):** `plan/recipes/create-substitution-proposal.md` (created in U-08) explains how testers create a proposal via API/Postman/MC; OA-07 confirms the path.
 
 ## Tasks
-- [ ] U-01 **Spike (docs/OAS):** confirm SDK call names for listing/getting/applying Order Edits, staged actions available (`addLineItem`, `removeLineItem`/quantity change), custom type on edits, and whether Merchant Center can create them. Write findings in `PROJECT-FINDINGS.md` §13 and adjust this file's design if names differ (then tell the owner).
-- [ ] U-02 Write `PATCH /api/cart/line-items/[lineId]/substitution` + `SubstitutionControl` + tests (400 invalid value; optimistic update and rollback; accessible name; default shown from line).
-- [ ] U-03 Write `lib/ct/order-edits.ts` `getProposalsForOrder` + tests with fixtures: pending proposal included; declined/applied excluded; non-proposal edits excluded; price difference computed.
-- [ ] U-04 Write `acceptProposal`/`declineProposal` + tests: apply called with both versions; not owner rejected; order not editable → `NOT_EDITABLE`; conflict → `ProposalConflictError`; decline sets status and does **not** call apply.
-- [ ] U-05 Write the three proposal routes + tests (status codes above; ownership).
-- [ ] U-06 Write `OrderSubstitutions` + hook `useProposals(orderId)` + tests: shows notice with price difference; Accept calls endpoint then refetches; Decline shows "Removal requested"; stale error shows explanation and refetch; read-only when not editable.
-- [ ] U-07 Wire into order detail (R slot) and cart line (J slot); messages (both locales).
-- [ ] U-08 Write `plan/recipes/create-substitution-proposal.md` (exact HTTP requests, no secrets) and report manual tests M-U-1…M-U-4, sign-off SO-04.
+- [x] U-01 **Spike (docs/OAS):** confirm SDK call names for listing/getting/applying Order Edits, staged actions available (`addLineItem`, `removeLineItem`/quantity change), custom type on edits, and whether Merchant Center can create them. Write findings in `PROJECT-FINDINGS.md` §13 and adjust this file's design if names differ (then tell the owner).
+- [x] U-02 Write `PATCH /api/cart/line-items/[lineId]/substitution` + `SubstitutionControl` + tests (400 invalid value; optimistic update and rollback; accessible name; default shown from line).
+- [x] U-03 Write `lib/ct/order-edits.ts` `getProposalsForOrder` + tests with fixtures: pending proposal included; declined/applied excluded; non-proposal edits excluded; price difference computed.
+- [x] U-04 Write `acceptProposal`/`declineProposal` + tests: apply called with both versions; not owner rejected; order not editable → `NOT_EDITABLE`; conflict → `ProposalConflictError`; decline sets status and does **not** call apply.
+- [x] U-05 Write the three proposal routes + tests (status codes above; ownership).
+- [x] U-06 Write `OrderSubstitutions` + hook `useProposals(orderId)` + tests: shows notice with price difference; Accept calls endpoint then refetches; Decline shows "Removal requested"; stale error shows explanation and refetch; read-only when not editable.
+- [x] U-07 Wire into order detail (R slot) and cart line (J slot); messages (both locales).
+- [x] U-08 Write `plan/recipes/create-substitution-proposal.md` (exact HTTP requests, no secrets) and report manual tests M-U-1…M-U-4, sign-off SO-04.
 
 ## Unit tests (scenario → test)
 | Scenario | Test |
@@ -44,10 +44,26 @@ Shoppers set a per-line substitution preference in the cart; on order detail the
 | Order already shipped (not editable) | U-04, U-06 |
 
 ## Manual tests to report
-- M-U-1: Place a test order with a line set to "No substitution": order detail shows it (preference copied).
-- M-U-2 (OA-07): Create a proposal with the recipe on that order: notice appears with price difference.
-- M-U-3: Accept: line shows the substitute and total changes; Merchant Center shows the edit applied.
-- M-U-4: Create another proposal and Decline: "Removal requested"; the edit is not applied in Merchant Center.
+- M-U-1: Place a test order with a line set to "No substitution" (cart: switch the line, reload: it stays; place the order, e.g. `npx tsx scripts/seed/create-qa-order.ts` has lines with both preferences): order detail shows it (preference copied).
+- M-U-2 (OA-07): Create a proposal with `plan/recipes/create-substitution-proposal.md` (script `create-qa-substitution.ts` or the HTTP request) on that order: the notice appears above the items with the substitute, the price difference and the new total.
+- M-U-3: Accept: the line shows the substitute and the total changes; Merchant Center shows the edit applied (result `Applied`, custom `status = applied`).
+- M-U-4: Create another proposal and Decline: the line shows "Removal requested" (also after reload); the edit is not applied in Merchant Center (result `NotProcessed`, `status = declined`).
+- M-U-5: Create a proposal, open the order page, then change the order in Merchant Center (any update), press Accept: the page explains the order changed and refreshes. Also: a proposal on a shipped order (set shipment state Shipped) shows read-only text with "Contact us" and no buttons.
 
 ## Definition of done
 No substitution logic bypasses Order Edits; ownership checks tested; recipe written; `verify` passes; SO-04 requested.
+
+## Implementation notes (deviations, recorded by the developer)
+- **No live commercetools check was possible** (`site/.env.seed` was not used by the agent): the Order Edit calls follow the OAS and docs (PROJECT-FINDINGS section 18) and are unit-tested against fixtures only. `scripts/seed/create-qa-substitution.ts` is unit-tested for its pure parts (arguments, draft, call order against a mocked client) but **has not been run against the project** (Q-U-1). The first person with `.env.seed` should run it once and report differences in PROJECT-FINDINGS section 18.
+- Combination of custom types (D-051): the order keeps its single custom type `cart-delivery`; the line items carry `line-substitution`; the edit carries `substitution-proposal` (`resourceTypeIds: order-edit`). They live on different resources, so nothing conflicts. The substitute line added by the edit gets `line-substitution` (`none`) from the staged `addLineItem`.
+- `getProposalsForOrder(orderId, customerId, locale)` (plan: `(orderId)`) enforces ownership itself and returns `{ proposals, removalRequested }`: `removalRequested` are the original line ids of **declined** proposals so the "Removal requested" tag survives a reload (the plan listed only pending ones, which would lose the state). `Proposal` and `ProposalsResponse` are in `lib/types.ts`.
+- Unapplied edits: the plan said keep `result.type === 'NotProcessed'`. A GET by id returns `PreviewSuccess`/`PreviewFailure` instead, so the code treats every result except `Applied` as unapplied; the list answer is used only to find candidates, the preview comes from a GET by id per pending edit. The price difference is `preview.totalPrice - order.totalPrice`, the substitute name comes from the preview line (no product read). A failed preview shows the proposal read-only without price.
+- A proposal edit is recognised by the custom type key (the list is requested with `expand: ['custom.type']`) and by its fields; edits of another type are ignored.
+- Decline also requires an editable order (spec: Accept and Decline are not offered otherwise). Accept sets `status = applied` after a successful apply; if that write fails the accept still succeeds (the edit result `Applied` hides it).
+- Routes: errors are `PROPOSAL_NOT_FOUND` (404, also for a foreign order or edit), `NOT_EDITABLE` (422), `STALE` (409), `PROPOSALS_ERROR` (500) via `lib/api/proposal-failure.ts`. All routes use `privateJson`/`unauthenticated` and call `getSession()` (the scan test covers them).
+- After Accept the order is refetched (`mutate(keyOrder(id))`): the original line is gone and the substitute appears as a normal new line (the mapper's `OrderLine.substitute` is not used, because the edit replaces the line). `LineRemovalTag` (exported from `OrderSubstitutions.tsx`) is rendered in the order table row and reads the same SWR cache (`keyProposals(id)` = `order:<id>:proposals`, cleared on sign-out by the existing `order:` prefix rule).
+- Cart: `PATCH /api/cart/line-items/[lineId]/substitution` answers 400 `INVALID_PREFERENCE`; a line without a custom type gets `setLineItemCustomType` (type + field) instead of `setLineItemCustomField`. `setSubstitution` was added to `useCartMutations` and `CartContext` (additive). `SubstitutionControl` rolls back and shows the existing `cart.updateFailed` toast.
+- Messages: `cart.substitution.*` and `account.order.substitution.*` (both locales; German is a faithful machine translation, see IDEAS).
+- Test helper `lib/ct/order-edits.test-helpers.ts` (not a test file; fixtures and a fluent fake of `orders().edits()`).
+- `cleanup-qa.ts` now deletes the Order Edits of a QA order before the order.
+- Sign-off SO-04 is owner-only; not set. OA-07: the API recipe is the proposed answer (Merchant Center cannot create proposals with a custom type).

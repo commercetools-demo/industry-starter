@@ -16,6 +16,10 @@ async function main() {
     }
     const where = `customerId="${c.id}"`;
     for (const o of (await root.orders().get({ queryArgs: { where, limit: 500 } }).execute()).body.results) {
+      // substitution proposals (Order Edits, workstream U) of the order go first
+      for (const edit of (await root.orders().edits().get({ queryArgs: { where: `resource(id="${o.id}")`, limit: 500 } }).execute()).body.results) {
+        await root.orders().edits().withId({ ID: edit.id }).delete({ queryArgs: { version: edit.version } }).execute();
+      }
       await root.orders().withId({ ID: o.id }).delete({ queryArgs: { version: o.version } }).execute();
       orders += 1;
     }

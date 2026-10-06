@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { KEY_CART } from '@/lib/cache-keys';
 import { fetchJson, sendJson } from '@/lib/fetcher';
-import type { Cart } from '@/lib/types';
+import type { Cart, SubstitutionPreference } from '@/lib/types';
 
 type CartResponse = { cart: Cart | null };
 
@@ -46,5 +46,11 @@ export function useCartMutations() {
     [apply],
   );
 
-  return useMemo(() => ({ addItem, setQuantity, removeLine }), [addItem, setQuantity, removeLine]);
+  const setSubstitution = useCallback(
+    (lineId: string, preference: SubstitutionPreference) =>
+      apply(sendJson<CartResponse>(`/api/cart/line-items/${encodeURIComponent(lineId)}/substitution`, 'PATCH', { preference })),
+    [apply],
+  );
+
+  return useMemo(() => ({ addItem, setQuantity, removeLine, setSubstitution }), [addItem, setQuantity, removeLine, setSubstitution]);
 }

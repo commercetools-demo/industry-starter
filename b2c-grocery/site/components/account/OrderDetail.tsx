@@ -16,7 +16,7 @@ import { formatMoney } from '@/lib/utils';
 import { addressLines } from './AddressCard';
 import { formatDate, orderLabel } from './format';
 import { OrderStatusTag } from './OrderStatusTag';
-import { OrderSubstitutions } from './OrderSubstitutions';
+import { LineRemovalTag, OrderSubstitutions } from './OrderSubstitutions';
 
 function OrderNotFound() {
   const t = useTranslations('account.order');
@@ -131,6 +131,7 @@ export function OrderDetail({ orderId }: { orderId: string }) {
                       <div className="text-[15px]">{line.name}</div>
                       {line.increment.label ? <div className="card-meta">{line.increment.label}</div> : null}
                       {line.substitute ? <div className="card-meta">{line.substitute.name}</div> : null}
+                      <LineRemovalTag orderId={order.id} lineId={line.id} />
                     </div>
                   </div>
                 </td>

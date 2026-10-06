@@ -161,4 +161,13 @@ describe('CartView', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Dein Warenkorb' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Zur Kasse' })).toBeDisabled();
   });
+
+  it('Each line has a substitution control showing its saved preference', () => {
+    const cart = makeCart({ lines: [{ ...bananas, substitutionPreference: 'allow-similar' }, milk] });
+    stubFetch(() => ({ body: { cart } }));
+    renderWithCart(<CartView />, { cart });
+    expect(screen.getByRole('radiogroup', { name: 'Substitution for Bananas' })).toBeInTheDocument();
+    expect(within(screen.getByRole('radiogroup', { name: 'Substitution for Bananas' })).getByRole('radio', { name: 'Allow similar' })).toBeChecked();
+    expect(within(screen.getByRole('radiogroup', { name: 'Substitution for Whole milk 1 L' })).getByRole('radio', { name: 'No substitution' })).toBeChecked();
+  });
 });
