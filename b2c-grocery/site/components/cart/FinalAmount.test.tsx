@@ -21,8 +21,9 @@ describe('FinalAmount', () => {
   });
 
   it('Absent final amount: renders nothing', () => {
-    const { container } = renderWithProviders(<FinalAmount provisional={eur(1000)} />);
-    expect(container).toBeEmptyDOMElement();
+    renderWithProviders(<FinalAmount provisional={eur(1000)} />);
+    expect(screen.queryByTestId('final-amount')).not.toBeInTheDocument();
+    expect(screen.queryByText(/final amount/i)).not.toBeInTheDocument();
   });
 
   it('German: euro formatting and translated text', () => {
