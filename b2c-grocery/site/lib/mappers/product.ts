@@ -54,7 +54,7 @@ function mapPrice(price: ProductVariant['price']): Price | undefined {
   };
 }
 
-function mapVariant(variant: ProductVariant, locale: string): Variant {
+export function mapVariant(variant: ProductVariant, locale: string): Variant {
   const attrs = attributeMap(variant.attributes);
   const attributes: Record<string, AttrValue> = {};
   for (const [name, value] of attrs) {

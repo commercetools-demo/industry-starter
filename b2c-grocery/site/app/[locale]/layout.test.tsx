@@ -1,6 +1,8 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { NextIntlClientProvider } from 'next-intl';
 import { ToastProvider } from '@/components/ui/Toast';
+import { CartProvider } from '@/context/CartProvider';
+import { SWRProvider } from '@/context/SWRProvider';
 import de from '@/messages/de-DE.json';
 import en from '@/messages/en-US.json';
 import { COUNTRY_CONFIG } from '@/lib/utils';
@@ -15,6 +17,12 @@ vi.mock('next-intl/server', () => ({
   getMessages: vi.fn(async () => (globalThis as { __msgs?: unknown }).__msgs),
   getTranslations: vi.fn(async () => (key: string) => `nav.${key}`),
 }));
+const getSession = vi.fn();
+vi.mock('@/lib/session', () => ({ getSession: () => getSession(), getMarket: async () => ({ country: 'US', currency: 'USD', locale: 'en-US' }) }));
+const getMappedCart = vi.fn();
+vi.mock('@/lib/ct/cart', () => ({ getMappedCart: (...args: unknown[]) => getMappedCart(...args) }));
+vi.mock('@/lib/ct/locale-validation', () => ({ getValidMarkets: vi.fn(async () => Object.values((await import('@/lib/utils')).COUNTRY_CONFIG)) }));
+vi.mock('@/components/layout/BagButton', () => ({ BagButton: () => <span data-slot="bag">nav.bag</span> }));
 // Chrome pieces are tested on their own; here we only check the composition and order.
 vi.mock('@/components/layout/AnnouncementBar', () => ({ AnnouncementBar: () => <div data-slot="announcement" /> }));
 vi.mock('@/components/layout/Header', () => ({
@@ -26,6 +34,12 @@ vi.mock('@/components/layout/Header', () => ({
   ),
 }));
 vi.mock('@/components/layout/Footer', () => ({ Footer: () => <footer data-slot="footer" /> }));
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  getSession.mockResolvedValue({});
+  getMappedCart.mockResolvedValue(null);
+});
 
 const render = async (locale: string) =>
   LocaleLayout({ children: <span>child</span>, params: Promise.resolve({ locale }) });
@@ -40,10 +54,38 @@ describe('LocaleLayout', () => {
     expect(renderToStaticMarkup(el)).toContain('child');
   });
 
-  it('wraps the chrome in the ToastProvider, directly inside the intl provider', async () => {
+  it('provider order: intl > SWR > Toast > Cart > chrome', async () => {
     (globalThis as { __msgs?: unknown }).__msgs = en;
     const el = await render('en-US');
-    expect(el.props.children.type).toBe(ToastProvider);
+    const swr = el.props.children;
+    expect(swr.type).toBe(SWRProvider);
+    expect(swr.props.children.type).toBe(ToastProvider);
+    expect(swr.props.children.props.children.type).toBe(CartProvider);
+  });
+
+  it('Returning customer hydration: the server cart seeds the SWR fallback (first paint, no spinner)', async () => {
+    (globalThis as { __msgs?: unknown }).__msgs = en;
+    getSession.mockResolvedValue({ cartId: 'cart-1' });
+    const cart = { id: 'cart-1', itemCount: 2 };
+    getMappedCart.mockResolvedValue(cart);
+    const el = await render('en-US');
+    expect(el.props.children.props.fallback).toEqual({ cart });
+    expect(getMappedCart).toHaveBeenCalledWith('cart-1', { country: 'US', currency: 'USD', locale: 'en-US' });
+  });
+
+  it('no cart id in the session: fallback cart is null and commercetools is not called', async () => {
+    (globalThis as { __msgs?: unknown }).__msgs = en;
+    const el = await render('en-US');
+    expect(el.props.children.props.fallback).toEqual({ cart: null });
+    expect(getMappedCart).not.toHaveBeenCalled();
+  });
+
+  it('a failing cart read does not break the page', async () => {
+    (globalThis as { __msgs?: unknown }).__msgs = en;
+    getSession.mockResolvedValue({ cartId: 'cart-1' });
+    getMappedCart.mockRejectedValue(new Error('down'));
+    const el = await render('en-US');
+    expect(el.props.children.props.fallback).toEqual({ cart: null });
   });
 
   it('renders announcement, header, main (page-enter) and footer in that order', async () => {
@@ -61,7 +103,7 @@ describe('LocaleLayout', () => {
     const el = await render('en-US');
     const html = renderToStaticMarkup(el);
     expect(html).toContain(`data-markets="${Object.keys(COUNTRY_CONFIG).length}"`);
-    expect(html).toContain('nav.bag');
+    expect(html).toContain('data-slot="bag"');
     expect(html).toContain('aria-label="nav.account"');
   });
 

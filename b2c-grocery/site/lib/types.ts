@@ -41,3 +41,49 @@ export interface ListingFacets {
 }
 export interface SearchResult { products: Product[]; total: number; page: number; pageSize: number; facets: ListingFacets }
 export type SortKey = 'relevance' | 'newest' | 'price-asc' | 'price-desc';
+
+export interface Address {
+  firstName?: string;
+  lastName?: string;
+  streetName?: string;
+  additionalStreetInfo?: string;
+  postalCode?: string;
+  city?: string;
+  country: string;
+  phone?: string;
+  email?: string;
+}
+export type SubstitutionPreference = 'allow-similar' | 'none';
+export interface CartLine {
+  id: string;
+  productId: string;
+  sku: string;
+  name: string;
+  slug: string;
+  image?: string;
+  quantity: number;
+  unitPrice: Price;
+  total: Money;
+  increment: Increment;
+  approximateWeight: boolean;
+  substitutionPreference: SubstitutionPreference;
+  recurrence?: { policyKey: string; priceSelectionMode: 'Fixed' | 'Dynamic' };
+  availableQuantity?: number;
+  inStock: boolean;
+}
+export interface CartSlot { id: string; start: string; end: string; charge?: Money; holdExpires?: string }
+export interface Cart {
+  id: string;
+  version: number;
+  currencyCode: string;
+  lines: CartLine[];
+  /** Distinct lines, not units. */
+  itemCount: number;
+  subtotal: Money;
+  shipping?: { name?: string; price: Money; free: boolean };
+  tax?: Money;
+  total: Money;
+  isProvisional: boolean;
+  shippingAddress?: Address;
+  slot?: CartSlot;
+}
