@@ -20,3 +20,10 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [J] A line's name is not a link to the PDP yet (the PDP route comes with L); add the link (and a thumbnail link) when `/product/[slug]` exists.
 - [J] `getAvailableQuantity` is one inventory call per add/change; a batch `getAvailableQuantities(skus)` would help if the cart page ever revalidates stock per line.
 - [J] Undo after Remove re-adds with the default substitution preference (the removed line's preference is not restored).
+
+## From workstream O
+- [O] German keys to review (machine-translated): all of `auth.*`.
+- [O] Signed-in visitors who open sign-in, register or forgot-password still see the form; redirecting them to `/account` would be friendlier.
+- [O] No "sign out" control exists yet (the account area arrives in R); `useAuthMutations().logout` and `/api/auth/logout` are ready.
+- [O] The email-verified banner with "resend" from `design/specs/account.md` is moot while registration auto-verifies (D-038); `isEmailVerified` is not kept in the session.
+- [O] Password rules are length only (8+), as specified; a breached-password or strength check could be added.
