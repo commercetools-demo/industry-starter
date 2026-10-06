@@ -21,7 +21,7 @@ Eligible products can be bought on a cadence; customers see and manage their rec
 - Page `/account/subscriptions` (`(protected)`): list `Card`s: items, cadence, state `Tag`, next order date (`Intl.DateTimeFormat` by locale), actions Change cadence (dialog), Change quantity (inline stepper), Pause/Resume, Cancel (confirm dialog stating last order date); empty state + link to the shop. Changes state: "applies from the next order".
 
 ## Tasks
-- [ ] W-01 **Spike (needs OA-05, F done):** with a test cart containing a recurrence line, complete a hosted checkout in test mode and check whether a Recurring Order exists (Merchant Center/API). Record result + steps in `PROJECT-FINDINGS.md` §13 and the TODO file (M-W-1). **Stop for Gate 3.**
+- [x] W-01 **Spike (needs OA-05, F done):** with a test cart containing a recurrence line, complete a hosted checkout in test mode and check whether a Recurring Order exists (Merchant Center/API). Record result + steps in `PROJECT-FINDINGS.md` §13 and the TODO file (M-W-1). **Stop for Gate 3.**
 - [ ] W-02 Verify OAS names for `recurrenceInfo` draft and RecurringOrder update actions; record in findings; adjust design.
 - [ ] W-03 Write `lib/config/features.ts` + `lib/ct/recurrence-policies.ts` + tests (flag parsing; policies localized; cached 300 s).
 - [ ] W-04 Extend `addLineItem` for `recurrenceInfo` + route validation + tests (eligible product + valid key → request contains Dynamic; ineligible → 400; unknown key → 400; one-time → no recurrenceInfo).
@@ -41,7 +41,7 @@ Eligible products can be bought on a cadence; customers see and manage their rec
 | Spike fails (flag off) | W-03 |
 
 ## Manual tests to report
-- M-W-1 (OA-05): spike steps and result (see W-01).
+- M-W-1 (OA-05): `cd site && npx tsx scripts/seed/create-qa-recurring.ts --policy every-2-weeks` (needs `.env.seed`). Expected: it prints a `recurring:` line (state Active, schedule 2 Weeks, a `nextOrderAt` date); if it prints `NO Recurring Order was created`, spike W-01 failed: set `FEATURE_SUBSCRIPTIONS=false` as the default and ask the owner (Gate 3). Optionally repeat through the browser after V: pay with a bag that has a subscribed milk line and look in Merchant Center, Orders, Recurring orders. Delete the data with `npx tsx scripts/seed/cleanup-qa.ts`.
 - M-W-2: PDP of Whole milk shows the selector; Bananas (not eligible) does not.
 - M-W-3: Subscribe "Every 2 weeks": cart line badge and notice; after checkout a Recurring Order exists.
 - M-W-4: `/account/subscriptions`: change cadence, pause, resume — same recurring order id each time.

@@ -99,3 +99,8 @@ Resolved by D-051: `finalTotal` added to the `cart-delivery` custom type (live p
 **Question:** The hosted checkout lists every applicable shipping method (D-049), so the old 500.00 / 750.00 methods are visible next to `standard`, and the shopper may pick one there even though the cart summary on our page shows the `standard` cost. Our summary is a snapshot taken when the page loads. Accepted for v1 (Z-05 checklist), or should the cart totals refresh on our side after the hosted step (not possible without a message from the SDK)?
 **Blocking:** no
 **Answer (owner):**
+
+## Q-W-1 (workstream W, task W-01)
+**Question:** The spike (Gate 3) could not be run end to end by the developer (no browser/Adyen run, no `.env.seed`). Docs say "Create Order from Cart" creates the Recurring Order by itself, so W was built on that and stays behind `FEATURE_SUBSCRIPTIONS` (default true). Please run `npx tsx scripts/seed/create-qa-recurring.ts` (M-W-1) and, if it prints "NO Recurring Order was created", set the default to `false` and tell the owner. Also confirm that a quantity change on the recurring cart (`changeLineItemQuantity` on `recurringOrder.cart`) is accepted (M-W-4).
+**Blocking:** no
+**Answer (owner):**
