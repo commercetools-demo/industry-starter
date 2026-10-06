@@ -1,6 +1,7 @@
 {
   "common": {
-    "brand": "MALVA"
+    "brand": "MALVA",
+    "announcement": "Fresh groceries from growers we trust, delivered to your door."
   },
   "nav": {
     "shop": "Shop",

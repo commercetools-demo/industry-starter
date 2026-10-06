@@ -44,7 +44,7 @@ Compose in `app/[locale]/layout.tsx` using the provider order defined in D (`Nex
 - [x] H-05 Write `Photo` with tests (washed class applied; empty src → placeholder; `alt` required by type; `sizes` passed).
 - [x] H-06 Write `Dialog` with tests (focus moves into dialog; Tab cycles inside; Esc calls `onClose`; focus returns to trigger; backdrop click closes).
 - [x] H-07 Write `Toast` system with fake timers: appears with message and action; auto-dismiss after exactly 2800 ms; second toast replaces first.
-- [ ] H-08 Write `SectionHeading`, `Table`, `AnnouncementBar` (tests: kicker/heading/link; table header semantics).
+- [x] H-08 Write `SectionHeading`, `Table`, `AnnouncementBar` (tests: kicker/heading/link; table header semantics).
 - [ ] H-09 Write `Header`, `PrimaryNav` (**client leaf**, `components/layout/PrimaryNav.tsx`: uses `usePathname`/`useSearchParams` to set `aria-current` — the rest of `Header` stays a Server Component), `CompactNav`, `LocaleSwitcher` (receives a `markets` prop; calls the hook `hooks/useLocaleSwitch.ts`, never `fetch` directly), `Footer` with tests: nav items from messages in both locales; active item has `aria-current`; slots render; locale switch calls `/api/locale` (mock fetch) and router; footer links locale-aware (`getPathname`).
 - [ ] H-10 Compose the chrome in `app/[locale]/layout.tsx`; add message keys (both locales) for every string; update `test/utils.tsx` so `renderWithProviders` also includes `ToastProvider`. Report manual tests M-H-1…M-H-4 and sign-off SO-01.
 

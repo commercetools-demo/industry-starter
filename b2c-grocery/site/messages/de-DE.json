@@ -1,6 +1,7 @@
 {
   "common": {
-    "brand": "MALVA"
+    "brand": "MALVA",
+    "announcement": "Frische Lebensmittel von Erzeugern, denen wir vertrauen, direkt zu dir nach Hause."
   },
   "nav": {
     "shop": "Shop",
