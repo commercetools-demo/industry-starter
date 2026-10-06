@@ -16,7 +16,7 @@ Friendly error/not-found pages in both locales and local guards that fail `npm r
 - `scripts/check-release.mjs` (used by Y): fails if `app/api/health` exists, or any route under `app/**/dev/**` lacks the `NODE_ENV === 'development'` guard (it must call `notFound()` otherwise).
 
 ## Tasks
-- [ ] I-01 Write `error.tsx`, `not-found.tsx`, `global-error.tsx`, the root `app/not-found.tsx` and the catch-all `[...rest]/page.tsx` (test: the catch-all calls `notFound`) + message keys (both locales). Tests: `error.tsx` shows generic text (never the raw error message), "Try again" calls `reset`; `not-found` has a link to `/shop` (locale aware); `global-error` renders html/body.
+- [x] I-01 Write `error.tsx`, `not-found.tsx`, `global-error.tsx`, the root `app/not-found.tsx` and the catch-all `[...rest]/page.tsx` (test: the catch-all calls `notFound`) + message keys (both locales). Tests: `error.tsx` shows generic text (never the raw error message), "Try again" calls `reset`; `not-found` has a link to `/shop` (locale aware); `global-error` renders html/body.
 - [ ] I-02 Write `scripts/check-secrets.mjs` with tests on temp git repos/dirs for each rule (a–d) and a passing case; add `check:secrets` to `verify`; write `scripts/check-bundle-secrets.mjs` + tests (temp `.next/static` with a planted secret value fails; clean passes) and append `check:bundle` after `build` in `verify`.
 - [ ] I-03 Write `scripts/check-release.mjs` (+ tests) but do **not** add it to `verify`; add `verify:release` = `verify` + `check:release`.
 - [ ] I-04 Verify `validateEnv()` covers `CTP_CHECKOUT_APP_KEY` (E) and add `README` section "Environment variables" listing all variables, which are secret, where to set them (`.env.local`, Netlify UI).
