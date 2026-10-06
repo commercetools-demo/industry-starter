@@ -23,3 +23,8 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 **Question:** The add route returns 404 `UNKNOWN_SKU` for a SKU that is not in the catalog (the plan did not say). Also quantity must be an integer >= 1 for PATCH too (removing is DELETE). OK?
 **Blocking:** no
 **Answer (owner):**
+
+## Q-K-1 (workstream K, task K-05)
+**Question:** The market (currency/country) comes from the session or the `your-shop-country-locale` cookie, but the proxy does not set it when someone opens `/de-DE/...` directly, so the cart layout (J) and `getMarket()` would give USD under a German URL. K avoids it by deriving currency/country from the URL locale (`COUNTRY_CONFIG[locale]`). Should `proxy.ts`/`getMarket()` do this for everyone (L, M, P, cart), or is the locale switcher the only intended way to change market?
+**Blocking:** no
+**Answer (owner):**
