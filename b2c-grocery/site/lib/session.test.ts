@@ -62,6 +62,15 @@ describe('updateSession and cookie flags', () => {
     expect(next).toEqual({ customerId: 'u1', cartId: 'c2' });
   });
 
+  it('lastOrderId (V) survives the cookie round trip; completing an order swaps cartId for lastOrderId', async () => {
+    jar.set('malva-session', await createSessionToken({ cartId: 'c1', country: 'US' }));
+    const res = NextResponse.json({});
+    const next = await updateSession({ lastOrderId: 'o1', cartId: undefined }, res);
+    expect(next).toEqual({ lastOrderId: 'o1', country: 'US' });
+    jar.set('malva-session', res.cookies.get('malva-session')?.value ?? '');
+    expect(await getSession()).toEqual({ lastOrderId: 'o1', country: 'US' });
+  });
+
   it('removes keys patched to undefined', async () => {
     jar.set('malva-session', await createSessionToken({ cartId: 'c1', country: 'US' }));
     const next = await updateSession({ cartId: undefined }, NextResponse.json({}));

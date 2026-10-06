@@ -25,7 +25,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | S | Address book | 6 | 0 | Not started | | |
 | T | Saved lists | 6 | 6 | Verified | Claude (verify + Chrome) | 2026-10-06 |
 | U | Substitutions | 8 | 0 | Not started | | |
-| V | Hosted checkout and confirmation | 9 | 0 | Not started | | |
+| V | Hosted checkout and confirmation | 9 | 8 | Ready for review | V-09 is the owner's smoke test (M-V-2…M-V-8) | |
 | W | Subscriptions | 9 | 0 | Not started | | |
 | X | Static pages | 6 | 6 | Verified | Claude (verify + Chrome) | 2026-10-06 |
 | Y | Netlify deployment | 5 | 0 | Not started | | |

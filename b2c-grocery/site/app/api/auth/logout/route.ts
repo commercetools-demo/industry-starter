@@ -5,7 +5,7 @@ import { updateSession } from '@/lib/session';
 export async function POST(): Promise<NextResponse> {
   const res = NextResponse.json({ ok: true });
   await updateSession(
-    { customerId: undefined, customerEmail: undefined, customerFirstName: undefined, customerLastName: undefined, cartId: undefined },
+    { customerId: undefined, customerEmail: undefined, customerFirstName: undefined, customerLastName: undefined, cartId: undefined, lastOrderId: undefined },
     res,
   );
   res.headers.set('Cache-Control', 'no-store');
