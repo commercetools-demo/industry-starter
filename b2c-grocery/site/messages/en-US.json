@@ -106,7 +106,34 @@
     }
   },
   "pdp": {
-    "photoAlt": "{name}, photo {number}"
+    "photoAlt": "{name}, photo {number}",
+    "questions": "Questions about this product?",
+    "contact": "Contact us →",
+    "availability": {
+      "in": "In stock",
+      "out": "Out of stock"
+    },
+    "specs": {
+      "caption": "Product details",
+      "property": "Detail",
+      "value": "Value",
+      "brand": "Brand",
+      "origin": "Origin",
+      "storage": "Storage",
+      "dietary": "Dietary",
+      "allergens": "Allergens",
+      "storageValues": {
+        "ambient": "Store at room temperature",
+        "chilled": "Keep chilled",
+        "frozen": "Keep frozen"
+      },
+      "dietaryValues": {
+        "vegan": "Vegan",
+        "vegetarian": "Vegetarian",
+        "gluten-free": "Gluten free",
+        "organic": "Organic"
+      }
+    }
   },
   "cart": {
     "added": "Added to your bag",
