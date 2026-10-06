@@ -28,3 +28,4 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [K] `SaveButton` and `useSaved` are stubs until T; T must replace `hooks/useSaved.ts` only.
 - [K] Quick add-to-bag on tiles (not drawn) could use `useCartContext().addItemWithToast`.
 - [K] Facet counts cost up to 3 extra lean searches when category, price and stock are all active; cache or merge if search latency becomes an issue.
+- [X] All copy in `site/content/**` (about, faq, journal, policies) is placeholder and needs owner review (SO-10, SO-13); legal pages (privacy, terms) need real legal text. German is a faithful translation by the developer; please have it reviewed.
