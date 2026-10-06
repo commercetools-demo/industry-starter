@@ -30,7 +30,7 @@ export function NavLinks({ active, stacked, onNavigate, className }: NavLinksPro
               href={item.href}
               aria-current={active === item.key ? 'page' : undefined}
               onClick={onNavigate}
-              className="inline-block border-b-2 border-transparent py-(--space-1) text-[14px] font-medium whitespace-nowrap text-text no-underline hover:text-accent aria-[current=page]:border-accent aria-[current=page]:text-accent"
+              className="inline-block border-b-2 border-transparent py-(--space-1) text-[14px] font-medium whitespace-nowrap text-text no-underline hover:text-accent-700 aria-[current=page]:border-accent aria-[current=page]:text-accent-700"
             >
               {t(item.key)}
             </Link>

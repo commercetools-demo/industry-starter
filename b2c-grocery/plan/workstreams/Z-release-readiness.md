@@ -7,7 +7,7 @@
 Everything is verified against the specs, manual tests are executed by the owner, secrets and temporary credentials are cleaned up, and the OpenSpec changes can be archived.
 
 ## Tasks
-- [ ] Z-01 **Spec coverage run:** for every `#### Scenario` in the three changes, confirm a test exists (use the "Unit tests (scenario → test)" tables in the workstream files). Produce `plan/COVERAGE-REPORT.md` listing each scenario → test file(s); any gap becomes a fix task before continuing.
+- [x] Z-01 **Spec coverage run:** for every `#### Scenario` in the three changes, confirm a test exists (use the "Unit tests (scenario → test)" tables in the workstream files). Produce `plan/COVERAGE-REPORT.md` listing each scenario → test file(s); any gap becomes a fix task before continuing.
 - [ ] Z-02 Run `cd site && rm -rf node_modules .next && npm ci && npm run verify:release`; paste the pass summary (no secrets) in `plan/COVERAGE-REPORT.md`.
 - [ ] Z-03 Run `npm run seed:verify` and re-check `PROJECT-FINDINGS.md` is current.
 - [ ] Z-04 Consolidate the manual tests: every `M-*` row in the TODO file has a status set by the owner; list `FAIL` rows with notes and fix them (new tasks).

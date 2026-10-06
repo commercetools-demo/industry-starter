@@ -113,3 +113,5 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [W] Order detail could say "Part of subscription X" via `originOrder` and link to `/account/subscriptions`; the checkout confirmation could mention that repeat orders were set up.
 - [W] A quantity change on a subscription is not checked against stock (the repeat order is created later anyway). A soft maximum (available quantity) in the stepper would avoid obviously impossible values.
 - [W] Delete or hide Canceled/Expired subscriptions after some time; they stay in the list forever today.
+
+- [Z] M-E-1 in `TODO-MANUAL-TESTING.md` curls `/api/health`, which Y-02 removed. Mark it as retired and record the removal as a decision row. The vitest fetch guard (`vitest.setup.ts`) now makes any unstubbed network call in a unit test fail.

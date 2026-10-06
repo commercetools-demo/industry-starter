@@ -25,7 +25,7 @@ export function OrdersTable({ orders }: { orders: OrderListItem[] }) {
       {orders.map((order) => (
         <tr key={order.id} className="relative">
           <td data-label={t('colItems')} className={CELL}>
-            <Link href={`/account/orders/${order.id}`} className="text-text no-underline after:absolute after:inset-0 hover:text-accent focus-visible:outline-2 focus-visible:outline-accent">
+            <Link href={`/account/orders/${order.id}`} className="text-text no-underline after:absolute after:inset-0 hover:text-accent-700 focus-visible:outline-2 focus-visible:outline-accent">
               {order.itemSummary}
             </Link>
           </td>

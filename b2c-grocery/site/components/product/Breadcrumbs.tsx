@@ -26,7 +26,7 @@ export function Breadcrumbs({ category, categoryHref, current }: { category?: st
                 {item.label}
               </span>
             ) : (
-              <Link href={item.href ?? '/shop'} className="text-inherit no-underline hover:text-accent">
+              <Link href={item.href ?? '/shop'} className="text-inherit no-underline hover:text-accent-700">
                 {item.label}
               </Link>
             )}

@@ -8,4 +8,4 @@ export function privateJson(body: unknown, init: ResponseInit = {}): NextRespons
 }
 
 /** 401 for account routes called without a signed-in session (the `(protected)` layout guards pages only). */
-export const unauthenticated = (): NextResponse => privateJson({ error: 'UNAUTHENTICATED' }, { status: 401 });
+export const unauthenticated = (): NextResponse => privateJson({ error: 'Unauthorized' }, { status: 401 });

@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 
 const linkClass =
-  'text-[14px] text-[color-mix(in_srgb,var(--color-text)_68%,transparent)] no-underline hover:text-accent';
+  'text-[14px] text-[color-mix(in_srgb,var(--color-text)_68%,transparent)] no-underline hover:text-accent-700';
 
 type Column = { title: string; links: Array<{ label: string; href: string }> };
 

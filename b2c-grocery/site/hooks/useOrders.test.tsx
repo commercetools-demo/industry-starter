@@ -44,7 +44,7 @@ describe('useOrders', () => {
   });
 
   it('401 keeps the safe defaults and exposes the error', async () => {
-    const { result } = setup(reply({ error: 'UNAUTHENTICATED' }, 401), () => useOrders());
+    const { result } = setup(reply({ error: 'Unauthorized' }, 401), () => useOrders());
     await waitFor(() => expect(result.current.value.error).toBeDefined());
     expect(result.current.value.orders).toEqual([]);
   });
