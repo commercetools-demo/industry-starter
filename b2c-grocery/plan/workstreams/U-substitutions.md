@@ -29,7 +29,7 @@ Shoppers set a per-line substitution preference in the cart; on order detail the
 - [x] U-02 Write `PATCH /api/cart/line-items/[lineId]/substitution` + `SubstitutionControl` + tests (400 invalid value; optimistic update and rollback; accessible name; default shown from line).
 - [x] U-03 Write `lib/ct/order-edits.ts` `getProposalsForOrder` + tests with fixtures: pending proposal included; declined/applied excluded; non-proposal edits excluded; price difference computed.
 - [x] U-04 Write `acceptProposal`/`declineProposal` + tests: apply called with both versions; not owner rejected; order not editable → `NOT_EDITABLE`; conflict → `ProposalConflictError`; decline sets status and does **not** call apply.
-- [ ] U-05 Write the three proposal routes + tests (status codes above; ownership).
+- [x] U-05 Write the three proposal routes + tests (status codes above; ownership).
 - [ ] U-06 Write `OrderSubstitutions` + hook `useProposals(orderId)` + tests: shows notice with price difference; Accept calls endpoint then refetches; Decline shows "Removal requested"; stale error shows explanation and refetch; read-only when not editable.
 - [ ] U-07 Wire into order detail (R slot) and cart line (J slot); messages (both locales).
 - [ ] U-08 Write `plan/recipes/create-substitution-proposal.md` (exact HTTP requests, no secrets) and report manual tests M-U-1…M-U-4, sign-off SO-04.
