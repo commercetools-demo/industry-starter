@@ -17,7 +17,7 @@ Customers manage addresses and can pick one in the cart delivery step.
 
 ## Tasks
 - [x] S-01 Write `lib/address-validation.ts` + `lib/mappers/address.ts` + tests (every field rule, both countries; default flags mapped).
-- [ ] S-02 Write `lib/ct/addresses.ts` + tests (actions sent for add/change/remove/default; first address becomes default shipping; retry on 409).
+- [x] S-02 Write `lib/ct/addresses.ts` + tests (actions sent for add/change/remove/default; first address becomes default shipping; retry on 409).
 - [ ] S-03 Write the API routes + tests (401; validation errors 400 with field keys; list returned after each change).
 - [ ] S-04 Write `useAddresses` + tests.
 - [ ] S-05 Write the page, `AddressDialog`, delete confirmation + tests (default tag; invalid postcode shows inline error and nothing saved; delete default clears the tag; empty state).
