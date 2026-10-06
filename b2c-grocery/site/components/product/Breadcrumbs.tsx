@@ -1,0 +1,34 @@
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
+
+/** Home / Shop / <Category>; the last item is the current page and not a link. */
+export function Breadcrumbs({ category }: { category?: string }) {
+  const t = useTranslations('plp.breadcrumbs');
+  const nav = useTranslations('nav');
+  const items = [
+    { label: t('home'), href: '/' },
+    { label: nav('shop'), href: '/shop' },
+    ...(category ? [{ label: category, href: undefined }] : []),
+  ];
+  const last = category ? items.length - 1 : 1;
+  return (
+    <nav aria-label={t('label')} className="text-[13px] text-muted">
+      <ol className="m-0 flex list-none flex-wrap items-center gap-(--space-2) p-0">
+        {items.map((item, index) => (
+          <li key={item.label} className="flex items-center gap-(--space-2)">
+            {index > 0 ? <span aria-hidden="true">/</span> : null}
+            {index === last ? (
+              <span aria-current="page" className="text-text">
+                {item.label}
+              </span>
+            ) : (
+              <Link href={item.href ?? '/shop'} className="text-inherit no-underline hover:text-accent">
+                {item.label}
+              </Link>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}

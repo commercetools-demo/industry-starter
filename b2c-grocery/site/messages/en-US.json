@@ -55,7 +55,25 @@
     "save": "Save {name} to a list",
     "unsave": "Remove {name} from your saved items",
     "was": "Was {price}",
-    "now": "Now {price}"
+    "now": "Now {price}",
+    "kicker": "The shop",
+    "everything": "Everything",
+    "breadcrumbs": {
+      "label": "Breadcrumb",
+      "home": "Home"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page}"
+    },
+    "empty": {
+      "title": "Nothing under those terms",
+      "body": "Try removing a filter or two, or tell us what you are looking for and we will help.",
+      "clear": "Clear filters",
+      "contact": "Contact us"
+    }
   },
   "pdp": {},
   "cart": {

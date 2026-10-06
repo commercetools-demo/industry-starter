@@ -55,7 +55,25 @@
     "save": "{name} in einer Liste speichern",
     "unsave": "{name} aus den gespeicherten Artikeln entfernen",
     "was": "Vorher {price}",
-    "now": "Jetzt {price}"
+    "now": "Jetzt {price}",
+    "kicker": "Der Shop",
+    "everything": "Alles",
+    "breadcrumbs": {
+      "label": "Brotkrümelnavigation",
+      "home": "Startseite"
+    },
+    "pagination": {
+      "label": "Seitennavigation",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "page": "Seite {page}"
+    },
+    "empty": {
+      "title": "Nichts unter diesen Bedingungen",
+      "body": "Entfernen Sie einen Filter oder zwei, oder sagen Sie uns, was Sie suchen, und wir helfen Ihnen.",
+      "clear": "Filter zurücksetzen",
+      "contact": "Kontakt"
+    }
   },
   "pdp": {},
   "cart": {
