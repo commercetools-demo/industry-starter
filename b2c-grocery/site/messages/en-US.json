@@ -58,7 +58,15 @@
   "search": {},
   "static": {},
   "errors": {
-    "title": "Something went wrong"
+    "kicker": "Oops",
+    "title": "Something went wrong",
+    "body": "We could not load this page. Please try again, or head back to the shop.",
+    "retry": "Try again",
+    "backToShop": "Back to the shop",
+    "notFoundKicker": "404",
+    "notFoundTitle": "We could not find that page",
+    "notFoundBody": "The page may have moved or never existed. Let us get you back to the good stuff.",
+    "contact": "Contact us"
   },
   "a11y": {
     "language": "Language"

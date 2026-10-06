@@ -58,7 +58,15 @@
   "search": {},
   "static": {},
   "errors": {
-    "title": "Etwas ist schiefgelaufen"
+    "kicker": "Hoppla",
+    "title": "Etwas ist schiefgelaufen",
+    "body": "Diese Seite konnte nicht geladen werden. Bitte versuche es erneut oder geh zurück zum Shop.",
+    "retry": "Erneut versuchen",
+    "backToShop": "Zurück zum Shop",
+    "notFoundKicker": "404",
+    "notFoundTitle": "Diese Seite haben wir nicht gefunden",
+    "notFoundBody": "Die Seite wurde vielleicht verschoben oder hat nie existiert. Wir bringen dich zurück zu den guten Sachen.",
+    "contact": "Kontakt"
   },
   "a11y": {
     "language": "Sprache"

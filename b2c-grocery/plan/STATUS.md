@@ -12,7 +12,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | F | Catalog data model | 12 | 12 | Verified | Claude (seed:verify) + owner (M-F-1..4, Gate 1) | 2026-10-06 |
 | G | Data-loading foundation | 9 | 9 | Ready for review | | |
 | H | Design system primitives and chrome | 10 | 10 | Ready for review | | |
-| I | Error pages, env validation, guards | 5 | 0 | Not started | | |
+| I | Error pages, env validation, guards | 5 | 5 | Ready for review | | |
 | J | Cart core | 9 | 0 | Not started | | |
 | K | Product listing | 8 | 0 | Not started | | |
 | L | Product detail | 9 | 0 | Not started | | |
