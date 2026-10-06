@@ -48,13 +48,13 @@ Rows are generated from the "Manual tests to report" sections of `plan/workstrea
 | --- | --- | --- | --- | --- |
 | M-A-1 | A | In `site/` run `npm ci && npm run verify` → all steps pass, exit code 0 (Node 22 via `nvm use`). | — | PASS (owner reported 2026-10-06) |
 | M-A-2 | A | `npm run dev`, open `http://localhost:3000` → the "Bootstrap OK" page renders without console errors (the `/en-US` redirect arrives in D). | — | PASS (owner reported 2026-10-06) |
-| M-C-1 | C | `npm run dev`, open `/`, DevTools → Network: no request to `fonts.googleapis.com`/`fonts.gstatic.com`; headings render in Caprasimo, body in Figtree. | — | TODO |
-| M-C-2 | C | Tab through the demo page: focus ring is a 2px terracotta outline, not the browser default. | — | TODO |
-| M-D-1 | D | Open `http://localhost:3000/` → lands on `/en-US`. Open `/de-DE` → German title/language attribute `de-DE`. | — | TODO |
-| M-D-2 | D | Set cookie `your-shop-country-locale=de-DE`, open `/` → `/de-DE`. | — | TODO |
-| M-D-3 | D | Visit `/fr-FR/x` → redirected under `/en-US/…` and shows a 404 (the localized not-found page arrives in I). | — | TODO |
-| M-E-1 | E | `curl http://localhost:3000/api/health` → `{"ok":true,"projectKey":"spec-test-b2c"}`. | OA-02 | TODO |
-| M-E-2 | E | In the browser POST `/api/locale` `{"locale":"de-DE"}` (fetch in DevTools) → response `{locale:'de-DE',currency:'EUR',country:'DE'}` and cookies `malva-session`, `your-shop-country-locale` are set, `HttpOnly` for the first. | — | TODO |
+| M-C-1 | C | `npm run dev`, open `/`, DevTools → Network: no request to `fonts.googleapis.com`/`fonts.gstatic.com`; headings render in Caprasimo, body in Figtree. | — | PASS (Claude via Chrome, 2026-10-06) |
+| M-C-2 | C | Tab through the demo page: focus ring is a 2px terracotta outline, not the browser default. | — | PASS (Claude via Chrome, 2026-10-06) |
+| M-D-1 | D | Open `http://localhost:3000/` → lands on `/en-US`. Open `/de-DE` → German title/language attribute `de-DE`. | — | PASS (Claude via Chrome, 2026-10-06) |
+| M-D-2 | D | Set cookie `your-shop-country-locale=de-DE`, open `/` → `/de-DE`. | — | PASS (Claude via Chrome, 2026-10-06) |
+| M-D-3 | D | Visit `/fr-FR/x` → redirected under `/en-US/…` and shows a 404 (the localized not-found page arrives in I). | — | PASS (Claude via Chrome, 2026-10-06) |
+| M-E-1 | E | `curl http://localhost:3000/api/health` → `{"ok":true,"projectKey":"spec-test-b2c"}`. | OA-02 | PASS (Claude via Chrome, 2026-10-06) |
+| M-E-2 | E | In the browser POST `/api/locale` `{"locale":"de-DE"}` (fetch in DevTools) → response `{locale:'de-DE',currency:'EUR',country:'DE'}` and cookies `malva-session`, `your-shop-country-locale` are set, `HttpOnly` for the first. | — | PASS (Claude via Chrome, 2026-10-06) |
 | M-E-3 | E | Remove `manage_sessions` from the API client scopes (or use a throwaway client) → `/api/health` still ok but checkout session creation (V) fails with a named-scope error. (Run later with V; keep row `BLOCKED` until then.) | OA-02 | DEFERRED (owner, later) |
 | M-F-1 | F | Merchant Center → Settings → Shipping methods: `standard` with US and DE zone rates. | — | PASS (owner reported 2026-10-06) |
 | M-F-2 | F | Merchant Center → Products: 36 products; open Bananas: variants 500 g/1 kg with USD and EUR prices; Cheddar shows 0 stock. | — | PASS (owner reported 2026-10-06) |
