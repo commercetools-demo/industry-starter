@@ -48,7 +48,7 @@ describe('CartDeliveryStep', () => {
     expect(screen.getByRole('heading', { name: 'Delivery' })).toBeInTheDocument();
     expect(screen.getByLabelText('First name')).toBeInTheDocument();
     expect(screen.queryByText('Delivery slot')).not.toBeInTheDocument();
-    expect(fetch.mock.calls.filter(([url]) => url !== '/api/cart')).toEqual([]);
+    expect(fetch.mock.calls.filter(([url]) => !['/api/cart', '/api/auth/me'].includes(url))).toEqual([]);
   });
 
   it('country defaults to the shopper market', () => {
@@ -64,7 +64,7 @@ describe('CartDeliveryStep', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save address' }));
     expect(await screen.findByText('Enter a valid postcode.')).toBeInTheDocument();
     expect(screen.getByLabelText('Postcode')).toHaveAttribute('aria-invalid', 'true');
-    expect(fetch.mock.calls.filter(([url]) => url !== '/api/cart')).toEqual([]);
+    expect(fetch.mock.calls.filter(([url]) => !['/api/cart', '/api/auth/me'].includes(url))).toEqual([]);
   });
 
   it('Missing required fields are flagged inline', async () => {

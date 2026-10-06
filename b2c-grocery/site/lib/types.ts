@@ -69,6 +69,13 @@ export interface Address {
   phone?: string;
   email?: string;
 }
+/** An address in the customer's address book (S): the commercetools id and the default flags are always present. */
+export interface SavedAddress extends Address {
+  id: string;
+  isDefaultShipping: boolean;
+  isDefaultBilling: boolean;
+  key?: string;
+}
 export type SubstitutionPreference = 'allow-similar' | 'none';
 export interface CartLine {
   id: string;

@@ -124,3 +124,9 @@ Not readable through the MCP (names only would be visible in Merchant Center).
 - Order Edits require orders with inventory mode `None` (D-031). Editing re-applies current prices to **all** lines (docs warning), so the preview total can differ from the order total by more than the substituted line.
 - Merchant Center: no screen creates an Order Edit with a custom type; proposals are created through the API (recipe `plan/recipes/create-substitution-proposal.md`, script `scripts/seed/create-qa-substitution.ts`).
 - A line created by an Order Edit has no `line-substitution` custom fields unless the staged `addLineItem` carries them; the order mapper already defaults a missing preference to `none`.
+## 18. Customer addresses, verified live by workstream S (2026-10-06, throwaway customer `qa-*@example.com`)
+- `addAddress` with a `key` followed by `setDefaultShippingAddress` with `addressKey` (same update call) works: the id of a new address is not known before the call, so the first address is made default by its key. The customer response lists addresses with `id` and `key`.
+- `setDefaultShippingAddress` + `setDefaultBillingAddress` by `addressId` in one update call works; the new `defaultShippingAddressId` and `defaultBillingAddressId` come back in the response (the previous default has neither).
+- **`removeAddress` on the default address clears `defaultShippingAddressId` / `defaultBillingAddressId` by itself** (checked: the remaining address has no default afterwards; no extra action is needed). Removing the default does not promote another address.
+- `changeAddress` keeps the default flags of the address.
+- The dashboard profile (`GET /api/account/profile`) follows the default shipping address immediately.

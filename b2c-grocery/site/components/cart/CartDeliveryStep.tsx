@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { useCartContext } from '@/context/CartProvider';
 import { useDeliveryMutations, type AddressInput } from '@/hooks/useDelivery';
 import { isDeliverable } from '@/lib/slots/deliverable';
-import { AddressForm } from './AddressForm';
+import { DeliveryAddress } from './DeliveryAddress';
 import { SlotPicker } from './SlotPicker';
 
 const MAX_TIMEOUT = 2_147_483_647;
@@ -50,7 +50,7 @@ export function CartDeliveryStep() {
           {notice}
         </p>
       ) : null}
-      <AddressForm address={address} onSave={saveAddress} />
+      <DeliveryAddress address={address} onSave={saveAddress} />
       {address && deliverable ? (
         <SlotPicker key={`${address.country}|${address.postalCode}`} cart={cart} address={{ country: address.country, postalCode: address.postalCode ?? '' }} mutations={mutations} onNotice={setNotice} />
       ) : null}
