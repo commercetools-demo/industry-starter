@@ -133,6 +133,9 @@
         "gluten-free": "Glutenfrei",
         "organic": "Bio"
       }
+    },
+    "options": {
+      "packLabel": "Packungsgröße"
     }
   },
   "cart": {

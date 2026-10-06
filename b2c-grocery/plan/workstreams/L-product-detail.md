@@ -32,7 +32,7 @@ export function buildSelectors(product: Product): Selector[]; // pure
 - [x] L-02 Write the page skeleton, `generateMetadata`, not-found handling, variant choice by `?sku=` + tests (mock `getProductBySlug`): unknown slug calls `notFound`; default variant is first in stock; `sku` param selects that variant; metadata title.
 - [x] L-03 Write `ProductGallery` + tests (primary has `priority`; ≤3 images; alt text from product name).
 - [x] L-04 Write `BuyBox` parts (`Availability`, `SpecsTable`, contact strip) + tests (out of stock text; specs rows omitted when empty; strip links to `/contact`).
-- [ ] L-05 Write `VariantSelectors` (client) + tests: choosing "1 kg" calls `router.replace(`${pathname}?sku=…`, { scroll: false })`; arrow keys on segmented; disabled option not clickable; swatch/radio kinds render via config.
+- [x] L-05 Write `VariantSelectors` (client) + tests: choosing "1 kg" calls `router.replace(`${pathname}?sku=…`, { scroll: false })`; arrow keys on segmented; disabled option not clickable; swatch/radio kinds render via config.
 - [ ] L-06 Write `AddToBag` + tests: quantity min 1 and max; disabled when out of stock with `aria-disabled` and text; success calls mutation once and shows toast; `INSUFFICIENT_STOCK` shows "Only 3 available" and does not change the cart; heart present.
 - [ ] L-07 Write `RelatedProducts` and `Reviews` + tests (related excludes current product, max 4; reviews returns nothing without data).
 - [ ] L-08 Compose the page in two columns at `desktop` (`1.15fr/1fr`, gap ≈ 49 px), buy box sticky `top-[110px]`; single column at `<desktop`. Add message keys (both locales). Test breadcrumbs (Home / Shop / Category / Product).
