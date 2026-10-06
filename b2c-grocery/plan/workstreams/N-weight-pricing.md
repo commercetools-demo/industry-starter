@@ -27,7 +27,7 @@ Rules: `inc.unit === 'each'` → `null`; `g` → per kg: `centAmount × (1000 / 
 - [x] N-01 Write `lib/pricing.ts` + tests: all unit conversions above, discounted price used, `each` → null, undefined price → null, rounding half-up on cents.
 - [x] N-02 Extend `PriceBlock` to render the unit line + tests (500 g example; `each` shows none; EUR/de-DE formatting).
 - [x] N-03 Pass `increment` through tile, PDP and cart line; tests assert the unit price appears in each (render with fixture product).
-- [ ] N-04 Write `ProvisionalNotice` and wire into the cart summary (total label + note); tests: approximate line → "Total (provisional)" + note; exact lines → "Total", no note.
+- [x] N-04 Write `ProvisionalNotice` and wire into the cart summary (total label + note); tests: approximate line → "Total (provisional)" + note; exact lines → "Total", no note.
 - [ ] N-05 Write `FinalAmount` + tests (difference sign, equal amounts → "No difference", absent → renders nothing).
 - [ ] N-06 Message keys (both locales); report manual tests M-N-1…M-N-3 and sign-off SO-14.
 
