@@ -67,6 +67,12 @@
         "d": "Pantry",
         "e": "Meet the growers"
       }
+    },
+    "categories": {
+      "kicker": "The aisles",
+      "title": "Browse by category",
+      "all": "Everything →",
+      "count": "{count} items"
     }
   },
   "plp": {

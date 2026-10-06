@@ -67,6 +67,12 @@
         "d": "Vorrat",
         "e": "Unsere Erzeuger"
       }
+    },
+    "categories": {
+      "kicker": "Die Gänge",
+      "title": "Nach Kategorie stöbern",
+      "all": "Alles ansehen →",
+      "count": "{count} Artikel"
     }
   },
   "plp": {
