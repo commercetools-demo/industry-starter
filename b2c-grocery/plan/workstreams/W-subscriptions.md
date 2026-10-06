@@ -22,7 +22,7 @@ Eligible products can be bought on a cadence; customers see and manage their rec
 
 ## Tasks
 - [x] W-01 **Spike (needs OA-05, F done):** with a test cart containing a recurrence line, complete a hosted checkout in test mode and check whether a Recurring Order exists (Merchant Center/API). Record result + steps in `PROJECT-FINDINGS.md` §13 and the TODO file (M-W-1). **Stop for Gate 3.**
-- [ ] W-02 Verify OAS names for `recurrenceInfo` draft and RecurringOrder update actions; record in findings; adjust design.
+- [x] W-02 Verify OAS names for `recurrenceInfo` draft and RecurringOrder update actions; record in findings; adjust design.
 - [ ] W-03 Write `lib/config/features.ts` + `lib/ct/recurrence-policies.ts` + tests (flag parsing; policies localized; cached 300 s).
 - [ ] W-04 Extend `addLineItem` for `recurrenceInfo` + route validation + tests (eligible product + valid key → request contains Dynamic; ineligible → 400; unknown key → 400; one-time → no recurrenceInfo).
 - [ ] W-05 Write `RecurrenceSelector` + `RecurrenceBadge` + tests (hidden when ineligible or flag off; notice visible for cadence; selection passed to add).
@@ -49,3 +49,7 @@ Eligible products can be bought on a cadence; customers see and manage their rec
 
 ## Definition of done
 Gate 3 decision recorded; behavior behind the flag; `verify` passes; SO-05 requested.
+
+## Implementation notes (deviations, recorded by the developer)
+- Findings are in `PROJECT-FINDINGS.md` §19 (the plan said §13, taken). W-01 was **not** proven in a browser or with a live order: the docs say "Create Order from Cart" creates the Recurring Order by itself and the API is available in the project; `scripts/seed/create-qa-recurring.ts` is the live check (M-W-1) and also creates browser-test data. See Q-W-1. Work continued behind the flag instead of stopping (rule: never block on the owner).
+- W-02 (OAS names, checked with the SDK types and docs; the knowledge MCP has `api-RecurringOrder` but not a `-write` schema): a Recurring Order has **no line items** (they are on `cart`, the recurring cart; expand `cart`). Pause/resume/cancel are all `setRecurringOrderState` (`{type:'paused'|'active'|'canceled'}`), the schedule is `setSchedule` (`recurrencePolicy` resource identifier), skip next is `setOrderSkipConfiguration` (`Counter`), and a quantity change is `changeLineItemQuantity` on the recurring cart. Design adjusted accordingly in W-06.
