@@ -6,6 +6,12 @@ async function main() {
   const res = await root.customers().get({ queryArgs: { limit: 500 } }).execute();
   const qa = res.body.results.filter((c) => /^qa-.*@example\.com$/.test(c.email));
   for (const c of qa) {
+    // orphan wishlist created by workstream T
+    const list = await root.shoppingLists().get({ queryArgs: { where: `key="wishlist-${c.id}"`, limit: 1 } }).execute();
+    for (const l of list.body.results) {
+      await root.shoppingLists().withId({ ID: l.id }).delete({ queryArgs: { version: l.version } }).execute();
+      console.log('deleted wishlist', l.id);
+    }
     await root.customers().withId({ ID: c.id }).delete({ queryArgs: { version: c.version } }).execute();
     console.log('deleted customer', c.id);
   }

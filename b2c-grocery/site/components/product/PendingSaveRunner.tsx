@@ -19,7 +19,9 @@ export function PendingSaveRunner() {
   const { user, data } = useAccount();
   const { save } = useWishlistMutations();
   const handled = useRef<string | null>(null);
-  const productId = searchParams.get(SAVE_PARAM);
+  // The sign-in URL carries `save` too (so a registration link can keep it); the destination page completes the save.
+  const onAuthPage = pathname.startsWith('/account/sign-in') || pathname.startsWith('/account/register');
+  const productId = onAuthPage ? null : searchParams.get(SAVE_PARAM);
   const signedIn = user !== null;
   const known = data !== undefined;
 

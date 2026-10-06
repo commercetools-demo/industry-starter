@@ -107,10 +107,10 @@ Rows are generated from the "Manual tests to report" sections of `plan/workstrea
 | M-S-1 | S | Add two addresses; set the second as default: tag moves; Merchant Center → customer shows the defaults. | — | TODO |
 | M-S-2 | S | Delete the default: no address marked default. | — | TODO |
 | M-S-3 | S | In the cart, the default address is preselected and slots load. | — | TODO |
-| M-T-1 | T | Signed out, click a heart: sign-in page; after signing in you land back and the heart is filled. | — | TODO |
-| M-T-2 | T | `/en-US/account/saved` lists the item; remove it: empty state. | — | TODO |
-| M-T-3 | T | Merchant Center → Shopping lists: `wishlist-<customerId>` exists with one line. | — | TODO |
-| M-T-4 | T | Signed in, open `/en-US/shop?save=<any product id>` typed by hand (no heart click first): nothing is saved, the `save` parameter disappears from the URL. | — | TODO |
+| M-T-1 | T | Signed out, click a heart: sign-in page; after signing in you land back and the heart is filled. | — | PASS (Claude via Chrome, 2026-10-06; M-T-1 fixed a redirect bug) |
+| M-T-2 | T | `/en-US/account/saved` lists the item; remove it: empty state. | — | PASS (Claude via Chrome, 2026-10-06; M-T-1 fixed a redirect bug) |
+| M-T-3 | T | Merchant Center → Shopping lists: `wishlist-<customerId>` exists with one line. | — | PASS (Claude: list key and one line verified via API during T; wishlist deleted in cleanup) |
+| M-T-4 | T | Signed in, open `/en-US/shop?save=<any product id>` typed by hand (no heart click first): nothing is saved, the `save` parameter disappears from the URL. | — | PASS (Claude via Chrome, 2026-10-06; M-T-1 fixed a redirect bug) |
 | M-U-1 | U | Place a test order with a line set to "No substitution": order detail shows it (preference copied). | — | TODO |
 | M-U-2 | U | Create a proposal with the recipe on that order: notice appears with price difference. | OA-07 | TODO |
 | M-U-3 | U | Accept: line shows the substitute and total changes; Merchant Center shows the edit applied. | — | TODO |

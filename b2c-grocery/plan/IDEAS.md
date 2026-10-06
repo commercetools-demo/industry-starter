@@ -77,3 +77,6 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [T] The header "Saved" entry (`nav.saved`) and the account hub should link to `/account/saved`; R owns the account hub, H the header.
 - [T] Deleting a customer leaves its `wishlist-<customerId>` shopping list behind in commercetools; the QA cleanup script should delete those lists too.
 - [T] Saved cards always add quantity 1 of the first variant; weight products (N) may need their increment instead.
+
+## Fixed by orchestrator in T (2026-10-06)
+- Heart click while signed out → sign-in → the shopper stayed on the sign-in page (PendingSaveRunner ran on the sign-in URL because it also carries `save`, stripped the param and `router.replace`d back to sign-in, racing with the login redirect). The runner now ignores `/account/sign-in` and `/account/register`; regression test added. Cleanup script also deletes `wishlist-<customerId>` lists.

@@ -6,11 +6,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const replace = vi.fn();
 let search = '';
+let path = '/shop';
 vi.mock('next/navigation', async (orig) => ({ ...(await orig<typeof import('next/navigation')>()), useSearchParams: () => new URLSearchParams(search) }));
 vi.mock('@/i18n/routing', async (orig) => ({
   ...(await orig<typeof import('@/i18n/routing')>()),
   useRouter: () => ({ push: vi.fn(), replace, refresh: vi.fn() }),
-  usePathname: () => '/shop',
+  usePathname: () => path,
 }));
 
 import { PendingSaveRunner } from './PendingSaveRunner';
@@ -39,10 +40,22 @@ beforeEach(() => {
   replace.mockClear();
   sessionStorage.clear();
   search = '';
+  path = '/shop';
 });
 afterEach(() => vi.unstubAllGlobals());
 
 describe('PendingSaveRunner', () => {
+  it('does nothing on the sign-in page (its URL carries save too); the redirect target completes the save', async () => {
+    path = '/account/sign-in';
+    search = '?redirect=%2Fen-US%2Fshop%3Fsave%3Dp-1&save=p-1';
+    sessionStorage.setItem('pendingSave', 'p-1');
+    const { posts } = mount(user);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(posts()).toHaveLength(0);
+    expect(replace).not.toHaveBeenCalled();
+    expect(sessionStorage.getItem('pendingSave')).toBe('p-1');
+  });
+
   it('Anonymous heart click, after sign-in: adds the product once, clears the storage and strips save', async () => {
     search = '?category=bakery&save=p-1';
     sessionStorage.setItem('pendingSave', 'p-1');
