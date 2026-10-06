@@ -30,8 +30,8 @@ export function blockedByRateLimit(request: Request, route: keyof typeof LIMITS)
  * The shopper is now this customer: write the identity fields and the merged cart id (or drop the cart id when the
  * sign-in produced no Active cart, so a stale anonymous cart is never kept). Responds `{ user }`.
  */
-export async function signedInJson(customer: CtCustomer, cart?: CtCart): Promise<NextResponse> {
-  const res = NextResponse.json({ user: userOf(customer) });
+export async function signedInJson(customer: CtCustomer, cart?: CtCart, body: unknown = { user: userOf(customer) }): Promise<NextResponse> {
+  const res = NextResponse.json(body);
   await updateSession(
     {
       customerId: customer.id,
