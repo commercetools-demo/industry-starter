@@ -10,6 +10,10 @@ if (shouldValidateAtBuild()) validateEnv();
 const nextConfig: NextConfig = {
   // The markdown pages are read from disk at request time; make Netlify bundle them with the functions.
   outputFileTracingIncludes: { '/**': ['./content/**/*'] },
+  // The hosted checkout and the confirmation page are per shopper (D-042, order-confirmation-page).
+  async headers() {
+    return [{ source: '/:locale/checkout/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] }];
+  },
   images: {
     unoptimized: true,
     remotePatterns: [
