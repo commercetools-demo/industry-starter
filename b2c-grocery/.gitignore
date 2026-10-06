@@ -4,6 +4,9 @@
 .env.local
 .env.*.local
 .env.production
+.env.*
+!.env.example
+!site/.env.example
 .env.test
 # Belt-and-suspenders: explicit paths in case of git add --force
 site/.env

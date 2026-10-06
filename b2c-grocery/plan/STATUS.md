@@ -4,7 +4,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 
 | ID | Workstream | Tasks | Done | Status | Verified by | Date |
 | --- | --- | --- | --- | --- | --- | --- |
-| A | Scaffold, tooling, verify script | 9 | 0 | Not started | | |
+| A | Scaffold, tooling, verify script | 9 | 9 | Ready for review | | |
 | B | Project structure and lint rules | 6 | 0 | Not started | | |
 | C | Styling foundation and tokens | 6 | 0 | Not started | | |
 | D | Locale routing and messages | 7 | 0 | Not started | | |
