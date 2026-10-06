@@ -13,7 +13,8 @@ describe('validateAddress', () => {
   it.each(['firstName', 'lastName', 'streetName', 'postalCode', 'city', 'country'] as const)('%s is required (blank counts as missing)', (field) => {
     expect(validateAddress({ ...us, [field]: '' })[field]).toBe('required');
     expect(validateAddress({ ...us, [field]: '   ' })[field]).toBe('required');
-    const { [field]: _omit, ...rest } = us;
+    const rest: Record<string, string> = { ...us };
+    delete rest[field];
     expect(validateAddress(rest)[field]).toBe('required');
   });
 
