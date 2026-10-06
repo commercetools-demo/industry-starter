@@ -14,7 +14,7 @@ vi.mock('./client', () => ({
   }),
 }));
 
-import { getCustomerOrders, getOrderById, getOrderForCustomer } from './orders';
+import { getCustomerOrders, getOrderById, getOrderForCustomer, getOrderRef } from './orders';
 
 const order = (over: Record<string, unknown> = {}) => ({ ...(fixture as Record<string, unknown>), ...over });
 
@@ -47,6 +47,19 @@ describe('getOrderById', () => {
     expect(await getOrderById('gone', 'en-US')).toBeNull();
     getExecute.mockRejectedValueOnce(Object.assign(new Error('boom'), { statusCode: 500 }));
     await expect(getOrderById('x', 'en-US')).rejects.toThrow('boom');
+  });
+});
+
+describe('getOrderRef', () => {
+  it('returns the source cart id, customer and booked slot', async () => {
+    getExecute.mockResolvedValue({ body: order({ cart: { typeId: 'cart', id: 'cart-9' } }) });
+    expect(await getOrderRef('order-1')).toEqual({ id: 'order-1', cartId: 'cart-9', customerId: 'cust-1', slotId: '2026-10-12-09' });
+  });
+  it('guest order without cart or slot has only the id; 404 is null', async () => {
+    getExecute.mockResolvedValueOnce({ body: order({ cart: undefined, customerId: undefined, custom: undefined }) });
+    expect(await getOrderRef('order-1')).toEqual({ id: 'order-1' });
+    getExecute.mockRejectedValueOnce(Object.assign(new Error('nf'), { statusCode: 404 }));
+    expect(await getOrderRef('gone')).toBeNull();
   });
 });
 
