@@ -56,6 +56,18 @@
           "name": "String"
         },
         "inputHint": "SingleLine"
+      },
+      {
+        "name": "finalTotal",
+        "label": {
+          "en-US": "Final total (set after picking, Q-R-2)",
+          "de-DE": "Endbetrag (nach dem Packen)"
+        },
+        "required": false,
+        "type": {
+          "name": "Money"
+        },
+        "inputHint": "SingleLine"
       }
     ]
   },

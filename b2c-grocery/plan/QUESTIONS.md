@@ -84,3 +84,6 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 **Question:** The R developer could not read `site/.env.seed` (copying it into the worktree was refused), so `scripts/seed/create-qa-order.ts`, the extended `cleanup-qa.ts` and the order `Money` custom field shape were never run against the project. Please run `npx tsx scripts/seed/create-qa-order.ts --status packing` once from a checkout that has `.env.seed`, then `cleanup-qa.ts`, and record any error in `PROJECT-FINDINGS.md`.
 **Blocking:** no
 **Answer (owner):**
+
+## Q-R-2 resolution (orchestrator, 2026-10-06)
+Resolved by D-051: `finalTotal` added to the `cart-delivery` custom type (live project updated). `order-final` is now unused.

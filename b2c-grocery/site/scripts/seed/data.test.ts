@@ -14,7 +14,7 @@ describe('custom types (F-05)', () => {
     expect(Object.keys(byKey).sort()).toEqual(['cart-delivery', 'line-substitution', 'order-final', 'substitution-proposal']);
     // commercetools uses the resource type id 'order' for both carts and orders
     expect(byKey['cart-delivery'].resourceTypeIds).toEqual(['order']);
-    expect(byKey['cart-delivery'].fieldDefinitions.map((f) => f.name)).toEqual(['slotId', 'slotStart', 'slotEnd', 'slotHoldExpires']);
+    expect(byKey['cart-delivery'].fieldDefinitions.map((f) => f.name)).toEqual(['slotId', 'slotStart', 'slotEnd', 'slotHoldExpires', 'finalTotal']);
     expect(byKey['order-final'].fieldDefinitions[0]).toMatchObject({ name: 'finalTotal', type: { name: 'Money' } });
     expect(byKey['line-substitution'].resourceTypeIds).toEqual(['line-item']);
     const pref = byKey['line-substitution'].fieldDefinitions[0].type as { values: { key: string }[] };
