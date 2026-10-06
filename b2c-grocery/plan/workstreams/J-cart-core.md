@@ -38,7 +38,7 @@ Default substitution preference: `product.storage === 'chilled'` or category `fr
 - Cart page `app/[locale]/cart/page.tsx` (client island inside a server page): H1 "Your bag" (52px); lines (150×180 `Photo`, name h3, line total, stock `Tag` ("In stock"/"Out of stock"), `QuantityStepper`, ghost Remove); sticky summary `Card` (subtotal, delivery with slot placeholder, total in heading font, `Checkout` button **disabled for now** — enabled by V), returns note; empty state; remove shows undo toast ("Removed — Undo" re-adds sku/qty). Extension points for later workstreams: `<CartDeliveryStep/>` (Q), `<SubstitutionControl line/>` (U), `<ProvisionalNotice/>` (N), `<RecurrenceBadge line/>` (W) — render nothing in J.
 
 ## Tasks
-- [ ] J-01 Append cart types; write `lib/mappers/cart.ts` + fixtures + tests (provisional when any approximate line; free shipping flag; default preference `none`; slot mapping; recurrence mapping).
+- [x] J-01 Append cart types; write `lib/mappers/cart.ts` + fixtures + tests (provisional when any approximate line; free shipping flag; default preference `none`; slot mapping; recurrence mapping).
 - [ ] J-02 Write `lib/ct/availability.ts` + tests (quantity from entry; no entry → 0; mocked root).
 - [ ] J-03 Write `lib/ct/cart.ts` (`getCart` Active check, `createCart`, `addLineItem` with custom substitution field, quantity/remove, `withCartRetry`) + tests: retry once on 409 then succeed; second 409 throws; non-Active returns null; anonymous cart has `anonymousId`.
 - [ ] J-04 Write `lib/config/substitution.ts` (`defaultSubstitutionPreference`) + tests (chilled → allow-similar; ambient household → none).
