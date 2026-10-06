@@ -26,7 +26,7 @@ A production build of `site/` deploys on Netlify with env vars from the Netlify 
 ## Tasks
 - [x] Y-01 Write `netlify.toml` + test (`scripts/check-release.test.ts` parses the file and asserts base/command/publish/NODE_VERSION) and ensure no `vercel.json` exists.
 - [x] Y-02 Delete `app/api/health/route.ts` and its tests; finalize `check:release` rules + tests; add `verify:release` to `site/package.json` (verify + check:release).
-- [ ] Y-03 Run `npm run verify:release` locally and fix findings. Add a README section "Deploying to Netlify" (steps, env var list, rollback = redeploy previous deploy in Netlify UI).
+- [x] Y-03 Run `npm run verify:release` locally and fix findings. Add a README section "Deploying to Netlify" (steps, env var list, rollback = redeploy previous deploy in Netlify UI).
 - [ ] Y-04 Prepare the deploy checklist as manual tests M-Y-1…M-Y-5 (owner executes with OA-06).
 - [ ] Y-05 After the owner reports a successful deploy, record the site URL (non-secret) in `site/README.md`.
 
