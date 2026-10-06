@@ -2,11 +2,17 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Container } from '@/components/layout/Container';
-import { PriceBlock } from '@/components/product/PriceBlock';
-import { Tag } from '@/components/ui/Tag';
-import { getProductBySlug } from '@/lib/ct/search';
+import { Breadcrumbs } from '@/components/product/Breadcrumbs';
+import { BuyBox } from '@/components/product/BuyBox';
+import { ProductGallery } from '@/components/product/ProductGallery';
+import { RelatedProducts, RELATED_MAX } from '@/components/product/RelatedProducts';
+import { Reviews } from '@/components/product/Reviews';
+import { getCategoryTree } from '@/lib/ct/categories';
+import { getProductBySlug, searchProducts } from '@/lib/ct/search';
+import { buildSelectors, pickVariant } from '@/lib/config/variant-config';
+import { findCategoryById } from '@/lib/listing-view';
 import { marketFor } from '@/lib/market';
-import { pickVariant } from '@/lib/config/variant-config';
+import type { Category, Product } from '@/lib/types';
 
 type PageProps = { params: Promise<{ locale: string; slug: string }>; searchParams: Promise<{ sku?: string | string[] }> };
 
@@ -35,7 +41,11 @@ export async function generateMetadata({ params }: Pick<PageProps, 'params'>): P
   };
 }
 
-/** Server-rendered product page. The product comes from the React-cached lookup shared with `generateMetadata`. */
+/**
+ * Server-rendered product page. The product comes from the React-cached lookup shared with `generateMetadata`; the
+ * category tree and the related products then load in parallel. Related products are decoration: a failing search
+ * leaves the section out instead of failing the page.
+ */
 export default async function ProductPage({ params, searchParams }: PageProps) {
   const [{ locale, slug }, sp] = await Promise.all([params, searchParams]);
   setRequestLocale(locale);
@@ -43,14 +53,38 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
   const product = await getProductBySlug(decodeSlug(slug), market);
   if (!product) notFound();
 
+  const categoryId = product.categoryIds[0];
+  const [tree, related] = await Promise.all([
+    getCategoryTree(locale).catch((): Category[] => []),
+    categoryId
+      ? searchProducts({ ...market, categoryId, pageSize: RELATED_MAX + 1 }).then(
+          (result) => result.products,
+          (): Product[] => [],
+        )
+      : Promise.resolve<Product[]>([]),
+  ]);
+
   const sku = Array.isArray(sp.sku) ? sp.sku[0] : sp.sku;
   const variant = pickVariant(product, sku);
+  if (!variant) notFound();
+  const category = categoryId ? findCategoryById(tree, categoryId) : undefined;
+  const images = variant.images.length > 0 ? variant.images : (product.variants[0]?.images ?? []);
 
   return (
     <Container className="pt-[35px] pb-(--space-8)">
-      <h1>{product.name}</h1>
-      {variant ? <Tag>{variant.sku}</Tag> : null}
-      <PriceBlock price={variant?.price} />
+      <Breadcrumbs category={category?.name} categoryHref={category ? `/shop?category=${encodeURIComponent(category.slug)}` : undefined} current={product.name} />
+      <div className="mt-(--space-5) grid items-start gap-(--space-6) desktop:grid-cols-[1.15fr_1fr] desktop:gap-[49px]">
+        <ProductGallery images={images} name={product.name} />
+        <BuyBox
+          product={product}
+          variant={variant}
+          selectors={buildSelectors(product, variant.sku)}
+          categoryName={category?.name}
+          className="desktop:sticky desktop:top-[110px]"
+        />
+      </div>
+      <Reviews product={product} />
+      <RelatedProducts products={related} currentId={product.id} />
     </Container>
   );
 }

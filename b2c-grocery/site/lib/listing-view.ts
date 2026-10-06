@@ -22,6 +22,16 @@ export function findCategoryBySlug(tree: Category[], slug: string): Category | u
   return undefined;
 }
 
+/** Depth-first lookup of a category by id (the product page links back to its first category). */
+export function findCategoryById(tree: Category[], id: string): Category | undefined {
+  for (const node of tree) {
+    if (node.id === id) return node;
+    const inChildren = node.children ? findCategoryById(node.children, id) : undefined;
+    if (inChildren) return inChildren;
+  }
+  return undefined;
+}
+
 /** The facet counts direct categories only; a parent shows its own products plus those of its subcategories. */
 function rolledUp(node: Category, direct: Map<string, number>): number {
   return (direct.get(node.id) ?? 0) + (node.children ?? []).reduce((sum, child) => sum + rolledUp(child, direct), 0);

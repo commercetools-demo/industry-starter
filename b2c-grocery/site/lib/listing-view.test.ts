@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildFilterData, findCategoryBySlug } from './listing-view';
+import { buildFilterData, findCategoryById, findCategoryBySlug } from './listing-view';
 import type { Category, ListingFacets } from './types';
 
 const tree: Category[] = [
@@ -56,5 +56,12 @@ describe('buildFilterData', () => {
 
   it('passes the availability counts through', () => {
     expect(data.availability).toEqual({ inStock: 8, outOfStock: 1 });
+  });
+});
+
+describe('findCategoryById', () => {
+  it('finds nested categories by id and returns undefined for unknown ids', () => {
+    expect(findCategoryById(tree, 'fruit')?.name).toBe('Fruit');
+    expect(findCategoryById(tree, 'nope')).toBeUndefined();
   });
 });
