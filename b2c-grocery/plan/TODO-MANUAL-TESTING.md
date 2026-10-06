@@ -23,7 +23,7 @@ Status values: `TODO` · `BLOCKED` · `IN PROGRESS` · `DONE` / `PASS` / `APPROV
 | ID | What to review | Spec | Status |
 | --- | --- | --- | --- |
 | SO-01 | Responsive breakpoints and collapse rules (≥1200 / 768–1199 / <768) | storefront-design-system | TODO |
-| SO-02 | Cart pre-checkout delivery step (address + slot picker + preference + provisional notice) | delivery-slot-experience, cart-design | TODO |
+| SO-02 | Cart pre-checkout delivery step (address + slot picker + preference + provisional notice) | delivery-slot-experience, cart-design | TODO (J part: bag layout, lines, summary, empty, unavailable-line notice built; the delivery step itself arrives in Q/U/N, final sign-off in Q) |
 | SO-03 | Hosted checkout page frame (branding in Merchant Center + our header/footer) | checkout-design | TODO |
 | SO-04 | Substitution preference control and order-detail proposal notice | substitution-experience | TODO |
 | SO-05 | Subscription selector, notice and management page | subscription-experience | TODO |

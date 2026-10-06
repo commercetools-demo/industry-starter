@@ -46,7 +46,7 @@ Default substitution preference: `product.storage === 'chilled'` or category `fr
 - [x] J-06 Write `hooks/useCart.ts` + tests (mock fetch): read default null; mutation updates cache without refetch; failure throws `ApiError` and cache unchanged.
 - [x] J-07 Write `CartProvider`, `BagButton`, and wire the header `bag` slot and the locale layout's `SWRConfig` fallback; tests: label "Bag"/"Bag · 2"; toast shown on add with "View bag"; insufficient stock message shows available quantity.
 - [x] J-08 Write the cart page UI (no checkout yet) + messages (both locales) + tests: renders lines/totals from the cart; stepper changes call mutation; remove shows undo toast and undo re-adds; empty state with browse link; Checkout disabled with explanation text key `cart.checkoutDisabled`.
-- [ ] J-09 Report manual tests M-J-1…M-J-4 and sign-off SO-02 (partly, final in Q).
+- [x] J-09 Report manual tests M-J-1…M-J-4 and sign-off SO-02 (partly, final in Q).
 
 ## Unit tests (scenario → test)
 | Scenario | Test |
@@ -69,3 +69,14 @@ Default substitution preference: `product.storage === 'chilled'` or category `fr
 
 ## Definition of done
 Cart works end to end for anonymous visitors; totals come only from the server; `verify` passes.
+
+## Implementation notes (deviations, recorded by the developer)
+- `lib/ct/cart.ts` returns SDK carts (plain `getCart`, `createCart`, `addLineItem`, `changeLineItemQuantity`, `removeLineItem`, `withCartRetry(cartId, fn)` where `fn(freshCart)` does the mutation, so it always has the current version) plus `getMappedCart(id, ctx)` (Active cart mapped, else `null`) and `CartNotActiveError`. Cart reads and updates expand `lineItems[*].recurrenceInfo.recurrencePolicy` so the mapper gets the policy key (W).
+- `mapCart` takes `MapContext` (`locale, currency, country`) like `mapProduct`; `mapVariant` is now exported from `lib/mappers/product.ts`. Stock fields come from the line's `variant.availability`; `shipping`/`tax` are only set when the server cart has them; the slot comes from custom fields `slotId, slotStart, slotEnd, slotHoldExpires` (no `charge`, D-046).
+- `lib/cart-api.ts` (server-only) holds the shared route helpers (`cartJson`, `clearedCartJson`, `cartFailure`, `jsonError`, `isValidQuantity`). Error codes: `INVALID_SKU|INVALID_QUANTITY|UNKNOWN_SKU|INSUFFICIENT_STOCK|LINE_NOT_FOUND|CART_NOT_FOUND|CART_ERROR`. See Q-J-1, Q-J-2.
+- `defaultSubstitutionPreference(product, categoryKeys)` and `categoryKeysOf` in `lib/config/substitution.ts`.
+- The locale layout uses a client wrapper `context/SWRProvider.tsx` (swr is not a server module) and the real order `NextIntlClientProvider > SWRProvider > ToastProvider > CartProvider > chrome`. `markets` now comes from `await getValidMarkets()` (G-08 leftover). A failing cart read in the layout falls back to no cart. `account` stays the placeholder link until O.
+- `useCartContext()` (from `context/CartProvider.tsx`) is the way components use the cart: `{ cart, isLoading, itemCount, addItem, setQuantity, removeLine, addItemWithToast }`. `addItemWithToast` never throws and resolves `true`/`false`. `isLoading` is only true for an unseeded, unloaded cart.
+- Test helpers: `test/cart.tsx` (`makeCart`, `cartLine`, `renderWithCart`, `jsonResponse`). Stub `fetch` with a stateful handler (SWR revalidates after a mutation and would otherwise overwrite the cache with stale data).
+- Cart page: `components/cart/{CartView,CartLineRow,CartSummary}.tsx` plus the empty extension components `CartDeliveryStep` (Q), `SubstitutionControl` (U), `ProvisionalNotice` (N), `RecurrenceBadge` (W), each in its own file. Quantity changes show the new number immediately and roll back on failure; money values only change from the server response. Checkout is always disabled in J (explanation key `cart.checkoutDisabled`; `cart.checkoutBlocked` when a line is out of stock). The stepper max is the line's available quantity.
+- Added message keys: `nav.bagCount`, `cart.*` (both locales).
