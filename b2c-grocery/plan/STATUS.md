@@ -19,7 +19,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | M | Homepage | 6 | 0 | Not started | | |
 | N | Weight pricing | 6 | 0 | Not started | | |
 | O | Auth pages and identity | 9 | 9 | Verified | Claude (verify + Chrome) | 2026-10-06 |
-| P | Search | 5 | 0 | Not started | | |
+| P | Search | 5 | 5 | Ready for review | | |
 | Q | Delivery slots and address step | 9 | 0 | Not started | | |
 | R | Account shell, orders | 8 | 0 | Not started | | |
 | S | Address book | 6 | 0 | Not started | | |

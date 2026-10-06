@@ -34,3 +34,8 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [O] No "sign out" control exists yet (the account area arrives in R); `useAuthMutations().logout` and `/api/auth/logout` are ready.
 - [O] The email-verified banner with "resend" from `design/specs/account.md` is moot while registration auto-verifies (D-038); `isEmailVerified` is not kept in the session.
 - [O] Password rules are length only (8+), as specified; a breached-password or strength check could be added.
+
+## From workstream P
+- [P] German keys to review (machine-translated): all of `search.*` (title "Finden Sie es", suggestions).
+- [P] Search ranks by commercetools default (no sort). A relevance boost for whole-word matches over substring matches, and a "did you mean" for zero results, are not built.
+- [P] Search suggestions as typeahead dropdown (live results while typing) is not in the plan; the 300 ms URL update re-renders the page instead.
