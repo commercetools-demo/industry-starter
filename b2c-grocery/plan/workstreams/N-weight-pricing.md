@@ -29,7 +29,7 @@ Rules: `inc.unit === 'each'` → `null`; `g` → per kg: `centAmount × (1000 / 
 - [x] N-03 Pass `increment` through tile, PDP and cart line; tests assert the unit price appears in each (render with fixture product).
 - [x] N-04 Write `ProvisionalNotice` and wire into the cart summary (total label + note); tests: approximate line → "Total (provisional)" + note; exact lines → "Total", no note.
 - [x] N-05 Write `FinalAmount` + tests (difference sign, equal amounts → "No difference", absent → renders nothing).
-- [ ] N-06 Message keys (both locales); report manual tests M-N-1…M-N-3 and sign-off SO-14.
+- [x] N-06 Message keys (both locales); report manual tests M-N-1…M-N-3 and sign-off SO-14.
 
 ## Unit tests (scenario → test)
 | Scenario | Test |
@@ -40,9 +40,18 @@ Rules: `inc.unit === 'each'` → `null`; `g` → per kg: `centAmount × (1000 / 
 | Final amount recorded | N-05 (+ R integration) |
 
 ## Manual tests to report
-- M-N-1: Bananas 500 g shows price and "/ kg"; Whole milk shows no unit line.
+- M-N-1: Open /en-US/p/bananas (500 g selected) and /en-US/shop: Bananas 500 g shows the price and a muted "€x.xx / kg" line (also on the tile and after switching to 1 kg); Whole milk (each) shows no unit line. Repeat on /de-DE/p/bananas-de: "4,80 € / kg" style.
 - M-N-2: Cart with Bananas: summary shows "Total (provisional)" and note; remove Bananas: plain "Total".
 - M-N-3 (after R): set order custom field `finalTotal` in Merchant Center/API on a test order: order detail shows final amount and difference.
 
 ## Definition of done
 `unitPrice` covered; notice appears only for approximate lines; German formatting verified; `verify` passes.
+
+## Implementation notes (deviations, recorded by the developer)
+- `UnitPriceLine({ price, increment })` is exported from `components/product/PriceBlock.tsx` next to `PriceBlock`; `PriceBlock` takes an optional `increment` and renders `UnitPriceLine` below the price (the root is now an `inline-flex flex-col`; the tile passes `items-end` so the line right-aligns with the price). The cart line row uses `UnitPriceLine` directly (a cart line has no `PriceBlock`): increment label, then the unit line, under the name. Test id `unit-price` on the line.
+- `unitPrice` also returns `null` for a non-positive increment value (guards division by zero); the plan did not list it.
+- `ProvisionalNotice({ cart?, variant = 'inline' | 'total' })`: `inline` is the note paragraph, `total` is the label "Total (provisional)". With `cart` it renders only when `cart.isProvisional`; without `cart` (order detail R, confirmation V) it always renders, the caller decides. `CartSummary` shows the `total` variant in place of "Total" for provisional carts.
+- `FinalAmount({ provisional, final? })` lives in `components/cart/FinalAmount.tsx` (it was committed together with N-04 by mistake; its tests are in N-05). Difference is shown as `+€1.30` / `-€0.60` (ASCII minus), "No difference" when equal. It assumes both amounts share a currency. Not wired into any page (R owns the order detail and reads the `finalTotal` custom field); the cart mapper does not map `finalTotal` (it is an order field). See Q-N-1.
+- Message keys: new top-level namespace `pricing` (`perKg`, `perL`, `provisionalNote`, `totalProvisional`, `finalAmount`, `difference`, `noDifference`) in both locales; `messages/parity.test.ts` lists it in the required namespaces (additive; merges may conflict on that line). German is a faithful machine translation (see IDEAS).
+- Existing `plp.*`/`cart.*` keys are untouched. Tests: `lib/pricing.test.ts`, `components/product/{PriceBlock,UnitPriceWiring}.test.tsx`, `components/cart/{ProvisionalNotice,FinalAmount}.test.tsx`; one tile test regex was anchored (`/^2,96\s€$/`) because the tile now also shows a unit line.
+- Sign-off SO-14 is owner-only; not set.

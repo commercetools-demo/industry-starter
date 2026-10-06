@@ -48,3 +48,8 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 **Question:** The plan says AddToBag calls `addItemWithToast` and shows an inline "Only N available" on `INSUFFICIENT_STOCK`, but J's `addItemWithToast` swallows the error (toast only, resolves `true/false`). I check stock on the client (stepper max = available quantity; units already in the bag count) and show the inline message from that check; a server-side 409 (race) still gets J's toast "Only N available right now." Should J's helper expose the available quantity so the PDP can show the inline message for the 409 too (see IDEAS)?
 **Blocking:** no
 **Answer (owner):**
+
+## Q-N-1 (workstream N, task N-05)
+**Question:** `FinalAmount` is built and tested but not wired anywhere because the order detail (R) does not exist yet. R should render `<FinalAmount provisional={order.total} final={order.finalTotal} />` and `<ProvisionalNotice />` (no `cart` prop) for orders with approximate lines, and the order mapper must read custom field `finalTotal` (type `order-final`) into a `Money`. Please confirm R owns this wiring and the mapper change.
+**Blocking:** no
+**Answer (owner):**

@@ -51,3 +51,7 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [X] Footer links only to `/policies/delivery`; add returns, privacy and terms (H owns the footer). The homepage contact strip (M) should link to `/contact`.
 - [X] German keys to review (machine-translated): `static.*` and the German markdown in `content/de-DE`.
 - [X] Contact form has no CAPTCHA; in-memory rate limit only (D-047). Real delivery (email/CRM) is out of v1 (D-044).
+
+## From workstream N
+- [N] German keys to review (machine-translated): `pricing.*` (e.g. "Gesamt (vorläufig)", "Der Endbetrag hängt vom Gewicht ab, das wir abwiegen.").
+- [N] Mark approximate-weight lines ("about 500 g" / "approx.") on tile, PDP and cart line, not only in the cart summary.
