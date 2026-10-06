@@ -20,7 +20,7 @@ describe('create-qa-recurring', () => {
 
   it('waits until a Recurring Order with the order as origin shows up', async () => {
     const execute = vi.fn().mockResolvedValueOnce({ body: { results: [] } }).mockResolvedValueOnce({ body: { results: [{ id: 'ro-1' }] } });
-    const get = vi.fn((_args: { queryArgs: { where: string } }) => ({ execute }));
+    const get = vi.fn((args: { queryArgs: { where: string } }) => (void args, { execute }));
     const root = { recurringOrders: () => ({ get }) } as unknown as Root;
     expect(await waitForRecurringOrders(root, 'o-1', 5, 0)).toEqual([{ id: 'ro-1' }]);
     expect(get.mock.calls[0][0].queryArgs.where).toBe('originOrder(id="o-1")');

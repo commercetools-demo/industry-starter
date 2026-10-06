@@ -156,6 +156,55 @@
       "every-2-weeks": "Wiederholt sich alle 2 Wochen",
       "monthly": "Wiederholt sich jeden Monat",
       "other": "Wiederholt sich regelmäßig"
+    },
+    "manage": {
+      "metaTitle": "Abos",
+      "title": "Abos",
+      "intro": "Deine wiederkehrenden Bestellungen. Änderungen gelten ab der nächsten Bestellung.",
+      "list": "Deine wiederkehrenden Bestellungen",
+      "loading": "Deine Abos werden geladen…",
+      "loadFailed": "Wir konnten deine Abos nicht laden.",
+      "retry": "Erneut versuchen",
+      "empty": "Noch keine Abos",
+      "emptyHint": "Wähle auf einer Produktseite „Wiederholen“, um es regelmäßig geliefert zu bekommen.",
+      "browse": "Zum Shop",
+      "cadence": "Wiederholt sich",
+      "items": "Artikel",
+      "next": "Nächste Bestellung: {date}",
+      "pausedNext": "Pausiert: keine anstehende Bestellung",
+      "canceledNext": "Gekündigt: keine weiteren Bestellungen",
+      "inactiveNext": "Keine anstehende Bestellung",
+      "last": "Letzte Bestellung: {date}",
+      "state": {
+        "Active": "Aktiv",
+        "Paused": "Pausiert",
+        "Canceled": "Gekündigt",
+        "Other": "Nicht aktiv"
+      },
+      "changeCadence": "Rhythmus ändern",
+      "pause": "Pausieren",
+      "resume": "Fortsetzen",
+      "cancel": "Abo kündigen",
+      "quantityOf": "Menge von {name}",
+      "decrease": "Menge von {name} verringern",
+      "increase": "Menge von {name} erhöhen",
+      "actionFailed": "Das hat nicht geklappt. Bitte versuche es erneut.",
+      "cadenceDialog": {
+        "title": "Rhythmus ändern",
+        "body": "Wähle, wie oft du die Lieferung möchtest. Der neue Rhythmus gilt ab der nächsten Bestellung.",
+        "label": "Wie oft",
+        "save": "Speichern",
+        "saving": "Wird gespeichert…",
+        "keep": "Aktuellen behalten"
+      },
+      "cancelDialog": {
+        "title": "Dieses Abo kündigen?",
+        "body": "Es werden keine weiteren Bestellungen erstellt. Deine letzte Bestellung war am {date}.",
+        "bodyNoDate": "Es werden keine weiteren Bestellungen erstellt.",
+        "confirm": "Abo kündigen",
+        "canceling": "Wird gekündigt…",
+        "keep": "Abo behalten"
+      }
     }
   },
   "pdp": {

@@ -156,6 +156,55 @@
       "every-2-weeks": "Repeats every 2 weeks",
       "monthly": "Repeats every month",
       "other": "Repeats on a schedule"
+    },
+    "manage": {
+      "metaTitle": "Subscriptions",
+      "title": "Subscriptions",
+      "intro": "Your recurring orders. Changes apply from the next order.",
+      "list": "Your recurring orders",
+      "loading": "Loading your subscriptions…",
+      "loadFailed": "We could not load your subscriptions.",
+      "retry": "Try again",
+      "empty": "No subscriptions yet",
+      "emptyHint": "Choose “Repeat” on a product page to have it delivered on a schedule.",
+      "browse": "Browse the shop",
+      "cadence": "Repeats",
+      "items": "Items",
+      "next": "Next order: {date}",
+      "pausedNext": "Paused: no upcoming order",
+      "canceledNext": "Canceled: no more orders",
+      "inactiveNext": "No upcoming order",
+      "last": "Last order: {date}",
+      "state": {
+        "Active": "Active",
+        "Paused": "Paused",
+        "Canceled": "Canceled",
+        "Other": "Not active"
+      },
+      "changeCadence": "Change cadence",
+      "pause": "Pause",
+      "resume": "Resume",
+      "cancel": "Cancel subscription",
+      "quantityOf": "Quantity of {name}",
+      "decrease": "Decrease quantity of {name}",
+      "increase": "Increase quantity of {name}",
+      "actionFailed": "That did not work. Please try again.",
+      "cadenceDialog": {
+        "title": "Change cadence",
+        "body": "Choose how often you want this delivered. The new schedule applies from the next order.",
+        "label": "How often",
+        "save": "Save",
+        "saving": "Saving…",
+        "keep": "Keep current"
+      },
+      "cancelDialog": {
+        "title": "Cancel this subscription?",
+        "body": "No further orders will be created. Your last order was on {date}.",
+        "bodyNoDate": "No further orders will be created.",
+        "confirm": "Cancel subscription",
+        "canceling": "Canceling…",
+        "keep": "Keep subscription"
+      }
     }
   },
   "pdp": {
