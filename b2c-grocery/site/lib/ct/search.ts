@@ -1,4 +1,5 @@
 import 'server-only';
+import { cache } from 'react';
 import type {
   ProductPagedSearchResponse,
   ProductProjection,
@@ -149,4 +150,47 @@ function projectionsOf(response: ProductPagedSearchResponse, ctx: Ctx): Product[
 export async function searchProducts(p: SearchParams): Promise<SearchResult> {
   const { body } = await getApiRoot().products().search().post({ body: buildSearchRequest(p) }).execute();
   return mapSearchResponse(body, p);
+}
+
+/** Lean lookup (no facets) returning mapped products in the order commercetools returns them. */
+async function lookup(query: Expr, ctx: Ctx, limit: number): Promise<Product[]> {
+  const request = {
+    query,
+    limit,
+    productProjectionParameters: { priceCurrency: ctx.currency, priceCountry: ctx.country },
+  } as unknown as ProductSearchRequest;
+  const { body } = await getApiRoot().products().search().post({ body: request }).execute();
+  return projectionsOf(body, ctx);
+}
+
+/**
+ * Exact slug match in the shopper's language. React `cache` dedupes calls within one server render
+ * (`generateMetadata` and the page); it keys on arguments, so the context is flattened to primitives.
+ */
+const productBySlug = cache(async (slug: string, locale: string, currency: string, country: string): Promise<Product | null> => {
+  const products = await lookup({ exact: { field: FIELD.slug, language: locale, value: slug } }, { locale, currency, country }, 1);
+  return products[0] ?? null;
+});
+export const getProductBySlug = (slug: string, ctx: Ctx): Promise<Product | null> => productBySlug(slug, ctx.locale, ctx.currency, ctx.country);
+
+/** The product that owns a variant SKU (exact `variants.sku`); used by the cart to link back to the PDP. */
+export async function getProductBySku(sku: string, ctx: Ctx): Promise<Product | null> {
+  const products = await lookup({ exact: { field: FIELD.sku, value: sku } }, ctx, 1);
+  return products[0] ?? null;
+}
+
+const MAX_SEARCH_LIMIT = 100;
+
+/** Products for the given ids, in the order of `ids`; unknown ids are skipped and duplicates collapsed. */
+export async function getProductsByIds(ids: string[], ctx: Ctx): Promise<Product[]> {
+  const unique = [...new Set(ids)];
+  if (unique.length === 0) return [];
+  const chunks: string[][] = [];
+  for (let i = 0; i < unique.length; i += MAX_SEARCH_LIMIT) chunks.push(unique.slice(i, i + MAX_SEARCH_LIMIT));
+  const found = (await Promise.all(chunks.map((chunk) => lookup({ exact: { field: FIELD.id, values: chunk } }, ctx, chunk.length)))).flat();
+  const byId = new Map(found.map((p) => [p.id, p]));
+  return unique.flatMap((id) => {
+    const product = byId.get(id);
+    return product ? [product] : [];
+  });
 }
