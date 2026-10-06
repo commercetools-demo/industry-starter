@@ -15,7 +15,7 @@ Status values: `TODO` · `BLOCKED` · `IN PROGRESS` · `DONE` / `PASS` / `APPROV
 | OA-04 | In Merchant Center: enable countries US, DE; currencies USD, EUR; languages en-US, de-DE | F, D | DONE (owner reported 2026-10-06; not independently verified) |
 | OA-05 | Create a **Complete** Checkout application, install the **Adyen** connector (test mode), give the junior its application key (`CTP_CHECKOUT_APP_KEY`); allow `http://localhost:3000` and the Netlify URL as return/allowed origins | W, V spike | DONE (owner reported 2026-10-06; not independently verified) |
 | OA-06 | Create the Netlify site from this repo (base `site`), add env vars in the Netlify UI | Y | DONE (owner reported 2026-10-06; not independently verified) |
-| OA-07 | Confirm how testers create substitution Order Edits (Merchant Center feature or API recipe in `plan/recipes/`) | U manual tests | TODO |
+| OA-07 | Confirm how testers create substitution Order Edits (Merchant Center feature or API recipe in `plan/recipes/`) | U manual tests | DONE (script + recipe verified live by Claude: create-qa-substitution.ts creates an Order Edit proposal; accept/decline work end to end) |
 | OA-08 | Merge the planning branch (`design/malva-specs`) to `main` | juniors branch from `main` | IN PROGRESS (origin/main is still at e25eb2c; planning branch not on main yet) |
 
 ## 2. Design sign-offs (undrawn designs, proposals)
@@ -113,10 +113,10 @@ Rows are generated from the "Manual tests to report" sections of `plan/workstrea
 | M-T-3 | T | Merchant Center → Shopping lists: `wishlist-<customerId>` exists with one line. | — | PASS (Claude: list key and one line verified via API during T; wishlist deleted in cleanup) |
 | M-T-4 | T | Signed in, open `/en-US/shop?save=<any product id>` typed by hand (no heart click first): nothing is saved, the `save` parameter disappears from the URL. | — | PASS (Claude via Chrome, 2026-10-06; M-T-1 fixed a redirect bug) |
 | M-U-1 | U | Place a test order with a line set to "No substitution" (cart: switch the line, reload: it stays; place the order, e.g. `npx tsx scripts/seed/create-qa-order.ts` has lines with both preferences): order detail shows it (preference copied). | — | TODO |
-| M-U-2 | U | Create a proposal with `plan/recipes/create-substitution-proposal.md` (script `create-qa-substitution.ts` or the HTTP request) on that order: the notice appears above the items with the substitute, the price difference and the new total. | OA-07 | TODO |
+| M-U-2 | U | Create a proposal with `plan/recipes/create-substitution-proposal.md` (script `create-qa-substitution.ts` or the HTTP request) on that order: the notice appears above the items with the substitute, the price difference and the new total. | OA-07 | PASS (Claude via Chrome + live Order Edits, 2026-10-06) |
 | M-U-3 | U | Accept: the line shows the substitute and the total changes; Merchant Center shows the edit applied (result `Applied`, custom `status = applied`). | — | TODO |
 | M-U-4 | U | Create another proposal and Decline: the line shows "Removal requested" (also after reload); the edit is not applied in Merchant Center (result `NotProcessed`, `status = declined`). | — | TODO |
-| M-U-5 | U | Create a proposal, open the order page, then change the order in Merchant Center (any update), press Accept: the page explains the order changed and refreshes. Also: a proposal on a shipped order (set shipment state Shipped) shows read-only text with "Contact us" and no buttons. | — | TODO |
+| M-U-5 | U | Create a proposal, open the order page, then change the order in Merchant Center (any update), press Accept: the page explains the order changed and refreshes. Also: a proposal on a shipped order (set shipment state Shipped) shows read-only text with "Contact us" and no buttons. | — | UNIT-TESTED ONLY (stale version and shipped order) |
 | M-V-1 | V | Merchant Center: Checkout application branding applied; Adyen connector in test mode. | — | TODO |
 | M-V-2 | V | Cart with address + slot → "Checkout": hosted flow opens inline between our header/footer. | — | TODO |
 | M-V-3 | V | Pay with an Adyen test card: confirmation page shows order number, slot, thank-you name; bag is empty afterward. | — | TODO |
