@@ -38,3 +38,18 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 **Question:** `/en-US/account` and `/en-US/account/orders` do not exist until R, so after register, sign-in without `redirect` or password reset the shopper lands on a 404 page for now. Should the default landing be changed (for example to `/`) until R merges? I kept `/account` as specified.
 **Blocking:** no
 **Answer (owner):**
+
+## Q-Q-1 (workstream Q, task Q-04)
+**Question:** A live check (`PROJECT-FINDINGS.md` section 16) shows commercetools rejects a shipping address whose country has no `standard` rate in the cart currency (USD cart, DE address: HTTP 400 `InvalidOperation`). `PUT /api/cart/address` therefore answers 422 `COUNTRY_MISMATCH` when the address country differs from the cart's market, and the country select in the cart only works for the active market's country (the other option shows "switch the region in the header"). Is that acceptable, or should choosing the other country switch the market (and drop the cart, like the header switch)?
+**Blocking:** no
+**Answer (owner):**
+
+## Q-Q-2 (workstream Q, task Q-04)
+**Question:** The plan says an undeliverable address answers 422 and also clears the slot. I save the undeliverable address on the cart anyway (so the cart is truthful and `canCheckout` blocks), release and clear the slot, set no shipping method, and answer 422 `UNDELIVERABLE` with `{ cart, slotCleared }`. OK?
+**Blocking:** no
+**Answer (owner):**
+
+## Q-Q-3 (workstream Q, task Q-07/Q-08)
+**Question:** The slot hold lives only in process memory but the slot fields live on the cart, so after a restart the cart still shows a slot whose capacity was never re-reserved (until the 15-minute `slotHoldExpires` passes). The UI treats a slot as chosen only while `slotHoldExpires` is in the future, and V must re-hold at session creation (D-042). OK to keep this behaviour for v1?
+**Blocking:** no
+**Answer (owner):**

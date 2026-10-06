@@ -34,3 +34,10 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [O] No "sign out" control exists yet (the account area arrives in R); `useAuthMutations().logout` and `/api/auth/logout` are ready.
 - [O] The email-verified banner with "resend" from `design/specs/account.md` is moot while registration auto-verifies (D-038); `isEmailVerified` is not kept in the session.
 - [O] Password rules are length only (8+), as specified; a breached-password or strength check could be added.
+## From workstream Q
+- [Q] German keys to review (machine-translated): `cart.step.*`, `cart.slotCleared`, `cart.noSlots`, `cart.nextAvailable`, `cart.slotTaken`, `cart.slotExpired`, `cart.chooseSlot`, `cart.addAddress`, `cart.slotLine`.
+- [Q] Slot times are UTC in the stub; real slots need the delivery area's time zone (and a day boundary in local time).
+- [Q] Show a hold countdown ("held for 12 min") next to the chosen slot.
+- [Q] The address form always shows; a collapsed "Deliver to Ada, 10001 New York · Change" summary after saving would be tidier (the signed-in saved-address picker comes in S).
+- [Q] Changing the country should switch the market (see Q-Q-1) instead of blocking.
+- [Q] Slot capacity is global in the stub; per-postcode-area capacity would need the `country`/`postalCode` arguments that the interface already carries.

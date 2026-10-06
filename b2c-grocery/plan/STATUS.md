@@ -20,7 +20,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | N | Weight pricing | 6 | 0 | Not started | | |
 | O | Auth pages and identity | 9 | 9 | Ready for review | | |
 | P | Search | 5 | 0 | Not started | | |
-| Q | Delivery slots and address step | 9 | 0 | Not started | | |
+| Q | Delivery slots and address step | 9 | 9 | Ready for review | | |
 | R | Account shell, orders | 8 | 0 | Not started | | |
 | S | Address book | 6 | 0 | Not started | | |
 | T | Saved lists | 6 | 0 | Not started | | |

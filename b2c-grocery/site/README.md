@@ -29,3 +29,6 @@ All variables are read on the server only; none may ever be prefixed `NEXT_PUBLI
 | `HOME_LAYOUT`, `HOME_CONTACT_STRIP`, `HERO_IMAGE_URL`, `FEATURE_SUBSCRIPTIONS` | no | no | optional content and feature switches |
 
 Where to set them: locally in `site/.env.local` (copy `.env.example`; never commit it, only `.env.example` is tracked and its secret values stay empty); on Netlify in the site's environment variables (Site configuration, Environment variables).
+
+## Delivery slots (stub)
+Delivery windows come from an in-repo stub service (`lib/slots/stub-service.ts`, configured in `lib/config/slots.ts`: 7 days, six 2-hour windows from 08:00, capacity 10 per window, 15-minute holds; times are UTC). Its state lives **in memory** of the server process: a cold start or redeploy (Netlify serverless) resets all holds and bookings, and separate serverless instances do not share capacity. The chosen slot itself is stored on the commercetools cart (`cart-delivery` custom fields), so the cart keeps it, but its capacity hold is gone until it is picked again or V re-holds it when the checkout session is created. This is an accepted limitation for v1 (SO-12, D-033, D-042); replace `getSlotService()` in `lib/slots/index.ts` with a persistent service to remove it. Delivery cost is the commercetools shipping method `standard` (D-046, D-049); slots have no price.
