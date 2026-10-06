@@ -21,7 +21,7 @@
 
 ## Tasks
 - [x] M-01 Write `lib/config/site.ts` + tests (defaults; invalid env falls back). Use `Icon` from H (lucide is installed in A).
-- [ ] M-02 Write `HeroEditorial` and `HeroGrid` + messages; tests: editorial renders H1, two buttons with right hrefs; grid renders five tiles with spans; variant switch via config renders exactly one hero.
+- [x] M-02 Write `HeroEditorial` and `HeroGrid` + messages; tests: editorial renders H1, two buttons with right hrefs; grid renders five tiles with spans; variant switch via config renders exactly one hero.
 - [ ] M-03 Write `CategoryShowcase` + tests: six cards, each links to `/shop?category=slug`; count formatted `NN`; missing count omitted.
 - [ ] M-04 Write `NewIn` and `EditorialPanel` + tests (four tiles; panel button → `/journal`).
 - [ ] M-05 Write `ContactStrip` + page composition; tests: strip omitted entirely when disabled; page calls both fetches in parallel and never fetches the cart or customer (`getCart`/`getCustomer` not called; only `getMarket()` is used).

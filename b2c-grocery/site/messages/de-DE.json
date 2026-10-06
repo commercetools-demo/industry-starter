@@ -49,7 +49,26 @@
       "contact": "Kontakt"
     }
   },
-  "home": {},
+  "home": {
+    "hero": {
+      "tag": "Herbst 26 · Frisch vom Hof",
+      "title": "Gutes Essen, mit Bedacht ausgewählt",
+      "body": "Saisonales Gemüse, ehrliches Brot und Vorratsklassiker von Erzeugern und Bäckern, die wir beim Namen kennen, direkt zu Ihnen nach Hause.",
+      "shop": "Zur Kollektion",
+      "story": "Die Geschichte lesen",
+      "imageAlt": "Ein Holztisch mit saisonalem Gemüse und frischem Brot"
+    },
+    "grid": {
+      "title": "Gang für Gang",
+      "tiles": {
+        "a": "Der Tisch, gedeckt für den Herbst",
+        "b": "Frisches Obst & Gemüse",
+        "c": "Backwaren",
+        "d": "Vorrat",
+        "e": "Unsere Erzeuger"
+      }
+    }
+  },
   "plp": {
     "outOfStock": "Nicht vorrätig",
     "save": "{name} in einer Liste speichern",
