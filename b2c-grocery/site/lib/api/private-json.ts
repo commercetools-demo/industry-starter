@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
 
-/** JSON for per-customer data: never stored by a shared cache or the browser. Used by every `/api/account/*` route. */
+/** Every `/api/account/*` response is per customer: never storable by shared caches or the browser (account-design "Account data is never shared"). */
 export function privateJson(body: unknown, init: ResponseInit = {}): NextResponse {
   const res = NextResponse.json(body, init);
   res.headers.set('Cache-Control', 'private, no-store');
   return res;
 }
+
+/** 401 for account routes called without a signed-in session (the `(protected)` layout guards pages only). */
+export const unauthenticated = (): NextResponse => privateJson({ error: 'UNAUTHENTICATED' }, { status: 401 });

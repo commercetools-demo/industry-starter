@@ -21,7 +21,7 @@ export function mapAddress(a: CtAddress): Address {
   };
 }
 
-function mapLine(line: LineItem, locale: string): CartLine {
+export function mapLine(line: LineItem, locale: string): CartLine {
   const variant = mapVariant(line.variant, locale);
   const discounted = line.price.discounted?.value;
   const info = line.recurrenceInfo;
@@ -59,7 +59,7 @@ function mapLine(line: LineItem, locale: string): CartLine {
   };
 }
 
-function mapSlot(custom: CtCart['custom']): CartSlot | undefined {
+export function mapSlot(custom: CtCart['custom']): CartSlot | undefined {
   const fields: unknown = custom?.fields;
   if (!isRecord(fields)) return undefined;
   const id = str(fields.slotId);

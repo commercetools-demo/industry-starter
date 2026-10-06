@@ -80,3 +80,9 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 
 ## Fixed by orchestrator in T (2026-10-06)
 - Heart click while signed out → sign-in → the shopper stayed on the sign-in page (PendingSaveRunner ran on the sign-in URL because it also carries `save`, stripped the param and `router.replace`d back to sign-in, racing with the login redirect). The runner now ignores `/account/sign-in` and `/account/register`; regression test added. Cleanup script also deletes `wishlist-<customerId>` lists.
+## From workstream R
+- [R] German keys to review (machine-translated): the whole `account.*` namespace (e.g. "Kunde seit {year}", "Wird gepackt", "Ähnliches erlaubt").
+- [R] The theme has no `--color-muted`: `text-muted` (used in J/N components such as `CartSummary`, `PriceBlock`) is silently ignored. Define a muted token or switch those to `text-text/60`.
+- [R] Order detail: "Track", "Reorder" and a status timeline (design spec, `post-purchase-order-management`) are not built; neither are Returns or an unverified-email banner.
+- [R] The dashboard orders table could show skeleton rows while loading (spec) instead of the loading sentence.
+- [R] Order dates and slot times are UTC (like the slot stub); show them in the delivery area time zone once slots have one.

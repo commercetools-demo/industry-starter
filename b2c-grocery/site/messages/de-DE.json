@@ -279,6 +279,76 @@
       "addLabel": "{name} in den Warenkorb legen",
       "viewLabel": "Optionen für {name} wählen",
       "list": "Gemerkte Artikel"
+    },
+    "memberSince": "Kunde seit {year}",
+    "loading": "Wird geladen…",
+    "loadFailed": "Das konnten wir nicht laden. Bitte versuch es noch einmal.",
+    "retry": "Erneut versuchen",
+    "orders": {
+      "title": "Bestellungen",
+      "caption": "Deine Bestellungen",
+      "colItems": "Artikel",
+      "colNumber": "Bestellnummer",
+      "colPlaced": "Bestellt am",
+      "colTotal": "Gesamt",
+      "colStatus": "Status",
+      "empty": "Noch keine Bestellungen",
+      "browse": "Zum Sortiment",
+      "viewAll": "Alle Bestellungen",
+      "pagination": "Seiten der Bestellungen",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "pageOf": "Seite {page} von {pages}",
+      "loadingRows": "Deine Bestellungen werden geladen…"
+    },
+    "status": {
+      "processing": "In Bearbeitung",
+      "packing": "Wird gepackt",
+      "on-its-way": "Unterwegs",
+      "delivered": "Geliefert",
+      "cancelled": "Storniert",
+      "unknown": "Status unbekannt"
+    },
+    "address": {
+      "kicker": "Standardadresse",
+      "empty": "Noch keine Standardadresse",
+      "add": "Adresse hinzufügen",
+      "edit": "Bearbeiten"
+    },
+    "details": {
+      "kicker": "Details",
+      "nav": "Bereiche des Kontos",
+      "orders": "Bestellungen",
+      "addresses": "Adressen",
+      "saved": "Merklisten",
+      "subscriptions": "Abos",
+      "contact": "Kontakt"
+    },
+    "order": {
+      "title": "Bestellung {number}",
+      "placed": "Bestellt am {date}",
+      "delivery": "Lieferung: {day}, {time}",
+      "back": "Alle Bestellungen",
+      "itemsCaption": "Artikel dieser Bestellung",
+      "colItem": "Artikel",
+      "colQuantity": "Menge",
+      "colUnitPrice": "Einzelpreis",
+      "colTotal": "Gesamt",
+      "colSubstitution": "Ersatz",
+      "preference": {
+        "allow-similar": "Ähnliches erlaubt",
+        "none": "Kein Ersatz"
+      },
+      "totals": "Summen",
+      "subtotal": "Zwischensumme",
+      "shipping": "Lieferung",
+      "shippingFree": "Inklusive",
+      "tax": "Enthaltene Steuer",
+      "total": "Gesamt",
+      "address": "Lieferadresse",
+      "loading": "Deine Bestellung wird geladen…",
+      "notFoundTitle": "Diese Bestellung haben wir nicht gefunden",
+      "notFoundBody": "Sie gehört vielleicht zu einem anderen Konto oder existiert nicht mehr."
     }
   },
   "auth": {

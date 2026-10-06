@@ -2,7 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import useSWR, { SWRConfig, useSWRConfig } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { KEY_ACCOUNT, KEY_ADDRESSES, KEY_CART, KEY_ORDERS, KEY_RECURRING, KEY_WISHLIST, keyOrder, keyWishlistProducts } from '@/lib/cache-keys';
+import { KEY_ACCOUNT, KEY_ADDRESSES, KEY_CART, KEY_ORDERS, KEY_PROFILE, KEY_RECURRING, KEY_WISHLIST, keyOrder, keyOrdersPage, keyWishlistProducts } from '@/lib/cache-keys';
 import { ApiError } from '@/lib/fetcher';
 import { useCart } from './useCart';
 import { useAccount, useAuthMutations } from './useAccount';
@@ -28,6 +28,8 @@ function setup(fetchMock: ReturnType<typeof vi.fn>, fallback: Record<string, unk
       cart: useCart(),
       order: useSWR(keyOrder('o-1'), async () => ({ id: 'o-1' })),
       savedProducts: useSWR(keyWishlistProducts('en-US'), async () => [{ id: 'p-1' }]),
+      page2: useSWR(keyOrdersPage(2), async () => ({ orders: [] })),
+      profile: useSWR(KEY_PROFILE, async () => ({ firstName: 'Ada' })),
       mutations: useAuthMutations(),
       cache: useSWRConfig(),
     }),
@@ -109,11 +111,13 @@ describe('useAuthMutations', () => {
     const fetchMock = vi.fn().mockImplementation(async (url: string) => (url === '/api/auth/logout' ? json({ ok: true }) : json({ user: null })));
     const { result } = setup(fetchMock, fallback);
     await waitFor(() => expect(result.current.order.data).toEqual({ id: 'o-1' }));
+    await waitFor(() => expect(result.current.page2.data).toBeDefined());
+    await waitFor(() => expect(result.current.profile.data).toBeDefined());
     await act(() => result.current.mutations.logout());
     const get = (key: string) => result.current.cache.cache.get(key)?.data;
     expect(get(KEY_ACCOUNT)).toBeNull();
     expect(get(KEY_CART)).toBeNull();
-    for (const key of [KEY_ORDERS, KEY_ADDRESSES, KEY_WISHLIST, KEY_RECURRING, keyOrder('o-1'), keyWishlistProducts('en-US')]) expect(get(key)).toBeUndefined();
+    for (const key of [KEY_ORDERS, KEY_PROFILE, KEY_ADDRESSES, KEY_WISHLIST, KEY_RECURRING, keyOrder('o-1'), keyOrdersPage(2), keyWishlistProducts('en-US')]) expect(get(key)).toBeUndefined();
     expect(refresh).toHaveBeenCalled();
   });
 });

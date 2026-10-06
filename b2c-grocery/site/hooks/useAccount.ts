@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { KEY_ACCOUNT, KEY_ADDRESSES, KEY_CART, KEY_ORDERS, KEY_RECURRING, KEY_WISHLIST } from '@/lib/cache-keys';
+import { KEY_ACCOUNT, KEY_ADDRESSES, KEY_CART, KEY_ORDERS, KEY_PROFILE, KEY_RECURRING, KEY_WISHLIST } from '@/lib/cache-keys';
 import { fetchJson, sendJson } from '@/lib/fetcher';
 import { useRouter } from '@/i18n/routing';
 import type { AccountUser } from '@/lib/types';
@@ -66,10 +66,14 @@ export function useAuthMutations() {
     await Promise.all([
       mutate(KEY_ACCOUNT, null, { revalidate: false }),
       mutate(KEY_CART, null, { revalidate: false }),
-      ...[KEY_ORDERS, KEY_ADDRESSES, KEY_WISHLIST, KEY_RECURRING].map((key) => mutate(key, undefined, { revalidate: false })),
+      ...[KEY_ORDERS, KEY_PROFILE, KEY_ADDRESSES, KEY_WISHLIST, KEY_RECURRING].map((key) => mutate(key, undefined, { revalidate: false })),
     ]);
-    // Per-order caches (`order:<id>`) and the saved products (`wishlist:products:<locale>`) are keyed dynamically: drop them all.
-    await mutate((key) => typeof key === 'string' && (key.startsWith('order:') || key.startsWith('wishlist:')), undefined, { revalidate: false });
+    // Per-order caches (`order:<id>`), later order list pages (`orders:<n>`) and the saved products (`wishlist:products:<locale>`) are keyed dynamically: drop them all.
+    await mutate(
+      (key) => typeof key === 'string' && (key.startsWith('order:') || key.startsWith('orders:') || key.startsWith('wishlist:')),
+      undefined,
+      { revalidate: false },
+    );
     router.refresh();
   }, [mutate, router]);
 
