@@ -29,3 +29,6 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [K] Quick add-to-bag on tiles (not drawn) could use `useCartContext().addItemWithToast`.
 - [K] Facet counts cost up to 3 extra lean searches when category, price and stock are all active; cache or merge if search latency becomes an issue.
 - [X] All copy in `site/content/**` (about, faq, journal, policies) is placeholder and needs owner review (SO-10, SO-13); legal pages (privacy, terms) need real legal text. German is a faithful translation by the developer; please have it reviewed.
+- [X] Footer links only to `/policies/delivery`; add returns, privacy and terms (H owns the footer). The homepage contact strip (M) should link to `/contact`.
+- [X] German keys to review (machine-translated): `static.*` and the German markdown in `content/de-DE`.
+- [X] Contact form has no CAPTCHA; in-memory rate limit only (D-047). Real delivery (email/CRM) is out of v1 (D-044).
