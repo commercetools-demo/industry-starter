@@ -25,7 +25,7 @@
 - [x] M-03 Write `CategoryShowcase` + tests: six cards, each links to `/shop?category=slug`; count formatted `NN`; missing count omitted.
 - [x] M-04 Write `NewIn` and `EditorialPanel` + tests (four tiles; panel button → `/journal`).
 - [x] M-05 Write `ContactStrip` + page composition; tests: strip omitted entirely when disabled; page calls both fetches in parallel and never fetches the cart or customer (`getCart`/`getCustomer` not called; only `getMarket()` is used).
-- [ ] M-06 Report manual tests M-M-1…M-M-3; sign-off requests (design fidelity) added to SO-01.
+- [x] M-06 Report manual tests M-M-1…M-M-3; sign-off requests (design fidelity) added to SO-01.
 
 ## Unit tests (scenario → test)
 | Scenario | Test |
@@ -43,3 +43,15 @@
 
 ## Definition of done
 All sections render with real data; no session reads in the page; both locales; `verify` passes.
+
+## Implementation notes (deviations, recorded by the developer)
+- **Market follows the URL locale, not `getMarket()`** (as K and P, D-012): the page uses `COUNTRY_CONFIG[locale]` and only falls back to `getMarket()` for an unknown locale, so a fresh visit to `/de-DE` shows EUR. The page therefore reads no session at all (the test asserts `getSession`, `getCart`, `getMappedCart`, `getCustomer` are never called and `getMarket` only for an unknown locale). See Q-M-1.
+- **One search, not two:** the facets of the `sort: 'newest', pageSize: 4` search cover the whole catalog, so the category counts come from it (no extra `pageSize: 1` search). Counts are the direct facet counts rolled up with `rolledUp` (now exported from `lib/listing-view.ts`); an empty category facet means "unknown" and the count is omitted. A category with no products shows "00 items".
+- `export const dynamic = 'force-dynamic'` on the page so `HOME_LAYOUT`, `HOME_CONTACT_STRIP` and `HERO_IMAGE_URL` are read per request (otherwise the page would be prerendered at build with the build-time env and would need live commercetools at build).
+- `lib/config/site.ts` has a third switch `heroImageUrl` (`HERO_IMAGE_URL`, https only, default a picsum placeholder; the plan named it as config). `HOME_CONTACT_STRIP` accepts `true/1/on` and `false/0/off`; anything else keeps the default (on). Placeholder images live in `lib/config/home-images.ts`, category images keyed by category `key` (locale independent); a category without an entry gets the neutral placeholder block.
+- `ProductTile` got two additive props: `imageHeight?: 330 | 340` (home uses 340) and `showSave?: boolean` (home passes `false`: `design/specs/homepage.md` says the heart is not shown on home tiles, only on PLP). Defaults keep the listing unchanged.
+- Added `components/home/Hero.tsx` (selects exactly one of `HeroEditorial` / `HeroGrid`) and `lib/home-view.ts` (`buildShowcaseItems`, `twoDigits`). Sections carry `data-hero` / `data-section` / `data-category` / `data-tile` attributes (used by tests, harmless in HTML).
+- Showcase shows the first six root categories in tree order. "See all" on New in links to `/shop?sort=newest`. Responsive (proposed in the spec, SO-01): hero stacks under 1200, categories are a scroll-snap row under 768, 3 columns at tablet, 6 at desktop; products 1 / 2 / 4 columns.
+- Message keys added (both locales): `home.hero.*`, `home.grid.*`, `home.categories.*`, `home.newIn.*`, `home.editorial.*`, `home.contact.*`. German is machine-translated (see IDEAS). Copy is grocery-adapted ("Good food, quietly sourced", "Aisle by aisle", "The aisles").
+- `/journal` and `/contact` are built by X; until merged the buttons lead to a 404 (M-M-1 says so). No page-level `generateMetadata` was added (the layout default applies).
+- Live check with `npm run dev` against the seeded project: `/en-US` and `/de-DE` return 200 with all five sections and "06 items" / "06 Artikel" on every card.

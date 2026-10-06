@@ -22,7 +22,7 @@ Status values: `TODO` · `BLOCKED` · `IN PROGRESS` · `DONE` / `PASS` / `APPROV
 
 | ID | What to review | Spec | Status |
 | --- | --- | --- | --- |
-| SO-01 | Responsive breakpoints and collapse rules (≥1200 / 768–1199 / <768) | storefront-design-system | TODO |
+| SO-01 | Responsive breakpoints and collapse rules (≥1200 / 768–1199 / <768). M adds the homepage: hero stacks with the photo (420 px) below the copy under 1200, magazine grid becomes one column under 768, categories 3 columns at 768–1199 and a scroll-snap row under 768, products 2 columns then 1, editorial panel and contact strip stack | storefront-design-system | TODO |
 | SO-02 | Cart pre-checkout delivery step (address + slot picker + preference + provisional notice) | delivery-slot-experience, cart-design | TODO (J part: bag layout, lines, summary, empty, unavailable-line notice built; the delivery step itself arrives in Q/U/N, final sign-off in Q) |
 | SO-03 | Hosted checkout page frame (branding in Merchant Center + our header/footer) | checkout-design | TODO |
 | SO-04 | Substitution preference control and order-detail proposal notice | substitution-experience | TODO |

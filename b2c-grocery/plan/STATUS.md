@@ -16,7 +16,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | J | Cart core | 9 | 9 | Verified | Claude (verify + Chrome manual tests) | 2026-10-06 |
 | K | Product listing | 8 | 8 | Verified | Claude (verify + Chrome) | 2026-10-06 |
 | L | Product detail | 9 | 0 | Not started | | |
-| M | Homepage | 6 | 0 | Not started | | |
+| M | Homepage | 6 | 6 | Ready for review | | |
 | N | Weight pricing | 6 | 0 | Not started | | |
 | O | Auth pages and identity | 9 | 9 | Verified | Claude (verify + Chrome) | 2026-10-06 |
 | P | Search | 5 | 5 | Ready for review | | |

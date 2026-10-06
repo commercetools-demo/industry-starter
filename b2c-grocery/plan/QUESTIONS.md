@@ -43,3 +43,8 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 **Question:** P-04 asked for fullText on name plus a SKU OR clause. Live, fullText misses German compounds ("milch" vs "Vollmilch") and partial words, so I also OR a case-insensitive `wildcard *q*` on name (substring match, wildcards in user input escaped). Any query of 4+ letters/digits/hyphens also adds the exact-SKU clause (so "milk" does too, harmlessly). Trade-off: wildcard scans the name of every product (fine for a small catalog; revisit for very large ones). OK?
 **Blocking:** no
 **Answer (owner):**
+
+## Q-M-1 (workstream M, task M-05)
+**Question:** The plan says the page uses `getMarket()` for the market. As in K and P I used the URL locale's market (`COUNTRY_CONFIG`) and fall back to `getMarket()` only for unknown locales, because `getMarket()` reads the session cookie and a fresh visit to `/de-DE` would show USD. Result: the homepage reads no session at all. OK?
+**Blocking:** no
+**Answer (owner):**

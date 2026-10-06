@@ -39,3 +39,10 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [P] German keys to review (machine-translated): all of `search.*` (title "Finden Sie es", suggestions).
 - [P] Search ranks by commercetools default (no sort). A relevance boost for whole-word matches over substring matches, and a "did you mean" for zero results, are not built.
 - [P] Search suggestions as typeahead dropdown (live results while typing) is not in the plan; the 300 ms URL update re-renders the page instead.
+
+## From workstream M
+- [M] German keys to review (machine-translated): all of `home.*` (hero, grid tiles, categories, new in, editorial, contact).
+- [M] Real photography (hero, six categories, five magazine tiles, editorial) is an owner item (M-M-3); the homepage currently uses picsum placeholders. A small content file or per-image env could replace the code map in `lib/config/home-images.ts`.
+- [M] The homepage fails as a whole if the product search or category tree fails (the `error.tsx` boundary shows). Rendering the other sections without the failed one would be more resilient.
+- [M] "Recently ordered / Recommended for you" and quick order from `home-landing-page` have no drawn design (D-022) and are not built. The newsletter and promo banner from the Canvas are not built either.
+- [M] The editorial panel copy ("A morning at the bakery") is static placeholder; its link target `/journal` depends on workstream X.
