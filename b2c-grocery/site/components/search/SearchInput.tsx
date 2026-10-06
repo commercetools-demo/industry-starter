@@ -1,13 +1,13 @@
 'use client';
 import { Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { usePathname, useRouter } from '@/i18n/routing';
+import { MAX_QUERY_LENGTH } from '@/lib/search-query';
 import { useDebouncedCallback } from '@/lib/useDebouncedCallback';
 
 export const SEARCH_DEBOUNCE_MS = 300;
-export const MAX_QUERY_LENGTH = 100;
 
 /**
  * The URL is the state: typing updates `?q=` (debounced 300 ms), Enter updates it at once. Any change drops `page`.
@@ -18,9 +18,20 @@ export function SearchInput({ initialQuery = '' }: { initialQuery?: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const [value, setValue] = useState(initialQuery);
+  const lastNavigated = useRef(initialQuery);
+
+  // A link elsewhere on the page (a suggestion tag) changed `?q=`: show it. Our own navigations are ignored so a
+  // slower server render never overwrites what the shopper has typed since.
+  useEffect(() => {
+    if (initialQuery !== lastNavigated.current) {
+      lastNavigated.current = initialQuery;
+      setValue(initialQuery);
+    }
+  }, [initialQuery]);
 
   const navigate = (text: string) => {
     const q = text.trim().slice(0, MAX_QUERY_LENGTH);
+    lastNavigated.current = q;
     router.replace(q ? `${pathname}?${new URLSearchParams({ q }).toString()}` : pathname);
   };
   const [navigateLater, cancel] = useDebouncedCallback(navigate, SEARCH_DEBOUNCE_MS);

@@ -1,4 +1,6 @@
-import { act, fireEvent, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { NextIntlClientProvider } from 'next-intl';
+import messages from '@/messages/en-US.json';
 import { renderWithProviders } from '@/test/utils';
 import { SearchInput } from './SearchInput';
 
@@ -50,6 +52,23 @@ describe('SearchInput', () => {
     expect(replace).toHaveBeenCalledWith('/search?q=oat+drink');
     act(() => void vi.advanceTimersByTime(1000));
     expect(replace).toHaveBeenCalledTimes(1);
+  });
+
+  it('a changed initialQuery (suggestion link) replaces the text, but our own navigation does not', () => {
+    const wrap = (q: string) => (
+      <NextIntlClientProvider locale="en-US" messages={messages}>
+        <SearchInput initialQuery={q} />
+      </NextIntlClientProvider>
+    );
+    const { rerender } = render(wrap(''));
+    const box = screen.getByRole('searchbox');
+    type(box, 'milk');
+    act(() => void vi.advanceTimersByTime(300));
+    type(box, 'milk choc');
+    rerender(wrap('milk'));
+    expect(box).toHaveValue('milk choc');
+    rerender(wrap('Fresh'));
+    expect(box).toHaveValue('Fresh');
   });
 
   it('clearing the field removes q (page is dropped as well)', () => {

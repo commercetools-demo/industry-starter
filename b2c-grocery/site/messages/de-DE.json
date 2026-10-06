@@ -141,7 +141,24 @@
   "account": {},
   "auth": {},
   "search": {
-    "inputLabel": "Im Shop suchen"
+    "inputLabel": "Im Shop suchen",
+    "kicker": "Suche",
+    "title": "Finden Sie es",
+    "suggestionsLabel": "Probieren Sie es mit",
+    "suggestions": [
+      "Frisch",
+      "Vegan",
+      "Backwaren",
+      "Bio",
+      "Geschenke",
+      "Unter 5 €"
+    ],
+    "found": "{count} gefunden für „{query}“",
+    "none": {
+      "title": "Nichts gefunden für „{query}“",
+      "body": "Prüfen Sie die Schreibweise, versuchen Sie ein kürzeres Wort oder stöbern Sie im Shop nach Kategorie.",
+      "browse": "Zum Shop"
+    }
   },
   "static": {},
   "errors": {

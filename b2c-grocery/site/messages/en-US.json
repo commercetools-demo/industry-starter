@@ -141,7 +141,24 @@
   "account": {},
   "auth": {},
   "search": {
-    "inputLabel": "Search the shop"
+    "inputLabel": "Search the shop",
+    "kicker": "Search",
+    "title": "Find it",
+    "suggestionsLabel": "Try searching for",
+    "suggestions": [
+      "Fresh",
+      "Vegan",
+      "Bakery",
+      "Organic",
+      "Gifts",
+      "Under $5"
+    ],
+    "found": "{count} found for “{query}”",
+    "none": {
+      "title": "Nothing matched “{query}”",
+      "body": "Check the spelling, try a shorter word, or browse the shop by category.",
+      "browse": "Browse the shop"
+    }
   },
   "static": {},
   "errors": {
