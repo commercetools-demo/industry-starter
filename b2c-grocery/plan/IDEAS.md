@@ -20,3 +20,11 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [J] A line's name is not a link to the PDP yet (the PDP route comes with L); add the link (and a thumbnail link) when `/product/[slug]` exists.
 - [J] `getAvailableQuantity` is one inventory call per add/change; a batch `getAvailableQuantities(skus)` would help if the cart page ever revalidates stock per line.
 - [J] Undo after Remove re-adds with the default substitution preference (the removed line's preference is not restored).
+
+## From workstream K
+- [K] Loading skeleton (`app/[locale]/shop/loading.tsx`) with tile-height placeholders and an inline retry card (design "States") are not built.
+- [K] Optional category description under the H1 (`showDescription`) once categories carry descriptions.
+- [K] German keys to review (machine-translated): all of `plp.*`.
+- [K] `SaveButton` and `useSaved` are stubs until T; T must replace `hooks/useSaved.ts` only.
+- [K] Quick add-to-bag on tiles (not drawn) could use `useCartContext().addItemWithToast`.
+- [K] Facet counts cost up to 3 extra lean searches when category, price and stock are all active; cache or merge if search latency becomes an issue.

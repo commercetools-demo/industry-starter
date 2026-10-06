@@ -50,7 +50,61 @@
     }
   },
   "home": {},
-  "plp": {},
+  "plp": {
+    "outOfStock": "Out of stock",
+    "save": "Save {name} to a list",
+    "unsave": "Remove {name} from your saved items",
+    "was": "Was {price}",
+    "now": "Now {price}",
+    "kicker": "The shop",
+    "everything": "Everything",
+    "breadcrumbs": {
+      "label": "Breadcrumb",
+      "home": "Home"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page}"
+    },
+    "empty": {
+      "title": "Nothing under those terms",
+      "body": "Try removing a filter or two, or tell us what you are looking for and we will help.",
+      "clear": "Clear filters",
+      "contact": "Contact us"
+    },
+    "count": "{count, plural, one {# product} other {# products}}",
+    "filters": {
+      "title": "Filters",
+      "category": "Category",
+      "price": "Price",
+      "availability": "Availability",
+      "clearAll": "Clear all"
+    },
+    "band": {
+      "any": "Any price",
+      "under": "Under {max}",
+      "range": "{min}–{max}",
+      "over": "Over {min}"
+    },
+    "availability": {
+      "all": "Everything",
+      "in": "In stock",
+      "out": "Out of stock"
+    },
+    "applied": {
+      "label": "Applied filters",
+      "remove": "Remove filter: {label}"
+    },
+    "sort": {
+      "label": "Sort by",
+      "relevance": "Relevance",
+      "newest": "Newest",
+      "priceAsc": "Price ↑",
+      "priceDesc": "Price ↓"
+    }
+  },
   "pdp": {},
   "cart": {
     "added": "Added to your bag",

@@ -50,7 +50,61 @@
     }
   },
   "home": {},
-  "plp": {},
+  "plp": {
+    "outOfStock": "Nicht vorrätig",
+    "save": "{name} in einer Liste speichern",
+    "unsave": "{name} aus den gespeicherten Artikeln entfernen",
+    "was": "Vorher {price}",
+    "now": "Jetzt {price}",
+    "kicker": "Der Shop",
+    "everything": "Alles",
+    "breadcrumbs": {
+      "label": "Brotkrümelnavigation",
+      "home": "Startseite"
+    },
+    "pagination": {
+      "label": "Seitennavigation",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "page": "Seite {page}"
+    },
+    "empty": {
+      "title": "Nichts unter diesen Bedingungen",
+      "body": "Entfernen Sie einen Filter oder zwei, oder sagen Sie uns, was Sie suchen, und wir helfen Ihnen.",
+      "clear": "Filter zurücksetzen",
+      "contact": "Kontakt"
+    },
+    "count": "{count, plural, one {# Produkt} other {# Produkte}}",
+    "filters": {
+      "title": "Filter",
+      "category": "Kategorie",
+      "price": "Preis",
+      "availability": "Verfügbarkeit",
+      "clearAll": "Alle zurücksetzen"
+    },
+    "band": {
+      "any": "Jeder Preis",
+      "under": "Unter {max}",
+      "range": "{min}–{max}",
+      "over": "Über {min}"
+    },
+    "availability": {
+      "all": "Alles",
+      "in": "Vorrätig",
+      "out": "Nicht vorrätig"
+    },
+    "applied": {
+      "label": "Aktive Filter",
+      "remove": "Filter entfernen: {label}"
+    },
+    "sort": {
+      "label": "Sortieren nach",
+      "relevance": "Relevanz",
+      "newest": "Neueste",
+      "priceAsc": "Preis ↑",
+      "priceDesc": "Preis ↓"
+    }
+  },
   "pdp": {},
   "cart": {
     "added": "Zum Warenkorb hinzugefügt",

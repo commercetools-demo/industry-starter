@@ -27,4 +27,7 @@ Juniors: add a question when you must stop and ask (see JUNIOR-GUIDE §7). Forma
 ## Q-ORCH-1 (found by orchestrator while testing J)
 **Question:** The cart/currency comes from the *session* market, the page language from the *URL* locale. A visitor whose session says `de-DE`/EUR who opens `/en-US` directly sees English text but an EUR cart (and the catalog price currency follows the session too). Should the proxy/layout sync the session market to the URL locale on every request (recommended: yes, same rule as the locale switch: currency change drops the cart), or keep the explicit switch only?
 **Blocking:** no (default for now: explicit switch only; see IDEAS)
+## Q-K-1 (workstream K, task K-05)
+**Question:** The market (currency/country) comes from the session or the `your-shop-country-locale` cookie, but the proxy does not set it when someone opens `/de-DE/...` directly, so the cart layout (J) and `getMarket()` would give USD under a German URL. K avoids it by deriving currency/country from the URL locale (`COUNTRY_CONFIG[locale]`). Should `proxy.ts`/`getMarket()` do this for everyone (L, M, P, cart), or is the locale switcher the only intended way to change market?
+**Blocking:** no
 **Answer (owner):**
