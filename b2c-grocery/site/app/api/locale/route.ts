@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getSession, updateSession } from '@/lib/session';
-import { COUNTRY_CONFIG, LOCALE_COOKIE } from '@/lib/utils';
+import { getValidCountryConfig } from '@/lib/ct/locale-validation';
+import { LOCALE_COOKIE } from '@/lib/utils';
 
 /** Atomic market switch: locale, currency and country change together; a currency change drops the cart. */
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as { locale?: unknown } | null;
-  const config = typeof body?.locale === 'string' ? COUNTRY_CONFIG[body.locale] : undefined;
+  // Only markets that are also valid for the commercetools project (country, currency and language) are accepted.
+  const config = typeof body?.locale === 'string' ? (await getValidCountryConfig())[body.locale] : undefined;
   if (!config) return NextResponse.json({ error: 'Unsupported locale' }, { status: 400 });
 
   const session = await getSession();
