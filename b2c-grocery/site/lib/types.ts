@@ -104,6 +104,15 @@ export interface Cart {
   slot?: CartSlot;
 }
 
+/** `GET /api/account/profile`. */
+export interface AccountProfile {
+  createdAt: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  defaultShippingAddress?: Address;
+}
+
 export type OrderStatus = 'processing' | 'packing' | 'on-its-way' | 'delivered' | 'cancelled' | 'unknown';
 export interface OrderLine {
   id: string;

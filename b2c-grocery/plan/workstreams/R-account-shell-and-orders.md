@@ -34,7 +34,7 @@ export interface OrderListItem { id: string; orderNumber?: string; createdAt: st
 ## Tasks
 - [x] R-01 Append order types; write `lib/mappers/order.ts` + fixtures + tests (status mapping table incl. unknown fallback; item summary text; provisional flag; slot and `finalTotal` from custom fields).
 - [x] R-02 Write `lib/ct/orders.ts` + tests (ownership: other customer's order → null; sorted desc; mocked root).
-- [ ] R-03 Write `lib/api/private-json.ts` (`privateJson(body, init?)` sets `Cache-Control: private, no-store`), `lib/ct/customer.ts` (`getCustomer(customerId)`), `GET /api/account/profile` (`{ createdAt, firstName, lastName, email, defaultShippingAddress? }`), `GET /api/account/orders` and `[orderId]` + tests (401 anonymous; 404 for another customer's order; pagination params).
+- [x] R-03 Write `lib/api/private-json.ts` (`privateJson(body, init?)` sets `Cache-Control: private, no-store`), `lib/ct/customer.ts` (`getCustomer(customerId)`), `GET /api/account/profile` (`{ createdAt, firstName, lastName, email, defaultShippingAddress? }`), `GET /api/account/orders` and `[orderId]` + tests (401 anonymous; 404 for another customer's order; pagination params).
 - [ ] R-04 Write hooks `useOrders`, `useOrder` + tests (cache keys; safe defaults).
 - [ ] R-05 Write `AccountShell` + dashboard cards + tests (name/kicker; details rows and hrefs; default address shown or empty state).
 - [ ] R-06 Write the orders table + empty state + status `Tag` tones + tests (each status → tone; row link; "No orders yet").
