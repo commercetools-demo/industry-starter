@@ -136,7 +136,12 @@
     },
     "options": {
       "packLabel": "Packungsgröße"
-    }
+    },
+    "addToBag": "In den Warenkorb",
+    "quantity": "Menge",
+    "decrease": "Menge verringern",
+    "increase": "Menge erhöhen",
+    "onlyAvailable": "Nur {available} verfügbar"
   },
   "cart": {
     "added": "Zum Warenkorb hinzugefügt",

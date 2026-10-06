@@ -136,7 +136,12 @@
     },
     "options": {
       "packLabel": "Pack size"
-    }
+    },
+    "addToBag": "Add to bag",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "onlyAvailable": "Only {available} available"
   },
   "cart": {
     "added": "Added to your bag",
