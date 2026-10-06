@@ -28,7 +28,7 @@ export function buildSelectors(product: Product): Selector[]; // pure
 - `Reviews` (server): renders **only** if `product.reviews` exists (type `ProductReviews = { average: number; count: number; distribution: number[]; items: {…}[] }`, never populated in v1) — otherwise returns `null` (no heading, no gap).
 
 ## Tasks
-- [ ] L-01 Write `lib/config/variant-config.ts` + `buildSelectors` + tests: weighed product → one `packLabel` selector sorted 500 g, 1 kg, 2 kg; blocklisted attributes never appear; single-variant product → no selectors; unavailable combination → option disabled; selected option follows `sku`.
+- [x] L-01 Write `lib/config/variant-config.ts` + `buildSelectors` + tests: weighed product → one `packLabel` selector sorted 500 g, 1 kg, 2 kg; blocklisted attributes never appear; single-variant product → no selectors; unavailable combination → option disabled; selected option follows `sku`.
 - [ ] L-02 Write the page skeleton, `generateMetadata`, not-found handling, variant choice by `?sku=` + tests (mock `getProductBySlug`): unknown slug calls `notFound`; default variant is first in stock; `sku` param selects that variant; metadata title.
 - [ ] L-03 Write `ProductGallery` + tests (primary has `priority`; ≤3 images; alt text from product name).
 - [ ] L-04 Write `BuyBox` parts (`Availability`, `SpecsTable`, contact strip) + tests (out of stock text; specs rows omitted when empty; strip links to `/contact`).
