@@ -8,7 +8,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | B | Project structure and lint rules | 6 | 6 | Ready for review | | |
 | C | Styling foundation and tokens | 6 | 6 | Ready for review | | |
 | D | Locale routing and messages | 7 | 7 | Ready for review | | |
-| E | BFF core | 9 | 0 | Not started | | |
+| E | BFF core | 9 | 9 | Ready for review | | |
 | F | Catalog data model | 12 | 12 | Verified | Claude (seed:verify) + owner (M-F-1..4, Gate 1) | 2026-10-06 |
 | G | Data-loading foundation | 9 | 0 | Not started | | |
 | H | Design system primitives and chrome | 10 | 0 | Not started | | |
