@@ -28,3 +28,8 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [K] `SaveButton` and `useSaved` are stubs until T; T must replace `hooks/useSaved.ts` only.
 - [K] Quick add-to-bag on tiles (not drawn) could use `useCartContext().addItemWithToast`.
 - [K] Facet counts cost up to 3 extra lean searches when category, price and stock are all active; cache or merge if search latency becomes an issue.
+
+## From workstream P
+- [P] German keys to review (machine-translated): all of `search.*` (title "Finden Sie es", suggestions).
+- [P] Search ranks by commercetools default (no sort). A relevance boost for whole-word matches over substring matches, and a "did you mean" for zero results, are not built.
+- [P] Search suggestions as typeahead dropdown (live results while typing) is not in the plan; the 300 ms URL update re-renders the page instead.
