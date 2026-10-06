@@ -101,3 +101,8 @@ Juniors: add unrelated ideas here instead of changing code outside your task. Fo
 - [S] Customers have no "billing address" UI; billing default only follows "Make default" (needed by hosted checkout later).
 - [S] QA cleanup: a throwaway customer registered with `qa-*@example.com` is removed by `cleanup-qa.ts` together with its addresses (they live on the customer).
 
+- [V] Show the order total from the hosted checkout (its own price summary) next to ours, or hide our summary under 1200 px behind an expandable bar as the design spec proposes ("Responsive (proposed)"); today the summary stacks above the hosted flow below the `desktop` breakpoint.
+- [V] Close the hand-off gap without the browser: a commercetools Subscription on `OrderCreated` (or Connect job) that confirms the slot booking and links guest orders; see Q-V-1.
+- [V] Pass `styles` / `languageOverrides` to `checkoutFlow` so the hosted UI follows the tokens even without Merchant Center branding (M-V-1 checks the branding only).
+- [V] German keys to review (machine-translated): the whole `checkout.*` namespace (e.g. "Zur Kasse", "Danke, {name}", "Bewahre deine Bestellnummer auf").
+- [V] The SDK only knows `de` (not `de-DE`); `CheckoutFlow` maps `de-*` to `de`. Other locales added later must be checked against the SDK's locale list.

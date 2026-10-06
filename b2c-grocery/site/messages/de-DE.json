@@ -271,7 +271,38 @@
       "loading": "Deine gespeicherten Adressen werden geladen ..."
     }
   },
-  "checkout": {},
+  "checkout": {
+    "kicker": "Zur Kasse",
+    "title": "Zur Kasse",
+    "summaryTitle": "{count, plural, one {# Artikel} other {# Artikel}}",
+    "paymentRegion": "Zahlung",
+    "loading": "Sichere Zahlung wird geöffnet ...",
+    "completing": "Zahlung erhalten. Deine Bestellung wird abgeschlossen ...",
+    "completeFailed": "Deine Zahlung ist durchgegangen, aber wir konnten deine Bestellung nicht fertig öffnen. Bitte versuche es erneut.",
+    "retry": "Erneut versuchen",
+    "error": {
+      "SLOT_FULL": "Dieses Lieferfenster ist gerade voll geworden. Bitte wähle ein anderes.",
+      "UNAVAILABLE_LINES": "Einige Artikel sind in der gewählten Menge nicht mehr verfügbar. Bitte passe deinen Warenkorb an.",
+      "NO_ADDRESS": "Bitte gib eine Lieferadresse an, an die wir liefern können.",
+      "NO_SLOT": "Bitte wähle ein Lieferfenster.",
+      "SHIPPING_UNAVAILABLE": "Wir können derzeit nicht an diese Adresse liefern. Bitte prüfe sie.",
+      "NO_CART": "Dein Warenkorb ist leer.",
+      "EMPTY_CART": "Dein Warenkorb ist leer.",
+      "generic": "Wir konnten die Kasse nicht starten. Bitte versuche es erneut."
+    },
+    "confirmation": {
+      "kicker": "Bestellung {number}",
+      "title": "Danke, {name}",
+      "titleNoName": "Danke",
+      "body": "Wir haben deine Bestellung erhalten und machen sie fertig.",
+      "guestNumber": "Bewahre deine Bestellnummer auf: {number}.",
+      "delivery": "Lieferung: {day}, {time}",
+      "track": "Bestellung verfolgen",
+      "shop": "Zurück zum Shop",
+      "total": "Gesamt: {amount}",
+      "totalProvisional": "Gesamt (vorläufig): {amount}"
+    }
+  },
   "account": {
     "saved": {
       "title": "Zur Seite gelegt",

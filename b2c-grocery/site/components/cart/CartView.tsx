@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { useCartContext } from '@/context/CartProvider';
+import { useRouter } from '@/i18n/routing';
 import { ApiError } from '@/lib/fetcher';
 import type { CartLine } from '@/lib/types';
 import { CartDeliveryStep } from './CartDeliveryStep';
@@ -19,8 +20,10 @@ const availableOf = (e: unknown): number | undefined => {
 };
 
 /** The bag: lines on the left, sticky summary on the right (>= 1200px), or the empty state. */
-export function CartView() {
+export function CartView({ checkoutError }: { checkoutError?: string } = {}) {
   const t = useTranslations('cart');
+  const tCheckout = useTranslations('checkout.error');
+  const router = useRouter();
   const toast = useToast();
   const { cart, isLoading, setQuantity, removeLine, addItem } = useCartContext();
   /** Optimistic quantity per line while its request is in flight; dropped on completion (rollback on failure). */
@@ -76,9 +79,20 @@ export function CartView() {
   );
 
   const lines = cart?.lines ?? [];
+  const startCheckout = useCallback(() => router.push('/checkout'), [router]);
+  /** Why the hosted checkout did not open (`/cart?checkoutError=<code>`, set by `CheckoutFlow`). */
+  const checkoutMessage = checkoutError ? (tCheckout.has(checkoutError) ? tCheckout(checkoutError) : tCheckout('generic')) : null;
+  const shortLineIds = new Set(
+    checkoutError === 'UNAVAILABLE_LINES' ? lines.filter((l) => l.availableQuantity !== undefined && l.availableQuantity < l.quantity).map((l) => l.id) : [],
+  );
   return (
     <div className="page py-[calc(var(--space-8)*1.2)] px-(--space-4) tablet:px-(--space-8)">
       <h1 className="mb-(--space-6) text-[52px]">{t('title')}</h1>
+      {checkoutMessage ? (
+        <p role="alert" data-testid="checkout-error" className="mb-(--space-4) rounded-[var(--radius-md)] bg-accent-100 px-(--space-4) py-(--space-3) text-[14px] text-accent-800">
+          {checkoutMessage}
+        </p>
+      ) : null}
       {cart && lines.length > 0 ? (
         <div className="grid items-start gap-[42px] desktop:grid-cols-[1.5fr_1fr]">
           <div>
@@ -95,13 +109,14 @@ export function CartView() {
                   line={line}
                   displayQuantity={pending[line.id] ?? line.quantity}
                   busy={line.id in pending}
+                  short={shortLineIds.has(line.id)}
                   onQuantityChange={changeQuantity}
                   onRemove={remove}
                 />
               ))}
             </ul>
           </div>
-          <CartSummary cart={cart} />
+          <CartSummary cart={cart} onCheckout={startCheckout} />
         </div>
       ) : isLoading ? (
         <p aria-busy="true" className="text-[17px] text-muted">

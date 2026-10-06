@@ -10,6 +10,8 @@ export interface Session {
   customerFirstName?: string;
   customerLastName?: string;
   cartId?: string;
+  /** The order just placed through the hosted checkout (V): lets a guest open its confirmation page. */
+  lastOrderId?: string;
   anonymousId?: string;
   country?: string;
   currency?: string;

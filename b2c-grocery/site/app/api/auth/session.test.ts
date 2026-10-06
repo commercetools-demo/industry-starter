@@ -15,7 +15,7 @@ describe('POST /api/auth/logout', () => {
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true });
     expect(updateSession).toHaveBeenCalledWith(
-      { customerId: undefined, customerEmail: undefined, customerFirstName: undefined, customerLastName: undefined, cartId: undefined },
+      { customerId: undefined, customerEmail: undefined, customerFirstName: undefined, customerLastName: undefined, cartId: undefined, lastOrderId: undefined },
       expect.anything(),
     );
   });

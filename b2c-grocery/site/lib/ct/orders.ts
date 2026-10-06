@@ -43,6 +43,32 @@ export async function getOrderById(id: string, locale: string): Promise<Order | 
   return mapOrder(order, { locale });
 }
 
+/** The few raw order fields the checkout hand-off needs (V): which cart it came from and which slot it booked. */
+export interface OrderRef {
+  id: string;
+  cartId?: string;
+  customerId?: string;
+  slotId?: string;
+}
+
+/** `null` when the order does not exist. */
+export async function getOrderRef(id: string): Promise<OrderRef | null> {
+  let order: CtOrder;
+  try {
+    order = (await getApiRoot().orders().withId({ ID: id }).get().execute()).body;
+  } catch (e) {
+    if (statusOf(e) === 404) return null;
+    throw e;
+  }
+  const slotId: unknown = order.custom?.fields?.slotId;
+  return {
+    id: order.id,
+    ...(order.cart?.id ? { cartId: order.cart.id } : {}),
+    ...(order.customerId ? { customerId: order.customerId } : {}),
+    ...(typeof slotId === 'string' && slotId !== '' ? { slotId } : {}),
+  };
+}
+
 /** The single place order ownership is enforced: another customer's order (or a guest order) is `null`, same as a missing one. */
 export async function getOrderForCustomer(id: string, customerId: string, locale: string): Promise<Order | null> {
   const order = await getOrderById(id, locale);

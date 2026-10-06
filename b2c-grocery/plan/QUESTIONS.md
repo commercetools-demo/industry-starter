@@ -90,5 +90,12 @@ Resolved by D-051: `finalTotal` added to the `cart-delivery` custom type (live p
 
 ## Q-U-1 (workstream U, tasks U-01, U-03, U-08)
 **Question:** The U developer had no live access, so the Order Edit calls (`orders().edits()` list/get/post/apply, custom fields on the edit, preview in a GET by id, `removeLineItem` + `addLineItem` staged actions) follow the OAS and docs only and `scripts/seed/create-qa-substitution.ts` was never run. Please run `npx tsx scripts/seed/create-qa-substitution.ts` once from a checkout that has `.env.seed`, then M-U-2 to M-U-5, and record differences in `PROJECT-FINDINGS.md` section 18. Also confirm for OA-07 that the API recipe (`plan/recipes/create-substitution-proposal.md`) is acceptable because Merchant Center has no screen for proposals with a custom type.
+## Q-V-1 (workstream V, task V-04/V-07)
+**Question:** The hand-off to our app after payment depends on the browser: the hosted checkout creates the order on commercetools' side, our page then calls `POST /api/checkout/complete` (sets `lastOrderId`, drops `cartId`, confirms the slot booking). If the shopper closes the tab between the payment and that call, the order exists but the booking is never confirmed (the hold expires after 15 minutes: SO-12 oversell risk) and a guest has no way back to the confirmation page; the stale `cartId` is harmless (the cart is no longer Active and is dropped on the next cart read). A server-side path (commercetools Subscription on `OrderCreated`, or a Connect job) would close it but is out of v1 (D-042). Do you accept this for v1?
+**Blocking:** no
+**Answer (owner):**
+
+## Q-V-2 (workstream V, task V-05)
+**Question:** The hosted checkout lists every applicable shipping method (D-049), so the old 500.00 / 750.00 methods are visible next to `standard`, and the shopper may pick one there even though the cart summary on our page shows the `standard` cost. Our summary is a snapshot taken when the page loads. Accepted for v1 (Z-05 checklist), or should the cart totals refresh on our side after the hosted step (not possible without a message from the SDK)?
 **Blocking:** no
 **Answer (owner):**
