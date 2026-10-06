@@ -113,3 +113,10 @@ Not readable through the MCP (names only would be visible in Merchant Center).
 ## 17. Orders and customers, workstream R (NOT verified live)
 - No live call was possible for R (no admin credentials available to the agent). The order and customer mappers follow the platform SDK types and the cart fixture; the open points are tracked in `QUESTIONS.md` Q-R-2 and Q-R-3.
 - Expected from the commercetools API docs and to confirm with `scripts/seed/create-qa-order.ts`: an order created from a cart copies `custom` (type `cart-delivery` and the slot fields) and line item custom fields; `GET /orders?where=customerId="..."&sort=createdAt desc&withTotal=true` returns `total`; a `Money` custom field comes back as `{ type: "centPrecision", centAmount, currencyCode, fractionDigits }`; an order has only one custom type, so setting `order-final` replaces `cart-delivery` on that order.
+
+## 18. Customer addresses, verified live by workstream S (2026-10-06, throwaway customer `qa-*@example.com`)
+- `addAddress` with a `key` followed by `setDefaultShippingAddress` with `addressKey` (same update call) works: the id of a new address is not known before the call, so the first address is made default by its key. The customer response lists addresses with `id` and `key`.
+- `setDefaultShippingAddress` + `setDefaultBillingAddress` by `addressId` in one update call works; the new `defaultShippingAddressId` and `defaultBillingAddressId` come back in the response (the previous default has neither).
+- **`removeAddress` on the default address clears `defaultShippingAddressId` / `defaultBillingAddressId` by itself** (checked: the remaining address has no default afterwards; no extra action is needed). Removing the default does not promote another address.
+- `changeAddress` keeps the default flags of the address.
+- The dashboard profile (`GET /api/account/profile`) follows the default shipping address immediately.
