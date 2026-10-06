@@ -182,7 +182,26 @@
     "updateFailed": "Wir konnten deinen Warenkorb nicht aktualisieren. Bitte versuche es erneut."
   },
   "checkout": {},
-  "account": {},
+  "account": {
+    "saved": {
+      "title": "Zur Seite gelegt",
+      "metaTitle": "Zur Seite gelegt",
+      "count": "{count, plural, one {# Stück gemerkt} other {# Stücke gemerkt}}",
+      "empty": "Noch nichts zur Seite gelegt. Tippen Sie bei allem, was Ihnen gefällt, auf das Herz, dann wartet es hier auf Sie.",
+      "browse": "Zum Shop",
+      "addToBag": "In die Tasche",
+      "remove": "Entfernen",
+      "outOfStock": "Nicht vorrätig",
+      "loading": "Ihre gemerkten Artikel werden geladen ...",
+      "loadFailed": "Wir konnten Ihre gemerkten Artikel nicht laden.",
+      "retry": "Erneut versuchen",
+      "removeFailed": "Wir konnten den Artikel nicht entfernen. Bitte versuchen Sie es erneut.",
+      "removeLabel": "{name} aus den gemerkten Artikeln entfernen",
+      "addLabel": "{name} in die Tasche legen",
+      "viewLabel": "Optionen für {name} wählen",
+      "list": "Gemerkte Artikel"
+    }
+  },
   "auth": {
     "signInLink": "Anmelden",
     "accountLink": "Konto",

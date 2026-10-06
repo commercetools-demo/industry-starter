@@ -20,7 +20,7 @@ Signed-in customers save products with the heart and see them on the "Put aside"
 - [x] T-02 Write the wishlist routes + tests (401 anonymous; add/remove update list; returns ids).
 - [x] T-03 Replace `hooks/useSaved.ts` with the real implementation + tests: signed-in toggle adds/removes with optimistic cache update and rollback on error; anonymous toggle navigates with `redirect` and `save`.
 - [x] T-04 Write `PendingSaveRunner` + tests (adds once; strips `save`; does nothing when anonymous).
-- [ ] T-05 Write the saved page + tests (count label, empty state, add-to-bag rules incl. out-of-stock disabled and multi-variant link).
+- [x] T-05 Write the saved page + tests (count label, empty state, add-to-bag rules incl. out-of-stock disabled and multi-variant link).
 - [ ] T-06 Messages (both locales); report manual tests M-T-1…M-T-3 and sign-off SO-08.
 
 ## Unit tests (scenario → test)

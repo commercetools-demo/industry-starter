@@ -55,6 +55,13 @@ export function useWishlistMutations() {
   return useMemo(() => ({ save, unsave }), [save, unsave]);
 }
 
+/** Saved product ids (newest first), `undefined` until loaded and while anonymous (no request is made then). */
+export function useSavedIds(): string[] | undefined {
+  const { user } = useAccount();
+  const { data } = useSWR<string[]>(user ? KEY_WISHLIST : null, fetchIds, { revalidateOnFocus: false });
+  return user ? data : undefined;
+}
+
 /**
  * Heart state and toggle. The state comes from SWR (client-resolved per session, never from props or cached markup).
  * Signed in: the heart flips at once and rolls back if the server refuses. Anonymous: nothing is saved yet; the
@@ -64,13 +71,12 @@ export function useWishlistMutations() {
 export function useSaved(): UseSaved {
   const { user, data: account } = useAccount();
   const signedIn = user !== null;
-  const { data } = useSWR<string[]>(signedIn ? KEY_WISHLIST : null, fetchIds, { revalidateOnFocus: false });
+  const ids = useSavedIds();
   const { mutate } = useSWRConfig();
   const { save, unsave } = useWishlistMutations();
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
-  const ids = data;
 
   const isSaved = useCallback((productId: string) => (signedIn && ids?.includes(productId)) ?? false, [signedIn, ids]);
 
