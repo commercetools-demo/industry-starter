@@ -139,81 +139,6 @@
   },
   "checkout": {},
   "account": {},
-  "auth": {},
-<<<<<<< HEAD
-  "search": {
-    "inputLabel": "Search the shop",
-    "kicker": "Search",
-    "title": "Find it",
-    "suggestionsLabel": "Try searching for",
-    "suggestions": [
-      "Fresh",
-      "Vegan",
-      "Bakery",
-      "Organic",
-      "Gifts",
-      "Under $5"
-    ],
-    "found": "{count} found for “{query}”",
-    "none": {
-      "title": "Nothing matched “{query}”",
-      "body": "Check the spelling, try a shorter word, or browse the shop by category.",
-      "browse": "Browse the shop"
-    }
-  },
-  "static": {},
-=======
-  "search": {},
-  "static": {
-    "journal": {
-      "shopTheStory": "Shop the story"
-    },
-    "contact": {
-      "kicker": "Help",
-      "title": "Contact us",
-      "intro": "Questions about an order, a delivery or a product? Write to us below.",
-      "name": "Your name",
-      "email": "Email",
-      "topic": "Topic",
-      "topicPlaceholder": "Choose a topic",
-      "topics": {
-        "order": "Order",
-        "delivery": "Delivery",
-        "product": "Product",
-        "other": "Other"
-      },
-      "message": "Message",
-      "submit": "Send message",
-      "sending": "Sending...",
-      "errors": {
-        "required": "This field is required.",
-        "invalidEmail": "Enter a valid email address.",
-        "tooShort": "Your message must be at least 10 characters.",
-        "tooLong": "This is too long."
-      },
-      "formErrors": {
-        "rateLimited": "Too many messages. Please wait a minute and try again.",
-        "failed": "We could not receive your message. Please try again."
-      },
-      "successTitle": "Message received",
-      "successBody": "We have received your message. This store does not forward messages to a person yet, so a reply is not guaranteed."
-    }
-  },
->>>>>>> ws/x-static-pages
-  "errors": {
-    "kicker": "Oops",
-    "title": "Something went wrong",
-    "body": "We could not load this page. Please try again, or head back to the shop.",
-    "retry": "Try again",
-    "backToShop": "Back to the shop",
-    "notFoundKicker": "404",
-    "notFoundTitle": "We could not find that page",
-    "notFoundBody": "The page may have moved or never existed. Let us get you back to the good stuff.",
-    "contact": "Contact us"
-  },
-  "a11y": {
-    "language": "Language"
-  },
   "auth": {
     "signInLink": "Sign in",
     "accountLink": "Account",
@@ -255,5 +180,74 @@
       "rateLimited": "Too many attempts. Please wait a minute and try again.",
       "generic": "Something went wrong. Please try again."
     }
+  },
+  "search": {
+    "inputLabel": "Search the shop",
+    "kicker": "Search",
+    "title": "Find it",
+    "suggestionsLabel": "Try searching for",
+    "suggestions": [
+      "Fresh",
+      "Vegan",
+      "Bakery",
+      "Organic",
+      "Gifts",
+      "Under $5"
+    ],
+    "found": "{count} found for “{query}”",
+    "none": {
+      "title": "Nothing matched “{query}”",
+      "body": "Check the spelling, try a shorter word, or browse the shop by category.",
+      "browse": "Browse the shop"
+    }
+  },
+  "static": {
+    "journal": {
+      "shopTheStory": "Shop the story"
+    },
+    "contact": {
+      "kicker": "Help",
+      "title": "Contact us",
+      "intro": "Questions about an order, a delivery or a product? Write to us below.",
+      "name": "Your name",
+      "email": "Email",
+      "topic": "Topic",
+      "topicPlaceholder": "Choose a topic",
+      "topics": {
+        "order": "Order",
+        "delivery": "Delivery",
+        "product": "Product",
+        "other": "Other"
+      },
+      "message": "Message",
+      "submit": "Send message",
+      "sending": "Sending...",
+      "errors": {
+        "required": "This field is required.",
+        "invalidEmail": "Enter a valid email address.",
+        "tooShort": "Your message must be at least 10 characters.",
+        "tooLong": "This is too long."
+      },
+      "formErrors": {
+        "rateLimited": "Too many messages. Please wait a minute and try again.",
+        "failed": "We could not receive your message. Please try again."
+      },
+      "successTitle": "Message received",
+      "successBody": "We have received your message. This store does not forward messages to a person yet, so a reply is not guaranteed."
+    }
+  },
+  "errors": {
+    "kicker": "Oops",
+    "title": "Something went wrong",
+    "body": "We could not load this page. Please try again, or head back to the shop.",
+    "retry": "Try again",
+    "backToShop": "Back to the shop",
+    "notFoundKicker": "404",
+    "notFoundTitle": "We could not find that page",
+    "notFoundBody": "The page may have moved or never existed. Let us get you back to the good stuff.",
+    "contact": "Contact us"
+  },
+  "a11y": {
+    "language": "Language"
   }
 }
