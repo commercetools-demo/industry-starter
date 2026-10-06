@@ -28,7 +28,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | V | Hosted checkout and confirmation | 9 | 8 | Ready for review | V-09 is the owner's smoke test (M-V-2…M-V-8) | |
 | W | Subscriptions | 9 | 0 | Not started | | |
 | X | Static pages | 6 | 6 | Verified | Claude (verify + Chrome) | 2026-10-06 |
-| Y | Netlify deployment | 5 | 0 | Not started | | |
+| Y | Netlify deployment | 5 | 4 | Ready for review (Y-05 waits for owner deploy report, Q-Y-1) | | |
 | Z | Release readiness | 7 | 0 | Not started | | |
 
 Task counts are checked by `node plan/verify-plan.mjs` against the checkbox lists in each workstream file.

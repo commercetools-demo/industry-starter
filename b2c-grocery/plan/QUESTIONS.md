@@ -99,3 +99,8 @@ Resolved by D-051: `finalTotal` added to the `cart-delivery` custom type (live p
 **Question:** The hosted checkout lists every applicable shipping method (D-049), so the old 500.00 / 750.00 methods are visible next to `standard`, and the shopper may pick one there even though the cart summary on our page shows the `standard` cost. Our summary is a snapshot taken when the page loads. Accepted for v1 (Z-05 checklist), or should the cart totals refresh on our side after the hosted step (not possible without a message from the SDK)?
 **Blocking:** no
 **Answer (owner):**
+
+## Q-Y-1 (workstream Y, task Y-05)
+**Question:** Y-05 (record the Netlify site URL in `site/README.md`) needs your report of a successful deploy and the public URL (OA-06 only says the site exists). Please run M-Y-1 to M-Y-5 and send the URL. Also, `/api/health` is gone now, so the PASS of M-E-1 cannot be repeated; it stays valid as history.
+**Blocking:** no
+**Answer (owner):**
