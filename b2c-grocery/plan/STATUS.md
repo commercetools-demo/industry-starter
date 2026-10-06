@@ -24,7 +24,7 @@ Updated by the developer on each task and by the owner/Claude on verification. S
 | R | Account shell, orders | 8 | 8 | Ready for review | | |
 | S | Address book | 6 | 0 | Not started | | |
 | T | Saved lists | 6 | 6 | Verified | Claude (verify + Chrome) | 2026-10-06 |
-| U | Substitutions | 8 | 0 | Not started | | |
+| U | Substitutions | 8 | 8 | Ready for review | | |
 | V | Hosted checkout and confirmation | 9 | 0 | Not started | | |
 | W | Subscriptions | 9 | 0 | Not started | | |
 | X | Static pages | 6 | 6 | Verified | Claude (verify + Chrome) | 2026-10-06 |
