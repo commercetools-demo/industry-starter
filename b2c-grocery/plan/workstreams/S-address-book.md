@@ -16,7 +16,7 @@ Customers manage addresses and can pick one in the cart delivery step.
 - Cart integration: in `CartDeliveryStep` (Q) for signed-in customers show `SavedAddressPicker` (radio cards, default preselected) above the manual form and an "Add a new address" option; choosing one calls `PUT /api/cart/address` with the saved address.
 
 ## Tasks
-- [ ] S-01 Write `lib/address-validation.ts` + `lib/mappers/address.ts` + tests (every field rule, both countries; default flags mapped).
+- [x] S-01 Write `lib/address-validation.ts` + `lib/mappers/address.ts` + tests (every field rule, both countries; default flags mapped).
 - [ ] S-02 Write `lib/ct/addresses.ts` + tests (actions sent for add/change/remove/default; first address becomes default shipping; retry on 409).
 - [ ] S-03 Write the API routes + tests (401; validation errors 400 with field keys; list returned after each change).
 - [ ] S-04 Write `useAddresses` + tests.
