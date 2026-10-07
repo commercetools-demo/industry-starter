@@ -5,7 +5,10 @@ import type {
   ProductSearchFacetResultBucket,
   ProductSearchRequest,
 } from '@commercetools/platform-sdk';
+import { ApiError } from '@/lib/api-error';
 import { getPriceBands } from '@/lib/config/price-bands';
+import { MAX_HITS, SEARCH_LANGUAGES_TTL_SECONDS } from '@/lib/config/search';
+import { looksLikeSku, normalizeQuery } from '@/lib/search/params';
 import { LISTING_PAGE_SIZE } from '@/lib/config/facets';
 import { flattenTree } from '@/lib/mappers/category';
 import { mapOffer, mergeFacts } from '@/lib/mappers/offer';
@@ -150,4 +153,84 @@ export async function searchOffers(p: SearchParams): Promise<SearchResult> {
     }),
     bandFacet: buckets(body, 'priceBands').map((bucket) => ({ id: bucket.key, count: bucket.count })),
   };
+}
+
+// ===== P: offer text search =====
+// Product Search (D-056): ONE compound query per search, ids and matching SKUs only (no projection per hit, no N+1). The offers
+// themselves come from the cached catalog (`getVisibleOffers`), so the result honours eligibility, release windows and N's de-duplication.
+// Uses the SDK `products().search().post()` (installed @commercetools/platform-sdk 8.x). Docs:
+// https://docs.commercetools.com/api/projects/product-search and https://docs.commercetools.com/api/search-query-language
+
+export { looksLikeSku, normalizeQuery };
+
+export interface OfferSearchHit {
+  id: string;
+  matchedSkus: string[];
+}
+export interface OfferSearchResult {
+  total: number;
+  /** At most MAX_HITS, relevance order. */
+  hits: OfferSearchHit[];
+}
+export interface OfferTextQueryInput {
+  text: string;
+  locale: Locale;
+  /** Id of the `malva-offer` product type: anchor products (plans, add-ons ...) never count as hits. */
+  offerTypeId?: string;
+}
+
+/**
+ * Pure request builder. `exact` on the SKU only for an identifier-shaped query (boost 10), `fullText` on the localized name (boost 3)
+ * and exactly one `fuzzy` (level 2; the API lowers it to 1 for 3 to 5 characters and to 0 for 1 to 2). At most 4 expressions of the
+ * 50 allowed; the value is at most 100 of 256 characters.
+ */
+export function buildOfferTextQuery(input: OfferTextQueryInput): ProductSearchRequest {
+  const text = normalizeQuery(input.text);
+  const clauses: Expr[] = [];
+  if (looksLikeSku(text)) clauses.push({ exact: { field: FIELD.sku, value: text, caseInsensitive: true, boost: 10 } });
+  clauses.push({ fullText: { field: FIELD.name, language: input.locale, value: text, boost: 3 } });
+  clauses.push({ fuzzy: { field: FIELD.name, language: input.locale, value: text, level: 2 } });
+  const textQuery: Expr = { or: clauses };
+  const query = input.offerTypeId ? { and: [{ exact: { field: FIELD.productType, value: input.offerTypeId } }, textQuery] } : textQuery;
+  return { query, limit: MAX_HITS, offset: 0, markMatchingVariants: true } as unknown as ProductSearchRequest;
+}
+
+/** One round trip. Upstream failures (HTTP errors, timeouts, network) become `ApiError('UPSTREAM_ERROR')`; the raw error never leaves. */
+export async function searchOfferHits(input: OfferTextQueryInput): Promise<OfferSearchResult> {
+  try {
+    const ids = await getProductTypeIds();
+    const offerTypeId = ids[OFFER_TYPE_KEY];
+    if (!offerTypeId) throw new Error(`Product type ${OFFER_TYPE_KEY} not found`);
+    const request = buildOfferTextQuery({ ...input, offerTypeId });
+    const { body } = await withTimeout(getApiRoot().products().search().post({ body: request }).execute(), 'search.offerText');
+    return {
+      total: body.total,
+      hits: body.results.map((result) => ({
+        id: result.id,
+        matchedSkus: result.matchingVariants && !result.matchingVariants.allMatched ? result.matchingVariants.matchedVariants.flatMap((variant) => (variant.sku ? [variant.sku] : [])) : [],
+      })),
+    };
+  } catch (error) {
+    throw error instanceof ApiError ? error : new ApiError('UPSTREAM_ERROR', 'Search is temporarily unavailable');
+  }
+}
+
+let languagesCache: { at: number; value: string[] } | null = null;
+
+/** Languages configured in the project (`GET /{projectKey}`, scope view_project_settings), cached SEARCH_LANGUAGES_TTL_SECONDS. */
+export async function getSearchLanguages(): Promise<string[]> {
+  const now = Date.now();
+  if (languagesCache && now - languagesCache.at < SEARCH_LANGUAGES_TTL_SECONDS * 1000) return languagesCache.value;
+  try {
+    const { body } = await withTimeout(getApiRoot().get().execute(), 'search.languages');
+    languagesCache = { at: now, value: body.languages };
+    return body.languages;
+  } catch {
+    throw new ApiError('UPSTREAM_ERROR', 'Search is temporarily unavailable');
+  }
+}
+
+/** Test seam: forget the cached languages. */
+export function resetSearchLanguagesCache(): void {
+  languagesCache = null;
 }
