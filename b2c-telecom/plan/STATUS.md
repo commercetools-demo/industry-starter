@@ -9,7 +9,7 @@ Updated by the developer on each task and by Claude (after Chrome verification) 
 | C | Design tokens, fonts, styling foundation | 8 | 8 | Verified | Claude (verify + Chrome C-C-1…6) | 2026-10-07 |
 | D | Locale routing, messages, region and language switch | 10 | 10 | Verified | Claude (verify + Chrome C-D-1…7) | 2026-10-07 |
 | E | BFF core | 13 | 13 | Verified | Claude (verify + Chrome/terminal C-E-1…7) | 2026-10-07 |
-| F | Seeding framework, project settings, market and shipping | 15 | 0 | Not started | | |
+| F | Seeding framework, project settings, market and shipping | 15 | 15 | Verified | orchestrator (MCP + terminal) | 2026-10-07 |
 | G | Catalog model, seed data and images | 20 | 0 | Not started | | |
 | H | Data-loading foundation | 11 | 0 | Not started | | |
 | I | Design system primitives, shell and error pages | 16 | 0 | Not started | | |

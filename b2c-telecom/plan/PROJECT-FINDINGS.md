@@ -90,3 +90,8 @@ listing-generated: 2026-10-07T19:21:21.020Z
 - **Finding: Product Search activation state is `searchIndexing.productsSearch.status`**, not `searchIndexing.products` (that field is the deprecated Product Projection Search index and stays `Deactivated`). After `changeProductSearchIndexingEnabled` (`enabled: true`, `mode: ProductsSearch`) `productsSearch.status` was `Activated` immediately (no `Indexing` state seen, zero products). `seed:settings -- --check-only` prints `product search: Activated`.
 - `seed:verify` live: all 9 checks PASS (the shipping check reports `deferred until the product types define offer-kind`), `All checks passed.`
 - `seed -- --confirm-project wrong-key` exits 2 and names the key found.
+
+## Workstream F findings (2026-10-07)
+- Product Search status lives at `searchIndexing.productsSearch.status` (Activated).
+- `.env.seed` CTP_* variable names are mapped by `scripts/seed/lib.ts`; the file stays gitignored.
+- Shipping methods `malva-shipping-standard` and `malva-delivery-digital` are deferred (seed exit 4 skip) until workstream G defines the product-type attribute `offer-kind`; the platform rejects shipping predicates over unknown attributes. C-F-2 is checked after G.
