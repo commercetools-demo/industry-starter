@@ -11,7 +11,7 @@ function leaves(value: unknown, prefix = ''): [string, string][] {
 
 const MESSAGES = { 'en-US': en, 'de-DE': de } as const;
 const NEW_NAMESPACES = ['plp'] as const;
-const NEW_OFFERS_KEYS = ['cta', 'perMonth', 'term', 'validity', 'lines', 'customize', 'hint', 'addons', 'equipment', 'included', 'browseAll', 'rent', 'buy', 'needsPlan', 'equipmentKind', 'replace', 'remove', 'addon'] as const;
+const NEW_OFFERS_KEYS = ['cta', 'perMonth', 'mostPopular', 'term', 'validity', 'lines', 'customize', 'hint', 'addons', 'equipment', 'included', 'browseAll', 'rent', 'buy', 'needsPlan', 'equipmentKind', 'replace', 'remove', 'addon'] as const;
 
 describe('listing message keys', () => {
   it('every key of the listing exists in both locales', () => {
