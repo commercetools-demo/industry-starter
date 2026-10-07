@@ -41,11 +41,11 @@ describe('OrderSummary', () => {
     const cart = makeCart();
     const { unmount } = renderWithProviders(<OrderSummary cart={cart} signedIn />);
     expect(screen.getByRole('link', { name: 'Check out' })).toHaveAttribute('href', '/en-US/bundle/checkout');
-    expect(screen.queryByRole('link', { name: 'Log in to check out with your account' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Sign in to use saved details' })).not.toBeInTheDocument();
     unmount();
     renderWithProviders(<OrderSummary cart={cart} signedIn={false} />);
     expect(screen.getByRole('link', { name: 'Check out' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Log in to check out with your account' })).toHaveAttribute('href', '/en-US/login?next=%2Fbundle');
+    expect(screen.getByRole('link', { name: 'Sign in to use saved details' })).toHaveAttribute('href', '/en-US/login?next=%2Fbundle%2Fcheckout');
   });
 
   it('de-DE amounts and copy', () => {

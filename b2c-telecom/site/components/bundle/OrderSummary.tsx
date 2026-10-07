@@ -71,7 +71,7 @@ export function OrderSummary({ cart, signedIn, codeForm, extra }: OrderSummaryPr
         </span>
       )}
       {!signedIn ? (
-        <Link href="/login?next=%2Fbundle" className={cx('text-center font-display text-sm font-semibold underline underline-offset-4', FOCUS_RING)}>
+        <Link href="/login?next=%2Fbundle%2Fcheckout" className={cx('text-center font-display text-sm font-semibold underline underline-offset-4', FOCUS_RING)}>
           {t('cta.login')}
         </Link>
       ) : null}
