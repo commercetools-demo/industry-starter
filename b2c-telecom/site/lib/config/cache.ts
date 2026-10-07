@@ -10,5 +10,7 @@ export const PRODUCT_TYPE_IDS_TTL = 3600;
 export const MARKET_VALIDATION_TTL = 300;
 /** 5 minutes (D-020), used by K. */
 export const SERVICEABILITY_TTL = 300;
+/** Customer Group id -> key map (K's buyer context). */
+export const CUSTOMER_GROUPS_TTL = 300;
 /** Upstream read timeout (Error pages "Upstream fault"). */
 export const CT_READ_TIMEOUT_MS = 8000;
