@@ -16,7 +16,8 @@
     "check:tokens": "node scripts/check-tokens.mjs",
     "check:dev-routes": "node scripts/check-dev-routes.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
-    "verify": "npm run check:secrets && npm run check:lockfile && npm run check:versions && npm run check:tokens && npm run check:boundaries && npm run lint && npm run typecheck && npm test && npm run build && npm run check:dev-routes"
+    "check:bundle": "node scripts/check-bundle-secrets.mjs",
+    "verify": "npm run check:secrets && npm run check:lockfile && npm run check:versions && npm run check:tokens && npm run check:boundaries && npm run lint && npm run typecheck && npm test && npm run build && npm run check:bundle && npm run check:dev-routes"
   },
   "dependencies": {
     "@commercetools/checkout-browser-sdk": "^1.7.5",
