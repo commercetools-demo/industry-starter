@@ -1,0 +1,644 @@
+{
+  "common": {
+    "brand": "MALVA",
+    "announcement": "Fresh groceries from growers we trust, delivered to your door.",
+    "metaDescription": "Fresh groceries from growers and bakers we know, picked and packed for delivery to your door."
+  },
+  "nav": {
+    "shop": "Shop",
+    "new": "New in",
+    "journal": "Journal",
+    "search": "Search",
+    "saved": "Saved",
+    "bag": "Bag",
+    "bagCount": "Bag · {count}",
+    "account": "Account",
+    "searchPill": "Search the shop",
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "primary": "Main navigation",
+    "home": "MALVA home"
+  },
+  "footer": {
+    "blurb": "Honest groceries from growers and bakers we have met, packed fresh and brought to your door.",
+    "shop": {
+      "title": "Shop",
+      "freshProduce": "Fresh produce",
+      "dairyEggs": "Dairy & eggs",
+      "bakery": "Bakery",
+      "pantry": "Pantry",
+      "drinks": "Drinks",
+      "household": "Household"
+    },
+    "slugs": {
+      "freshProduce": "fresh-produce",
+      "dairyEggs": "dairy-eggs",
+      "bakery": "bakery",
+      "pantry": "pantry",
+      "drinks": "drinks",
+      "household": "household"
+    },
+    "house": {
+      "title": "House",
+      "about": "About us",
+      "journal": "The journal"
+    },
+    "help": {
+      "title": "Help",
+      "faq": "FAQ",
+      "delivery": "Delivery",
+      "contact": "Contact us"
+    }
+  },
+  "home": {
+    "hero": {
+      "tag": "Autumn 26 · Fresh from the farm",
+      "title": "Good food, quietly sourced",
+      "body": "Seasonal produce, honest bread and pantry staples from growers and bakers we know by name, delivered to your door.",
+      "shop": "Shop the collection",
+      "story": "Read the story",
+      "imageAlt": "A wooden table with seasonal vegetables and fresh bread"
+    },
+    "grid": {
+      "title": "Aisle by aisle",
+      "tiles": {
+        "a": "The table, set for autumn",
+        "b": "Fresh produce",
+        "c": "Bakery",
+        "d": "Pantry",
+        "e": "Meet the growers"
+      }
+    },
+    "categories": {
+      "kicker": "The aisles",
+      "title": "Browse by category",
+      "all": "Everything →",
+      "count": "{count} items"
+    },
+    "newIn": {
+      "kicker": "New in",
+      "title": "Just picked and just baked",
+      "all": "See all →"
+    },
+    "editorial": {
+      "kicker": "From the journal · No. 14",
+      "title": "A morning at the bakery",
+      "body": "Before the shutters go up, the ovens have been running for hours. We spent a morning with the baker who makes our sourdough, and learned why slow dough tastes better.",
+      "button": "Read the journal",
+      "imageAlt": "Loaves of sourdough cooling on a wooden rack"
+    },
+    "contact": {
+      "title": "Questions? Contact us",
+      "body": "Allergies, substitutions or a delivery that did not go to plan: we read every message and reply within a working day.",
+      "button": "Contact us"
+    }
+  },
+  "plp": {
+    "outOfStock": "Out of stock",
+    "save": "Save {name} to a list",
+    "unsave": "Remove {name} from your saved items",
+    "was": "Was {price}",
+    "now": "Now {price}",
+    "kicker": "The shop",
+    "everything": "Everything",
+    "breadcrumbs": {
+      "label": "Breadcrumb",
+      "home": "Home"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page}"
+    },
+    "empty": {
+      "title": "Nothing under those terms",
+      "body": "Try removing a filter or two, or tell us what you are looking for and we will help.",
+      "clear": "Clear filters",
+      "contact": "Contact us"
+    },
+    "count": "{count, plural, one {# product} other {# products}}",
+    "filters": {
+      "title": "Filters",
+      "category": "Category",
+      "price": "Price",
+      "availability": "Availability",
+      "clearAll": "Clear all"
+    },
+    "band": {
+      "any": "Any price",
+      "under": "Under {max}",
+      "range": "{min}–{max}",
+      "over": "Over {min}"
+    },
+    "availability": {
+      "all": "Everything",
+      "in": "In stock",
+      "out": "Out of stock"
+    },
+    "applied": {
+      "label": "Applied filters",
+      "remove": "Remove filter: {label}"
+    },
+    "sort": {
+      "label": "Sort by",
+      "relevance": "Relevance",
+      "newest": "Newest",
+      "priceAsc": "Price ↑",
+      "priceDesc": "Price ↓"
+    }
+  },
+  "pdp": {
+    "photoAlt": "{name}, photo {number}",
+    "questions": "Questions about this product?",
+    "contact": "Contact us →",
+    "availability": {
+      "in": "In stock",
+      "out": "Out of stock"
+    },
+    "specs": {
+      "caption": "Product details",
+      "property": "Detail",
+      "value": "Value",
+      "brand": "Brand",
+      "origin": "Origin",
+      "storage": "Storage",
+      "dietary": "Dietary",
+      "allergens": "Allergens",
+      "storageValues": {
+        "ambient": "Store at room temperature",
+        "chilled": "Keep chilled",
+        "frozen": "Keep frozen"
+      },
+      "dietaryValues": {
+        "vegan": "Vegan",
+        "vegetarian": "Vegetarian",
+        "gluten-free": "Gluten free",
+        "organic": "Organic"
+      }
+    },
+    "options": {
+      "packLabel": "Pack size"
+    },
+    "addToBag": "Add to bag",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "onlyAvailable": "Only {available} available",
+    "related": "Pairs with",
+    "reviews": {
+      "title": "Reviews",
+      "count": "{count, plural, one {# review} other {# reviews}}",
+      "stars": "{stars} stars",
+      "rated": "Rated {rating} out of 5"
+    }
+  },
+  "cart": {
+    "added": "Added to your bag",
+    "viewBag": "View bag",
+    "insufficientStock": "Only {available} available right now.",
+    "outOfStock": "Sorry, this item is out of stock.",
+    "addFailed": "We could not update your bag. Please try again.",
+    "title": "Your bag",
+    "summary": "Summary",
+    "subtotal": "Subtotal",
+    "delivery": "Delivery",
+    "deliveryIncluded": "Included",
+    "deliveryPending": "Calculated at checkout",
+    "total": "Total",
+    "checkout": "Checkout",
+    "checkoutDisabled": "Checkout opens soon. Your bag is saved in the meantime.",
+    "checkoutBlocked": "Remove the unavailable items to continue.",
+    "returnsNote": "Something not right with your order? Tell us within 48 hours and we will make it good.",
+    "empty": "Your bag is empty.",
+    "browse": "Browse the shop",
+    "loading": "Loading your bag...",
+    "inStockTag": "In stock",
+    "outOfStockTag": "Out of stock",
+    "lineUnavailable": "This item is out of stock right now. Remove it to continue.",
+    "remove": "Remove",
+    "removed": "Removed from your bag",
+    "undo": "Undo",
+    "quantityOf": "Quantity of {name}",
+    "decrease": "Decrease quantity of {name}",
+    "increase": "Increase quantity of {name}",
+    "updateFailed": "We could not update your bag. Please try again.",
+    "slotCleared": "Your delivery slot was removed because the address changed. Please choose a new one.",
+    "noSlots": "No delivery slots are available for this address right now.",
+    "nextAvailable": "Next available: {date}",
+    "slotTaken": "That slot was just taken. Please pick another.",
+    "slotExpired": "Your slot reservation ran out. Please choose a slot again.",
+    "chooseSlot": "Choose a delivery slot to continue.",
+    "addAddress": "Add a delivery address to continue.",
+    "substitution": {
+      "label": "Substitution for {name}",
+      "allow-similar": "Allow similar",
+      "none": "No substitution"
+    },
+    "slotLine": "Delivery slot: {day}, {time}",
+    "step": {
+      "title": "Delivery",
+      "addressLegend": "Delivery address",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "street": "Street and number",
+      "additional": "Address line 2 (optional)",
+      "postalCode": "Postcode",
+      "city": "City",
+      "country": "Country",
+      "phone": "Phone (optional)",
+      "save": "Save address",
+      "saving": "Saving...",
+      "saved": "Address saved.",
+      "required": "This field is required.",
+      "invalidPostcode": "Enter a valid postcode.",
+      "undeliverable": "We do not deliver to this postcode yet.",
+      "countryMismatch": "Delivery to this country needs the other store. Switch the region in the header.",
+      "shippingUnavailable": "Delivery is not available for this address.",
+      "saveFailed": "We could not save the address. Please try again.",
+      "slotFailed": "We could not save your slot. Please try again.",
+      "slotsTitle": "Delivery slot",
+      "slotsLoading": "Loading delivery slots...",
+      "slotsFailed": "We could not load delivery slots.",
+      "daysLabel": "Delivery day",
+      "timesLabel": "Delivery time",
+      "slotsLeft": "{count} left",
+      "release": "Remove slot"
+    },
+    "saved": {
+      "legend": "Saved addresses",
+      "new": "Add a new address",
+      "default": "Default",
+      "loading": "Loading your saved addresses..."
+    }
+  },
+  "checkout": {
+    "kicker": "Checkout",
+    "title": "Checkout",
+    "summaryTitle": "{count, plural, one {# item} other {# items}}",
+    "paymentRegion": "Payment",
+    "loading": "Opening secure payment...",
+    "completing": "Payment received. Finishing your order...",
+    "completeFailed": "Your payment went through, but we could not finish opening your order. Please try again.",
+    "retry": "Try again",
+    "error": {
+      "SLOT_FULL": "That delivery slot just filled. Please pick another one.",
+      "UNAVAILABLE_LINES": "Some items are no longer available in the quantity you chose. Please update your bag.",
+      "NO_ADDRESS": "Please add a delivery address we can deliver to.",
+      "NO_SLOT": "Please choose a delivery slot.",
+      "SHIPPING_UNAVAILABLE": "We cannot deliver to that address right now. Please check it.",
+      "NO_CART": "Your bag is empty.",
+      "EMPTY_CART": "Your bag is empty.",
+      "generic": "We could not start checkout. Please try again."
+    },
+    "confirmation": {
+      "kicker": "Order {number}",
+      "title": "Thank you, {name}",
+      "titleNoName": "Thank you",
+      "body": "We have your order and we are getting it ready.",
+      "guestNumber": "Keep your order number for reference: {number}.",
+      "delivery": "Delivery: {day}, {time}",
+      "track": "Track this order",
+      "shop": "Back to the shop",
+      "total": "Total: {amount}",
+      "totalProvisional": "Total (provisional): {amount}"
+    }
+  },
+  "account": {
+    "saved": {
+      "title": "Put aside",
+      "metaTitle": "Put aside",
+      "count": "{count, plural, one {# piece saved} other {# pieces saved}}",
+      "empty": "Nothing put aside yet. Tap the heart on anything you like and it will wait for you here.",
+      "browse": "Browse the shop",
+      "addToBag": "Add to bag",
+      "remove": "Remove",
+      "outOfStock": "Out of stock",
+      "loading": "Loading your saved items...",
+      "loadFailed": "We could not load your saved items.",
+      "retry": "Try again",
+      "removeFailed": "We could not remove that item. Please try again.",
+      "removeLabel": "Remove {name} from your saved items",
+      "addLabel": "Add {name} to your bag",
+      "viewLabel": "Choose options for {name}",
+      "list": "Saved items"
+    },
+    "memberSince": "Member since {year}",
+    "loading": "Loading…",
+    "loadFailed": "We could not load this. Please try again.",
+    "retry": "Try again",
+    "orders": {
+      "title": "Orders",
+      "caption": "Your orders",
+      "colItems": "Items",
+      "colNumber": "Order number",
+      "colPlaced": "Placed",
+      "colTotal": "Total",
+      "colStatus": "Status",
+      "empty": "No orders yet",
+      "browse": "Browse the shop",
+      "viewAll": "All orders",
+      "pagination": "Orders pages",
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {page} of {pages}",
+      "loadingRows": "Loading your orders…"
+    },
+    "status": {
+      "processing": "Processing",
+      "packing": "Packing",
+      "on-its-way": "On its way",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "unknown": "Status unknown"
+    },
+    "address": {
+      "kicker": "Default address",
+      "empty": "No default address yet",
+      "add": "Add an address",
+      "edit": "Edit"
+    },
+    "details": {
+      "kicker": "Details",
+      "nav": "Account sections",
+      "orders": "Orders",
+      "addresses": "Addresses",
+      "saved": "Saved lists",
+      "subscriptions": "Subscriptions",
+      "contact": "Contact us"
+    },
+    "order": {
+      "title": "Order {number}",
+      "placed": "Placed {date}",
+      "delivery": "Delivery: {day}, {time}",
+      "back": "All orders",
+      "itemsCaption": "Items in this order",
+      "colItem": "Item",
+      "colQuantity": "Quantity",
+      "colUnitPrice": "Unit price",
+      "colTotal": "Total",
+      "colSubstitution": "Substitution",
+      "preference": {
+        "allow-similar": "Allow similar",
+        "none": "No substitution"
+      },
+      "totals": "Totals",
+      "subtotal": "Subtotal",
+      "shipping": "Delivery",
+      "shippingFree": "Included",
+      "tax": "Tax included",
+      "total": "Total",
+      "address": "Delivery address",
+      "loading": "Loading your order…",
+      "notFoundTitle": "We could not find that order",
+      "notFoundBody": "It may belong to another account, or it no longer exists.",
+      "substitution": {
+        "title": "Substitution proposals",
+        "groupLabel": "Substitution proposal for {name}",
+        "notice": "We couldn't find {original}. Proposed: {substitute} ({difference})",
+        "newTotal": "New total: {total}",
+        "noDifference": "no price difference",
+        "accept": "Accept",
+        "decline": "Decline",
+        "acceptLabel": "Accept the substitute for {name}",
+        "declineLabel": "Decline the substitute for {name}",
+        "readOnly": "This order can no longer be changed, so the proposal is shown for information only.",
+        "contact": "Contact us",
+        "stale": "This order changed since the proposal was made. We refreshed it, please check the current state.",
+        "notEditable": "This order can no longer be changed. We refreshed it.",
+        "failed": "We could not save your choice. Please try again.",
+        "removalRequested": "Removal requested"
+      }
+    },
+    "addresses": {
+      "title": "Addresses",
+      "metaTitle": "Addresses",
+      "loading": "Loading your addresses...",
+      "loadFailed": "We could not load your addresses.",
+      "retry": "Try again",
+      "empty": "You have not saved an address yet.",
+      "add": "Add an address",
+      "edit": "Edit",
+      "editLabel": "Edit address: {name}",
+      "delete": "Delete",
+      "deleteLabel": "Delete address: {name}",
+      "makeDefault": "Make default",
+      "makeDefaultLabel": "Make default: {name}",
+      "default": "Default",
+      "list": "Saved addresses",
+      "actionFailed": "That did not work. Please try again.",
+      "dialog": {
+        "addTitle": "Add an address",
+        "editTitle": "Edit address",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "street": "Street and number",
+        "additional": "Address line 2 (optional)",
+        "postalCode": "Postcode",
+        "city": "City",
+        "country": "Country",
+        "phone": "Phone (optional)",
+        "save": "Save address",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "saveFailed": "We could not save the address. Please try again."
+      },
+      "errors": {
+        "required": "This field is required.",
+        "invalidCountry": "Choose United States or Deutschland.",
+        "invalidPostcode": "Enter a valid postcode for the country.",
+        "invalidPhone": "Enter a valid phone number.",
+        "tooLong": "That is too long (100 characters at most)."
+      },
+      "confirm": {
+        "title": "Delete this address?",
+        "body": "This address will be removed from your address book.",
+        "defaultNote": "It is your default address. You will have no default address afterwards.",
+        "cancel": "Keep it",
+        "confirm": "Delete address",
+        "deleting": "Deleting...",
+        "failed": "We could not delete the address. Please try again."
+      }
+    }
+  },
+  "auth": {
+    "signInLink": "Sign in",
+    "accountLink": "Account",
+    "accountLinkNamed": "Account, {name}",
+    "signInTitle": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "passwordNew": "Password",
+    "passwordHint": "At least 8 characters",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "signInSubmit": "Sign in",
+    "signInPending": "Signing in…",
+    "forgotLink": "Forgot your password?",
+    "registerLink": "New here? Create an account",
+    "invalid": "Email or password is incorrect",
+    "registerTitle": "Create your account",
+    "registerSubmit": "Create account",
+    "registerPending": "Creating your account…",
+    "exists": "We could not create an account with these details.",
+    "signInInstead": "Sign in instead",
+    "signInLinkLong": "Already have an account? Sign in",
+    "forgotTitle": "Reset your password",
+    "forgotIntro": "Enter your email and we will prepare a link to choose a new password.",
+    "forgotSubmit": "Send reset link",
+    "forgotPending": "Sending…",
+    "forgotSent": "If an account exists for that email, a reset link has been prepared.",
+    "devLink": "Development only: open the reset link",
+    "backToSignIn": "Back to sign in",
+    "resetTitle": "Choose a new password",
+    "resetSubmit": "Save and sign in",
+    "resetPending": "Saving…",
+    "invalidToken": "This reset link is invalid or has expired.",
+    "requestNewLink": "Request a new link",
+    "errors": {
+      "required": "This field is required",
+      "email": "Enter a valid email address",
+      "passwordShort": "Use at least 8 characters",
+      "rateLimited": "Too many attempts. Please wait a minute and try again.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "search": {
+    "inputLabel": "Search the shop",
+    "kicker": "Search",
+    "title": "Find it",
+    "suggestionsLabel": "Try searching for",
+    "suggestions": [
+      "Fresh",
+      "Vegan",
+      "Bakery",
+      "Organic",
+      "Gifts",
+      "Under $5"
+    ],
+    "found": "{count} found for “{query}”",
+    "none": {
+      "title": "Nothing matched “{query}”",
+      "body": "Check the spelling, try a shorter word, or browse the shop by category.",
+      "browse": "Browse the shop"
+    }
+  },
+  "static": {
+    "journal": {
+      "shopTheStory": "Shop the story"
+    },
+    "contact": {
+      "kicker": "Help",
+      "title": "Contact us",
+      "intro": "Questions about an order, a delivery or a product? Write to us below.",
+      "name": "Your name",
+      "email": "Email",
+      "topic": "Topic",
+      "topicPlaceholder": "Choose a topic",
+      "topics": {
+        "order": "Order",
+        "delivery": "Delivery",
+        "product": "Product",
+        "other": "Other"
+      },
+      "message": "Message",
+      "submit": "Send message",
+      "sending": "Sending...",
+      "errors": {
+        "required": "This field is required.",
+        "invalidEmail": "Enter a valid email address.",
+        "tooShort": "Your message must be at least 10 characters.",
+        "tooLong": "This is too long."
+      },
+      "formErrors": {
+        "rateLimited": "Too many messages. Please wait a minute and try again.",
+        "failed": "We could not receive your message. Please try again."
+      },
+      "successTitle": "Message received",
+      "successBody": "We have received your message. This store does not forward messages to a person yet, so a reply is not guaranteed."
+    }
+  },
+  "errors": {
+    "kicker": "Oops",
+    "title": "Something went wrong",
+    "body": "We could not load this page. Please try again, or head back to the shop.",
+    "retry": "Try again",
+    "backToShop": "Back to the shop",
+    "notFoundKicker": "404",
+    "notFoundTitle": "We could not find that page",
+    "notFoundBody": "The page may have moved or never existed. Let us get you back to the good stuff.",
+    "contact": "Contact us"
+  },
+  "pricing": {
+    "perKg": "{price} / kg",
+    "perL": "{price} / l",
+    "provisionalNote": "The final amount depends on the weight we pick.",
+    "totalProvisional": "Total (provisional)",
+    "finalAmount": "Final amount {amount}",
+    "difference": "difference {delta}",
+    "noDifference": "No difference"
+  },
+  "a11y": {
+    "language": "Language"
+  },
+  "subscription": {
+    "repeatLabel": "Repeat",
+    "oneTime": "One-time",
+    "priceNotice": "The price of each repeat order follows the current price and may change.",
+    "badge": {
+      "weekly": "Repeats every week",
+      "every-2-weeks": "Repeats every 2 weeks",
+      "monthly": "Repeats every month",
+      "other": "Repeats on a schedule"
+    },
+    "manage": {
+      "metaTitle": "Subscriptions",
+      "title": "Subscriptions",
+      "intro": "Your recurring orders. Changes apply from the next order.",
+      "list": "Your recurring orders",
+      "loading": "Loading your subscriptions…",
+      "loadFailed": "We could not load your subscriptions.",
+      "retry": "Try again",
+      "empty": "No subscriptions yet",
+      "emptyHint": "Choose “Repeat” on a product page to have it delivered on a schedule.",
+      "browse": "Browse the shop",
+      "cadence": "Repeats",
+      "items": "Items",
+      "next": "Next order: {date}",
+      "pausedNext": "Paused: no upcoming order",
+      "canceledNext": "Canceled: no more orders",
+      "inactiveNext": "No upcoming order",
+      "last": "Last order: {date}",
+      "state": {
+        "Active": "Active",
+        "Paused": "Paused",
+        "Canceled": "Canceled",
+        "Other": "Not active"
+      },
+      "changeCadence": "Change cadence",
+      "pause": "Pause",
+      "resume": "Resume",
+      "cancel": "Cancel subscription",
+      "quantityOf": "Quantity of {name}",
+      "decrease": "Decrease quantity of {name}",
+      "increase": "Increase quantity of {name}",
+      "actionFailed": "That did not work. Please try again.",
+      "cadenceDialog": {
+        "title": "Change cadence",
+        "body": "Choose how often you want this delivered. The new schedule applies from the next order.",
+        "label": "How often",
+        "save": "Save",
+        "saving": "Saving…",
+        "keep": "Keep current"
+      },
+      "cancelDialog": {
+        "title": "Cancel this subscription?",
+        "body": "No further orders will be created. Your last order was on {date}.",
+        "bodyNoDate": "No further orders will be created.",
+        "confirm": "Cancel subscription",
+        "canceling": "Canceling…",
+        "keep": "Keep subscription"
+      }
+    }
+  }
+}

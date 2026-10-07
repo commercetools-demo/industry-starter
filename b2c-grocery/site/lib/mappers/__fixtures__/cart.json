@@ -1,0 +1,74 @@
+{
+  "id": "cart-1",
+  "version": 4,
+  "cartState": "Active",
+  "anonymousId": "anon-1",
+  "totalPrice": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 1047, "fractionDigits": 2 },
+  "lineItems": [
+    {
+      "id": "line-bananas",
+      "productId": "p-bananas",
+      "productSlug": { "en-US": "bananas", "de-DE": "bananas-de" },
+      "name": { "en-US": "Bananas", "de-DE": "Bananen" },
+      "variant": {
+        "id": 1,
+        "sku": "BANANAS-500G",
+        "images": [{ "url": "https://picsum.photos/seed/bananas-500g/800/800", "dimensions": { "w": 800, "h": 800 } }],
+        "availability": { "isOnStock": true, "availableQuantity": 50 },
+        "attributes": [
+          { "name": "approximateWeight", "value": true },
+          { "name": "incrementValue", "value": 500 },
+          { "name": "incrementUnit", "value": { "key": "g", "label": "g" } },
+          { "name": "packLabel", "value": { "en-US": "500 g", "de-DE": "500 g" } }
+        ]
+      },
+      "price": { "id": "pr-1", "value": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 149, "fractionDigits": 2 }, "country": "US" },
+      "quantity": 2,
+      "totalPrice": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 298, "fractionDigits": 2 },
+      "custom": { "type": { "typeId": "type", "id": "t-1" }, "fields": { "substitutionPreference": "allow-similar" } }
+    },
+    {
+      "id": "line-milk",
+      "productId": "p-milk",
+      "productSlug": { "en-US": "whole-milk", "de-DE": "vollmilch" },
+      "name": { "en-US": "Whole milk 1 L", "de-DE": "Vollmilch 1 l" },
+      "variant": {
+        "id": 1,
+        "sku": "MILK-1L",
+        "images": [],
+        "availability": { "isOnStock": false, "availableQuantity": 0 },
+        "attributes": [
+          { "name": "incrementValue", "value": 1 },
+          { "name": "incrementUnit", "value": { "key": "l", "label": "l" } },
+          { "name": "packLabel", "value": { "en-US": "1 L", "de-DE": "1 l" } }
+        ]
+      },
+      "price": {
+        "id": "pr-2",
+        "value": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 199, "fractionDigits": 2 },
+        "discounted": { "value": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 149, "fractionDigits": 2 }, "discount": { "typeId": "product-discount", "id": "d-1" } },
+        "country": "US"
+      },
+      "quantity": 3,
+      "totalPrice": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 447, "fractionDigits": 2 },
+      "recurrenceInfo": {
+        "recurrencePolicy": { "typeId": "recurrence-policy", "id": "rp-1", "obj": { "key": "weekly" } },
+        "priceSelectionMode": "Dynamic"
+      }
+    }
+  ],
+  "shippingInfo": {
+    "shippingMethodName": "Standard",
+    "price": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 302, "fractionDigits": 2 }
+  },
+  "taxedPrice": {
+    "totalNet": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 872, "fractionDigits": 2 },
+    "totalGross": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 1047, "fractionDigits": 2 },
+    "totalTax": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 175, "fractionDigits": 2 }
+  },
+  "shippingAddress": { "country": "US", "city": "Austin", "postalCode": "73301", "streetName": "Main St 1", "firstName": "Ada" },
+  "custom": {
+    "type": { "typeId": "type", "id": "t-2" },
+    "fields": { "slotId": "2026-10-12-09", "slotStart": "2026-10-12T09:00:00.000Z", "slotEnd": "2026-10-12T11:00:00.000Z", "slotHoldExpires": "2026-10-12T08:15:00.000Z" }
+  }
+}

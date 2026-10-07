@@ -1,0 +1,644 @@
+{
+  "common": {
+    "brand": "MALVA",
+    "announcement": "Frische Lebensmittel von Erzeugern, denen wir vertrauen, direkt zu dir nach Hause.",
+    "metaDescription": "Frische Lebensmittel von Erzeugern und Bäckern, die wir kennen – gepackt und bis an deine Tür geliefert."
+  },
+  "nav": {
+    "shop": "Shop",
+    "new": "Neu",
+    "journal": "Journal",
+    "search": "Suche",
+    "saved": "Gemerkt",
+    "bag": "Warenkorb",
+    "bagCount": "Warenkorb · {count}",
+    "account": "Konto",
+    "searchPill": "Im Shop suchen",
+    "menu": "Menü",
+    "closeMenu": "Menü schließen",
+    "primary": "Hauptnavigation",
+    "home": "MALVA Startseite"
+  },
+  "footer": {
+    "blurb": "Ehrliche Lebensmittel von Erzeugern und Bäckern, die wir kennen, frisch gepackt und bis an deine Tür gebracht.",
+    "shop": {
+      "title": "Shop",
+      "freshProduce": "Obst & Gemüse",
+      "dairyEggs": "Milch & Eier",
+      "bakery": "Backwaren",
+      "pantry": "Vorrat",
+      "drinks": "Getränke",
+      "household": "Haushalt"
+    },
+    "slugs": {
+      "freshProduce": "obst-gemuese",
+      "dairyEggs": "milch-eier",
+      "bakery": "backwaren",
+      "pantry": "vorrat",
+      "drinks": "getraenke",
+      "household": "haushalt"
+    },
+    "house": {
+      "title": "Haus",
+      "about": "Über uns",
+      "journal": "Das Journal"
+    },
+    "help": {
+      "title": "Hilfe",
+      "faq": "FAQ",
+      "delivery": "Lieferung",
+      "contact": "Kontakt"
+    }
+  },
+  "home": {
+    "hero": {
+      "tag": "Herbst 26 · Frisch vom Hof",
+      "title": "Gutes Essen, mit Bedacht ausgewählt",
+      "body": "Saisonales Gemüse, ehrliches Brot und Vorratsklassiker von Erzeugern und Bäckern, die wir beim Namen kennen, direkt zu Ihnen nach Hause.",
+      "shop": "Zur Kollektion",
+      "story": "Die Geschichte lesen",
+      "imageAlt": "Ein Holztisch mit saisonalem Gemüse und frischem Brot"
+    },
+    "grid": {
+      "title": "Gang für Gang",
+      "tiles": {
+        "a": "Der Tisch, gedeckt für den Herbst",
+        "b": "Frisches Obst & Gemüse",
+        "c": "Backwaren",
+        "d": "Vorrat",
+        "e": "Unsere Erzeuger"
+      }
+    },
+    "categories": {
+      "kicker": "Die Gänge",
+      "title": "Nach Kategorie stöbern",
+      "all": "Alles ansehen →",
+      "count": "{count} Artikel"
+    },
+    "newIn": {
+      "kicker": "Neu im Sortiment",
+      "title": "Frisch geerntet, frisch gebacken",
+      "all": "Alle ansehen →"
+    },
+    "editorial": {
+      "kicker": "Aus dem Journal · Nr. 14",
+      "title": "Ein Morgen in der Bäckerei",
+      "body": "Bevor die Rollläden hochgehen, laufen die Öfen schon seit Stunden. Wir haben einen Morgen mit dem Bäcker verbracht, der unser Sauerteigbrot backt, und erfahren, warum langsamer Teig besser schmeckt.",
+      "button": "Zum Journal",
+      "imageAlt": "Sauerteigbrote kühlen auf einem Holzgitter aus"
+    },
+    "contact": {
+      "title": "Fragen? Kontaktieren Sie uns",
+      "body": "Allergien, Ersatzprodukte oder eine Lieferung, die nicht wie geplant lief: Wir lesen jede Nachricht und antworten innerhalb eines Werktags.",
+      "button": "Kontakt aufnehmen"
+    }
+  },
+  "plp": {
+    "outOfStock": "Nicht vorrätig",
+    "save": "{name} in einer Liste speichern",
+    "unsave": "{name} aus den gespeicherten Artikeln entfernen",
+    "was": "Vorher {price}",
+    "now": "Jetzt {price}",
+    "kicker": "Der Shop",
+    "everything": "Alles",
+    "breadcrumbs": {
+      "label": "Brotkrümelnavigation",
+      "home": "Startseite"
+    },
+    "pagination": {
+      "label": "Seitennavigation",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "page": "Seite {page}"
+    },
+    "empty": {
+      "title": "Nichts unter diesen Bedingungen",
+      "body": "Entfernen Sie einen Filter oder zwei, oder sagen Sie uns, was Sie suchen, und wir helfen Ihnen.",
+      "clear": "Filter zurücksetzen",
+      "contact": "Kontakt"
+    },
+    "count": "{count, plural, one {# Produkt} other {# Produkte}}",
+    "filters": {
+      "title": "Filter",
+      "category": "Kategorie",
+      "price": "Preis",
+      "availability": "Verfügbarkeit",
+      "clearAll": "Alle zurücksetzen"
+    },
+    "band": {
+      "any": "Jeder Preis",
+      "under": "Unter {max}",
+      "range": "{min}–{max}",
+      "over": "Über {min}"
+    },
+    "availability": {
+      "all": "Alles",
+      "in": "Vorrätig",
+      "out": "Nicht vorrätig"
+    },
+    "applied": {
+      "label": "Aktive Filter",
+      "remove": "Filter entfernen: {label}"
+    },
+    "sort": {
+      "label": "Sortieren nach",
+      "relevance": "Relevanz",
+      "newest": "Neueste",
+      "priceAsc": "Preis ↑",
+      "priceDesc": "Preis ↓"
+    }
+  },
+  "pdp": {
+    "photoAlt": "{name}, Foto {number}",
+    "questions": "Fragen zu diesem Produkt?",
+    "contact": "Kontakt aufnehmen →",
+    "availability": {
+      "in": "Auf Lager",
+      "out": "Nicht auf Lager"
+    },
+    "specs": {
+      "caption": "Produktdetails",
+      "property": "Merkmal",
+      "value": "Wert",
+      "brand": "Marke",
+      "origin": "Herkunft",
+      "storage": "Lagerung",
+      "dietary": "Ernährung",
+      "allergens": "Allergene",
+      "storageValues": {
+        "ambient": "Bei Raumtemperatur lagern",
+        "chilled": "Gekühlt lagern",
+        "frozen": "Gefroren lagern"
+      },
+      "dietaryValues": {
+        "vegan": "Vegan",
+        "vegetarian": "Vegetarisch",
+        "gluten-free": "Glutenfrei",
+        "organic": "Bio"
+      }
+    },
+    "options": {
+      "packLabel": "Packungsgröße"
+    },
+    "addToBag": "In den Warenkorb",
+    "quantity": "Menge",
+    "decrease": "Menge verringern",
+    "increase": "Menge erhöhen",
+    "onlyAvailable": "Nur {available} verfügbar",
+    "related": "Passt dazu",
+    "reviews": {
+      "title": "Bewertungen",
+      "count": "{count, plural, one {# Bewertung} other {# Bewertungen}}",
+      "stars": "{stars} Sterne",
+      "rated": "Bewertet mit {rating} von 5"
+    }
+  },
+  "cart": {
+    "added": "Zum Warenkorb hinzugefügt",
+    "viewBag": "Warenkorb ansehen",
+    "insufficientStock": "Aktuell sind nur {available} verfügbar.",
+    "outOfStock": "Leider ist dieser Artikel ausverkauft.",
+    "addFailed": "Wir konnten deinen Warenkorb nicht aktualisieren. Bitte versuche es erneut.",
+    "title": "Dein Warenkorb",
+    "summary": "Zusammenfassung",
+    "subtotal": "Zwischensumme",
+    "delivery": "Lieferung",
+    "deliveryIncluded": "Inklusive",
+    "deliveryPending": "Wird an der Kasse berechnet",
+    "total": "Gesamt",
+    "checkout": "Zur Kasse",
+    "checkoutDisabled": "Die Kasse öffnet bald. Dein Warenkorb bleibt in der Zwischenzeit gespeichert.",
+    "checkoutBlocked": "Entferne die nicht verfügbaren Artikel, um fortzufahren.",
+    "returnsNote": "Stimmt etwas mit deiner Bestellung nicht? Sag uns innerhalb von 48 Stunden Bescheid, wir machen es wieder gut.",
+    "empty": "Dein Warenkorb ist leer.",
+    "browse": "Zum Shop",
+    "loading": "Dein Warenkorb wird geladen ...",
+    "inStockTag": "Auf Lager",
+    "outOfStockTag": "Ausverkauft",
+    "lineUnavailable": "Dieser Artikel ist gerade ausverkauft. Entferne ihn, um fortzufahren.",
+    "remove": "Entfernen",
+    "removed": "Aus dem Warenkorb entfernt",
+    "undo": "Rückgängig",
+    "quantityOf": "Menge von {name}",
+    "decrease": "Menge von {name} verringern",
+    "increase": "Menge von {name} erhöhen",
+    "updateFailed": "Wir konnten deinen Warenkorb nicht aktualisieren. Bitte versuche es erneut.",
+    "slotCleared": "Dein Lieferfenster wurde entfernt, weil sich die Adresse geändert hat. Bitte wähle ein neues.",
+    "noSlots": "Für diese Adresse sind derzeit keine Lieferfenster verfügbar.",
+    "nextAvailable": "Nächster Termin: {date}",
+    "slotTaken": "Dieses Lieferfenster wurde gerade vergeben. Bitte wähle ein anderes.",
+    "slotExpired": "Deine Reservierung ist abgelaufen. Bitte wähle das Lieferfenster erneut.",
+    "chooseSlot": "Wähle ein Lieferfenster, um fortzufahren.",
+    "addAddress": "Gib eine Lieferadresse an, um fortzufahren.",
+    "substitution": {
+      "label": "Ersatz für {name}",
+      "allow-similar": "Ähnliches erlauben",
+      "none": "Kein Ersatz"
+    },
+    "slotLine": "Lieferfenster: {day}, {time}",
+    "step": {
+      "title": "Lieferung",
+      "addressLegend": "Lieferadresse",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "street": "Straße und Hausnummer",
+      "additional": "Adresszusatz (optional)",
+      "postalCode": "Postleitzahl",
+      "city": "Ort",
+      "country": "Land",
+      "phone": "Telefon (optional)",
+      "save": "Adresse speichern",
+      "saving": "Speichern ...",
+      "saved": "Adresse gespeichert.",
+      "required": "Dieses Feld ist erforderlich.",
+      "invalidPostcode": "Gib eine gültige Postleitzahl ein.",
+      "undeliverable": "In diese Postleitzahl liefern wir noch nicht.",
+      "countryMismatch": "Für die Lieferung in dieses Land brauchst du den anderen Shop. Wechsle die Region in der Kopfzeile.",
+      "shippingUnavailable": "Für diese Adresse ist keine Lieferung möglich.",
+      "saveFailed": "Die Adresse konnte nicht gespeichert werden. Bitte versuche es erneut.",
+      "slotFailed": "Das Lieferfenster konnte nicht gespeichert werden. Bitte versuche es erneut.",
+      "slotsTitle": "Lieferfenster",
+      "slotsLoading": "Lieferfenster werden geladen ...",
+      "slotsFailed": "Lieferfenster konnten nicht geladen werden.",
+      "daysLabel": "Liefertag",
+      "timesLabel": "Lieferzeit",
+      "slotsLeft": "noch {count}",
+      "release": "Lieferfenster entfernen"
+    },
+    "saved": {
+      "legend": "Gespeicherte Adressen",
+      "new": "Neue Adresse hinzufügen",
+      "default": "Standard",
+      "loading": "Deine gespeicherten Adressen werden geladen ..."
+    }
+  },
+  "checkout": {
+    "kicker": "Zur Kasse",
+    "title": "Zur Kasse",
+    "summaryTitle": "{count, plural, one {# Artikel} other {# Artikel}}",
+    "paymentRegion": "Zahlung",
+    "loading": "Sichere Zahlung wird geöffnet ...",
+    "completing": "Zahlung erhalten. Deine Bestellung wird abgeschlossen ...",
+    "completeFailed": "Deine Zahlung ist durchgegangen, aber wir konnten deine Bestellung nicht fertig öffnen. Bitte versuche es erneut.",
+    "retry": "Erneut versuchen",
+    "error": {
+      "SLOT_FULL": "Dieses Lieferfenster ist gerade voll geworden. Bitte wähle ein anderes.",
+      "UNAVAILABLE_LINES": "Einige Artikel sind in der gewählten Menge nicht mehr verfügbar. Bitte passe deinen Warenkorb an.",
+      "NO_ADDRESS": "Bitte gib eine Lieferadresse an, an die wir liefern können.",
+      "NO_SLOT": "Bitte wähle ein Lieferfenster.",
+      "SHIPPING_UNAVAILABLE": "Wir können derzeit nicht an diese Adresse liefern. Bitte prüfe sie.",
+      "NO_CART": "Dein Warenkorb ist leer.",
+      "EMPTY_CART": "Dein Warenkorb ist leer.",
+      "generic": "Wir konnten die Kasse nicht starten. Bitte versuche es erneut."
+    },
+    "confirmation": {
+      "kicker": "Bestellung {number}",
+      "title": "Danke, {name}",
+      "titleNoName": "Danke",
+      "body": "Wir haben deine Bestellung erhalten und machen sie fertig.",
+      "guestNumber": "Bewahre deine Bestellnummer auf: {number}.",
+      "delivery": "Lieferung: {day}, {time}",
+      "track": "Bestellung verfolgen",
+      "shop": "Zurück zum Shop",
+      "total": "Gesamt: {amount}",
+      "totalProvisional": "Gesamt (vorläufig): {amount}"
+    }
+  },
+  "account": {
+    "saved": {
+      "title": "Zur Seite gelegt",
+      "metaTitle": "Zur Seite gelegt",
+      "count": "{count, plural, one {# Stück gemerkt} other {# Stücke gemerkt}}",
+      "empty": "Noch nichts zur Seite gelegt. Tippe bei allem, was dir gefällt, auf das Herz, dann wartet es hier auf dich.",
+      "browse": "Zum Shop",
+      "addToBag": "In den Warenkorb",
+      "remove": "Entfernen",
+      "outOfStock": "Nicht vorrätig",
+      "loading": "Deine gemerkten Artikel werden geladen ...",
+      "loadFailed": "Wir konnten deine gemerkten Artikel nicht laden.",
+      "retry": "Erneut versuchen",
+      "removeFailed": "Wir konnten den Artikel nicht entfernen. Bitte versuche es erneut.",
+      "removeLabel": "{name} aus den gemerkten Artikeln entfernen",
+      "addLabel": "{name} in den Warenkorb legen",
+      "viewLabel": "Optionen für {name} wählen",
+      "list": "Gemerkte Artikel"
+    },
+    "memberSince": "Kunde seit {year}",
+    "loading": "Wird geladen…",
+    "loadFailed": "Das konnten wir nicht laden. Bitte versuch es noch einmal.",
+    "retry": "Erneut versuchen",
+    "orders": {
+      "title": "Bestellungen",
+      "caption": "Deine Bestellungen",
+      "colItems": "Artikel",
+      "colNumber": "Bestellnummer",
+      "colPlaced": "Bestellt am",
+      "colTotal": "Gesamt",
+      "colStatus": "Status",
+      "empty": "Noch keine Bestellungen",
+      "browse": "Zum Sortiment",
+      "viewAll": "Alle Bestellungen",
+      "pagination": "Seiten der Bestellungen",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "pageOf": "Seite {page} von {pages}",
+      "loadingRows": "Deine Bestellungen werden geladen…"
+    },
+    "status": {
+      "processing": "In Bearbeitung",
+      "packing": "Wird gepackt",
+      "on-its-way": "Unterwegs",
+      "delivered": "Geliefert",
+      "cancelled": "Storniert",
+      "unknown": "Status unbekannt"
+    },
+    "address": {
+      "kicker": "Standardadresse",
+      "empty": "Noch keine Standardadresse",
+      "add": "Adresse hinzufügen",
+      "edit": "Bearbeiten"
+    },
+    "details": {
+      "kicker": "Details",
+      "nav": "Bereiche des Kontos",
+      "orders": "Bestellungen",
+      "addresses": "Adressen",
+      "saved": "Merklisten",
+      "subscriptions": "Abos",
+      "contact": "Kontakt"
+    },
+    "order": {
+      "title": "Bestellung {number}",
+      "placed": "Bestellt am {date}",
+      "delivery": "Lieferung: {day}, {time}",
+      "back": "Alle Bestellungen",
+      "itemsCaption": "Artikel dieser Bestellung",
+      "colItem": "Artikel",
+      "colQuantity": "Menge",
+      "colUnitPrice": "Einzelpreis",
+      "colTotal": "Gesamt",
+      "colSubstitution": "Ersatz",
+      "preference": {
+        "allow-similar": "Ähnliches erlaubt",
+        "none": "Kein Ersatz"
+      },
+      "totals": "Summen",
+      "subtotal": "Zwischensumme",
+      "shipping": "Lieferung",
+      "shippingFree": "Inklusive",
+      "tax": "Enthaltene Steuer",
+      "total": "Gesamt",
+      "address": "Lieferadresse",
+      "loading": "Deine Bestellung wird geladen…",
+      "notFoundTitle": "Diese Bestellung haben wir nicht gefunden",
+      "notFoundBody": "Sie gehört vielleicht zu einem anderen Konto oder existiert nicht mehr.",
+      "substitution": {
+        "title": "Ersatzvorschläge",
+        "groupLabel": "Ersatzvorschlag für {name}",
+        "notice": "Wir konnten {original} nicht finden. Vorschlag: {substitute} ({difference})",
+        "newTotal": "Neue Summe: {total}",
+        "noDifference": "kein Preisunterschied",
+        "accept": "Annehmen",
+        "decline": "Ablehnen",
+        "acceptLabel": "Ersatz für {name} annehmen",
+        "declineLabel": "Ersatz für {name} ablehnen",
+        "readOnly": "Diese Bestellung kann nicht mehr geändert werden, der Vorschlag wird nur zur Information angezeigt.",
+        "contact": "Kontakt",
+        "stale": "Die Bestellung hat sich seit dem Vorschlag geändert. Wir haben sie aktualisiert, bitte prüfe den aktuellen Stand.",
+        "notEditable": "Diese Bestellung kann nicht mehr geändert werden. Wir haben sie aktualisiert.",
+        "failed": "Wir konnten deine Auswahl nicht speichern. Bitte versuche es erneut.",
+        "removalRequested": "Entfernung angefragt"
+      }
+    },
+    "addresses": {
+      "title": "Adressen",
+      "metaTitle": "Adressen",
+      "loading": "Deine Adressen werden geladen ...",
+      "loadFailed": "Wir konnten deine Adressen nicht laden.",
+      "retry": "Erneut versuchen",
+      "empty": "Du hast noch keine Adresse gespeichert.",
+      "add": "Adresse hinzufügen",
+      "edit": "Bearbeiten",
+      "editLabel": "Adresse bearbeiten: {name}",
+      "delete": "Löschen",
+      "deleteLabel": "Adresse löschen: {name}",
+      "makeDefault": "Als Standard festlegen",
+      "makeDefaultLabel": "Als Standard festlegen: {name}",
+      "default": "Standard",
+      "list": "Gespeicherte Adressen",
+      "actionFailed": "Das hat nicht geklappt. Bitte versuche es erneut.",
+      "dialog": {
+        "addTitle": "Adresse hinzufügen",
+        "editTitle": "Adresse bearbeiten",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "street": "Straße und Hausnummer",
+        "additional": "Adresszusatz (optional)",
+        "postalCode": "Postleitzahl",
+        "city": "Ort",
+        "country": "Land",
+        "phone": "Telefon (optional)",
+        "save": "Adresse speichern",
+        "saving": "Speichern ...",
+        "cancel": "Abbrechen",
+        "saveFailed": "Wir konnten die Adresse nicht speichern. Bitte versuche es erneut."
+      },
+      "errors": {
+        "required": "Dieses Feld ist erforderlich.",
+        "invalidCountry": "Wähle United States oder Deutschland.",
+        "invalidPostcode": "Gib eine gültige Postleitzahl für das Land ein.",
+        "invalidPhone": "Gib eine gültige Telefonnummer ein.",
+        "tooLong": "Das ist zu lang (höchstens 100 Zeichen)."
+      },
+      "confirm": {
+        "title": "Diese Adresse löschen?",
+        "body": "Diese Adresse wird aus deinem Adressbuch entfernt.",
+        "defaultNote": "Es ist deine Standardadresse. Danach hast du keine Standardadresse.",
+        "cancel": "Behalten",
+        "confirm": "Adresse löschen",
+        "deleting": "Löschen ...",
+        "failed": "Wir konnten die Adresse nicht löschen. Bitte versuche es erneut."
+      }
+    }
+  },
+  "auth": {
+    "signInLink": "Anmelden",
+    "accountLink": "Konto",
+    "accountLinkNamed": "Konto, {name}",
+    "signInTitle": "Anmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "passwordNew": "Passwort",
+    "passwordHint": "Mindestens 8 Zeichen",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "signInSubmit": "Anmelden",
+    "signInPending": "Anmeldung läuft…",
+    "forgotLink": "Passwort vergessen?",
+    "registerLink": "Neu hier? Konto erstellen",
+    "invalid": "E-Mail oder Passwort ist falsch",
+    "registerTitle": "Konto erstellen",
+    "registerSubmit": "Konto erstellen",
+    "registerPending": "Konto wird erstellt…",
+    "exists": "Mit diesen Angaben konnten wir kein Konto erstellen.",
+    "signInInstead": "Stattdessen anmelden",
+    "signInLinkLong": "Schon ein Konto? Anmelden",
+    "forgotTitle": "Passwort zurücksetzen",
+    "forgotIntro": "Gib deine E-Mail-Adresse ein, dann bereiten wir einen Link für ein neues Passwort vor.",
+    "forgotSubmit": "Link zum Zurücksetzen senden",
+    "forgotPending": "Wird gesendet…",
+    "forgotSent": "Falls zu dieser E-Mail-Adresse ein Konto existiert, wurde ein Link zum Zurücksetzen vorbereitet.",
+    "devLink": "Nur Entwicklung: Link zum Zurücksetzen öffnen",
+    "backToSignIn": "Zurück zur Anmeldung",
+    "resetTitle": "Neues Passwort wählen",
+    "resetSubmit": "Speichern und anmelden",
+    "resetPending": "Wird gespeichert…",
+    "invalidToken": "Dieser Link zum Zurücksetzen ist ungültig oder abgelaufen.",
+    "requestNewLink": "Neuen Link anfordern",
+    "errors": {
+      "required": "Dieses Feld ist erforderlich",
+      "email": "Gib eine gültige E-Mail-Adresse ein",
+      "passwordShort": "Verwende mindestens 8 Zeichen",
+      "rateLimited": "Zu viele Versuche. Bitte warte eine Minute und versuche es erneut.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+    }
+  },
+  "search": {
+    "inputLabel": "Im Shop suchen",
+    "kicker": "Suche",
+    "title": "Finden Sie es",
+    "suggestionsLabel": "Probieren Sie es mit",
+    "suggestions": [
+      "Frisch",
+      "Vegan",
+      "Backwaren",
+      "Bio",
+      "Geschenke",
+      "Unter 5 €"
+    ],
+    "found": "{count} gefunden für „{query}“",
+    "none": {
+      "title": "Nichts gefunden für „{query}“",
+      "body": "Prüfen Sie die Schreibweise, versuchen Sie ein kürzeres Wort oder stöbern Sie im Shop nach Kategorie.",
+      "browse": "Zum Shop"
+    }
+  },
+  "static": {
+    "journal": {
+      "shopTheStory": "Die Geschichte shoppen"
+    },
+    "contact": {
+      "kicker": "Hilfe",
+      "title": "Kontakt",
+      "intro": "Fragen zu einer Bestellung, einer Lieferung oder einem Produkt? Schreiben Sie uns unten.",
+      "name": "Ihr Name",
+      "email": "E-Mail",
+      "topic": "Thema",
+      "topicPlaceholder": "Thema wählen",
+      "topics": {
+        "order": "Bestellung",
+        "delivery": "Lieferung",
+        "product": "Produkt",
+        "other": "Sonstiges"
+      },
+      "message": "Nachricht",
+      "submit": "Nachricht senden",
+      "sending": "Wird gesendet...",
+      "errors": {
+        "required": "Dieses Feld ist erforderlich.",
+        "invalidEmail": "Geben Sie eine gültige E-Mail-Adresse ein.",
+        "tooShort": "Ihre Nachricht muss mindestens 10 Zeichen lang sein.",
+        "tooLong": "Das ist zu lang."
+      },
+      "formErrors": {
+        "rateLimited": "Zu viele Nachrichten. Bitte warten Sie eine Minute und versuchen Sie es erneut.",
+        "failed": "Wir konnten Ihre Nachricht nicht entgegennehmen. Bitte versuche es erneut."
+      },
+      "successTitle": "Nachricht erhalten",
+      "successBody": "Wir haben Ihre Nachricht erhalten. Dieser Shop leitet Nachrichten noch nicht an eine Person weiter, eine Antwort ist daher nicht garantiert."
+    }
+  },
+  "errors": {
+    "kicker": "Hoppla",
+    "title": "Etwas ist schiefgelaufen",
+    "body": "Diese Seite konnte nicht geladen werden. Bitte versuche es erneut oder geh zurück zum Shop.",
+    "retry": "Erneut versuchen",
+    "backToShop": "Zurück zum Shop",
+    "notFoundKicker": "404",
+    "notFoundTitle": "Diese Seite haben wir nicht gefunden",
+    "notFoundBody": "Die Seite wurde vielleicht verschoben oder hat nie existiert. Wir bringen dich zurück zu den guten Sachen.",
+    "contact": "Kontakt"
+  },
+  "pricing": {
+    "perKg": "{price} / kg",
+    "perL": "{price} / l",
+    "provisionalNote": "Der Endbetrag hängt vom Gewicht ab, das wir abwiegen.",
+    "totalProvisional": "Gesamt (vorläufig)",
+    "finalAmount": "Endbetrag {amount}",
+    "difference": "Differenz {delta}",
+    "noDifference": "Keine Differenz"
+  },
+  "a11y": {
+    "language": "Sprache"
+  },
+  "subscription": {
+    "repeatLabel": "Wiederholen",
+    "oneTime": "Einmalig",
+    "priceNotice": "Der Preis jeder Folgebestellung richtet sich nach dem aktuellen Preis und kann sich ändern.",
+    "badge": {
+      "weekly": "Wiederholt sich jede Woche",
+      "every-2-weeks": "Wiederholt sich alle 2 Wochen",
+      "monthly": "Wiederholt sich jeden Monat",
+      "other": "Wiederholt sich regelmäßig"
+    },
+    "manage": {
+      "metaTitle": "Abos",
+      "title": "Abos",
+      "intro": "Deine wiederkehrenden Bestellungen. Änderungen gelten ab der nächsten Bestellung.",
+      "list": "Deine wiederkehrenden Bestellungen",
+      "loading": "Deine Abos werden geladen…",
+      "loadFailed": "Wir konnten deine Abos nicht laden.",
+      "retry": "Erneut versuchen",
+      "empty": "Noch keine Abos",
+      "emptyHint": "Wähle auf einer Produktseite „Wiederholen“, um es regelmäßig geliefert zu bekommen.",
+      "browse": "Zum Shop",
+      "cadence": "Wiederholt sich",
+      "items": "Artikel",
+      "next": "Nächste Bestellung: {date}",
+      "pausedNext": "Pausiert: keine anstehende Bestellung",
+      "canceledNext": "Gekündigt: keine weiteren Bestellungen",
+      "inactiveNext": "Keine anstehende Bestellung",
+      "last": "Letzte Bestellung: {date}",
+      "state": {
+        "Active": "Aktiv",
+        "Paused": "Pausiert",
+        "Canceled": "Gekündigt",
+        "Other": "Nicht aktiv"
+      },
+      "changeCadence": "Rhythmus ändern",
+      "pause": "Pausieren",
+      "resume": "Fortsetzen",
+      "cancel": "Abo kündigen",
+      "quantityOf": "Menge von {name}",
+      "decrease": "Menge von {name} verringern",
+      "increase": "Menge von {name} erhöhen",
+      "actionFailed": "Das hat nicht geklappt. Bitte versuche es erneut.",
+      "cadenceDialog": {
+        "title": "Rhythmus ändern",
+        "body": "Wähle, wie oft du die Lieferung möchtest. Der neue Rhythmus gilt ab der nächsten Bestellung.",
+        "label": "Wie oft",
+        "save": "Speichern",
+        "saving": "Wird gespeichert…",
+        "keep": "Aktuellen behalten"
+      },
+      "cancelDialog": {
+        "title": "Dieses Abo kündigen?",
+        "body": "Es werden keine weiteren Bestellungen erstellt. Deine letzte Bestellung war am {date}.",
+        "bodyNoDate": "Es werden keine weiteren Bestellungen erstellt.",
+        "confirm": "Abo kündigen",
+        "canceling": "Wird gekündigt…",
+        "keep": "Abo behalten"
+      }
+    }
+  }
+}

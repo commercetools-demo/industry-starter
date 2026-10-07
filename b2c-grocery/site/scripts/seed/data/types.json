@@ -1,0 +1,204 @@
+[
+  {
+    "key": "cart-delivery",
+    "name": {
+      "en-US": "Cart delivery",
+      "de-DE": "Lieferung (Warenkorb)"
+    },
+    "resourceTypeIds": [
+      "order"
+    ],
+    "fieldDefinitions": [
+      {
+        "name": "slotId",
+        "label": {
+          "en-US": "Slot id",
+          "de-DE": "Slot id"
+        },
+        "required": false,
+        "type": {
+          "name": "String"
+        },
+        "inputHint": "SingleLine"
+      },
+      {
+        "name": "slotStart",
+        "label": {
+          "en-US": "Slot start (ISO)",
+          "de-DE": "Slot start (ISO)"
+        },
+        "required": false,
+        "type": {
+          "name": "String"
+        },
+        "inputHint": "SingleLine"
+      },
+      {
+        "name": "slotEnd",
+        "label": {
+          "en-US": "Slot end (ISO)",
+          "de-DE": "Slot end (ISO)"
+        },
+        "required": false,
+        "type": {
+          "name": "String"
+        },
+        "inputHint": "SingleLine"
+      },
+      {
+        "name": "slotHoldExpires",
+        "label": {
+          "en-US": "Slot hold expires (ISO)",
+          "de-DE": "Slot hold expires (ISO)"
+        },
+        "required": false,
+        "type": {
+          "name": "String"
+        },
+        "inputHint": "SingleLine"
+      },
+      {
+        "name": "finalTotal",
+        "label": {
+          "en-US": "Final total (set after picking, Q-R-2)",
+          "de-DE": "Endbetrag (nach dem Packen)"
+        },
+        "required": false,
+        "type": {
+          "name": "Money"
+        },
+        "inputHint": "SingleLine"
+      }
+    ]
+  },
+  {
+    "key": "order-final",
+    "name": {
+      "en-US": "Order final amount",
+      "de-DE": "Endbetrag der Bestellung"
+    },
+    "resourceTypeIds": [
+      "order"
+    ],
+    "fieldDefinitions": [
+      {
+        "name": "finalTotal",
+        "label": {
+          "en-US": "Final total",
+          "de-DE": "Endbetrag"
+        },
+        "required": false,
+        "type": {
+          "name": "Money"
+        },
+        "inputHint": "SingleLine"
+      }
+    ]
+  },
+  {
+    "key": "line-substitution",
+    "name": {
+      "en-US": "Line substitution",
+      "de-DE": "Ersatzprodukt (Position)"
+    },
+    "resourceTypeIds": [
+      "line-item"
+    ],
+    "fieldDefinitions": [
+      {
+        "name": "substitutionPreference",
+        "label": {
+          "en-US": "Substitution preference",
+          "de-DE": "Substitution preference"
+        },
+        "required": false,
+        "type": {
+          "name": "Enum",
+          "values": [
+            {
+              "key": "allow-similar",
+              "label": "allow-similar"
+            },
+            {
+              "key": "none",
+              "label": "none"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "key": "substitution-proposal",
+    "name": {
+      "en-US": "Substitution proposal",
+      "de-DE": "Ersatzvorschlag"
+    },
+    "resourceTypeIds": [
+      "order-edit"
+    ],
+    "fieldDefinitions": [
+      {
+        "name": "originalLineItemId",
+        "label": {
+          "en-US": "Original line item id",
+          "de-DE": "Original line item id"
+        },
+        "required": false,
+        "type": {
+          "name": "String"
+        },
+        "inputHint": "SingleLine"
+      },
+      {
+        "name": "substituteSku",
+        "label": {
+          "en-US": "Substitute SKU",
+          "de-DE": "Substitute SKU"
+        },
+        "required": false,
+        "type": {
+          "name": "String"
+        },
+        "inputHint": "SingleLine"
+      },
+      {
+        "name": "status",
+        "label": {
+          "en-US": "Status",
+          "de-DE": "Status"
+        },
+        "required": false,
+        "type": {
+          "name": "Enum",
+          "values": [
+            {
+              "key": "pending",
+              "label": "pending"
+            },
+            {
+              "key": "declined",
+              "label": "declined"
+            },
+            {
+              "key": "applied",
+              "label": "applied"
+            }
+          ]
+        }
+      },
+      {
+        "name": "note",
+        "label": {
+          "en-US": "Note",
+          "de-DE": "Note"
+        },
+        "required": false,
+        "type": {
+          "name": "String"
+        },
+        "inputHint": "MultiLine"
+      }
+    ]
+  }
+]

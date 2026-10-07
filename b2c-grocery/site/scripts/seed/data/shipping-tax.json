@@ -1,0 +1,87 @@
+{
+  "taxCategories": [
+    {
+      "key": "food",
+      "name": "Food",
+      "rates": [
+        {
+          "name": "DE food",
+          "amount": 0.07,
+          "includedInPrice": true,
+          "country": "DE"
+        },
+        {
+          "name": "US food",
+          "amount": 0,
+          "includedInPrice": false,
+          "country": "US"
+        }
+      ]
+    },
+    {
+      "key": "non-food",
+      "name": "Non-food",
+      "rates": [
+        {
+          "name": "DE non-food",
+          "amount": 0.19,
+          "includedInPrice": true,
+          "country": "DE"
+        },
+        {
+          "name": "US non-food",
+          "amount": 0,
+          "includedInPrice": false,
+          "country": "US"
+        }
+      ]
+    }
+  ],
+  "zones": [
+    {
+      "key": "usa",
+      "name": "USA",
+      "locations": [
+        {
+          "country": "US"
+        }
+      ]
+    },
+    {
+      "key": "europe",
+      "name": "Europe",
+      "locations": [
+        {
+          "country": "GB"
+        },
+        {
+          "country": "DE"
+        }
+      ]
+    }
+  ],
+  "shippingMethod": {
+    "key": "standard",
+    "name": "Standard delivery",
+    "localizedName": {
+      "en-US": "Standard delivery",
+      "de-DE": "Standardlieferung"
+    },
+    "taxCategoryKey": "non-food",
+    "isDefault": false,
+    "rates": [
+      {
+        "zoneKey": "usa",
+        "currency": "USD",
+        "centAmount": 500,
+        "freeAboveCentAmount": 5000
+      },
+      {
+        "zoneKey": "europe",
+        "currency": "EUR",
+        "centAmount": 490,
+        "freeAboveCentAmount": 4500
+      }
+    ]
+  }
+}

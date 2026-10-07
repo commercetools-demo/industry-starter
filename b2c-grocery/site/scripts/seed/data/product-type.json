@@ -1,0 +1,225 @@
+{
+  "key": "grocery-product",
+  "name": "Grocery product",
+  "description": "MALVA grocery product with weight-based variants",
+  "attributes": [
+    {
+      "name": "brand",
+      "label": {
+        "en-US": "Brand",
+        "de-DE": "Marke"
+      },
+      "isRequired": false,
+      "type": {
+        "name": "text"
+      },
+      "attributeConstraint": "SameForAll",
+      "isSearchable": true,
+      "inputHint": "SingleLine"
+    },
+    {
+      "name": "origin",
+      "label": {
+        "en-US": "Origin",
+        "de-DE": "Herkunft"
+      },
+      "isRequired": false,
+      "type": {
+        "name": "text"
+      },
+      "attributeConstraint": "SameForAll",
+      "isSearchable": true,
+      "inputHint": "SingleLine"
+    },
+    {
+      "name": "dietary",
+      "label": {
+        "en-US": "Dietary",
+        "de-DE": "Ernährung"
+      },
+      "isRequired": false,
+      "type": {
+        "name": "set",
+        "elementType": {
+          "name": "enum",
+          "values": [
+            {
+              "key": "vegan",
+              "label": "vegan"
+            },
+            {
+              "key": "vegetarian",
+              "label": "vegetarian"
+            },
+            {
+              "key": "gluten-free",
+              "label": "gluten-free"
+            },
+            {
+              "key": "organic",
+              "label": "organic"
+            }
+          ]
+        }
+      },
+      "attributeConstraint": "SameForAll",
+      "isSearchable": true,
+      "inputHint": "SingleLine"
+    },
+    {
+      "name": "storage",
+      "label": {
+        "en-US": "Storage",
+        "de-DE": "Lagerung"
+      },
+      "isRequired": false,
+      "type": {
+        "name": "enum",
+        "values": [
+          {
+            "key": "ambient",
+            "label": "ambient"
+          },
+          {
+            "key": "chilled",
+            "label": "chilled"
+          },
+          {
+            "key": "frozen",
+            "label": "frozen"
+          }
+        ]
+      },
+      "attributeConstraint": "SameForAll",
+      "isSearchable": true,
+      "inputHint": "SingleLine"
+    },
+    {
+      "name": "allergens",
+      "label": {
+        "en-US": "Allergens",
+        "de-DE": "Allergene"
+      },
+      "isRequired": false,
+      "type": {
+        "name": "set",
+        "elementType": {
+          "name": "text"
+        }
+      },
+      "attributeConstraint": "SameForAll",
+      "isSearchable": true,
+      "inputHint": "SingleLine"
+    },
+    {
+      "name": "substituteProducts",
+      "label": {
+        "en-US": "Substitute products",
+        "de-DE": "Ersatzprodukte"
+      },
+      "isRequired": false,
+      "type": {
+        "name": "set",
+        "elementType": {
+          "name": "reference",
+          "referenceTypeId": "product"
+        }
+      },
+      "attributeConstraint": "SameForAll",
+      "isSearchable": false,
+      "inputHint": "SingleLine"
+    },
+    {
+      "name": "recurringEligible",
+      "label": {
+        "en-US": "Recurring eligible",
+        "de-DE": "Abo-fähig"
+      },
+      "isRequired": false,
+      "type": {
+        "name": "boolean"
+      },
+      "attributeConstraint": "SameForAll",
+      "isSearchable": true,
+      "inputHint": "SingleLine"
+    },
+    {
+      "name": "incrementValue",
+      "label": {
+        "en-US": "Increment value",
+        "de-DE": "Mengenschritt"
+      },
+      "isRequired": false,
+      "type": {
+        "name": "number"
+      },
+      "attributeConstraint": "None",
+      "isSearchable": true,
+      "inputHint": "SingleLine"
+    },
+    {
+      "name": "incrementUnit",
+      "label": {
+        "en-US": "Increment unit",
+        "de-DE": "Einheit"
+      },
+      "isRequired": false,
+      "type": {
+        "name": "enum",
+        "values": [
+          {
+            "key": "g",
+            "label": "g"
+          },
+          {
+            "key": "kg",
+            "label": "kg"
+          },
+          {
+            "key": "ml",
+            "label": "ml"
+          },
+          {
+            "key": "l",
+            "label": "l"
+          },
+          {
+            "key": "each",
+            "label": "each"
+          }
+        ]
+      },
+      "attributeConstraint": "None",
+      "isSearchable": true,
+      "inputHint": "SingleLine"
+    },
+    {
+      "name": "approximateWeight",
+      "label": {
+        "en-US": "Approximate weight",
+        "de-DE": "Ungefähres Gewicht"
+      },
+      "isRequired": false,
+      "type": {
+        "name": "boolean"
+      },
+      "attributeConstraint": "None",
+      "isSearchable": true,
+      "inputHint": "SingleLine"
+    },
+    {
+      "name": "packLabel",
+      "label": {
+        "en-US": "Pack label",
+        "de-DE": "Packungsbezeichnung"
+      },
+      "isRequired": false,
+      "type": {
+        "name": "ltext"
+      },
+      "attributeConstraint": "None",
+      "isSearchable": true,
+      "inputHint": "SingleLine"
+    }
+  ]
+}

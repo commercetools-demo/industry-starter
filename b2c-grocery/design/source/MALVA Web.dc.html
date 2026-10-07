@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/organic-ade09aa4-c6c1-425a-bbe9-5d695b75473f/styles.css">
+<script src="_ds/organic-ade09aa4-c6c1-425a-bbe9-5d695b75473f/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a:hover{color:var(--color-accent-700)}
+.ph{position:relative;overflow:hidden;background:var(--color-neutral-200);border-radius:calc(var(--radius-lg) * 1.15);filter:saturate(.6) contrast(.85) brightness(1.1) opacity(.94)}
+.ph::after{content:attr(data-shot);position:absolute;left:14px;bottom:12px;right:14px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)}
+.blob{background:var(--color-accent-2-200);border-radius:50%}
+.lift{transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+.lift:hover{transform:translateY(-4px)}
+@keyframes orgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes orgUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--color-bg);font-family:var(--font-body);color:var(--color-text)">
+
+  <!-- ══════════ HEADER ══════════ -->
+  <div style="position:sticky;top:0;z-index:50;background:color-mix(in srgb, var(--color-bg) 92%, transparent);backdrop-filter:blur(10px)">
+    <div class="nav" style="max-width:1360px;margin:0 auto;padding:var(--space-4) var(--space-8);gap:var(--space-6);flex-wrap:nowrap">
+      <div onClick="{{ goHome }}" class="nav-brand" style="font-size:26px;cursor:pointer;letter-spacing:-.02em">MALVA</div>
+      <div style="display:flex;gap:var(--space-6);align-items:center;margin-right:auto;min-width:0;overflow:hidden">
+        <sc-for list="{{ navLinks }}" as="l" hint-placeholder-count="4">
+          <div onClick="{{ l.on }}" style="font-size:14px;font-weight:500;white-space:nowrap;cursor:pointer;color:{{ l.color }};padding:var(--space-1) 0;border-bottom:2px solid {{ l.rule }}" style-hover="color:var(--color-accent)">{{ l.name }}</div>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--space-2)">
+        <div onClick="{{ goSearch }}" class="btn btn-secondary" style="gap:8px;width:190px;flex:none;white-space:nowrap;overflow:hidden;justify-content:flex-start;color:color-mix(in srgb, var(--color-text) 55%, transparent);font-family:var(--font-body);font-weight:400">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          Search the shop
+        </div>
+        <div onClick="{{ goWish }}" class="btn btn-secondary btn-icon" title="Saved">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="{{ wishFill }}" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M12 20s-7-4.6-7-9.4A4 4 0 0 1 12 7.6 4 4 0 0 1 19 10.6c0 4.8-7 9.4-7 9.4Z"></path></svg>
+        </div>
+        <div onClick="{{ goCart }}" class="btn btn-primary" style="gap:8px;white-space:nowrap;flex:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M5 8h14l-1.2 11H6.2Z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>
+          {{ bagLabel }}
+        </div>
+        <div onClick="{{ goAccount }}" class="btn btn-secondary btn-icon" title="Account">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><circle cx="12" cy="9" r="3.2"></circle><path d="M5.5 19.5a6.8 6.8 0 0 1 13 0"></path></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1360px;margin:0 auto;padding:0 var(--space-8) 120px">
+
+    <!-- ══════════ HOME ══════════ -->
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div style="animation:orgIn .4s ease both">
+
+        <sc-if value="{{ homeHero }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:var(--space-8);align-items:center;padding:var(--space-8) 0 calc(var(--space-8) * 1.6)">
+            <div style="position:relative">
+              <div class="blob" style="position:absolute;width:210px;height:210px;left:-90px;top:-60px;opacity:.5"></div>
+              <div style="position:relative">
+                <span class="tag tag-accent-2" style="margin-bottom:var(--space-4)">Autumn 26 · Chapter one</span>
+                <h1 style="font-size:76px;line-height:.98;margin:var(--space-3) 0 var(--space-4);max-width:9em;text-wrap:pretty">The quiet table</h1>
+                <p style="font-size:18px;line-height:1.6;max-width:34em;color:color-mix(in srgb, var(--color-text) 72%, transparent)">Stoneware thrown in Puglia, unbleached linen from Donegal and a single stem. Objects that ask nothing of the room — and give it everything.</p>
+                <div style="display:flex;gap:var(--space-3);margin-top:var(--space-6)">
+                  <div onClick="{{ goBrowse }}" class="btn btn-primary" style="font-size:15px;padding:var(--space-3) var(--space-6)">Shop the collection</div>
+                  <div onClick="{{ goEditorial }}" class="btn btn-secondary" style="font-size:15px;padding:var(--space-3) var(--space-6)">Read the story</div>
+                </div>
+              </div>
+            </div>
+            <div class="ph" data-shot="shot — alabaster lamp on travertine, morning light" style="height:560px"></div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ homeGrid }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:var(--space-8) 0 calc(var(--space-8) * 1.4)">
+            <h1 style="font-size:62px;line-height:1;max-width:14em;margin-bottom:var(--space-6)">A house made of small decisions</h1>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:230px;gap:var(--space-4)">
+              <div onClick="{{ goEditorial }}" class="ph lift" data-shot="shot — table setting, wide" style="grid-column:span 2;grid-row:span 2;height:auto;cursor:pointer"></div>
+              <div onClick="{{ goBrowse }}" class="ph lift" data-shot="shot — lamp, plaster wall" style="height:auto;cursor:pointer"></div>
+              <div onClick="{{ goBrowse }}" class="ph lift" data-shot="shot — wool throw folded" style="height:auto;cursor:pointer"></div>
+              <div onClick="{{ goBrowse }}" class="ph lift" data-shot="shot — ceramics in a row" style="height:auto;cursor:pointer"></div>
+              <div onClick="{{ goEditorial }}" class="ph lift" data-shot="shot — workshop hands" style="grid-column:span 2;height:auto;cursor:pointer"></div>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-6);margin-bottom:var(--space-6)">
+          <div>
+            <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">The rooms</h6>
+            <h2 style="font-size:38px;margin:0">Browse by what it does</h2>
+          </div>
+          <div onClick="{{ goBrowse }}" class="btn btn-ghost" style="font-size:14px">Everything →</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-3);margin-bottom:calc(var(--space-8) * 1.6)">
+          <sc-for list="{{ cats }}" as="c" hint-placeholder-count="6">
+            <div onClick="{{ c.on }}" class="card lift elev-sm" style="cursor:pointer;padding:var(--space-3);gap:var(--space-3)">
+              <div class="ph" data-shot="{{ c.shot }}" style="height:130px;border-radius:var(--radius-md)"></div>
+              <div>
+                <div class="card-title" style="font-size:15px">{{ c.name }}</div>
+                <div class="card-meta">{{ c.count }} pieces</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-6);margin-bottom:var(--space-6)">
+          <div>
+            <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">New in</h6>
+            <h2 style="font-size:38px;margin:0">Just off the loom and wheel</h2>
+          </div>
+          <div onClick="{{ goBrowse }}" class="btn btn-ghost" style="font-size:14px">See all →</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);margin-bottom:calc(var(--space-8) * 1.6)">
+          <sc-for list="{{ newIn }}" as="p" hint-placeholder-count="4">
+            <div onClick="{{ p.on }}" class="lift" style="cursor:pointer">
+              <div class="ph" data-shot="{{ p.shot }}" style="height:340px;margin-bottom:var(--space-3)"></div>
+              <div style="display:flex;justify-content:space-between;gap:var(--space-3);align-items:baseline">
+                <div class="card-title">{{ p.name }}</div>
+                <div style="font-size:15px;white-space:nowrap">{{ p.priceLabel }}</div>
+              </div>
+              <div class="card-meta">{{ p.maker }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-8);align-items:center;background:var(--color-accent-2-700);border-radius:calc(var(--radius-lg) * 1.6);padding:var(--space-8);margin-bottom:calc(var(--space-8) * 1.6)">
+          <div>
+            <h6 style="color:var(--color-accent-2-200);margin-bottom:var(--space-3)">From the journal · No. 14</h6>
+            <h2 style="font-size:44px;color:var(--color-bg);margin-bottom:var(--space-4);text-wrap:pretty">Living with alabaster</h2>
+            <p style="font-size:17px;line-height:1.65;color:color-mix(in srgb, #f5ead8 78%, transparent);max-width:32em">Sofia Renaldi on why the softest stone in the quarry makes the hardest-working light in a house — and how to keep it looking like it was always there.</p>
+            <div onClick="{{ goEditorial }}" class="btn" style="background:var(--color-bg);color:var(--color-accent-2-800);margin-top:var(--space-4);font-size:15px;padding:var(--space-3) var(--space-6)">Read the story</div>
+          </div>
+          <div class="ph" data-shot="shot — puglia workshop, hands at the wheel" style="height:380px;background:var(--color-accent-2-300)"></div>
+        </div>
+
+        <sc-if value="{{ concierge }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;align-items:center;gap:var(--space-8);justify-content:space-between;border:1px solid var(--color-divider);border-radius:calc(var(--radius-lg) * 1.4);padding:var(--space-6) var(--space-8)">
+            <div style="display:flex;align-items:center;gap:var(--space-6)">
+              <div class="blob" style="width:64px;height:64px;flex:none;display:grid;place-items:center;color:var(--color-accent-2-800)">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M20 12a8 8 0 1 0-3 6.2V21l3-2.3A7.9 7.9 0 0 0 20 12Z"></path></svg>
+              </div>
+              <div>
+                <h3 style="font-size:24px;margin-bottom:4px">Ask a stylist</h3>
+                <p style="margin:0;font-size:15px;color:color-mix(in srgb, var(--color-text) 65%, transparent)">Free advice on scale, finish and pairing — usually answered the same afternoon.</p>
+              </div>
+            </div>
+            <div class="btn btn-primary" style="flex:none;font-size:15px;padding:var(--space-3) var(--space-6)">Start a conversation</div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ══════════ BROWSE ══════════ -->
+    <sc-if value="{{ isBrowse }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:orgIn .35s ease both;padding-top:var(--space-8)">
+        <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">The shop</h6>
+        <h1 style="font-size:56px;margin-bottom:var(--space-6)">{{ cat }}</h1>
+        <div style="display:grid;grid-template-columns:230px 1fr;gap:calc(var(--space-8) * 1.2);align-items:start">
+
+          <div style="position:sticky;top:110px;display:flex;flex-direction:column;gap:var(--space-6)">
+            <div>
+              <h6 style="margin-bottom:var(--space-3)">Category</h6>
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <sc-for list="{{ catChips }}" as="c" hint-placeholder-count="7">
+                  <div onClick="{{ c.on }}" style="display:flex;justify-content:space-between;padding:7px 12px;border-radius:999px;cursor:pointer;font-size:14px;font-weight:{{ c.weight }};background:{{ c.bg }};color:{{ c.fg }}" style-hover="background:color-mix(in srgb, var(--color-text) 7%, transparent)">
+                    <span>{{ c.name }}</span><span style="opacity:.6">{{ c.n }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <h6 style="margin-bottom:var(--space-3)">Price</h6>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ priceBands }}" as="b" hint-placeholder-count="4">
+                  <div onClick="{{ b.on }}" class="tag" style="cursor:pointer;padding:6px 12px;font-size:12px;background:{{ b.bg }};color:{{ b.fg }};border:1px solid {{ b.border }}">{{ b.name }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <h6 style="margin-bottom:var(--space-3)">Availability</h6>
+              <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+                <sc-for list="{{ availability }}" as="a" hint-placeholder-count="2">
+                  <div onClick="{{ a.on }}" class="radio">
+                    <span class="dot" style="border-color:{{ a.border }};background:{{ a.fill }};box-shadow:{{ a.inset }}"></span>{{ a.name }}
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div onClick="{{ reset }}" class="btn btn-ghost" style="align-self:flex-start;font-size:13px">Clear all</div>
+          </div>
+
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:var(--space-4);margin-bottom:var(--space-6);border-bottom:1px solid var(--color-divider)">
+              <div style="font-size:14px;color:color-mix(in srgb, var(--color-text) 60%, transparent)">{{ resultLabel }}</div>
+              <div class="seg">
+                <sc-for list="{{ sortOptions }}" as="s" hint-placeholder-count="4">
+                  <div onClick="{{ s.on }}" class="seg-opt" style="background:{{ s.bg }};color:{{ s.fg }}">{{ s.name }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6) var(--space-4)">
+              <sc-for list="{{ visible }}" as="p" hint-placeholder-count="6">
+                <div onClick="{{ p.on }}" class="lift" style="cursor:pointer">
+                  <div class="ph" data-shot="{{ p.shot }}" style="height:330px;margin-bottom:var(--space-3)">
+                    <div onClick="{{ p.wish }}" class="btn btn-icon" style="position:absolute;right:12px;top:12px;background:var(--color-bg);color:{{ p.wishColor }};box-shadow:var(--shadow-sm)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="{{ p.wishFill }}" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M12 20s-7-4.6-7-9.4A4 4 0 0 1 12 7.6 4 4 0 0 1 19 10.6c0 4.8-7 9.4-7 9.4Z"></path></svg>
+                    </div>
+                    <sc-if value="{{ p.madeToOrder }}" hint-placeholder-val="{{ false }}">
+                      <span class="tag tag-accent" style="position:absolute;left:12px;top:12px">Made to order</span>
+                    </sc-if>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;gap:var(--space-3);align-items:baseline">
+                    <div class="card-title">{{ p.name }}</div>
+                    <div style="font-size:15px;white-space:nowrap">{{ p.priceLabel }}</div>
+                  </div>
+                  <div class="card-meta">{{ p.maker }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:var(--space-8);text-align:center">
+                <h3 style="font-size:26px;margin-bottom:var(--space-2)">Nothing under those terms</h3>
+                <p style="color:color-mix(in srgb, var(--color-text) 60%, transparent)">Try a wider price band, or let a stylist find it for you.</p>
+                <div onClick="{{ reset }}" class="btn btn-secondary" style="margin-top:var(--space-3)">Clear filters</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ══════════ PRODUCT ══════════ -->
+    <sc-if value="{{ isPdp }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:orgIn .35s ease both;padding-top:var(--space-6)">
+        <div onClick="{{ goBack }}" class="btn btn-ghost" style="margin-bottom:var(--space-4);font-size:13px">← Back</div>
+        <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:calc(var(--space-8) * 1.4);align-items:start">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)">
+            <div class="ph" data-shot="{{ product.shot }}" style="grid-column:span 2;height:600px"></div>
+            <div class="ph" data-shot="shot — detail, surface" style="height:290px"></div>
+            <div class="ph" data-shot="shot — in situ, room" style="height:290px"></div>
+          </div>
+          <div style="position:sticky;top:110px">
+            <div style="display:flex;gap:6px;margin-bottom:var(--space-3)">
+              <span class="tag tag-accent-2">{{ product.cat }}</span>
+              <span class="tag tag-neutral">{{ product.ref }}</span>
+            </div>
+            <h1 style="font-size:48px;line-height:1.02;margin-bottom:var(--space-3);text-wrap:pretty">{{ product.name }}</h1>
+            <div style="font-size:15px;color:color-mix(in srgb, var(--color-text) 60%, transparent);margin-bottom:var(--space-4)">{{ product.maker }}</div>
+            <div style="font-family:var(--font-heading);font-size:30px;margin-bottom:var(--space-4)">{{ product.priceLabel }}</div>
+            <p style="font-size:16px;line-height:1.7;color:color-mix(in srgb, var(--color-text) 75%, transparent);margin-bottom:var(--space-6)">{{ product.blurb }}</p>
+
+            <div style="display:flex;gap:var(--space-3);align-items:center;margin-bottom:var(--space-4)">
+              <div style="display:flex;align-items:center;border:1px solid var(--color-divider);border-radius:999px">
+                <div onClick="{{ decQty }}" class="btn btn-icon">−</div>
+                <div style="width:26px;text-align:center;font-size:14px">{{ pdpQty }}</div>
+                <div onClick="{{ incQty }}" class="btn btn-icon">+</div>
+              </div>
+              <div onClick="{{ addCurrent }}" class="btn btn-primary" style="flex:1;font-size:15px;padding:var(--space-3) var(--space-6)">Add to bag</div>
+              <div onClick="{{ toggleWishCurrent }}" class="btn btn-secondary btn-icon" style="width:44px;height:44px;color:{{ currentWishColor }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="{{ currentWishFill }}" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="M12 20s-7-4.6-7-9.4A4 4 0 0 1 12 7.6 4 4 0 0 1 19 10.6c0 4.8-7 9.4-7 9.4Z"></path></svg>
+              </div>
+            </div>
+
+            <sc-if value="{{ concierge }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:var(--space-3);background:var(--color-accent-2-100);border-radius:calc(var(--radius-lg) * 1.15);padding:var(--space-3) var(--space-4);margin-bottom:var(--space-6)">
+                <div style="font-size:14px;color:var(--color-accent-2-800);flex:1">Unsure of the scale? A stylist will size it to your room.</div>
+                <div class="btn btn-ghost" style="color:var(--color-accent-2-700);font-size:13px">Ask →</div>
+              </div>
+            </sc-if>
+
+            <table class="table">
+              <tbody>
+                <sc-for list="{{ product.specs }}" as="s" hint-placeholder-count="5">
+                  <tr>
+                    <th style="width:38%;border-bottom:1px solid color-mix(in srgb, var(--color-text) 8%, transparent)">{{ s.k }}</th>
+                    <td>{{ s.v }}</td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="margin-top:calc(var(--space-8) * 1.8)">
+          <h2 style="font-size:36px;margin-bottom:var(--space-6)">Pairs with</h2>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4)">
+            <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
+              <div onClick="{{ p.on }}" class="lift" style="cursor:pointer">
+                <div class="ph" data-shot="{{ p.shot }}" style="height:290px;margin-bottom:var(--space-3)"></div>
+                <div style="display:flex;justify-content:space-between;gap:var(--space-3);align-items:baseline">
+                  <div class="card-title">{{ p.name }}</div>
+                  <div style="font-size:15px;white-space:nowrap">{{ p.priceLabel }}</div>
+                </div>
+                <div class="card-meta">{{ p.maker }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ══════════ EDITORIAL ══════════ -->
+    <sc-if value="{{ isEditorial }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:orgIn .35s ease both;padding-top:var(--space-6)">
+        <div onClick="{{ goBack }}" class="btn btn-ghost" style="margin-bottom:var(--space-4);font-size:13px">← Back</div>
+        <div class="ph" data-shot="shot — puglia workshop, hands at the wheel, wide" style="height:520px;margin-bottom:calc(var(--space-8) * 1.2)"></div>
+        <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:calc(var(--space-8) * 1.4);align-items:start">
+          <div style="position:sticky;top:110px">
+            <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-3)">Journal · No. 14</h6>
+            <h1 style="font-size:52px;line-height:1;margin-bottom:var(--space-4);text-wrap:pretty">The quiet table</h1>
+            <div class="card-meta" style="font-size:13px">Words by Sofia Renaldi · Photographs, Ostuni</div>
+          </div>
+          <div>
+            <p style="font-size:20px;line-height:1.65;margin-bottom:var(--space-6)">In a farmhouse outside Ostuni, four generations have thrown the same shape of bowl. We spent two days watching clay dry and came back with a table setting that refuses to shout.</p>
+            <p style="font-size:16px;line-height:1.75;color:color-mix(in srgb, var(--color-text) 78%, transparent);margin-bottom:var(--space-6)">The workshop has no showroom and no website. Orders arrive by telephone, are written in a ledger, and leave on a Thursday. What the family makes has barely changed since the sixties — a low bowl, a wide plate, a jug with a thumbprint where the handle meets the body — because nobody there believes the shapes need improving.</p>
+            <div style="background:var(--color-surface);border-radius:calc(var(--radius-lg) * 1.4);padding:var(--space-8);margin-bottom:var(--space-6)">
+              <h3 style="font-size:30px;line-height:1.25;margin:0;text-wrap:pretty">“A good object is one you stop noticing after a week, and miss instantly when it's gone.”</h3>
+            </div>
+            <p style="font-size:16px;line-height:1.75;color:color-mix(in srgb, var(--color-text) 78%, transparent)">We chose five pieces for the table, and one for the light above it. Everything here is glazed in the same satin oat, so a setting can be built up slowly over years without ever needing to match.</p>
+          </div>
+        </div>
+        <div style="margin-top:calc(var(--space-8) * 1.6)">
+          <h2 style="font-size:36px;margin-bottom:var(--space-6)">Shop the story</h2>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4)">
+            <sc-for list="{{ storyProducts }}" as="p" hint-placeholder-count="4">
+              <div onClick="{{ p.on }}" class="lift" style="cursor:pointer">
+                <div class="ph" data-shot="{{ p.shot }}" style="height:300px;margin-bottom:var(--space-3)"></div>
+                <div style="display:flex;justify-content:space-between;gap:var(--space-3);align-items:baseline">
+                  <div class="card-title">{{ p.name }}</div>
+                  <div style="font-size:15px;white-space:nowrap">{{ p.priceLabel }}</div>
+                </div>
+                <div class="card-meta">{{ p.maker }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ══════════ SEARCH ══════════ -->
+    <sc-if value="{{ isSearch }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:orgIn .3s ease both;padding-top:var(--space-8);max-width:1000px">
+        <h1 style="font-size:44px;margin-bottom:var(--space-4)">Find it</h1>
+        <input class="input" value="{{ q }}" onChange="{{ onQuery }}" placeholder="Objects, makers, rooms" style="font-size:20px;min-height:58px;padding-inline:24px;margin-bottom:var(--space-6)" />
+        <sc-if value="{{ noQuery }}" hint-placeholder-val="{{ true }}">
+          <h6 style="margin-bottom:var(--space-3)">Try</h6>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ suggested }}" as="s" hint-placeholder-count="6">
+              <div onClick="{{ s.on }}" class="tag tag-outline" style="cursor:pointer;padding:8px 16px;font-size:13px">{{ s.term }}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:14px;color:color-mix(in srgb, var(--color-text) 60%, transparent);margin-bottom:var(--space-4)">{{ searchLabel }}</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6) var(--space-4)">
+            <sc-for list="{{ searchResults }}" as="p" hint-placeholder-count="3">
+              <div onClick="{{ p.on }}" class="lift" style="cursor:pointer">
+                <div class="ph" data-shot="{{ p.shot }}" style="height:290px;margin-bottom:var(--space-3)"></div>
+                <div style="display:flex;justify-content:space-between;gap:var(--space-3);align-items:baseline">
+                  <div class="card-title">{{ p.name }}</div>
+                  <div style="font-size:15px;white-space:nowrap">{{ p.priceLabel }}</div>
+                </div>
+                <div class="card-meta">{{ p.maker }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ══════════ WISHLIST ══════════ -->
+    <sc-if value="{{ isWish }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:orgIn .3s ease both;padding-top:var(--space-8)">
+        <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">{{ wishLabel }}</h6>
+        <h1 style="font-size:52px;margin-bottom:var(--space-6)">Put aside</h1>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4)">
+          <sc-for list="{{ wishItems }}" as="p" hint-placeholder-count="2">
+            <div class="card elev-sm" style="gap:var(--space-3)">
+              <div onClick="{{ p.on }}" class="ph" data-shot="{{ p.shot }}" style="height:270px;border-radius:var(--radius-md);cursor:pointer"></div>
+              <div>
+                <div class="card-title">{{ p.name }}</div>
+                <div class="card-meta">{{ p.maker }}</div>
+              </div>
+              <div style="font-size:16px">{{ p.priceLabel }}</div>
+              <div style="display:flex;gap:var(--space-2);align-items:center">
+                <div onClick="{{ p.add }}" class="btn btn-primary" style="flex:1">Add to bag</div>
+                <div onClick="{{ p.wish }}" class="btn btn-ghost" style="font-size:13px">Remove</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ wishEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:var(--space-8) 0">
+            <p style="font-size:17px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">Nothing saved yet. Tap the heart on anything you're circling.</p>
+            <div onClick="{{ goBrowse }}" class="btn btn-primary" style="margin-top:var(--space-3)">Browse the shop</div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ══════════ CART ══════════ -->
+    <sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:orgIn .3s ease both;padding-top:var(--space-8)">
+        <h1 style="font-size:52px;margin-bottom:var(--space-6)">Your bag</h1>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:calc(var(--space-8) * 1.2);align-items:start">
+          <div>
+            <sc-for list="{{ cartLines }}" as="l" hint-placeholder-count="2">
+              <div style="display:flex;gap:var(--space-4);padding-bottom:var(--space-4);margin-bottom:var(--space-4);border-bottom:1px solid var(--color-divider)">
+                <div class="ph" data-shot="{{ l.shot }}" style="width:150px;height:180px;flex:none;border-radius:var(--radius-md)"></div>
+                <div style="flex:1;display:flex;flex-direction:column">
+                  <div style="display:flex;justify-content:space-between;gap:var(--space-4)">
+                    <h3 style="font-size:22px;margin-bottom:4px">{{ l.name }}</h3>
+                    <div style="font-size:17px;white-space:nowrap">{{ l.total }}</div>
+                  </div>
+                  <div class="card-meta" style="margin-bottom:var(--space-2)">{{ l.maker }}</div>
+                  <span class="tag tag-neutral" style="align-self:flex-start;margin-bottom:auto">{{ l.lead }}</span>
+                  <div style="display:flex;align-items:center;gap:var(--space-4);margin-top:var(--space-3)">
+                    <div style="display:flex;align-items:center;border:1px solid var(--color-divider);border-radius:999px">
+                      <div onClick="{{ l.dec }}" class="btn btn-icon">−</div>
+                      <div style="width:26px;text-align:center;font-size:14px">{{ l.qty }}</div>
+                      <div onClick="{{ l.inc }}" class="btn btn-icon">+</div>
+                    </div>
+                    <div onClick="{{ l.remove }}" class="btn btn-ghost" style="font-size:13px">Remove</div>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:var(--space-8) 0">
+                <p style="font-size:17px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">Your bag is empty.</p>
+                <div onClick="{{ goBrowse }}" class="btn btn-primary" style="margin-top:var(--space-3)">Browse the shop</div>
+              </div>
+            </sc-if>
+          </div>
+          <div class="card elev-md" style="position:sticky;top:110px;padding:var(--space-6);gap:var(--space-3)">
+            <h3 style="font-size:24px;margin:0">Summary</h3>
+            <div style="display:flex;justify-content:space-between;font-size:15px"><span style="opacity:.7">Subtotal</span><span>{{ subtotal }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:15px"><span style="opacity:.7">White-glove delivery</span><span>{{ shipping }}</span></div>
+            <div style="height:1px;background:var(--color-divider)"></div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--font-heading);font-size:24px"><span>Total</span><span>{{ total }}</span></div>
+            <div onClick="{{ goCheckout }}" class="btn btn-primary btn-block" style="font-size:15px;padding:var(--space-3)">Checkout</div>
+            <p style="margin:0;font-size:13px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">Complimentary returns within 30 days. Made-to-order pieces ship in 6–8 weeks.</p>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ══════════ CHECKOUT ══════════ -->
+    <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:orgIn .3s ease both;padding-top:var(--space-8)">
+        <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">Step 2 of 3 · Delivery</h6>
+        <h1 style="font-size:52px;margin-bottom:var(--space-6)">Checkout</h1>
+        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:calc(var(--space-8) * 1.2);align-items:start">
+          <div style="display:flex;flex-direction:column;gap:var(--space-6)">
+            <div>
+              <h3 style="font-size:22px;margin-bottom:var(--space-3)">Contact</h3>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)">
+                <div class="field"><label>First name</label><input class="input" value="Camille" /></div>
+                <div class="field"><label>Last name</label><input class="input" value="Roux" /></div>
+                <div class="field" style="grid-column:span 2"><label>Email</label><input class="input" value="camille.roux@example.fr" /></div>
+              </div>
+            </div>
+            <div>
+              <h3 style="font-size:22px;margin-bottom:var(--space-3)">Shipping address</h3>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)">
+                <div class="field" style="grid-column:span 2"><label>Street</label><input class="input" value="14 rue des Archives" /></div>
+                <div class="field"><label>City</label><input class="input" value="Paris" /></div>
+                <div class="field"><label>Postcode</label><input class="input" value="75004" /></div>
+              </div>
+            </div>
+            <div>
+              <h3 style="font-size:22px;margin-bottom:var(--space-3)">Delivery</h3>
+              <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+                <sc-for list="{{ deliveryOptions }}" as="d" hint-placeholder-count="3">
+                  <div onClick="{{ d.on }}" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);border-radius:calc(var(--radius-lg) * 1.15);cursor:pointer;border:1px solid {{ d.border }};background:{{ d.bg }}">
+                    <span class="dot" style="width:16px;height:16px;flex:none;border-radius:50%;border:1.5px solid {{ d.dotBorder }};background:{{ d.fill }};box-shadow:{{ d.inset }}"></span>
+                    <div style="flex:1">
+                      <div style="font-size:15px;font-weight:500">{{ d.name }}</div>
+                      <div style="font-size:13px;color:color-mix(in srgb, var(--color-text) 60%, transparent)">{{ d.note }}</div>
+                    </div>
+                    <div style="font-size:15px">{{ d.price }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <h3 style="font-size:22px;margin-bottom:var(--space-3)">Payment</h3>
+              <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--color-divider);border-radius:calc(var(--radius-lg) * 1.15);padding:var(--space-3) var(--space-4)">
+                <div style="font-size:15px">Visa ···· 4417</div>
+                <div class="btn btn-ghost" style="font-size:13px">Change</div>
+              </div>
+            </div>
+          </div>
+          <div class="card elev-md" style="position:sticky;top:110px;padding:var(--space-6);gap:var(--space-3)">
+            <h3 style="font-size:24px;margin:0">{{ cartLabel }}</h3>
+            <sc-for list="{{ cartLines }}" as="l" hint-placeholder-count="2">
+              <div style="display:flex;gap:var(--space-3);align-items:center">
+                <div class="ph" data-shot="" style="width:52px;height:62px;flex:none;border-radius:var(--radius-sm)"></div>
+                <div style="flex:1;font-size:14px">{{ l.name }} <span style="opacity:.5">× {{ l.qty }}</span></div>
+                <div style="font-size:14px">{{ l.total }}</div>
+              </div>
+            </sc-for>
+            <div style="height:1px;background:var(--color-divider)"></div>
+            <div style="display:flex;justify-content:space-between;font-size:15px"><span style="opacity:.7">Subtotal</span><span>{{ subtotal }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:15px"><span style="opacity:.7">Delivery</span><span>{{ shipping }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--font-heading);font-size:24px"><span>Total</span><span>{{ total }}</span></div>
+            <div onClick="{{ placeOrder }}" class="btn btn-primary btn-block" style="font-size:15px;padding:var(--space-3)">Place order</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ══════════ CONFIRMATION ══════════ -->
+    <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:orgUp .45s ease both;padding:calc(var(--space-8) * 2) 0;max-width:640px;margin:0 auto;text-align:center">
+        <div class="blob" style="width:96px;height:96px;margin:0 auto var(--space-6);display:grid;place-items:center;color:var(--color-accent-2-800)">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"><path d="m5 13 4.5 4.5L19 7.5"></path></svg>
+        </div>
+        <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-3)">Order MLV-2261</h6>
+        <h1 style="font-size:52px;margin-bottom:var(--space-4)">Thank you, Camille</h1>
+        <p style="font-size:17px;line-height:1.7;color:color-mix(in srgb, var(--color-text) 68%, transparent)">Your pieces are being wrapped in Ostuni. We'll write the moment they leave the workshop — and a stylist is on hand if anything needs rethinking when they arrive.</p>
+        <div style="display:flex;gap:var(--space-3);justify-content:center;margin-top:var(--space-6)">
+          <div onClick="{{ goAccount }}" class="btn btn-primary" style="font-size:15px;padding:var(--space-3) var(--space-6)">Track this order</div>
+          <div onClick="{{ goHome }}" class="btn btn-secondary" style="font-size:15px;padding:var(--space-3) var(--space-6)">Back to the shop</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ══════════ ACCOUNT ══════════ -->
+    <sc-if value="{{ isAccount }}" hint-placeholder-val="{{ false }}">
+      <div style="animation:orgIn .3s ease both;padding-top:var(--space-8)">
+        <h6 style="color:var(--color-accent-700);margin-bottom:var(--space-2)">Member since 2023</h6>
+        <h1 style="font-size:52px;margin-bottom:var(--space-6)">Camille Roux</h1>
+        <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:calc(var(--space-8) * 1.2);align-items:start">
+          <div>
+            <h3 style="font-size:24px;margin-bottom:var(--space-3)">Orders</h3>
+            <table class="table">
+              <thead><tr><th>Piece</th><th>Reference</th><th>Placed</th><th style="text-align:right">Status</th></tr></thead>
+              <tbody>
+                <sc-for list="{{ orders }}" as="o" hint-placeholder-count="4">
+                  <tr>
+                    <td>{{ o.name }}</td>
+                    <td style="opacity:.6">{{ o.ref }}</td>
+                    <td style="opacity:.6">{{ o.date }}</td>
+                    <td style="text-align:right"><span class="tag {{ o.tag }}">{{ o.status }}</span></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+            <div class="card elev-sm" style="padding:var(--space-4)">
+              <div class="card-kicker">Default address</div>
+              <div style="font-size:15px;line-height:1.6">Camille Roux<br />14 rue des Archives<br />75004 Paris</div>
+              <div class="btn btn-ghost" style="align-self:flex-start;font-size:13px">Edit</div>
+            </div>
+            <div class="card elev-sm" style="padding:var(--space-4)">
+              <div class="card-kicker">Details</div>
+              <sc-for list="{{ accountLinks }}" as="l" hint-placeholder-count="5">
+                <div style="display:flex;justify-content:space-between;font-size:15px;padding:var(--space-2) 0;border-bottom:1px solid color-mix(in srgb, var(--color-text) 8%, transparent);cursor:pointer" style-hover="color:var(--color-accent)">
+                  <span>{{ l.name }}</span><span style="opacity:.4">→</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <div style="background:var(--color-surface);padding:calc(var(--space-8) * 1.4) var(--space-8)">
+    <div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:var(--space-8)">
+      <div>
+        <div style="font-family:var(--font-heading);font-size:26px;margin-bottom:var(--space-3)">MALVA</div>
+        <p style="font-size:14px;line-height:1.7;max-width:26em;color:color-mix(in srgb, var(--color-text) 65%, transparent)">Objects for the house, made slowly by people we've met. Paris showroom, rue des Archives.</p>
+      </div>
+      <sc-for list="{{ footerCols }}" as="col" hint-placeholder-count="3">
+        <div>
+          <h6 style="margin-bottom:var(--space-3)">{{ col.title }}</h6>
+          <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+            <sc-for list="{{ col.items }}" as="i" hint-placeholder-count="4">
+              <div style="font-size:14px;color:color-mix(in srgb, var(--color-text) 68%, transparent);cursor:pointer" style-hover="color:var(--color-accent)">{{ i }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ══════════ TOAST ══════════ -->
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div class="card elev-lg" style="position:fixed;right:var(--space-8);bottom:var(--space-8);z-index:90;flex-direction:row;align-items:center;gap:var(--space-4);padding:var(--space-3) var(--space-4);animation:orgUp .28s ease both">
+      <div style="font-size:15px">{{ toast }}</div>
+      <div onClick="{{ goCart }}" class="btn btn-primary" style="font-size:13px">View bag</div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440},&quot;homeLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Editorial hero&quot;,&quot;Magazine grid&quot;],&quot;default&quot;:&quot;Editorial hero&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Variations&quot;},&quot;concierge&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Variations&quot;}}">
+const P = [
+  {id:1,name:'Cassia alabaster lamp',cat:'Lighting',price:480,maker:'Studio Cassia · Milan',ref:'MLV-LT-041',shot:'shot — lamp lit, low angle',blurb:'A single block of Volterra alabaster, turned until the light passes through it like skin. Dimmable brass switch on a woven cord.'},
+  {id:2,name:'Ossa ribbed vase',cat:'Vases',price:165,maker:'Bottega Ossa · Puglia',ref:'MLV-VS-018',shot:'shot — vase, single stem',blurb:'Thrown by hand, then combed while the clay is still wet. Each rib records the potter\u2019s pass, so no two are alike.'},
+  {id:3,name:'Pale wool throw',cat:'Textiles',price:240,maker:'Mill No. 6 · Donegal',ref:'MLV-TX-007',shot:'shot — throw over linen chair',blurb:'Undyed lambswool woven on a hundred-year-old loom, finished with a hand-knotted fringe. Softens with every wash.'},
+  {id:4,name:'Marchetti travertine table',cat:'Furniture',price:1180,maker:'Marchetti · Tivoli',ref:'MLV-FN-002',shot:'shot — side table in situ',blurb:'Unfilled Roman travertine cut from a single block. The pitting is left raw \u2014 this stone is meant to show its age.'},
+  {id:5,name:'Lune dinner set, four',cat:'Tableware',price:320,maker:'Atelier Lune · Ostuni',ref:'MLV-TB-023',shot:'shot — plates stacked',blurb:'Four plates, four bowls, glazed in a satin oat that shifts warm under candlelight. Dishwasher safe, reluctantly.'},
+  {id:6,name:'Fig & cedar candle',cat:'Scent',price:78,maker:'MALVA · Grasse',ref:'MLV-SC-011',shot:'shot — candle, lit',blurb:'Green fig over cedarwood and a trace of smoke. Poured in Grasse into a stoneware vessel you will keep long after.'},
+  {id:7,name:'Halo brass sconce',cat:'Lighting',price:395,maker:'Halo Works · Lyon',ref:'MLV-LT-055',shot:'shot — sconce on plaster wall',blurb:'Unlacquered brass that will patina to a soft bronze within a season. Hardwired or plug-in, your choice at checkout.'},
+  {id:8,name:'Onda glass carafe',cat:'Tableware',price:96,maker:'Vetri Onda · Murano',ref:'MLV-TB-034',shot:'shot — carafe, water, light',blurb:'Mouth-blown in Murano with a deliberate wobble in the rim. Holds one litre and pours without a drip.'},
+  {id:9,name:'Rill linen curtain',cat:'Textiles',price:290,maker:'Mill No. 6 · Donegal',ref:'MLV-TX-029',shot:'shot — curtain, backlit',blurb:'Heavyweight Belgian linen with a stonewashed drape. Made to order in three lengths.'},
+  {id:10,name:'Terra bowl, large',cat:'Vases',price:145,maker:'Bottega Ossa · Puglia',ref:'MLV-VS-044',shot:'shot — bowl on travertine',blurb:'A wide, low bowl for fruit, keys, or nothing at all. Terracotta sealed with beeswax.'},
+  {id:11,name:'Sabbia oak stool',cat:'Furniture',price:640,maker:'Marchetti · Tivoli',ref:'MLV-FN-018',shot:'shot — stool, side light',blurb:'Solid white oak, soaped rather than lacquered, so it takes on the room instead of resisting it.'},
+  {id:12,name:'Vespro incense set',cat:'Scent',price:52,maker:'MALVA · Grasse',ref:'MLV-SC-026',shot:'shot — incense on ceramic dish',blurb:'Resin and cypress, hand-rolled in short sticks. Twenty minutes each, which is about the length of a bath.'}
+];
+const fmt = n => '\u20AC' + n.toLocaleString('en-US');
+const mto = p => p.price > 500 || p.cat === 'Textiles';
+const specs = p => [
+  {k:'Maker', v:p.maker},
+  {k:'Reference', v:p.ref},
+  {k:'Material', v:p.cat === 'Textiles' ? 'Undyed natural fibre' : p.cat === 'Lighting' ? 'Alabaster, unlacquered brass' : p.cat === 'Furniture' ? 'Solid stone or oak' : 'Stoneware, satin glaze'},
+  {k:'Lead time', v:mto(p) ? '6\u20138 weeks, made to order' : 'In stock \u00b7 ships in 3 days'},
+  {k:'Care', v:'Wipe with a dry cloth'}
+];
+
+class Component extends DCLogic {
+  state = {
+    screen: 'home', back: 'home', pid: 1, pdpQty: 1,
+    cart: [{id:5,qty:1},{id:6,qty:2}], wish: [3,7],
+    cat: 'Everything', sort: 'Curated', band: 'Any price', avail: 'Everything',
+    q: '', toast: '', delivery: 0, navKey: ''
+  };
+
+  go = (s, navKey) => this.setState(st => ({ screen: s, back: st.screen, navKey: navKey || '' }));
+  open = (id) => this.setState(st => ({ screen: 'pdp', back: st.screen, pid: id, pdpQty: 1 }));
+
+  add = (id, n) => this.setState(st => {
+    const c = st.cart.slice();
+    const i = c.findIndex(l => l.id === id);
+    if (i >= 0) c[i] = { id, qty: c[i].qty + (n || 1) }; else c.push({ id, qty: n || 1 });
+    return { cart: c, toast: 'Added to your bag' };
+  }, () => { clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: '' }), 2800); });
+
+  qty = (id, d) => this.setState(st => ({ cart: st.cart.map(l => l.id === id ? { id, qty: Math.max(1, l.qty + d) } : l) }));
+  wishToggle = (id) => this.setState(st => ({ wish: st.wish.includes(id) ? st.wish.filter(w => w !== id) : st.wish.concat(id) }));
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  renderVals() {
+    const sig = JSON.stringify([this.state, this.props.homeLayout, this.props.concierge, this.props.accentVoice]);
+    if (sig === this._sig) return this._vals;
+    this._sig = sig;
+    this._vals = this.build();
+    return this._vals;
+  }
+
+  build() {
+    const s = this.state;
+    const home = this.props.homeLayout ?? 'Editorial hero';
+    const concierge = this.props.concierge ?? true;
+
+    const deco = p => ({
+      ...p, priceLabel: fmt(p.price), madeToOrder: mto(p),
+      on: () => this.open(p.id),
+      wish: (e) => { if (e) e.stopPropagation(); this.wishToggle(p.id); },
+      add: () => this.add(p.id),
+      wishFill: s.wish.includes(p.id) ? 'currentColor' : 'none',
+      wishColor: s.wish.includes(p.id) ? 'var(--color-accent)' : 'var(--color-text)'
+    });
+
+    const product = deco(P.find(p => p.id === s.pid) || P[0]);
+    product.specs = specs(product);
+
+    const bandTest = p => s.band === 'Any price' ? true
+      : s.band === 'Under \u20AC150' ? p.price < 150
+      : s.band === '\u20AC150\u2013400' ? p.price >= 150 && p.price <= 400
+      : p.price > 400;
+    const availTest = p => s.avail === 'Everything' ? true : s.avail === 'In stock' ? !mto(p) : mto(p);
+
+    let list = P.filter(p => (s.cat === 'Everything' || p.cat === s.cat) && bandTest(p) && availTest(p));
+    if (s.sort === 'Price ↑') list = list.slice().sort((a,b) => a.price - b.price);
+    if (s.sort === 'Price ↓') list = list.slice().sort((a,b) => b.price - a.price);
+    if (s.sort === 'Newest') list = list.slice().reverse();
+
+    const q = s.q.trim().toLowerCase();
+    const results = q ? P.filter(p => (p.name + ' ' + p.cat + ' ' + p.maker).toLowerCase().includes(q)) : [];
+
+    const cartLines = s.cart.map(l => {
+      const p = P.find(x => x.id === l.id);
+      return { name: p.name, maker: p.maker, shot: p.shot, qty: l.qty, total: fmt(p.price * l.qty),
+        lead: mto(p) ? 'Made to order · 6–8 weeks' : 'In stock',
+        inc: () => this.qty(l.id, 1), dec: () => this.qty(l.id, -1),
+        remove: () => this.setState(st => ({ cart: st.cart.filter(x => x.id !== l.id) })) };
+    });
+    const sub = s.cart.reduce((a, l) => a + P.find(x => x.id === l.id).price * l.qty, 0);
+    const ship = sub > 800 ? 0 : 45;
+
+    const catNames = ['Everything','Lighting','Textiles','Furniture','Vases','Tableware','Scent'];
+    const catShots = { Lighting:'shot — lamp on plaster', Textiles:'shot — folded wool', Furniture:'shot — stool corner', Vases:'shot — vase trio', Tableware:'shot — plate stack', Scent:'shot — candle unlit' };
+
+    const pick = (name, active, on, extra) => ({ name, on,
+      bg: active ? 'var(--color-accent)' : 'transparent',
+      fg: active ? 'var(--color-bg)' : 'var(--color-text)',
+      border: active ? 'var(--color-accent)' : 'var(--color-divider)',
+      weight: active ? '600' : '400', ...extra });
+
+    const radio = (name, active, on) => ({ name, on,
+      border: active ? 'var(--color-accent)' : 'var(--color-divider)',
+      fill: active ? 'var(--color-accent)' : 'transparent',
+      inset: active ? 'inset 0 0 0 4px var(--color-bg)' : 'none' });
+
+    const navKeys = [
+      { key:'shop', name:'Shop', go: () => this.setState(st => ({ screen:'browse', back:st.screen, navKey:'shop', cat:'Everything', sort:'Curated' })) },
+      { key:'new', name:'New in', go: () => this.setState(st => ({ screen:'browse', back:st.screen, navKey:'new', cat:'Everything', sort:'Newest' })) },
+      { key:'order', name:'Made to order', go: () => this.setState(st => ({ screen:'browse', back:st.screen, navKey:'order', cat:'Everything', avail:'Made to order' })) },
+      { key:'journal', name:'Journal', go: () => this.go('editorial', 'journal') }
+    ];
+
+    return {
+      isHome: s.screen === 'home', isBrowse: s.screen === 'browse', isPdp: s.screen === 'pdp',
+      isEditorial: s.screen === 'editorial', isSearch: s.screen === 'search', isWish: s.screen === 'wish',
+      isCart: s.screen === 'cart', isCheckout: s.screen === 'checkout', isDone: s.screen === 'done',
+      isAccount: s.screen === 'account',
+
+      homeHero: home === 'Editorial hero', homeGrid: home === 'Magazine grid', concierge,
+
+      navLinks: navKeys.map(n => ({ name: n.name, on: n.go,
+        color: s.navKey === n.key ? 'var(--color-accent)' : 'var(--color-text)',
+        rule: s.navKey === n.key ? 'var(--color-accent)' : 'transparent' })),
+      goHome: () => this.go('home'), goBrowse: () => this.go('browse', 'shop'), goEditorial: () => this.go('editorial', 'journal'),
+      goSearch: () => this.go('search'), goWish: () => this.go('wish'), goCart: () => this.go('cart'),
+      goAccount: () => this.go('account'), goCheckout: () => this.go('checkout'),
+      placeOrder: () => this.go('done'),
+      goBack: () => this.go(s.back === s.screen ? 'home' : s.back),
+      bagLabel: s.cart.length ? 'Bag · ' + s.cart.length : 'Bag',
+      wishFill: s.wish.length ? 'currentColor' : 'none',
+
+      cats: catNames.slice(1).map(n => ({ name: n, shot: catShots[n],
+        count: String(P.filter(p => p.cat === n).length).padStart(2, '0'),
+        on: () => this.setState(st => ({ cat: n, screen: 'browse', back: st.screen, navKey: 'shop' })) })),
+      newIn: P.slice(0, 4).map(deco),
+
+      cat: s.cat, sort: s.sort,
+      catChips: catNames.map(n => pick(n, n === s.cat, () => this.setState({ cat: n }),
+        { n: n === 'Everything' ? P.length : P.filter(p => p.cat === n).length })),
+      priceBands: ['Any price','Under \u20AC150','\u20AC150\u2013400','Over \u20AC400'].map(n => pick(n, n === s.band, () => this.setState({ band: n }))),
+      sortOptions: ['Curated','Newest','Price ↑','Price ↓'].map(n => pick(n, n === s.sort, () => this.setState({ sort: n }))),
+      availability: ['Everything','In stock','Made to order'].map(n => radio(n, n === s.avail, () => this.setState({ avail: n }))),
+      reset: () => this.setState({ cat: 'Everything', band: 'Any price', avail: 'Everything', sort: 'Curated' }),
+      visible: list.map(deco), empty: list.length === 0,
+      resultLabel: list.length + (list.length === 1 ? ' object' : ' objects'),
+
+      product,
+      related: P.filter(p => p.id !== product.id && p.cat !== product.cat).slice(0, 4).map(deco),
+      pdpQty: s.pdpQty,
+      incQty: () => this.setState(st => ({ pdpQty: st.pdpQty + 1 })),
+      decQty: () => this.setState(st => ({ pdpQty: Math.max(1, st.pdpQty - 1) })),
+      addCurrent: () => this.add(product.id, s.pdpQty),
+      toggleWishCurrent: () => this.wishToggle(product.id),
+      currentWishFill: s.wish.includes(product.id) ? 'currentColor' : 'none',
+      currentWishColor: s.wish.includes(product.id) ? 'var(--color-accent)' : 'var(--color-text)',
+
+      storyProducts: [P[4], P[1], P[7], P[9]].map(deco),
+
+      q: s.q, hasQuery: q.length > 0, noQuery: q.length === 0,
+      onQuery: (e) => this.setState({ q: e.target.value }),
+      searchResults: results.map(deco),
+      searchLabel: results.length + ' found for “' + s.q.trim() + '”',
+      suggested: ['Alabaster','Under \u20AC150','Made to order','Puglia','Linen','Gifts'].map(t => ({ term: t, on: () => this.setState({ q: t }) })),
+
+      wishItems: P.filter(p => s.wish.includes(p.id)).map(deco),
+      wishEmpty: s.wish.length === 0,
+      wishLabel: s.wish.length + ' pieces saved',
+
+      cartLines, cartEmpty: s.cart.length === 0,
+      cartLabel: s.cart.length + (s.cart.length === 1 ? ' piece' : ' pieces'),
+      subtotal: fmt(sub), shipping: ship ? fmt(ship) : 'Included', total: fmt(sub + ship),
+      deliveryOptions: [
+        { name:'White-glove', note:'Delivered, unpacked and placed', price: ship ? fmt(45) : 'Included' },
+        { name:'Standard courier', note:'3\u20135 working days', price:'\u20AC12' },
+        { name:'Collect in Paris', note:'Rue des Archives showroom', price:'Free' }
+      ].map((d, i) => ({ ...d,
+        on: () => this.setState({ delivery: i }),
+        border: s.delivery === i ? 'var(--color-accent)' : 'var(--color-divider)',
+        bg: s.delivery === i ? 'var(--color-accent-100)' : 'transparent',
+        dotBorder: s.delivery === i ? 'var(--color-accent)' : 'var(--color-divider)',
+        fill: s.delivery === i ? 'var(--color-accent)' : 'transparent',
+        inset: s.delivery === i ? 'inset 0 0 0 4px var(--color-bg)' : 'none' })),
+
+      orders: [
+        { name:'Halo brass sconce', ref:'MLV-2247', date:'12 Jul', status:'Delivered', tag:'tag-neutral' },
+        { name:'Rill linen curtain', ref:'MLV-2251', date:'28 Jul', status:'In the workshop', tag:'tag-accent' },
+        { name:'Terra bowl, large', ref:'MLV-2258', date:'02 Aug', status:'On its way', tag:'tag-accent-2' },
+        { name:'Fig & cedar candle', ref:'MLV-2260', date:'04 Aug', status:'Packing', tag:'tag-accent-2' }
+      ],
+      accountLinks: ['Addresses','Payment methods','Returns','Concierge','Trade programme'].map(n => ({ name: n })),
+
+      footerCols: [
+        { title:'Shop', items:['Lighting','Textiles','Furniture','Tableware','Scent'] },
+        { title:'House', items:['The journal','Our makers','Paris showroom','Trade programme'] },
+        { title:'Help', items:['Delivery','Returns','Care guide','Ask a stylist'] }
+      ],
+      toast: s.toast
+    };
+  }
+}
+
+</script>
+</body>
+</html>
