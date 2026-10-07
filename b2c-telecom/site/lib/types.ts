@@ -177,6 +177,8 @@ export interface ListingResult {
   bands: { id: string; count: number }[];
   /** Explicit empty reason; recovery links are the root categories. */
   empty?: 'no-offers' | 'no-match';
+  /** Present with `empty`: the root categories to link to, so the page never shows a blank list. */
+  recoveryLinks?: { key: string; name: string; slug: string }[];
 }
 export interface SearchResult {
   offers: Offer[];
