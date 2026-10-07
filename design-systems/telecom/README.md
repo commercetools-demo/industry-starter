@@ -8,11 +8,12 @@ Extracted from the Figma Community file **Telecom website theme** (the `.fig` is
 - `components/` — button, plan card, syntax chip, navigation
 
 ## Principles
-- **Brand red on white.** Red (`brand-600`..`800`) carries headers, nav and CTAs; surfaces are white or `neutral-100`; amber is a sparing accent.
+- **Honey Locust brand, Guilliman Blue complement.** Honey Locust (`brand-*`, base `#f9c162`) carries headers and nav; Guilliman Blue (`blue-*`, base `#629af9`) carries actions: CTAs, links, bullets. Surfaces are white or `neutral-100`.
+- **Light brand means dark text.** Never put white text on `brand-500`; use `text-on-brand` (`brand-950`). White text is fine on `blue-700` and darker.
 - **Pills and soft cards.** Buttons and CTAs are fully rounded (`radius-pill`); cards use `radius-lg`/`radius-xl`.
 - **Exo for UI.** Headings, nav, plan names use Exo with 1px tracking; Inter ExtraBold for registration syntax; Roboto for body copy.
-- **Plan card pattern.** Red header → triangle-bulleted benefits → hairline divider, validity, outlined pill CTA.
-- Source copy is Vietnamese; swap text freely, keep structure.
+- **Plan card pattern.** Honey header → triangle-bulleted benefits → hairline divider, validity, blue outlined pill CTA.
+- All copy is US English.
 
 ## Caveats
-Extracted from the file's raw node data: the Figma file has no named styles or variables, so token names are assigned by usage frequency, not designer intent. Some Figma values (e.g. magenta `#f828a5` glows, 45px radii) are decorative one-offs and were left out.
+Extracted from the file's raw node data: the Figma file has no named styles or variables, so token names are assigned by usage frequency, not designer intent. The original red/amber palette was replaced with Honey Locust and Guilliman Blue. Decorative one-offs (magenta glows, 45px radii) were left out.
