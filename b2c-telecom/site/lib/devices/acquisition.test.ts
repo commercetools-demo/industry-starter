@@ -117,13 +117,18 @@ describe('dates', () => {
     expect(endOfTermFor('lease')).toBe('return');
   });
   it('computeRecurringExpiry: after the last scheduled payment and before the next, time of day kept', () => {
-    // payments 2..24 start at startsAt; the last is startsAt + 22 months; the buffer is 7 days
+    // payment 1 is the initial order at startsAt, generated orders follow monthly: the last (24th) is startsAt + 23 months; buffer 7 days
     const startsAt = new Date('2026-10-07T09:30:00Z');
-    expect(computeRecurringExpiry(startsAt, 24).toISOString()).toBe('2028-08-14T09:30:00.000Z');
+    expect(computeRecurringExpiry(startsAt, 24).toISOString()).toBe('2028-09-14T09:30:00.000Z');
     // 12 months
-    expect(computeRecurringExpiry(startsAt, 12).toISOString()).toBe('2027-08-14T09:30:00.000Z');
+    expect(computeRecurringExpiry(startsAt, 12).toISOString()).toBe('2027-09-14T09:30:00.000Z');
     // month-end start is clamped, then the buffer is added
-    expect(computeRecurringExpiry(new Date('2026-12-31T00:00:00Z'), 4).toISOString()).toBe('2027-03-07T00:00:00.000Z');
+    expect(computeRecurringExpiry(new Date('2026-12-31T00:00:00Z'), 3).toISOString()).toBe('2027-03-07T00:00:00.000Z');
+    // the expiry always lies after the last scheduled payment and before the one after it
+    const last = new Date('2028-09-07T09:30:00Z');
+    const next = new Date('2028-10-07T09:30:00Z');
+    expect(computeRecurringExpiry(startsAt, 24).getTime()).toBeGreaterThan(last.getTime());
+    expect(computeRecurringExpiry(startsAt, 24).getTime()).toBeLessThan(next.getTime());
   });
 });
 
