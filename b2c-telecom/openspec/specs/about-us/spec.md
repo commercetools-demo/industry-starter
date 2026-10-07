@@ -40,3 +40,6 @@ Data source tags: `[STATIC]` served from CDN with no middleware call; `[CACHED]`
 
 - Which certification and compliance claims on this page are legally controlled, and who signs off before an editor publishes a change to them?
 - Should the sales call-to-action carry the referring page into the enquiry for attribution, and is that permitted under the storefront's consent policy?
+
+## Plan notes
+Content changes are files in git deployed with the site (D-034); the "without a storefront deployment" clause of "Editor publishes a correction" does not apply.

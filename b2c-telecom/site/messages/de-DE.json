@@ -182,7 +182,47 @@
       }
     }
   },
-  "content": {},
+  "content": {
+    "fallbackNotice": "Diese Seite ist in dieser Sprache noch nicht verfügbar. Es wird die englische Version angezeigt.",
+    "faq": { "topicsNav": "Themen", "allQuestions": "Alle Fragen" },
+    "support": { "popular": "Häufige Fragen" },
+    "contact": {
+      "heading": "Schreiben Sie uns",
+      "cta": "E-Mail an den Support",
+      "subject": "Anfrage an den Malva-Telecom-Support",
+      "note": "Bitte senden Sie keine Zahlungskartennummern oder Passwörter per E-Mail."
+    },
+    "blog": {
+      "title": "Blog",
+      "description": "Ratgeber zu Internet, Mobilfunktarifen und Preisen.",
+      "filterLabel": "Nach Thema filtern",
+      "clearAll": "Filter zurücksetzen",
+      "removeFilter": "Filter entfernen: {tag}",
+      "noMatch": "Keine Artikel passen zu diesen Filtern.",
+      "publishedOn": "Veröffentlicht am {date}",
+      "related": "Weitere Artikel",
+      "withdrawnTitle": "Dieser Artikel ist nicht mehr verfügbar",
+      "withdrawnLink": "Artikel zu {topic} ansehen"
+    },
+    "tags": { "internet": "Internet", "phone": "Mobilfunk", "pricing": "Preise", "labels": "Informationsblätter" },
+    "legal": {
+      "effective": "Gültig seit {date}",
+      "superseded": "Dies ist eine ersetzte Version. Sie galt bis {until}.",
+      "viewCurrent": "Aktuelle Version ansehen",
+      "earlier": "Frühere Versionen"
+    },
+    "credits": { "photoBy": "Foto von {name} auf Pexels" },
+    "footer": {
+      "label": "Unternehmen und Rechtliches",
+      "about": "Über uns",
+      "faq": "Häufige Fragen",
+      "blog": "Blog",
+      "shippingReturns": "Versand und Rückgabe",
+      "terms": "Bedingungen",
+      "privacy": "Datenschutz",
+      "imageCredits": "Bildnachweise"
+    }
+  },
   "errors": {
     "kicker": {
       "notFound": "404",

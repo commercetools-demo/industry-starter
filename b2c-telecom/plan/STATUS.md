@@ -26,7 +26,7 @@ Updated by the developer on each task and by Claude (after Chrome verification) 
 | T | Address book, payment methods, saved lists | 15 | 0 | Not started | | |
 | U | Hosted checkout and order confirmation | 17 | 0 | Not started | | |
 | V | Post-purchase: cancel and device return | 12 | 0 | Not started | | |
-| W | Content pages | 10 | 0 | Not started | | |
+| W | Content pages | 10 | 10 | Merged (verify + curl smoke; Chrome C-W pending) | orchestrator | 2026-10-07 |
 | X | Coordinated offer release | 8 | 0 | Not started | | |
 | Y | Netlify deployment | 7 | 0 | Not started | | |
 | Z | Release readiness | 7 | 0 | Not started | | |
