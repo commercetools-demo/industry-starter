@@ -1,0 +1,44 @@
+/* Printed receipt of an order (workstream S, D-059: no PDF, no invoice). Tokens only. The Broadband Facts label is never restyled here:
+   it is black on white by design (D-053). */
+.receipt-only {
+  display: none;
+}
+
+@media print {
+  /* The site frame, the account navigation and every control disappear. */
+  body > div > header,
+  body > div > footer,
+  [data-print='hide'] {
+    display: none !important;
+  }
+
+  body {
+    background: var(--color-neutral-0);
+    color: var(--color-neutral-900);
+  }
+
+  .receipt-only {
+    display: block;
+    margin: 0 0 var(--space-7);
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+  }
+
+  .receipt-page table,
+  .receipt-page th,
+  .receipt-page td {
+    border-color: var(--color-neutral-900);
+    background: var(--color-neutral-0);
+    color: var(--color-neutral-900);
+  }
+
+  .receipt-page a {
+    color: var(--color-neutral-900);
+    text-decoration: none;
+  }
+
+  .receipt-page section {
+    break-inside: avoid;
+  }
+}

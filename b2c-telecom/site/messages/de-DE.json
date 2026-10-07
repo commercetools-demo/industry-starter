@@ -287,7 +287,176 @@
     "home": "Startseite"
   },
   "checkout": {},
-  "account": {},
+  "account": {
+    "breadcrumb": "Startseite / Mein Konto",
+    "home": "Startseite",
+    "title": "Mein Konto",
+    "nav": {
+      "label": "Konto",
+      "overview": "Übersicht",
+      "orders": "Bestellungen",
+      "addresses": "Adressen",
+      "payments": "Zahlungsarten",
+      "lists": "Merklisten"
+    },
+    "hi": "Hallo {firstName}",
+    "card": {
+      "account": "KONTO",
+      "bill": "MONATLICHE RECHNUNG",
+      "address": "LIEFERADRESSE"
+    },
+    "accountNo": "Kundennr. {number} · Aktiv",
+    "nextBill": "Nächste Rechnung am {date}",
+    "noBills": "Keine anstehenden Rechnungen.",
+    "nextBillUnavailable": "Nächstes Rechnungsdatum nicht verfügbar",
+    "change": {
+      "title": "Möchten Sie etwas ändern?",
+      "browse": "Tarife ansehen",
+      "logout": "Abmelden"
+    },
+    "address": {
+      "none": "Noch keine Adresse gespeichert.",
+      "add": "Adresse hinzufügen",
+      "manage": "Adressen verwalten"
+    },
+    "recent": {
+      "title": "Letzte Bestellungen",
+      "all": "Alle Bestellungen",
+      "empty": "Noch keine Bestellungen.",
+      "browse": "Tarife ansehen"
+    },
+    "contract": {
+      "title": "Aktueller Vertrag",
+      "cols": {
+        "item": "Artikel",
+        "type": "Art",
+        "started": "Beginn",
+        "term": "Laufzeit",
+        "price": "Preis"
+      },
+      "empty": "Sie haben noch keine aktiven Dienste.",
+      "note": "Die Gebühr für vorzeitige Kündigung steht auf dem Broadband-Facts-Label des jeweiligen Tarifs.",
+      "term": "{months} Monate · endet am {date}",
+      "monthToMonth": "Monatlich kündbar",
+      "perMonth": "{amount}/Monat",
+      "unknownTerm": "—",
+      "months": "{months} Monate"
+    },
+    "type": {
+      "cable": "Kabelinternet",
+      "wireless": "Heimfunk-Internet",
+      "phone": "Mobilfunktarif",
+      "addon": "Zusatzoption",
+      "equipment": "Gerät",
+      "installments": "Geräteraten",
+      "lease": "Gerätemiete",
+      "outright": "Handy",
+      "other": "Sonstiges"
+    },
+    "device": {
+      "variant": "{name} {memory} GB, {color}"
+    },
+    "color": {
+      "black": "Schwarz",
+      "silver": "Silber",
+      "violet": "Violett"
+    },
+    "plans": {
+      "title": "Ihre Tarife",
+      "empty": "Die Labels Ihrer Tarife erscheinen hier, sobald Sie einen aktiven Tarif haben."
+    },
+    "unavailable": "Dieser Bereich ist gerade nicht verfügbar. Versuchen Sie es gleich noch einmal.",
+    "loading": "Wird geladen",
+    "orders": {
+      "title": "Ihre Bestellungen",
+      "cols": {
+        "order": "Bestellung",
+        "placed": "Datum",
+        "items": "Artikel",
+        "status": "Status",
+        "total": "Summe"
+      },
+      "empty": "Noch keine Bestellungen.",
+      "emptyFilter": "Keine Bestellungen für diesen Filter.",
+      "showAll": "Alle anzeigen",
+      "browse": "Tarife ansehen",
+      "total": "{today} heute · {monthly}/Monat",
+      "totalOnly": "{today} heute",
+      "more": "{names} +{count}",
+      "filterLabel": "Bestellungen nach Status filtern",
+      "listLabel": "Ihre Bestellungen",
+      "pagination": "Seiten",
+      "previous": "Zurück",
+      "next": "Weiter"
+    },
+    "filter": {
+      "all": "Alle",
+      "open": "Offen",
+      "completed": "Abgeschlossen",
+      "cancelled": "Storniert"
+    },
+    "page": "Seite {page} von {pages}",
+    "status": {
+      "placed": "Aufgegeben",
+      "processing": "In Bearbeitung",
+      "shipped": "Versendet",
+      "delivered": "Zugestellt",
+      "completed": "Abgeschlossen",
+      "cancelled": "Storniert",
+      "unknown": "Unbekannt"
+    },
+    "order": {
+      "title": "Bestellung",
+      "heading": "Bestellung {orderNumber}",
+      "placed": "Aufgegeben am {date}",
+      "serviceStart": "Servicebeginn {date}",
+      "items": "Artikel",
+      "cols": {
+        "item": "Artikel",
+        "type": "Art",
+        "qty": "Menge",
+        "unit": "Einzelpreis",
+        "total": "Summe"
+      },
+      "perMonth": "{amount}/Monat",
+      "partOf": "Gehört zu {plan}",
+      "totals": "Summen",
+      "dueAtOrder": "Fällig bei Bestellung",
+      "monthlyAfter": "Danach monatlich",
+      "modeOutright": "Einmalzahlung",
+      "modeInstallments": "Ratenzahlung, {months} Monate",
+      "modeLease": "Miete, {months} Monate",
+      "modeTotal": {
+        "outright": "Einmalzahlung {amount}",
+        "installments": "Raten {amount}/Monat",
+        "lease": "Miete {amount}/Monat"
+      },
+      "finalPayment": "Letzte Rate am {date}",
+      "returnBy": "Rückgabe bis {date}",
+      "schedule": "Ihre vereinbarten Preise",
+      "labels": "Broadband Facts zum Zeitpunkt Ihrer Bestellung",
+      "noLabel": "Für diese Bestellung ist kein Label verfügbar.",
+      "delivery": "Lieferadresse",
+      "deliveryStatus": "Lieferstatus",
+      "noAddress": "Diese Bestellung hat keine Lieferadresse.",
+      "print": "Beleg drucken",
+      "receiptFor": "Beleg zur Bestellung {orderNumber}",
+      "receiptCustomer": "Kunde: {name}",
+      "buyAgain": "Erneut bestellen",
+      "notFound": "Diese Bestellung wurde nicht gefunden",
+      "notFoundBody": "Sie gehört möglicherweise zu einem anderen Konto.",
+      "allOrders": "Alle Bestellungen",
+      "itemsLabel": "Bestellpositionen"
+    },
+    "reorder": {
+      "unavailable": "Diese Artikel konnten nicht hinzugefügt werden: {names}.",
+      "unavailableTitle": "Einige Artikel sind nicht verfügbar",
+      "continue": "Weiter zu Mein Paket",
+      "done": "Wir haben aus dieser Bestellung ein neues Paket erstellt.",
+      "pending": "Ihr Paket wird erstellt…",
+      "error": "Wir konnten diese Bestellung nicht übernehmen. Versuchen Sie es gleich noch einmal."
+    }
+  },
   "auth": {
     "login": {
       "title": "Anmelden",
