@@ -147,6 +147,29 @@ const eslintConfig = defineConfig([
     rules: restrictSyntax([NAV_CONTROL_FLOW]),
   },
 
+  // 8. lib/offers and lib/pricing are pure TypeScript (D-024): no framework, no I/O.
+  {
+    files: ['lib/offers/**/*.{ts,tsx}', 'lib/pricing/**/*.{ts,tsx}'],
+    rules: {
+      ...restrictImports({ paths: [CLIENT_BUILDER, ...NAV_PATHS], patterns: PURE_MODULE }),
+      'no-restricted-globals': ['error', 'fetch', 'window', 'document'],
+    },
+  },
+
+  // 9. lib/types.ts is the application type source: no platform imports.
+  {
+    files: ['lib/types.ts'],
+    rules: restrictImports({
+      paths: [CLIENT_BUILDER, ...NAV_PATHS],
+      patterns: [
+        {
+          group: ['@commercetools/*', '@/lib/ct/*', '**/lib/ct/*'],
+          message: 'lib/types.ts is the application type source: no platform imports.',
+        },
+      ],
+    }),
+  },
+
   // 10. Tests may mock server modules. Keep this block last.
   {
     files: ['**/*.test.{ts,tsx}', 'test/**'],

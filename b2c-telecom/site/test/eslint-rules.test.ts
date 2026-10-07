@@ -132,6 +132,35 @@ describe('Locale-aware navigation', () => {
   });
 });
 
+describe('Pure modules and the application type source', () => {
+  it('lib/offers importing react or @/lib/ct/cart errors', async () => {
+    expect(await lint("import { useState } from 'react';\nexport const x = useState;\n", 'lib/offers/x.ts')).toHaveLength(1);
+    expect(await lint("import { getCart } from '@/lib/ct/cart';\nexport const x = getCart;\n", 'lib/offers/x.ts')).toHaveLength(1);
+    expect(await lint("import { getCart } from '@/lib/ct/cart';\nexport const x = getCart;\n", 'lib/pricing/x.ts')).toHaveLength(1);
+  });
+
+  it('lib/offers using fetch, window or document errors', async () => {
+    expect(await lint("export const load = () => fetch('/x');\n", 'lib/offers/x.ts')).toHaveLength(1);
+    expect(await lint('export const w = () => window.innerWidth;\n', 'lib/pricing/x.ts')).toHaveLength(1);
+    expect(await lint('export const d = () => document.title;\n', 'lib/pricing/x.ts')).toHaveLength(1);
+  });
+
+  it('a pure function in lib/offers is fine', async () => {
+    expect(await lint('export const add = (a: number, b: number) => a + b;\n', 'lib/offers/x.ts')).toEqual([]);
+    expect(await lint("import type { Cart } from '@/lib/types';\nexport type X = Cart;\n", 'lib/offers/x.ts')).toEqual([]);
+  });
+
+  it('lib/types.ts importing @commercetools/platform-sdk errors', async () => {
+    const messages = await lint("import type { Cart } from '@commercetools/platform-sdk';\nexport type X = Cart;\n", 'lib/types.ts');
+    expect(messages).toHaveLength(1);
+    expect(messages[0]).toContain('application type source');
+  });
+
+  it('lib/types.ts without platform imports is fine', async () => {
+    expect(await lint('export type Money = { centAmount: number; currencyCode: string };\n', 'lib/types.ts')).toEqual([]);
+  });
+});
+
 describe('Raw commercetools fetch', () => {
   const literal = "export const load = () => fetch('https://api.us-central1.gcp.commercetools.com/x');\n";
   const template = 'const project = "p";\nexport const load = () => fetch(`https://api.us-central1.gcp.commercetools.com/${project}`);\n';
