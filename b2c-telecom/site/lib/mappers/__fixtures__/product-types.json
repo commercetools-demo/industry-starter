@@ -1,0 +1,26 @@
+[
+  {
+    "id": "a4aa98e6-9878-43c8-919e-4124de36f95b",
+    "key": "malva-internet-plan"
+  },
+  {
+    "id": "271b53db-252e-473c-9b99-bbf39311a66a",
+    "key": "malva-phone-plan"
+  },
+  {
+    "id": "30905cdb-7fbe-4a68-9d21-b84320f8bad9",
+    "key": "malva-addon"
+  },
+  {
+    "id": "41f9b5e4-84fe-499f-88ca-c335e1b820b6",
+    "key": "malva-equipment"
+  },
+  {
+    "id": "d6f0db80-6ac8-4cf2-b30c-8a97a58e8aa6",
+    "key": "malva-device"
+  },
+  {
+    "id": "b44a5700-4f88-42dc-9764-4c061c75539b",
+    "key": "malva-offer"
+  }
+]

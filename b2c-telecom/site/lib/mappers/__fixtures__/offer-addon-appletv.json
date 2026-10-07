@@ -1,0 +1,161 @@
+{
+  "id": "39801d35-b97d-4ebd-b226-50f1d2fbabf4",
+  "version": 4,
+  "productType": {
+    "typeId": "product-type",
+    "id": "b44a5700-4f88-42dc-9764-4c061c75539b"
+  },
+  "name": {
+    "en-US": "Apple TV+",
+    "de-DE": "Apple TV+"
+  },
+  "description": {
+    "en-US": "Award-winning originals, streamed anywhere.",
+    "de-DE": "Preisgekrönte Originals, überall streamen."
+  },
+  "categories": [
+    {
+      "typeId": "category",
+      "id": "fc4b1b5a-837f-4a33-8cb9-ddb95a525d4f"
+    },
+    {
+      "typeId": "category",
+      "id": "6d5e6055-4ddc-40d9-88d4-d614b490f26a"
+    }
+  ],
+  "categoryOrderHints": {
+    "fc4b1b5a-837f-4a33-8cb9-ddb95a525d4f": "0.2",
+    "6d5e6055-4ddc-40d9-88d4-d614b490f26a": "0.2"
+  },
+  "slug": {
+    "en-US": "appletv",
+    "de-DE": "appletv"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "MLV-ADD-APPLETV-MTH",
+    "key": "mlv-add-appletv-mth",
+    "prices": [
+      {
+        "id": "7376e2d6-19ba-4d39-9267-c3ce3d5176fd",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 1000,
+          "fractionDigits": 2
+        },
+        "key": "mlv-add-appletv-mth_usd_malva-monthly",
+        "country": "US",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+        }
+      },
+      {
+        "id": "26eef8c2-28cf-41b4-93dd-48d2f5a9b80c",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 1000,
+          "fractionDigits": 2
+        },
+        "key": "mlv-add-appletv-mth_eur_malva-monthly",
+        "country": "DE",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+        }
+      }
+    ],
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/2162496231/photo/living-room-interior-with-lcd-tv-set-potted-plant-armchair-and-decorations.jpg",
+        "label": "Photo via Pexels",
+        "dimensions": {
+          "w": 612,
+          "h": 408
+        }
+      }
+    ],
+    "attributes": [
+      {
+        "name": "anchors",
+        "value": [
+          "malva-appletv"
+        ]
+      },
+      {
+        "name": "offer-kind",
+        "value": {
+          "key": "addon",
+          "label": "addon"
+        }
+      },
+      {
+        "name": "audience",
+        "value": [
+          {
+            "key": "consumer",
+            "label": "consumer"
+          },
+          {
+            "key": "small-business",
+            "label": "small-business"
+          },
+          {
+            "key": "employee",
+            "label": "employee"
+          }
+        ]
+      },
+      {
+        "name": "addon-tag",
+        "value": {
+          "key": "video",
+          "label": {
+            "en-US": "Video",
+            "de-DE": "Video"
+          }
+        }
+      },
+      {
+        "name": "existing-customer",
+        "value": {
+          "key": "any",
+          "label": "any"
+        }
+      },
+      {
+        "name": "charge-type",
+        "value": {
+          "key": "monthly",
+          "label": {
+            "en-US": "Monthly",
+            "de-DE": "Monatlich"
+          }
+        }
+      },
+      {
+        "name": "offer-family",
+        "value": "addon"
+      },
+      {
+        "name": "contract-term",
+        "value": {
+          "key": "month-to-month",
+          "label": {
+            "en-US": "Month-to-month",
+            "de-DE": "Monatlich kündbar"
+          }
+        }
+      }
+    ]
+  },
+  "variants": [],
+  "attributes": [],
+  "key": "malva-offer-appletv",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "d49bf476-a882-4ccc-9e79-de3d3e6fe5ea"
+  }
+}

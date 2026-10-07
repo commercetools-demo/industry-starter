@@ -1,0 +1,92 @@
+{
+  "id": "ac2a9796-cb51-46c1-9c96-a468afa205c7",
+  "version": 1,
+  "productType": {
+    "typeId": "product-type",
+    "id": "41f9b5e4-84fe-499f-88ca-c335e1b820b6"
+  },
+  "name": {
+    "en-US": "Malva WiFi 5 Router AC1200",
+    "de-DE": "Malva WLAN-5-Router AC1200"
+  },
+  "description": {
+    "en-US": "Entry-level Wi-Fi 5 router for plans up to 300 Mbps.",
+    "de-DE": "Wi-Fi-5-Einstiegsrouter für Tarife bis 300 Mbit/s."
+  },
+  "categories": [],
+  "categoryOrderHints": {},
+  "slug": {
+    "en-US": "router-ac1200-details",
+    "de-DE": "router-ac1200-details"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "MLV-EQP-AC1200-BASE",
+    "key": "mlv-eqp-ac1200-base",
+    "prices": [],
+    "images": [],
+    "attributes": [
+      {
+        "name": "highlights",
+        "value": [
+          {
+            "en-US": "Wi-Fi 5, dual band",
+            "de-DE": "WLAN 5, Dualband"
+          },
+          {
+            "en-US": "Up to 300 Mbps",
+            "de-DE": "Bis zu 300 Mbit/s"
+          }
+        ]
+      },
+      {
+        "name": "wifi-standard",
+        "value": {
+          "key": "wifi-5",
+          "label": "wifi-5"
+        }
+      },
+      {
+        "name": "charge-type",
+        "value": {
+          "key": "monthly-rental",
+          "label": {
+            "en-US": "Monthly rental",
+            "de-DE": "Monatliche Miete"
+          }
+        }
+      },
+      {
+        "name": "supported-technologies",
+        "value": [
+          {
+            "key": "cable",
+            "label": "cable"
+          },
+          {
+            "key": "fixed-wireless",
+            "label": "fixed-wireless"
+          }
+        ]
+      },
+      {
+        "name": "max-downstream-mbps",
+        "value": 300
+      },
+      {
+        "name": "equipment-kind",
+        "value": {
+          "key": "router",
+          "label": "router"
+        }
+      }
+    ]
+  },
+  "variants": [],
+  "attributes": [],
+  "key": "malva-router-ac1200",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "d49bf476-a882-4ccc-9e79-de3d3e6fe5ea"
+  }
+}

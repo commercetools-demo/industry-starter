@@ -1,0 +1,154 @@
+{
+  "id": "7db8a581-9bdc-48f6-b5c5-576b92e0386f",
+  "version": 1,
+  "productType": {
+    "typeId": "product-type",
+    "id": "a4aa98e6-9878-43c8-919e-4124de36f95b"
+  },
+  "name": {
+    "en-US": "Cable Gig",
+    "de-DE": "Cable Gig"
+  },
+  "description": {
+    "en-US": "Gigabit cable internet with whole-home mesh Wi-Fi and free professional installation.",
+    "de-DE": "Gigabit-Kabel-Internet mit Mesh-WLAN für das ganze Zuhause und kostenloser Profi-Installation."
+  },
+  "categories": [],
+  "categoryOrderHints": {},
+  "slug": {
+    "en-US": "cable-gig-details",
+    "de-DE": "cable-gig-details"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "MLV-CBL-GIG-BASE",
+    "key": "mlv-cbl-gig-base",
+    "prices": [],
+    "images": [],
+    "attributes": [
+      {
+        "name": "data-gb",
+        "value": -1
+      },
+      {
+        "name": "highlights",
+        "value": [
+          {
+            "en-US": "1 Gbps download",
+            "de-DE": "1 Gbit/s Download"
+          },
+          {
+            "en-US": "Unlimited data",
+            "de-DE": "Unbegrenztes Datenvolumen"
+          },
+          {
+            "en-US": "Whole-home mesh Wi-Fi",
+            "de-DE": "Mesh-WLAN für das ganze Zuhause"
+          },
+          {
+            "en-US": "Free professional install",
+            "de-DE": "Kostenlose Profi-Installation"
+          }
+        ]
+      },
+      {
+        "name": "typical-latency-ms",
+        "value": 11
+      },
+      {
+        "name": "upstream-mbps",
+        "value": 60
+      },
+      {
+        "name": "early-termination-fee",
+        "value": {
+          "en-US": "$10 x months remaining",
+          "de-DE": "10 € x verbleibende Monate"
+        }
+      },
+      {
+        "name": "typical-download-mbps",
+        "value": 940
+      },
+      {
+        "name": "typical-upload-mbps",
+        "value": 60
+      },
+      {
+        "name": "included-addons",
+        "value": [
+          "malva-appletv"
+        ]
+      },
+      {
+        "name": "label-plan-id",
+        "value": "MLV-CA-102"
+      },
+      {
+        "name": "charge-type",
+        "value": {
+          "key": "monthly",
+          "label": {
+            "en-US": "Monthly",
+            "de-DE": "Monatlich"
+          }
+        }
+      },
+      {
+        "name": "price-lock-months",
+        "value": 24
+      },
+      {
+        "name": "required-equipment-kinds",
+        "value": [
+          {
+            "key": "modem",
+            "label": "modem"
+          }
+        ]
+      },
+      {
+        "name": "technology",
+        "value": {
+          "key": "cable",
+          "label": {
+            "en-US": "Cable",
+            "de-DE": "Kabel"
+          }
+        }
+      },
+      {
+        "name": "bundle-discount-text",
+        "value": {
+          "en-US": "Bundle with a phone plan for $5 off monthly.",
+          "de-DE": "In Kombination mit einem Handytarif 5 € monatlich sparen."
+        }
+      },
+      {
+        "name": "downstream-mbps",
+        "value": 1000
+      },
+      {
+        "name": "activation-fee",
+        "value": 25
+      },
+      {
+        "name": "contract-term",
+        "value": {
+          "key": "24-months",
+          "label": {
+            "en-US": "24 months",
+            "de-DE": "24 Monate"
+          }
+        }
+      }
+    ]
+  },
+  "variants": [],
+  "attributes": [],
+  "key": "malva-cable-gig",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "d49bf476-a882-4ccc-9e79-de3d3e6fe5ea"
+  }
+}

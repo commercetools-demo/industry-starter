@@ -1,0 +1,306 @@
+{
+  "id": "2530fcb6-e712-413d-8b66-f839e1c07a39",
+  "version": 1,
+  "productType": {
+    "typeId": "product-type",
+    "id": "d6f0db80-6ac8-4cf2-b30c-8a97a58e8aa6"
+  },
+  "name": {
+    "en-US": "Nova 5G",
+    "de-DE": "Nova 5G"
+  },
+  "description": {
+    "en-US": "Malva Nova 5G: a 6.1-inch 5G phone with a 128 GB or 256 GB option.",
+    "de-DE": "Malva Nova 5G: ein 6,1-Zoll-5G-Handy mit 128 GB oder 256 GB Speicher."
+  },
+  "categories": [],
+  "categoryOrderHints": {},
+  "slug": {
+    "en-US": "phone-nova-5g-details",
+    "de-DE": "phone-nova-5g-details"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "MLV-DEV-NOVA5G-BLK-128-BASE",
+    "key": "mlv-dev-nova5g-blk-128-base",
+    "prices": [],
+    "images": [],
+    "attributes": [
+      {
+        "name": "highlights",
+        "value": [
+          {
+            "en-US": "6.1-inch display",
+            "de-DE": "6,1-Zoll-Display"
+          },
+          {
+            "en-US": "5G ready",
+            "de-DE": "5G-fähig"
+          }
+        ]
+      },
+      {
+        "name": "color",
+        "value": {
+          "key": "black",
+          "label": {
+            "en-US": "Black",
+            "de-DE": "Schwarz"
+          }
+        }
+      },
+      {
+        "name": "network-generation",
+        "value": {
+          "key": "5g",
+          "label": {
+            "en-US": "5G",
+            "de-DE": "5G"
+          }
+        }
+      },
+      {
+        "name": "compatible-plan-families",
+        "value": [
+          {
+            "key": "phone",
+            "label": "phone"
+          }
+        ]
+      },
+      {
+        "name": "os",
+        "value": {
+          "key": "android",
+          "label": "android"
+        }
+      },
+      {
+        "name": "brand",
+        "value": "Malva"
+      },
+      {
+        "name": "memory-gb",
+        "value": {
+          "key": "128",
+          "label": "128 GB"
+        }
+      }
+    ]
+  },
+  "variants": [
+    {
+      "id": 2,
+      "sku": "MLV-DEV-NOVA5G-BLK-256-BASE",
+      "key": "mlv-dev-nova5g-blk-256-base",
+      "prices": [],
+      "images": [],
+      "attributes": [
+        {
+          "name": "highlights",
+          "value": [
+            {
+              "en-US": "6.1-inch display",
+              "de-DE": "6,1-Zoll-Display"
+            },
+            {
+              "en-US": "5G ready",
+              "de-DE": "5G-fähig"
+            }
+          ]
+        },
+        {
+          "name": "color",
+          "value": {
+            "key": "black",
+            "label": {
+              "en-US": "Black",
+              "de-DE": "Schwarz"
+            }
+          }
+        },
+        {
+          "name": "network-generation",
+          "value": {
+            "key": "5g",
+            "label": {
+              "en-US": "5G",
+              "de-DE": "5G"
+            }
+          }
+        },
+        {
+          "name": "compatible-plan-families",
+          "value": [
+            {
+              "key": "phone",
+              "label": "phone"
+            }
+          ]
+        },
+        {
+          "name": "os",
+          "value": {
+            "key": "android",
+            "label": "android"
+          }
+        },
+        {
+          "name": "brand",
+          "value": "Malva"
+        },
+        {
+          "name": "memory-gb",
+          "value": {
+            "key": "256",
+            "label": "256 GB"
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "sku": "MLV-DEV-NOVA5G-SLV-128-BASE",
+      "key": "mlv-dev-nova5g-slv-128-base",
+      "prices": [],
+      "images": [],
+      "attributes": [
+        {
+          "name": "highlights",
+          "value": [
+            {
+              "en-US": "6.1-inch display",
+              "de-DE": "6,1-Zoll-Display"
+            },
+            {
+              "en-US": "5G ready",
+              "de-DE": "5G-fähig"
+            }
+          ]
+        },
+        {
+          "name": "color",
+          "value": {
+            "key": "silver",
+            "label": {
+              "en-US": "Silver",
+              "de-DE": "Silber"
+            }
+          }
+        },
+        {
+          "name": "network-generation",
+          "value": {
+            "key": "5g",
+            "label": {
+              "en-US": "5G",
+              "de-DE": "5G"
+            }
+          }
+        },
+        {
+          "name": "compatible-plan-families",
+          "value": [
+            {
+              "key": "phone",
+              "label": "phone"
+            }
+          ]
+        },
+        {
+          "name": "os",
+          "value": {
+            "key": "android",
+            "label": "android"
+          }
+        },
+        {
+          "name": "brand",
+          "value": "Malva"
+        },
+        {
+          "name": "memory-gb",
+          "value": {
+            "key": "128",
+            "label": "128 GB"
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "sku": "MLV-DEV-NOVA5G-SLV-256-BASE",
+      "key": "mlv-dev-nova5g-slv-256-base",
+      "prices": [],
+      "images": [],
+      "attributes": [
+        {
+          "name": "highlights",
+          "value": [
+            {
+              "en-US": "6.1-inch display",
+              "de-DE": "6,1-Zoll-Display"
+            },
+            {
+              "en-US": "5G ready",
+              "de-DE": "5G-fähig"
+            }
+          ]
+        },
+        {
+          "name": "color",
+          "value": {
+            "key": "silver",
+            "label": {
+              "en-US": "Silver",
+              "de-DE": "Silber"
+            }
+          }
+        },
+        {
+          "name": "network-generation",
+          "value": {
+            "key": "5g",
+            "label": {
+              "en-US": "5G",
+              "de-DE": "5G"
+            }
+          }
+        },
+        {
+          "name": "compatible-plan-families",
+          "value": [
+            {
+              "key": "phone",
+              "label": "phone"
+            }
+          ]
+        },
+        {
+          "name": "os",
+          "value": {
+            "key": "android",
+            "label": "android"
+          }
+        },
+        {
+          "name": "brand",
+          "value": "Malva"
+        },
+        {
+          "name": "memory-gb",
+          "value": {
+            "key": "256",
+            "label": "256 GB"
+          }
+        }
+      ]
+    }
+  ],
+  "attributes": [],
+  "key": "malva-phone-nova-5g",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "d49bf476-a882-4ccc-9e79-de3d3e6fe5ea"
+  }
+}
