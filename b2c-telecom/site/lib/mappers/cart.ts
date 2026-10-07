@@ -3,6 +3,7 @@ import type { Cart as CtCart, CustomLineItem, LineItem } from '@commercetools/pl
 import { ACTIVATION_FEE_SLUG_PREFIX } from '@/lib/config/cart';
 import { MONTHLY_POLICY_KEY } from '@/lib/config/pricing';
 import { getMinimumOrder, shortfall } from '@/lib/cart/minimum';
+import { readAcquisition } from '@/lib/devices/acquisition';
 import { refersTo } from '@/lib/offers/refs';
 import { getLocalizedString } from '@/lib/format';
 import { buildLabel, formatLabelMoney } from '@/lib/pricing/label';
@@ -103,6 +104,8 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
     const unitListPrice = money(item.price.value);
     const recurring = item.recurrenceInfo !== undefined;
     const quantity = item.quantity;
+    // Q: how a device is acquired is read from the line fields, never inferred from its price. A financed device line is not a service line.
+    const acquisition = readAcquisition(fields);
     return {
       id: item.id,
       source: 'line-item',
@@ -118,7 +121,7 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
       quantity,
       termMonths: (variant?.termMonths ?? 0) as TermMonths,
       chargeType: recurring ? 'recurring' : 'one-time',
-      recurrence: item.recurrenceInfo ? { policyKey: MONTHLY_POLICY_KEY, priceSelectionMode: item.recurrenceInfo.priceSelectionMode === 'Fixed' ? 'Fixed' : 'Dynamic' } : null,
+      recurrence: item.recurrenceInfo && !acquisition ? { policyKey: MONTHLY_POLICY_KEY, priceSelectionMode: item.recurrenceInfo.priceSelectionMode === 'Fixed' ? 'Fixed' : 'Dynamic' } : null,
       unitListPrice,
       unitPrice: { centAmount: quantity > 0 ? Math.round(total.centAmount / quantity) : total.centAmount, currencyCode: total.currencyCode },
       total,
@@ -129,6 +132,7 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
       schedule: null,
       label: null,
       stock: null,
+      ...(acquisition ? { acquisition } : {}),
     };
   });
 

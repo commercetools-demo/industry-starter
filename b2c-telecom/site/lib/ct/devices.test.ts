@@ -40,7 +40,7 @@ vi.mock('@/lib/ct/client', () => ({
 vi.mock('@/lib/ct/catalog', () => ({ getAllOffers: async () => [] }));
 vi.mock('@/lib/ct/customer', () => ({ getCustomerById: async () => state.customer }));
 
-import { applyDeviceRecurringExpiry, getCreditFlag, getDevicePolicyId, getDevicePolicyMap } from './devices';
+import { applyDeviceRecurringExpiry, assertDeviceCartIntegrity, getCreditFlag, getDevicePolicyId, getDevicePolicyMap } from './devices';
 
 const line = (policyId: string) => ({ recurrenceInfo: { recurrencePolicy: { id: policyId } } });
 const order = (id: string, policyIds: string[], patch: Partial<RecurringOrder> = {}): unknown => ({
@@ -133,5 +133,22 @@ describe('applyDeviceRecurringExpiry', () => {
     expect(result).toEqual({ applied: [], skipped: [], polls: 0 });
     expect(state.reads).toBe(5);
     expect(sleeps).toHaveLength(4);
+  });
+});
+
+describe('assertDeviceCartIntegrity', () => {
+  const deviceLine = (id: string, mode: string, term: number, policyId?: string) => ({
+    id,
+    price: policyId ? { recurrencePolicy: { id: policyId } } : {},
+    ...(policyId ? { recurrenceInfo: { recurrencePolicy: { id: policyId } } } : {}),
+    custom: { fields: { acquisitionMode: mode, acquisitionTermMonths: term } },
+  });
+
+  it('passes when every device line prices from the policy of its recorded mode and term', async () => {
+    await expect(assertDeviceCartIntegrity({ lineItems: [deviceLine('a', 'outright', 0), deviceLine('b', 'installments', 24, 'p-24'), deviceLine('c', 'lease', 24, 'p-l')] as never })).resolves.toBeUndefined();
+  });
+
+  it('throws PRICE_NOT_FOR_TERM for a financed line whose price fell back to the one-time price', async () => {
+    await expect(assertDeviceCartIntegrity({ lineItems: [deviceLine('b', 'installments', 24)] as never })).rejects.toMatchObject({ code: 'PRICE_NOT_FOR_TERM', lineItemId: 'b' });
   });
 });

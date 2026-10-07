@@ -4,7 +4,7 @@ import { BundleRefusal, blockedRefusal } from '@/lib/cart/errors';
 import { guardAdd } from '@/lib/cart/guard';
 import { checkQuantity } from '@/lib/cart/quantity';
 import { availableModeNames, getAvailableModes, policyKeyFor, readAcquisition } from '@/lib/devices/acquisition';
-import { assertDeviceCartIntegrity, buildAddDeviceActions, buildChangeModeActions, checkPriceFromPolicy } from '@/lib/devices/cart-actions';
+import { buildAddDeviceActions, buildChangeModeActions, checkPriceFromPolicy } from '@/lib/devices/cart-actions';
 import { mapDeviceOffer } from '@/lib/mappers/device';
 import type { SessionData } from '@/lib/session-types';
 import type { AcquisitionMode, DeviceOffer, DeviceVariant, Market, Offer } from '@/lib/types';
@@ -184,10 +184,4 @@ export async function changeDeviceMode(session: SessionData, market: Market, lin
     return after;
   });
   return outcome((await mapForMarket(updated, market)).cart);
-}
-
-/** Re-checks every device line of a cart against the policy of its recorded mode (U calls this before it creates a checkout session). */
-export async function assertDeviceLinesPriced(cart: CtCart): Promise<void> {
-  const policyKeyById = await getDevicePolicyMap();
-  assertDeviceCartIntegrity(cart.lineItems, Object.fromEntries(Object.entries(policyKeyById).map(([id, key]) => [key, id])));
 }

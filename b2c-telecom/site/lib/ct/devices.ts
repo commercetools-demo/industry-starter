@@ -3,6 +3,7 @@ import type { Cart as CtCart, CartUpdateAction, LineItem, RecurringOrder } from 
 import { unstable_cache } from 'next/cache';
 import { DEVICE_POLICY_KEYS, EXPIRY_POLL_ATTEMPTS, EXPIRY_POLL_INTERVAL_MS, POLICY_CACHE_SECONDS } from '@/lib/config/devices';
 import { computeEndDate, computeRecurringExpiry, modeOfPolicyKey, readAcquisition } from '@/lib/devices/acquisition';
+import { assertDeviceCartIntegrity as assertDeviceLines } from '@/lib/devices/cart-actions';
 import { getFinancingProvider } from '@/lib/devices/financing';
 import { mapDeviceOffer } from '@/lib/mappers/device';
 import type { SessionData } from '@/lib/session-types';
@@ -199,4 +200,14 @@ export async function evaluateFinancing(session: SessionData, market: Market): P
   });
   if (cart && decision.outcome === 'approved' && decision.reason === 'ok') await recordFinancingDecision(cart.id, decision);
   return decision;
+}
+
+/**
+ * Every device line of the cart must still price from the policy of its recorded mode and term, or this throws `PriceNotForTermError`
+ * (code PRICE_NOT_FOR_TERM). U calls it before it creates a checkout session, so a price that fell back to the outright price can never
+ * be charged as if it were a monthly amount.
+ */
+export async function assertDeviceCartIntegrity(cart: Pick<CtCart, 'lineItems'>): Promise<void> {
+  const policyKeyById = await getDevicePolicyMap();
+  assertDeviceLines(cart.lineItems, Object.fromEntries(Object.entries(policyKeyById).map(([id, key]) => [key, id])));
 }
