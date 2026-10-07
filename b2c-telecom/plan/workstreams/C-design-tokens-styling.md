@@ -120,7 +120,7 @@ Planner default (spec open question on contrast): breadcrumbs on `brand-100` use
 - [x] C-05 Append the design-lint block to `eslint.config.mjs` and spread `DESIGN_SYNTAX` into the existing `no-restricted-syntax` arrays as described. Test `eslint-design.test.ts` (node env, ESLint API like B's): `className="bg-[#fff]"` in `components/ui/x.tsx` errors with "Raw hex color"; `className="p-[16px]"` errors with "Raw px value"; `style={{ fontFamily: 'font-family: Lato' }}`-style literal errors with "Font not provided"; the same in `components/label/BroadbandLabel.tsx` passes; in `x.test.tsx` passes; `bg-brand-500 text-text-on-brand` passes; B's `fetch('/api/x')` rule still errors in `components/`.
 - [x] C-06 Write `app/dev/tokens/page.dev.tsx` as designed. Test `app/dev/tokens/page.dev.test.tsx`: renders the six section ids; the CTA sample has classes `bg-action`, `hover:bg-action-hover`, `rounded-pill`, `text-text-on-pink`; no element uses `text-white`; `next.config` development extensions contain `dev.tsx` (reuse A's test helper).
 - [x] C-07 Write `app/globals.contrast.test.ts` as designed.
-- [ ] C-08 Run `npm run verify`; confirm `npm run build` output route list has no `/dev/tokens`. Report C- checks as ready.
+- [x] C-08 Run `npm run verify`; confirm `npm run build` output route list has no `/dev/tokens`. Report C- checks as ready.
 
 ## Unit tests (scenario → test)
 | Scenario (exact title from the spec) | Capability | Test (file → `it(...)` name) |
