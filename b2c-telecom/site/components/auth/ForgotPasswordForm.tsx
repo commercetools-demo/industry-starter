@@ -18,7 +18,16 @@ const FIELDS = ['email'] as const;
  * Asks for a reset link. The confirmation is the same for every address; the demo banner and link appear only when the server
  * returns `demoLink` (D-033: no email is sent, DEMO_SHOW_RESET_LINK=true). Also used inline on the "link no longer usable" state.
  */
-export function ForgotPasswordForm({ returnTo, showBackLink = true }: { returnTo?: string | undefined; showBackLink?: boolean }): ReactElement {
+export function ForgotPasswordForm({
+  returnTo,
+  showBackLink = true,
+  submitKey = 'forgot.submit',
+}: {
+  returnTo?: string | undefined;
+  showBackLink?: boolean;
+  /** Message key (namespace `auth`) of the button: the expired state of the reset page says "Send a new link". */
+  submitKey?: 'forgot.submit' | 'reset.sendNew';
+}): ReactElement {
   const t = useTranslations('auth');
   const locale = useLocale();
   const { forgotPassword } = useAuthMutations();
@@ -84,7 +93,7 @@ export function ForgotPasswordForm({ returnTo, showBackLink = true }: { returnTo
         {formError}
       </p>
       <Button type="submit" block loading={pending}>
-        {pending ? t('forgot.pending') : t('forgot.submit')}
+        {pending ? t('forgot.pending') : t(submitKey)}
       </Button>
       {backLink}
     </form>
