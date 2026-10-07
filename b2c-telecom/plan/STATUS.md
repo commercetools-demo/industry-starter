@@ -14,8 +14,8 @@ Updated by the developer on each task and by Claude (after Chrome verification) 
 | H | Data-loading foundation | 11 | 11 | Merged (verify + node-run live requests; Chrome C-H pending) | orchestrator | 2026-10-07 |
 | I | Design system primitives, shell and error pages | 16 | 16 | Merged (verify + curl smoke; Chrome C-I pending) | orchestrator | 2026-10-07 |
 | J | Offer rules: compatibility, add-ons, required equipment | 10 | 10 | Merged (verify + live lint:catalog 0 errors; Chrome C-J pending) | orchestrator | 2026-10-07 |
-| K | Exclusivity and eligibility | 12 | 0 | Not started | | |
-| L | Recurring pricing core and checkout spike | 13 | 0 | Not started | | |
+| K | Exclusivity and eligibility | 12 | 12 | Merged (verify + curl C-K-1..7; rest pending M/R/U) | orchestrator | 2026-10-07 |
+| L | Recurring pricing core and checkout spike | 13 | 12 | Merged (L-09 blocked on OA-05; Chrome C-L pending) | orchestrator | 2026-10-07 |
 | M | My bundle, Broadband Facts label, discount prompt | 19 | 0 | Not started | | |
 | N | Category listings and add-ons page | 15 | 0 | Not started | | |
 | O | Home page | 7 | 0 | Not started | | |
