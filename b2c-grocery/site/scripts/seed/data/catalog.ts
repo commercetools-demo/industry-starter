@@ -1,3 +1,5 @@
+import savedImages from './product-images.json';
+
 // Compact catalog definition. `buildProductDrafts()` turns it into commercetools product drafts.
 export type Unit = 'g' | 'kg' | 'ml' | 'l' | 'each';
 type Flag = 'W' | 'A' | 'OOS' | 'R';
@@ -78,7 +80,10 @@ export function buildProductDrafts(): Record<string, unknown>[] {
         { value: { currencyCode: 'USD', centAmount: v.usd }, country: 'US' },
         { value: { currencyCode: 'EUR', centAmount: eurCents(v.usd) }, country: 'DE' },
       ],
-      images: [{ url: `https://picsum.photos/seed/${skuOf(d.key, v).toLowerCase()}/800/800`, dimensions: { w: 800, h: 800 } }],
+      // Photos picked by `npm run seed:images` when present, else a placeholder.
+      images: (savedImages as Record<string, { url: string; dimensions: { w: number; h: number } }[]>)[d.key] ?? [
+        { url: `https://picsum.photos/seed/${skuOf(d.key, v).toLowerCase()}/800/800`, dimensions: { w: 800, h: 800 } },
+      ],
       attributes: [
         ...productAttrs(d),
         attr('incrementValue', v.value),

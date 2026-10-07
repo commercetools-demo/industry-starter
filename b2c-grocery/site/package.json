@@ -17,6 +17,7 @@
     "verify:release": "npm run verify && npm run check:release",
     "verify": "npm run check:secrets && npm run check:lockfile && npm run check:tokens && npm run lint && npm run typecheck && npm test && npm run build && npm run check:bundle",
     "seed": "tsx scripts/seed/seed.ts",
+    "seed:images": "tsx scripts/seed/update-images.ts",
     "seed:verify": "tsx scripts/seed/verify.ts",
     "check:tokens": "node scripts/check-tokens.mjs"
   },
