@@ -1008,5 +1008,74 @@
       "wireless": "{bundle} off monthly when you add a phone plan.",
       "phone": "Second line {secondLine} off. {bundle} off your internet plan when you also have a phone plan."
     }
+  },
+  "devices": {
+    "from": "Ab {price}/Monat",
+    "orOutright": "oder {price} bei Einmalzahlung",
+    "color": "Farbe",
+    "memory": "Speicher",
+    "memoryValue": "{gb} GB",
+    "colorName": {
+      "black": "Schwarz",
+      "silver": "Silber",
+      "violet": "Violett"
+    },
+    "mode": {
+      "label": "Wie möchten Sie zahlen?",
+      "outright": "Einmalzahlung",
+      "installments": "Ratenzahlung",
+      "lease": "Miete",
+      "description": {
+        "outright": "Eine Zahlung heute. Das Gerät gehört Ihnen.",
+        "installments": "Den Preis auf monatliche Raten verteilen.",
+        "lease": "Monatlich zahlen und das Gerät am Ende zurückgeben."
+      }
+    },
+    "term": {
+      "label": "Laufzeit der Raten",
+      "months": "{months} Monate"
+    },
+    "summary": {
+      "title": "Das zahlen Sie",
+      "dueToday": "Heute fällig",
+      "then": "Danach {price}/Monat für weitere {count} Monate",
+      "total": "Gesamtbetrag: {price}"
+    },
+    "endOfTerm": {
+      "owned": "Das Gerät gehört Ihnen ab dem ersten Tag.",
+      "ownedAfterFinalPayment": "Das Gerät gehört Ihnen nach der letzten Rate am {date}.",
+      "return": "Am Ende der Mietzeit müssen Sie das Gerät bis zum {date} zurückgeben (innerhalb von 30 Tagen nach der letzten Rate)."
+    },
+    "estimate": "Voraussichtlich, wenn Sie heute bestellen.",
+    "add": "In mein Paket",
+    "unavailable": "{mode} ist für {device} nicht verfügbar. Verfügbar: {modes}.",
+    "unavailableShort": "Für {device} nicht verfügbar",
+    "termUnavailable": "Die Laufzeit von {months} Monaten ist für diese Farbe und diesen Speicher nicht verfügbar.",
+    "change": "Zahlungsart ändern",
+    "changeApply": "Übernehmen",
+    "changeCancel": "Abbrechen",
+    "quantity": {
+      "label": "Anzahl",
+      "decrease": "Weniger",
+      "increase": "Mehr"
+    },
+    "priceNotForTerm": "Für diese Laufzeit gibt es keinen Preis, daher wurde das Gerät nicht hinzugefügt.",
+    "limit": "Sie können dasselbe Gerät mit derselben Zahlungsart bis zu {max} Mal hinzufügen.",
+    "line": {
+      "term": "Über {months} Monate",
+      "mode": "Zahlungsart",
+      "quantity": "Anzahl: {count}"
+    },
+    "financing": {
+      "declinedTitle": "Die Finanzierung für dieses Paket konnte nicht genehmigt werden.",
+      "amountOverLimit": "Der finanzierte Gesamtbetrag liegt über Ihrem Limit von {limit}.",
+      "customerDeclined": "Für dieses Konto ist keine Finanzierung verfügbar.",
+      "payInFull": "Stattdessen in einer Summe zahlen"
+    },
+    "totals": {
+      "title": "Geräte nach Zahlungsart",
+      "byMode": "{mode}: {count} Artikel, heute fällig {due}, monatlich {monthly}"
+    },
+    "section": "Geräte"
   }
 }

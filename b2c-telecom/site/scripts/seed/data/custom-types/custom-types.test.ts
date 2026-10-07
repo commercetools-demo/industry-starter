@@ -22,6 +22,9 @@ describe('custom types', () => {
       ['acquisitionTermMonths', 'Number'],
       ['offerKey', 'String'],
       ['autoAdded', 'Boolean'],
+      ['acquisitionEndOfTerm', 'Enum'],
+      ['acquisitionEndDate', 'Date'],
+      ['financingDecisionId', 'String'],
     ]);
     expect(names(cartType)).toEqual(['postalCode', 'serviceableCable', 'serviceableWireless', 'serviceablePhone', 'demoMarker']);
     expect(names(customerType)).toEqual(['accountNumber', 'creditApproved', 'demoMarker', 'sessionsValidAfter']);

@@ -1008,5 +1008,74 @@
       "wireless": "{bundle} off monthly when you add a phone plan.",
       "phone": "Second line {secondLine} off. {bundle} off your internet plan when you also have a phone plan."
     }
+  },
+  "devices": {
+    "from": "From {price}/mo",
+    "orOutright": "or {price} outright",
+    "color": "Color",
+    "memory": "Memory",
+    "memoryValue": "{gb} GB",
+    "colorName": {
+      "black": "Black",
+      "silver": "Silver",
+      "violet": "Violet"
+    },
+    "mode": {
+      "label": "How do you want to pay?",
+      "outright": "Pay in full",
+      "installments": "Installments",
+      "lease": "Lease",
+      "description": {
+        "outright": "One payment today. The device is yours.",
+        "installments": "Spread the price over monthly payments.",
+        "lease": "Pay monthly and return the device at the end."
+      }
+    },
+    "term": {
+      "label": "Installment term",
+      "months": "{months} months"
+    },
+    "summary": {
+      "title": "What you pay",
+      "dueToday": "Due today",
+      "then": "Then {price}/mo for {count} more months",
+      "total": "Total payable: {price}"
+    },
+    "endOfTerm": {
+      "owned": "You own the device from day one.",
+      "ownedAfterFinalPayment": "You own the device after your final payment on {date}.",
+      "return": "At the end of the lease you must return the device by {date} (within 30 days of your final payment)."
+    },
+    "estimate": "Estimated, if you order today.",
+    "add": "Add to bundle",
+    "unavailable": "{mode} is not available for {device}. Available: {modes}.",
+    "unavailableShort": "Not available for {device}",
+    "termUnavailable": "The {months}-month term is not available for this color and memory.",
+    "change": "Change how you pay",
+    "changeApply": "Update",
+    "changeCancel": "Cancel",
+    "quantity": {
+      "label": "Quantity",
+      "decrease": "Fewer",
+      "increase": "More"
+    },
+    "priceNotForTerm": "This device has no price for that term, so it was not added.",
+    "limit": "You can add up to {max} of the same device and payment option.",
+    "line": {
+      "term": "Over {months} months",
+      "mode": "Payment option",
+      "quantity": "Quantity: {count}"
+    },
+    "financing": {
+      "declinedTitle": "We could not approve financing for this bundle.",
+      "amountOverLimit": "The financed total is above your limit of {limit}.",
+      "customerDeclined": "Financing is not available for this account.",
+      "payInFull": "Pay in full instead"
+    },
+    "totals": {
+      "title": "Devices by payment option",
+      "byMode": "{mode}: {count} item(s), due today {due}, monthly {monthly}"
+    },
+    "section": "Devices"
   }
 }

@@ -100,6 +100,8 @@ export interface OfferVariant {
   oneTimePrice?: Money;
   /** Devices only: every recurring (installment, lease) price of the market, lowest first. */
   financedPrices?: Money[];
+  /** Devices only (Q): the same prices with the id of their recurrence policy; Q maps the id to a mode and term. */
+  financedOptions?: { policyId: string; amount: Money }[];
   /** Only when the variant has an inventory entry (equipment, devices); undefined = not tracked (services, D-019). */
   availableQuantity?: number;
   images: string[];
@@ -428,6 +430,10 @@ export interface CartLine {
   label: BroadbandLabelData | null;
   /** Equipment and devices only. */
   stock: { available: number | null; inStock: boolean } | null;
+  /** Device lines only (Q): how the device is acquired, read from the line custom fields. */
+  acquisition?: LineAcquisition;
+  /** Device lines only (Q): the variant's color and memory and its prices per mode, so the bundle can offer "Change how you pay". */
+  device?: { color: string; memoryGb: number; prices: DevicePrices };
 }
 export type DiscountCodeReason = 'unknown-code' | 'not-active' | 'not-valid' | 'not-applicable' | 'max-reached' | 'stopped';
 export interface CartDiscountCodeInfo {
@@ -557,6 +563,90 @@ export interface MergeNote {
   names: string;
 }
 
+// ===== Q: devices =====
+export type AcquisitionMode = 'outright' | 'installments' | 'lease';
+export type InstallmentTerm = 12 | 24 | 36;
+export type EndOfTerm = 'owned' | 'owned-after-final-payment' | 'return';
+/** What a line of the bundle says about how its device is acquired (read from the line custom fields, never inferred from the price). */
+export interface LineAcquisition {
+  mode: AcquisitionMode;
+  /** 0 for outright. */
+  termMonths: number;
+  endOfTerm: EndOfTerm;
+  /** ISO date: final payment (installments) or return-by date (lease). Set when the financing decision is recorded. */
+  endDate?: string;
+  financingDecisionId?: string;
+}
+/** The prices of one device variant for one market: the outright price and one monthly amount per financed term. */
+export interface DevicePrices {
+  outright?: Money;
+  installments: Partial<Record<InstallmentTerm, Money>>;
+  lease: Partial<Record<24, Money>>;
+}
+export interface DeviceVariant {
+  sku: string;
+  /** Attribute key, e.g. `black`. */
+  color: string;
+  memoryGb: number;
+  prices: DevicePrices;
+  /** Only when the variant has an inventory entry. */
+  availableQuantity?: number;
+}
+export interface DeviceOffer {
+  key: string;
+  name: string;
+  description: string;
+  image?: string;
+  /** Colors and memories in variant order, without duplicates. */
+  colors: string[];
+  memories: number[];
+  /** variants[0] is the master variant. */
+  variants: DeviceVariant[];
+}
+/** What a device card (or the bundle) sends to add or change a device line. */
+export interface AddDeviceArgs {
+  offerKey: string;
+  sku: string;
+  quantity: number;
+  mode: AcquisitionMode;
+  /** 0 for outright. */
+  termMonths: number;
+}
+export interface AcquisitionQuote {
+  mode: AcquisitionMode;
+  termMonths: number;
+  dueNow: Money;
+  /** `payments` counts the first one; `remaining` is the number after today. */
+  recurring?: { amount: Money; payments: number; remaining: number };
+  totalPayable: Money;
+  endOfTerm: EndOfTerm;
+  endDate?: string;
+}
+export type CreditFlag = 'approve' | 'decline';
+export interface FinancingLine {
+  lineId: string;
+  mode: 'installments' | 'lease';
+  termMonths: number;
+  quantity: number;
+  monthly: Money;
+}
+export interface FinancingRequest {
+  customerId: string | null;
+  creditFlag: CreditFlag | null;
+  currency: 'USD' | 'EUR';
+  lines: FinancingLine[];
+}
+export type FinancingReason = 'ok' | 'no-financed-lines' | 'sign-in-required' | 'customer-declined' | 'amount-over-limit';
+export interface FinancingDecision {
+  decisionId: string;
+  outcome: 'approved' | 'declined' | 'sign-in-required';
+  reason: FinancingReason;
+  financedTotal: Money;
+  limit: Money;
+  /** ISO. */
+  decidedAt: string;
+}
+
 // ===== P: search =====
 export type SearchViewState = 'start' | 'results' | 'none' | 'unsupported-language' | 'error';
 export interface SearchResultItem {
@@ -603,7 +693,6 @@ export type OrderStatus = 'placed' | 'processing' | 'shipped' | 'delivered' | 'c
 export type OrderLineKind = 'internet-plan' | 'phone-plan' | 'device' | 'equipment' | 'addon' | 'other';
 /** The "Type" column of the contract table. */
 export type OrderLineFamily = 'cable' | 'wireless' | 'phone' | 'addon' | 'equipment' | 'installments' | 'lease' | 'outright' | 'other';
-export type AcquisitionMode = 'outright' | 'installments' | 'lease';
 /** The device line's acquisition, read from the line's custom fields (never inferred from a price). */
 export interface OrderLineAcquisition {
   mode: AcquisitionMode;

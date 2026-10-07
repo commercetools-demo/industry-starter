@@ -1,6 +1,6 @@
 import type { TypeDraft } from '../../types';
 import { ls } from '../catalog-types';
-import { BOOLEAN, NUMBER, STRING, field } from './fields';
+import { BOOLEAN, DATE, NUMBER, STRING, field } from './fields';
 
 export const lineItemType: TypeDraft = {
   key: 'malva-line-item',
@@ -20,5 +20,16 @@ export const lineItemType: TypeDraft = {
     field('acquisitionTermMonths', 'Acquisition term (months)', 'Laufzeit (Monate)', NUMBER),
     field('offerKey', 'Offer key', 'Angebotsschlüssel', STRING),
     field('autoAdded', 'Added automatically', 'Automatisch hinzugefügt', BOOLEAN),
+    // Workstream Q: what happens at the end of the term, until when, and the financing decision of record.
+    field('acquisitionEndOfTerm', 'End of term', 'Ende der Laufzeit', {
+      name: 'Enum',
+      values: [
+        { key: 'owned', label: 'Owned from day one' },
+        { key: 'owned-after-final-payment', label: 'Owned after the final payment' },
+        { key: 'return', label: 'Return at the end' },
+      ],
+    }),
+    field('acquisitionEndDate', 'End date of the term', 'Enddatum der Laufzeit', DATE),
+    field('financingDecisionId', 'Financing decision id', 'Kennung der Finanzierungsentscheidung', STRING),
   ],
 };

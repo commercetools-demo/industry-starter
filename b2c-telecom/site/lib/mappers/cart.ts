@@ -3,6 +3,8 @@ import type { Cart as CtCart, CustomLineItem, LineItem } from '@commercetools/pl
 import { ACTIVATION_FEE_SLUG_PREFIX } from '@/lib/config/cart';
 import { MONTHLY_POLICY_KEY } from '@/lib/config/pricing';
 import { getMinimumOrder, shortfall } from '@/lib/cart/minimum';
+import { readAcquisition } from '@/lib/devices/acquisition';
+import { devicePricesOf } from '@/lib/mappers/device';
 import { refersTo } from '@/lib/offers/refs';
 import { getLocalizedString } from '@/lib/format';
 import { buildLabel, formatLabelMoney } from '@/lib/pricing/label';
@@ -39,6 +41,8 @@ export interface CartMapDeps {
   today: string;
   /** Cart Discount id to key (references in a cart carry the id only). */
   discountKeyById: Record<string, string>;
+  /** Recurrence policy id to key of the device policies (workstream Q); only needed when the cart has a device line. */
+  devicePolicyKeys?: Record<string, string>;
 }
 
 const zero = (currencyCode: string): Money => ({ centAmount: 0, currencyCode });
@@ -82,6 +86,14 @@ function issueFor(code: string, messageKey: string, line: Pick<CartLine, 'id' | 
   return { code, severity: 'blocking', lineId: line.id, offerKey: line.offerKey, resolution: 'none', reasons: [{ code, messageKey, params: extra, offerKeys: [line.offerKey] }] };
 }
 
+/** Color, memory and prices per mode of a device line's variant (Q); empty when the variant lacks a color or a memory. */
+function deviceOf(variant: Offer['variants'][number], deps: CartMapDeps): { device?: NonNullable<CartLine['device']> } {
+  const color = variant.attributes.color;
+  const memoryGb = Number(variant.attributes['memory-gb']);
+  if (typeof color !== 'string' || !Number.isFinite(memoryGb)) return {};
+  return { device: { color, memoryGb, prices: devicePricesOf(variant, deps.devicePolicyKeys ?? {}) } };
+}
+
 export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Cart {
   const currency = ct.totalPrice.currencyCode;
   const issues: BundleIssue[] = [...deps.issues];
@@ -90,7 +102,9 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
   const feeOf = (offerKey: string): CustomLineItem | undefined => feeItems.find((item) => item.slug === `${ACTIVATION_FEE_SLUG_PREFIX}${offerKey}`);
 
   // First pass: the line items without schedule and label (they need their children).
-  const base: CartLine[] = ct.lineItems.map((item): CartLine => {
+  // Lines keep the order in which they were first added: a device re-added in another mode carries its old `addedAt` (Q, verified live).
+  const ordered = [...ct.lineItems].sort((a, b) => (a.addedAt ?? '').localeCompare(b.addedAt ?? ''));
+  const base: CartLine[] = ordered.map((item): CartLine => {
     const fields = item.custom?.fields as Record<string, unknown> | undefined;
     const offerKey = fieldText(fields, 'offerKey') ?? item.productKey ?? '';
     const offer = deps.offersByKey[offerKey];
@@ -103,6 +117,8 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
     const unitListPrice = money(item.price.value);
     const recurring = item.recurrenceInfo !== undefined;
     const quantity = item.quantity;
+    // Q: how a device is acquired is read from the line fields, never inferred from its price. A financed device line is not a service line.
+    const acquisition = readAcquisition(fields);
     return {
       id: item.id,
       source: 'line-item',
@@ -118,7 +134,7 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
       quantity,
       termMonths: (variant?.termMonths ?? 0) as TermMonths,
       chargeType: recurring ? 'recurring' : 'one-time',
-      recurrence: item.recurrenceInfo ? { policyKey: MONTHLY_POLICY_KEY, priceSelectionMode: item.recurrenceInfo.priceSelectionMode === 'Fixed' ? 'Fixed' : 'Dynamic' } : null,
+      recurrence: item.recurrenceInfo && !acquisition ? { policyKey: MONTHLY_POLICY_KEY, priceSelectionMode: item.recurrenceInfo.priceSelectionMode === 'Fixed' ? 'Fixed' : 'Dynamic' } : null,
       unitListPrice,
       unitPrice: { centAmount: quantity > 0 ? Math.round(total.centAmount / quantity) : total.centAmount, currencyCode: total.currencyCode },
       total,
@@ -129,6 +145,8 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
       schedule: null,
       label: null,
       stock: null,
+      ...(acquisition ? { acquisition } : {}),
+      ...(acquisition && variant ? deviceOf(variant, deps) : {}),
     };
   });
 

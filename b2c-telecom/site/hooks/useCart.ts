@@ -64,15 +64,17 @@ export function useCart() {
   return { cart, itemCount: cart?.itemCount ?? 0, isLoading, error };
 }
 
-/**
- * Every mutation writes the cart of the RESPONSE into the SWR cache (also the `cart` that comes with a refusal) and never refetches or
- * computes anything: totals are the server's. A refusal then throws a CartError so the caller can show the reason.
- */
-export function useCartMutations(): CartMutations {
-  const { mutate } = useSWRConfig();
+/** A cart request with the contract of every cart route: the cart of the response is written into the cache, a refusal throws a CartError. */
+export type CartRequest = (url: string, method: 'POST' | 'PATCH' | 'DELETE', body?: unknown) => Promise<Cart | null>;
 
-  const send = useCallback(
-    async (url: string, method: 'POST' | 'PATCH' | 'DELETE', body?: unknown): Promise<Cart | null> => {
+/**
+ * The one function every cart-changing hook sends its request with (M's mutations and Q's device actions): it writes the cart of the
+ * RESPONSE into the SWR cache (also the `cart` that comes with a refusal) and never refetches or computes anything.
+ */
+export function useCartRequest(): CartRequest {
+  const { mutate } = useSWRConfig();
+  return useCallback(
+    async (url, method, body): Promise<Cart | null> => {
       let response: Response;
       try {
         response = await fetch(url, { method, ...(body === undefined ? {} : { headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }) });
@@ -96,6 +98,11 @@ export function useCartMutations(): CartMutations {
     },
     [mutate],
   );
+}
+
+/** Every mutation sends through `useCartRequest`; a refusal then throws a CartError so the caller can show the reason. */
+export function useCartMutations(): CartMutations {
+  const send = useCartRequest();
 
   return useMemo<CartMutations>(
     () => ({
