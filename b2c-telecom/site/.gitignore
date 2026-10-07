@@ -45,3 +45,6 @@ next-env.d.ts
 # seeding
 .env.seed
 scripts/seed/.backup/
+
+# release engine local state (workstream X)
+/scripts/seed/releases/.state/
