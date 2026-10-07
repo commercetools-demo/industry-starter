@@ -9,6 +9,7 @@ export const STRING: FieldType = { name: 'String' };
 export const BOOLEAN: FieldType = { name: 'Boolean' };
 export const NUMBER: FieldType = { name: 'Number' };
 export const DATE: FieldType = { name: 'Date' };
+export const DATETIME: FieldType = { name: 'DateTime' };
 
 /** Cart and order fields that survive the cart-to-order handover (malva-order repeats them). */
 export const CART_FIELDS: FieldDefinitionDraft[] = [

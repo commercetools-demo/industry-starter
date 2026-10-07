@@ -22,7 +22,8 @@ describe('custom types', () => {
       ['autoAdded', 'Boolean'],
     ]);
     expect(names(cartType)).toEqual(['postalCode', 'serviceableCable', 'serviceableWireless', 'serviceablePhone', 'demoMarker']);
-    expect(names(customerType)).toEqual(['accountNumber', 'creditApproved', 'demoMarker']);
+    expect(names(customerType)).toEqual(['accountNumber', 'creditApproved', 'demoMarker', 'sessionsValidAfter']);
+    expect(customerType.fieldDefinitions.find((f) => f.name === 'sessionsValidAfter')?.type).toEqual({ name: 'DateTime' });
     expect(orderType.fieldDefinitions.slice(0, 5).map((f) => [f.name, f.type.name])).toEqual([
       ['serviceStartDate', 'Date'],
       ['priceSchedule', 'String'],

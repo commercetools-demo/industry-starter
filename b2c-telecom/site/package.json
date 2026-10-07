@@ -28,6 +28,7 @@
     "seed:experiments": "tsx scripts/seed/experiments/platform-checks.ts",
     "job:schedule-sweep": "tsx --conditions=react-server scripts/jobs/schedule-sweep.ts",
     "seed:discounts": "tsx --conditions=react-server scripts/seed/discounts.ts",
+    "seed:customer-fields": "tsx scripts/seed/customer-fields.ts",
     "spike:recurring-checkout": "tsx --conditions=react-server scripts/spike/recurring-checkout.ts",
     "seed:export-serviceability": "tsx scripts/seed/export-serviceability.ts",
     "release:validate": "tsx scripts/seed/release.ts validate",
