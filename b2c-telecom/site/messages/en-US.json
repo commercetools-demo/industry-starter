@@ -263,5 +263,50 @@
     "lines": "x {quantity} lines",
     "monthRange": "{from}-{to}",
     "monthFrom": "{from} onwards"
+  },
+  "label": {
+    "title": "Broadband Facts",
+    "disclosure": "Fixed & mobile broadband consumer disclosure",
+    "monthlyPrice": "Monthly Price",
+    "monthlyFees": "Provider Monthly Fees",
+    "oneTimeFees": "One-time Fees at the Time of Purchase",
+    "otherFees": "Other Fees",
+    "etf": "Early termination fee",
+    "taxes": "Government taxes",
+    "taxesValue": "Varies by location",
+    "discountsBundles": "Discounts & Bundles",
+    "speeds": "Speeds Provided with Plan",
+    "download": "Typical Download Speed",
+    "upload": "Typical Upload Speed",
+    "latency": "Typical Latency",
+    "data": "Data Included with Monthly Price",
+    "monthlyData": "Monthly data",
+    "additionalData": "Charges for additional data usage: None",
+    "network": "Network Management & Privacy",
+    "networkText": "Our network management practices and privacy policy are available at {networkUrl} and {privacyUrl}.",
+    "support": "Customer Support",
+    "supportText": "Contact us at {phone} or {url}.",
+    "footnote": "Learn more about the terms used on this label at {fcc}. Unique plan ID: {id}",
+    "none": "None",
+    "kind": {
+      "cable": "Cable internet",
+      "wireless": "Home wireless internet",
+      "phone": "Phone plan"
+    },
+    "activationFee": "Activation fee",
+    "lock": "Price locked for {months} months.",
+    "noLock": "Price can change with notice.",
+    "intro": "Introductory price {amount}/mo for the first {months} months, then {standing}/mo.",
+    "step": "Price changes to {amount}/mo from month {month}.",
+    "perMonth": "{amount}/mo",
+    "unlimited": "Unlimited",
+    "gb": "{n} GB",
+    "mbps": "{n} Mbps",
+    "ms": "{n} ms",
+    "discounts": {
+      "cable": "{bundle} off monthly when you add a phone plan.",
+      "wireless": "{bundle} off monthly when you add a phone plan.",
+      "phone": "Second line {secondLine} off. {bundle} off your internet plan when you also have a phone plan."
+    }
   }
 }
