@@ -27,6 +27,16 @@ describe('runSearch', () => {
     expect(view.items[1]).toMatchObject({ offerKey: 'malva-offer-cable-100', matchedSku: null });
   });
 
+  it('a name query is never flagged as a part number match, even when the API lists matching variants', async () => {
+    const view = await runSearch(params({ q: 'cable' }), deps([hit(LISTED_CABLE_500, ['MLV-CABLE-500-24M'])]));
+    expect(view.items[0]?.matchedSku).toBeNull();
+  });
+
+  it('a SKU with one character changed matches no part number', async () => {
+    const view = await runSearch(params({ q: 'MLV-CABLE-500-24X' }), deps([hit(LISTED_CABLE_500)]));
+    expect(view.items.every((item) => item.matchedSku === null)).toBe(true);
+  });
+
   it('Query matches nothing: state is none', async () => {
     const view = await runSearch(params({ q: 'zzzzqq' }), deps([]));
     expect(view).toMatchObject({ state: 'none', query: 'zzzzqq', total: 0, items: [] });

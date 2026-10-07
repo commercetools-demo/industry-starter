@@ -169,7 +169,7 @@ Answers to the spec's open questions (**Planner defaults**): (1) a pasted identi
 - [x] P-08 Create `app/[locale]/search/page.tsx` (+ `generateMetadata`, `loading.tsx`) and add all `search.*` keys to both message files. Tests: `app/[locale]/search/page.test.tsx` (mock `@/lib/ct/search`, `@/lib/ct/catalog`, `@/lib/ct/categories`: start state, results with pagination links keeping `q`, none state, error state, page 99 → last page, `robots` noindex), `messages/search-keys.test.ts` (keys present in both locales, ICU compiles).
 - [x] P-09 Create `lib/search/pollUntil.ts` (`pollUntil(fn, { intervalMs, attempts, sleep })`, injectable `sleep`) and `scripts/wait-for-search-index.ts` (npm script `search:wait`: polls `searchOfferHits({ text: 'Cable 500', locale: 'en-US' })` every 30 s up to 40 attempts (20 min) until `total ≥ 1`, prints elapsed time, exits 1 on timeout; uses `.env.local`). Tests: `lib/search/pollUntil.test.ts` (resolves on the 3rd attempt, rejects after the limit, never sleeps after success).
 - [x] P-10 Append the header entry: `components/search/HeaderSearchLink.tsx`, append it to `components/layout/SiteHeader.tsx` and `MobileDrawer.tsx` behind `HEADER_SEARCH_ENABLED` (append-only edits to I's files, no other change). Tests: `components/layout/SiteHeader.search.test.tsx` (link present with `aria-label` and href `/en-US/search`; absent when the flag is mocked `false`; drawer shows it first).
-- [ ] P-11 Run `npm run verify`; report the C- checks (screenshots taken by Claude; owner may comment, D-068); set STATUS `Ready for review`.
+- [x] P-11 Run `npm run verify`; report the C- checks (screenshots taken by Claude; owner may comment, D-068); set STATUS `Ready for review`.
 
 ## Unit tests (scenario → test)
 | Scenario (exact title from the spec) | Capability | Test (file → `it(...)` name) |
@@ -183,11 +183,11 @@ Answers to the spec's open questions (**Planner defaults**): (1) a pasted identi
 - C-P-1 (needs OA-02, OA-03, G, H): first run `npm run search:wait` in `site/` (blocks until the index returns "Cable 500"; up to 20 min after a seed or reindex), then `GET http://localhost:3000/api/search?q=cable%20500` through the page (navigate to the URL) → JSON with `state: "results"`, `total ≥ 1`, first `offerKey` `malva-offer-cable-500`; keep the result as the index-ready proof.
 - C-P-2 (needs C-P-1, I): open `http://localhost:3000/en-US/search?q=cable` at 1440 px → H1 "Search", prefilled pill input "cable", status text "3 results for “cable”" (Cable 100, Cable 500, Cable Gig; no other offers), cards with kind "Plan", from price "From $39.99/mo"-style lines, CTA "View in Cable internet"; category chips "All (3)" and "Cable internet (3)"; console clean; one document request, no `/p/` or `/products/` links anywhere.
 - C-P-3 (needs C-P-2): click "View in Cable internet" on Cable 500 → URL `/en-US/shop/cable-internet?offer=malva-offer-cable-500#offer-malva-offer-cable-500`, Cable 500 card centred and outlined (N's anchor).
-- C-P-4 (needs C-P-1): open `/en-US/search?q=<SKU>` where `<SKU>` is the SKU of the Cable 500 24-month variant read from G's seed manifest under `scripts/seed/data/**` (form `MLV-<family>-<tier>-<term>`) → exactly one result listed first, Cable 500, with the pill "Part number match" and the SKU text, aria-label "Best match: part number <SKU>"; repeat with the SKU in lower case → same result; a SKU with one character changed returns the fuzzy/none outcome, never a wrong offer flagged as part number match.
+- C-P-4 (needs C-P-1): open `/en-US/search?q=<SKU>` where `<SKU>` is `MLV-CBL-500-24M` (the Cable 500 24-month variant) → exactly one result listed first, Cable 500, with the pill "Part number match" and the SKU text, aria-label "Best match: part number <SKU>"; repeat with the SKU in lower case → same result; a SKU with one character changed returns the fuzzy/none outcome, never a wrong offer flagged as part number match.
 - C-P-5 (needs C-P-1): open `/en-US/search?q=Unlimitd` (typo, 8 characters) → results include "Unlimited" and "Unlimited Max", heading "… results for “Unlimitd”", no "did you mean" text anywhere.
 - C-P-6 (needs C-P-1): open `/en-US/search?q=zzzzqq` → "No results for “zzzzqq”", the input still contains `zzzzqq` and is editable, the body text, and four fallback tiles Phone plans, Wireless internet, Cable internet, Add-ons linking to the same URLs as the header; no empty grid.
 - C-P-7 (needs C-P-1): open `/en-US/search` and `/en-US/search?q=a` → start state: "Type at least 2 characters." (second URL), popular searches chips "Cable 500, Unlimited, Spotify, Router"; clicking "Spotify" → `?q=Spotify` with the Spotify add-on result linking to `/en-US/shop/add-ons?offer=malva-offer-spotify#…`.
-- C-P-8 (needs C-P-1): open `/en-US/search?q=Malva` (Malva Secure plus the routers, modem and gateway) → chips "All (n)", "Security and protection (1)" and "Routers and equipment (n-1)" with counts that add up; click "Security and protection" → URL has `category=malva-cat-protection`, one card (Malva Secure) and no `page`; set the sort to "Price: high to low" on the All view → `sort=price-desc`, prices descend (nulls last); click "All" → params removed; reload keeps the state.
+- C-P-8 (needs C-P-1): open `/en-US/search?q=Malva` (Malva Secure plus the routers, modem and gateway) → chips "All (6)", "Security and protection (1)" and "Routers and equipment (5)" with counts that add up (6); click "Security and protection" → URL has `category=malva-cat-protection`, one card (Malva Secure) and no `page`; set the sort to "Price: high to low" on the All view → `sort=price-desc`, prices descend (nulls last); click "All" → params removed; reload keeps the state.
 - C-P-9 (needs C-P-1): open `/en-US/search?q=Malva&page=99` → renders the last page (page 1 of 1 with the seed) without an error and without a blank grid; numbered pagination (more than 12 results) cannot be reached with the seed, so it is covered by the unit test only (log it as such).
 - C-P-10 (needs C-P-1, I): header entry: on `/en-US` the header shows a magnifier icon button (aria-label "Search") before the account link; click → `/en-US/search`; at 375 px the mobile drawer lists "Search" first and it navigates to the same page; the icon is keyboard focusable with a visible ring (screenshot for the sign-off request).
 - C-P-11 (needs C-P-1, I): `/de-DE/search?q=Tarif` and `/de-DE/search?q=Cable` → German chrome ("Suche", "Ergebnisse für „Cable“", "Ab 59,99 €/Monat", "Treffer bei Artikelnummer" on a SKU query), prices in EUR; `<html lang="de-DE">`; no-results page in German with `search.none.*`.
@@ -203,9 +203,18 @@ None.
 - Availability and price facets, availability indicator on results (D-019, `product-listing-page` open questions answered in N); contract-pricing overlay (B2B, D-005).
 - Detail-page links from results: replaced by `offerHref` (D-052).
 
+## Implementation notes (junior, as built)
+- Offers come from K's `getVisibleOffers` (`lib/search/load.ts`); Product Search returns ids only (restricted to the `malva-offer` product type). `getOffersByIds` does not exist in H; hits are matched on `Offer.id`.
+- Added `fullText`-independent wildcard clause (`*text*`, case-insensitive): `fullTextPrefix` on `name` is rejected live ("Full text prefix is not supported"), and "Unlim" otherwise found nothing.
+- `matchedSku` flags only an exact (case-insensitive) variant SKU: the API's `matchingVariants` lists variants for plain name queries too.
+- Upstream errors use `ApiError` code `UPSTREAM_ERROR` (502); `SEARCH_UNAVAILABLE` is not in E's code list. Results JSON also carries `path` (no locale prefix) and `category`.
+- N's `SortSelect` only knows two listing sorts, so search has `components/search/SearchSortSelect.tsx` (adds "Best match").
+- No `loading.tsx` (N's finding: it makes 404 and redirects stream as 200). `components/search/CategoryTiles.tsx`, `lib/search/{load,tiles,pollUntil}.ts` are new helpers.
+- Live: `/api/search?q=cable` 3 results; `Unlimitd` -> Unlimited and Unlimited Max; `MLV-CBL-500-24M` (any case) -> Cable 500 flagged; one character changed -> none; `Malva` -> 6 results (Security 1, Routers 5); `zzzzqq` -> none.
+
 ## Definition of done
-- [ ] All tasks ticked, `npm run verify` passes.
-- [ ] Every scenario row above has a passing test.
+- [x] All tasks ticked, `npm run verify` passes.
+- [x] Every scenario row above has a passing test.
 - [ ] C- and M- lines present; STATUS set to `Ready for review`.
 - [ ] `lib/ct/search.ts` has H's code untouched above the marked P section; `npm run search:wait` works against the seeded project.
 - [ ] Header-search and search-layout screenshots taken by Claude (C- checks); owner may comment (D-068).

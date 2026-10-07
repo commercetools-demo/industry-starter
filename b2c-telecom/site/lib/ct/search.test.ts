@@ -150,10 +150,15 @@ describe('buildOfferTextQuery', () => {
     expect(buildOfferTextQuery({ text: 'cable', locale: 'en-US' })).toMatchObject({ limit: 100, offset: 0, markMatchingVariants: true });
   });
 
+  it('a half-typed word is found through an escaped, case-insensitive wildcard (fullTextPrefix is rejected by the API)', () => {
+    expect(clausesOf('Unlim*')).toContainEqual({ wildcard: { field: 'name', language: 'en-US', value: '*Unlim\\**', caseInsensitive: true } });
+    expect(JSON.stringify(clausesOf('Unlim'))).not.toContain('fullTextPrefix');
+  });
+
   it('cuts a query longer than 100 characters and stays far below the 50-expression limit', () => {
     const clauses = clausesOf('x'.repeat(150));
     expect((clauses.find((clause) => 'fullText' in clause)?.fullText?.value as string).length).toBe(100);
-    expect(clauses.length).toBeLessThanOrEqual(3);
+    expect(clauses.length).toBeLessThanOrEqual(4);
   });
 
   it('restricts hits to the offer product type when its id is known', () => {

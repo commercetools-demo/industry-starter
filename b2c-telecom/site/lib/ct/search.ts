@@ -189,6 +189,9 @@ export function buildOfferTextQuery(input: OfferTextQueryInput): ProductSearchRe
   const clauses: Expr[] = [];
   if (looksLikeSku(text)) clauses.push({ exact: { field: FIELD.sku, value: text, caseInsensitive: true, boost: 10 } });
   clauses.push({ fullText: { field: FIELD.name, language: input.locale, value: text, boost: 3 } });
+  // Part of a word ("Unlim" finds Unlimited): a half-typed name must not be an empty result. `fullTextPrefix` is rejected by the API for
+  // `name` ("Full text prefix is not supported", verified live), so a case-insensitive wildcard is used, as in H's listing search.
+  clauses.push({ wildcard: { field: FIELD.name, language: input.locale, value: `*${escapeWildcard(text)}*`, caseInsensitive: true } });
   clauses.push({ fuzzy: { field: FIELD.name, language: input.locale, value: text, level: 2 } });
   const textQuery: Expr = { or: clauses };
   const query = input.offerTypeId ? { and: [{ exact: { field: FIELD.productType, value: input.offerTypeId } }, textQuery] } : textQuery;

@@ -57,7 +57,6 @@ export async function runSearch(params: SearchParams, deps: RunSearchDeps): Prom
 
   // Hit order is kept. Unknown, hidden and restricted offers are simply not in `offers`.
   const byId = new Map(offers.map((offer) => [offer.id, offer]));
-  const matchedSkusById = new Map(result.hits.map((hit) => [hit.id, hit.matchedSkus]));
   const hitOffers = dedupeByAnchors(result.hits.flatMap((hit) => (byId.has(hit.id) ? [byId.get(hit.id) as Offer] : [])));
 
   // Exact part number first (stable); several products matching one pasted identifier are all shown first, in API order.
@@ -81,7 +80,9 @@ export async function runSearch(params: SearchParams, deps: RunSearchDeps): Prom
       categoryName: category.name,
       fromPrice: price,
       fromPriceRecurring: recurring,
-      matchedSku: exactSku(offer) ?? matchedSkusById.get(offer.id)?.[0] ?? null,
+      // Only an exact SKU is flagged. The API's `matchingVariants` also lists variants that merely share the name match (live: a plain
+      // "cable" query reported every cable variant), so it is not a "part number match" signal.
+      matchedSku: exactSku(offer),
       highlight: highlightOf(offer),
       href,
       path,
