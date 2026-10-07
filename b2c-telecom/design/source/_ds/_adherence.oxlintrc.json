@@ -1,0 +1,30 @@
+{
+  "plugins": ["react", "import"],
+  "rules": {
+    "react/forbid-elements": ["warn", { "forbid": [] }],
+    "no-restricted-imports": ["warn", { "patterns": [] }],
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "Literal[value=/#[0-9a-fA-F]{3,8}\\b/]",
+        "message": "Raw hex color — use a design-system color token via var()."
+      },
+      {
+        "selector": "Literal[value=/\\b\\d+px\\b/]",
+        "message": "Raw px value — use a design-system spacing token via var()."
+      },
+      {
+        "selector": "Literal[value=/font-family\\s*:\\s*(?!['\\\"]?(?:Exo|Inter|Roboto))/i]",
+        "message": "Font not provided by the design system. Available: Exo, Inter, Roboto."
+      }
+    ]
+  },
+  "overrides": [
+    { "files": ["**/index.js"], "rules": { "no-restricted-imports": "off" } }
+  ],
+  "x-omelette": {
+    "components": {},
+    "fontFamilies": ["Exo", "Inter", "Roboto"],
+    "note": "Token allow-list (x-omelette.tokens / tokenKinds) omitted here: it is identical to the custom properties in tokens.css. Reference copy of the lint config, trimmed from the Claude Design export."
+  }
+}

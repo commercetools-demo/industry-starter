@@ -1,0 +1,25 @@
+{
+  "namespace": "Telecom_82a17f",
+  "components": [],
+  "startingPoints": [],
+  "cards": [
+    { "path": "foundations/colors.html", "group": "Colors" },
+    { "path": "components/button.html", "group": "Components" },
+    { "path": "components/navigation.html", "group": "Components" },
+    { "path": "components/plan-card.html", "group": "Components" },
+    { "path": "components/syntax-chip.html", "group": "Components" },
+    { "path": "foundations/spacing-radius-shadow.html", "group": "Spacing" },
+    { "path": "foundations/typography.html", "group": "Type" }
+  ],
+  "templates": [],
+  "hasThumbnailHtml": true,
+  "globalCssPaths": ["tokens.css"],
+  "tokens": "omitted — 1:1 with the custom properties declared in tokens.css (colors, fonts, type scale, spacing, radius, shadow, --container-width)",
+  "themes": [],
+  "fonts": [],
+  "brandFonts": [
+    { "family": "Exo", "status": "ok", "tokens": ["--font-display"], "path": "tokens.css" },
+    { "family": "Inter", "status": "ok", "tokens": ["--font-cta"], "path": "tokens.css" }
+  ],
+  "source": "spa"
+}

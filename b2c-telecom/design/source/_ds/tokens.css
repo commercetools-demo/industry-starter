@@ -1,0 +1,82 @@
+/* Telecom design system tokens — extracted from "Telecom website theme (Community).fig" */
+@import url("https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700&family=Inter:wght@400;500;700;800;900&family=Roboto:wght@400;500;700;900&display=swap");
+
+:root {
+  /* Brand — Honey Locust (base #f9c162) */
+  --color-brand-50: #fef6e7;
+  --color-brand-100: #fdecd0;
+  --color-brand-200: #fce0b1;
+  --color-brand-300: #fbd491;
+  --color-brand-400: #fac772;
+  --color-brand-500: #f9c162;
+  --color-brand-600: #d4a453;
+  --color-brand-700: #ae8745;
+  --color-brand-800: #896a36;
+  --color-brand-900: #644d27;
+  --color-brand-950: #3e3019;
+  --color-brand-gradient: linear-gradient(90deg, #f9c162, #d4a453);
+
+  /* Complement — After-Party Pink (base #c162f9) */
+  --color-pink-50: #f6e7fe;
+  --color-pink-100: #ecd0fd;
+  --color-pink-200: #e3b8fc;
+  --color-pink-300: #d799fb;
+  --color-pink-400: #ca7afa;
+  --color-pink-500: #c162f9;
+  --color-pink-600: #a453d4;
+  --color-pink-700: #8745ae;
+  --color-pink-800: #6a3689;
+  --color-pink-900: #4d2764;
+  --color-pink-950: #30193e;
+
+  /* Neutrals */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f5f5f5;
+  --color-neutral-100: #efefef;
+  --color-neutral-200: #e5e2e2;
+  --color-neutral-300: #c9c9c9;
+  --color-neutral-400: #a0a0a0;
+  --color-neutral-500: #6f6f6f;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #3d3d3d;
+  --color-neutral-900: #000000;
+
+  /* Semantic — brand surfaces are light, so text on them is dark */
+  --color-text: var(--color-neutral-900);
+  --color-text-muted: var(--color-neutral-600);
+  --color-text-on-brand: var(--color-brand-950);
+  --color-text-on-pink: var(--color-neutral-0);
+  --color-text-link: var(--color-pink-700);
+  --color-surface: var(--color-neutral-0);
+  --color-surface-subtle: var(--color-neutral-100);
+  --color-surface-brand: var(--color-brand-500);
+  --color-surface-brand-subtle: var(--color-brand-50);
+  --color-border: #dddddd;
+  --color-border-brand: var(--color-brand-700);
+  --color-border-on-brand: var(--color-brand-950);
+  --color-action: var(--color-pink-700);
+  --color-action-hover: var(--color-pink-800);
+
+  /* Typography */
+  --font-display: "Exo", system-ui, sans-serif;   /* headings, nav, plan names, UI labels */
+  --font-cta: "Inter", system-ui, sans-serif;     /* registration syntax / CTAs */
+  --font-body: "Roboto", system-ui, sans-serif;   /* dense body copy */
+  --text-xs: 12px; --text-sm: 14px; --text-md: 16px; --text-lg: 18px; --text-xl: 20px;
+  --text-2xl: 24px; --text-3xl: 26px; --text-4xl: 36px; --text-5xl: 40px;
+  --tracking-ui: 1px;
+
+  /* Spacing */
+  --space-1: 4px; --space-2: 6px; --space-3: 8px; --space-4: 10px; --space-5: 16px;
+  --space-6: 20px; --space-7: 24px; --space-8: 30px; --space-9: 40px;
+
+  /* Radius */
+  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px; --radius-xl: 24px; --radius-pill: 100px;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 8px rgba(0,0,0,.15);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.25);
+  --shadow-lg: 0 6px 6px rgba(0,0,0,.25);
+
+  /* Layout */
+  --container-width: 1440px;
+}
