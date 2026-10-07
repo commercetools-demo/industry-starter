@@ -1,7 +1,7 @@
 import type { CartLineRef, Offer } from '@/lib/types';
 import * as fx from './__fixtures__/offers';
 import { attachmentFields } from './addons';
-import { buildCandidateList, conflictBetween, evaluateAddition, evaluateCandidate, mergeVerdicts } from './compat';
+import { buildCandidateList, conflictBetween, evaluateAddition, evaluateCandidate, mergeVerdicts, revalidateCartCompat } from './compat';
 
 const codes = (verdict: { reasons: { code: string }[] }) => verdict.reasons.map((reason) => reason.code);
 
@@ -273,5 +273,61 @@ describe('mergeVerdicts', () => {
     expect(merged.status).toBe('unavailable');
     expect(codes(merged)).toEqual(['ALREADY_INCLUDED', 'SPEED_TOO_LOW']);
     expect(mergeVerdicts(allowed, allowed)).toEqual({ status: 'allowed', reasons: [], parentLineItemId: 'P' });
+  });
+});
+
+describe('revalidateCartCompat', () => {
+  const cart = [
+    line('NET', 'malva-offer-cable-gig'),
+    line('RTR', 'malva-offer-router-ax3000', 'NET'),
+    line('SEC', 'malva-offer-secure', 'NET'),
+    line('PH', 'malva-offer-phone-unlimited-max'),
+    line('NFX', 'malva-offer-netflix', 'PH'),
+  ];
+
+  it('a cart that still satisfies every rule has no issues', () => {
+    expect(revalidateCartCompat(cart, catalog)).toEqual([]);
+  });
+
+  it('Cart older than the rule: a router whose speed was reduced is reported as a blocking issue with resolution remove', () => {
+    const reduced = { ...catalog, 'malva-offer-router-ax3000': fx.withFacts(fx.routerAx3000, { maxDownstreamMbps: 300 }) };
+    const issues = revalidateCartCompat(cart, reduced);
+    expect(issues).toHaveLength(1);
+    expect(issues[0]).toMatchObject({ lineItemId: 'RTR', offerKey: 'malva-offer-router-ax3000', blocking: true, resolution: 'remove' });
+    expect(issues[0].reasons[0]).toMatchObject({ code: 'SPEED_TOO_LOW', params: { max: 300, needed: 1000 } });
+  });
+
+  it("Compatibility changes after the cart was built: a dependent line no longer in the plan's compatible set is reported before checkout", () => {
+    const narrowed = { ...catalog, 'malva-offer-phone-unlimited-max': { ...fx.phoneUnlimitedMax, compatibleAddons: [] } };
+    const issues = revalidateCartCompat(cart, narrowed);
+    expect(issues.map((issue) => [issue.lineItemId, issue.resolution, issue.reasons[0].code])).toEqual([['NFX', 'remove', 'FAMILY_MISMATCH']]);
+  });
+
+  it('reports an extra the plan now includes as ALREADY_INCLUDED', () => {
+    const nowIncluded = { ...catalog, 'malva-offer-cable-gig': { ...fx.cableGig, includedOffers: [...fx.cableGig.includedOffers, 'malva-offer-secure'] } };
+    expect(revalidateCartCompat(cart, nowIncluded).map((issue) => [issue.lineItemId, issue.reasons[0].code])).toEqual([['SEC', 'ALREADY_INCLUDED']]);
+  });
+
+  it('reports an orphan as PARENT_REQUIRED and an add-on without any parent too', () => {
+    const orphaned = cart.filter((entry) => entry.lineItemId !== 'PH');
+    expect(revalidateCartCompat(orphaned, catalog).map((issue) => [issue.lineItemId, issue.reasons[0].code])).toEqual([['NFX', 'PARENT_REQUIRED']]);
+    expect(revalidateCartCompat([line('LONE', 'malva-offer-spotify')], catalog)[0].reasons[0].code).toBe('PARENT_REQUIRED');
+  });
+
+  it('reports a retired offer as OFFER_NOT_FOUND', () => {
+    const { 'malva-offer-secure': _retired, ...withoutSecure } = catalog;
+    expect(_retired).toBeDefined();
+    const issues = revalidateCartCompat(cart, withoutSecure);
+    expect(issues.map((issue) => [issue.lineItemId, issue.resolution, issue.reasons[0].code])).toEqual([['SEC', 'remove', 'OFFER_NOT_FOUND']]);
+  });
+
+  it('reports missing required equipment on the plan line with resolution choose-equipment', () => {
+    const needsRouter = fx.plan({ id: 'cable-gig-router', name: 'Cable Gig R', family: 'internet', technology: 'cable', mbps: 1000, required: ['router'] });
+    const withPlan = { ...catalog, [needsRouter.key]: needsRouter };
+    const issues = revalidateCartCompat([line('NET', needsRouter.key)], withPlan);
+    expect(issues).toHaveLength(1);
+    expect(issues[0]).toMatchObject({ lineItemId: 'NET', resolution: 'choose-equipment', blocking: true });
+    expect(issues[0].reasons[0]).toMatchObject({ code: 'REQUIRED_EQUIPMENT_MISSING', params: { planName: 'Cable Gig R', kind: 'router' } });
+    expect(revalidateCartCompat([line('NET', needsRouter.key), line('R', 'malva-offer-router-ax3000', 'NET')], withPlan)).toEqual([]);
   });
 });

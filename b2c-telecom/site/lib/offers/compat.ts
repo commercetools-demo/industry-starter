@@ -1,6 +1,6 @@
-import type { CandidateEntry, CartLineRef, CompatVerdict, Offer, ReplaceTarget, VerdictStatus } from '@/lib/types';
+import type { CandidateEntry, CartIssue, CartLineRef, CompatVerdict, Offer, ReplaceTarget, VerdictStatus } from '@/lib/types';
 import { dependentsOf, planLinesOf } from './addons';
-import { defaultEquipment } from './equipment';
+import { defaultEquipment, missingRequiredEquipment } from './equipment';
 import { refersTo } from './refs';
 import { conflictBetween, evaluateCandidate, makeReason } from './rules';
 
@@ -105,6 +105,51 @@ export function evaluateAddition(input: AdditionInput): CompatVerdict {
   if (candidate.kind === 'base-package' || candidate.kind === 'bundle') return planCandidateVerdict(candidate, cart, offersByKey);
   if (planOffer) return evaluateCandidate(planOffer, candidate);
   return cartModeVerdict(input);
+}
+
+/**
+ * Which lines of a cart no longer satisfy the rules (a cart older than the rule, a retired offer, a plan newly including an
+ * extra, a lost parent, missing required equipment). Every issue is blocking; output order = cart order. K appends its
+ * exclusivity and eligibility issues; M calls this on every cart read and U when checkout starts.
+ */
+export function revalidateCartCompat(lines: CartLineRef[], offersByKey: Record<string, Offer>): CartIssue[] {
+  const lineIds = new Set(lines.map((line) => line.lineItemId));
+  const equipmentOffers = Object.values(offersByKey).filter((offer) => offer.kind === 'equipment');
+  const issues: CartIssue[] = [];
+  for (const line of lines) {
+    const offer = offersByKey[line.offerKey];
+    const issue = (resolution: CartIssue['resolution'], reasons: CartIssue['reasons']) => issues.push({ lineItemId: line.lineItemId, offerKey: line.offerKey, blocking: true, resolution, reasons });
+    if (!offer) {
+      issue('remove', [makeReason('OFFER_NOT_FOUND', {}, [line.offerKey])]);
+      continue;
+    }
+    if (offer.kind === 'addon' || offer.kind === 'equipment') {
+      const parent = line.parentLineItemId === undefined ? undefined : lines.find((candidate) => candidate.lineItemId === line.parentLineItemId);
+      if (line.parentLineItemId === undefined || !lineIds.has(line.parentLineItemId) || !parent) {
+        issue('remove', [makeReason('PARENT_REQUIRED', {}, [offer.key])]);
+        continue;
+      }
+      const parentOffer = offersByKey[parent.offerKey];
+      if (!parentOffer) continue; // the parent line reports OFFER_NOT_FOUND; removing it takes this line along
+      const verdict = evaluateCandidate(parentOffer, offer);
+      if (verdict.status !== 'allowed') issue('remove', verdict.reasons);
+      continue;
+    }
+    if (offer.kind === 'base-package' || offer.kind === 'bundle') {
+      const attached = dependentsOf(lines, line.lineItemId).flatMap((dependent) => {
+        const dependentOffer = offersByKey[dependent.offerKey];
+        return dependentOffer?.kind === 'equipment' ? [dependentOffer] : [];
+      });
+      const missing = missingRequiredEquipment(offer, attached, equipmentOffers);
+      if (missing.length > 0) {
+        issue(
+          'choose-equipment',
+          missing.map((kind) => makeReason('REQUIRED_EQUIPMENT_MISSING', { planName: offer.name, kind }, [offer.key])),
+        );
+      }
+    }
+  }
+  return issues;
 }
 
 /**
