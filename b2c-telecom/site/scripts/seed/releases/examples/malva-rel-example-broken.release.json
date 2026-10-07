@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "key": "malva-rel-example-broken",
+  "name": "Broken example (names an offer that does not exist)",
+  "author": "Malva commerce team",
+  "releaseAt": "2026-12-01T09:00:00Z",
+  "withdrawOffers": ["malva-offer-nope"]
+}
