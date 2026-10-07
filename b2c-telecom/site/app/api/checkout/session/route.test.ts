@@ -10,6 +10,7 @@ vi.mock('@/lib/ct/client', async () => (await import('@/test/fixtures/checkoutWo
 vi.mock('@/lib/ct/devices', async () => (await import('@/test/fixtures/checkoutWorld')).devicesMock());
 vi.mock('@/lib/ct/order-stamp', async () => (await import('@/test/fixtures/checkoutWorld')).stampMock());
 vi.mock('@/lib/ct/checkout-session', async () => (await import('@/test/fixtures/checkoutWorld')).checkoutSessionMock());
+vi.mock('@/lib/ct/customer', async () => (await import('@/test/fixtures/checkoutWorld')).customerMock());
 vi.mock('@/lib/ct/session', async () => (await import('@/test/fixtures/checkoutWorld')).sessionMock());
 vi.mock('@/lib/market/server', async () => (await import('@/test/fixtures/checkoutWorld')).marketMock());
 
@@ -76,6 +77,14 @@ describe('POST /api/checkout/session', () => {
     world.ct.shippingAddress = { ...ADDRESS };
     expect(await code(await start(TOTAL + 5999))).toBe('NO_DELIVERY');
     expect(world.sessionsCreated).toEqual([]);
+  });
+
+  it('a signed-in buyer gets the customer own email on the cart once, so contact is complete', async () => {
+    delete world.ct.customerEmail;
+    world.customerEmail = 'qa-u1@example.com';
+    expect((await start()).status).toBe(200);
+    expect(world.ct.customerEmail).toBe('qa-u1@example.com');
+    expect(world.actions.flat().filter((a) => a.action === 'setCustomerEmail')).toHaveLength(1);
   });
 
   it('a guest with monthly items: 401 SIGN_IN_REQUIRED, no session', async () => {

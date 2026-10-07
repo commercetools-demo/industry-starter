@@ -30,6 +30,8 @@ export interface World {
   deviceIntegrityFails: boolean;
   stamped: string[];
   calls: string[];
+  /** The signed-in customer's own email (what `getCustomerById` answers); null = unknown. */
+  customerEmail: string | null;
 }
 
 export const MARKET = { locale: 'en-US', currency: 'USD', country: 'US' } as const;
@@ -58,6 +60,7 @@ export function resetWorld(opts: { lines?: CartLine[]; signedIn?: boolean; recur
     deviceIntegrityFails: false,
     stamped: [],
     calls: [],
+    customerEmail: null,
     ct: {
       id: 'cart-1',
       version: 1,
@@ -260,6 +263,10 @@ export function sessionMock() {
       return world.session;
     },
   };
+}
+
+export function customerMock() {
+  return { getCustomerById: async () => (world.customerEmail ? { id: 'cust-1', email: world.customerEmail } : null) };
 }
 
 export function marketMock() {

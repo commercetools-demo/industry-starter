@@ -4,7 +4,7 @@ import { validateAddress } from '@/lib/addresses/validate';
 import { checkReadiness, compareTotal, splitIssues } from '@/lib/checkout/guards';
 import { generateOrderNumber, isOrderNumber } from '@/lib/checkout/orderNumber';
 import { CheckoutRefusal } from '@/lib/checkout/refusal';
-import { computeServiceStart } from '@/lib/checkout/serviceStart';
+import { buildReview } from '@/lib/checkout/review';
 import { isValidEmail } from '@/lib/checkout/steps';
 import { isDemoPayment } from '@/lib/config/checkout';
 import { MALVA_SHIPPING_KEY_PREFIX } from '@/lib/config/shipping';
@@ -17,6 +17,7 @@ import { getActiveCartForSession, statusOf, updateCart } from './cart';
 import { mapForMarket } from './bundle';
 import { CheckoutSessionError, createCheckoutSession } from './checkout-session';
 import { getApiRoot } from './client';
+import { getCustomerById } from './customer';
 import { applyDeviceRecurringExpiry, assertDeviceCartIntegrity, evaluateFinancing } from './devices';
 import { stampOrderPricing } from './order-stamp';
 import { getServiceability } from './serviceability';
@@ -40,10 +41,17 @@ const refuse = (status: number, code: string, message: string, details?: Record<
 
 // ---- reading ----
 
+/** A signed-in buyer's contact is the customer's own email: written to the cart once, so the contact step is complete and read-only. */
+async function withCustomerEmail(ct: CtCart, session: SessionData): Promise<CtCart> {
+  if (!session.customerId || ct.customerEmail) return ct;
+  const customer = await getCustomerById(session.customerId);
+  return customer?.email ? updateCart(ct, [{ action: 'setCustomerEmail', email: customer.email }]) : ct;
+}
+
 async function loadCart(session: SessionData, market: Market): Promise<CtCart> {
   const ct = await getActiveCartForSession(session, market);
   if (!ct) throw refuse(400, 'NO_CART', 'There is no bundle to check out.');
-  return ct;
+  return withCustomerEmail(ct, session);
 }
 
 async function stateOf(ct: CtCart, session: SessionData, market: Market): Promise<{ state: CheckoutState; ct: CtCart }> {
@@ -61,7 +69,7 @@ export async function readCheckoutState(session: SessionData, market: Market): P
 /** Same, but `null` instead of a refusal when there is no bundle (the page redirects). */
 export async function findCheckoutState(session: SessionData, market: Market): Promise<CheckoutState | null> {
   const ct = await getActiveCartForSession(session, market);
-  return ct ? (await stateOf(ct, session, market)).state : null;
+  return ct ? (await stateOf(await withCustomerEmail(ct, session), session, market)).state : null;
 }
 
 // ---- contact and address ----
@@ -185,27 +193,6 @@ export async function selectDelivery(session: SessionData, market: Market, shipp
 
 // ---- review ----
 
-const sum = (amounts: Money[], currencyCode: string): Money => ({ centAmount: amounts.reduce((total, amount) => total + amount.centAmount, 0), currencyCode });
-
-/** Review data: everything is the cart's (schedules and labels ride on the mapped plan lines); only L's documented sums are added here. */
-export function buildReview(state: CheckoutState, today: string): CheckoutReview {
-  const { cart } = state;
-  const currency = cart.currencyCode;
-  const after = cart.lines.filter((line) => line.chargeType === 'recurring' && line.kind !== 'fee').map((line): Money => {
-    const periods = line.schedule?.periods ?? [];
-    const next = periods[1] ?? periods[0];
-    return next && line.schedule ? { centAmount: next.monthlyAmount.centAmount * line.quantity, currencyCode: currency } : line.total;
-  });
-  const totals = cart.lines.flatMap((line) => (line.schedule && !line.schedule.openEnded && line.schedule.totalContractValue ? [line.schedule.totalContractValue] : []));
-  return {
-    state,
-    serviceStartDate: computeServiceStart(cart.lines, today),
-    dueToday: cart.summary.total,
-    monthlyAfterToday: sum(after, currency),
-    contractTotal: totals.length > 0 ? sum(totals, currency) : null,
-  };
-}
-
 export async function readReview(session: SessionData, market: Market): Promise<CheckoutReview> {
   return buildReview(await readCheckoutState(session, market), toDateOnly(new Date()));
 }
@@ -236,7 +223,8 @@ async function orderByNumber(orderNumber: string): Promise<CtOrder | null> {
  * financing decision. Returns the order number reserved for this cart (the same one on every retry).
  */
 export async function prepareCheckout(session: SessionData, market: Market, expectedTotalCents: unknown): Promise<Prepared> {
-  const found = await getActiveCartForSession(session, market);
+  const existing = await getActiveCartForSession(session, market);
+  const found = existing ? await withCustomerEmail(existing, session) : null;
   if (!found) {
     if (session.pendingOrderNumber && (await orderByNumber(session.pendingOrderNumber))) {
       throw refuse(409, 'ALREADY_ORDERED', 'This bundle has already been ordered.', { orderNumber: session.pendingOrderNumber });
