@@ -1,7 +1,33 @@
 {
-  "common": { "brand": "Malva" },
+  "common": {
+    "brand": "Malva",
+    "toast": { "dismiss": "Dismiss" },
+    "breadcrumb": "Breadcrumb"
+  },
+  "shell": {
+    "home": "Malva Telecom home",
+    "skipToContent": "Skip to content",
+    "nav": { "primary": "Main navigation" },
+    "account": {
+      "login": "Log in",
+      "greeting": "Hi, {firstName}",
+      "greetingNoName": "My account"
+    },
+    "bundle": { "labelCount": "My bundle · {count}" },
+    "menu": { "open": "Open menu", "close": "Close menu", "title": "Menu" },
+    "locale": {
+      "label": "Language and region",
+      "en-US": "English (US)",
+      "de-DE": "Deutsch (Deutschland)"
+    }
+  },
   "nav": {},
-  "footer": { "photoCredit": "Photos from Pexels" },
+  "footer": {
+    "photoCredit": "Photos from Pexels",
+    "nav": "Footer",
+    "support": "Support",
+    "copyright": "© 2026 Malva Telecom"
+  },
   "home": { "placeholder": "Malva Telecom storefront" },
   "plp": {},
   "bundle": {},
@@ -10,7 +36,29 @@
   "auth": {},
   "search": {},
   "content": {},
-  "errors": {},
+  "errors": {
+    "kicker": { "notFound": "404", "unauthorized": "403", "server": "500" },
+    "notFound": {
+      "title": "We couldn't find that page",
+      "body": "The address may be mistyped, or the offer is no longer available. Search, or head back to our plans.",
+      "searchLabel": "Search Malva",
+      "searchButton": "Search",
+      "browse": "Browse our plans"
+    },
+    "home": "Back to home",
+    "server": {
+      "title": "Something went wrong on our side",
+      "body": "We couldn't finish loading this page. Your bundle and your sign-in are safe. Please try again.",
+      "retry": "Try again"
+    },
+    "reference": "Reference: {reference}",
+    "unauthorized": {
+      "title": "You don't have access to this",
+      "body": "You're signed in, but your account isn't allowed to do this. If you think that's a mistake, contact support and quote the reference below.",
+      "account": "Go to my account",
+      "support": "Contact support"
+    }
+  },
   "a11y": {},
   "offers": {
     "reason": {
