@@ -58,7 +58,47 @@
       }
     }
   },
-  "content": {},
+  "content": {
+    "fallbackNotice": "This page is not available in this language yet. Showing the English version.",
+    "faq": { "topicsNav": "Topics", "allQuestions": "All questions" },
+    "support": { "popular": "Popular questions" },
+    "contact": {
+      "heading": "Email us",
+      "cta": "Email support",
+      "subject": "Malva Telecom support request",
+      "note": "Please do not include payment card numbers or passwords in your email."
+    },
+    "blog": {
+      "title": "Blog",
+      "description": "Guides to internet, phone plans and prices.",
+      "filterLabel": "Filter by topic",
+      "clearAll": "Clear filters",
+      "removeFilter": "Remove filter: {tag}",
+      "noMatch": "No articles match these filters.",
+      "publishedOn": "Published {date}",
+      "related": "Related articles",
+      "withdrawnTitle": "This article is no longer available",
+      "withdrawnLink": "See {topic} articles"
+    },
+    "tags": { "internet": "Internet", "phone": "Phone", "pricing": "Pricing", "labels": "Labels" },
+    "legal": {
+      "effective": "In effect since {date}",
+      "superseded": "This is a superseded version. It was in effect until {until}.",
+      "viewCurrent": "View the current version",
+      "earlier": "Earlier versions"
+    },
+    "credits": { "photoBy": "Photo by {name} on Pexels" },
+    "footer": {
+      "label": "Company and legal",
+      "about": "About us",
+      "faq": "FAQ",
+      "blog": "Blog",
+      "shippingReturns": "Shipping and returns",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "imageCredits": "Image credits"
+    }
+  },
   "errors": {
     "kicker": {
       "notFound": "404",
