@@ -1,0 +1,1057 @@
+{
+  "id": "60afa6ae-9d5b-42f4-94ae-cad16d8b66d3",
+  "version": 22,
+  "productType": {
+    "typeId": "product-type",
+    "id": "b44a5700-4f88-42dc-9764-4c061c75539b"
+  },
+  "name": {
+    "en-US": "Nova 5G",
+    "de-DE": "Nova 5G"
+  },
+  "description": {
+    "en-US": "Malva Nova 5G: a 6.1-inch 5G phone with a 128 GB or 256 GB option.",
+    "de-DE": "Malva Nova 5G: ein 6,1-Zoll-5G-Handy mit 128 GB oder 256 GB Speicher."
+  },
+  "categories": [
+    {
+      "typeId": "category",
+      "id": "49f784fd-3c4f-4bc1-bdb1-a62fc7658072"
+    }
+  ],
+  "categoryOrderHints": {
+    "49f784fd-3c4f-4bc1-bdb1-a62fc7658072": "0.1"
+  },
+  "slug": {
+    "en-US": "phone-nova-5g",
+    "de-DE": "phone-nova-5g"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "MLV-DEV-NOVA5G-BLK-128",
+    "key": "mlv-dev-nova5g-blk-128",
+    "prices": [
+      {
+        "id": "10aa8ccd-f1f9-4af9-8c99-6ffdb970d6d0",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 49900,
+          "fractionDigits": 2
+        },
+        "key": "mlv-dev-nova5g-blk-128_usd_once",
+        "country": "US"
+      },
+      {
+        "id": "c2d44bc8-6b10-4cd1-a759-adc878bcb19d",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 49900,
+          "fractionDigits": 2
+        },
+        "key": "mlv-dev-nova5g-blk-128_eur_once",
+        "country": "DE"
+      },
+      {
+        "id": "ce8161d2-a51d-4a00-af96-378cd57f1e2d",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 4158,
+          "fractionDigits": 2
+        },
+        "key": "mlv-dev-nova5g-blk-128_usd_malva-device-installment-12",
+        "country": "US",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "f47c4819-37cd-43ea-9e51-a6682314313f"
+        }
+      },
+      {
+        "id": "810ab670-8602-4626-91c4-e06daaf8684b",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 4200,
+          "fractionDigits": 2
+        },
+        "key": "mlv-dev-nova5g-blk-128_eur_malva-device-installment-12",
+        "country": "DE",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "f47c4819-37cd-43ea-9e51-a6682314313f"
+        }
+      },
+      {
+        "id": "4e0c5705-9dd1-44c7-b482-a58004b38074",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 2079,
+          "fractionDigits": 2
+        },
+        "key": "mlv-dev-nova5g-blk-128_usd_malva-device-installment-24",
+        "country": "US",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "d77e52fe-89aa-463e-9f9c-0b9c810b25b0"
+        }
+      },
+      {
+        "id": "f76be26b-35dd-48dd-8ee3-52acf7fa3a74",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 2100,
+          "fractionDigits": 2
+        },
+        "key": "mlv-dev-nova5g-blk-128_eur_malva-device-installment-24",
+        "country": "DE",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "d77e52fe-89aa-463e-9f9c-0b9c810b25b0"
+        }
+      },
+      {
+        "id": "69b8e901-72af-4458-8f5c-d65c0683f3fa",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 1386,
+          "fractionDigits": 2
+        },
+        "key": "mlv-dev-nova5g-blk-128_usd_malva-device-installment-36",
+        "country": "US",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "e19129fe-8aca-45eb-ae50-be44cd61b7da"
+        }
+      },
+      {
+        "id": "402357aa-6e5c-4c73-a54c-ff9cec741b16",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 1400,
+          "fractionDigits": 2
+        },
+        "key": "mlv-dev-nova5g-blk-128_eur_malva-device-installment-36",
+        "country": "DE",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "e19129fe-8aca-45eb-ae50-be44cd61b7da"
+        }
+      },
+      {
+        "id": "96f2e0ef-dc5d-472e-aaa1-32aef6b16a92",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 1996,
+          "fractionDigits": 2
+        },
+        "key": "mlv-dev-nova5g-blk-128_usd_malva-device-lease-24",
+        "country": "US",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "56340eff-0349-400d-ae7c-152409506c77"
+        }
+      },
+      {
+        "id": "b1f2048d-2474-4e4e-87ac-55deb876a3c6",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 2000,
+          "fractionDigits": 2
+        },
+        "key": "mlv-dev-nova5g-blk-128_eur_malva-device-lease-24",
+        "country": "DE",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "56340eff-0349-400d-ae7c-152409506c77"
+        }
+      }
+    ],
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/2199471016/photo/close-up-hands-of-unrecognizable-man-holding-and-using-smartphone-standing-on-city-street.jpg",
+        "label": "Photo via Pexels",
+        "dimensions": {
+          "w": 612,
+          "h": 408
+        }
+      }
+    ],
+    "attributes": [
+      {
+        "name": "anchors",
+        "value": [
+          "malva-phone-nova-5g"
+        ]
+      },
+      {
+        "name": "offer-kind",
+        "value": {
+          "key": "device",
+          "label": "device"
+        }
+      },
+      {
+        "name": "audience",
+        "value": [
+          {
+            "key": "consumer",
+            "label": "consumer"
+          },
+          {
+            "key": "small-business",
+            "label": "small-business"
+          },
+          {
+            "key": "employee",
+            "label": "employee"
+          }
+        ]
+      },
+      {
+        "name": "color",
+        "value": {
+          "key": "black",
+          "label": {
+            "en-US": "Black",
+            "de-DE": "Schwarz"
+          }
+        }
+      },
+      {
+        "name": "memory-gb",
+        "value": {
+          "key": "128",
+          "label": "128 GB"
+        }
+      },
+      {
+        "name": "existing-customer",
+        "value": {
+          "key": "any",
+          "label": "any"
+        }
+      },
+      {
+        "name": "charge-type",
+        "value": {
+          "key": "one-time",
+          "label": {
+            "en-US": "One-time",
+            "de-DE": "Einmalig"
+          }
+        }
+      },
+      {
+        "name": "offer-family",
+        "value": "device"
+      },
+      {
+        "name": "network-generation",
+        "value": {
+          "key": "5g",
+          "label": {
+            "en-US": "5G",
+            "de-DE": "5G"
+          }
+        }
+      },
+      {
+        "name": "contract-term",
+        "value": {
+          "key": "month-to-month",
+          "label": {
+            "en-US": "Month-to-month",
+            "de-DE": "Monatlich kündbar"
+          }
+        }
+      }
+    ],
+    "availability": {
+      "isOnStock": true,
+      "availableQuantity": 200,
+      "version": 4,
+      "id": "7c6abf6a-6530-4744-8d72-0025daaae320"
+    }
+  },
+  "variants": [
+    {
+      "id": 2,
+      "sku": "MLV-DEV-NOVA5G-BLK-256",
+      "key": "mlv-dev-nova5g-blk-256",
+      "prices": [
+        {
+          "id": "65231c1a-2033-4581-9925-6e0729dcbca3",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 54900,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-blk-256_usd_once",
+          "country": "US"
+        },
+        {
+          "id": "02e1e3ed-892d-4fc5-9663-c0b6e49e47ff",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 54900,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-blk-256_eur_once",
+          "country": "DE"
+        },
+        {
+          "id": "a3c89463-ff8b-48d5-9435-72c089978593",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 4575,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-blk-256_usd_malva-device-installment-12",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "f47c4819-37cd-43ea-9e51-a6682314313f"
+          }
+        },
+        {
+          "id": "d90b01a5-4037-49d5-91f4-eb5292102b66",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 4600,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-blk-256_eur_malva-device-installment-12",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "f47c4819-37cd-43ea-9e51-a6682314313f"
+          }
+        },
+        {
+          "id": "705165e9-6185-4eb6-812b-017fe9a038f4",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 2288,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-blk-256_usd_malva-device-installment-24",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "d77e52fe-89aa-463e-9f9c-0b9c810b25b0"
+          }
+        },
+        {
+          "id": "c3b89928-c706-427e-b4e3-6c9cf0f118f0",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2300,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-blk-256_eur_malva-device-installment-24",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "d77e52fe-89aa-463e-9f9c-0b9c810b25b0"
+          }
+        },
+        {
+          "id": "b81bc43d-df96-48d4-8a48-8740fb70eae1",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 1525,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-blk-256_usd_malva-device-installment-36",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "e19129fe-8aca-45eb-ae50-be44cd61b7da"
+          }
+        },
+        {
+          "id": "877babbd-aab9-41fa-a485-4a16dfbb7248",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 1500,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-blk-256_eur_malva-device-installment-36",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "e19129fe-8aca-45eb-ae50-be44cd61b7da"
+          }
+        },
+        {
+          "id": "e3ea2b7a-6973-470c-9f81-5583f7e12fb5",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 2196,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-blk-256_usd_malva-device-lease-24",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "56340eff-0349-400d-ae7c-152409506c77"
+          }
+        },
+        {
+          "id": "fc07b829-fa3b-4d5a-89fb-43a4fd523155",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2200,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-blk-256_eur_malva-device-lease-24",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "56340eff-0349-400d-ae7c-152409506c77"
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "https://media.istockphoto.com/id/2199471016/photo/close-up-hands-of-unrecognizable-man-holding-and-using-smartphone-standing-on-city-street.jpg",
+          "label": "Photo via Pexels",
+          "dimensions": {
+            "w": 612,
+            "h": 408
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "name": "anchors",
+          "value": [
+            "malva-phone-nova-5g"
+          ]
+        },
+        {
+          "name": "offer-kind",
+          "value": {
+            "key": "device",
+            "label": "device"
+          }
+        },
+        {
+          "name": "audience",
+          "value": [
+            {
+              "key": "consumer",
+              "label": "consumer"
+            },
+            {
+              "key": "small-business",
+              "label": "small-business"
+            },
+            {
+              "key": "employee",
+              "label": "employee"
+            }
+          ]
+        },
+        {
+          "name": "color",
+          "value": {
+            "key": "black",
+            "label": {
+              "en-US": "Black",
+              "de-DE": "Schwarz"
+            }
+          }
+        },
+        {
+          "name": "memory-gb",
+          "value": {
+            "key": "256",
+            "label": "256 GB"
+          }
+        },
+        {
+          "name": "existing-customer",
+          "value": {
+            "key": "any",
+            "label": "any"
+          }
+        },
+        {
+          "name": "charge-type",
+          "value": {
+            "key": "one-time",
+            "label": {
+              "en-US": "One-time",
+              "de-DE": "Einmalig"
+            }
+          }
+        },
+        {
+          "name": "offer-family",
+          "value": "device"
+        },
+        {
+          "name": "network-generation",
+          "value": {
+            "key": "5g",
+            "label": {
+              "en-US": "5G",
+              "de-DE": "5G"
+            }
+          }
+        },
+        {
+          "name": "contract-term",
+          "value": {
+            "key": "month-to-month",
+            "label": {
+              "en-US": "Month-to-month",
+              "de-DE": "Monatlich kündbar"
+            }
+          }
+        }
+      ],
+      "availability": {
+        "isOnStock": true,
+        "availableQuantity": 200,
+        "version": 1,
+        "id": "7adbf015-6199-43ef-af96-96fe0be85d5a"
+      }
+    },
+    {
+      "id": 3,
+      "sku": "MLV-DEV-NOVA5G-SLV-128",
+      "key": "mlv-dev-nova5g-slv-128",
+      "prices": [
+        {
+          "id": "e8a8ab08-a819-47da-948e-df743e74124d",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 49900,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-128_usd_once",
+          "country": "US"
+        },
+        {
+          "id": "b91aab9f-60ff-4977-9434-36e59c5e160a",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 49900,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-128_eur_once",
+          "country": "DE"
+        },
+        {
+          "id": "b4a36c9f-33d8-4fc2-8226-380a1f48f49e",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 4158,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-128_usd_malva-device-installment-12",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "f47c4819-37cd-43ea-9e51-a6682314313f"
+          }
+        },
+        {
+          "id": "986eebaf-821a-45d2-947b-4ef7f3c9222a",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 4200,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-128_eur_malva-device-installment-12",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "f47c4819-37cd-43ea-9e51-a6682314313f"
+          }
+        },
+        {
+          "id": "d4d883f7-c296-45ff-8223-8f6248c8005d",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 2079,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-128_usd_malva-device-installment-24",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "d77e52fe-89aa-463e-9f9c-0b9c810b25b0"
+          }
+        },
+        {
+          "id": "ba728f8a-9fcc-421a-acab-fe1d0420b065",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2100,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-128_eur_malva-device-installment-24",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "d77e52fe-89aa-463e-9f9c-0b9c810b25b0"
+          }
+        },
+        {
+          "id": "fc278b7f-5a09-4df4-b562-9fb5459272a4",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 1386,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-128_usd_malva-device-installment-36",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "e19129fe-8aca-45eb-ae50-be44cd61b7da"
+          }
+        },
+        {
+          "id": "0fd7be9b-a621-4696-9cde-5554dc1d8d1a",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 1400,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-128_eur_malva-device-installment-36",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "e19129fe-8aca-45eb-ae50-be44cd61b7da"
+          }
+        },
+        {
+          "id": "b34cbc8a-5a14-46a3-bc0d-63e2627dd1bb",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 1996,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-128_usd_malva-device-lease-24",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "56340eff-0349-400d-ae7c-152409506c77"
+          }
+        },
+        {
+          "id": "2295682d-7db1-4153-8397-7412d5b65862",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2000,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-128_eur_malva-device-lease-24",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "56340eff-0349-400d-ae7c-152409506c77"
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "https://media.istockphoto.com/id/2199471016/photo/close-up-hands-of-unrecognizable-man-holding-and-using-smartphone-standing-on-city-street.jpg",
+          "label": "Photo via Pexels",
+          "dimensions": {
+            "w": 612,
+            "h": 408
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "name": "anchors",
+          "value": [
+            "malva-phone-nova-5g"
+          ]
+        },
+        {
+          "name": "offer-kind",
+          "value": {
+            "key": "device",
+            "label": "device"
+          }
+        },
+        {
+          "name": "audience",
+          "value": [
+            {
+              "key": "consumer",
+              "label": "consumer"
+            },
+            {
+              "key": "small-business",
+              "label": "small-business"
+            },
+            {
+              "key": "employee",
+              "label": "employee"
+            }
+          ]
+        },
+        {
+          "name": "color",
+          "value": {
+            "key": "silver",
+            "label": {
+              "en-US": "Silver",
+              "de-DE": "Silber"
+            }
+          }
+        },
+        {
+          "name": "memory-gb",
+          "value": {
+            "key": "128",
+            "label": "128 GB"
+          }
+        },
+        {
+          "name": "existing-customer",
+          "value": {
+            "key": "any",
+            "label": "any"
+          }
+        },
+        {
+          "name": "charge-type",
+          "value": {
+            "key": "one-time",
+            "label": {
+              "en-US": "One-time",
+              "de-DE": "Einmalig"
+            }
+          }
+        },
+        {
+          "name": "offer-family",
+          "value": "device"
+        },
+        {
+          "name": "network-generation",
+          "value": {
+            "key": "5g",
+            "label": {
+              "en-US": "5G",
+              "de-DE": "5G"
+            }
+          }
+        },
+        {
+          "name": "contract-term",
+          "value": {
+            "key": "month-to-month",
+            "label": {
+              "en-US": "Month-to-month",
+              "de-DE": "Monatlich kündbar"
+            }
+          }
+        }
+      ],
+      "availability": {
+        "isOnStock": true,
+        "availableQuantity": 200,
+        "version": 1,
+        "id": "38abae7a-2027-463b-9227-d52a0e789c92"
+      }
+    },
+    {
+      "id": 4,
+      "sku": "MLV-DEV-NOVA5G-SLV-256",
+      "key": "mlv-dev-nova5g-slv-256",
+      "prices": [
+        {
+          "id": "1d12595d-574f-4954-8dfa-7bfd637bce1d",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 54900,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-256_usd_once",
+          "country": "US"
+        },
+        {
+          "id": "2bee4fc6-a777-49cc-a192-6359171ef748",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 54900,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-256_eur_once",
+          "country": "DE"
+        },
+        {
+          "id": "84ab234b-3eae-4527-b8d3-de703d880a49",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 4575,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-256_usd_malva-device-installment-12",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "f47c4819-37cd-43ea-9e51-a6682314313f"
+          }
+        },
+        {
+          "id": "b38181cb-3035-43cb-9442-88032a49f679",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 4600,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-256_eur_malva-device-installment-12",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "f47c4819-37cd-43ea-9e51-a6682314313f"
+          }
+        },
+        {
+          "id": "9971aa91-10e8-485f-9918-0cf11d0e5dfd",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 2288,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-256_usd_malva-device-installment-24",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "d77e52fe-89aa-463e-9f9c-0b9c810b25b0"
+          }
+        },
+        {
+          "id": "76c9caa6-3cd8-4f50-a1d2-e136dccdb382",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2300,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-256_eur_malva-device-installment-24",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "d77e52fe-89aa-463e-9f9c-0b9c810b25b0"
+          }
+        },
+        {
+          "id": "9a250e21-6c5f-4fc1-8ebc-aad484fe9001",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 1525,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-256_usd_malva-device-installment-36",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "e19129fe-8aca-45eb-ae50-be44cd61b7da"
+          }
+        },
+        {
+          "id": "d2c779cc-7ad1-4a04-9a4a-66745cbe76f7",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 1500,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-256_eur_malva-device-installment-36",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "e19129fe-8aca-45eb-ae50-be44cd61b7da"
+          }
+        },
+        {
+          "id": "d9846839-9bd0-408c-9cb4-5fceb3a64fbc",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 2196,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-256_usd_malva-device-lease-24",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "56340eff-0349-400d-ae7c-152409506c77"
+          }
+        },
+        {
+          "id": "83eac397-a8b3-48b7-93c7-1392e88dd94c",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2200,
+            "fractionDigits": 2
+          },
+          "key": "mlv-dev-nova5g-slv-256_eur_malva-device-lease-24",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "56340eff-0349-400d-ae7c-152409506c77"
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "https://media.istockphoto.com/id/2199471016/photo/close-up-hands-of-unrecognizable-man-holding-and-using-smartphone-standing-on-city-street.jpg",
+          "label": "Photo via Pexels",
+          "dimensions": {
+            "w": 612,
+            "h": 408
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "name": "anchors",
+          "value": [
+            "malva-phone-nova-5g"
+          ]
+        },
+        {
+          "name": "offer-kind",
+          "value": {
+            "key": "device",
+            "label": "device"
+          }
+        },
+        {
+          "name": "audience",
+          "value": [
+            {
+              "key": "consumer",
+              "label": "consumer"
+            },
+            {
+              "key": "small-business",
+              "label": "small-business"
+            },
+            {
+              "key": "employee",
+              "label": "employee"
+            }
+          ]
+        },
+        {
+          "name": "color",
+          "value": {
+            "key": "silver",
+            "label": {
+              "en-US": "Silver",
+              "de-DE": "Silber"
+            }
+          }
+        },
+        {
+          "name": "memory-gb",
+          "value": {
+            "key": "256",
+            "label": "256 GB"
+          }
+        },
+        {
+          "name": "existing-customer",
+          "value": {
+            "key": "any",
+            "label": "any"
+          }
+        },
+        {
+          "name": "charge-type",
+          "value": {
+            "key": "one-time",
+            "label": {
+              "en-US": "One-time",
+              "de-DE": "Einmalig"
+            }
+          }
+        },
+        {
+          "name": "offer-family",
+          "value": "device"
+        },
+        {
+          "name": "network-generation",
+          "value": {
+            "key": "5g",
+            "label": {
+              "en-US": "5G",
+              "de-DE": "5G"
+            }
+          }
+        },
+        {
+          "name": "contract-term",
+          "value": {
+            "key": "month-to-month",
+            "label": {
+              "en-US": "Month-to-month",
+              "de-DE": "Monatlich kündbar"
+            }
+          }
+        }
+      ],
+      "availability": {
+        "isOnStock": true,
+        "availableQuantity": 200,
+        "version": 1,
+        "id": "99581756-b098-47d7-8a46-d011d883811d"
+      }
+    }
+  ],
+  "attributes": [],
+  "key": "malva-offer-phone-nova-5g",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "d49bf476-a882-4ccc-9e79-de3d3e6fe5ea"
+  }
+}

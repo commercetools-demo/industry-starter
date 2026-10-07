@@ -1,0 +1,457 @@
+{
+  "id": "701a36aa-7b0f-4b38-a08d-fa016fab3739",
+  "version": 8,
+  "productType": {
+    "typeId": "product-type",
+    "id": "b44a5700-4f88-42dc-9764-4c061c75539b"
+  },
+  "name": {
+    "en-US": "Unlimited",
+    "de-DE": "Unlimited"
+  },
+  "description": {
+    "en-US": "A phone plan with unlimited 5G data, a 30 GB hotspot, roaming in over 40 countries and one add-on included.",
+    "de-DE": "Ein Handytarif mit unbegrenzten 5G-Daten, 30 GB Hotspot, Roaming in über 40 Ländern und einem Zusatzangebot inklusive."
+  },
+  "categories": [
+    {
+      "typeId": "category",
+      "id": "b1597dc6-00de-4718-967f-bc0ea40b2c15"
+    }
+  ],
+  "categoryOrderHints": {
+    "b1597dc6-00de-4718-967f-bc0ea40b2c15": "0.3"
+  },
+  "slug": {
+    "en-US": "phone-unlimited",
+    "de-DE": "phone-unlimited"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "MLV-PHN-UNL-M2M",
+    "key": "mlv-phn-unl-m2m",
+    "prices": [
+      {
+        "id": "bebe715a-3aba-41ae-a305-aed7ac763508",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 5000,
+          "fractionDigits": 2
+        },
+        "key": "mlv-phn-unl-m2m_usd_malva-monthly",
+        "country": "US",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+        }
+      },
+      {
+        "id": "644441d2-7f48-4b05-ada5-50ec47777d86",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 5000,
+          "fractionDigits": 2
+        },
+        "key": "mlv-phn-unl-m2m_eur_malva-monthly",
+        "country": "DE",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+        }
+      }
+    ],
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
+        "label": "Photo via Pexels",
+        "dimensions": {
+          "w": 612,
+          "h": 408
+        }
+      }
+    ],
+    "attributes": [
+      {
+        "name": "data-gb",
+        "value": -1
+      },
+      {
+        "name": "anchors",
+        "value": [
+          "malva-phone-unlimited"
+        ]
+      },
+      {
+        "name": "offer-kind",
+        "value": {
+          "key": "base-package",
+          "label": "base-package"
+        }
+      },
+      {
+        "name": "audience",
+        "value": [
+          {
+            "key": "consumer",
+            "label": "consumer"
+          },
+          {
+            "key": "small-business",
+            "label": "small-business"
+          },
+          {
+            "key": "employee",
+            "label": "employee"
+          }
+        ]
+      },
+      {
+        "name": "existing-customer",
+        "value": {
+          "key": "any",
+          "label": "any"
+        }
+      },
+      {
+        "name": "charge-type",
+        "value": {
+          "key": "monthly",
+          "label": {
+            "en-US": "Monthly",
+            "de-DE": "Monatlich"
+          }
+        }
+      },
+      {
+        "name": "badge",
+        "value": {
+          "key": "most-popular",
+          "label": {
+            "en-US": "Most popular",
+            "de-DE": "Am beliebtesten"
+          }
+        }
+      },
+      {
+        "name": "included-offers",
+        "value": [
+          "malva-offer-spotify"
+        ]
+      },
+      {
+        "name": "offer-family",
+        "value": "phone"
+      },
+      {
+        "name": "network-generation",
+        "value": {
+          "key": "5g",
+          "label": {
+            "en-US": "5G",
+            "de-DE": "5G"
+          }
+        }
+      },
+      {
+        "name": "contract-term",
+        "value": {
+          "key": "month-to-month",
+          "label": {
+            "en-US": "Month-to-month",
+            "de-DE": "Monatlich kündbar"
+          }
+        }
+      }
+    ]
+  },
+  "variants": [
+    {
+      "id": 2,
+      "sku": "MLV-PHN-UNL-12M",
+      "key": "mlv-phn-unl-12m",
+      "prices": [
+        {
+          "id": "badb4efa-56f9-4258-aefa-9e2470a434f1",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 4800,
+            "fractionDigits": 2
+          },
+          "key": "mlv-phn-unl-12m_usd_malva-monthly",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+          }
+        },
+        {
+          "id": "34687433-5ebc-47e2-b6e6-93038a121543",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 4800,
+            "fractionDigits": 2
+          },
+          "key": "mlv-phn-unl-12m_eur_malva-monthly",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
+          "label": "Photo via Pexels",
+          "dimensions": {
+            "w": 612,
+            "h": 408
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "name": "data-gb",
+          "value": -1
+        },
+        {
+          "name": "anchors",
+          "value": [
+            "malva-phone-unlimited"
+          ]
+        },
+        {
+          "name": "offer-kind",
+          "value": {
+            "key": "base-package",
+            "label": "base-package"
+          }
+        },
+        {
+          "name": "audience",
+          "value": [
+            {
+              "key": "consumer",
+              "label": "consumer"
+            },
+            {
+              "key": "small-business",
+              "label": "small-business"
+            },
+            {
+              "key": "employee",
+              "label": "employee"
+            }
+          ]
+        },
+        {
+          "name": "existing-customer",
+          "value": {
+            "key": "any",
+            "label": "any"
+          }
+        },
+        {
+          "name": "charge-type",
+          "value": {
+            "key": "monthly",
+            "label": {
+              "en-US": "Monthly",
+              "de-DE": "Monatlich"
+            }
+          }
+        },
+        {
+          "name": "badge",
+          "value": {
+            "key": "most-popular",
+            "label": {
+              "en-US": "Most popular",
+              "de-DE": "Am beliebtesten"
+            }
+          }
+        },
+        {
+          "name": "included-offers",
+          "value": [
+            "malva-offer-spotify"
+          ]
+        },
+        {
+          "name": "offer-family",
+          "value": "phone"
+        },
+        {
+          "name": "network-generation",
+          "value": {
+            "key": "5g",
+            "label": {
+              "en-US": "5G",
+              "de-DE": "5G"
+            }
+          }
+        },
+        {
+          "name": "contract-term",
+          "value": {
+            "key": "12-months",
+            "label": {
+              "en-US": "12 months",
+              "de-DE": "12 Monate"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "sku": "MLV-PHN-UNL-24M",
+      "key": "mlv-phn-unl-24m",
+      "prices": [
+        {
+          "id": "8511f500-9b16-42e1-b728-4bb22287876b",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 4600,
+            "fractionDigits": 2
+          },
+          "key": "mlv-phn-unl-24m_usd_malva-monthly",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+          }
+        },
+        {
+          "id": "3eea6474-0cba-4416-b765-da6ab1ec4b39",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 4600,
+            "fractionDigits": 2
+          },
+          "key": "mlv-phn-unl-24m_eur_malva-monthly",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
+          "label": "Photo via Pexels",
+          "dimensions": {
+            "w": 612,
+            "h": 408
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "name": "data-gb",
+          "value": -1
+        },
+        {
+          "name": "anchors",
+          "value": [
+            "malva-phone-unlimited"
+          ]
+        },
+        {
+          "name": "offer-kind",
+          "value": {
+            "key": "base-package",
+            "label": "base-package"
+          }
+        },
+        {
+          "name": "audience",
+          "value": [
+            {
+              "key": "consumer",
+              "label": "consumer"
+            },
+            {
+              "key": "small-business",
+              "label": "small-business"
+            },
+            {
+              "key": "employee",
+              "label": "employee"
+            }
+          ]
+        },
+        {
+          "name": "existing-customer",
+          "value": {
+            "key": "any",
+            "label": "any"
+          }
+        },
+        {
+          "name": "charge-type",
+          "value": {
+            "key": "monthly",
+            "label": {
+              "en-US": "Monthly",
+              "de-DE": "Monatlich"
+            }
+          }
+        },
+        {
+          "name": "badge",
+          "value": {
+            "key": "most-popular",
+            "label": {
+              "en-US": "Most popular",
+              "de-DE": "Am beliebtesten"
+            }
+          }
+        },
+        {
+          "name": "included-offers",
+          "value": [
+            "malva-offer-spotify"
+          ]
+        },
+        {
+          "name": "offer-family",
+          "value": "phone"
+        },
+        {
+          "name": "network-generation",
+          "value": {
+            "key": "5g",
+            "label": {
+              "en-US": "5G",
+              "de-DE": "5G"
+            }
+          }
+        },
+        {
+          "name": "contract-term",
+          "value": {
+            "key": "24-months",
+            "label": {
+              "en-US": "24 months",
+              "de-DE": "24 Monate"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "attributes": [],
+  "key": "malva-offer-phone-unlimited",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "d49bf476-a882-4ccc-9e79-de3d3e6fe5ea"
+  }
+}

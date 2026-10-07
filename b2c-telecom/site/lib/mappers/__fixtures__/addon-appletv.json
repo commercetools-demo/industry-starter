@@ -1,0 +1,81 @@
+{
+  "id": "d868e99f-3a1e-48e7-be09-580b71fb94e0",
+  "version": 1,
+  "productType": {
+    "typeId": "product-type",
+    "id": "30905cdb-7fbe-4a68-9d21-b84320f8bad9"
+  },
+  "name": {
+    "en-US": "Apple TV+",
+    "de-DE": "Apple TV+"
+  },
+  "description": {
+    "en-US": "Award-winning originals, streamed anywhere.",
+    "de-DE": "Preisgekrönte Originals, überall streamen."
+  },
+  "categories": [],
+  "categoryOrderHints": {},
+  "slug": {
+    "en-US": "appletv-details",
+    "de-DE": "appletv-details"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "MLV-ADD-APPLETV-BASE",
+    "key": "mlv-add-appletv-base",
+    "prices": [],
+    "images": [],
+    "attributes": [
+      {
+        "name": "addon-tag",
+        "value": {
+          "key": "video",
+          "label": {
+            "en-US": "Video",
+            "de-DE": "Video"
+          }
+        }
+      },
+      {
+        "name": "charge-type",
+        "value": {
+          "key": "monthly",
+          "label": {
+            "en-US": "Monthly",
+            "de-DE": "Monatlich"
+          }
+        }
+      },
+      {
+        "name": "applies-to-families",
+        "value": [
+          {
+            "key": "internet",
+            "label": "internet"
+          }
+        ]
+      },
+      {
+        "name": "addon-kind",
+        "value": {
+          "key": "streaming",
+          "label": {
+            "en-US": "Streaming",
+            "de-DE": "Streaming"
+          }
+        }
+      },
+      {
+        "name": "provider",
+        "value": "Apple"
+      }
+    ]
+  },
+  "variants": [],
+  "attributes": [],
+  "key": "malva-appletv",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "d49bf476-a882-4ccc-9e79-de3d3e6fe5ea"
+  }
+}

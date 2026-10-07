@@ -1,0 +1,261 @@
+{
+  "id": "393a8ecd-9f13-493e-836c-b859e9ac8d7d",
+  "version": 10,
+  "productType": {
+    "typeId": "product-type",
+    "id": "b44a5700-4f88-42dc-9764-4c061c75539b"
+  },
+  "name": {
+    "en-US": "Malva WiFi 5 Router AC1200",
+    "de-DE": "Malva WLAN-5-Router AC1200"
+  },
+  "description": {
+    "en-US": "Entry-level Wi-Fi 5 router for plans up to 300 Mbps.",
+    "de-DE": "Wi-Fi-5-Einstiegsrouter für Tarife bis 300 Mbit/s."
+  },
+  "categories": [
+    {
+      "typeId": "category",
+      "id": "97af745c-d614-4690-b52a-290375aaa596"
+    }
+  ],
+  "categoryOrderHints": {
+    "97af745c-d614-4690-b52a-290375aaa596": "0.1"
+  },
+  "slug": {
+    "en-US": "router-ac1200",
+    "de-DE": "router-ac1200"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "MLV-EQP-AC1200-RENT",
+    "key": "mlv-eqp-ac1200-rent",
+    "prices": [
+      {
+        "id": "4a7b10f5-964f-4edf-9eba-efe5a2fb7d6b",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 500,
+          "fractionDigits": 2
+        },
+        "key": "mlv-eqp-ac1200-rent_usd_malva-monthly",
+        "country": "US",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+        }
+      },
+      {
+        "id": "f1d36b28-ee83-4e80-800b-b4e9c7d8d770",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 500,
+          "fractionDigits": 2
+        },
+        "key": "mlv-eqp-ac1200-rent_eur_malva-monthly",
+        "country": "DE",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+        }
+      }
+    ],
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/91692641/photo/a-cable-modem-and-router-isolated-on-a-white-background.jpg",
+        "label": "Photo via Pexels",
+        "dimensions": {
+          "w": 612,
+          "h": 407
+        }
+      }
+    ],
+    "attributes": [
+      {
+        "name": "anchors",
+        "value": [
+          "malva-router-ac1200"
+        ]
+      },
+      {
+        "name": "offer-kind",
+        "value": {
+          "key": "equipment",
+          "label": "equipment"
+        }
+      },
+      {
+        "name": "audience",
+        "value": [
+          {
+            "key": "consumer",
+            "label": "consumer"
+          },
+          {
+            "key": "small-business",
+            "label": "small-business"
+          },
+          {
+            "key": "employee",
+            "label": "employee"
+          }
+        ]
+      },
+      {
+        "name": "existing-customer",
+        "value": {
+          "key": "any",
+          "label": "any"
+        }
+      },
+      {
+        "name": "charge-type",
+        "value": {
+          "key": "monthly-rental",
+          "label": {
+            "en-US": "Monthly rental",
+            "de-DE": "Monatliche Miete"
+          }
+        }
+      },
+      {
+        "name": "offer-family",
+        "value": "equipment"
+      },
+      {
+        "name": "contract-term",
+        "value": {
+          "key": "month-to-month",
+          "label": {
+            "en-US": "Month-to-month",
+            "de-DE": "Monatlich kündbar"
+          }
+        }
+      }
+    ],
+    "availability": {
+      "isOnStock": true,
+      "availableQuantity": 500,
+      "version": 1,
+      "id": "adeda6cd-0be0-4864-9827-9b2c051a2d90"
+    }
+  },
+  "variants": [
+    {
+      "id": 2,
+      "sku": "MLV-EQP-AC1200-BUY",
+      "key": "mlv-eqp-ac1200-buy",
+      "prices": [
+        {
+          "id": "322e0e6b-538e-4846-a9f8-0cb93ca00459",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 7999,
+            "fractionDigits": 2
+          },
+          "key": "mlv-eqp-ac1200-buy_usd_once",
+          "country": "US"
+        },
+        {
+          "id": "ae7a6649-930b-4b46-b229-67ad4e5d14e0",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 8000,
+            "fractionDigits": 2
+          },
+          "key": "mlv-eqp-ac1200-buy_eur_once",
+          "country": "DE"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://media.istockphoto.com/id/91692641/photo/a-cable-modem-and-router-isolated-on-a-white-background.jpg",
+          "label": "Photo via Pexels",
+          "dimensions": {
+            "w": 612,
+            "h": 407
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "name": "anchors",
+          "value": [
+            "malva-router-ac1200"
+          ]
+        },
+        {
+          "name": "offer-kind",
+          "value": {
+            "key": "equipment",
+            "label": "equipment"
+          }
+        },
+        {
+          "name": "audience",
+          "value": [
+            {
+              "key": "consumer",
+              "label": "consumer"
+            },
+            {
+              "key": "small-business",
+              "label": "small-business"
+            },
+            {
+              "key": "employee",
+              "label": "employee"
+            }
+          ]
+        },
+        {
+          "name": "existing-customer",
+          "value": {
+            "key": "any",
+            "label": "any"
+          }
+        },
+        {
+          "name": "charge-type",
+          "value": {
+            "key": "one-time",
+            "label": {
+              "en-US": "One-time",
+              "de-DE": "Einmalig"
+            }
+          }
+        },
+        {
+          "name": "offer-family",
+          "value": "equipment"
+        },
+        {
+          "name": "contract-term",
+          "value": {
+            "key": "month-to-month",
+            "label": {
+              "en-US": "Month-to-month",
+              "de-DE": "Monatlich kündbar"
+            }
+          }
+        }
+      ],
+      "availability": {
+        "isOnStock": true,
+        "availableQuantity": 500,
+        "version": 1,
+        "id": "a4b12253-18b4-41f5-b2f4-d3917031155b"
+      }
+    }
+  ],
+  "attributes": [],
+  "key": "malva-offer-router-ac1200",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "d49bf476-a882-4ccc-9e79-de3d3e6fe5ea"
+  }
+}

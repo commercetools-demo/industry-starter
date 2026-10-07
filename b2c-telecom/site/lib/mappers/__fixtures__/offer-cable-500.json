@@ -1,0 +1,568 @@
+{
+  "id": "e19ba358-5e5f-473d-b90b-929796b6ce59",
+  "version": 8,
+  "productType": {
+    "typeId": "product-type",
+    "id": "b44a5700-4f88-42dc-9764-4c061c75539b"
+  },
+  "name": {
+    "en-US": "Cable 500",
+    "de-DE": "Cable 500"
+  },
+  "description": {
+    "en-US": "Cable internet with 500 Mbps download, a Wi-Fi 6 gateway and free professional installation.",
+    "de-DE": "Kabel-Internet mit 500 Mbit/s Download, WLAN-6-Gateway und kostenloser Profi-Installation."
+  },
+  "categories": [
+    {
+      "typeId": "category",
+      "id": "793f0332-6783-4a1a-bcdc-b7de8efa698e"
+    }
+  ],
+  "categoryOrderHints": {
+    "793f0332-6783-4a1a-bcdc-b7de8efa698e": "0.2"
+  },
+  "slug": {
+    "en-US": "cable-500",
+    "de-DE": "cable-500"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "MLV-CBL-500-24M",
+    "key": "mlv-cbl-500-24m",
+    "prices": [
+      {
+        "id": "b1255868-6581-4791-a61e-8548207ce9f2",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 5999,
+          "fractionDigits": 2
+        },
+        "key": "mlv-cbl-500-24m_usd_malva-monthly",
+        "country": "US",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+        }
+      },
+      {
+        "id": "50c5fd4b-e65f-41ff-b807-8b6e05fd75e8",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 6000,
+          "fractionDigits": 2
+        },
+        "key": "mlv-cbl-500-24m_eur_malva-monthly",
+        "country": "DE",
+        "recurrencePolicy": {
+          "typeId": "recurrence-policy",
+          "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+        }
+      },
+      {
+        "id": "9d3b5d6c-b65d-4bac-96be-b6a6239493a9",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "USD",
+          "centAmount": 2500,
+          "fractionDigits": 2
+        },
+        "key": "mlv-cbl-500-24m_usd_once",
+        "country": "US"
+      },
+      {
+        "id": "7af9a81f-45ae-4afe-855d-ced563555172",
+        "value": {
+          "type": "centPrecision",
+          "currencyCode": "EUR",
+          "centAmount": 2500,
+          "fractionDigits": 2
+        },
+        "key": "mlv-cbl-500-24m_eur_once",
+        "country": "DE"
+      }
+    ],
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1355612066/photo/technician-installing-wifi-router-at-home.jpg",
+        "label": "Photo via Pexels",
+        "dimensions": {
+          "w": 612,
+          "h": 408
+        }
+      }
+    ],
+    "attributes": [
+      {
+        "name": "data-gb",
+        "value": -1
+      },
+      {
+        "name": "anchors",
+        "value": [
+          "malva-cable-500"
+        ]
+      },
+      {
+        "name": "offer-kind",
+        "value": {
+          "key": "base-package",
+          "label": "base-package"
+        }
+      },
+      {
+        "name": "audience",
+        "value": [
+          {
+            "key": "consumer",
+            "label": "consumer"
+          },
+          {
+            "key": "small-business",
+            "label": "small-business"
+          },
+          {
+            "key": "employee",
+            "label": "employee"
+          }
+        ]
+      },
+      {
+        "name": "technology",
+        "value": {
+          "key": "cable",
+          "label": {
+            "en-US": "Cable",
+            "de-DE": "Kabel"
+          }
+        }
+      },
+      {
+        "name": "existing-customer",
+        "value": {
+          "key": "any",
+          "label": "any"
+        }
+      },
+      {
+        "name": "charge-type",
+        "value": {
+          "key": "monthly",
+          "label": {
+            "en-US": "Monthly",
+            "de-DE": "Monatlich"
+          }
+        }
+      },
+      {
+        "name": "badge",
+        "value": {
+          "key": "most-popular",
+          "label": {
+            "en-US": "Most popular",
+            "de-DE": "Am beliebtesten"
+          }
+        }
+      },
+      {
+        "name": "conflicts-with",
+        "value": [
+          "malva-offer-cable-100",
+          "malva-offer-cable-gig",
+          "malva-offer-cable-existing-customer",
+          "malva-offer-wireless-lite",
+          "malva-offer-wireless-5g",
+          "malva-offer-wireless-5g-plus"
+        ]
+      },
+      {
+        "name": "downstream-mbps",
+        "value": 500
+      },
+      {
+        "name": "included-offers",
+        "value": [
+          "malva-offer-modem-docsis31"
+        ]
+      },
+      {
+        "name": "offer-family",
+        "value": "cable"
+      },
+      {
+        "name": "contract-term",
+        "value": {
+          "key": "24-months",
+          "label": {
+            "en-US": "24 months",
+            "de-DE": "24 Monate"
+          }
+        }
+      }
+    ]
+  },
+  "variants": [
+    {
+      "id": 2,
+      "sku": "MLV-CBL-500-M2M",
+      "key": "mlv-cbl-500-m2m",
+      "prices": [
+        {
+          "id": "0d3e810e-09a4-4462-b9e0-8c9d03614e79",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 6999,
+            "fractionDigits": 2
+          },
+          "key": "mlv-cbl-500-m2m_usd_malva-monthly",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+          }
+        },
+        {
+          "id": "82948f28-03ee-4751-9de9-2a0b81e3f99c",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 7000,
+            "fractionDigits": 2
+          },
+          "key": "mlv-cbl-500-m2m_eur_malva-monthly",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+          }
+        },
+        {
+          "id": "746738d2-770e-44f9-ba2b-0fe413acbb5e",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 2500,
+            "fractionDigits": 2
+          },
+          "key": "mlv-cbl-500-m2m_usd_once",
+          "country": "US"
+        },
+        {
+          "id": "0cedda5c-e465-45ce-b8d8-6370149634ae",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2500,
+            "fractionDigits": 2
+          },
+          "key": "mlv-cbl-500-m2m_eur_once",
+          "country": "DE"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://media.istockphoto.com/id/1355612066/photo/technician-installing-wifi-router-at-home.jpg",
+          "label": "Photo via Pexels",
+          "dimensions": {
+            "w": 612,
+            "h": 408
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "name": "data-gb",
+          "value": -1
+        },
+        {
+          "name": "anchors",
+          "value": [
+            "malva-cable-500"
+          ]
+        },
+        {
+          "name": "offer-kind",
+          "value": {
+            "key": "base-package",
+            "label": "base-package"
+          }
+        },
+        {
+          "name": "audience",
+          "value": [
+            {
+              "key": "consumer",
+              "label": "consumer"
+            },
+            {
+              "key": "small-business",
+              "label": "small-business"
+            },
+            {
+              "key": "employee",
+              "label": "employee"
+            }
+          ]
+        },
+        {
+          "name": "technology",
+          "value": {
+            "key": "cable",
+            "label": {
+              "en-US": "Cable",
+              "de-DE": "Kabel"
+            }
+          }
+        },
+        {
+          "name": "existing-customer",
+          "value": {
+            "key": "any",
+            "label": "any"
+          }
+        },
+        {
+          "name": "charge-type",
+          "value": {
+            "key": "monthly",
+            "label": {
+              "en-US": "Monthly",
+              "de-DE": "Monatlich"
+            }
+          }
+        },
+        {
+          "name": "badge",
+          "value": {
+            "key": "most-popular",
+            "label": {
+              "en-US": "Most popular",
+              "de-DE": "Am beliebtesten"
+            }
+          }
+        },
+        {
+          "name": "conflicts-with",
+          "value": [
+            "malva-offer-cable-100",
+            "malva-offer-cable-gig",
+            "malva-offer-cable-existing-customer",
+            "malva-offer-wireless-lite",
+            "malva-offer-wireless-5g",
+            "malva-offer-wireless-5g-plus"
+          ]
+        },
+        {
+          "name": "downstream-mbps",
+          "value": 500
+        },
+        {
+          "name": "included-offers",
+          "value": [
+            "malva-offer-modem-docsis31"
+          ]
+        },
+        {
+          "name": "offer-family",
+          "value": "cable"
+        },
+        {
+          "name": "contract-term",
+          "value": {
+            "key": "month-to-month",
+            "label": {
+              "en-US": "Month-to-month",
+              "de-DE": "Monatlich kündbar"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "sku": "MLV-CBL-500-12M",
+      "key": "mlv-cbl-500-12m",
+      "prices": [
+        {
+          "id": "d33c1538-25d4-45d3-b320-0317b28a1a51",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 6499,
+            "fractionDigits": 2
+          },
+          "key": "mlv-cbl-500-12m_usd_malva-monthly",
+          "country": "US",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+          }
+        },
+        {
+          "id": "fb1fc405-22ca-4ddb-b18c-d4ae78bf6172",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 6500,
+            "fractionDigits": 2
+          },
+          "key": "mlv-cbl-500-12m_eur_malva-monthly",
+          "country": "DE",
+          "recurrencePolicy": {
+            "typeId": "recurrence-policy",
+            "id": "4a935560-9d0e-49ae-8a59-3e18d69035c1"
+          }
+        },
+        {
+          "id": "4eac16bb-5cfe-4b93-ba74-cc2b2d648f7b",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "USD",
+            "centAmount": 2500,
+            "fractionDigits": 2
+          },
+          "key": "mlv-cbl-500-12m_usd_once",
+          "country": "US"
+        },
+        {
+          "id": "157e59a2-5d8a-43b0-9bcf-a60eec838df8",
+          "value": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 2500,
+            "fractionDigits": 2
+          },
+          "key": "mlv-cbl-500-12m_eur_once",
+          "country": "DE"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://media.istockphoto.com/id/1355612066/photo/technician-installing-wifi-router-at-home.jpg",
+          "label": "Photo via Pexels",
+          "dimensions": {
+            "w": 612,
+            "h": 408
+          }
+        }
+      ],
+      "attributes": [
+        {
+          "name": "data-gb",
+          "value": -1
+        },
+        {
+          "name": "anchors",
+          "value": [
+            "malva-cable-500"
+          ]
+        },
+        {
+          "name": "offer-kind",
+          "value": {
+            "key": "base-package",
+            "label": "base-package"
+          }
+        },
+        {
+          "name": "audience",
+          "value": [
+            {
+              "key": "consumer",
+              "label": "consumer"
+            },
+            {
+              "key": "small-business",
+              "label": "small-business"
+            },
+            {
+              "key": "employee",
+              "label": "employee"
+            }
+          ]
+        },
+        {
+          "name": "technology",
+          "value": {
+            "key": "cable",
+            "label": {
+              "en-US": "Cable",
+              "de-DE": "Kabel"
+            }
+          }
+        },
+        {
+          "name": "existing-customer",
+          "value": {
+            "key": "any",
+            "label": "any"
+          }
+        },
+        {
+          "name": "charge-type",
+          "value": {
+            "key": "monthly",
+            "label": {
+              "en-US": "Monthly",
+              "de-DE": "Monatlich"
+            }
+          }
+        },
+        {
+          "name": "badge",
+          "value": {
+            "key": "most-popular",
+            "label": {
+              "en-US": "Most popular",
+              "de-DE": "Am beliebtesten"
+            }
+          }
+        },
+        {
+          "name": "conflicts-with",
+          "value": [
+            "malva-offer-cable-100",
+            "malva-offer-cable-gig",
+            "malva-offer-cable-existing-customer",
+            "malva-offer-wireless-lite",
+            "malva-offer-wireless-5g",
+            "malva-offer-wireless-5g-plus"
+          ]
+        },
+        {
+          "name": "downstream-mbps",
+          "value": 500
+        },
+        {
+          "name": "included-offers",
+          "value": [
+            "malva-offer-modem-docsis31"
+          ]
+        },
+        {
+          "name": "offer-family",
+          "value": "cable"
+        },
+        {
+          "name": "contract-term",
+          "value": {
+            "key": "12-months",
+            "label": {
+              "en-US": "12 months",
+              "de-DE": "12 Monate"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "attributes": [],
+  "key": "malva-offer-cable-500",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "d49bf476-a882-4ccc-9e79-de3d3e6fe5ea"
+  }
+}

@@ -64,7 +64,7 @@ export interface AddonFacts {
   appliesToTechnologies: Technology[];
   chargeType?: string;
   trialDays?: number;
-  /** Music | Video | Extras (attribute `addon-tag`, localized label). */
+  /** Key of attribute `addon-tag`: music, video or extras. */
   tag?: string;
   highlights: string[];
 }

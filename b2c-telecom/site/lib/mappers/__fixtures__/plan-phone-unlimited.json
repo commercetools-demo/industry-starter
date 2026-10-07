@@ -1,0 +1,155 @@
+{
+  "id": "9f019746-f554-4b43-a97c-b4111561bb1d",
+  "version": 1,
+  "productType": {
+    "typeId": "product-type",
+    "id": "271b53db-252e-473c-9b99-bbf39311a66a"
+  },
+  "name": {
+    "en-US": "Unlimited",
+    "de-DE": "Unlimited"
+  },
+  "description": {
+    "en-US": "A phone plan with unlimited 5G data, a 30 GB hotspot, roaming in over 40 countries and one add-on included.",
+    "de-DE": "Ein Handytarif mit unbegrenzten 5G-Daten, 30 GB Hotspot, Roaming in über 40 Ländern und einem Zusatzangebot inklusive."
+  },
+  "categories": [],
+  "categoryOrderHints": {},
+  "slug": {
+    "en-US": "phone-unlimited-details",
+    "de-DE": "phone-unlimited-details"
+  },
+  "masterVariant": {
+    "id": 1,
+    "sku": "MLV-PHN-UNL-BASE",
+    "key": "mlv-phn-unl-base",
+    "prices": [],
+    "images": [],
+    "attributes": [
+      {
+        "name": "data-gb",
+        "value": -1
+      },
+      {
+        "name": "highlights",
+        "value": [
+          {
+            "en-US": "Unlimited 5G data",
+            "de-DE": "Unbegrenzte 5G-Daten"
+          },
+          {
+            "en-US": "Hotspot 30GB",
+            "de-DE": "Hotspot 30 GB"
+          },
+          {
+            "en-US": "Roaming in 40+ countries",
+            "de-DE": "Roaming in über 40 Ländern"
+          },
+          {
+            "en-US": "1 add-on included",
+            "de-DE": "1 Zusatzangebot inklusive"
+          }
+        ]
+      },
+      {
+        "name": "typical-latency-ms",
+        "value": 28
+      },
+      {
+        "name": "lines-included",
+        "value": 1
+      },
+      {
+        "name": "early-termination-fee",
+        "value": {
+          "en-US": "None",
+          "de-DE": "Keine"
+        }
+      },
+      {
+        "name": "typical-download-mbps",
+        "value": 220
+      },
+      {
+        "name": "typical-upload-mbps",
+        "value": 35
+      },
+      {
+        "name": "included-addons",
+        "value": [
+          "malva-spotify"
+        ]
+      },
+      {
+        "name": "label-plan-id",
+        "value": "MLV-PH-102"
+      },
+      {
+        "name": "charge-type",
+        "value": {
+          "key": "monthly",
+          "label": {
+            "en-US": "Monthly",
+            "de-DE": "Monatlich"
+          }
+        }
+      },
+      {
+        "name": "badge",
+        "value": {
+          "key": "most-popular",
+          "label": {
+            "en-US": "Most popular",
+            "de-DE": "Am beliebtesten"
+          }
+        }
+      },
+      {
+        "name": "price-lock-months",
+        "value": 0
+      },
+      {
+        "name": "bundle-discount-text",
+        "value": {
+          "en-US": "Add a second line for $10 off. Bundle with cable or wireless for $5 off monthly.",
+          "de-DE": "Zweite Leitung für 10 € weniger. In Kombination mit Kabel oder Funk 5 € monatlich sparen."
+        }
+      },
+      {
+        "name": "hotspot-gb",
+        "value": 30
+      },
+      {
+        "name": "activation-fee",
+        "value": 0
+      },
+      {
+        "name": "network-generation",
+        "value": {
+          "key": "5g",
+          "label": {
+            "en-US": "5G",
+            "de-DE": "5G"
+          }
+        }
+      },
+      {
+        "name": "contract-term",
+        "value": {
+          "key": "month-to-month",
+          "label": {
+            "en-US": "Month-to-month",
+            "de-DE": "Monatlich kündbar"
+          }
+        }
+      }
+    ]
+  },
+  "variants": [],
+  "attributes": [],
+  "key": "malva-phone-unlimited",
+  "taxCategory": {
+    "typeId": "tax-category",
+    "id": "d49bf476-a882-4ccc-9e79-de3d3e6fe5ea"
+  }
+}
