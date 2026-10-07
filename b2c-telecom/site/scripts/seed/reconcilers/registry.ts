@@ -3,6 +3,8 @@ import { cartDiscountReconciler } from './cartDiscount';
 import { categoryReconciler } from './category';
 import { customerGroupReconciler } from './customerGroup';
 import { customObjectReconciler } from './customObject';
+import { demoCustomerReconciler } from './demoCustomer';
+import { demoOrderReconciler } from './demoOrder';
 import { discountCodeReconciler } from './discountCode';
 import { inventoryReconciler } from './inventory';
 import { productReconciler } from './product';
@@ -28,6 +30,8 @@ export const reconcilers: AnyReconciler[] = [
   discountCodeReconciler,
   productReconciler,
   inventoryReconciler,
+  demoCustomerReconciler,
+  demoOrderReconciler,
 ];
 
 export function getReconciler(kind: Kind): AnyReconciler | undefined {

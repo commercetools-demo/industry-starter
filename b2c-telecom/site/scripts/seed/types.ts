@@ -59,6 +59,8 @@ export type SeedManifest = { [K in Kind]?: Draft[] };
 export interface Ctx {
   /** Country code -> key of the adopted zone, filled by the zoneCoverage reconciler. */
   zoneKeys: Record<string, string>;
+  /** Password of the demo customers (env SEED_DEMO_PASSWORD); only set with --with-demo. */
+  demoPassword?: string;
 }
 
 /** Thrown by a reconciler when the platform refuses a change because of another resource: the item is skipped. */

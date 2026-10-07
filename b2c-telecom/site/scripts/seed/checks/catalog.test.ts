@@ -44,7 +44,7 @@ describe('seed:verify catalog checks', () => {
 
   it('counts fail when a product is missing or unpublished', async () => {
     const api = await seeded();
-    const first = api.list('products')[0] as { masterData: { published: boolean } };
+    const first = api.list('products')[0] as unknown as { masterData: { published: boolean } };
     first.masterData.published = false;
     const unpublished = await catalogCounts.run(api, { projectKey: 'x' });
     expect(unpublished.ok).toBe(false);

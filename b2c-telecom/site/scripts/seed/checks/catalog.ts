@@ -176,7 +176,7 @@ export const searchFindsOffers: Check = {
 };
 
 export const demoData: Check = {
-  name: 'demo data (when seeded: 5 customers with their group and demoMarker, 3 orders with serviceStartDate)',
+  name: 'demo data (when seeded: 5 customers with their group and demoMarker, 3 orders with serviceStartDate and a Recurring Order)',
   async run(api) {
     const first = (await getAll(api, 'customers', { where: `key="${demoCustomers[0].key}"` })) as Obj[];
     if (first.length === 0) return ok('demo data not seeded');
@@ -192,7 +192,11 @@ export const demoData: Check = {
     for (const wanted of demoOrders) {
       const found = ((await getAll(api, 'orders', { where: `orderNumber="${wanted.orderNumber}"` })) as (Obj & { custom?: { fields?: Record<string, unknown> } })[])[0];
       if (!found) problems.push(`order ${wanted.orderNumber} missing`);
-      else if (found.custom?.fields?.serviceStartDate !== wanted.serviceStartDate) problems.push(`${wanted.orderNumber} serviceStartDate is ${String(found.custom?.fields?.serviceStartDate)}`);
+      else {
+        if (found.custom?.fields?.serviceStartDate !== wanted.serviceStartDate) problems.push(`${wanted.orderNumber} serviceStartDate is ${String(found.custom?.fields?.serviceStartDate)}`);
+        const recurring = await getAll(api, 'recurring-orders', { where: `originOrder(id="${String(found.id)}")` });
+        if (recurring.length === 0) problems.push(`${wanted.orderNumber} has no Recurring Order`);
+      }
     }
     return problems.length === 0 ? ok() : fail(problems.join('; '));
   },
