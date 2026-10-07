@@ -41,3 +41,6 @@ Data source tags: `[STATIC]` served from CDN with no middleware call; `[CACHED]`
 
 - Is an unhelpful vote routed to an owner of record for that answer, or only to a dashboard nobody is accountable for?
 - Do any answers restate a policy, a price or a lead time, and what stops them from drifting from the policy pages and the catalog?
+
+## Plan notes
+The "Was this helpful?" feedback component is not built (no analytics, D-034/D-059); the scenario "Feedback collector unreachable" is replaced by the absence of any vote control.

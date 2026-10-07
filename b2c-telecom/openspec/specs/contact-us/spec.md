@@ -48,3 +48,6 @@ Data source tags: `[STATIC]` served from CDN with no middleware call; `[CACHED]`
 - Does an authenticated buyer's enquiry carry an account or company identifier to the CRM, and which identifier is authoritative on that side?
 - What is the retention and consent basis for the free-text field, given a buyer may paste order or payment details into it?
 - Is the chat vendor in scope for the storefront's consent banner, and does the page remain compliant when chat is declined?
+
+## Plan notes
+D-034 narrows this capability: the contact page is static content with a `mailto:` link, no form and no storage. The four scenarios above are not built. Replacement behaviour (tested in workstream W): (1) the page offers a `mailto:` link to the support address with a localized subject and shows the address as text; (2) the page contains no form and sends nothing, so it never reports an enquiry as delivered; the reader's own mail client reports sending; (3) the page contains no chat script or placeholder; (4) the page lists the email channel for every visitor and never renders an empty offices block.
