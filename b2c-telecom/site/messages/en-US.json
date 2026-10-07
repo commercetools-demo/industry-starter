@@ -169,7 +169,84 @@
   },
   "checkout": {},
   "account": {},
-  "auth": {},
+  "auth": {
+    "login": {
+      "title": "Log in",
+      "subtitle": "Access your plans, contract and bill.",
+      "submit": "Log in",
+      "pending": "Logging in…",
+      "error": "Enter a valid email and password.",
+      "forgot": "Forgot your password?",
+      "create": "New to Malva? Create an account",
+      "resetDone": "Password changed. Log in with your new password."
+    },
+    "field": {
+      "email": "Email",
+      "password": "Password",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "newPassword": "New password"
+    },
+    "register": {
+      "title": "Create your account",
+      "submit": "Create account",
+      "pending": "Creating account…",
+      "haveAccount": "Already have an account? Log in",
+      "exists": "An account with this email already exists. Log in or reset your password."
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "subtitle": "Enter your email and we will prepare a reset link.",
+      "submit": "Send reset link",
+      "pending": "Preparing link…",
+      "confirm": "If an account exists for that email, a reset link has been prepared.",
+      "demoBanner": "Demo mode: email delivery is disabled.",
+      "demoLink": "Open the reset link",
+      "unverifiedHint": "You will be able to log in with your new password; your email address is confirmed when you finish.",
+      "backToLogin": "Back to log in"
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "submit": "Change password",
+      "pending": "Changing password…",
+      "expiredTitle": "This reset link is no longer usable",
+      "expiredBody": "Request a new link below.",
+      "sendNew": "Send a new link"
+    },
+    "password": {
+      "show": "Show password",
+      "hide": "Hide password",
+      "requirements": "Password requirements",
+      "summary": "{met} of {total} requirements met",
+      "met": "met",
+      "notMet": "not met",
+      "rule": {
+        "min-length": "Use at least 10 characters.",
+        "max-length": "Use at most 128 characters.",
+        "lowercase": "Add a lowercase letter.",
+        "uppercase": "Add an uppercase letter.",
+        "digit": "Add a number.",
+        "not-email": "Do not use your email address in the password."
+      }
+    },
+    "validation": {
+      "firstName": "Enter your first name (up to 60 characters).",
+      "lastName": "Enter your last name (up to 60 characters).",
+      "email": "Enter a valid email address.",
+      "password": "Enter a password.",
+      "generic": "Something went wrong. Try again.",
+      "unavailable": "The service is temporarily unavailable. Try again."
+    },
+    "rateLimited": "Too many attempts. Try again later.",
+    "logout": {
+      "label": "Log out",
+      "pending": "Logging out…"
+    },
+    "mergeNote": {
+      "review": "{count} item(s) in your bundle need your attention: {names}.",
+      "action": "Review My bundle"
+    }
+  },
   "search": {},
   "pricing": {
     "mode": {
@@ -184,8 +261,13 @@
   },
   "content": {
     "fallbackNotice": "This page is not available in this language yet. Showing the English version.",
-    "faq": { "topicsNav": "Topics", "allQuestions": "All questions" },
-    "support": { "popular": "Popular questions" },
+    "faq": {
+      "topicsNav": "Topics",
+      "allQuestions": "All questions"
+    },
+    "support": {
+      "popular": "Popular questions"
+    },
     "contact": {
       "heading": "Email us",
       "cta": "Email support",
@@ -204,14 +286,21 @@
       "withdrawnTitle": "This article is no longer available",
       "withdrawnLink": "See {topic} articles"
     },
-    "tags": { "internet": "Internet", "phone": "Phone", "pricing": "Pricing", "labels": "Labels" },
+    "tags": {
+      "internet": "Internet",
+      "phone": "Phone",
+      "pricing": "Pricing",
+      "labels": "Labels"
+    },
     "legal": {
       "effective": "In effect since {date}",
       "superseded": "This is a superseded version. It was in effect until {until}.",
       "viewCurrent": "View the current version",
       "earlier": "Earlier versions"
     },
-    "credits": { "photoBy": "Photo by {name} on Pexels" },
+    "credits": {
+      "photoBy": "Photo by {name} on Pexels"
+    },
     "footer": {
       "label": "Company and legal",
       "about": "About us",

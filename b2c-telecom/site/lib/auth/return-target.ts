@@ -21,6 +21,11 @@ export function stripLocalePrefix(path: string): string {
   return locale === undefined ? path : rest;
 }
 
+/** `<path>?returnTo=<encoded>` when there is a target (links between the auth pages carry it along). */
+export function withReturnTo(path: string, returnTo: string | undefined): string {
+  return returnTo ? `${path}?returnTo=${encodeURIComponent(returnTo)}` : path;
+}
+
 /**
  * The locale-prefixed path to go to after sign-in. Accepted: a path starting with "/" (not "//"), with no backslash, no scheme,
  * no control character and no `..` segment, optionally already prefixed with THIS locale, whose first segment is one of
