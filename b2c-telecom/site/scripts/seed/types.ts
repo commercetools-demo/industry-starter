@@ -122,11 +122,18 @@ export interface ProductTypeDraft extends Draft {
   attributes: AttributeDefinitionDraft[];
 }
 
+export type FieldType =
+  | { name: 'Boolean' | 'String' | 'LocalizedString' | 'Number' | 'DateTime' | 'Date' | 'Time' | 'Money' }
+  | { name: 'Reference'; referenceTypeId: string }
+  | { name: 'Enum'; values: { key: string; label: string }[] }
+  | { name: 'LocalizedEnum'; values: { key: string; label: LocalizedString }[] }
+  | { name: 'Set'; elementType: FieldType };
+
 export interface FieldDefinitionDraft {
   name: string;
   label: LocalizedString;
   required: boolean;
-  type: AttributeType | { name: 'Boolean' | 'String' | 'LocalizedString' | 'Number' | 'DateTime' | 'Date' | 'Time' | 'Money' };
+  type: FieldType;
   inputHint?: 'SingleLine' | 'MultiLine';
 }
 
