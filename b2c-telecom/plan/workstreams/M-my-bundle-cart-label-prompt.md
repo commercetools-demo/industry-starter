@@ -339,7 +339,7 @@ export const PROMPT_PAIRINGS: PromptPairing[] = [
 - [x] M-16 Write `lib/config/promptPairings.ts`, `lib/ct/cartDrafts.ts` `buildProbeDraft` (extend), `lib/pricing/prompts.ts`. [SKILL: commercetools-commerce-patterns]. Tests `lib/pricing/prompts.test.ts` (mock the SDK): one test per prompt scenario (see table); the probe cart is deleted in `finally` even when reading fails; at most 3 candidates priced; `saving` equals attributable delta; a suppressed discount (probe shows 0) is skipped.
 - [x] M-17 Write `GET /api/cart/prompts` and `components/bundle/DiscountPrompts.tsx`, wire into `BundleView` (above the summary on mobile, inside the content column on desktop). Tests: route returns `{ prompts: [] }` for an empty cart; component shows "Save $5.00/mo" and calls `addLine`, disappears after the cart prop changes.
 - [x] M-18 Write `lib/pricing/orderStamp.ts`. Tests `lib/pricing/orderStamp.test.ts`: uses the order creation date (not today); one schedule and one label per plan line; add-ons produce no label; a plan whose label data is missing yields an error entry; JSON parses back with `parseSchedules` and `parseLabelSnapshot`.
-- [ ] M-19 Report Chrome checks C-M-1 to C-M-22 and manual test M-M-1; run `npm run verify`; set `STATUS.md` to `Ready for review`.
+- [x] M-19 Report Chrome checks C-M-1 to C-M-22 and manual test M-M-1; run `npm run verify`; set `STATUS.md` to `Ready for review`.
 
 ## Unit tests (scenario → test)
 | Scenario (exact title from the spec) | Capability | Test (file → `it(...)` name) |
