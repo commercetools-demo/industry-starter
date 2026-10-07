@@ -1,6 +1,7 @@
 import 'server-only';
 import type { Cart as CtCart, CartDraft, CartUpdateAction, LineItem } from '@commercetools/platform-sdk';
 import { ApiError } from '@/lib/api-error';
+import { isOfferReleased } from '@/lib/offers/release';
 import { ACTIVATION_FEE_SLUG_PREFIX, CART_DELETE_DAYS, MAX_PHONE_LINES } from '@/lib/config/cart';
 import { getLocalizedString } from '@/lib/format';
 import type { GuardLine } from '@/lib/cart/guard';
@@ -204,6 +205,7 @@ const priceMissing = (sku: string): ApiError => new ApiError('VALIDATION', `No r
  */
 export async function addOfferLine(cartId: string, args: AddOfferLineArgs): Promise<CtCart> {
   const { offer, variant, quantity, parentLineId, equipment } = args;
+  if (!isOfferReleased(offer)) throw new ApiError('CONFLICT', 'This offer is not available yet', { reason: 'OFFER_NOT_RELEASED', offer: offer.key });
   return withCartRetry(cartId, async (fresh) => {
     const existing = fresh.lineItems.find((line) => line.variant.sku === variant.sku && offerKeyOfLine(line) === offer.key && parentIdOfLine(line) === parentLineId);
     if (existing) return updateCart(fresh, quantityActions(fresh, existing, existing.quantity + quantity));

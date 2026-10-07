@@ -20,8 +20,8 @@ export const EXPECTED = {
   products: 52,
   offers: 27,
   inventory: 19,
-  cartDiscounts: 6,
-  discountCodes: 1,
+  cartDiscounts: 9,
+  discountCodes: 2,
   policies: 5,
   serviceability: 11,
 } as const;
@@ -44,7 +44,7 @@ function liveVariants(p: LiveProduct): LiveVariant[] {
 const keysWithPrefix = (items: Obj[], prefix: string): string[] => items.map((i) => String(i.key ?? i.sku ?? '')).filter((k) => k.startsWith(prefix));
 
 export const catalogCounts: Check = {
-  name: 'catalog counts (6 product types, 4 custom types, 8 categories, 52 products, 19 inventory entries, 6 discounts, 1 code, 5 policies, 11 serviceability objects)',
+  name: 'catalog counts (6 product types, 4 custom types, 8 categories, 52 products, 19 inventory entries, 9 discounts, 2 codes, 5 policies, 11 serviceability objects)',
   async run(api) {
     const problems: string[] = [];
     const expect = (label: string, actual: number, wanted: number): void => {
