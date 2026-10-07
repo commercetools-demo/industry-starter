@@ -886,3 +886,59 @@ export interface BundleMoveResult {
   /** The bundle after the move (null when nothing could be added and there is no bundle). */
   cart: Cart | null;
 }
+
+// ===== U: checkout =====
+export type CheckoutStep = 'contact' | 'address' | 'delivery' | 'review' | 'payment';
+export interface ShippingOption {
+  id: string;
+  key: string;
+  name: string;
+  description?: string;
+  price: Money;
+}
+/** An address as the checkout stores it on the cart (the address-book purposes are not part of it). */
+export type CheckoutAddress = Omit<AddressInput, 'isService' | 'isBilling'>;
+/** What the checkout steps and the summary read: the mapped cart plus the contact, address and delivery facts the cart carries. */
+export interface CheckoutState {
+  cart: Cart;
+  signedIn: boolean;
+  email: string | null;
+  phone: string | null;
+  serviceAddress: CheckoutAddress | null;
+  billingAddress: CheckoutAddress | null;
+  needsDelivery: boolean;
+  delivery: { id: string; name: string; price: Money } | null;
+  /** The platform's shipping price and tax portion; null until they exist. */
+  shipping: Money | null;
+  tax: Money | null;
+  /** The bundle holds a recurring line: a customer is required (guests cannot create recurring orders, Q-007). */
+  needsCustomer: boolean;
+}
+export interface CheckoutReview {
+  state: CheckoutState;
+  /** YYYY-MM-DD: what the order would store as its service start if placed today. */
+  serviceStartDate: string;
+  dueToday: Money;
+  monthlyAfterToday: Money;
+  contractTotal: Money | null;
+}
+export interface CheckoutSessionInfo {
+  /** `hosted` = commercetools Checkout widget; `demo` = simulated payment (no Checkout application configured). */
+  mode: 'hosted' | 'demo';
+  orderNumber: string;
+  sessionId?: string;
+  projectKey?: string;
+  region?: string;
+  flow?: 'payment' | 'checkout';
+  expiresAt?: string;
+}
+/** What the confirmation page shows: the order plus whether the viewer owns it. */
+export interface OrderConfirmationView {
+  order: Order;
+  /** Full view (owner or the session that placed it) or limited (capability link). */
+  full: boolean;
+  /** Contact email (full view only). */
+  email: string | null;
+  isGuest: boolean;
+  paymentState: string | null;
+}
