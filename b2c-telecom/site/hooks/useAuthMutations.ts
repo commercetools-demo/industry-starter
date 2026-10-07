@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { useSWRConfig } from 'swr';
 import { useToast } from '@/components/ui/Toast';
-import { KEY_CART, KEY_SESSION } from '@/lib/cache-keys';
+import { ACCOUNT_KEY_PREFIX, KEY_CART, KEY_SESSION } from '@/lib/cache-keys';
 import type { AccountUser, Cart, MergeNote } from '@/lib/types';
 
 /** A refused or failed auth request. `code` is the stable code of the auth API (`INVALID_CREDENTIALS`, `WEAK_PASSWORD`, ...) or `NETWORK`. */
@@ -102,6 +102,7 @@ export function useAuthMutations(): AuthMutations {
   const logout = useCallback(async () => {
     await post<{ ok: true }>('/api/auth/logout', {});
     await mutate(KEY_CART, null, { revalidate: false });
+    await mutate((key) => typeof key === 'string' && key.startsWith(ACCOUNT_KEY_PREFIX), undefined, { revalidate: false }); // T: addresses, cards, lists
     await mutate(KEY_SESSION);
   }, [mutate]);
 
