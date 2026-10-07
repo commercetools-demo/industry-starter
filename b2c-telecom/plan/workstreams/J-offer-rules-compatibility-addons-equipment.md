@@ -203,7 +203,7 @@ K appends the keys for its own codes.
 - [x] J-06 Add `revalidateCartCompat` to `compat.ts` and create `lib/offers/errors.ts` with tests (`compat.test.ts`: narrowed set, newly included extra, orphan, retired offer, missing equipment; `errors.test.ts`: body shape and that `OfferRuleError` carries the verdict).
 - [x] J-07 [SKILL: commercetools-storefront] Create `lib/ct/cart-context.ts` with `lib/ct/cart-context.test.ts` (mock API root: maps custom fields; falls back to `productKey`; 404 returns `[]`; no write method is called).
 - [x] J-08 [SKILL: commercetools-storefront] Create `app/api/offers/compatibility/route.ts` with `route.test.ts` (Node environment; mock `@/lib/ct/catalog`, `@/lib/ct/session`, `@/lib/ct/cart-context`): card mode verdicts, cart mode uses the session cart and ignores a body `cartId`, 400/404/405/502 shapes, no cart write function is ever invoked, unknown `override` field ignored.
-- [ ] J-09 Create `lib/offers/lint.ts`, `scripts/lint-catalog.ts` and `npm run lint:catalog` with `lib/offers/lint.test.ts` (each error rule and the one-sided-conflict warning); run it live (needs OA-02) and record the output in `PROJECT-FINDINGS.md` under `## J — catalog lint`; if it reports errors, stop and tell the owner (data belongs to G).
+- [x] J-09 Create `lib/offers/lint.ts`, `scripts/lint-catalog.ts` and `npm run lint:catalog` with `lib/offers/lint.test.ts` (each error rule and the one-sided-conflict warning); run it live (needs OA-02) and record the output in `PROJECT-FINDINGS.md` under `## J — catalog lint`; if it reports errors, stop and tell the owner (data belongs to G).
 - [ ] J-10 Run `npm run verify`; `node plan/verify-plan.mjs --sync`; report the C-J lines.
 
 ## Unit tests (scenario → test)

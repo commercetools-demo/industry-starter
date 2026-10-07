@@ -119,3 +119,7 @@ Verified live on 2026-10-07 against `spec-test-b2c-telecom` through the dev wind
 ### G: image hosts
 - All 35 lock entries / 70 URLs are on `media.istockphoto.com`; none on `images.pexels.com`. No photographer, licence or rate-limit data in the response. A clean URL answers 301 to a sized variant, then 200 `image/jpeg`.
 - These are iStock/Getty files: the "Photos from Pexels" credit text is inaccurate and public hotlinking is not covered. Acceptable for the demo under D-066; see QUESTIONS.md Q-008.
+
+## J — catalog lint
+
+`npm run lint:catalog` on 2026-10-07 against spec-test-b2c-telecom (en-US/USD): `Checked 27 offers. 0 error(s), 0 warning(s).` All conflicts are declared on both sides; every reference in included-offers, conflicts-with, compatible-addons and incompatible-with resolves. Live facts that shaped the rules: cable plans include the DOCSIS modem and wireless plans include the 5G gateway (so required equipment kinds are satisfied by inclusion, no equipment line is auto-added); Unlimited Max lists Netflix in compatible-addons (a positive exception to its internet-only attributes); the AX3000 router lists wireless-lite in incompatible-with.
