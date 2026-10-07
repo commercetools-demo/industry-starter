@@ -153,7 +153,8 @@
       "add": "Add",
       "addAria": "Add {name} and save {saving} per month",
       "cablePhone": "Add {name} to your Cable internet and save {saving}/mo.",
-      "secondLine": "Add a second line and save {saving}/mo."
+      "secondLine": "Add a second line and save {saving}/mo.",
+      "region": "Ways to save"
     },
     "loading": "Loading your bundle",
     "section": {
