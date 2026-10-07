@@ -102,7 +102,9 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
   const feeOf = (offerKey: string): CustomLineItem | undefined => feeItems.find((item) => item.slug === `${ACTIVATION_FEE_SLUG_PREFIX}${offerKey}`);
 
   // First pass: the line items without schedule and label (they need their children).
-  const base: CartLine[] = ct.lineItems.map((item): CartLine => {
+  // Lines keep the order in which they were first added: a device re-added in another mode carries its old `addedAt` (Q, verified live).
+  const ordered = [...ct.lineItems].sort((a, b) => (a.addedAt ?? '').localeCompare(b.addedAt ?? ''));
+  const base: CartLine[] = ordered.map((item): CartLine => {
     const fields = item.custom?.fields as Record<string, unknown> | undefined;
     const offerKey = fieldText(fields, 'offerKey') ?? item.productKey ?? '';
     const offer = deps.offersByKey[offerKey];

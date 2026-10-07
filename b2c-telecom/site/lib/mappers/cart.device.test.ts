@@ -84,4 +84,11 @@ describe('device lines in the mapped cart', () => {
     expect(cart.lines[0]?.device?.prices.installments).toEqual({});
     expect(cart.lines[0]?.device?.prices.outright?.centAmount).toBe(118800);
   });
+
+  it('lines keep the order of their first add: a device re-added in another mode (old addedAt) stays where it was', () => {
+    const ct = ctCart({ lines: [outrightLine, financedLine] });
+    (ct.lineItems[0] as { addedAt?: string }).addedAt = '2026-10-07T10:05:00.000Z';
+    (ct.lineItems[1] as { addedAt?: string }).addedAt = '2026-10-07T10:00:00.000Z';
+    expect(mapCart(ct, ctx, deps()).lines.map((line) => line.id)).toEqual(['D2', 'D1']);
+  });
 });
