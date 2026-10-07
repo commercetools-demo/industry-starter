@@ -4,6 +4,7 @@ import {
   padResponse,
   rateLimited,
   readAuthBody,
+  readMergedBundle,
   startCustomerSession,
   stringField,
 } from '@/lib/auth/api';
@@ -14,28 +15,15 @@ import { clearFailures, isLockedOut, rateLimit, registerFailure } from '@/lib/au
 import { safeReturnPath } from '@/lib/auth/return-target';
 import { PASSWORD_POLICY } from '@/lib/config/password';
 import { RATE_LIMITS } from '@/lib/config/auth';
-import { readBundle } from '@/lib/ct/bundle';
 import { InvalidCredentialsError, signIn } from '@/lib/ct/customer';
 import { json } from '@/lib/ct/http';
 import { getSession } from '@/lib/ct/session';
 import { mapCustomer } from '@/lib/mappers/customer';
 import { getMarket } from '@/lib/market/server';
 import { clientKey } from '@/lib/rate-limit';
-import type { Cart } from '@/lib/types';
 import { isSupportedLocale } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
-
-/** The merged bundle as the buyer sees it. A failure here never fails the sign-in: the bundle is read again by the page. */
-async function readMergedBundle(customerId: string, cartId: string | undefined, market: Awaited<ReturnType<typeof getMarket>>): Promise<{ cart: Cart | null; cartId: string | undefined }> {
-  try {
-    const outcome = await readBundle({ customerId, ...(cartId ? { cartId } : {}) }, market);
-    return { cart: outcome.cart, cartId: outcome.cartId ?? cartId };
-  } catch (error) {
-    console.error('[auth] merged bundle unavailable', error instanceof Error ? error.name : 'unknown');
-    return { cart: null, cartId };
-  }
-}
 
 /** Sign in with email and password. Every failure looks the same (status, body, headers, and at least MIN_RESPONSE_MS of time). */
 export async function POST(request: Request) {

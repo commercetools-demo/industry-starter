@@ -2,8 +2,10 @@ import 'server-only';
 import type { NextResponse } from 'next/server';
 import { ApiError } from '@/lib/api-error';
 import { MAX_BODY_BYTES, MIN_RESPONSE_MS } from '@/lib/config/auth';
+import { readBundle } from '@/lib/ct/bundle';
 import { json } from '@/lib/ct/http';
 import { updateSession } from '@/lib/ct/session';
+import type { Cart, Market } from '@/lib/types';
 
 // Shared by the five /api/auth routes. Every answer is `Cache-Control: no-store` (json() sets it).
 
@@ -76,6 +78,17 @@ export const sleep = (ms: number): Promise<void> => new Promise((resolve) => set
 export async function padResponse(startedAt: number, minMs: number = MIN_RESPONSE_MS): Promise<void> {
   const remaining = minMs - (Date.now() - startedAt);
   if (remaining > 0) await sleep(remaining);
+}
+
+/** The merged bundle as the buyer sees it. A failure here never fails a sign-in: the bundle page reads it again. */
+export async function readMergedBundle(customerId: string, cartId: string | undefined, market: Market): Promise<{ cart: Cart | null; cartId: string | undefined }> {
+  try {
+    const outcome = await readBundle({ customerId, ...(cartId ? { cartId } : {}) }, market);
+    return { cart: outcome.cart, cartId: outcome.cartId ?? cartId };
+  } catch (error) {
+    console.error('[auth] merged bundle unavailable', error instanceof Error ? error.name : 'unknown');
+    return { cart: null, cartId };
+  }
 }
 
 /** Writes the signed-in session (fresh token, so a fresh `iat`) and replaces the cart reference. Keeps `anonymousId`. */

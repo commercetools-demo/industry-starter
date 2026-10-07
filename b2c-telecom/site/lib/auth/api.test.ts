@@ -1,4 +1,7 @@
 // @vitest-environment node
+vi.mock('@/lib/ct/bundle', () => ({ readBundle: vi.fn() }));
+vi.mock('@/lib/ct/session', () => ({ updateSession: vi.fn() }));
+
 import { authFailure, AuthRefusal, invalidCredentials, padResponse, rateLimited, readAuthBody } from './api';
 
 const request = (body: string, headers: Record<string, string> = { 'content-type': 'application/json' }): Request => new Request('http://localhost/api/auth/login', { method: 'POST', headers, body });
