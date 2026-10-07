@@ -14,19 +14,11 @@ import { dayToDate } from '@/lib/devices/format';
 import { deviceHeadline } from '@/lib/devices/headline';
 import { formatMoneyExact } from '@/lib/format';
 import { offerAnchorId } from '@/lib/listing/links';
-import type { AcquisitionMode, DeviceOffer, Locale } from '@/lib/types';
+import type { AddDeviceArgs, DeviceOffer, Locale } from '@/lib/types';
 import { AcquisitionModePicker } from './AcquisitionModePicker';
 import { AcquisitionSummary } from './AcquisitionSummary';
 import { DevicePicker } from './DevicePicker';
 import { useDeviceErrorText } from './useDeviceError';
-
-export interface AddDeviceArgs {
-  offerKey: string;
-  sku: string;
-  quantity: number;
-  mode: AcquisitionMode;
-  termMonths: number;
-}
 
 type DeviceCardProps = {
   offer: DeviceOffer;

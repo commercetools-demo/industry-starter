@@ -599,6 +599,15 @@ export interface DeviceOffer {
   /** variants[0] is the master variant. */
   variants: DeviceVariant[];
 }
+/** What a device card (or the bundle) sends to add or change a device line. */
+export interface AddDeviceArgs {
+  offerKey: string;
+  sku: string;
+  quantity: number;
+  mode: AcquisitionMode;
+  /** 0 for outright. */
+  termMonths: number;
+}
 export interface AcquisitionQuote {
   mode: AcquisitionMode;
   termMonths: number;
