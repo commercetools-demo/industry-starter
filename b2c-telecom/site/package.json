@@ -17,6 +17,7 @@
     "check:dev-routes": "node scripts/check-dev-routes.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "check:bundle": "node scripts/check-bundle-secrets.mjs",
+    "lint:catalog": "tsx --conditions=react-server --env-file=.env.local scripts/lint-catalog.ts",
     "seed:plan": "tsx scripts/seed/seed.ts --plan",
     "seed": "tsx scripts/seed/seed.ts",
     "seed:verify": "tsx scripts/seed/verify.ts",

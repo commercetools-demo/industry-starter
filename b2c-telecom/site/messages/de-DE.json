@@ -1,7 +1,33 @@
 {
-  "common": { "brand": "Malva" },
+  "common": {
+    "brand": "Malva",
+    "toast": { "dismiss": "Schließen" },
+    "breadcrumb": "Brotkrumenpfad"
+  },
+  "shell": {
+    "home": "Malva Telecom Startseite",
+    "skipToContent": "Zum Inhalt springen",
+    "nav": { "primary": "Hauptnavigation" },
+    "account": {
+      "login": "Anmelden",
+      "greeting": "Hallo, {firstName}",
+      "greetingNoName": "Mein Konto"
+    },
+    "bundle": { "labelCount": "Mein Bundle · {count}" },
+    "menu": { "open": "Menü öffnen", "close": "Menü schließen", "title": "Menü" },
+    "locale": {
+      "label": "Sprache und Region",
+      "en-US": "English (US)",
+      "de-DE": "Deutsch (Deutschland)"
+    }
+  },
   "nav": {},
-  "footer": { "photoCredit": "Fotos von Pexels" },
+  "footer": {
+    "photoCredit": "Fotos von Pexels",
+    "nav": "Fußzeile",
+    "support": "Support",
+    "copyright": "© 2026 Malva Telecom"
+  },
   "home": { "placeholder": "Malva Telecom Shop" },
   "plp": {},
   "bundle": {},
@@ -21,8 +47,46 @@
     }
   },
   "content": {},
-  "errors": {},
+  "errors": {
+    "kicker": { "notFound": "404", "unauthorized": "403", "server": "500" },
+    "notFound": {
+      "title": "Diese Seite haben wir nicht gefunden",
+      "body": "Die Adresse ist vielleicht falsch geschrieben oder das Angebot ist nicht mehr verfügbar. Suchen Sie oder gehen Sie zurück zu unseren Tarifen.",
+      "searchLabel": "Malva durchsuchen",
+      "searchButton": "Suchen",
+      "browse": "Unsere Tarife ansehen"
+    },
+    "home": "Zur Startseite",
+    "server": {
+      "title": "Bei uns ist etwas schiefgelaufen",
+      "body": "Wir konnten diese Seite nicht vollständig laden. Ihr Bundle und Ihre Anmeldung sind unverändert. Bitte versuchen Sie es erneut.",
+      "retry": "Erneut versuchen"
+    },
+    "reference": "Referenz: {reference}",
+    "unauthorized": {
+      "title": "Dafür fehlt Ihnen die Berechtigung",
+      "body": "Sie sind angemeldet, aber Ihr Konto darf das nicht. Falls Sie das für einen Fehler halten, wenden Sie sich an den Support und nennen Sie die Referenz.",
+      "account": "Zu meinem Konto",
+      "support": "Support kontaktieren"
+    }
+  },
   "a11y": {},
+  "offers": {
+    "reason": {
+      "SPEED_TOO_LOW": "Unterstützt bis zu {max} Mbit/s; {planName} liefert {needed} Mbit/s.",
+      "TECHNOLOGY_MISMATCH": "Funktioniert nicht mit {planName}.",
+      "FAMILY_MISMATCH": "Für diese Tarifart nicht verfügbar.",
+      "ALREADY_INCLUDED": "Bereits in {planName} enthalten.",
+      "DECLARED_INCOMPATIBLE": "Nicht kompatibel mit {planName}.",
+      "EXCLUSIVE_CONFLICT": "{candidateName} kann nicht zusammen mit {otherName} gebucht werden.",
+      "CATALOG_DATA_INCOMPLETE": "Vorübergehend nicht verfügbar.",
+      "OFFER_NOT_FOUND": "Dieser Artikel ist nicht mehr verfügbar.",
+      "REQUIRED_EQUIPMENT_MISSING": "{planName} benötigt ein kompatibles Gerät ({kind}).",
+      "PARENT_REQUIRED": "Fügen Sie zuerst einen Tarif hinzu.",
+      "AMBIGUOUS_PARENT": "Wählen Sie, zu welchem Tarif das gehört.",
+      "ALREADY_ATTACHED": "Bereits zu {planName} hinzugefügt."
+    }
+  },
   "region": {
     "label": "Region und Sprache",
     "change": "Region ändern",

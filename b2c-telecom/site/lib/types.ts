@@ -190,6 +190,82 @@ export interface SearchResult {
 }
 export type SearchSort = 'relevance' | 'price-asc' | 'price-desc';
 
+// ===== J: offer rules =====
+export type ReasonCode =
+  | 'SPEED_TOO_LOW'
+  | 'TECHNOLOGY_MISMATCH'
+  | 'FAMILY_MISMATCH'
+  | 'ALREADY_INCLUDED'
+  | 'DECLARED_INCOMPATIBLE'
+  | 'EXCLUSIVE_CONFLICT'
+  | 'CATALOG_DATA_INCOMPLETE'
+  | 'OFFER_NOT_FOUND'
+  | 'REQUIRED_EQUIPMENT_MISSING'
+  | 'PARENT_REQUIRED'
+  | 'AMBIGUOUS_PARENT'
+  | 'ALREADY_ATTACHED'
+  // used by workstream K (declared here once so nobody edits the union twice):
+  | 'HELD_SERVICE_CONFLICT'
+  | 'NOT_ELIGIBLE_AUDIENCE'
+  | 'NOT_ELIGIBLE_EXISTING_CUSTOMER'
+  | 'NOT_ELIGIBLE_CHANNEL'
+  | 'NOT_STARTED'
+  | 'ENDED'
+  | 'NOT_SERVICEABLE';
+
+export interface Reason {
+  code: ReasonCode;
+  /** Always `offers.reason.${code}`. */
+  messageKey: string;
+  /** ICU params: planName, candidateName, otherName, max, needed, kind. */
+  params: Record<string, string | number>;
+  /** The offers involved (plan first, then candidate / other). */
+  offerKeys: string[];
+}
+export interface ReplaceTarget {
+  lineItemId: string;
+  offerKey: string;
+  offerName: string;
+}
+export type VerdictStatus = 'allowed' | 'unavailable' | 'included';
+export interface EquipmentSelection {
+  kind: EquipmentKind;
+  offerKey: string;
+  variantSku: string;
+  mode: 'rental' | 'purchase';
+}
+export interface CompatVerdict {
+  status: VerdictStatus;
+  /** Empty when allowed; the first element is the primary reason. */
+  reasons: Reason[];
+  /** The plan line the add-on/equipment attaches to (cart mode). */
+  parentLineItemId?: string;
+  /** Present with AMBIGUOUS_PARENT. */
+  candidateParents?: string[];
+  /** Present with EXCLUSIVE_CONFLICT: lines the buyer may replace (the buyer decides, never automatic). */
+  replaces?: ReplaceTarget[];
+  /** Present when the candidate is a plan. */
+  requiredEquipment?: EquipmentSelection[];
+}
+export interface CartLineRef {
+  lineItemId: string;
+  offerKey: string;
+  parentLineItemId?: string;
+  quantity: number;
+}
+export type CartIssueResolution = 'remove' | 'replace' | 'choose-equipment';
+export interface CartIssue {
+  lineItemId: string;
+  offerKey: string;
+  blocking: true;
+  resolution: CartIssueResolution;
+  reasons: Reason[];
+}
+export interface CandidateEntry {
+  offer: Offer;
+  verdict: CompatVerdict;
+}
+
 // ===== L: pricing =====
 export type PriceSelectionMode = 'Fixed' | 'Dynamic';
 export interface LineRecurrence {
