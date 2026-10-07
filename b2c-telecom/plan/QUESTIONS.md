@@ -53,3 +53,6 @@ Answer in this file or in chat; the plan continues with the stated default.
 - **Q-015** (from W) Support mailbox `support@malva.example`, legal text and German copy are placeholders/machine-translated (SO-09). Image-credits page and footer say Pexels but images are iStock with no photographer data (see Q-008).
 - **Q-012 resolved by default (R):** kept `lib/ct/account-name.ts` for the header first name; session cookie not extended.
 - **Note (R):** test customers `chrome-r-<ts>@example.com` remain in the live project (cleanup selector `@example.com`); `signedInAt` session field is used for session invalidation instead of `iat`.
+- **Q-016** (from N) Default listing order is cheapest-first (offers have no order hint, so no "Featured"). Confirm or request an order hint.
+- **Q-017** (from N) Existing customers: the existing-customer cable offer is deduped away behind Cable 500 and reachable only via `?offer=`. Should existing customers see the cheaper offer instead? Default: as built.
+- **Q-018** (from O) The home page cannot be static/ISR (C-O-5): the layout's `AccountSlot` reads the session cookie so every page is dynamic. Fix would move the account slot to the client. Default: accept dynamic rendering (catalog reads are cached 60 s).

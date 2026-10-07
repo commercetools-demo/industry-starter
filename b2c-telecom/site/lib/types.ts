@@ -151,6 +151,8 @@ export interface Category {
   parentId?: string;
   orderHint?: string;
   image?: string;
+  /** Alternative text of `image` (the asset name; names the photographer). */
+  imageAlt?: string;
   children: Category[];
 }
 /** Minor units; min inclusive, max exclusive. */
@@ -521,6 +523,21 @@ export interface LabelSnapshot {
   locale: string;
   currencyCode: string;
   labels: { sku: string; offerKey: string; label: BroadbandLabelData }[];
+}
+
+// ===== N: listing =====
+/** `plans` = base packages (cards with term, lines, add-ons), `addons` = add-ons and equipment (toggle cards), `devices` = Q's cards. */
+export type ListingKind = 'plans' | 'addons' | 'devices';
+/** `price-asc` is the default order (cheapest first, which is the order the design shows). */
+export type ListingSort = 'price-asc' | 'price-desc';
+/** The listing state that lives only in the query string. `page` is NOT clamped here (the listing result clamps it). */
+export interface ListingParams {
+  /** A chip id; null = All. */
+  filter: string | null;
+  sort: ListingSort;
+  page: number;
+  /** The offer to scroll to and highlight (canonical offer link). */
+  offer: string | null;
 }
 
 // ===== R: account user =====
