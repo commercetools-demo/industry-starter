@@ -3,6 +3,7 @@ import { buildPlatformManifest as buildManifest } from './manifest';
 import { main as seedMain } from './seed';
 import { FakeCt } from './test/fake-ct';
 import type { CategoryDraft, ProductDraft, ProductTypeDraft, SeedManifest } from './types';
+import { platformChecks } from './checks/platform';
 import { main as verify } from './verify';
 
 const SOURCE = { CTP_SEED_PROJECT_KEY: 'spec-test-b2c-telecom' };
@@ -48,7 +49,7 @@ async function fullySeeded(): Promise<FakeCt> {
 
 async function run(api: FakeCt) {
   const lines: string[] = [];
-  const code = await verify([], { api, source: SOURCE, log: (l) => lines.push(l) });
+  const code = await verify([], { api, source: SOURCE, checks: platformChecks, log: (l) => lines.push(l) });
   return { code, out: lines.join('\n') };
 }
 
