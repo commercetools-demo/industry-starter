@@ -15,7 +15,11 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: { '/**': ['./content/**/*', './scripts/seed/data/product-images.json'] },
   // The auth pages carry per-visitor state (and the reset token in the URL): never cached by a browser or proxy (R).
   async headers() {
-    return [{ source: '/:locale/(login|register|forgot-password|reset-password)', headers: [{ key: 'Cache-Control', value: 'no-store' }] }];
+    return [
+      { source: '/:locale/(login|register|forgot-password|reset-password)', headers: [{ key: 'Cache-Control', value: 'no-store' }] },
+      // The account pages (S, T, V) show one customer's orders and data: never cached by a browser or a shared proxy.
+      { source: '/:locale/account/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] },
+    ];
   },
   images: {
     unoptimized: true, // the commercetools image CDN rejects Next optimiser query parameters

@@ -7,7 +7,8 @@ import type { Order, OrderLine, ReorderUnavailable } from '@/lib/types';
 // recurrence info and custom fields) and its custom fields, but keeps nothing a buyer must not inherit and drops nothing visibly:
 //  - `parentLineItemId` still holds the ORDER's line ids and must point at the new lines,
 //  - the order's own custom fields (stored schedule, label snapshot, cancellation ...) must not travel onto a new cart,
-//  - a line whose product is no longer available may be missing (compare by SKU, never trust a flag), or may have lost its recurrence.
+//  - a line whose product is no longer available may be missing (compare by SKU, never trust a flag), may still be there although the
+//    product was unpublished (verified live: Replicate keeps it), or may have lost its recurrence.
 // The report is the SKU comparison; unavailable lines are removed from the new cart and listed, never dropped silently.
 
 /** Order custom fields that describe THAT order and must be cleared on the new cart. */
@@ -23,7 +24,11 @@ export interface ReorderPlan {
   unavailable: ReorderUnavailable[];
 }
 
-export function planReorder(order: Order, cart: CtCart): ReorderPlan {
+/**
+ * `publishedSkus` = the SKUs the catalog sells today (published products only); a line whose SKU is not in it is removed even though
+ * Replicate kept it. `null` skips the check (nothing to look up).
+ */
+export function planReorder(order: Order, cart: CtCart, publishedSkus: ReadonlySet<string> | null = null): ReorderPlan {
   const free = [...cart.lineItems];
   const actions: CartUpdateAction[] = [];
   const unavailable: ReorderUnavailable[] = [];
@@ -45,6 +50,11 @@ export function planReorder(order: Order, cart: CtCart): ReorderPlan {
       continue;
     }
     const match = free.splice(index, 1)[0] as LineItem;
+    if (publishedSkus && !publishedSkus.has(line.sku)) {
+      actions.push({ action: 'removeLineItem', lineItemId: match.id });
+      drop(line, 'not-available');
+      continue;
+    }
     if (line.recurring && match.recurrenceInfo === undefined) {
       actions.push({ action: 'removeLineItem', lineItemId: match.id });
       drop(line, 'recurrence-lost');

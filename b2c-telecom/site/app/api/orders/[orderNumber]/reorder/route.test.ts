@@ -11,6 +11,7 @@ const state = vi.hoisted(() => ({
   requireCustomer: vi.fn(),
   mapForMarket: vi.fn(),
   withOrderNumber: vi.fn(),
+  published: vi.fn(),
   otherCalls: vi.fn(),
 }));
 
@@ -22,6 +23,7 @@ vi.mock('@/lib/ct/cart', () => ({ getCartById: state.getCart, updateCart: state.
 vi.mock('@/lib/ct/client', () => ({
   getApiRoot: () => ({
     orders: () => ({ withOrderNumber: (args: unknown) => ({ get: () => ({ execute: () => state.withOrderNumber(args) }) }) }),
+    productProjections: () => ({ get: (args: unknown) => ({ execute: () => state.published(args) }) }),
     carts: () => ({
       replicate: () => ({ post: (args: unknown) => ({ execute: () => state.replicate(args) }) }),
       withId: (args: unknown) => state.otherCalls('withId', args), // any other cart call (the previous cart) would show up here
@@ -34,8 +36,10 @@ import { POST } from './route';
 const request = () => new Request('http://localhost/api/orders/QA-AAAA01/reorder', { method: 'POST', headers: { origin: 'http://localhost' } });
 const call = (orderNumber = 'QA-AAAA01', req: Request = request()) => POST(req, { params: Promise.resolve({ orderNumber }) });
 
+const PRODUCT_OF: Record<string, string> = { 'MLV-CBL-500-24M': 'malva-offer-cable-500', 'MLV-ADD-APPLETV-MTH': 'malva-offer-appletv' };
 const line = (id: string, sku: string, recurring = true, parent?: string) => ({
   id,
+  productKey: PRODUCT_OF[sku],
   variant: { sku },
   ...(recurring ? { recurrenceInfo: { priceSelectionMode: 'Fixed' } } : {}),
   custom: { fields: { ...(parent ? { parentLineItemId: parent } : {}) } },
@@ -48,6 +52,7 @@ beforeEach(() => {
   state.withOrderNumber.mockResolvedValue({ body: orderA() });
   state.getCart.mockImplementation(async (id: string) => ({ id, version: 2, lineItems: [], customLineItems: [] }));
   state.updateCart.mockResolvedValue({});
+  state.published.mockResolvedValue({ body: { results: [{ masterVariant: { sku: 'MLV-CBL-500-24M' }, variants: [] }, { masterVariant: { sku: 'MLV-ADD-APPLETV-MTH' }, variants: [] }] } });
   state.mapForMarket.mockImplementation(async (ct: { id: string }) => ({ cart: { id: ct.id, lines: [] }, ct }));
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
 });
@@ -62,6 +67,14 @@ describe('POST /api/orders/[orderNumber]/reorder', () => {
     expect(body.unavailable).toEqual([{ sku: 'MLV-ADD-APPLETV-MTH', name: 'Apple TV+', reason: 'not-available' }]);
     expect(state.replicate).toHaveBeenCalledWith({ body: { reference: { typeId: 'order', id: 'id-QA-AAAA01' } } });
     expect(response.headers.get('cache-control')).toBe('no-store');
+  });
+
+  it('an unpublished product that Replicate kept is removed from the new cart and reported', async () => {
+    state.published.mockResolvedValue({ body: { results: [{ masterVariant: { sku: 'MLV-CBL-500-24M' }, variants: [] }] } });
+    state.replicate.mockResolvedValue({ body: replicaWith([line('n1', 'MLV-CBL-500-24M'), line('n2', 'MLV-ADD-APPLETV-MTH', true, 'a1')]) });
+    const body = await (await call()).json();
+    expect(body.unavailable).toEqual([{ sku: 'MLV-ADD-APPLETV-MTH', name: 'Apple TV+', reason: 'not-available' }]);
+    expect(state.updateCart).toHaveBeenCalledWith(expect.objectContaining({ id: 'new-cart' }), [{ action: 'removeLineItem', lineItemId: 'n2' }]);
   });
 
   it('removes the unavailable line from the new cart and reports a lost recurrence', async () => {

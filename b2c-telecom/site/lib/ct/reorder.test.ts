@@ -44,6 +44,16 @@ describe('planReorder', () => {
     expect(plan.actions).not.toContainEqual(expect.objectContaining({ lineItemId: 'n1', action: 'removeLineItem' }));
   });
 
+  it('removes and reports a line that Replicate kept although its product is no longer sold', () => {
+    const plan = planReorder(A, replica([line('n1', 'MLV-CBL-500-24M'), line('n2', 'MLV-ADD-APPLETV-MTH', { parent: 'a1' })]), new Set(['MLV-CBL-500-24M']));
+    expect(plan.unavailable).toEqual([{ sku: 'MLV-ADD-APPLETV-MTH', name: 'Apple TV+', reason: 'not-available' }]);
+    expect(plan.actions).toEqual([{ action: 'removeLineItem', lineItemId: 'n2' }]);
+  });
+
+  it('with no catalog check (null) a present line is kept', () => {
+    expect(planReorder(A, replica([line('n1', 'MLV-CBL-500-24M'), line('n2', 'MLV-ADD-APPLETV-MTH', { parent: 'n1' })]), null).unavailable).toEqual([]);
+  });
+
   it('clears the custom fields that describe the old order and nothing else', () => {
     const plan = planReorder(A, replica([line('n1', 'MLV-CBL-500-24M'), line('n2', 'MLV-ADD-APPLETV-MTH', { parent: 'n1' })], { custom: { fields: { serviceStartDate: '2026-03-12', priceSchedule: '{}', labelSnapshot: '{}', postalCode: '10001' } } }));
     expect(plan.actions).toEqual([

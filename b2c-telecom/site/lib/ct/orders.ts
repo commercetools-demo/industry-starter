@@ -88,6 +88,18 @@ export const getCustomerOrdersCached: (customerId: string, locale: Locale) => Pr
 export const getRecurringSummariesCached: (customerId: string) => Promise<RecurringSummary[]> = cache(getRecurringSummaries);
 
 /**
+ * The SKUs of the published products with these keys (what the catalog sells today), or `null` when there is nothing to look up.
+ * Replicate Cart keeps a line whose product was unpublished (verified live), so the SKU comparison alone is not enough.
+ */
+async function getPublishedSkus(productKeys: string[]): Promise<Set<string> | null> {
+  const keys = [...new Set(productKeys.filter((key) => key !== ''))];
+  if (keys.length === 0) return null;
+  const where = `key in (${keys.map((key) => `"${sanitize(key)}"`).join(',')})`;
+  const { body } = await withTimeout(getApiRoot().productProjections().get({ queryArgs: { where, limit: 500 } }).execute(), 'orders.published');
+  return new Set(body.results.flatMap((product) => [product.masterVariant, ...product.variants].flatMap((variant) => (variant.sku ? [variant.sku] : []))));
+}
+
+/**
  * "Buy again": Replicate Cart from the order (a replicated cart is priced from today's catalog), then the plan of `planReorder`: lines that
  * could not be reused are removed and returned as `unavailable`, parent links and order-only custom fields are repaired. The caller has
  * already proved ownership (`getOrderForCustomer`); the customer's previous active cart is left alone. Returns the fresh, expanded cart.
@@ -97,7 +109,7 @@ export async function replicateOrderToCart(order: Order): Promise<{ cart: CtCart
     getApiRoot().carts().replicate().post({ body: { reference: { typeId: 'order', id: order.id } } }).execute(),
     'orders.replicate',
   );
-  const { actions, unavailable } = planReorder(order, replica);
+  const { actions, unavailable } = planReorder(order, replica, await getPublishedSkus(replica.lineItems.map((line) => line.productKey ?? '')));
   if (actions.length > 0) await updateCart(replica, actions);
   const cart = await getCartById(replica.id);
   if (!cart) throw new ApiError('INTERNAL', 'The new bundle could not be read');
