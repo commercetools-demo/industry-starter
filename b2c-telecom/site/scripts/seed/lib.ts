@@ -150,15 +150,24 @@ export function createApi(env: SeedEnv): CtApi {
   return api;
 }
 
+export interface ConnectOptions {
+  mode: Mode;
+  confirmProject?: string;
+  source?: Record<string, string | undefined>;
+  /** Tests inject an in-memory api; the target check still runs first. */
+  api?: CtApi;
+}
+
 /**
- * Builds the admin client after the target check, then proves the credentials belong to the named project.
- * Throws TargetError (exit code 2) on any violation.
+ * Runs the target check, builds the admin client, then proves the credentials belong to the named project.
+ * Throws TargetError (exit code 2) on any violation, before any write.
  */
-export async function getAdminApi(opts: { mode: Mode; confirmProject?: string; source?: Record<string, string | undefined> }): Promise<{ api: CtApi; projectKey: string }> {
-  const env = readSeedEnv(opts.source ?? loadSeedEnv());
-  assertTarget({ envProjectKey: env.projectKey, confirmProject: opts.confirmProject, mode: opts.mode });
-  const api = createApi(env);
+export async function getAdminApi(opts: ConnectOptions): Promise<{ api: CtApi; projectKey: string }> {
+  const source = opts.source ?? loadSeedEnv();
+  const envProjectKey = source.CTP_SEED_PROJECT_KEY ?? '';
+  assertTarget({ envProjectKey, confirmProject: opts.confirmProject, mode: opts.mode });
+  const api = opts.api ?? createApi(readSeedEnv(source));
   const project = (await api.get('')) as { key?: string } | null;
-  assertEchoedKey(env.projectKey, project?.key);
-  return { api, projectKey: env.projectKey };
+  assertEchoedKey(envProjectKey, project?.key);
+  return { api, projectKey: envProjectKey };
 }
