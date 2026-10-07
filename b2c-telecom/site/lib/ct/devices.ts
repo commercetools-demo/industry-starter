@@ -1,10 +1,13 @@
 import 'server-only';
-import type { RecurringOrder } from '@commercetools/platform-sdk';
+import type { Cart as CtCart, CartUpdateAction, LineItem, RecurringOrder } from '@commercetools/platform-sdk';
 import { unstable_cache } from 'next/cache';
 import { DEVICE_POLICY_KEYS, EXPIRY_POLL_ATTEMPTS, EXPIRY_POLL_INTERVAL_MS, POLICY_CACHE_SECONDS } from '@/lib/config/devices';
-import { computeRecurringExpiry, modeOfPolicyKey } from '@/lib/devices/acquisition';
+import { computeEndDate, computeRecurringExpiry, modeOfPolicyKey, readAcquisition } from '@/lib/devices/acquisition';
+import { getFinancingProvider } from '@/lib/devices/financing';
 import { mapDeviceOffer } from '@/lib/mappers/device';
-import type { CreditFlag, DeviceOffer, Market, Offer } from '@/lib/types';
+import type { SessionData } from '@/lib/session-types';
+import type { CreditFlag, DeviceOffer, FinancingDecision, FinancingLine, Market, Offer } from '@/lib/types';
+import { getActiveCartForSession, updateCart, withCartRetry } from './cart';
 import { getAllOffers } from './catalog';
 import { getApiRoot } from './client';
 import { getCustomerById } from './customer';
@@ -144,4 +147,56 @@ export async function applyDeviceRecurringExpiry(orderId: string, deps: ExpiryDe
     console.error('[devices] recurring expiry failed', orderId, error instanceof Error ? error.message : 'unknown error');
   }
   return result;
+}
+
+// ---- financing decision ----
+
+const fieldsOf = (line: LineItem): Record<string, unknown> | undefined => line.custom?.fields as Record<string, unknown> | undefined;
+
+/** The financed device lines of a cart (installments and lease), with the unit amount each pays every month. */
+export function financedLinesOf(cart: Pick<CtCart, 'lineItems'>): FinancingLine[] {
+  return cart.lineItems.flatMap((line): FinancingLine[] => {
+    const acquisition = readAcquisition(fieldsOf(line));
+    if (!acquisition || acquisition.mode === 'outright') return [];
+    return [{ lineId: line.id, mode: acquisition.mode, termMonths: acquisition.termMonths, quantity: line.quantity, monthly: { centAmount: line.price.value.centAmount, currencyCode: line.price.value.currencyCode } }];
+  });
+}
+
+/**
+ * After an approved decision, writes `financingDecisionId` and `acquisitionEndDate` onto every financed line so the order carries
+ * them (billing and returns read the line, not a document). The end date is fixed from the day of the decision. Anything but an
+ * approval writes nothing. Returns the cart as it is afterwards.
+ */
+export async function recordFinancingDecision(cartId: string, decision: FinancingDecision): Promise<CtCart> {
+  return withCartRetry(cartId, async (fresh) => {
+    if (decision.outcome !== 'approved') return fresh;
+    const decidedOn = new Date(decision.decidedAt);
+    const actions: CartUpdateAction[] = [];
+    for (const line of fresh.lineItems) {
+      const acquisition = readAcquisition(fieldsOf(line));
+      if (!acquisition || acquisition.mode === 'outright') continue;
+      const endDate = computeEndDate(acquisition.mode, acquisition.termMonths, decidedOn);
+      if (acquisition.financingDecisionId !== decision.decisionId) actions.push({ action: 'setLineItemCustomField', lineItemId: line.id, name: 'financingDecisionId', value: decision.decisionId });
+      if (endDate && acquisition.endDate !== endDate) actions.push({ action: 'setLineItemCustomField', lineItemId: line.id, name: 'acquisitionEndDate', value: endDate });
+    }
+    return actions.length === 0 ? fresh : updateCart(fresh, actions);
+  });
+}
+
+/**
+ * The financing decision for the session's bundle, evaluated server-side every time (the client's picture is never trusted) and
+ * recorded on the lines when approved. U calls it directly at "Continue to payment" and again inside the checkout session route.
+ * An anonymous visitor with a financed line gets `sign-in-required`; a visitor with no cart gets an approval with no financed lines.
+ */
+export async function evaluateFinancing(session: SessionData, market: Market): Promise<FinancingDecision> {
+  const cart = await getActiveCartForSession(session, market);
+  const customerId = session.customerId ?? null;
+  const decision = await getFinancingProvider().decide({
+    customerId,
+    creditFlag: customerId ? await getCreditFlag(customerId) : null,
+    currency: market.currency,
+    lines: cart ? financedLinesOf(cart) : [],
+  });
+  if (cart && decision.outcome === 'approved' && decision.reason === 'ok') await recordFinancingDecision(cart.id, decision);
+  return decision;
 }

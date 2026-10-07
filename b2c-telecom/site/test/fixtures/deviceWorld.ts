@@ -107,6 +107,9 @@ function apply(cart: FakeCart, version: number, actions: { action: string; [key:
       });
     } else if (action.action === 'removeLineItem') {
       cart.lineItems = cart.lineItems.filter((line) => line.id !== action.lineItemId);
+    } else if (action.action === 'setLineItemCustomField') {
+      const line = cart.lineItems.find((candidate) => candidate.id === action.lineItemId);
+      if (line) line.custom.fields[action.name as string] = action.value;
     } else if (action.action === 'changeLineItemQuantity') {
       const line = cart.lineItems.find((candidate) => candidate.id === action.lineItemId);
       if (line) line.quantity = action.quantity as number;
