@@ -42,7 +42,120 @@
     "placeholder": "Malva Telecom storefront"
   },
   "plp": {},
-  "bundle": {},
+  "bundle": {
+    "title": "My bundle",
+    "empty": {
+      "title": "Your bundle is empty",
+      "body": "Choose a plan from any category, then add extras.",
+      "phone": "Phone plans",
+      "wireless": "Wireless internet",
+      "cable": "Cable internet",
+      "aria": "Where to start"
+    },
+    "kind": {
+      "cable": "Cable internet",
+      "wireless": "Home wireless internet",
+      "phone": "Phone plan"
+    },
+    "line": {
+      "removePlan": "Remove plan",
+      "remove": "Remove",
+      "change": "Change",
+      "forPlan": "For {plan}",
+      "included": "Included at no charge",
+      "oneTime": "one-time",
+      "perMonth": "{amount}/mo",
+      "term": "{months}-month term",
+      "monthToMonth": "Month to month",
+      "removeAria": "Remove {name}"
+    },
+    "qty": {
+      "label": "Number of lines",
+      "decrease": "Fewer lines",
+      "increase": "More lines"
+    },
+    "stock": {
+      "out": "Out of stock",
+      "few": "Only {count} left"
+    },
+    "summary": {
+      "title": "Order summary",
+      "plans": "Plans",
+      "addons": "Add-ons",
+      "devices": "Devices",
+      "monthly": "Monthly",
+      "oneTime": "One-time fees",
+      "discounts": "Discounts",
+      "tax": "Taxes",
+      "dueToday": "Due today",
+      "taxNote": "Taxes are calculated at checkout. Each plan's Broadband Facts label is shown with the plan."
+    },
+    "cta": {
+      "checkout": "Check out",
+      "login": "Log in to check out with your account",
+      "blocked": "Resolve the items above to continue"
+    },
+    "minimum": "Add {shortfall} more to reach the {minimum} minimum order.",
+    "code": {
+      "label": "Discount code",
+      "apply": "Apply",
+      "remove": "Remove code",
+      "applied": "Code {code} applied",
+      "noLonger": "Code {code} no longer applies: {reason}",
+      "reason": {
+        "unknown-code": "We could not find that code.",
+        "not-active": "This code is not active.",
+        "not-valid": "This code has expired or is not valid yet.",
+        "not-applicable": "This code does not apply to what is in your bundle.",
+        "max-reached": "This code has reached its limit.",
+        "stopped": "A better offer already applies, so this code was not used."
+      }
+    },
+    "blocked": {
+      "title": "We could not add {name}",
+      "generic": "This item cannot be added to your bundle right now.",
+      "replace": "Replace {existing} with {new}",
+      "keep": "Keep {existing}",
+      "dismiss": "Close"
+    },
+    "removeDependents": {
+      "title": "Remove {name}?",
+      "body": "These items go with it: {items}.",
+      "confirm": "Remove all",
+      "cancel": "Keep"
+    },
+    "issue": {
+      "title": "Please review your bundle",
+      "generic": "This item needs attention before you can check out.",
+      "scheduleNotPriceable": "This plan cannot be priced for its full term yet.",
+      "labelMissing": "This plan is temporarily unavailable.",
+      "outOfStock": "This item is out of stock.",
+      "removeLine": "Remove {name}"
+    },
+    "toast": {
+      "added": "{name} added to your bundle",
+      "view": "View bundle"
+    },
+    "error": {
+      "generic": "Something went wrong. Your bundle was not changed."
+    },
+    "prompt": {
+      "title": "Save {saving}/mo",
+      "add": "Add",
+      "addAria": "Add {name} and save {saving} per month",
+      "cablePhone": "Add {name} to your Cable internet and save {saving}/mo.",
+      "secondLine": "Add a second line and save {saving}/mo."
+    },
+    "loading": "Loading your bundle",
+    "section": {
+      "plans": "Plans",
+      "addons": "Add-ons"
+    },
+    "addons": {
+      "empty": "No add-ons yet.",
+      "browse": "Browse add-ons"
+    }
+  },
   "checkout": {},
   "account": {},
   "auth": {},
@@ -130,5 +243,25 @@
       "fixed-wireless": "Home wireless",
       "mobile": "Phone"
     }
+  },
+  "schedule": {
+    "title": "Your price, month by month",
+    "col": {
+      "months": "Months",
+      "dates": "Dates",
+      "amount": "Per month"
+    },
+    "row": {
+      "intro": "Introductory price",
+      "standing": "Standard price"
+    },
+    "dueAtOrder": "Due at order",
+    "total": "Total over {months} months",
+    "afterTerm": "After your {months}-month term: {amount}/mo from {date}.",
+    "openEnded": "No contract: you can cancel any time. Price can change; we tell you before it does.",
+    "provisional": "Dates assume you order today; they are fixed when you place the order.",
+    "lines": "x {quantity} lines",
+    "monthRange": "{from}-{to}",
+    "monthFrom": "{from} onwards"
   }
 }

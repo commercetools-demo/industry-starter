@@ -1,11 +1,17 @@
 // Cart discounts (D-014, D-027). Predicates use backtick-escaped attribute names (hyphens); proven live in G-18.
 // Docs: https://docs.commercetools.com/api/projects/cartDiscounts , https://docs.commercetools.com/api/projects/predicates
+import { DISCOUNT_AMOUNTS } from '../../../lib/config/discounts';
 import type { CartDiscountDraft } from '../types';
 import { ls } from './catalog-types';
 
 const money = (cents: number): { currencyCode: string; centAmount: number }[] => [
   { currencyCode: 'USD', centAmount: cents },
   { currencyCode: 'EUR', centAmount: cents },
+];
+/** Per-currency amounts shared with the Broadband Facts label text (lib/config/discounts.ts, workstream M). */
+const amounts = (a: { USD: number; EUR: number }): { currencyCode: string; centAmount: number }[] => [
+  { currencyCode: 'USD', centAmount: a.USD },
+  { currencyCode: 'EUR', centAmount: a.EUR },
 ];
 
 const PHONE_UNIT = 'attributes.`offer-family` = "phone"';
@@ -20,7 +26,7 @@ export const cartDiscounts: CartDiscountDraft[] = [
     key: 'malva-cd-second-line-10',
     name: ls('Second line $10 off', 'Zweite Leitung 10 € weniger'),
     description: ls('The first phone line pays full price; lines 2 to 5 get $10 off each.', 'Die erste Leitung kostet den vollen Preis; die Leitungen 2 bis 5 kosten je 10 € weniger.'),
-    value: { type: 'absolute', money: money(1000), applicationMode: 'IndividualApplication' },
+    value: { type: 'absolute', money: amounts(DISCOUNT_AMOUNTS.secondLine), applicationMode: 'IndividualApplication' },
     cartPredicate: 'true',
     target: {
       type: 'pattern',
@@ -39,7 +45,7 @@ export const cartDiscounts: CartDiscountDraft[] = [
     key: 'malva-cd-bundle-5',
     name: ls('Bundle with a phone plan: $5 off', 'Mit Handytarif kombinieren: 5 € weniger'),
     description: ls('A phone plan together with cable or wireless internet saves $5 a month.', 'Ein Handytarif zusammen mit Kabel- oder Funk-Internet spart 5 € im Monat.'),
-    value: { type: 'absolute', money: money(500) },
+    value: { type: 'absolute', money: amounts(DISCOUNT_AMOUNTS.bundleCablePhone) },
     cartPredicate: `lineItemExists(${PHONE_UNIT}) = true and lineItemExists(${HOME_INTERNET}) = true`,
     target: { type: 'lineItems', predicate: HOME_INTERNET },
     sortOrder: '0.2',

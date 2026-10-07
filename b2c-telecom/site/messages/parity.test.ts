@@ -13,7 +13,7 @@ describe('messages parity', () => {
     expect(keyPaths(de)).toEqual(keyPaths(en));
   });
   it('has the exact top-level namespaces', () => {
-    const expected = ['a11y', 'account', 'auth', 'bundle', 'checkout', 'common', 'content', 'errors', 'footer', 'home', 'nav', 'offers', 'plp', 'pricing', 'region', 'search', 'serviceability', 'shell'];
+    const expected = ['a11y', 'account', 'auth', 'bundle', 'checkout', 'common', 'content', 'errors', 'footer', 'home', 'nav', 'offers', 'plp', 'pricing', 'region', 'schedule', 'search', 'serviceability', 'shell'];
     expect(Object.keys(en).sort()).toEqual(expected);
     expect(Object.keys(de).sort()).toEqual(expected);
   });

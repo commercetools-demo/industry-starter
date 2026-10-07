@@ -379,3 +379,146 @@ export interface RecurringOrderSummary {
   lines: { name: string; sku: string; quantity: number; priceSelectionMode: PriceSelectionMode | null }[];
   failureReason?: string;
 }
+
+// ===== M: cart (My bundle) =====
+// Name notes: J's `CartIssue` (per line, with reasons) is kept as is; the cart API's issue shape is `BundleIssue`.
+// M does not re-declare `OfferFacts`: the offer data the mappers need is `Offer` (H).
+export type BundleLineKind = 'plan' | 'addon' | 'equipment' | 'device' | 'fee';
+export interface CartLine {
+  /** commercetools line item id, or custom line item id for fee lines. */
+  id: string;
+  source: 'line-item' | 'custom-line-item';
+  /** Offer key; for a fee line the key of the plan it belongs to. */
+  offerKey: string;
+  /** null for fee lines. */
+  sku: string | null;
+  kind: BundleLineKind;
+  name: string;
+  family: PlanFamily | null;
+  technology: Technology | null;
+  imageUrl?: string;
+  /** First 3 highlights of the offer (localized). */
+  bullets: string[];
+  /** Short description (add-on rows). */
+  description: string;
+  quantity: number;
+  termMonths: TermMonths;
+  chargeType: 'recurring' | 'one-time';
+  /** null for one-time lines. */
+  recurrence: LineRecurrence | null;
+  /** Engine `price` (before discounts). */
+  unitListPrice: Money;
+  /** Engine line total / quantity (after discounts, before tax); display only, `total` is authoritative. */
+  unitPrice: Money;
+  /** Engine `totalPrice`. */
+  total: Money;
+  /** From `discountedPricePerQuantity[].discountedPrice.includedDiscounts[].discount.key`. */
+  appliedDiscountKeys: string[];
+  /** Custom field `parentLineItemId` (D-026). */
+  parentLineId: string | null;
+  /** Included by the plan (J) and priced 0. */
+  includedAtNoCharge: boolean;
+  /** Equipment line that is a default for a kind the parent plan requires (D-025). */
+  requiredEquipment: boolean;
+  /** Plans only: computed by L's `buildSchedule` (provisional order date = today). */
+  schedule: PriceSchedule | null;
+  /** Plans only. */
+  label: BroadbandLabelData | null;
+  /** Equipment and devices only. */
+  stock: { available: number | null; inStock: boolean } | null;
+}
+export type DiscountCodeReason = 'unknown-code' | 'not-active' | 'not-valid' | 'not-applicable' | 'max-reached' | 'stopped';
+export interface CartDiscountCodeInfo {
+  code: string;
+  state: 'applied' | 'not-applicable' | 'not-active' | 'not-valid' | 'max-reached' | 'stopped';
+  reason: DiscountCodeReason | null;
+}
+export interface BundleIssueReason {
+  code: string;
+  messageKey: string;
+  params: Record<string, string | number>;
+  offerKeys: string[];
+}
+/** What is wrong with a line of the bundle: a rule that changed after the add (J/K revalidation) or a data gap. */
+export interface BundleIssue {
+  code: string;
+  severity: 'blocking';
+  lineId: string | null;
+  offerKey: string | null;
+  /** J/K resolution; `none` for data gaps. */
+  resolution: CartIssueResolution | 'none';
+  reasons: BundleIssueReason[];
+}
+export interface CartSummary {
+  /** Recurring subtotals by kind (sum of engine line totals). */
+  plans: Money;
+  addons: Money;
+  devicesMonthly: Money;
+  /** Sum of engine line totals of recurring / one-time lines (one-time includes fee lines). */
+  monthly: Money;
+  oneTime: Money;
+  /** Sum of the discounts the engine applied (positive amount). */
+  discountTotal: Money;
+  /** Engine taxedPrice portion (null until it exists) and engine totalPrice (due today). */
+  tax: Money | null;
+  total: Money;
+}
+export interface Cart {
+  id: string;
+  version: number;
+  currencyCode: string;
+  country: string;
+  lines: CartLine[];
+  /** Number of non-fee lines (distinct); header pill "My bundle · N". */
+  itemCount: number;
+  summary: CartSummary;
+  discountCodes: CartDiscountCodeInfo[];
+  /** null when the minimum is 0 for this currency. */
+  minimumOrder: { required: Money; shortfall: Money | null } | null;
+  issues: BundleIssue[];
+  canCheckout: boolean;
+  checkoutBlockedBy: ('EMPTY' | 'MINIMUM_ORDER' | 'ISSUES')[];
+  /** Cart custom field (K serviceability). */
+  postalCode: string | null;
+}
+export interface BlockedAdd {
+  kind: 'incompatible' | 'conflict' | 'ineligible' | 'unavailable' | 'invalid' | 'limit';
+  offerKey: string;
+  reasons: BundleIssueReason[];
+  /** Only for kind 'conflict' and for ONE_PLAN_PER_CATEGORY. */
+  replace?: { removeLineId: string; removeOfferKey: string; removeOfferName: string };
+}
+export interface DiscountPrompt {
+  pairingKey: string;
+  discountKey: string;
+  candidate: { offerKey: string; sku: string; name: string; quantity: number; termMonths: TermMonths };
+  /** Per month, quoted from a priced prospective cart. */
+  saving: Money;
+  messageKey: string;
+  params: Record<string, string | number>;
+}
+// Label data (broadband-facts-label contract; all strings already formatted).
+export interface LabelRow {
+  k: string;
+  v: string;
+}
+export interface BroadbandLabelData {
+  id: string;
+  planName: string;
+  kind: string;
+  price: string;
+  priceNote: string;
+  monthlyFees: LabelRow[];
+  oneTime: LabelRow[];
+  etf: string;
+  discounts: string;
+  speeds: LabelRow[];
+  data: string;
+}
+export interface LabelSnapshot {
+  v: 1;
+  takenAt: string;
+  locale: string;
+  currencyCode: string;
+  labels: { sku: string; offerKey: string; label: BroadbandLabelData }[];
+}
