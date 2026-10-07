@@ -6,6 +6,7 @@ import type { Category } from '@/lib/types';
 
 export function mapCategory(sdk: SdkCategory, locale: string): Category {
   const image = sdk.assets?.[0]?.sources?.[0]?.uri;
+  const imageAlt = image ? getLocalizedString(sdk.assets?.[0]?.name, locale) : '';
   return {
     id: sdk.id,
     key: sdk.key ?? sdk.id,
@@ -15,6 +16,7 @@ export function mapCategory(sdk: SdkCategory, locale: string): Category {
     ...(sdk.parent ? { parentId: sdk.parent.id } : {}),
     ...(sdk.orderHint ? { orderHint: sdk.orderHint } : {}),
     ...(image ? { image } : {}),
+    ...(imageAlt ? { imageAlt } : {}),
     children: [],
   };
 }

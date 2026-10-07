@@ -40,7 +40,48 @@
     "copyright": "© 2026 Malva Telecom"
   },
   "home": {
-    "placeholder": "Malva Telecom storefront"
+    "placeholder": "Malva Telecom storefront",
+    "hero": {
+      "eyebrow": "New customers",
+      "title": "Fast fiber cable. Zero surprises.",
+      "sub": "Up to {speed} at home from {price}/mo, with price locked for {months} months.",
+      "subNoLock": "Up to {speed} at home from {price}/mo.",
+      "cta": "See cable plans",
+      "imageLabel": "Hero image placeholder",
+      "imageAlt": "Malva Telecom cable internet at home",
+      "speed": {
+        "gbps": "{value, number} Gbps",
+        "mbps": "{value, number} Mbps"
+      }
+    },
+    "promo": {
+      "phone": {
+        "eyebrow": "PHONE PLANS",
+        "title": "Plans from {price} a line",
+        "titleNoPrice": "Plans for every phone",
+        "cta": "Shop phone plans"
+      },
+      "addons": {
+        "eyebrow": "ADD-ONS",
+        "title": "{names} and more on your bill",
+        "titleNoNames": "Streaming, music and extras on your bill",
+        "cta": "Browse add-ons"
+      }
+    },
+    "categories": {
+      "title": "Shop by category",
+      "from": "From {price}/mo →",
+      "browse": "Browse all →"
+    },
+    "addons": {
+      "title": "Popular add-ons",
+      "viewAll": "View all →",
+      "price": "{price}/mo"
+    },
+    "meta": {
+      "title": "Malva Telecom: phone, wireless and cable internet",
+      "description": "Compare phone plans, home wireless and cable internet with locked prices and add-ons on one bill."
+    }
   },
   "plp": {
     "home": "Home",

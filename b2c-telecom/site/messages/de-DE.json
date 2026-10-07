@@ -40,7 +40,48 @@
     "copyright": "© 2026 Malva Telecom"
   },
   "home": {
-    "placeholder": "Malva Telecom Shop"
+    "placeholder": "Malva Telecom Shop",
+    "hero": {
+      "eyebrow": "Neukunden",
+      "title": "Schnelles Kabel-Internet. Keine Überraschungen.",
+      "sub": "Bis zu {speed} zu Hause ab {price}/Monat, mit {months} Monaten Preisgarantie.",
+      "subNoLock": "Bis zu {speed} zu Hause ab {price}/Monat.",
+      "cta": "Kabel-Tarife ansehen",
+      "imageLabel": "Platzhalter für Hero-Bild",
+      "imageAlt": "Malva Telecom Kabel-Internet für zu Hause",
+      "speed": {
+        "gbps": "{value, number} Gbit/s",
+        "mbps": "{value, number} Mbit/s"
+      }
+    },
+    "promo": {
+      "phone": {
+        "eyebrow": "MOBILFUNKTARIFE",
+        "title": "Tarife ab {price} pro Anschluss",
+        "titleNoPrice": "Tarife für jedes Handy",
+        "cta": "Mobilfunktarife ansehen"
+      },
+      "addons": {
+        "eyebrow": "ZUSATZOPTIONEN",
+        "title": "{names} und mehr auf Ihrer Rechnung",
+        "titleNoNames": "Streaming, Musik und Extras auf Ihrer Rechnung",
+        "cta": "Zusatzoptionen ansehen"
+      }
+    },
+    "categories": {
+      "title": "Nach Kategorie einkaufen",
+      "from": "Ab {price}/Monat →",
+      "browse": "Alle ansehen →"
+    },
+    "addons": {
+      "title": "Beliebte Zusatzoptionen",
+      "viewAll": "Alle ansehen →",
+      "price": "{price}/Monat"
+    },
+    "meta": {
+      "title": "Malva Telecom: Mobilfunk, Funk- und Kabel-Internet",
+      "description": "Vergleichen Sie Mobilfunktarife sowie Funk- und Kabel-Internet mit garantierten Preisen und Zusatzoptionen auf einer Rechnung."
+    }
   },
   "plp": {
     "home": "Startseite",
