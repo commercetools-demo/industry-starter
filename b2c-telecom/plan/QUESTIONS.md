@@ -56,3 +56,6 @@ Answer in this file or in chat; the plan continues with the stated default.
 - **Q-016** (from N) Default listing order is cheapest-first (offers have no order hint, so no "Featured"). Confirm or request an order hint.
 - **Q-017** (from N) Existing customers: the existing-customer cable offer is deduped away behind Cable 500 and reachable only via `?offer=`. Should existing customers see the cheaper offer instead? Default: as built.
 - **Q-018** (from O) The home page cannot be static/ISR (C-O-5): the layout's `AccountSlot` reads the session cookie so every page is dynamic. Fix would move the account slot to the client. Default: accept dynamic rendering (catalog reads are cached 60 s).
+- **Q-019** (from P) The header search magnifier is undrawn: owner sign-off needed (`HEADER_SEARCH_ENABLED` in `lib/config/search.ts` switches it off). German catalog names are English, so `/de-DE/search?q=Tarif` finds nothing.
+- **TODO for M (from S):** `PriceSchedule` shows "Dates assume you order today" on order detail pages; needs a prop to suppress. "Buy again" confirms with a toast, not the planned `?reordered` banner on `/bundle`.
+- **Note (S):** `scripts/seed/create-qa-order.ts` / `cleanup-qa.ts` create and remove QA customers and orders (cleanup also removes `chrome-r-*` customers).
