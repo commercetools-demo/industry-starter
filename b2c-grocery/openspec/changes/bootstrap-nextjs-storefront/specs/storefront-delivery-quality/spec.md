@@ -2,7 +2,7 @@
 
 ### Requirement: Deploy configuration
 
-A root `netlify.toml` (`base = "site"`, `command = "npm run build"`, `publish = ".next"`, `NODE_VERSION = "22"`) SHALL exist, with the Netlify project root scoped to `site/`. No `vercel.json` SHALL be added. Netlify environment variables SHALL be set in the Netlify UI and never committed.
+A `site/netlify.toml` (`command = "npm run build"`, `NODE_VERSION = "22"`, plus an `ignore` rule) SHALL exist, with the Netlify base directory set to `b2c-grocery/site` in the monorepo. No `vercel.json` SHALL be added. Netlify environment variables SHALL be set in the Netlify UI and never committed.
 
 #### Scenario: Netlify build
 - **WHEN** Netlify builds the repository

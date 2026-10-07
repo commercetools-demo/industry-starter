@@ -6,14 +6,14 @@ import path from 'node:path';
 import { checkRelease, NETLIFY_TEMPLATE } from './check-release.mjs';
 
 /**
- * Builds a throwaway repository (`<tmp>/netlify.toml`, `<tmp>/site/...`) and returns the `site/` directory.
+ * Builds a throwaway repository (`<tmp>/site/netlify.toml`, `<tmp>/site/...`) and returns the `site/` directory.
  * Keys of `files` are relative to `site/`; keys starting with `../` are relative to the repository root.
  */
 function project(files: Record<string, string>, { netlify = NETLIFY_TEMPLATE }: { netlify?: string | null } = {}) {
   const repo = mkdtempSync(path.join(tmpdir(), 'rel-'));
   const site = path.join(repo, 'site');
   mkdirSync(site, { recursive: true });
-  if (netlify !== null) writeFileSync(path.join(repo, 'netlify.toml'), netlify);
+  if (netlify !== null) writeFileSync(path.join(site, 'netlify.toml'), netlify);
   for (const [rel, content] of Object.entries(files)) {
     const full = path.join(site, rel);
     mkdirSync(path.dirname(full), { recursive: true });
@@ -58,7 +58,7 @@ describe('checkRelease', () => {
   });
 
   it('fails when netlify.toml is missing', () => {
-    expect(checkRelease(project({}, { netlify: null }))).toEqual(['netlify.toml is missing at the repository root']);
+    expect(checkRelease(project({}, { netlify: null }))).toEqual(['netlify.toml is missing in site/']);
   });
 
   it('fails when netlify.toml differs from the template', () => {
@@ -86,13 +86,13 @@ describe('checkRelease', () => {
 
 describe('netlify.toml (Y-01)', () => {
   const root = path.resolve(import.meta.dirname, '..', '..');
-  const toml = readFileSync(path.join(root, 'netlify.toml'), 'utf8');
+  const toml = readFileSync(path.join(root, 'site', 'netlify.toml'), 'utf8');
   const value = (key: string) => new RegExp(`^\\s*${key}\\s*=\\s*"([^"]*)"`, 'm').exec(toml)?.[1];
 
-  it('Netlify build config: base, command, publish and Node version', () => {
-    expect(value('base')).toBe('site');
+  it('Netlify build config: command and Node version (base directory is set in the Netlify UI)', () => {
+    expect(value('base')).toBeUndefined();
     expect(value('command')).toBe('npm run build');
-    expect(value('publish')).toBe('.next');
+    expect(value('publish')).toBeUndefined();
     expect(value('NODE_VERSION')).toBe('22');
   });
 

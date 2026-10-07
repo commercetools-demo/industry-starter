@@ -16,11 +16,13 @@ function walk(dir) {
 const GUARD = /NODE_ENV\s*(?:===|!==|==|!=)\s*['"]development['"]/;
 const NOT_FOUND = /\bnotFound\s*\(/;
 
-/** The `netlify.toml` the repository must carry (Y-01). Compared ignoring blank lines and spacing. */
+/**
+ * The `site/netlify.toml` this project must carry (Y-01). The repository is a monorepo, so the Netlify base directory
+ * is `b2c-grocery/site` (set in the Netlify UI) and the file lives there. Compared ignoring blank lines and spacing.
+ */
 export const NETLIFY_TEMPLATE = `[build]
-  base    = "site"
   command = "npm run build"
-  publish = ".next"
+  ignore  = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ../design ../plan"
 
 [build.environment]
   NODE_VERSION = "22"
@@ -49,18 +51,18 @@ function trackedFiles(rootDir) {
 }
 
 /**
- * Release-only checks (used by `verify:release`, not by `verify`). `rootDir` is the project root (site/); the
- * repository root is its parent. Returns a list of problems (empty = releasable).
+ * Release-only checks (used by `verify:release`, not by `verify`). `rootDir` is the project root (site/); its
+ * parent is the project directory inside the monorepo. Returns a list of problems (empty = releasable).
  */
 export function checkRelease(rootDir) {
   const problems = [];
   const repoRoot = path.resolve(rootDir, '..');
 
-  const netlifyFile = path.join(repoRoot, 'netlify.toml');
+  const netlifyFile = path.join(rootDir, 'netlify.toml');
   if (!existsSync(netlifyFile)) {
-    problems.push('netlify.toml is missing at the repository root');
+    problems.push('netlify.toml is missing in site/');
   } else if (normalize(readFileSync(netlifyFile, 'utf8')) !== normalize(NETLIFY_TEMPLATE)) {
-    problems.push('netlify.toml does not match the template (base site, command npm run build, publish .next, NODE_VERSION 22)');
+    problems.push('netlify.toml does not match the template (command npm run build, ignore rule, NODE_VERSION 22)');
   }
   for (const dir of [repoRoot, rootDir]) {
     if (existsSync(path.join(dir, 'vercel.json'))) problems.push('vercel.json must not exist (hosting is Netlify, D-003)');

@@ -1,0 +1,11 @@
+node_modules/
+.next/
+.netlify/
+.DS_Store
+*.log
+
+# Environment files: never commit (each project also has its own .gitignore)
+.env
+.env.*
+!.env.example
+.envrc
