@@ -131,3 +131,9 @@ export function parseTagFilter(raw: string | string[] | undefined): string[] {
   }
   return seen.slice(0, 3);
 }
+
+/** Locales that have their own file for a slug (drives the hreflang alternates). */
+export function availableLocales(slug: string, opts?: ContentOptions): ContentLocale[] {
+  if (!SLUG_PATTERN.test(slug)) return [];
+  return (['en-US', 'de-DE'] as const).filter((locale) => existsSync(path.join(blogDir(locale, opts), `${slug}.md`)));
+}
