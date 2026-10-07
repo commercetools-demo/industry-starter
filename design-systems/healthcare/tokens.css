@@ -1,0 +1,99 @@
+/* Healthcare design system tokens — extracted from "Desktop Designs : Healthcare Consultation (Community).fig" */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap");
+
+:root {
+  /* Brand — Azure (base #2aa7ff) */
+  --color-brand-50: #eef8ff;
+  --color-brand-100: #d9efff;
+  --color-brand-200: #b4e0ff;
+  --color-brand-300: #8acfff;
+  --color-brand-400: #59baff;
+  --color-brand-500: #2aa7ff;
+  --color-brand-600: #2593e0;
+  --color-brand-700: #1e78b8;
+  --color-brand-800: #186194;
+  --color-brand-900: #124970;
+  --color-brand-950: #0d324d;
+
+  /* Navy — headings and inverse surfaces (700 #1b3c74, 900 #102851) */
+  --color-navy-50: #edeff4;
+  --color-navy-100: #d6dce6;
+  --color-navy-200: #afbbce;
+  --color-navy-300: #8294b3;
+  --color-navy-400: #5f779e;
+  --color-navy-500: #3d5989;
+  --color-navy-600: #2b4a7e;
+  --color-navy-700: #1b3c74;
+  --color-navy-800: #163263;
+  --color-navy-900: #102851;
+  --color-navy-950: #081429;
+
+  /* Neutrals — cool grays */
+  --color-neutral-0: #ffffff;
+  --color-neutral-25: #fafbfe;
+  --color-neutral-50: #f0f0f5;
+  --color-neutral-100: #e8e8f0;
+  --color-neutral-200: #cbe4f4;
+  --color-neutral-300: #abb6c7;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #787887;
+  --color-neutral-600: #5c6169;
+  --color-neutral-700: #414146;
+  --color-neutral-900: #000000;
+
+  /* Status */
+  --color-success-500: #01a400;
+  --color-success-50: #e6f6e6;
+  --color-warning-500: #ffb200;
+  --color-warning-50: #ffedc3;
+  --color-danger-500: #ff684c;
+  --color-danger-50: #ffeae6;
+  --color-info-500: #14bef0;
+  --color-info-50: #e3f7fd;
+  --color-border: #e8e8f0;
+
+  /* Gradients */
+  --gradient-sky: linear-gradient(180deg, #e7f0ff, rgba(232,241,255,.47));
+  --gradient-brand: linear-gradient(180deg, #e1f3ff, #2aa7ff);
+  --gradient-peach: linear-gradient(180deg, #ffdfcf, #ffa78f);
+
+  /* Semantic — white text is only for filled brand controls; use brand-600+ for small brand-colored text */
+  --color-text: var(--color-navy-900);
+  --color-text-heading: var(--color-navy-700);
+  --color-text-body: var(--color-neutral-700);
+  --color-text-muted: var(--color-neutral-500);
+  --color-text-placeholder: var(--color-neutral-300);
+  --color-text-on-brand: var(--color-neutral-0);
+  --color-text-link: var(--color-brand-500);
+  --color-surface: var(--color-neutral-0);
+  --color-surface-subtle: var(--color-neutral-25);
+  --color-surface-brand: var(--color-brand-500);
+  --color-surface-brand-subtle: var(--color-brand-50);
+  --color-surface-inverse: var(--color-navy-700);
+  --color-border-brand: var(--color-brand-500);
+  --color-action: var(--color-brand-500);
+  --color-action-hover: var(--color-brand-600);
+  --color-success: var(--color-success-500);
+
+  /* Typography */
+  --font-display: "Poppins", system-ui, sans-serif;  /* headings, nav, buttons, doctor names */
+  --font-meta: "Lato", system-ui, sans-serif;        /* experience, ratings, filter labels */
+  --font-body: "Roboto", system-ui, sans-serif;      /* footer copy */
+  --text-xs: 12px; --text-sm: 14px; --text-md: 16px; --text-lg: 18px; --text-xl: 20px;
+  --text-2xl: 24px; --text-3xl: 36px; --text-4xl: 48px;
+
+  /* Spacing */
+  --space-1: 4px; --space-2: 6px; --space-3: 8px; --space-4: 10px; --space-5: 16px;
+  --space-6: 20px; --space-7: 24px; --space-8: 40px;
+
+  /* Radius */
+  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 15px; --radius-xl: 20px; --radius-2xl: 40px; --radius-pill: 100px;
+
+  /* Elevation */
+  --shadow-sm: 0 15px 25px rgba(0,0,0,.06);
+  --shadow-md: 6px 6px 35px rgba(16,40,81,.11);
+  --shadow-lg: 0 34px 44px rgba(213,219,228,.44);
+
+  /* Layout */
+  --container-width: 1440px;
+}
