@@ -3,6 +3,8 @@
 import { useState, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
 import { SWRConfig } from 'swr';
+import { AcquisitionLine } from '@/components/devices/AcquisitionLine';
+import { AcquisitionTotals } from '@/components/devices/AcquisitionTotals';
 import { useToast } from '@/components/ui/Toast';
 import { CartError, useCart, useCartMutations } from '@/hooks/useCart';
 import { Link } from '@/i18n/routing';
@@ -30,6 +32,7 @@ const ADDON_KINDS = new Set(['addon', 'equipment', 'device']);
 
 function BundleContent({ signedIn, links }: Omit<BundleViewProps, 'initialCart'>): ReactElement {
   const t = useTranslations('bundle');
+  const tDevices = useTranslations('devices');
   const toast = useToast();
   const { cart } = useCart();
   const mutations = useCartMutations();
@@ -52,8 +55,10 @@ function BundleContent({ signedIn, links }: Omit<BundleViewProps, 'initialCart'>
 
   const lines = cart?.lines ?? [];
   const plans = lines.filter((line) => line.kind === 'plan');
-  const addons = lines.filter((line) => ADDON_KINDS.has(line.kind));
-  if (!cart || plans.length + addons.length === 0) return <EmptyBundle links={links} />;
+  // Devices with a recorded acquisition mode have their own section (workstream Q); any other device line stays a plain row.
+  const devices = lines.filter((line) => line.kind === 'device' && line.acquisition !== undefined);
+  const addons = lines.filter((line) => ADDON_KINDS.has(line.kind) && !devices.includes(line));
+  if (!cart || plans.length + addons.length + devices.length === 0) return <EmptyBundle links={links} />;
 
   const removeLine = (lineId: string, cascade = false): Promise<void> => run(() => mutations.removeLine(lineId, { cascade }));
 
@@ -63,7 +68,7 @@ function BundleContent({ signedIn, links }: Omit<BundleViewProps, 'initialCart'>
         <OrderedBannerSlot />
         <IssuesBanner issues={cart.issues} lines={lines} busy={busy} onRemove={(lineId) => void removeLine(lineId, true)} />
         {notice ? <BlockedAddNotice blocked={notice.blocked} name={notice.name} onDismiss={() => setNotice(null)} /> : null}
-        <h2 className="m-0 font-display text-3xl font-bold tracking-ui">{t('section.plans')}</h2>
+        {plans.length > 0 ? <h2 className="m-0 font-display text-3xl font-bold tracking-ui">{t('section.plans')}</h2> : null}
         {plans.map((plan) => (
           <PlanCard
             key={plan.id}
@@ -89,6 +94,17 @@ function BundleContent({ signedIn, links }: Omit<BundleViewProps, 'initialCart'>
             ))}
           </ul>
         )}
+        {devices.length > 0 ? (
+          <>
+            <h2 className="m-0 mt-2 font-display text-3xl font-bold tracking-ui">{tDevices('section')}</h2>
+            <ul className="m-0 flex list-none flex-col gap-4 p-0">
+              {devices.map((device) => (
+                <AcquisitionLine key={device.id} line={device} busy={busy} onRemove={(lineId) => void removeLine(lineId)} />
+              ))}
+            </ul>
+            <AcquisitionTotals lines={devices} />
+          </>
+        ) : null}
         <DiscountPrompts cart={cart} onAdd={(args, name) => run(() => mutations.addLine(args), name)} busy={busy} />
       </div>
       <OrderSummary

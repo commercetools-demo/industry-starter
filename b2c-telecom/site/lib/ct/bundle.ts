@@ -27,6 +27,7 @@ import {
   withCartRetry,
 } from './cart';
 import { getAllOffers } from './catalog';
+import { getDevicePolicyMap } from './devices';
 import { getCartDiscountKeys } from './discount-keys';
 import { getServiceability } from './serviceability';
 
@@ -65,7 +66,10 @@ export async function mapForMarket(ct: CtCart, market: Market, location?: Servic
     return kind && PHYSICAL.has(kind) && line.variant.sku ? [line.variant.sku] : [];
   });
   const stock = physical.length > 0 ? await getAvailableQuantities(physical) : {};
-  const cart = mapCart(normalized, market, { offersByKey, stock, issues, today: toDateOnly(new Date()), discountKeyById });
+  // Q: a cart with a device line needs the policy ids of its prices to offer "Change how you pay".
+  const hasDevice = normalized.lineItems.some((line) => offersByKey[offerKeyOfLine(line)]?.kind === 'device');
+  const devicePolicyKeys = hasDevice ? await getDevicePolicyMap() : undefined;
+  const cart = mapCart(normalized, market, { offersByKey, stock, issues, today: toDateOnly(new Date()), discountKeyById, ...(devicePolicyKeys ? { devicePolicyKeys } : {}) });
   return { cart, ct: normalized };
 }
 
@@ -115,6 +119,8 @@ export async function addToBundle(session: SessionData, market: Market, input: A
   if (!candidate) throw new BundleRefusal(404, 'UNKNOWN_OFFER', 'Offer not found.');
   const variant: OfferVariant | undefined = candidate.variants.find((entry) => entry.sku === input.sku);
   if (!variant) throw new BundleRefusal(404, 'UNKNOWN_SKU', 'Variant not found.');
+  // A device always carries its acquisition mode and term (workstream Q): it is added through /api/cart/devices.
+  if (candidate.kind === 'device') return refuse(session, market, new BundleRefusal(400, 'USE_DEVICE_ROUTE', 'Devices are added with their payment option.'));
 
   const existing = await getActiveCartForSession(session, market);
   const allLines = existing ? toGuardLines(existing) : [];

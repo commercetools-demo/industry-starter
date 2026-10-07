@@ -15,6 +15,8 @@ import type { BreadcrumbItem } from '@/components/ui/Breadcrumb';
 import { redirect } from '@/i18n/routing';
 import { ADDONS_CATEGORY_KEY, BLURB_KEY_BY_CATEGORY, FOR_PARAM, PLAN_CATEGORY_BY_FAMILY } from '@/lib/config/listing';
 import { SITE_URL } from '@/lib/config/site';
+import { toDeviceOffers } from '@/lib/ct/devices';
+import { toDateOnly } from '@/lib/pricing/dates';
 import { breadcrumbTrail } from '@/lib/mappers/category';
 import { countNounFor } from '@/lib/listing/kinds';
 import { categoryPath } from '@/lib/listing/links';
@@ -105,6 +107,9 @@ export default async function ListingPage({ params, searchParams }: Props) {
         ? { addons: [], equipment: [], plans: pool.filter((offer) => offer.kind === 'base-package' || offer.kind === 'bundle'), preferredParentLineId: preferred, links }
         : { addons: [], equipment: [], plans: [], preferredParentLineId: null, links };
 
+  // Handsets: the offers of this page with their price per mode and term (policy ids resolved to keys), priced for the buyer's market.
+  const devices = kind === 'devices' ? { offers: await toDeviceOffers(result.offers), today: toDateOnly(new Date()) } : undefined;
+
   const recovery: EmptyLink[] = tree
     .filter((root) => root.key !== category.key)
     .map((root) => ({ key: root.key, name: root.name, href: `/shop/${root.slugs[locale] ?? root.slug}` }));
@@ -135,7 +140,7 @@ export default async function ListingPage({ params, searchParams }: Props) {
             {result.empty === 'no-match' ? (
               <ListingEmpty variant="no-match" noun={noun} clearHref={`${basePath}${toQueryString(withListingChange(listingParams, { filter: null }))}`} />
             ) : (
-              <OfferGrid kind={kind} offers={result.offers} highlightKey={state.highlightKey} candidates={candidates} />
+              <OfferGrid kind={kind} offers={result.offers} highlightKey={state.highlightKey} candidates={candidates} devices={devices} />
             )}
             <Pagination page={result.page} pageCount={result.pageCount} basePath={basePath} query={keptQuery} />
           </>

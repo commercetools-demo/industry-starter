@@ -8,7 +8,6 @@ import {
   LISTED_PLANS,
   LISTED_SPOTIFY,
 } from '@/lib/listing/__fixtures__/catalog';
-import type { Offer } from '@/lib/types';
 import { renderWithProviders } from '@/test/utils';
 import { cartOf } from './__fixtures__/cart';
 import type { ListingCandidates } from './ListingProvider';
@@ -43,21 +42,6 @@ describe('OfferGrid', () => {
     renderWithProviders(<OfferGrid kind="addons" offers={[LISTED_SPOTIFY]} highlightKey={null} candidates={CANDIDATES} />);
     expect(screen.getByRole('heading', { name: 'Spotify' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Needs a plan' })).toBeDisabled();
-  });
-
-  it('devices: name and prices only, no cart actions', () => {
-    const device = {
-      ...LISTED_SPOTIFY,
-      key: 'malva-offer-phone-nova-5g',
-      name: 'Nova 5G',
-      kind: 'device',
-      variants: [{ ...LISTED_SPOTIFY.variants[0], recurringPrice: undefined, oneTimePrice: { centAmount: 49900, currencyCode: 'USD' }, financedPrices: [{ centAmount: 1400, currencyCode: 'USD' }] }],
-    } as Offer;
-    renderWithProviders(<OfferGrid kind="devices" offers={[device]} highlightKey={null} candidates={CANDIDATES} />);
-    expect(screen.getByRole('heading', { name: 'Nova 5G' })).toBeInTheDocument();
-    expect(screen.getByText('From $499')).toBeInTheDocument();
-    expect(screen.getByText('From $14/mo')).toBeInTheDocument();
-    expect(screen.queryByRole('button')).toBeNull();
   });
 
   it('the offer of the ?offer= link is outlined and scrolled to', () => {

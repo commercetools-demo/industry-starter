@@ -1,4 +1,5 @@
 // Feature constants of "My bundle" (workstream M). Never inline these numbers.
+import { MAX_DEVICE_QUANTITY } from './devices';
 
 /** D-014: one phone plan offer, quantity 1-5 = number of lines. */
 export const MAX_PHONE_LINES = 5;
@@ -9,8 +10,8 @@ export const QUANTITY_RULES = {
   /** Follows the parent plan. */
   addon: { min: 1, max: 5 },
   equipment: { min: 1, max: 1 },
-  /** Q refines. */
-  device: { min: 1, max: 5 },
+  /** Per device line (one mode and term of one variant); Q refines (workstream Q). */
+  device: { min: 1, max: MAX_DEVICE_QUANTITY },
 } as const;
 
 /** Cents; 0 disables. Confirmed by the owner (D-063). */
