@@ -42,7 +42,85 @@
   "home": {
     "placeholder": "Malva Telecom Shop"
   },
-  "plp": {},
+  "plp": {
+    "home": "Startseite",
+    "count": {
+      "plans": "{count, plural, one {# Tarif} other {# Tarife}}",
+      "addons": "{count, plural, one {# Zusatzoption} other {# Zusatzoptionen}}",
+      "items": "{count, plural, one {# Artikel} other {# Artikel}}",
+      "devices": "{count, plural, one {# Gerät} other {# Geräte}}"
+    },
+    "sort": {
+      "label": "Sortierung",
+      "priceAsc": "Preis aufsteigend",
+      "priceDesc": "Preis absteigend"
+    },
+    "filter": {
+      "label": "Filter",
+      "all": "Alle",
+      "unlimited": "Unbegrenzt",
+      "data-capped": "Datenlimit",
+      "5g": "5G",
+      "lte": "LTE",
+      "up-to-500": "Bis 500 Mbit/s",
+      "1-gbps": "1 Gbit/s",
+      "music": "Musik",
+      "video": "Video",
+      "extras": "Extras",
+      "clear": "Filter zurücksetzen",
+      "remove": "Filter {label} entfernen",
+      "applied": "Aktive Filter"
+    },
+    "empty": {
+      "title": "Hier gibt es noch nichts",
+      "body": "Diese Angebote sind in Ihrem Markt derzeit nicht verfügbar. Probieren Sie stattdessen diese."
+    },
+    "nomatch": {
+      "plans": "Keine Tarife passen zu diesen Filtern",
+      "addons": "Keine Zusatzoptionen passen zu diesen Filtern",
+      "items": "Keine Artikel passen zu diesen Filtern",
+      "devices": "Keine Geräte passen zu diesen Filtern"
+    },
+    "upsell": {
+      "title": "Machen Sie ihn zu Ihrem mit Zusatzoptionen",
+      "body": "{names} und mehr lassen sich zu jedem Tarif hinzufügen.",
+      "cta": "Zusatzoptionen ansehen"
+    },
+    "blurb": {
+      "cable": "Schnelles Kabel-Internet mit Preisgarantie. Wählen Sie die Geschwindigkeit, die zu Ihrem Zuhause passt.",
+      "wireless": "Internet für zu Hause über unser 5G- und LTE-Netz, in Minuten eingerichtet.",
+      "phone": "Tarife für jedes Handy, monatlich abgerechnet ohne Überraschungen.",
+      "addons": "Streaming, Musik und mehr, abgerechnet mit Ihrem Malva-Tarif. Funktioniert mit Mobilfunk, Funk- und Kabel-Internet.",
+      "streaming": "Musik und Video, abgerechnet mit Ihrem Malva-Tarif.",
+      "protection": "Sicherheit und Geräteschutz für Ihren Tarif.",
+      "equipment": "Router, Modems und Gateways. Monatlich mieten oder einmalig kaufen.",
+      "devices": "Handys und Geräte: sofort bezahlt, in Raten oder geleast."
+    },
+    "h1": {
+      "addons": "Zusatzoptionen für jeden Tarif"
+    },
+    "browseBy": "Nach Art stöbern",
+    "price": {
+      "unavailable": "Preis nicht verfügbar"
+    },
+    "cta": {
+      "unavailable": "Nicht verfügbar"
+    },
+    "meta": {
+      "title": "{name} | Malva Telecom",
+      "description": "{name} von Malva Telecom: Tarife und Zusatzoptionen, monatlich abgerechnet."
+    },
+    "pagination": {
+      "label": "Seitennavigation",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "page": "Seite {n}"
+    },
+    "device": {
+      "from": "Ab {price}",
+      "fromMonthly": "Ab {price}/Monat"
+    }
+  },
   "bundle": {
     "title": "Mein Bundle",
     "empty": {
@@ -341,6 +419,62 @@
   },
   "a11y": {},
   "offers": {
+    "cta": {
+      "choose": "Tarif wählen",
+      "selected": "Ausgewählt ✓"
+    },
+    "perMonth": "/Monat",
+    "mostPopular": "Am beliebtesten",
+    "term": {
+      "label": "Vertragslaufzeit",
+      "month-to-month": "Monatlich kündbar",
+      "12-months": "12 Monate",
+      "24-months": "24 Monate",
+      "locked": "Zum Ändern der Laufzeit abwählen"
+    },
+    "validity": {
+      "month-to-month": "Monatlich kündbar",
+      "12-months": "12 Monate Preisgarantie",
+      "24-months": "24 Monate Preisgarantie"
+    },
+    "lines": "Anschlüsse",
+    "customize": "Anpassen",
+    "hint": "Wählen Sie diesen Tarif, um Extras hinzuzufügen",
+    "addons": "Zusatzoptionen",
+    "equipment": "Ausstattung",
+    "included": "Enthalten",
+    "browseAll": "Alle Zusatzoptionen ansehen",
+    "rent": "Mieten {price}/Monat",
+    "buy": "Kaufen {price}",
+    "needsPlan": "Benötigt einen kompatiblen Tarif im Bundle",
+    "equipmentKind": {
+      "router": "Router",
+      "modem": "Modem",
+      "extender": "Repeater",
+      "gateway": "Gateway"
+    },
+    "replace": {
+      "title": "Tarif ersetzen?",
+      "body": "{held} durch {next} ersetzen?",
+      "confirm": "Ersetzen",
+      "cancel": "Behalten",
+      "dependents": "Beim Wechsel {count, plural, one {entfällt # Zusatzoption} other {entfallen # Zusatzoptionen}}."
+    },
+    "remove": {
+      "title": "Tarif entfernen?",
+      "body": "{name} und {count, plural, one {# Zusatzoption} other {# Zusatzoptionen}} entfernen?",
+      "confirm": "Entfernen",
+      "cancel": "Behalten"
+    },
+    "addon": {
+      "add": "Zum Bundle",
+      "added": "Hinzugefügt ✓",
+      "needsPlan": "Tarif nötig",
+      "choosePlan": "Tarif wählen",
+      "included": "Enthalten",
+      "oneTime": "einmalig",
+      "unavailable": "Nicht verfügbar"
+    },
     "reason": {
       "SPEED_TOO_LOW": "Unterstützt bis zu {max} Mbit/s; {planName} liefert {needed} Mbit/s.",
       "TECHNOLOGY_MISMATCH": "Funktioniert nicht mit {planName}.",
