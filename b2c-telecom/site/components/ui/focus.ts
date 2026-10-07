@@ -2,3 +2,5 @@
 export const FOCUS_RING = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action';
 /** Ring on brand surfaces, where the action colour would not contrast. */
 export const FOCUS_RING_ON_BRAND = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-950';
+/** Ring on dark surfaces (brand-950, danger), where neither the action colour nor brand-950 shows. */
+export const FOCUS_RING_ON_DARK = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500';
