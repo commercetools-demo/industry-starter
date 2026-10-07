@@ -131,3 +131,70 @@ describe('Locale-aware navigation', () => {
     expect(await lint(code, 'i18n/navigation.ts')).toEqual([]);
   });
 });
+
+describe('Raw commercetools fetch', () => {
+  const literal = "export const load = () => fetch('https://api.us-central1.gcp.commercetools.com/x');\n";
+  const template = 'const project = "p";\nexport const load = () => fetch(`https://api.us-central1.gcp.commercetools.com/${project}`);\n';
+
+  it('a fetch to commercetools (string and template literal) is flagged in lib/ct/other.ts', async () => {
+    expect(await lint(literal, 'lib/ct/other.ts')).toHaveLength(1);
+    expect(await lint(template, 'lib/ct/other.ts')).toHaveLength(1);
+  });
+
+  it('a fetch to commercetools is allowed in lib/ct/checkout.ts and scripts/seed/x.ts', async () => {
+    expect(await lint(literal, 'lib/ct/checkout.ts')).toEqual([]);
+    expect(await lint(template, 'lib/ct/checkout.ts')).toEqual([]);
+    expect(await lint(literal, 'scripts/seed/x.ts')).toEqual([]);
+  });
+
+  it('redirect() inside try/catch still errors in lib/ct/checkout.ts and scripts', async () => {
+    const code = "import { redirect } from '@/i18n/routing';\nexport function go() {\n  try {\n    redirect({ href: '/', locale: 'en-US' });\n  } catch {\n    return null;\n  }\n}\n";
+    expect(await lint(code, 'lib/ct/checkout.ts')).toHaveLength(1);
+    expect(await lint(code, 'scripts/seed/x.ts')).toHaveLength(1);
+  });
+});
+
+describe('Mutable user state loaded through the client layer', () => {
+  const inline = "export const load = () => fetch('/api/cart');\n";
+  const inlineTemplate = 'export const load = (id: string) => fetch(`/api/cart/${id}`);\n';
+
+  it("Mutable user state loaded through the client layer: fetch('/api/cart') inside components errors, inside hooks is allowed", async () => {
+    expect(await lint(inline, 'components/offers/x.tsx')).toHaveLength(1);
+    expect(await lint(inlineTemplate, 'components/offers/x.tsx')).toHaveLength(1);
+    expect(await lint(inline, 'hooks/useCart.ts')).toEqual([]);
+    expect(await lint(inlineTemplate, 'hooks/useCart.ts')).toEqual([]);
+  });
+
+  it('a component fetch to a non-API URL is not flagged by the inline rule', async () => {
+    expect(await lint("export const load = () => fetch('/healthz');\n", 'components/offers/x.tsx')).toEqual([]);
+  });
+});
+
+describe('Catalog page loaded on the server', () => {
+  const page = 'app/[locale]/shop/[slug]/page.tsx';
+
+  it('Catalog page loaded on the server: a page.tsx that is a client module or fetches /api errors', async () => {
+    const client = "'use client';\n\nexport default function Page() {\n  return null;\n}\n";
+    const clientMessages = await lint(client, page);
+    expect(clientMessages).toHaveLength(1);
+    expect(clientMessages[0]).toContain('Server Components');
+
+    const fetching = "export default async function Page() {\n  await fetch('/api/offers');\n  return null;\n}\n";
+    expect(await lint(fetching, page)).toHaveLength(1);
+  });
+
+  it('a layout.tsx that is a client module errors', async () => {
+    expect(await lint("'use client';\n\nexport default function Layout() {\n  return null;\n}\n", 'app/[locale]/layout.tsx')).toHaveLength(1);
+  });
+
+  it('a plain async page is fine', async () => {
+    const code = 'export default async function Page() {\n  const data = await Promise.resolve(1);\n  return data;\n}\n';
+    expect(await lint(code, page)).toEqual([]);
+  });
+
+  it('error.tsx and global-error.tsx may be client modules', async () => {
+    const client = "'use client';\n\nexport default function ErrorPage() {\n  return null;\n}\n";
+    expect(await lint(client, 'app/[locale]/error.tsx')).toEqual([]);
+    expect(await lint(client, 'app/global-error.tsx')).toEqual([]);
+  });
+});

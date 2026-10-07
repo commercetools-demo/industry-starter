@@ -117,6 +117,18 @@ const eslintConfig = defineConfig([
     }),
   },
 
+  // 3. Components never fetch('/api/...') inline (hooks do).
+  {
+    files: ['components/**/*.{ts,tsx}'],
+    rules: restrictSyntax([NAV_CONTROL_FLOW, ...RAW_CT_FETCH, ...COMPONENT_API_FETCH]),
+  },
+
+  // 4. Pages and layouts are Server Components that call lib/ct directly, never their own /api.
+  {
+    files: ['app/[[]locale[]]/**/page.tsx', 'app/[[]locale[]]/**/layout.tsx'],
+    rules: restrictSyntax([NAV_CONTROL_FLOW, ...RAW_CT_FETCH, ...COMPONENT_API_FETCH, PAGE_NO_CLIENT]),
+  },
+
   // 5. i18n builds the locale-aware navigation: it may import next/link and next/navigation.
   {
     files: ['i18n/**/*.{ts,tsx}'],
@@ -127,6 +139,12 @@ const eslintConfig = defineConfig([
   {
     files: ['lib/ct/client.ts', 'scripts/seed/lib.ts'],
     rules: restrictImports({ paths: [...NAV_PATHS] }),
+  },
+
+  // 7. Raw fetch to commercetools is allowed where the plan says so (hosted Checkout session, spike and seed scripts).
+  {
+    files: ['lib/ct/checkout.ts', 'scripts/**/*.{ts,mjs,js}'],
+    rules: restrictSyntax([NAV_CONTROL_FLOW]),
   },
 
   // 10. Tests may mock server modules. Keep this block last.
