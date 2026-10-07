@@ -100,21 +100,29 @@ export function closePrices(prices: IndexPrice[], at: string): IndexPrice[] {
 }
 
 /**
- * Clears the closing validUntil of the newest price of every scope (the one a withdrawal closed). Older, historical prices stay closed.
+ * Reinstating an offer is dark too: the newest price of every scope that was closed is closed no later than `releaseAt` and a copy of
+ * it opens at `releaseAt` (new key). Until then the offer has no valid price, so it cannot be listed or sold; the end-time is cleared
+ * at once but only the price makes it purchasable again.
  */
-export function reopenPrices(prices: IndexPrice[]): IndexPrice[] {
+export function reopenPrices(prices: IndexPrice[], releaseAt: string, endsAt?: string): IndexPrice[] {
   const newest = new Map<string, IndexPrice>();
+  const from = (x: IndexPrice): number => (x.validFrom ? Date.parse(x.validFrom) : Number.NEGATIVE_INFINITY);
   for (const p of prices) {
     const current = newest.get(scopeOf(p));
-    const from = (x: IndexPrice): number => (x.validFrom ? Date.parse(x.validFrom) : Number.NEGATIVE_INFINITY);
     if (!current || from(p) >= from(current)) newest.set(scopeOf(p), p);
   }
-  return prices.map((p) => {
-    if (newest.get(scopeOf(p)) !== p || p.validUntil === undefined) return p;
-    const { validUntil: _closed, ...open } = p;
-    void _closed;
-    return open;
-  });
+  const out: IndexPrice[] = [];
+  for (const p of prices) {
+    if (newest.get(scopeOf(p)) !== p || p.validUntil === undefined) {
+      out.push(p);
+      continue;
+    }
+    const base = p.key?.replace(/_\d{8}T\d{6}Z$/, '');
+    const { validUntil: closed, ...rest } = p;
+    out.push({ ...p, validUntil: Date.parse(closed) > Date.parse(releaseAt) ? releaseAt : closed });
+    out.push({ ...rest, ...(base ? { key: `${base}_${stampOf(releaseAt)}` } : {}), validFrom: releaseAt, ...(endsAt ? { validUntil: endsAt } : {}) });
+  }
+  return out;
 }
 
 /** Prices of a patch: the same-scope open prices are closed at `releaseAt`, the new ones start at `releaseAt`. */
@@ -179,7 +187,7 @@ export function applyToIndex(index: CatalogIndex, manifest: ReleaseManifest): Ca
       next = mapVariants(next, (v) => ({ ...withAttribute(v, END_TIME, releaseAt), prices: closePrices(v.prices, releaseAt) }));
     }
     if (manifest.reinstateOffers.includes(offer.key)) {
-      next = mapVariants(next, (v) => ({ ...withAttribute(v, END_TIME, undefined), prices: reopenPrices(v.prices) }));
+      next = mapVariants(next, (v) => ({ ...withAttribute(v, END_TIME, undefined), prices: reopenPrices(v.prices, releaseAt, endsAt) }));
     }
     return next;
   });

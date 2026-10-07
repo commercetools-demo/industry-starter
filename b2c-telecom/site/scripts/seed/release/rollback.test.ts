@@ -41,4 +41,21 @@ describe('generated rollback', () => {
       expect((await getRecord(f, rollback.key))?.rollbackOf).toBe(manifest.key);
     }
   });
+
+  it('a reinstated offer stays unpurchasable until the rollback instant (its price reopens at releaseAt)', async () => {
+    const fake = await makeProject();
+    const manifest = exampleManifest();
+    const snapshot = takeSnapshot(manifest, await buildCatalogIndex(fake));
+    await applyRelease(manifest, deps(fake));
+    const rollbackAt = '2026-10-07T11:00:00Z';
+    await applyRelease(buildRollbackManifest(manifest, snapshot, { releaseAt: rollbackAt }), deps(fake, { now: () => new Date(Date.parse(manifest.releaseAt) + 60 * 1000) }));
+    const index = await buildCatalogIndex(fake);
+    const keys = (iso: string): string[] => purchasableAt(index, new Date(iso)).map((r) => r.key);
+    // between the two instants only the summer offer is purchasable; at the rollback instant the old one is back and the summer offer gone
+    expect(keys('2026-10-07T10:45:00Z')).toContain('malva-offer-phone-unlimited-summer');
+    expect(keys('2026-10-07T10:45:00Z')).not.toContain('malva-offer-phone-online-only');
+    expect(keys('2026-10-07T10:59:59Z')).not.toContain('malva-offer-phone-online-only');
+    expect(keys('2026-10-07T11:00:00Z')).toContain('malva-offer-phone-online-only');
+    expect(keys('2026-10-07T11:00:00Z')).not.toContain('malva-offer-phone-unlimited-summer');
+  });
 });

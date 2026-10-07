@@ -137,7 +137,7 @@ async function runStep(api: CtApi, step: Step, manifest: ReleaseManifest, index:
     }
     case 'reinstateOffer': {
       if (!offer) throw new Error(`offer ${step.key} vanished`);
-      await mutate(api, 'products', step.key, [setAttr(END_TIME, undefined), ...priceActions(offer, reopenPrices), { action: 'publish' }]);
+      await mutate(api, 'products', step.key, [setAttr(END_TIME, undefined), ...priceActions(offer, (prices) => reopenPrices(prices, releaseAt, endsAt)), { action: 'publish' }]);
       return;
     }
   }
