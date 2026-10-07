@@ -111,38 +111,59 @@ export const EQUIPMENT_PRICES: Record<string, { rent: { sku: string; usd: number
   'malva-offer-5g-gateway': { rent: { sku: 'MLV-EQP-5GGW-RENT', usd: 1000 } },
 };
 
-/** Handset outright prices by model and memory (one-time, USD cents). */
-export const DEVICE_OUTRIGHT: Record<string, Record<string, number>> = {
-  'malva-offer-phone-nova-5g': { '128': 49900, '256': 54900 },
-  'malva-offer-phone-nova-pro': { '256': 79900, '512': 89900 },
-};
-
 // ---------------------------------------------------------------------------------------------------------------
-// Handset financing (D-015, D-060): one recurrence policy per mode and term, because a price has one policy.
+// Handset prices (D-015, D-060). One recurrence policy per mode and term, because a price has one policy. The table is the contract of
+// workstream Q: price depends on memory, never on color; installment x term = outright exactly (no rounding); EUR is its own column
+// (not the USD rounding rule). Nova 5G has no lease (the "mode unavailable" case) and the Nova 5G 256 GB Silver variant has no
+// 36-month installment price (the price-fallback trap, see `DEVICE_PRICE_HOLES`).
 
 export const INSTALLMENT_TERMS = [12, 24, 36] as const;
 export const LEASE_TERM = 24;
-/** Monthly lease amount as a share of the outright price. */
-export const LEASE_RATE = 0.04;
 
 export function installmentPolicy(termMonths: number): string {
   return `malva-device-installment-${termMonths}`;
 }
 export const LEASE_POLICY = `malva-device-lease-${LEASE_TERM}`;
 
-export function installmentCents(outrightCents: number, termMonths: number): number {
-  return Math.round(outrightCents / termMonths);
-}
-export function leaseCents(outrightCents: number): number {
-  return Math.round(outrightCents * LEASE_RATE);
+export interface DeviceRow {
+  /** Cents. */
+  outright: Record<Currency, number>;
+  /** Monthly lease (24 months), cents; absent = the device is not offered on lease. */
+  lease?: Record<Currency, number>;
 }
 
-/** Recurring prices of one handset variant for all financed modes: installments 12/24/36 and lease 24. */
-export function financedPrices(outrightCents: number): PriceSpec[] {
-  return [
-    ...INSTALLMENT_TERMS.flatMap((term) => monthlyPrices(installmentCents(outrightCents, term), installmentPolicy(term))),
-    ...monthlyPrices(leaseCents(outrightCents), LEASE_POLICY),
-  ];
+/** Handset prices by offer key and memory (GB). */
+export const DEVICE_PRICES: Record<string, Record<string, DeviceRow>> = {
+  'malva-offer-phone-nova-5g': {
+    '128': { outright: { USD: 72000, EUR: 64800 } },
+    '256': { outright: { USD: 82800, EUR: 75600 } },
+  },
+  'malva-offer-phone-nova-pro': {
+    '256': { outright: { USD: 100800, EUR: 93600 }, lease: { USD: 3300, EUR: 3000 } },
+    '512': { outright: { USD: 118800, EUR: 111600 }, lease: { USD: 3900, EUR: 3600 } },
+  },
+};
+
+/** A variant that deliberately lacks one financed price, so the storefront's price-fallback guard has something real to catch. */
+export const DEVICE_PRICE_HOLES: { sku: string; policy: string }[] = [{ sku: 'MLV-DEV-NOVA5G-SLV-256', policy: installmentPolicy(36) }];
+
+export function installmentOf(row: DeviceRow, currency: Currency, termMonths: number): number {
+  return row.outright[currency] / termMonths;
+}
+
+/** Outright (one-time) and financed (recurring) prices of one handset variant, USD/US and EUR/DE. */
+export function devicePriceSpecs(offerKey: string, memory: string, sku: string): PriceSpec[] {
+  const row = DEVICE_PRICES[offerKey]?.[memory];
+  if (!row) throw new Error(`No handset price for ${offerKey} ${memory} GB`);
+  const holes = new Set(DEVICE_PRICE_HOLES.filter((hole) => hole.sku === sku).map((hole) => hole.policy));
+  return CURRENCIES.flatMap((currency): PriceSpec[] => {
+    const base = { currency, country: COUNTRY_OF[currency] };
+    return [
+      { ...base, centAmount: row.outright[currency] },
+      ...INSTALLMENT_TERMS.filter((term) => !holes.has(installmentPolicy(term))).map((term) => ({ ...base, centAmount: installmentOf(row, currency, term), recurrencePolicy: installmentPolicy(term) })),
+      ...(row.lease && !holes.has(LEASE_POLICY) ? [{ ...base, centAmount: row.lease[currency], recurrencePolicy: LEASE_POLICY }] : []),
+    ];
+  });
 }
 
 /** Every recurrence policy a variant with these prices is sold with. */

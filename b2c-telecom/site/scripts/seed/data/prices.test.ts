@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { MANIFEST } from '.';
 import type { ProductDraft } from '../types';
 import { priceKey } from './catalog-types';
-import { ADDON_PRICES, CABLE_ACTIVATION_FEE_CENTS, DEVICE_OUTRIGHT, EQUIPMENT_PRICES, PLAN_PRICES, eurFromUsd, financedPrices, installmentCents, leaseCents, monthlyPrices, oneTimePrices } from './prices';
+import { ADDON_PRICES, CABLE_ACTIVATION_FEE_CENTS, EQUIPMENT_PRICES, PLAN_PRICES, devicePriceSpecs, eurFromUsd, monthlyPrices, oneTimePrices } from './prices';
 
 describe('prices', () => {
   it('EUR rule: USD rounded to whole euros, half rounds up', () => {
@@ -36,18 +36,32 @@ describe('prices', () => {
     expect(by('12M')).toBeLessThan(by('M2M') as number);
   });
 
-  it('financed amounts for Nova 5G 128 GB: 4158, 2079, 1386 and lease 1996', () => {
-    const outright = DEVICE_OUTRIGHT['malva-offer-phone-nova-5g']['128'];
-    expect(outright).toBe(49900);
-    expect([12, 24, 36].map((t) => installmentCents(outright, t))).toEqual([4158, 2079, 1386]);
-    expect(leaseCents(outright)).toBe(1996);
-    const financed = financedPrices(outright);
-    expect(financed.filter((p) => p.currency === 'USD').map((p) => [p.recurrencePolicy, p.centAmount])).toEqual([
-      ['malva-device-installment-12', 4158],
-      ['malva-device-installment-24', 2079],
-      ['malva-device-installment-36', 1386],
-      ['malva-device-lease-24', 1996],
+  it('handset prices of Nova 5G 128 GB: outright 72000, installments 6000, 3000, 2000 and no lease', () => {
+    const specs = devicePriceSpecs('malva-offer-phone-nova-5g', '128', 'MLV-DEV-NOVA5G-BLK-128').filter((p) => p.currency === 'USD');
+    expect(specs.map((p) => [p.recurrencePolicy, p.centAmount])).toEqual([
+      [undefined, 72000],
+      ['malva-device-installment-12', 6000],
+      ['malva-device-installment-24', 3000],
+      ['malva-device-installment-36', 2000],
     ]);
+  });
+
+  it('Nova Pro 512 GB in EUR: outright 111600, installments 9300, 4650, 3100, lease 3600', () => {
+    const specs = devicePriceSpecs('malva-offer-phone-nova-pro', '512', 'MLV-DEV-NOVAPRO-BLK-512').filter((p) => p.currency === 'EUR');
+    expect(specs.map((p) => [p.recurrencePolicy, p.centAmount, p.country])).toEqual([
+      [undefined, 111600, 'DE'],
+      ['malva-device-installment-12', 9300, 'DE'],
+      ['malva-device-installment-24', 4650, 'DE'],
+      ['malva-device-installment-36', 3100, 'DE'],
+      ['malva-device-lease-24', 3600, 'DE'],
+    ]);
+  });
+
+  it('the Nova 5G 256 GB Silver variant has no 36-month installment price in either currency', () => {
+    const specs = devicePriceSpecs('malva-offer-phone-nova-5g', '256', 'MLV-DEV-NOVA5G-SLV-256');
+    expect(specs.filter((p) => p.recurrencePolicy === 'malva-device-installment-36')).toEqual([]);
+    expect(specs.filter((p) => p.recurrencePolicy === 'malva-device-installment-24')).toHaveLength(2);
+    expect(devicePriceSpecs('malva-offer-phone-nova-5g', '256', 'MLV-DEV-NOVA5G-BLK-256').filter((p) => p.recurrencePolicy === 'malva-device-installment-36')).toHaveLength(2);
   });
 
   it('price keys are unique and follow <sku>_<currency>_<policy or once>', () => {
