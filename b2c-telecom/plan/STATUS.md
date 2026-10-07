@@ -4,7 +4,7 @@ Updated by the developer on each task and by Claude (after Chrome verification) 
 
 | ID | Workstream | Tasks | Done | Status | Verified by | Date |
 | --- | --- | --- | --- | --- | --- | --- |
-| A | Scaffold, tooling, verify script | 10 | 10 | Not started | | |
+| A | Scaffold, tooling, verify script | 10 | 10 | Verified | Claude (verify + Chrome C-A-1…3) | 2026-10-07 |
 | B | Code structure and lint rules | 9 | 0 | Not started | | |
 | C | Design tokens, fonts, styling foundation | 8 | 0 | Not started | | |
 | D | Locale routing, messages, region and language switch | 10 | 0 | Not started | | |
