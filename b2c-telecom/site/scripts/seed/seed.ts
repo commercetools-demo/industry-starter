@@ -5,6 +5,7 @@ import { getAdminApi, loadSeedEnv, type CtApi } from './lib';
 import { buildManifest } from './manifest';
 import { applyPlan, newCtx, planAll } from './reconcile';
 import { reconcilers as defaultReconcilers } from './reconcilers/registry';
+import { activateProductSearch, applyProjectSettings, checkProjectSettings, missingMessage, SearchNotReadyError, waitForSearchIndex } from './project-settings';
 import { warnings } from './reconcilers/productType';
 import { renderPlan, renderReport } from './report';
 import type { AnyReconciler, Kind, SeedManifest } from './types';
@@ -16,6 +17,7 @@ export interface SeedDeps {
   manifest?: SeedManifest;
   reconcilers?: AnyReconciler[];
   log?: Log;
+  sleep?: (ms: number) => Promise<void>;
 }
 
 function restrict(manifest: SeedManifest, only: Kind[] | undefined): SeedManifest {
@@ -40,6 +42,18 @@ export async function main(argv: string[], deps: SeedDeps = {}): Promise<number>
     const only = args.values.get('only')?.split(',').filter(Boolean) as Kind[] | undefined;
     const manifest = restrict(full, only);
 
+    // project settings: check always, edit only with --apply-project-settings (adds, never removes)
+    let settings = await checkProjectSettings(api);
+    if (settings.missing.length > 0) {
+      if (!args.flags.has('apply-project-settings') || planOnly) {
+        log(missingMessage(settings));
+        return EXIT.PREFLIGHT;
+      }
+      await applyProjectSettings(api, settings);
+      settings = await checkProjectSettings(api);
+      log(`Project settings updated (added only): ${settings.missing.length === 0 ? 'ok' : settings.missing.join(', ')}`);
+    }
+
     const errors = await validateManifest(api, full, reconcilers);
     if (errors.length > 0) {
       for (const e of errors) log(`INVALID ${e.kind} "${e.key}": ${e.message}`);
@@ -60,8 +74,22 @@ export async function main(argv: string[], deps: SeedDeps = {}): Promise<number>
       if (Object.keys(ctx.zoneKeys).length > 0) log(`zones: ${Object.entries(ctx.zoneKeys).map(([c, k]) => `${c}=${k}`).join(' ')}`);
       for (const w of warnings) log(`warning: ${w}`);
     }
+    if (report.exitCode !== EXIT.OK && report.exitCode !== EXIT.SKIPPED) return report.exitCode;
+
+    // Product Search is activated after the data is written so the first index build covers the whole catalog
+    const activation = await activateProductSearch(api);
+    if (!json) log(activation === 'activated' ? 'Product Search activated (mode ProductsSearch).' : 'Product Search already active.');
+    if (!args.flags.has('no-wait')) {
+      const expectedKeys = (manifest.product ?? []).map((p) => p.key);
+      const { lagMs } = await waitForSearchIndex(api, { expectedKeys, sleep: deps.sleep });
+      if (!json) log(`Search index ready (lag ${Math.round(lagMs / 1000)} s, ${expectedKeys.length} product(s)).`);
+    }
     return report.exitCode;
   } catch (err) {
+    if (err instanceof SearchNotReadyError) {
+      log(err.message);
+      return err.exitCode;
+    }
     return exitCodeForError(err, log);
   }
 }

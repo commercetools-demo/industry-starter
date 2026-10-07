@@ -129,7 +129,7 @@ export function createApi(env: SeedEnv): CtApi {
       }
     },
     async post(p, body) {
-      api.writes += 1;
+      if (!p.endsWith('/search')) api.writes += 1; // searching is a read
       try {
         const res = await client.execute({ method: 'POST', uri: buildUri(env.projectKey, p), body: body as Record<string, unknown>, headers: { 'Content-Type': 'application/json' } });
         return res.body;
