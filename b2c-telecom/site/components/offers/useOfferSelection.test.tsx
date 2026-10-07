@@ -165,6 +165,16 @@ describe('useOfferSelection', () => {
     expect(result.current.pending).toBeNull();
   });
 
+  it('the activation fee line of a plan is not an add-on: it neither counts nor asks', async () => {
+    setCart(cartOf([PLAN_LINE, cartLine({ id: 'fee', offerKey: LISTED_CABLE_500.key, kind: 'fee', parentLineId: 'line-cable-500' })]));
+    const { result } = renderHook(() => useOfferSelection(LISTED_CABLE_500), { wrapper });
+    expect(result.current.dependents).toEqual([]);
+    await act(async () => {
+      await result.current.deselect();
+    });
+    expect(removeLine).toHaveBeenCalledWith('line-cable-500', undefined);
+  });
+
   it('deselecting a plan with dependents asks first, then removes with cascade', async () => {
     setCart(cartOf([PLAN_LINE, cartLine({ id: 'dep', offerKey: 'malva-offer-spotify', kind: 'addon', parentLineId: 'line-cable-500' })]));
     const { result } = renderHook(() => useOfferSelection(LISTED_CABLE_500), { wrapper });

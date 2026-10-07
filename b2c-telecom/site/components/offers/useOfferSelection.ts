@@ -49,7 +49,8 @@ export function useOfferSelection(offer: Offer): OfferSelection {
   const running = useRef(false);
 
   const planLine = cart?.lines.find((line) => line.offerKey === offer.key && line.kind === 'plan');
-  const dependents = planLine ? (cart?.lines.filter((line) => line.parentLineId === planLine.id) ?? []) : [];
+  // The activation fee line also points at its plan (M); it is not an add-on and the server removes it with the plan.
+  const dependents = planLine ? (cart?.lines.filter((line) => line.parentLineId === planLine.id && line.kind !== 'fee') ?? []) : [];
 
   const run = useCallback(async (work: () => Promise<void>): Promise<void> => {
     if (running.current) return;
@@ -88,7 +89,7 @@ export function useOfferSelection(offer: Offer): OfferSelection {
               kind: 'replace',
               heldName: replace.removeOfferName,
               replaceLineId: replace.removeLineId,
-              dependentCount: cart?.lines.filter((line) => line.parentLineId === replace.removeLineId).length ?? 0,
+              dependentCount: cart?.lines.filter((line) => line.parentLineId === replace.removeLineId && line.kind !== 'fee').length ?? 0,
               sku,
               quantity,
             });
