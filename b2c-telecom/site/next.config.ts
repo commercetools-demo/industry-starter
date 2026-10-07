@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
+import { IMAGE_HOSTS } from './lib/config/images';
 import { maybeValidateAtBuild } from './lib/ct/env-core';
 
 // Netlify builds fail by variable name; local builds validate nothing (so `npm run verify` needs no credentials).
@@ -13,7 +14,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true, // the commercetools image CDN rejects Next optimiser query parameters
     remotePatterns: [
-      { protocol: 'https', hostname: 'images.pexels.com' },
+      ...IMAGE_HOSTS.map((hostname) => ({ protocol: 'https' as const, hostname })), // seeded stock photos (D-055, D-066)
       { protocol: 'https', hostname: 'storage.googleapis.com' }, // commercetools-hosted product images (Planner default)
     ],
   },
