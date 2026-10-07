@@ -45,6 +45,11 @@ describe('SiteFooter', () => {
     expect(footer).toHaveTextContent('© 2026 Malva Telecom');
   });
 
+  it('links the image credit to Pexels (D-055)', () => {
+    renderWithProviders(<SiteFooter items={[]} />);
+    expect(screen.getByRole('link', { name: 'Photos from Pexels' })).toHaveAttribute('href', 'https://www.pexels.com');
+  });
+
   it('renders the credits slot', () => {
     renderWithProviders(<SiteFooter items={[]} credits={<span>Photos by Ada</span>} />);
     expect(screen.getByText('Photos by Ada')).toBeInTheDocument();

@@ -5,9 +5,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   setRequestLocale(locale);
   const t = await getTranslations();
   return (
-    <main>
+    <div>
       <h1>{t('common.brand')}</h1>
       <p>{t('home.placeholder')}</p>
-    </main>
+    </div>
   );
 }

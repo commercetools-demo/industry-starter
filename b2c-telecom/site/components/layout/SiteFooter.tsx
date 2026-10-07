@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { cx } from '@/lib/cx';
+import { PEXELS_URL } from '@/lib/config/images';
 import type { NavItem } from '@/lib/nav';
 
 const LINK = 'rounded-sm font-display text-sm font-medium text-brand-100 no-underline hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500';
@@ -36,9 +36,14 @@ export function SiteFooter({ items, credits }: SiteFooterProps): ReactElement {
               </li>
             </ul>
           </nav>
-          <p className={cx('m-0 font-body text-sm text-brand-300')}>{t('copyright')}</p>
+          <p className="m-0 font-body text-sm text-brand-300">{t('copyright')}</p>
         </div>
-        {credits ? <div className="text-sm text-brand-300">{credits}</div> : null}
+        <div className="flex flex-wrap items-center gap-x-7 gap-y-3 font-body text-sm text-brand-300">
+          <a href={PEXELS_URL} target="_blank" rel="noopener noreferrer" className="rounded-sm text-brand-300 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
+            {t('photoCredit')}
+          </a>
+          {credits}
+        </div>
       </div>
     </footer>
   );
