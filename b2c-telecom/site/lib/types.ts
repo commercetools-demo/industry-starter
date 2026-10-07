@@ -571,8 +571,10 @@ export interface SearchResultItem {
   matchedSku: string | null;
   /** First plan highlight, else null. */
   highlight: string | null;
-  /** Canonical link with locale prefix (`offerHref`). */
+  /** Canonical link with locale prefix (`offerHref`), for JSON consumers. */
   href: string;
+  /** The same link without the locale prefix (`offerPath`), for the locale-aware `Link`. */
+  path: string;
 }
 export interface SearchCategoryCount {
   key: string;

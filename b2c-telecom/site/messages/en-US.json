@@ -325,7 +325,57 @@
       "action": "Review My bundle"
     }
   },
-  "search": {},
+  "search": {
+    "open": "Search",
+    "title": "Search",
+    "inputLabel": "Search plans, add-ons and equipment",
+    "placeholder": "Plan name or part number",
+    "submit": "Search",
+    "found": "{count, plural, one {# result} other {# results}} for “{query}”",
+    "sort": {
+      "label": "Sort",
+      "relevance": "Best match",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low"
+    },
+    "all": "All ({count})",
+    "categoriesLabel": "Narrow by category",
+    "kind": {
+      "plan": "Plan",
+      "addon": "Add-on",
+      "equipment": "Equipment",
+      "device": "Device"
+    },
+    "from": "From {price}/mo",
+    "fromOneTime": "From {price}",
+    "priceUnavailable": "Price not available",
+    "partNumber": "Part number match",
+    "bestMatch": "Best match: part number {sku}",
+    "viewIn": "View in {category}",
+    "none": {
+      "title": "No results for “{query}”",
+      "body": "Check the spelling or try a shorter term. We cannot suggest corrections, but these categories may help."
+    },
+    "browse": "Browse categories",
+    "start": {
+      "hint": "Type at least 2 characters."
+    },
+    "popular": "Popular searches",
+    "unsupported": {
+      "title": "Search is not available in this language",
+      "body": "Switch the language of the site to continue searching."
+    },
+    "error": {
+      "title": "Search is temporarily unavailable",
+      "body": "Please try again in a moment.",
+      "retry": "Try again"
+    },
+    "truncated": "Showing the 100 best matches. Refine your search.",
+    "meta": {
+      "title": "Search",
+      "titleQuery": "“{query}” | Search | Malva Telecom"
+    }
+  },
   "pricing": {
     "mode": {
       "fixed": "Price locked for your {months}-month term",

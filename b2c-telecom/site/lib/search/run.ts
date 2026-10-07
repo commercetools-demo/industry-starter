@@ -2,7 +2,7 @@ import { ApiError } from '@/lib/api-error';
 import { LISTING_PAGE_SIZE } from '@/lib/config/facets';
 import { MAX_HITS } from '@/lib/config/search';
 import { dedupeByAnchors } from '@/lib/listing/visibility';
-import { findCategory, offerHref, primaryCategoryKey } from '@/lib/listing/links';
+import { findCategory, offerHref, offerPath, primaryCategoryKey } from '@/lib/listing/links';
 import type { Category, Locale, Money, Offer, SearchCategoryCount, SearchResultItem, SearchView } from '@/lib/types';
 import { isSearchableQuery, type SearchParams } from './params';
 
@@ -70,7 +70,8 @@ export async function runSearch(params: SearchParams, deps: RunSearchDeps): Prom
     const categoryKey = primaryCategoryKey(offer);
     const category = categoryKey === undefined ? undefined : findCategory(deps.tree, categoryKey);
     const href = offerHref(offer, deps.locale, deps.tree);
-    if (categoryKey === undefined || !category || href === undefined) return [];
+    const path = offerPath(offer, deps.locale, deps.tree);
+    if (categoryKey === undefined || !category || href === undefined || path === undefined) return [];
     const { price, recurring } = fromPriceOf(offer);
     const item: SearchResultItem = {
       offerKey: offer.key,
@@ -83,6 +84,7 @@ export async function runSearch(params: SearchParams, deps: RunSearchDeps): Prom
       matchedSku: exactSku(offer) ?? matchedSkusById.get(offer.id)?.[0] ?? null,
       highlight: highlightOf(offer),
       href,
+      path,
     };
     return [item];
   });
