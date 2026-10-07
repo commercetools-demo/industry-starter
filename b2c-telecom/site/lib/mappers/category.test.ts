@@ -14,6 +14,11 @@ describe('category mapper', () => {
     expect(phone?.parentId).toBeUndefined();
   });
 
+  it('carries the image asset name as alternative text', () => {
+    const phone = map('en-US').find((category) => category.key === 'malva-cat-phone-plans');
+    expect(phone?.imageAlt).toBeTruthy();
+  });
+
   it('orders roots by order hint and nests the add-on children', () => {
     const tree = buildCategoryTree(map('en-US'));
     expect(tree.map((category) => category.key)).toEqual([

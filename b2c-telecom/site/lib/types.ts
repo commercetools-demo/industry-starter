@@ -151,6 +151,8 @@ export interface Category {
   parentId?: string;
   orderHint?: string;
   image?: string;
+  /** Alternative text of `image` (the asset name; names the photographer). */
+  imageAlt?: string;
   children: Category[];
 }
 /** Minor units; min inclusive, max exclusive. */
