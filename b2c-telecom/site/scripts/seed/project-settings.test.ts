@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { activateProductSearch, applyProjectSettings, checkProjectSettings, main as settingsMain, waitForSearchIndex } from './project-settings';
 import { main as seedMain } from './seed';
-import { buildManifest } from './manifest';
+import { buildPlatformManifest as buildManifest } from './manifest';
 import { FakeCt } from './test/fake-ct';
 import { offerType } from './test/fixtures';
 
