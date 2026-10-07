@@ -6,6 +6,7 @@ import { FakeCt } from '../test/fake-ct';
 import { main as verify } from '../verify';
 import { catalogChecks, catalogCounts, demoData, imageCoverage, offerPrices, offerReferences, searchFindsOffers, yearOneDiscounts } from './catalog';
 import { platformChecks } from './platform';
+import { releaseChecks } from './releases';
 import type { ProductDraft } from '../types';
 
 const SOURCE = { CTP_SEED_PROJECT_KEY: 'spec-test-b2c-telecom' };
@@ -38,7 +39,7 @@ describe('seed:verify catalog checks', () => {
     const code = await verify([], { api, source: SOURCE, log: (l) => lines.push(l) });
     expect(code).toBe(0);
     expect(lines.join('\n')).toContain('All checks passed.');
-    expect(lines.length).toBe(platformChecks.length + catalogChecks.length + 1);
+    expect(lines.length).toBe(platformChecks.length + catalogChecks.length + releaseChecks.length + 1);
     expect(api.writes).toBe(0);
   });
 

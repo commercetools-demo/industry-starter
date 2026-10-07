@@ -16,6 +16,8 @@ export const EXIT = {
   SKIPPED: 4,
   GATE: 5,
   SEARCH_NOT_READY: 6,
+  /** A release apply failed and its compensation failed too (workstream X). */
+  INCONSISTENT: 7,
 } as const;
 
 export class TargetError extends Error {
