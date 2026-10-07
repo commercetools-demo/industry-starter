@@ -1,5 +1,9 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
+import { maybeValidateAtBuild } from './lib/ct/env-core';
+
+// Netlify builds fail by variable name; local builds validate nothing (so `npm run verify` needs no credentials).
+maybeValidateAtBuild(process.env);
 
 const isProd = process.env.NODE_ENV === 'production';
 
