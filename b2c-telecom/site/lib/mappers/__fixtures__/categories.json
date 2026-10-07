@@ -1,0 +1,462 @@
+[
+  {
+    "id": "b1597dc6-00de-4718-967f-bc0ea40b2c15",
+    "version": 3,
+    "key": "malva-cat-phone-plans",
+    "name": {
+      "en-US": "Phone plans",
+      "de-DE": "Handytarife"
+    },
+    "slug": {
+      "en-US": "phone-plans",
+      "de-DE": "handytarife"
+    },
+    "description": {
+      "en-US": "Pick the data you need. No contracts, no hidden fees, keep your number.",
+      "de-DE": "Wählen Sie das Datenvolumen, das Sie brauchen. Keine Vertragsbindung, keine versteckten Kosten, Rufnummer mitnehmen."
+    },
+    "orderHint": "0.1",
+    "assets": [
+      {
+        "id": "b075f4b1-6ff5-4bd5-96b3-6a9a7233999d",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 408
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Phone plans",
+          "de-DE": "Handytarife"
+        },
+        "key": "malva-cat-phone-plans-image-1",
+        "tags": []
+      },
+      {
+        "id": "71d63ad2-8167-4ebf-b837-512a2c6efacc",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/2112655025/photo/son-visiting-his-parents.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 408
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Phone plans",
+          "de-DE": "Handytarife"
+        },
+        "key": "malva-cat-phone-plans-image-2",
+        "tags": []
+      }
+    ]
+  },
+  {
+    "id": "11e93998-f69a-47f1-aba6-b290fee0599b",
+    "version": 3,
+    "key": "malva-cat-home-wireless",
+    "name": {
+      "en-US": "Wireless internet",
+      "de-DE": "Funk-Internet"
+    },
+    "slug": {
+      "en-US": "home-wireless-internet",
+      "de-DE": "funk-internet"
+    },
+    "description": {
+      "en-US": "Plug in, connect, go. Home internet over our 5G network with no installation visit.",
+      "de-DE": "Einstecken, verbinden, loslegen. Heim-Internet über unser 5G-Netz ohne Installationstermin."
+    },
+    "orderHint": "0.2",
+    "assets": [
+      {
+        "id": "75ee9f4a-4c0a-423c-a656-89df1f1c5dae",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1141320660/photo/wireless-internet-concept-mobile-network.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 408
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Wireless internet",
+          "de-DE": "Funk-Internet"
+        },
+        "key": "malva-cat-home-wireless-image-1",
+        "tags": []
+      },
+      {
+        "id": "7d38fb84-f966-472d-a3ed-421afe385d42",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/2262414223/photo/woman-hand-plugging-rj45-ethernet-cable-into-white-wifi-router-near-laptop-at-home-office-desk.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 407
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Wireless internet",
+          "de-DE": "Funk-Internet"
+        },
+        "key": "malva-cat-home-wireless-image-2",
+        "tags": []
+      }
+    ]
+  },
+  {
+    "id": "793f0332-6783-4a1a-bcdc-b7de8efa698e",
+    "version": 3,
+    "key": "malva-cat-cable-internet",
+    "name": {
+      "en-US": "Cable internet",
+      "de-DE": "Kabel-Internet"
+    },
+    "slug": {
+      "en-US": "cable-internet",
+      "de-DE": "kabel-internet"
+    },
+    "description": {
+      "en-US": "Fiber-grade cable speeds with a locked price and professional installation.",
+      "de-DE": "Kabel-Internet auf Glasfaser-Niveau mit festem Preis und Profi-Installation."
+    },
+    "orderHint": "0.3",
+    "assets": [
+      {
+        "id": "202ab512-4f18-495f-8b4b-b98ecf1fde39",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1355612066/photo/technician-installing-wifi-router-at-home.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 408
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Cable internet",
+          "de-DE": "Kabel-Internet"
+        },
+        "key": "malva-cat-cable-internet-image-1",
+        "tags": []
+      },
+      {
+        "id": "40623dfa-ecd0-4ef4-8f39-bde75d1d0b51",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 408
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Cable internet",
+          "de-DE": "Kabel-Internet"
+        },
+        "key": "malva-cat-cable-internet-image-2",
+        "tags": []
+      }
+    ]
+  },
+  {
+    "id": "6d5e6055-4ddc-40d9-88d4-d614b490f26a",
+    "version": 3,
+    "key": "malva-cat-add-ons",
+    "name": {
+      "en-US": "Add-ons",
+      "de-DE": "Zusatzangebote"
+    },
+    "slug": {
+      "en-US": "add-ons",
+      "de-DE": "zusatzangebote"
+    },
+    "description": {
+      "en-US": "Streaming, music and extras, billed with your Malva plan. Works with phone, wireless and cable.",
+      "de-DE": "Streaming, Musik und Extras, abgerechnet mit Ihrem Malva-Tarif. Funktioniert mit Handy, Funk und Kabel."
+    },
+    "orderHint": "0.4",
+    "assets": [
+      {
+        "id": "0cbc7f80-4e10-4af3-839d-c6dfaf690113",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1412871535/photo/friends-watching-movies-together-at-home.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 369
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Add-ons",
+          "de-DE": "Zusatzangebote"
+        },
+        "key": "malva-cat-add-ons-image-1",
+        "tags": []
+      },
+      {
+        "id": "21dda595-2f2b-4dd3-9b6b-1406edf7bf68",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1278677367/photo/man-choosing-movie-for-streaming-on-tablet-computer.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 408
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Add-ons",
+          "de-DE": "Zusatzangebote"
+        },
+        "key": "malva-cat-add-ons-image-2",
+        "tags": []
+      }
+    ]
+  },
+  {
+    "id": "49f784fd-3c4f-4bc1-bdb1-a62fc7658072",
+    "version": 3,
+    "key": "malva-cat-devices",
+    "name": {
+      "en-US": "Phones & devices",
+      "de-DE": "Handys & Geräte"
+    },
+    "slug": {
+      "en-US": "phones-and-devices",
+      "de-DE": "handys-und-geraete"
+    },
+    "description": {
+      "en-US": "Malva phones, with outright purchase, installments or lease.",
+      "de-DE": "Malva-Handys zum Kauf, auf Raten oder zur Miete."
+    },
+    "orderHint": "0.5",
+    "assets": [
+      {
+        "id": "d18e1587-a583-40b1-b895-9f9e7414f47a",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/2199471016/photo/close-up-hands-of-unrecognizable-man-holding-and-using-smartphone-standing-on-city-street.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 408
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Phones & devices",
+          "de-DE": "Handys & Geräte"
+        },
+        "key": "malva-cat-devices-image-1",
+        "tags": []
+      },
+      {
+        "id": "9c1c3231-2555-4e8b-981d-f0f7b1b81a67",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1322157897/photo/close-up-of-a-businessman-hand-holding-a-smartphone-white-screen-is-blank-the-background-is.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 408
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Phones & devices",
+          "de-DE": "Handys & Geräte"
+        },
+        "key": "malva-cat-devices-image-2",
+        "tags": []
+      }
+    ]
+  },
+  {
+    "id": "fc4b1b5a-837f-4a33-8cb9-ddb95a525d4f",
+    "version": 3,
+    "key": "malva-cat-streaming",
+    "name": {
+      "en-US": "Streaming & entertainment",
+      "de-DE": "Streaming & Unterhaltung"
+    },
+    "slug": {
+      "en-US": "streaming-entertainment",
+      "de-DE": "streaming-unterhaltung"
+    },
+    "description": {
+      "en-US": "Video and music services on your Malva bill.",
+      "de-DE": "Video- und Musikdienste auf Ihrer Malva-Rechnung."
+    },
+    "parent": {
+      "typeId": "category",
+      "id": "6d5e6055-4ddc-40d9-88d4-d614b490f26a"
+    },
+    "orderHint": "0.1",
+    "assets": [
+      {
+        "id": "a6125a3f-65c0-4e2b-af63-df28681b832f",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1412871535/photo/friends-watching-movies-together-at-home.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 369
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Streaming & entertainment",
+          "de-DE": "Streaming & Unterhaltung"
+        },
+        "key": "malva-cat-streaming-image-1",
+        "tags": []
+      },
+      {
+        "id": "19fced03-d7dc-4869-b7cb-a975afcf0904",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1278677367/photo/man-choosing-movie-for-streaming-on-tablet-computer.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 408
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Streaming & entertainment",
+          "de-DE": "Streaming & Unterhaltung"
+        },
+        "key": "malva-cat-streaming-image-2",
+        "tags": []
+      }
+    ]
+  },
+  {
+    "id": "559d7eef-6be7-4a32-8b60-ac60166136f7",
+    "version": 3,
+    "key": "malva-cat-protection",
+    "name": {
+      "en-US": "Security & protection",
+      "de-DE": "Sicherheit & Schutz"
+    },
+    "slug": {
+      "en-US": "security-and-protection",
+      "de-DE": "sicherheit-und-schutz"
+    },
+    "description": {
+      "en-US": "Cloud backup, device cover and network security.",
+      "de-DE": "Cloud-Backup, Geräteschutz und Netzwerksicherheit."
+    },
+    "parent": {
+      "typeId": "category",
+      "id": "6d5e6055-4ddc-40d9-88d4-d614b490f26a"
+    },
+    "orderHint": "0.2",
+    "assets": [
+      {
+        "id": "b907063f-086c-4644-afb5-cfd541420954",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1303145712/photo/phishing-mobile-phone-hacker-or-cyber-scam-concept-password-and-login-pass-code-in-smartphone.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 412
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Security & protection",
+          "de-DE": "Sicherheit & Schutz"
+        },
+        "key": "malva-cat-protection-image-1",
+        "tags": []
+      },
+      {
+        "id": "68413efe-6275-4ad5-91fd-4ce7a710ce70",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1341253865/photo/businessman-using-smartphone-to-input-passcode-or-password-for-access-to-mobile-phone.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 348
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Security & protection",
+          "de-DE": "Sicherheit & Schutz"
+        },
+        "key": "malva-cat-protection-image-2",
+        "tags": []
+      }
+    ]
+  },
+  {
+    "id": "97af745c-d614-4690-b52a-290375aaa596",
+    "version": 3,
+    "key": "malva-cat-equipment",
+    "name": {
+      "en-US": "Routers & equipment",
+      "de-DE": "Router & Zubehör"
+    },
+    "slug": {
+      "en-US": "routers-and-equipment",
+      "de-DE": "router-und-zubehoer"
+    },
+    "description": {
+      "en-US": "Routers, modems and gateways to rent or buy.",
+      "de-DE": "Router, Modems und Gateways zur Miete oder zum Kauf."
+    },
+    "parent": {
+      "typeId": "category",
+      "id": "6d5e6055-4ddc-40d9-88d4-d614b490f26a"
+    },
+    "orderHint": "0.3",
+    "assets": [
+      {
+        "id": "43e3b778-ba43-400e-952c-4f8c4cd33394",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/91692641/photo/a-cable-modem-and-router-isolated-on-a-white-background.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 407
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Routers & equipment",
+          "de-DE": "Router & Zubehör"
+        },
+        "key": "malva-cat-equipment-image-1",
+        "tags": []
+      },
+      {
+        "id": "542331b2-24ac-4c65-a01d-17f8ca584a7b",
+        "sources": [
+          {
+            "uri": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+            "dimensions": {
+              "w": 612,
+              "h": 408
+            }
+          }
+        ],
+        "name": {
+          "en-US": "Routers & equipment",
+          "de-DE": "Router & Zubehör"
+        },
+        "key": "malva-cat-equipment-image-2",
+        "tags": []
+      }
+    ]
+  }
+]
