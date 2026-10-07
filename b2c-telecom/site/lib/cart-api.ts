@@ -1,6 +1,7 @@
 import 'server-only';
 import type { NextResponse } from 'next/server';
 import { BundleRefusal } from '@/lib/cart/errors';
+import { POSTAL_COOKIE, POSTAL_COOKIE_MAX_AGE } from '@/lib/config/eligibility';
 import type { BundleOutcome } from '@/lib/ct/bundle';
 import { errorResponse, json } from '@/lib/ct/http';
 import { getSession, updateSession } from '@/lib/ct/session';
@@ -39,6 +40,9 @@ export async function cartResponse(run: (session: SessionData, market: Market) =
     const result = await run(session, market);
     const response = json({ cart: result.cart });
     await syncSession(session, result, response);
+    if (result.postalCode) {
+      response.cookies.set(POSTAL_COOKIE, result.postalCode, { httpOnly: true, sameSite: 'lax', path: '/', secure: process.env.NODE_ENV === 'production', maxAge: POSTAL_COOKIE_MAX_AGE });
+    }
     return response;
   } catch (error) {
     if (error instanceof BundleRefusal) {

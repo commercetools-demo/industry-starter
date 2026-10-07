@@ -4,16 +4,30 @@ import { blockedRefusal, BundleRefusal, refusalFromApiError } from '@/lib/cart/e
 import { guardAdd, revalidateLines } from '@/lib/cart/guard';
 import { precheckPlan } from '@/lib/cart/precheck';
 import { checkQuantity } from '@/lib/cart/quantity';
-import { mapCart } from '@/lib/mappers/cart';
+import { codeStateInfo, mapCart } from '@/lib/mappers/cart';
 import { removalPlan } from '@/lib/offers/addons';
 import { toDateOnly } from '@/lib/pricing/dates';
 import type { SessionData } from '@/lib/session-types';
-import type { BlockedAdd, Cart, Market, Offer, OfferVariant } from '@/lib/types';
+import type { BlockedAdd, Cart, DiscountCodeReason, Market, Offer, OfferVariant, ServiceLocation } from '@/lib/types';
 import { getAvailableQuantities } from './availability';
 import { getBuyerContext } from './buyer-context';
-import { addOfferLine, changeLineQuantity, createCartForSession, getActiveCartForSession, normalizeCart, offerKeyOfLine, removeLine, toGuardLines } from './cart';
+import {
+  addOfferLine,
+  changeLineQuantity,
+  createCartForSession,
+  errorCodeOf,
+  getActiveCartForSession,
+  normalizeCart,
+  offerKeyOfLine,
+  removeLine,
+  statusOf,
+  toGuardLines,
+  updateCart,
+  withCartRetry,
+} from './cart';
 import { getAllOffers } from './catalog';
 import { getCartDiscountKeys } from './discount-keys';
+import { getServiceability } from './serviceability';
 
 // Orchestration of "My bundle": every function takes the session and the market, checks ownership through the cart helpers (D-070),
 // applies the guard on every add (the card's earlier verdict is never trusted) and answers with the full mapped cart read back from
@@ -26,6 +40,8 @@ export interface BundleOutcome {
   cartId: string | undefined;
   /** Set when a cart was created for an anonymous visitor: the session must remember it. */
   anonymousId?: string;
+  /** Set by the address route: the route also remembers the ZIP in the HttpOnly cookie K reads. */
+  postalCode?: string;
 }
 
 const PHYSICAL: ReadonlySet<Offer['kind']> = new Set(['equipment', 'device']);
@@ -34,9 +50,13 @@ async function offersByKeyFor(market: Market): Promise<Record<string, Offer>> {
   return Object.fromEntries((await getAllOffers(market)).map((offer) => [offer.key, offer]));
 }
 
-/** Normalizes, revalidates (J + K), checks stock and maps. The second value is the cart after normalizing. */
-export async function mapForMarket(ct: CtCart, market: Market): Promise<{ cart: Cart; ct: CtCart }> {
-  const [offersByKey, buyer, discountKeyById] = await Promise.all([offersByKeyFor(market), getBuyerContext(market), getCartDiscountKeys()]);
+/**
+ * Normalizes, revalidates (J + K), checks stock and maps. The second value is the cart after normalizing. `location` overrides the
+ * remembered ZIP of the buyer (the address route has just changed it, the cookie is not on the request yet).
+ */
+export async function mapForMarket(ct: CtCart, market: Market, location?: ServiceLocation): Promise<{ cart: Cart; ct: CtCart }> {
+  const [offersByKey, baseBuyer, discountKeyById] = await Promise.all([offersByKeyFor(market), getBuyerContext(market), getCartDiscountKeys()]);
+  const buyer = location ? { ...baseBuyer, location } : baseBuyer;
   const normalized = await normalizeCart(ct, offersByKey);
   const issues = revalidateLines({ lines: toGuardLines(normalized), offersByKey, buyer });
   const physical = normalized.lineItems.flatMap((line) => {
@@ -191,4 +211,68 @@ export async function removeFromBundle(session: SessionData, market: Market, lin
     if (mapped) return refuse(session, market, mapped);
     throw error;
   }
+}
+
+/**
+ * Remembers where the bundle will be served (cart custom field `postalCode`, the serviceability flags and the shipping address) and
+ * answers with K's issues for the new location. Without a cart nothing is written and the answer has no cart.
+ */
+export async function setBundleAddress(session: SessionData, market: Market, input: { postalCode: string }): Promise<BundleOutcome> {
+  const existing = await getActiveCartForSession(session, market);
+  if (!existing) return { cart: null, cartId: undefined, postalCode: input.postalCode };
+  const location = await getServiceability().check(input.postalCode, market.country);
+  const updated = await withCartRetry(existing.id, (fresh) =>
+    updateCart(fresh, [
+      { action: 'setCustomField', name: 'postalCode', value: input.postalCode },
+      { action: 'setCustomField', name: 'serviceableCable', value: location.served.cable },
+      { action: 'setCustomField', name: 'serviceableWireless', value: location.served['fixed-wireless'] },
+      { action: 'setCustomField', name: 'serviceablePhone', value: location.served.mobile },
+      { action: 'setShippingAddress', address: { country: market.country, postalCode: input.postalCode } },
+    ]),
+  );
+  return { ...outcome((await mapForMarket(updated, market, location)).cart), postalCode: input.postalCode };
+}
+
+const REJECTION_CODES = new Set(['ResourceNotFound', 'InvalidOperation', 'DiscountCodeNonApplicable']);
+
+function rejection(code: string, reason: DiscountCodeReason): BundleRefusal {
+  return new BundleRefusal(422, 'DISCOUNT_CODE_REJECTED', 'That code could not be applied.', { reason, code });
+}
+
+/**
+ * Applies a discount code. A code that does not match the cart is taken off again in a second update and the answer is 422
+ * DISCOUNT_CODE_REJECTED with the reason and the unchanged cart: a refused code never stays on the cart.
+ */
+export async function applyDiscountCode(session: SessionData, market: Market, rawCode: string): Promise<BundleOutcome> {
+  const code = rawCode.trim();
+  const existing = await getActiveCartForSession(session, market);
+  if (!existing) return refuse(session, market, rejection(code, 'not-applicable'));
+  let added: CtCart;
+  try {
+    added = await withCartRetry(existing.id, (fresh) => updateCart(fresh, [{ action: 'addDiscountCode', code }]));
+  } catch (error) {
+    if ((statusOf(error) === 400 || statusOf(error) === 404) && REJECTION_CODES.has(errorCodeOf(error) ?? '')) return refuse(session, market, rejection(code, 'unknown-code'));
+    throw error;
+  }
+  const info = added.discountCodes.find((entry) => entry.discountCode.obj?.code?.toLowerCase() === code.toLowerCase());
+  const state = info?.state ?? 'DoesNotMatchCart';
+  if (state === 'MatchesCart') return outcome((await mapForMarket(added, market)).cart);
+  const cleaned = info
+    ? await withCartRetry(added.id, (fresh) => updateCart(fresh, [{ action: 'removeDiscountCode', discountCode: { typeId: 'discount-code', id: info.discountCode.id } }]))
+    : added;
+  const refusal = rejection(code, codeStateInfo(state).reason ?? 'not-applicable');
+  refusal.cart = (await mapForMarket(cleaned, market)).cart;
+  throw refusal;
+}
+
+/** Takes a code off the cart (also one that no longer applies). 404 when the cart does not carry it. */
+export async function removeDiscountCode(session: SessionData, market: Market, rawCode: string): Promise<BundleOutcome> {
+  const code = rawCode.trim().toLowerCase();
+  const existing = await getActiveCartForSession(session, market);
+  const info = existing?.discountCodes.find((entry) => entry.discountCode.obj?.code?.toLowerCase() === code);
+  if (!existing || !info) return refuse(session, market, new BundleRefusal(404, 'CODE_NOT_FOUND', 'That code is not on your bundle.'));
+  const updated = await withCartRetry(existing.id, (fresh) =>
+    updateCart(fresh, [{ action: 'removeDiscountCode', discountCode: { typeId: 'discount-code', id: info.discountCode.id } }]),
+  );
+  return outcome((await mapForMarket(updated, market)).cart);
 }
