@@ -106,3 +106,16 @@ Verified live on 2026-10-07 against `spec-test-b2c-telecom` through the dev wind
 - Handset offer variants carry one one-time price plus several recurring prices (installment 12/24/36, lease 24). H exposes them as `OfferVariant.financedPrices`; they are never the "monthly price" of the offer.
 - Category tree: one `GET /categories` call returns all 8 categories; order hints 0.1 to 0.5 give Phone plans, Wireless internet, Cable internet, Add-ons, Phones & devices. Add-on children slugs: `streaming-entertainment`, `security-and-protection`, `routers-and-equipment`.
 - Listing data differs from the plan's C-H examples: cable internet lists 4 offers (`malva-offer-cable-existing-customer` $49.99 is an extra; eligibility is K's job) and phone plans list 5 (`malva-offer-phone-online-only` $45, unlimited, month-to-month only). de-DE prices are whole euros (`40 €`, `60 €`, `80 €`).
+
+## Workstream G findings (2026-10-07; details in plan/reports/G-report.md)
+- Inventory mode `None` is the only mode accepting service lines at order time; `TrackOnly`/`ReserveOnOrder` refuse them (OutOfStock). The app must check handset stock itself.
+- An order with a recurring line needs a customer on the cart: guests cannot create one (conflicts with D-035; see QUESTIONS.md Q-007).
+- An order needs a shipping address even for add-on-only carts.
+- `OrderFromCartDraft.custom` cannot change the cart's custom type: type the cart `malva-order` from creation.
+- Product Search: ~2 minutes from write to searchable (no 15-minute reindex seen).
+- Platform limits: required set attributes refused (set attributes are optional), dots not allowed in price keys (`_` used), max 50 search expressions per query.
+- ReserveOnOrder experiments consumed stock; a re-seed restored it.
+
+### G: image hosts
+- All 35 lock entries / 70 URLs are on `media.istockphoto.com`; none on `images.pexels.com`. No photographer, licence or rate-limit data in the response. A clean URL answers 301 to a sized variant, then 200 `image/jpeg`.
+- These are iStock/Getty files: the "Photos from Pexels" credit text is inaccurate and public hotlinking is not covered. Acceptable for the demo under D-066; see QUESTIONS.md Q-008.
