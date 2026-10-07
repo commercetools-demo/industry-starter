@@ -130,7 +130,7 @@ npm scripts and positions in `verify` (canonical table in A): `check:secrets` (s
 - [x] E-10 Write `scripts/check-dev-routes.mjs` (+ `.d.mts`) and `scripts/check-dev-routes.test.ts` (temp `.next/server/app/api/health` fails naming it; clean passes; manifest entry `/api/health/route` fails); add npm script `check:dev-routes` and insert at step 11 of `verify`.
 - [x] E-11 Write `scripts/check-secrets.mjs` (+ `.d.mts`) and `scripts/check-secrets.test.ts` (temp git repos: passes clean; rule a NEXT_PUBLIC_CTP and NEXT_PUBLIC_SESSION; rule a ignores `scripts/` and tests; rule b non-empty `CTP_CLIENT_SECRET` in `.env.example`, `CTP_SEED_` mention; rule c tracked `.env.local` fails and `.env.example` passes; rule d 32+ char literal assigned to `SESSION_SECRET` fails, shorter passes; messages never contain the planted secret values). Add npm script `check:secrets` and insert at step 1 of `verify`.
 - [x] E-12 Write `scripts/check-bundle-secrets.mjs` (+ `.d.mts`) and `scripts/check-bundle-secrets.test.ts` (temp `.next/static` with planted `CLIENT_SECRET` name fails; planted secret value fails and the output omits the value; seed value read from a temp `.env.seed` fails; clean passes; missing dir fails). Add npm script `check:bundle` and insert at step 10 of `verify`. Run `npm run verify` and confirm the order against A's canonical table.
-- [ ] E-13 Final run: `npm run verify` green; with a `.env.local` made by the owner (OA-02) start `npm run dev`; report the C- checks as ready.
+- [x] E-13 Final run: `npm run verify` green; with a `.env.local` made by the owner (OA-02) start `npm run dev`; report the C- checks as ready.
 
 ## Unit tests (scenario → test)
 | Scenario (exact title from the spec) | Capability | Test (file → `it(...)` name) |
