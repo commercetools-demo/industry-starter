@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { activateProductSearch, applyProjectSettings, checkProjectSettings, main as settingsMain, waitForSearchIndex } from './project-settings';
 import { main as seedMain } from './seed';
-import { buildManifest } from './manifest';
+import { buildPlatformManifest as buildManifest } from './manifest';
 import { FakeCt } from './test/fake-ct';
 import { offerType } from './test/fixtures';
 
@@ -74,6 +74,16 @@ describe('project settings', () => {
     const { lagMs } = await waitForSearchIndex(fake, { expectedKeys: ['a', 'b'], pollMs: 1000, sleep: async (ms) => void slept.push(ms) });
     expect(slept).toEqual([1000, 1000]);
     expect(lagMs).toBe(2000);
+  });
+
+  it('wait loop asks in chunks because the platform rejects more than 50 expressions per query', async () => {
+    const fake = api();
+    await activateProductSearch(fake);
+    const keys = Array.from({ length: 52 }, (_, i) => `k${i}`);
+    fake.indexedKeys = keys;
+    const { lagMs } = await waitForSearchIndex(fake, { expectedKeys: keys, pollMs: 1000, sleep: async () => undefined });
+    expect(lagMs).toBe(0);
+    expect(fake.searchCalls).toBe(3);
   });
 
   it('wait loop times out with exit code 6', async () => {

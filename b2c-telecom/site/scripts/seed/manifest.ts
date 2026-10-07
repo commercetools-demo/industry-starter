@@ -1,18 +1,12 @@
-// Assembles the seed manifest from the typed data modules. Workstream G appends its kinds (product types,
-// categories, products, inventory, discounts, custom objects) here.
-import { customerGroups } from './data/customer-groups';
-import { recurrencePolicies } from './data/recurrence';
-import { shippingMethods } from './data/shipping';
-import { taxCategories } from './data/tax';
-import { zoneCoverage } from './data/zones';
+// Assembles the seed manifest from the typed data modules (data/index.ts). Demo customers and orders only with --with-demo.
+import { DEMO, MANIFEST, PLATFORM_MANIFEST } from './data';
 import type { SeedManifest } from './types';
 
-export function buildManifest(_opts: { withDemo: boolean } = { withDemo: false }): SeedManifest {
-  return {
-    taxCategory: taxCategories,
-    zoneCoverage,
-    customerGroup: customerGroups,
-    recurrencePolicy: recurrencePolicies,
-    shippingMethod: shippingMethods,
-  };
+export function buildManifest(opts: { withDemo: boolean } = { withDemo: false }): SeedManifest {
+  return opts.withDemo ? { ...MANIFEST, ...DEMO } : { ...MANIFEST };
+}
+
+/** Market-level resources only (workstream F's part); the framework tests use it. */
+export function buildPlatformManifest(): SeedManifest {
+  return { ...PLATFORM_MANIFEST };
 }

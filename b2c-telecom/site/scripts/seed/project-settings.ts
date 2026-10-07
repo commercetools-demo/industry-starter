@@ -21,6 +21,8 @@ export const REQUIRED = {
 
 export const DEFAULT_POLL_MS = 20_000;
 export const DEFAULT_TIMEOUT_MS = 1_800_000;
+/** Keys per search query (the platform rejects more than 50 expressions). */
+export const SEARCH_CHUNK = 25;
 
 type Project = {
   version: number;
@@ -95,12 +97,18 @@ export async function waitForSearchIndex(
   const pollMs = opts.pollMs ?? DEFAULT_POLL_MS;
   const sleep = opts.sleep ?? ((ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms)));
   if (opts.expectedKeys.length === 0) return { lagMs: 0 };
-  const query = { query: { or: opts.expectedKeys.map((value) => ({ exact: { field: 'key', value } })) }, limit: 1 };
+  // The platform allows at most 50 expressions per query: ask in chunks and add the totals up.
+  const chunks: string[][] = [];
+  for (let i = 0; i < opts.expectedKeys.length; i += SEARCH_CHUNK) chunks.push(opts.expectedKeys.slice(i, i + SEARCH_CHUNK));
   let elapsed = 0;
   for (;;) {
     try {
-      const res = (await api.post('products/search', query)) as { total?: number };
-      if (res.total === opts.expectedKeys.length) return { lagMs: elapsed };
+      let found = 0;
+      for (const keys of chunks) {
+        const res = (await api.post('products/search', { query: { or: keys.map((value) => ({ exact: { field: 'key', value } })) }, limit: 1 })) as { total?: number };
+        found += res.total ?? 0;
+      }
+      if (found === opts.expectedKeys.length) return { lagMs: elapsed };
     } catch (err) {
       // "Product Search API is not enabled" while indexing: not ready yet
       if (!isNotEnabled(err)) throw err;

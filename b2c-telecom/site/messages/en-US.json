@@ -1,7 +1,7 @@
 {
   "common": { "brand": "Malva" },
   "nav": {},
-  "footer": {},
+  "footer": { "photoCredit": "Photos from Pexels" },
   "home": { "placeholder": "Malva Telecom storefront" },
   "plp": {},
   "bundle": {},

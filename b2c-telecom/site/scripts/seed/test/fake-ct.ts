@@ -190,6 +190,7 @@ export class FakeCt implements CtApi {
 
   private find(collection: string, idOrKey: string): Resource | undefined {
     if (idOrKey.startsWith('key=')) return this.byKey(collection, idOrKey.slice(4));
+    if (idOrKey.startsWith('order-number=')) return this.list(collection).find((r) => r.orderNumber === idOrKey.slice('order-number='.length));
     return this.list(collection).find((r) => r.id === idOrKey);
   }
 
@@ -279,6 +280,7 @@ export class FakeCt implements CtApi {
       throw httpError(400, 'ObjectNotFound', 'Product Search API is not enabled');
     }
     const or = ((body.query as Obj | undefined)?.or ?? []) as Obj[];
+    if (or.length > 50) throw httpError(400, 'InvalidInput', 'The number of expressions cannot exceed 50');
     const wanted = or.map((c) => String((c.exact as Obj).value));
     const hits = wanted.filter((k) => this.indexedKeys.includes(k));
     return { total: hits.length, offset: 0, limit: 1, hits: [] };
@@ -295,6 +297,7 @@ export class FakeCt implements CtApi {
     }
     const body = this.resolveRefs(clone(rawBody)) as Obj;
     if (collection === 'custom-objects') return this.upsertCustomObject(body);
+    if (collection === 'orders') return this.createOrder(body);
     if (typeof body.key === 'string' && this.byKey(collection, body.key)) {
       throw httpError(400, 'DuplicateField', `A duplicate value "${body.key}" exists for field "key".`);
     }
@@ -302,7 +305,38 @@ export class FakeCt implements CtApi {
     if (!this.collections.has(collection)) this.collections.set(collection, []);
     this.collections.get(collection)?.push(res);
     this.log.push(`create ${collection} ${String(res.key ?? res.sku ?? res.id)}`);
-    return clone(res);
+    return collection === 'customers' ? { customer: clone(res) } : clone(res);
+  }
+
+  /** Order from cart: needs a shipping address; a recurring line needs a customer and creates a Recurring Order (verified live in G-18). */
+  private createOrder(body: Obj): unknown {
+    const cartRef = body.cart as Obj;
+    const cart = this.list('carts').find((c) => c.id === cartRef.id);
+    if (!cart) throw httpError(404, 'ResourceNotFound', 'cart not found');
+    if (cart.version !== body.version) throw httpError(409, 'ConcurrentModification', 'version mismatch');
+    if (!cart.shippingAddress) throw httpError(400, 'InvalidOperation', 'Shipping address is not set.');
+    if (this.list('orders').some((o) => o.orderNumber === body.orderNumber)) throw httpError(400, 'DuplicateField', 'A duplicate value exists for field "orderNumber".');
+    const lineItems = arr(cart.lineItems);
+    const recurring = lineItems.some((l) => l.recurrenceInfo);
+    if (recurring && !cart.customerId) throw httpError(400, 'InvalidOperation', 'It is not possible to create a recurring order without a customer.');
+    const order = this.newResource({
+      orderNumber: body.orderNumber,
+      orderState: body.orderState ?? 'Open',
+      customerId: cart.customerId,
+      lineItems: clone(lineItems),
+      custom: clone(cart.custom),
+      shippingAddress: cart.shippingAddress,
+      cart: { typeId: 'cart', id: cart.id },
+    });
+    if (!this.collections.has('orders')) this.collections.set('orders', []);
+    this.collections.get('orders')?.push(order);
+    cart.cartState = 'Ordered';
+    cart.version = Number(cart.version) + 1;
+    if (recurring) {
+      this.seed('recurring-orders', { originOrder: { typeId: 'order', id: order.id }, recurringOrderState: 'Active', cart: { typeId: 'cart', id: cart.id } });
+    }
+    this.log.push(`create orders ${String(order.orderNumber)}`);
+    return clone(order);
   }
 
   private upsertCustomObject(body: Obj): unknown {
@@ -334,6 +368,11 @@ export class FakeCt implements CtApi {
         return { ...body, zoneRates: arr(body.zoneRates).map((z) => ({ zone: z.zone, shippingRates: arr(z.shippingRates).map(withTiers) })) };
       case 'discount-codes':
         return body;
+      case 'carts': {
+        let lineNo = 0;
+        const lineItems = arr(body.lineItems).map((l) => ({ id: `li-${++this.counter}-${++lineNo}`, quantity: 1, ...l, variant: { sku: l.sku } }));
+        return { ...body, lineItems, cartState: 'Active' };
+      }
       case 'products': {
         const staged = {
           name: body.name,
@@ -418,6 +457,24 @@ export class FakeCt implements CtApi {
       case 'cart-discounts': return this.cartDiscountAction(r, a, set, unsupported);
       case 'discount-codes': return this.discountCodeAction(r, a, set, unsupported);
       case 'products': return this.productAction(r, a, unsupported);
+      case 'carts':
+        if (a.action === 'addLineItem') {
+          r.lineItems = [...arr(r.lineItems), { id: `li-${++this.counter}`, quantity: 1, ...a, action: undefined, variant: { sku: a.sku } }];
+          return;
+        }
+        return unsupported();
+      case 'customers':
+        if (a.action === 'setFirstName') return void (r.firstName = a.firstName);
+        if (a.action === 'setLastName') return void (r.lastName = a.lastName);
+        if (a.action === 'setCustomerGroup') return void (r.customerGroup = a.customerGroup);
+        if (a.action === 'setCustomType') return void (r.custom = { type: a.type, fields: a.fields });
+        if (a.action === 'setCustomField') {
+          const custom = (r.custom ?? { fields: {} }) as { fields: Obj };
+          custom.fields[String(a.name)] = a.value;
+          r.custom = custom;
+          return;
+        }
+        return unsupported();
       case 'inventory':
         if (a.action === 'changeQuantity') return void (r.quantityOnStock = a.quantity);
         if (a.action === 'setRestockableInDays') return void (r.restockableInDays = a.restockableInDays);
@@ -510,6 +567,16 @@ export class FakeCt implements CtApi {
       case 'changeSlug': return set('slug');
       case 'setDescription': return set('description');
       case 'changeOrderHint': return set('orderHint');
+      case 'addAsset': return void (r.assets = [...arr(r.assets), a.asset]);
+      case 'removeAsset': return void (r.assets = arr(r.assets).filter((x) => x.key !== a.assetKey));
+      case 'changeAssetName': {
+        const asset = arr(r.assets).find((x) => x.key === a.assetKey) ?? unsupported();
+        return void (asset.name = a.name);
+      }
+      case 'setAssetSources': {
+        const asset = arr(r.assets).find((x) => x.key === a.assetKey) ?? unsupported();
+        return void (asset.sources = a.sources);
+      }
       case 'changeParent':
         r.parent = a.parent;
         r.ancestors = this.ancestorsOf(a.parent as Obj);
@@ -622,6 +689,12 @@ export class FakeCt implements CtApi {
         v.attributes = a.value === undefined ? rest : [...rest, { name: a.name, value: a.value }];
         return;
       }
+      case 'setAttributeInAllVariants':
+        for (const v of variants()) {
+          const rest = arr(v.attributes).filter((x) => x.name !== a.name);
+          v.attributes = a.value === undefined ? rest : [...rest, { name: a.name, value: a.value }];
+        }
+        return;
       case 'setPrices': bySku(a.sku).prices = arr(a.prices).map((p) => ({ id: `price-${++this.counter}`, ...p })); return;
       case 'addExternalImage': {
         const v = bySku(a.sku);

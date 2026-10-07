@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildManifest } from './manifest';
+import { buildPlatformManifest as buildManifest } from './manifest';
 import { main as reset } from './reset';
 import { main as seed } from './seed';
 import { FakeCt } from './test/fake-ct';

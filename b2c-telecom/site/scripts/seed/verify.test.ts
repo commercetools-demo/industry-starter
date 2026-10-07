@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { buildManifest } from './manifest';
+import { buildPlatformManifest as buildManifest } from './manifest';
 import { main as seedMain } from './seed';
 import { FakeCt } from './test/fake-ct';
 import type { CategoryDraft, ProductDraft, ProductTypeDraft, SeedManifest } from './types';
+import { platformChecks } from './checks/platform';
 import { main as verify } from './verify';
 
 const SOURCE = { CTP_SEED_PROJECT_KEY: 'spec-test-b2c-telecom' };
@@ -48,7 +49,7 @@ async function fullySeeded(): Promise<FakeCt> {
 
 async function run(api: FakeCt) {
   const lines: string[] = [];
-  const code = await verify([], { api, source: SOURCE, log: (l) => lines.push(l) });
+  const code = await verify([], { api, source: SOURCE, checks: platformChecks, log: (l) => lines.push(l) });
   return { code, out: lines.join('\n') };
 }
 
@@ -107,7 +108,7 @@ describe('seed:verify', () => {
     const api = new FakeCt();
     api.seed('zones', { key: 'usa', name: 'usa', locations: [{ country: 'US' }] });
     api.seed('zones', { key: 'europe', name: 'europe', locations: [{ country: 'DE' }] });
-    await seedMain(['--confirm-project', 'spec-test-b2c-telecom', '--no-wait'], { api, source: SOURCE, log: () => undefined });
+    await seedMain(['--confirm-project', 'spec-test-b2c-telecom', '--no-wait'], { api, source: SOURCE, manifest: buildManifest(), log: () => undefined });
     const early = await run(api);
     expect(early.out).toMatch(/PASS\s+shipping zones.*deferred until the product types define offer-kind/);
     expect(early.code).toBe(0);

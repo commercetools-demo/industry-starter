@@ -9,7 +9,7 @@ type ExistingVariant = {
   id: number;
   sku: string;
   attributes?: { name: string; value: unknown }[];
-  prices?: (Obj & { key?: string; value: { centAmount: number; currencyCode: string }; country?: string; customerGroup?: Ref; validFrom?: string; validUntil?: string })[];
+  prices?: (Obj & { key?: string; value: { centAmount: number; currencyCode: string }; country?: string; customerGroup?: Ref; recurrencePolicy?: Ref; validFrom?: string; validUntil?: string })[];
   images?: { url: string }[];
 };
 type ExistingProduct = Versioned & {
@@ -36,6 +36,8 @@ const EXPAND = [
   'masterData.staged.categories[*]',
   'masterData.staged.masterVariant.prices[*].customerGroup',
   'masterData.staged.variants[*].prices[*].customerGroup',
+  'masterData.staged.masterVariant.prices[*].recurrencePolicy',
+  'masterData.staged.variants[*].prices[*].recurrencePolicy',
 ];
 
 /** Enum values come back as { key, label }; the draft carries the key. */
@@ -51,6 +53,7 @@ function priceDraft(p: PriceDraft): Obj {
     value: p.value,
     ...(p.country ? { country: p.country } : {}),
     ...(p.customerGroup ? { customerGroup: { typeId: 'customer-group', key: p.customerGroup } } : {}),
+    ...(p.recurrencePolicy ? { recurrencePolicy: { typeId: 'recurrence-policy', key: p.recurrencePolicy } } : {}),
     ...(p.validFrom ? { validFrom: p.validFrom } : {}),
     ...(p.validUntil ? { validUntil: p.validUntil } : {}),
   };
@@ -62,7 +65,7 @@ function pricesDiffer(existing: ExistingVariant, wanted: VariantDraft): boolean 
   return wanted.prices.some((w) => {
     const h = have.find((x) => x.key === w.key);
     if (!h) return true;
-    return !covers(h.value, w.value) || h.country !== w.country || (h.customerGroup?.obj?.key ?? undefined) !== w.customerGroup || h.validFrom !== w.validFrom || h.validUntil !== w.validUntil;
+    return !covers(h.value, w.value) || h.country !== w.country || (h.customerGroup?.obj?.key ?? undefined) !== w.customerGroup || (h.recurrencePolicy?.obj?.key ?? undefined) !== w.recurrencePolicy || h.validFrom !== w.validFrom || h.validUntil !== w.validUntil;
   });
 }
 
@@ -167,6 +170,10 @@ export function planProduct(existing: ExistingProduct, draft: ProductDraft): Upd
     }
   }
 
+  const merged = [...mergeSameForAll(actions, wantedVariants.length)];
+  actions.length = 0;
+  actions.push(...merged);
+
   // published state
   if (draft.publish) {
     if (changes.length > 0 || !existing.masterData.published || existing.masterData.hasStagedChanges) {
@@ -178,6 +185,37 @@ export function planProduct(existing: ExistingProduct, draft: ProductDraft): Upd
     actions.push({ action: 'unpublish' });
   }
   return { changes, actions };
+}
+
+/**
+ * A change of one attribute to the same value in every variant must be one `setAttributeInAllVariants` action:
+ * SameForAll attributes cannot be set on a single variant when the product has several.
+ */
+export function mergeSameForAll(actions: UpdateAction[], variantCount: number): UpdateAction[] {
+  if (variantCount < 2) return actions;
+  const groups = new Map<string, UpdateAction[]>();
+  for (const a of actions) {
+    if (a.action !== 'setAttribute') continue;
+    const id = `${String(a.name)}=${JSON.stringify(a.value ?? null)}`;
+    groups.set(id, [...(groups.get(id) ?? []), a]);
+  }
+  const merged = new Set<string>();
+  const out: UpdateAction[] = [];
+  for (const a of actions) {
+    if (a.action !== 'setAttribute') {
+      out.push(a);
+      continue;
+    }
+    const id = `${String(a.name)}=${JSON.stringify(a.value ?? null)}`;
+    if ((groups.get(id)?.length ?? 0) < variantCount) {
+      out.push(a);
+      continue;
+    }
+    if (merged.has(id)) continue;
+    merged.add(id);
+    out.push({ action: 'setAttributeInAllVariants', name: a.name, ...(a.value !== undefined ? { value: a.value } : {}) });
+  }
+  return out;
 }
 
 async function categoryHints(api: CtApi, draft: ProductDraft): Promise<Record<string, string>> {
@@ -203,7 +241,10 @@ export const productReconciler = asReconciler<ProductDraft, ExistingProduct>({
     { kind: 'taxCategory', key: d.taxCategory, from: { kind: 'product', key: d.key } },
     ...d.categories.map((key) => ({ kind: 'category' as const, key, from: { kind: 'product' as const, key: d.key } })),
     ...[d.masterVariant, ...d.variants].flatMap((v) =>
-      v.prices.flatMap((p) => (p.customerGroup ? [{ kind: 'customerGroup' as const, key: p.customerGroup, from: { kind: 'product' as const, key: d.key } }] : [])),
+      v.prices.flatMap((p) => [
+        ...(p.customerGroup ? [{ kind: 'customerGroup' as const, key: p.customerGroup, from: { kind: 'product' as const, key: d.key } }] : []),
+        ...(p.recurrencePolicy ? [{ kind: 'recurrencePolicy' as const, key: p.recurrencePolicy, from: { kind: 'product' as const, key: d.key } }] : []),
+      ]),
     ),
   ],
   fetch: (api, key) => getByKey<ExistingProduct>(api, COLL, key, { expand: EXPAND }),

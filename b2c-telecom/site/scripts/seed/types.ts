@@ -59,6 +59,8 @@ export type SeedManifest = { [K in Kind]?: Draft[] };
 export interface Ctx {
   /** Country code -> key of the adopted zone, filled by the zoneCoverage reconciler. */
   zoneKeys: Record<string, string>;
+  /** Password of the demo customers (env SEED_DEMO_PASSWORD); only set with --with-demo. */
+  demoPassword?: string;
 }
 
 /** Thrown by a reconciler when the platform refuses a change because of another resource: the item is skipped. */
@@ -186,6 +188,8 @@ export interface CategoryDraft extends Draft {
   description?: LocalizedString;
   orderHint?: string;
   parent?: string; // category key
+  /** Category images (D-055): one asset per entry, keyed `<category key>-image-<n>`. */
+  assets?: { key: string; name: LocalizedString; sources: { uri: string; dimensions: { w: number; h: number } }[] }[];
 }
 
 export interface ShippingRateDraft {
@@ -237,6 +241,8 @@ export interface PriceDraft {
   value: Money;
   country?: string;
   customerGroup?: string; // key
+  /** Recurrence policy key; absent = one-time price. */
+  recurrencePolicy?: string;
   validFrom?: string;
   validUntil?: string;
 }
@@ -270,4 +276,40 @@ export interface InventoryDraft extends Draft {
 
 export interface CheckCtx {
   projectKey: string;
+}
+
+/** Custom Object (key = postal code for the serviceability container). */
+export interface CustomObjectDraft extends Draft {
+  container: string;
+  value: unknown;
+}
+
+export interface DemoCustomerDraft extends Draft {
+  email: string;
+  firstName: string;
+  lastName: string;
+  customerGroup: string; // key
+  address: { streetName: string; streetNumber?: string; postalCode: string; city: string; state?: string; country: string };
+  accountNumber: string;
+  creditApproved: boolean;
+}
+
+export interface DemoOrderLineDraft {
+  sku: string;
+  quantity: number;
+  offerKey: string;
+  recurrencePolicy: string; // key
+  priceSelectionMode: 'Fixed' | 'Dynamic';
+  /** Index (in `lines`) of the line this one depends on (parentLineItemId). */
+  parentLine?: number;
+}
+
+export interface DemoOrderDraft extends Draft {
+  orderNumber: string;
+  customer: string; // key
+  currency: string;
+  country: string;
+  serviceStartDate: string;
+  priceSchedule: string; // JSON
+  lines: DemoOrderLineDraft[];
 }

@@ -31,11 +31,16 @@ export async function main(argv: string[], deps: SeedDeps = {}): Promise<number>
   const planOnly = args.flags.has('plan');
   const json = args.flags.has('json');
   const reconcilers = deps.reconcilers ?? defaultReconcilers;
+  const env = deps.source ?? loadSeedEnv();
+  if (args.flags.has('with-demo') && !env.SEED_DEMO_PASSWORD) {
+    log('--with-demo needs the environment variable SEED_DEMO_PASSWORD (the password of the demo customers; never committed). Nothing was written.');
+    return EXIT.PREFLIGHT;
+  }
   try {
     const { api } = await getAdminApi({
       mode: planOnly ? 'read' : 'write',
       confirmProject: args.values.get('confirm-project'),
-      source: deps.source ?? loadSeedEnv(),
+      source: env,
       api: deps.api,
     });
     const full = deps.manifest ?? buildManifest({ withDemo: args.flags.has('with-demo') });
@@ -62,6 +67,7 @@ export async function main(argv: string[], deps: SeedDeps = {}): Promise<number>
     }
 
     const ctx = newCtx();
+    if (env.SEED_DEMO_PASSWORD) ctx.demoPassword = env.SEED_DEMO_PASSWORD;
     const plan = await planAll(api, manifest, reconcilers, ctx, await knownLineItemAttributes(api, full));
     if (planOnly) {
       log(json ? JSON.stringify({ plan }) : renderPlan(plan));

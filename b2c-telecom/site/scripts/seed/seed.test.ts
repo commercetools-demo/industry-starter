@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { shippingMethods } from './data/shipping';
-import { buildManifest } from './manifest';
+import { buildPlatformManifest as buildManifest } from './manifest';
 import { main } from './seed';
 import { FakeCt } from './test/fake-ct';
 import { offerType } from './test/fixtures';
