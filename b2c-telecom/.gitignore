@@ -1,0 +1,11 @@
+.envrc
+.env
+.env.*
+!.env.example
+!.env.seed.example
+node_modules/
+.next/
+coverage/
+.DS_Store
+*.tsbuildinfo
+.netlify/
