@@ -49,13 +49,13 @@ describe('checkout page', () => {
     await expect(CheckoutPage({ params })).rejects.toThrow('REDIRECT en-US /cart');
   });
 
-  it('renders the frame: kicker, heading, summary and the hosted flow', async () => {
+  it('renders the frame: kicker, heading and the hosted flow (no summary of ours)', async () => {
     vi.mocked(getSession).mockResolvedValue({ cartId: 'cart-1' });
     vi.mocked(getMappedCart).mockResolvedValue(makeCart());
     renderWithProviders(await CheckoutPage({ params }));
     expect(screen.getByRole('heading', { level: 1, name: 'Checkout' })).toBeInTheDocument();
     expect(screen.getByText('Checkout', { selector: 'h6' })).toBeInTheDocument();
-    expect(screen.getByText('Whole milk 1 L')).toBeInTheDocument();
+    expect(screen.queryByText('Whole milk 1 L')).not.toBeInTheDocument();
     expect(screen.getByTestId('flow')).toBeInTheDocument();
     expect(getMappedCart).toHaveBeenCalledWith('cart-1', { country: 'US', currency: 'USD', locale: 'en-US' });
   });

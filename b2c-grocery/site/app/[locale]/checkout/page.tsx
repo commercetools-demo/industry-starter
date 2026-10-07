@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
-import { CheckoutSummary } from '@/components/checkout/CheckoutSummary';
 import { redirect } from '@/i18n/routing';
 import { getMappedCart } from '@/lib/ct/cart';
 import { getMarket, getSession } from '@/lib/session';
@@ -13,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /**
- * Hosted checkout frame (D-035): kicker, H1, our compact summary and the inline Complete Checkout.
+ * Hosted checkout frame (D-035): kicker, H1, and the inline Complete Checkout (its own order summary replaces ours).
  * No (or an empty / no longer Active) session cart goes back to the bag.
  */
 export default async function CheckoutPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -28,12 +27,7 @@ export default async function CheckoutPage({ params }: { params: Promise<{ local
     <div className="page py-[calc(var(--space-8)*1.2)] px-(--space-4) tablet:px-(--space-8)">
       <h6 className="text-accent-700">{t('kicker')}</h6>
       <h1 className="mb-(--space-6) text-[52px]">{t('title')}</h1>
-      <div className="grid items-start gap-[42px] desktop:grid-cols-[1.4fr_1fr]">
-        <div className="order-2 desktop:order-1">
-          <CheckoutFlow />
-        </div>
-        <aside className="order-1 desktop:order-2">{cart ? <CheckoutSummary cart={cart} /> : null}</aside>
-      </div>
+      <CheckoutFlow />
     </div>
   );
 }

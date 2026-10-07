@@ -13,7 +13,7 @@ vi.mock('@commercetools/checkout-browser-sdk', () => ({ checkoutFlow: (options: 
 
 import { CheckoutFlow, sdkLocale } from './CheckoutFlow';
 
-type Options = { projectKey: string; region: string; sessionId: string; locale: string; onInfo: (m: unknown) => void };
+type Options = { projectKey: string; region: string; sessionId: string; locale: string; styles: Record<string, string>; onInfo: (m: unknown) => void };
 const session = { sessionId: 'sess-1', projectKey: 'proj', region: 'us-central1.gcp' };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });
 const fetchMock = vi.fn();
@@ -36,6 +36,7 @@ describe('CheckoutFlow', () => {
     const { container } = renderWithProviders(<CheckoutFlow />, { locale: 'en-US' });
     const options = await sdkOptions();
     expect(options).toMatchObject({ projectKey: 'proj', region: 'us-central1.gcp', sessionId: 'sess-1', locale: 'en-US' });
+    expect(options.styles['--font-family']).toBe('system-ui');
     expect(container.querySelector('[data-ctc]')).not.toBeNull();
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0][0]).toBe('/api/checkout/session');

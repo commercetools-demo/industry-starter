@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { useCheckoutSession } from '@/hooks/useCheckoutSession';
 import { useRouter } from '@/i18n/routing';
 import { parseCheckoutEvent } from '@/lib/checkout-events';
+import { checkoutStyles } from '@/lib/checkout-styles';
 
 /** The hosted checkout knows `de` and `en-US` (docs: Locales); `de-DE` is not on its list and would fall back to English. */
 export const sdkLocale = (locale: string): string => (locale.startsWith('de') ? 'de' : locale);
@@ -54,6 +55,7 @@ export function CheckoutFlow() {
         sessionId,
         locale: sdkLocale(locale),
         skipPaymentSuccessPage: true,
+        styles: checkoutStyles(),
         onInfo: (message) => {
           const event = parseCheckoutEvent(message);
           // `checkout_completed` and `order_created` both arrive: hand the order over once.
