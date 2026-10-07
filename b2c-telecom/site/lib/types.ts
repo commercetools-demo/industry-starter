@@ -772,6 +772,9 @@ export interface SavedListLine {
   lineId: string;
   offerKey: string;
   name: string;
+  /** The term of the saved variant (the UI translates it); null for lines without one. */
+  term: TermKey | null;
+  /** Literal descriptor of a variant without a term (a handset: "Black · 256 GB"); '' otherwise. */
   variantLabel: string;
   quantity: number;
   saved: Money | null;
