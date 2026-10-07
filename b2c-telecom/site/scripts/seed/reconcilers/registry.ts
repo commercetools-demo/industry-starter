@@ -1,8 +1,11 @@
 import type { AnyReconciler, Kind } from '../types';
+import { cartDiscountReconciler } from './cartDiscount';
 import { categoryReconciler } from './category';
 import { customerGroupReconciler } from './customerGroup';
+import { discountCodeReconciler } from './discountCode';
 import { productTypeReconciler } from './productType';
 import { recurrencePolicyReconciler } from './recurrencePolicy';
+import { shippingMethodReconciler } from './shippingMethod';
 import { taxCategoryReconciler } from './taxCategory';
 import { typeReconciler } from './type';
 import { zoneCoverageReconciler } from './zoneCoverage';
@@ -16,6 +19,9 @@ export const reconcilers: AnyReconciler[] = [
   recurrencePolicyReconciler,
   productTypeReconciler,
   categoryReconciler,
+  shippingMethodReconciler,
+  cartDiscountReconciler,
+  discountCodeReconciler,
 ];
 
 export function getReconciler(kind: Kind): AnyReconciler | undefined {

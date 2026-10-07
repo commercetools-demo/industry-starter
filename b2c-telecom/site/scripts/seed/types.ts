@@ -61,6 +61,14 @@ export interface Ctx {
   zoneKeys: Record<string, string>;
 }
 
+/** Thrown by a reconciler when the platform refuses a change because of another resource: the item is skipped. */
+export class SkipError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SkipError';
+  }
+}
+
 export interface Reconciler<D extends Draft = Draft, R = unknown> {
   kind: Kind;
   order: number;

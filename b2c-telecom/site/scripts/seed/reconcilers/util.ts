@@ -26,6 +26,15 @@ export function deepEqual(a: unknown, b: unknown): boolean {
   return true;
 }
 
+/** True when every field of `draft` is present with the same value in `existing` (extra fields in `existing` are ignored). */
+export function covers(existing: unknown, draft: unknown): boolean {
+  if (draft === undefined) return true;
+  if (draft === null || typeof draft !== 'object') return existing === draft;
+  if (existing === null || typeof existing !== 'object') return false;
+  if (Array.isArray(draft)) return Array.isArray(existing) && existing.length === draft.length && draft.every((d, i) => covers(existing[i], d));
+  return Object.entries(draft as Obj).every(([k, v]) => covers((existing as Obj)[k], v));
+}
+
 /** Compares only the fields that the draft sets (undefined in the draft means "not managed"). */
 export function field(changes: Change[], path: string, from: unknown, to: unknown): boolean {
   if (to === undefined || deepEqual(from, to)) return false;

@@ -1,6 +1,6 @@
 // Planning and execution of a seed run. Sequential on purpose (category locking, version conflicts).
 import { CtHttpError, type CtApi } from './lib';
-import type { AnyReconciler, Change, Ctx, Draft, Kind, Outcome, Plan, PlanItem, SeedManifest } from './types';
+import { SkipError, type AnyReconciler, Change, Ctx, Draft, Kind, Outcome, Plan, PlanItem, SeedManifest } from './types';
 
 export interface ItemResult {
   kind: Kind;
@@ -125,7 +125,10 @@ export async function applyPlan(api: CtApi, manifest: SeedManifest, plan: Plan, 
       try {
         outcome = await applyOne(api, r, draft, ctx);
       } catch (err) {
-        outcome = { status: 'failed', error: err instanceof Error ? err.message : String(err) };
+        outcome =
+          err instanceof SkipError
+            ? { status: 'skipped', reason: err.message }
+            : { status: 'failed', error: err instanceof Error ? err.message : String(err) };
       }
     }
     if (outcome.status === 'skipped') blocked.set(id, outcome.reason);
