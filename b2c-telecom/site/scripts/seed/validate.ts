@@ -24,8 +24,8 @@ export interface ValidationError {
 const LOCALE_KEY = /^[a-z]{2}-[A-Z]{2}$/;
 const REQUIRED_LOCALES = ['en-US', 'de-DE'];
 const ATTRIBUTE_IN_PREDICATE = /attributes\.(?:`([^`]+)`|([A-Za-z0-9_-]+))/g;
-/** Kinds whose key is not a `malva-` key (zoneCoverage uses the country code). */
-const UNOWNED_KEY_KINDS: Kind[] = ['zoneCoverage'];
+/** Kinds whose key is not a `malva-` key (zoneCoverage uses the country code, custom objects a postal code in a `malva-` container). */
+const UNOWNED_KEY_KINDS: Kind[] = ['zoneCoverage', 'customObject'];
 
 export function danglingMessage(from: { kind: Kind; key: string }, kind: Kind, key: string): string {
   return `Dangling reference: ${from.kind} "${from.key}" references ${kind} "${key}", which no manifest defines and the project does not hold`;
@@ -113,6 +113,9 @@ export async function validateManifest(
       seen.add(draft.key);
       if (!UNOWNED_KEY_KINDS.includes(kind) && !isOwnedKey(kind, draft.key)) {
         errors.push({ kind, key: draft.key, message: `Key "${draft.key}" is not an owned key (malva- prefix) for ${kind}` });
+      }
+      if (kind === 'customObject' && !String((draft as { container?: unknown }).container ?? '').startsWith('malva-')) {
+        errors.push({ kind, key: draft.key, message: `Custom object "${draft.key}" is not in a malva- container` });
       }
       checkLocalized(draft, kind, draft.key, kind, errors);
     }

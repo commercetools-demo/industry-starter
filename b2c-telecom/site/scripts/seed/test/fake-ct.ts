@@ -510,6 +510,16 @@ export class FakeCt implements CtApi {
       case 'changeSlug': return set('slug');
       case 'setDescription': return set('description');
       case 'changeOrderHint': return set('orderHint');
+      case 'addAsset': return void (r.assets = [...arr(r.assets), a.asset]);
+      case 'removeAsset': return void (r.assets = arr(r.assets).filter((x) => x.key !== a.assetKey));
+      case 'changeAssetName': {
+        const asset = arr(r.assets).find((x) => x.key === a.assetKey) ?? unsupported();
+        return void (asset.name = a.name);
+      }
+      case 'setAssetSources': {
+        const asset = arr(r.assets).find((x) => x.key === a.assetKey) ?? unsupported();
+        return void (asset.sources = a.sources);
+      }
       case 'changeParent':
         r.parent = a.parent;
         r.ancestors = this.ancestorsOf(a.parent as Obj);
@@ -622,6 +632,12 @@ export class FakeCt implements CtApi {
         v.attributes = a.value === undefined ? rest : [...rest, { name: a.name, value: a.value }];
         return;
       }
+      case 'setAttributeInAllVariants':
+        for (const v of variants()) {
+          const rest = arr(v.attributes).filter((x) => x.name !== a.name);
+          v.attributes = a.value === undefined ? rest : [...rest, { name: a.name, value: a.value }];
+        }
+        return;
       case 'setPrices': bySku(a.sku).prices = arr(a.prices).map((p) => ({ id: `price-${++this.counter}`, ...p })); return;
       case 'addExternalImage': {
         const v = bySku(a.sku);
