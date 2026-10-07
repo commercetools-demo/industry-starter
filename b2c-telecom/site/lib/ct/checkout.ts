@@ -126,7 +126,7 @@ export async function saveDetails(session: SessionData, market: Market, input: D
     if (input.billingAddress) actions.push({ action: 'setBillingAddress', address: toDraft(input.billingAddress, contactEmail, input.phone) });
     if (input.phone !== undefined && ct.shippingAddress) actions.push({ action: 'setShippingAddress', address: { ...(ct.shippingAddress as Address), phone: input.phone } });
   }
-  const updated = await updateCart(ct, actions);
+  const updated = actions.length === 0 ? ct : await updateCart(ct, actions);
   const { state } = await stateOf(updated, session, market);
   if (input.serviceAddress) {
     const { notServiceable } = splitIssues(state.cart.issues);

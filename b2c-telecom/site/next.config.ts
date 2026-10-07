@@ -19,6 +19,9 @@ const nextConfig: NextConfig = {
       { source: '/:locale/(login|register|forgot-password|reset-password)', headers: [{ key: 'Cache-Control', value: 'no-store' }] },
       // The account pages (S, T, V) show one customer's orders and data: never cached by a browser or a shared proxy.
       { source: '/:locale/account/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] },
+      // The checkout and the confirmation page show one buyer's cart and order (U): never cached.
+      { source: '/:locale/bundle/checkout', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] },
+      { source: '/:locale/order-confirmation/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] },
     ];
   },
   images: {

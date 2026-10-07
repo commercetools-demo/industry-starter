@@ -8,3 +8,5 @@ export const KEY_ADDRESSES = 'account:addresses';
 export const KEY_PAYMENT_METHODS = 'account:payment-methods';
 export const KEY_LISTS = 'account:lists';
 export const keyList = (id: string): string => `account:lists:${id}`;
+/** The checkout state (U): the cart plus contact, addresses and delivery; the server page passes it as the SWR fallback. */
+export const KEY_CHECKOUT = '/api/checkout/review';
