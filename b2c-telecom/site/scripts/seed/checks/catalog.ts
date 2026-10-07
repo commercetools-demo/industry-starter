@@ -20,8 +20,8 @@ export const EXPECTED = {
   products: 52,
   offers: 27,
   inventory: 19,
-  cartDiscounts: 9,
-  discountCodes: 2,
+  cartDiscounts: 6,
+  discountCodes: 1,
   policies: 5,
   serviceability: 11,
 } as const;
@@ -44,7 +44,7 @@ function liveVariants(p: LiveProduct): LiveVariant[] {
 const keysWithPrefix = (items: Obj[], prefix: string): string[] => items.map((i) => String(i.key ?? i.sku ?? '')).filter((k) => k.startsWith(prefix));
 
 export const catalogCounts: Check = {
-  name: 'catalog counts (6 product types, 4 custom types, 8 categories, 52 products, 19 inventory entries, 9 discounts, 2 codes, 5 policies, 11 serviceability objects)',
+  name: 'catalog counts (6 product types, 4 custom types, 8 categories, 52 products, 19 inventory entries, at least 6 discounts, at least 1 code, 5 policies, 11 serviceability objects)',
   async run(api) {
     const problems: string[] = [];
     const expect = (label: string, actual: number, wanted: number): void => {
@@ -58,8 +58,12 @@ export const catalogCounts: Check = {
     const unpublished = products.filter((p) => (p.masterData as { published?: boolean }).published !== true).map((p) => String(p.key));
     if (unpublished.length > 0) problems.push(`unpublished products: ${unpublished.join(', ')}`);
     expect('inventory entries', (await getAll(api, 'inventory')).filter((i) => String(i.sku).startsWith('MLV-')).length, EXPECTED.inventory);
-    expect('cart discounts', keysWithPrefix(await getAll(api, 'cart-discounts'), 'malva-cd-').length, EXPECTED.cartDiscounts);
-    expect('discount codes', keysWithPrefix(await getAll(api, 'discount-codes'), 'malva-dc-').length, EXPECTED.discountCodes);
+    // At least: workstreams L and M seed further discounts and codes with their own scripts (seed:discounts), outside this manifest.
+    const atLeast = (label: string, actual: number, wanted: number): void => {
+      if (actual < wanted) problems.push(`${label}: ${actual} (expected at least ${wanted})`);
+    };
+    atLeast('cart discounts', keysWithPrefix(await getAll(api, 'cart-discounts'), 'malva-cd-').length, EXPECTED.cartDiscounts);
+    atLeast('discount codes', keysWithPrefix(await getAll(api, 'discount-codes'), 'malva-dc-').length, EXPECTED.discountCodes);
     expect('recurrence policies', keysWithPrefix(await getAll(api, 'recurrence-policies'), 'malva-').length, EXPECTED.policies);
     expect('serviceability objects', (await getAll(api, 'custom-objects', { where: `container="${SERVICEABILITY_CONTAINER}"` })).length, EXPECTED.serviceability);
     return problems.length === 0 ? ok() : fail(problems.join('; '));
