@@ -4,6 +4,7 @@ import { unstable_cache } from 'next/cache';
 import { CATALOG_TTL, PRODUCT_TYPE_IDS_TTL } from '@/lib/config/cache';
 import { findDescendantKeys, flattenTree } from '@/lib/mappers/category';
 import { mapFacts, mapOffer, mergeFacts } from '@/lib/mappers/offer';
+import { filterReleased } from '@/lib/offers/release';
 import type { Locale, Market, Offer, OfferFacts } from '@/lib/types';
 import { getCategoryTree } from './categories';
 import { getApiRoot } from './client';
@@ -73,7 +74,7 @@ export async function getCatalogFacts(locale: Locale): Promise<Record<string, Of
   return read();
 }
 
-/** Every sellable offer of the market, priced for it. Offers without facts or without a market price are hidden and logged. */
+/** Every sellable offer of the market, priced for it, inside its release window. Offers without facts or without a market price are hidden and logged. */
 export async function getAllOffers(market: Market): Promise<Offer[]> {
   const read = unstable_cache(
     async (): Promise<Offer[]> => {
@@ -104,7 +105,9 @@ export async function getAllOffers(market: Market): Promise<Offer[]> {
     ['offers', market.locale, market.currency, market.country],
     { revalidate: CATALOG_TTL, tags: CACHE_TAGS },
   );
-  return read();
+  // Coordinated release (X, D-057): the cache keeps the raw offers including start/end time; the release window is applied on every
+  // read, so an offer appears and disappears at its instant, not after the cache TTL.
+  return filterReleased(await read(), new Date());
 }
 
 /** `null` for an unknown, unpublished or hidden offer. */
