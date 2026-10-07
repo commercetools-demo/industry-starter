@@ -1,1 +1,807 @@
-{}
+{
+  "malva-cat-phone-plans": {
+    "term": "family phone call",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/smiling-woman-with-baby-texting-on-phone-at-home-gm1314404449-402636070"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/2112655025/photo/son-visiting-his-parents.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/son-visiting-his-parents-gm2112655025-567055504"
+      }
+    ]
+  },
+  "malva-cat-devices": {
+    "term": "smartphone",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/2199471016/photo/close-up-hands-of-unrecognizable-man-holding-and-using-smartphone-standing-on-city-street.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/close-up-hands-of-unrecognizable-man-holding-and-using-smartphone-standing-on-city-gm2199471016-617222877"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1322157897/photo/close-up-of-a-businessman-hand-holding-a-smartphone-white-screen-is-blank-the-background-is.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/close-up-of-a-businessman-hand-holding-a-smartphone-white-screen-is-blank-the-gm1322157897-408206969"
+      }
+    ]
+  },
+  "malva-cat-home-wireless": {
+    "term": "home wifi router 5g",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1141320660/photo/wireless-internet-concept-mobile-network.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/wireless-internet-concept-mobile-network-gm1141320660-305721765"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/2262414223/photo/woman-hand-plugging-rj45-ethernet-cable-into-white-wifi-router-near-laptop-at-home-office-desk.jpg",
+        "dimensions": {
+          "h": 407,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/woman-hand-plugging-rj45-ethernet-cable-into-white-wifi-router-near-laptop-at-home-gm2262414223-675199998"
+      }
+    ]
+  },
+  "malva-cat-cable-internet": {
+    "term": "cable internet router home",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1355612066/photo/technician-installing-wifi-router-at-home.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/technician-installing-wifi-router-at-home-gm1355612066-430043810"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-gm1270583054-373476334"
+      }
+    ]
+  },
+  "malva-cat-add-ons": {
+    "term": "streaming entertainment couch",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1412871535/photo/friends-watching-movies-together-at-home.jpg",
+        "dimensions": {
+          "h": 369,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/friends-watching-movies-together-at-home-gm1412871535-462135719"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1278677367/photo/man-choosing-movie-for-streaming-on-tablet-computer.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/man-choosing-movie-for-streaming-on-tablet-computer-gm1278677367-377540394"
+      }
+    ]
+  },
+  "malva-cat-streaming": {
+    "term": "streaming entertainment couch",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1412871535/photo/friends-watching-movies-together-at-home.jpg",
+        "dimensions": {
+          "h": 369,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/friends-watching-movies-together-at-home-gm1412871535-462135719"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1278677367/photo/man-choosing-movie-for-streaming-on-tablet-computer.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/man-choosing-movie-for-streaming-on-tablet-computer-gm1278677367-377540394"
+      }
+    ]
+  },
+  "malva-cat-protection": {
+    "term": "phone security protection",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1303145712/photo/phishing-mobile-phone-hacker-or-cyber-scam-concept-password-and-login-pass-code-in-smartphone.jpg",
+        "dimensions": {
+          "h": 412,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/phishing-mobile-phone-hacker-or-cyber-scam-concept-password-and-login-pass-code-in-gm1303145712-394684017"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1341253865/photo/businessman-using-smartphone-to-input-passcode-or-password-for-access-to-mobile-phone.jpg",
+        "dimensions": {
+          "h": 348,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/businessman-using-smartphone-to-input-passcode-or-password-for-access-to-mobile-gm1341253865-421055215"
+      }
+    ]
+  },
+  "malva-cat-equipment": {
+    "term": "wifi router modem",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/91692641/photo/a-cable-modem-and-router-isolated-on-a-white-background.jpg",
+        "dimensions": {
+          "h": 407,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/a-cable-modem-and-router-isolated-on-a-white-background-gm91692641-5882110"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-gm1270583054-373476334"
+      }
+    ]
+  },
+  "malva-offer-cable-100": {
+    "term": "cable internet router home",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1355612066/photo/technician-installing-wifi-router-at-home.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/technician-installing-wifi-router-at-home-gm1355612066-430043810"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-gm1270583054-373476334"
+      }
+    ]
+  },
+  "malva-offer-cable-500": {
+    "term": "cable internet router home",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1355612066/photo/technician-installing-wifi-router-at-home.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/technician-installing-wifi-router-at-home-gm1355612066-430043810"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-gm1270583054-373476334"
+      }
+    ]
+  },
+  "malva-offer-cable-gig": {
+    "term": "cable internet router home",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1355612066/photo/technician-installing-wifi-router-at-home.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/technician-installing-wifi-router-at-home-gm1355612066-430043810"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-gm1270583054-373476334"
+      }
+    ]
+  },
+  "malva-offer-cable-existing-customer": {
+    "term": "cable internet router home",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1355612066/photo/technician-installing-wifi-router-at-home.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/technician-installing-wifi-router-at-home-gm1355612066-430043810"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-gm1270583054-373476334"
+      }
+    ]
+  },
+  "malva-offer-wireless-lite": {
+    "term": "home wifi router 5g",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1141320660/photo/wireless-internet-concept-mobile-network.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/wireless-internet-concept-mobile-network-gm1141320660-305721765"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/2262414223/photo/woman-hand-plugging-rj45-ethernet-cable-into-white-wifi-router-near-laptop-at-home-office-desk.jpg",
+        "dimensions": {
+          "h": 407,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/woman-hand-plugging-rj45-ethernet-cable-into-white-wifi-router-near-laptop-at-home-gm2262414223-675199998"
+      }
+    ]
+  },
+  "malva-offer-wireless-5g": {
+    "term": "home wifi router 5g",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1141320660/photo/wireless-internet-concept-mobile-network.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/wireless-internet-concept-mobile-network-gm1141320660-305721765"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/2262414223/photo/woman-hand-plugging-rj45-ethernet-cable-into-white-wifi-router-near-laptop-at-home-office-desk.jpg",
+        "dimensions": {
+          "h": 407,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/woman-hand-plugging-rj45-ethernet-cable-into-white-wifi-router-near-laptop-at-home-gm2262414223-675199998"
+      }
+    ]
+  },
+  "malva-offer-wireless-5g-plus": {
+    "term": "home wifi router 5g",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1141320660/photo/wireless-internet-concept-mobile-network.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/wireless-internet-concept-mobile-network-gm1141320660-305721765"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/2262414223/photo/woman-hand-plugging-rj45-ethernet-cable-into-white-wifi-router-near-laptop-at-home-office-desk.jpg",
+        "dimensions": {
+          "h": 407,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/woman-hand-plugging-rj45-ethernet-cable-into-white-wifi-router-near-laptop-at-home-gm2262414223-675199998"
+      }
+    ]
+  },
+  "malva-offer-phone-essential": {
+    "term": "family phone call",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/smiling-woman-with-baby-texting-on-phone-at-home-gm1314404449-402636070"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/2112655025/photo/son-visiting-his-parents.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/son-visiting-his-parents-gm2112655025-567055504"
+      }
+    ]
+  },
+  "malva-offer-phone-plus": {
+    "term": "family phone call",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/smiling-woman-with-baby-texting-on-phone-at-home-gm1314404449-402636070"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/2112655025/photo/son-visiting-his-parents.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/son-visiting-his-parents-gm2112655025-567055504"
+      }
+    ]
+  },
+  "malva-offer-phone-unlimited": {
+    "term": "family phone call",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/smiling-woman-with-baby-texting-on-phone-at-home-gm1314404449-402636070"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/2112655025/photo/son-visiting-his-parents.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/son-visiting-his-parents-gm2112655025-567055504"
+      }
+    ]
+  },
+  "malva-offer-phone-unlimited-max": {
+    "term": "family phone call",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/smiling-woman-with-baby-texting-on-phone-at-home-gm1314404449-402636070"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/2112655025/photo/son-visiting-his-parents.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/son-visiting-his-parents-gm2112655025-567055504"
+      }
+    ]
+  },
+  "malva-offer-phone-online-only": {
+    "term": "family phone call",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/smiling-woman-with-baby-texting-on-phone-at-home-gm1314404449-402636070"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/2112655025/photo/son-visiting-his-parents.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/son-visiting-his-parents-gm2112655025-567055504"
+      }
+    ]
+  },
+  "malva-offer-spotify": {
+    "term": "music headphones",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/502324324/photo/enjoyment.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/enjoyment-gm502324324-81844365"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1280339057/photo/young-woman-relaxing-at-home-and-listening-music.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/young-woman-relaxing-at-home-and-listening-music-gm1280339057-378673273"
+      }
+    ]
+  },
+  "malva-offer-appletv": {
+    "term": "living room tv",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/2162496231/photo/living-room-interior-with-lcd-tv-set-potted-plant-armchair-and-decorations.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/living-room-interior-with-lcd-tv-set-potted-plant-armchair-and-decorations-gm2162496231-582888021"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1332099020/photo/modern-living-room-interior-with-smart-tv-sofa-floor-lamp-and-potted-plant.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/modern-living-room-interior-with-smart-tv-sofa-floor-lamp-and-potted-plant-gm1332099020-415041486"
+      }
+    ]
+  },
+  "malva-offer-applemusic": {
+    "term": "listening to music",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1299480266/photo/woman-listening-to-music-wear-wireless-white-headphones-using-mobile-smart-phone-drinks-tea.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/woman-listening-to-music-wear-wireless-white-headphones-using-mobile-smart-phone-gm1299480266-392091109"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1280339057/photo/young-woman-relaxing-at-home-and-listening-music.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/young-woman-relaxing-at-home-and-listening-music-gm1280339057-378673273"
+      }
+    ]
+  },
+  "malva-offer-netflix": {
+    "term": "watching tv couch",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1412871535/photo/friends-watching-movies-together-at-home.jpg",
+        "dimensions": {
+          "h": 369,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/friends-watching-movies-together-at-home-gm1412871535-462135719"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1325684559/photo/shot-of-a-mature-man-relaxing-on-the-sofa-at-home.jpg",
+        "dimensions": {
+          "h": 323,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/shot-of-a-mature-man-relaxing-on-the-sofa-at-home-gm1325684559-410626744"
+      }
+    ]
+  },
+  "malva-offer-disneyplus": {
+    "term": "family movie night",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1714834062/photo/family-watching-a-movie-at-home-movie-night.jpg",
+        "dimensions": {
+          "h": 407,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/family-watching-a-movie-at-home-movie-night-gm1714834062-540127410"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/872006226/photo/family-enjoying-movie-night-at-home-together.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/family-enjoying-movie-night-at-home-together-gm872006226-243581314"
+      }
+    ]
+  },
+  "malva-offer-cloud-200": {
+    "term": "cloud storage laptop",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/2204892673/photo/woman-using-smartphone-and-laptop-while-traveling-on-a-train.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/woman-using-smartphone-and-laptop-while-traveling-on-a-train-gm2204892673-622317867"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/532187422/photo/cloud-uploading-from-mobile-phone-for-file-sharing-and-collaboration.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/cloud-uploading-from-mobile-phone-for-file-sharing-and-collaboration-gm532187422-94159563"
+      }
+    ]
+  },
+  "malva-offer-device-protect": {
+    "term": "smartphone screen protector",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1278796841/photo/man-cleaning-the-phone-display-before-applying-scratch-resistant-protective-glass.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/man-cleaning-the-phone-display-before-applying-scratch-resistant-protective-glass-gm1278796841-377616572"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/922690800/photo/man-applying-protective-tempered-glass-to-phone-screen.jpg",
+        "dimensions": {
+          "h": 388,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/man-applying-protective-tempered-glass-to-phone-screen-gm922690800-253269657"
+      }
+    ]
+  },
+  "malva-offer-secure": {
+    "term": "phone security protection",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/1303145712/photo/phishing-mobile-phone-hacker-or-cyber-scam-concept-password-and-login-pass-code-in-smartphone.jpg",
+        "dimensions": {
+          "h": 412,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/phishing-mobile-phone-hacker-or-cyber-scam-concept-password-and-login-pass-code-in-gm1303145712-394684017"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1341253865/photo/businessman-using-smartphone-to-input-passcode-or-password-for-access-to-mobile-phone.jpg",
+        "dimensions": {
+          "h": 348,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/businessman-using-smartphone-to-input-passcode-or-password-for-access-to-mobile-gm1341253865-421055215"
+      }
+    ]
+  },
+  "malva-offer-router-ac1200": {
+    "term": "wifi router modem",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/91692641/photo/a-cable-modem-and-router-isolated-on-a-white-background.jpg",
+        "dimensions": {
+          "h": 407,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/a-cable-modem-and-router-isolated-on-a-white-background-gm91692641-5882110"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-gm1270583054-373476334"
+      }
+    ]
+  },
+  "malva-offer-router-ax3000": {
+    "term": "wifi router modem",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/91692641/photo/a-cable-modem-and-router-isolated-on-a-white-background.jpg",
+        "dimensions": {
+          "h": 407,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/a-cable-modem-and-router-isolated-on-a-white-background-gm91692641-5882110"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-gm1270583054-373476334"
+      }
+    ]
+  },
+  "malva-offer-mesh-be9300": {
+    "term": "wifi router modem",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/91692641/photo/a-cable-modem-and-router-isolated-on-a-white-background.jpg",
+        "dimensions": {
+          "h": 407,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/a-cable-modem-and-router-isolated-on-a-white-background-gm91692641-5882110"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-gm1270583054-373476334"
+      }
+    ]
+  },
+  "malva-offer-modem-docsis31": {
+    "term": "wifi router modem",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/91692641/photo/a-cable-modem-and-router-isolated-on-a-white-background.jpg",
+        "dimensions": {
+          "h": 407,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/a-cable-modem-and-router-isolated-on-a-white-background-gm91692641-5882110"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-gm1270583054-373476334"
+      }
+    ]
+  },
+  "malva-offer-5g-gateway": {
+    "term": "wifi router modem",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/91692641/photo/a-cable-modem-and-router-isolated-on-a-white-background.jpg",
+        "dimensions": {
+          "h": 407,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/a-cable-modem-and-router-isolated-on-a-white-background-gm91692641-5882110"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1270583054/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-the-cable.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/selective-focus-at-router-internet-router-on-working-table-with-blurred-man-connect-gm1270583054-373476334"
+      }
+    ]
+  },
+  "malva-offer-phone-nova-5g": {
+    "term": "smartphone",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/2199471016/photo/close-up-hands-of-unrecognizable-man-holding-and-using-smartphone-standing-on-city-street.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/close-up-hands-of-unrecognizable-man-holding-and-using-smartphone-standing-on-city-gm2199471016-617222877"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1322157897/photo/close-up-of-a-businessman-hand-holding-a-smartphone-white-screen-is-blank-the-background-is.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/close-up-of-a-businessman-hand-holding-a-smartphone-white-screen-is-blank-the-gm1322157897-408206969"
+      }
+    ]
+  },
+  "malva-offer-phone-nova-pro": {
+    "term": "smartphone",
+    "images": [
+      {
+        "url": "https://media.istockphoto.com/id/2199471016/photo/close-up-hands-of-unrecognizable-man-holding-and-using-smartphone-standing-on-city-street.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/close-up-hands-of-unrecognizable-man-holding-and-using-smartphone-standing-on-city-gm2199471016-617222877"
+      },
+      {
+        "url": "https://media.istockphoto.com/id/1322157897/photo/close-up-of-a-businessman-hand-holding-a-smartphone-white-screen-is-blank-the-background-is.jpg",
+        "dimensions": {
+          "h": 408,
+          "w": 612
+        },
+        "photographer": null,
+        "page": "https://www.istockphoto.com/photo/close-up-of-a-businessman-hand-holding-a-smartphone-white-screen-is-blank-the-gm1322157897-408206969"
+      }
+    ]
+  }
+}
