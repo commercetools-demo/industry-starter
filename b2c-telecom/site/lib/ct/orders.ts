@@ -1,9 +1,13 @@
 import 'server-only';
 import { cache } from 'react';
+import type { Cart as CtCart } from '@commercetools/platform-sdk';
+import { ApiError } from '@/lib/api-error';
 import { DASHBOARD_ORDERS_LIMIT, NOT_RECURRING_GENERATED, ORDER_STATUS_PREDICATE, ORDERS_PAGE_SIZE, RECURRING_SUMMARY_LIMIT, type OrderStatusFilter } from '@/lib/config/account';
 import { mapOrder } from '@/lib/mappers/order';
-import type { Locale, Order, RecurringSummary } from '@/lib/types';
+import type { Locale, Order, RecurringSummary, ReorderUnavailable } from '@/lib/types';
+import { getCartById, updateCart } from './cart';
 import { getApiRoot } from './client';
+import { planReorder } from './reorder';
 import { withTimeout } from './timeout';
 
 // Orders of the signed-in customer (D-070: no /me endpoints). Every function takes the customer id from the SESSION and filters by it;
@@ -82,3 +86,20 @@ export const getCustomerOrdersCached: (customerId: string, locale: Locale) => Pr
 
 /** The recurring-orders read of the dashboard (separate from the orders read: its failure only affects the next bill date). */
 export const getRecurringSummariesCached: (customerId: string) => Promise<RecurringSummary[]> = cache(getRecurringSummaries);
+
+/**
+ * "Buy again": Replicate Cart from the order (a replicated cart is priced from today's catalog), then the plan of `planReorder`: lines that
+ * could not be reused are removed and returned as `unavailable`, parent links and order-only custom fields are repaired. The caller has
+ * already proved ownership (`getOrderForCustomer`); the customer's previous active cart is left alone. Returns the fresh, expanded cart.
+ */
+export async function replicateOrderToCart(order: Order): Promise<{ cart: CtCart; unavailable: ReorderUnavailable[] }> {
+  const { body: replica } = await withTimeout(
+    getApiRoot().carts().replicate().post({ body: { reference: { typeId: 'order', id: order.id } } }).execute(),
+    'orders.replicate',
+  );
+  const { actions, unavailable } = planReorder(order, replica);
+  if (actions.length > 0) await updateCart(replica, actions);
+  const cart = await getCartById(replica.id);
+  if (!cart) throw new ApiError('INTERNAL', 'The new bundle could not be read');
+  return { cart, unavailable };
+}
