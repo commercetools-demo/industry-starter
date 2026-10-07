@@ -158,7 +158,7 @@ Message namespace `account` (both locales). Key copy (en-US / de-DE):
 - [x] S-09 [SKILL: commercetools-storefront] Reorder: `replicateOrderToCart` in `lib/ct/orders.ts`, `POST /api/orders/[orderNumber]/reorder`, `ReorderButton` with the unavailable-items dialog. Verify the replicate request shape in the docs/OAS and record it. Tests: `app/api/orders/[orderNumber]/reorder/route.test.ts` (unavailable SKU reported and removed, recurrence lost reported, foreign order 404, session cart replaced, original cart untouched), `components/account/ReorderButton.test.tsx`.
 - [x] S-10 `PrintReceiptButton`, `receipt.css` print rules. Tests: `components/account/PrintReceiptButton.test.tsx` (calls `window.print`), a CSS test that the print stylesheet hides `[data-print="hide"]` elements.
 - [x] S-11 [SKILL: commercetools-platform] Write `scripts/seed/create-qa-order.ts`, `scripts/seed/data/qa-labels.ts`, `scripts/seed/cleanup-qa.ts` per section 7. Tests: `scripts/seed/create-qa-order.test.ts` (parseArgs bounds, drafts for each scenario, status actions, cleanup email pattern, refuses non-allow-listed project, never prints the password anywhere except the one console line). Run it live once with OA-03 and record any difference in `PROJECT-FINDINGS.md`.
-- [ ] S-12 de-DE review of every `account.*` key, a11y pass (landmarks, table headers `scope`, status not conveyed by color only), run `npm run verify`, STATUS `Ready for review`.
+- [x] S-12 de-DE review of every `account.*` key, a11y pass (landmarks, table headers `scope`, status not conveyed by color only), run `npm run verify`, STATUS `Ready for review`.
 
 ## Unit tests (scenario → test)
 | Scenario (exact title from the spec) | Capability | Test (file → `it(...)` name) |
