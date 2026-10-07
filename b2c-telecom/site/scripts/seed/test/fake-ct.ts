@@ -385,6 +385,9 @@ export class FakeCt implements CtApi {
     if (collection === 'products' && (res.masterData as { published: boolean }).published) {
       throw httpError(400, 'InvalidOperation', 'Product must be unpublished before deletion');
     }
+    if (collection === 'recurring-orders' && !['Canceled', 'Expired'].includes(String(res.recurringOrderState))) {
+      throw httpError(400, 'InvalidOperation', 'Only canceled or expired recurring orders can be deleted');
+    }
     if (collection === 'product-types' && this.list('products').some((p) => (p.productType as Obj).id === res.id)) {
       throw httpError(400, 'InvalidOperation', 'Product type is in use');
     }
@@ -420,7 +423,10 @@ export class FakeCt implements CtApi {
         if (a.action === 'setRestockableInDays') return void (r.restockableInDays = a.restockableInDays);
         return unsupported();
       case 'recurring-orders':
-        if (a.action === 'setRecurringOrderState') return void (r.recurringOrderState = a.recurringOrderState);
+        if (a.action === 'setRecurringOrderState') {
+          const type = String((a.recurringOrderState as Obj).type);
+          return void (r.recurringOrderState = type.charAt(0).toUpperCase() + type.slice(1));
+        }
         return unsupported();
       default:
         return unsupported();
