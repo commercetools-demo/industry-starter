@@ -50,3 +50,4 @@ Answer in this file or in chat; the plan continues with the stated default.
 - **Q-013** (from L) G's "first month free" discount stacks on Cable 100 and Air 5G, so the first charge is 0. Intended? Default: keep.
 - **Q-014** (from L) `recurringOrderScope` cannot limit a discount to the first order; the stored schedule stays the promise. Default: accept.
 - **Blocked (OA-05):** L-09 live Checkout spike (P4/P5) and gate M-L-2 need `CTP_CHECKOUT_APP_KEY`; M and U wait on Gate 2 for live payment only. U must not set `paymentStrategy` itself (order refused without payment allocation).
+- **Q-015** (from W) Support mailbox `support@malva.example`, legal text and German copy are placeholders/machine-translated (SO-09). Image-credits page and footer say Pexels but images are iStock with no photographer data (see Q-008).
