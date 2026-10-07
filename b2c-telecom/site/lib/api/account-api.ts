@@ -56,16 +56,23 @@ export interface AccountRouteOptions {
   status?: number;
 }
 
+export interface AccountRouteHooks<T> {
+  /** Runs on the success response before it is sent (a route that changes the session cookie). */
+  after?: (response: NextResponse, data: T, context: CustomerContext) => Promise<void>;
+}
+
 /**
  * Runs one account route: same-origin check for writes, the signed-in customer (401 otherwise), the handler, the JSON answer.
  * Handlers throw `AccountRefusal` or `ApiError`; `redirect()`-style control flow is never used here.
  */
-export async function accountRoute<T>(request: Request, options: AccountRouteOptions, run: (context: CustomerContext) => Promise<T>): Promise<NextResponse> {
+export async function accountRoute<T>(request: Request, options: AccountRouteOptions & AccountRouteHooks<T>, run: (context: CustomerContext) => Promise<T>): Promise<NextResponse> {
   try {
     if (options.mutating) assertSameOrigin(request);
     const context = await requireCustomerApi();
     const data = await run(context);
-    return privately(json(data, { status: options.status ?? 200 }));
+    const response = privately(json(data, { status: options.status ?? 200 }));
+    await options.after?.(response, data, context);
+    return response;
   } catch (error) {
     return failure(error);
   }

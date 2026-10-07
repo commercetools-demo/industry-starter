@@ -790,6 +790,8 @@ export interface SavedListDetail {
 }
 export interface BundleMoveResult {
   added: { lineId: string; offerKey: string; name: string }[];
-  skipped: { lineId: string; offerKey?: string; name: string; reason: { code: string; message: string } }[];
-  cart: Cart;
+  /** `messageKey`/`params` (J/K's `offers.reason.*`) let the UI localize a refusal; `message` is the English fallback. */
+  skipped: { lineId: string; offerKey?: string; name: string; reason: { code: string; message: string; messageKey?: string; params?: Record<string, string | number> } }[];
+  /** The bundle after the move (null when nothing could be added and there is no bundle). */
+  cart: Cart | null;
 }
