@@ -1,5 +1,6 @@
 import type { ReactElement, ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
+import { FooterLegalLinks } from '@/components/content/FooterLegalLinks';
 import { Link } from '@/i18n/routing';
 import { PEXELS_URL } from '@/lib/config/images';
 import type { NavItem } from '@/lib/nav';
@@ -44,6 +45,7 @@ export function SiteFooter({ items, credits }: SiteFooterProps): ReactElement {
           </a>
           {credits}
         </div>
+        <FooterLegalLinks />
       </div>
     </footer>
   );
