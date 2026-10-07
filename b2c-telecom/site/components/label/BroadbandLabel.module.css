@@ -1,0 +1,132 @@
+/* Broadband Facts label: the FCC consumer label format. Deliberately OUTSIDE the brand system (D-053): literal black on white,
+   2px black border, Roboto, no radius, no tokens, no CSS custom properties, so no theme or token change can alter it. */
+.label {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 400px;
+  padding: 14px 16px;
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 0;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+/* The loaded Roboto (next/font) is applied on this inner wrapper so the root keeps its literal declaration. */
+.body {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.title {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+.section {
+  margin-top: 8px;
+  padding-top: 6px;
+}
+
+/* Rule weights signal hierarchy: 8px between major blocks, 4px between sections, 1px between rows, 2px above the footnote. */
+.rule8 {
+  border-top: 8px solid #000;
+}
+.rule4 {
+  border-top: 4px solid #000;
+}
+.rule2 {
+  border-top: 2px solid #000;
+  margin-top: 10px;
+  padding-top: 6px;
+}
+
+.provider {
+  font-size: 17px;
+  font-weight: 700;
+}
+.plan {
+  font-size: 16px;
+}
+.kind {
+  font-size: 13px;
+}
+.disclosure {
+  font-size: 12px;
+  color: #525252;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.priceLabel {
+  font-size: 20px;
+  font-weight: 900;
+}
+.price {
+  font-size: 24px;
+  font-weight: 900;
+}
+.note {
+  font-size: 13px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+}
+.headingSmall {
+  margin: 6px 0 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.headingLarge {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+}
+.headingGap {
+  margin-top: 8px;
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 0;
+  border-top: 1px solid #000;
+}
+.value {
+  font-weight: 700;
+  text-align: right;
+}
+
+.small {
+  font-size: 12px;
+  color: #525252;
+}
+.text {
+  margin: 0;
+  font-size: 13px;
+}
+.underline {
+  text-decoration: underline;
+}
+.footnote {
+  font-size: 11px;
+  color: #3d3d3d;
+}
