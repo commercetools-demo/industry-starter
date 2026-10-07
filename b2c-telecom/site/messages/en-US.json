@@ -18,7 +18,8 @@
       "greetingNoName": "My account"
     },
     "bundle": {
-      "labelCount": "My bundle · {count}"
+      "labelCount": "My bundle · {count}",
+      "label": "My bundle"
     },
     "menu": {
       "open": "Open menu",
@@ -42,7 +43,130 @@
     "placeholder": "Malva Telecom storefront"
   },
   "plp": {},
-  "bundle": {},
+  "bundle": {
+    "title": "My bundle",
+    "empty": {
+      "title": "Your bundle is empty",
+      "body": "Choose a plan from any category, then add extras.",
+      "phone": "Phone plans",
+      "wireless": "Wireless internet",
+      "cable": "Cable internet",
+      "aria": "Where to start"
+    },
+    "kind": {
+      "cable": "Cable internet",
+      "wireless": "Home wireless internet",
+      "phone": "Phone plan"
+    },
+    "line": {
+      "removePlan": "Remove plan",
+      "remove": "Remove",
+      "change": "Change",
+      "forPlan": "For {plan}",
+      "included": "Included at no charge",
+      "oneTime": "one-time",
+      "perMonth": "{amount}/mo",
+      "term": "{months}-month term",
+      "monthToMonth": "Month to month",
+      "removeAria": "Remove {name}"
+    },
+    "qty": {
+      "label": "Number of lines",
+      "decrease": "Fewer lines",
+      "increase": "More lines"
+    },
+    "stock": {
+      "out": "Out of stock",
+      "few": "Only {count} left"
+    },
+    "summary": {
+      "title": "Order summary",
+      "plans": "Plans",
+      "addons": "Add-ons",
+      "devices": "Devices",
+      "monthly": "Monthly",
+      "oneTime": "One-time fees",
+      "discounts": "Discounts",
+      "tax": "Taxes",
+      "dueToday": "Due today",
+      "taxNote": "Taxes are calculated at checkout. Each plan's Broadband Facts label is shown with the plan."
+    },
+    "cta": {
+      "checkout": "Check out",
+      "login": "Log in to check out with your account",
+      "blocked": "Resolve the items above to continue"
+    },
+    "minimum": "Add {shortfall} more to reach the {minimum} minimum order.",
+    "code": {
+      "label": "Discount code",
+      "apply": "Apply",
+      "remove": "Remove code",
+      "applied": "Code {code} applied",
+      "noLonger": "Code {code} no longer applies: {reason}",
+      "reason": {
+        "unknown-code": "We could not find that code.",
+        "not-active": "This code is not active.",
+        "not-valid": "This code has expired or is not valid yet.",
+        "not-applicable": "This code does not apply to what is in your bundle.",
+        "max-reached": "This code has reached its limit.",
+        "stopped": "A better offer already applies, so this code was not used."
+      }
+    },
+    "blocked": {
+      "title": "We could not add {name}",
+      "generic": "This item cannot be added to your bundle right now.",
+      "replace": "Replace {existing} with {new}",
+      "keep": "Keep {existing}",
+      "dismiss": "Close",
+      "quantityFixed": "Only one {name} fits in a bundle.",
+      "quantityRange": "You can have {min} to {max} of {name}.",
+      "stock": "Only {available} of {name} left in stock.",
+      "outOfStock": "{name} is out of stock.",
+      "parentRequired": "Choose which plan {name} is for.",
+      "replacePlan": "You can only have one plan of this kind; replace the one in your bundle instead.",
+      "unavailable": "{name} is not available right now.",
+      "ineligible": "{name} is not available to you."
+    },
+    "removeDependents": {
+      "title": "Remove {name}?",
+      "body": "These items go with it: {items}.",
+      "confirm": "Remove all",
+      "cancel": "Keep"
+    },
+    "issue": {
+      "title": "Please review your bundle",
+      "generic": "This item needs attention before you can check out.",
+      "scheduleNotPriceable": "This plan cannot be priced for its full term yet.",
+      "labelMissing": "This plan is temporarily unavailable.",
+      "outOfStock": "This item is out of stock.",
+      "removeLine": "Remove {name}"
+    },
+    "toast": {
+      "added": "{name} added to your bundle",
+      "view": "View bundle"
+    },
+    "error": {
+      "generic": "Something went wrong. Your bundle was not changed."
+    },
+    "prompt": {
+      "title": "Save {saving}/mo",
+      "add": "Add",
+      "addAria": "Add {name} and save {saving} per month",
+      "cablePhone": "Add {name} to your Cable internet and save {saving}/mo.",
+      "secondLine": "Add a second line and save {saving}/mo.",
+      "region": "Ways to save"
+    },
+    "loading": "Loading your bundle",
+    "section": {
+      "plans": "Plans",
+      "addons": "Add-ons"
+    },
+    "addons": {
+      "empty": "No add-ons yet.",
+      "browse": "Browse add-ons"
+    },
+    "home": "Home"
+  },
   "checkout": {},
   "account": {},
   "auth": {},
@@ -169,6 +293,71 @@
       "cable": "Cable internet",
       "fixed-wireless": "Home wireless",
       "mobile": "Phone"
+    }
+  },
+  "schedule": {
+    "title": "Your price, month by month",
+    "col": {
+      "months": "Months",
+      "dates": "Dates",
+      "amount": "Per month"
+    },
+    "row": {
+      "intro": "Introductory price",
+      "standing": "Standard price"
+    },
+    "dueAtOrder": "Due at order",
+    "total": "Total over {months} months",
+    "afterTerm": "After your {months}-month term: {amount}/mo from {date}.",
+    "openEnded": "No contract: you can cancel any time. Price can change; we tell you before it does.",
+    "provisional": "Dates assume you order today; they are fixed when you place the order.",
+    "lines": "x {quantity} lines",
+    "monthRange": "{from}-{to}",
+    "monthFrom": "{from} onwards"
+  },
+  "label": {
+    "title": "Broadband Facts",
+    "disclosure": "Fixed & mobile broadband consumer disclosure",
+    "monthlyPrice": "Monthly Price",
+    "monthlyFees": "Provider Monthly Fees",
+    "oneTimeFees": "One-time Fees at the Time of Purchase",
+    "otherFees": "Other Fees",
+    "etf": "Early termination fee",
+    "taxes": "Government taxes",
+    "taxesValue": "Varies by location",
+    "discountsBundles": "Discounts & Bundles",
+    "speeds": "Speeds Provided with Plan",
+    "download": "Typical Download Speed",
+    "upload": "Typical Upload Speed",
+    "latency": "Typical Latency",
+    "data": "Data Included with Monthly Price",
+    "monthlyData": "Monthly data",
+    "additionalData": "Charges for additional data usage: None",
+    "network": "Network Management & Privacy",
+    "networkText": "Our network management practices and privacy policy are available at {networkUrl} and {privacyUrl}.",
+    "support": "Customer Support",
+    "supportText": "Contact us at {phone} or {url}.",
+    "footnote": "Learn more about the terms used on this label at {fcc}. Unique plan ID: {id}",
+    "none": "None",
+    "kind": {
+      "cable": "Cable internet",
+      "wireless": "Home wireless internet",
+      "phone": "Phone plan"
+    },
+    "activationFee": "Activation fee",
+    "lock": "Price locked for {months} months.",
+    "noLock": "Price can change with notice.",
+    "intro": "Introductory price {amount}/mo for the first {months} months, then {standing}/mo.",
+    "step": "Price changes to {amount}/mo from month {month}.",
+    "perMonth": "{amount}/mo",
+    "unlimited": "Unlimited",
+    "gb": "{n} GB",
+    "mbps": "{n} Mbps",
+    "ms": "{n} ms",
+    "discounts": {
+      "cable": "{bundle} off monthly when you add a phone plan.",
+      "wireless": "{bundle} off monthly when you add a phone plan.",
+      "phone": "Second line {secondLine} off. {bundle} off your internet plan when you also have a phone plan."
     }
   }
 }

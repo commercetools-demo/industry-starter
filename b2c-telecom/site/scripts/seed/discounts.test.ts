@@ -1,7 +1,9 @@
+import { CABLE5_CODE, DISCOUNT_AMOUNTS, DISCOUNT_KEYS } from '../../lib/config/discounts';
 import { INTRO_DEFS } from '../../lib/config/pricing';
+import { cable5Code, cable5Discount } from './data/cart-discounts/code-cable5';
 import { EXIT } from './config';
 import { apiLookup, buildIntroManifests, type LookupFn } from './data/cart-discounts/intro-defs';
-import { applyDiscounts, main } from './discounts';
+import { applyDiscountCodes, applyDiscounts, main } from './discounts';
 import { FakeCt } from './test/fake-ct';
 import type { CartDiscountDraft } from './types';
 import { planCartDiscount } from './reconcilers/cartDiscount';
@@ -69,13 +71,14 @@ describe('seed:discounts', () => {
     const api = new FakeCt();
     const log: string[] = [];
     expect(await main(['--confirm-project', 'spec-test-b2c-telecom'], { api, source: SOURCE, lookup, log: (l) => log.push(l) })).toBe(EXIT.OK);
-    expect(api.log.filter((l) => l.startsWith('create cart-discounts'))).toHaveLength(2);
-    expect(api.keysOf('cart-discounts').sort()).toEqual(['malva-cd-intro-cable-100-24', 'malva-cd-intro-wireless-5g-12']);
+    expect(api.log.filter((l) => l.startsWith('create cart-discounts'))).toHaveLength(3);
+    expect(api.keysOf('cart-discounts').sort()).toEqual(['malva-cd-code-cable5', 'malva-cd-intro-cable-100-24', 'malva-cd-intro-wireless-5g-12']);
+    expect(api.keysOf('discount-codes')).toEqual(['malva-dc-cable5']);
 
     const writes = api.writes;
     expect(await main(['--confirm-project', 'spec-test-b2c-telecom'], { api, source: SOURCE, lookup, log: (l) => log.push(l) })).toBe(EXIT.OK);
     expect(api.writes).toBe(writes);
-    expect(api.log.filter((l) => l.startsWith('create cart-discounts'))).toHaveLength(2);
+    expect(api.log.filter((l) => l.startsWith('create cart-discounts'))).toHaveLength(3);
 
     // a changed standing price updates the existing discount
     const changed: LookupFn = async (def) => ({ sku: SKUS[def.offerKey] as string, standing: { USD: (STANDING[def.offerKey] as { USD: number }).USD + 100, EUR: (STANDING[def.offerKey] as { EUR: number }).EUR } });
@@ -114,5 +117,40 @@ describe('seed:discounts', () => {
     await expect(apiLookup(none)(def)).rejects.toThrow(/run the seed first/);
     const noTerm = { get: async () => ({ masterVariant: projection.masterVariant }) } as unknown as Parameters<typeof apiLookup>[0];
     await expect(apiLookup(noTerm)(def)).rejects.toThrow(/no variant/);
+  });
+});
+
+describe('MALVA-CABLE5 (workstream M)', () => {
+  it('the discount targets cable line items, needs the code and uses the shared amounts for USD and EUR', () => {
+    expect(cable5Discount.key).toBe(DISCOUNT_KEYS.codeCable5);
+    expect(cable5Discount.key.startsWith('malva-cd-')).toBe(true);
+    expect(cable5Discount.requiresDiscountCode).toBe(true);
+    expect(cable5Discount.target).toMatchObject({ type: 'lineItems', predicate: 'attributes.`offer-family` = "cable"' });
+    expect(cable5Discount.cartPredicate).toContain('lineItemExists');
+    expect(cable5Discount.value).toEqual({
+      type: 'absolute',
+      money: [
+        { currencyCode: 'USD', centAmount: DISCOUNT_AMOUNTS.codeCable5.USD },
+        { currencyCode: 'EUR', centAmount: DISCOUNT_AMOUNTS.codeCable5.EUR },
+      ],
+    });
+  });
+
+  it('G and M share the amounts: the seeded second-line and bundle discounts read DISCOUNT_AMOUNTS', async () => {
+    const { cartDiscounts } = await import('./data/cart-discounts');
+    const amountOf = (key: string): number[] => ((cartDiscounts.find((d) => d.key === key)?.value as { money: { centAmount: number }[] }).money).map((m) => m.centAmount);
+    expect(amountOf(DISCOUNT_KEYS.secondLine)).toEqual([DISCOUNT_AMOUNTS.secondLine.USD, DISCOUNT_AMOUNTS.secondLine.EUR]);
+    expect(amountOf(DISCOUNT_KEYS.bundleCablePhone)).toEqual([DISCOUNT_AMOUNTS.bundleCablePhone.USD, DISCOUNT_AMOUNTS.bundleCablePhone.EUR]);
+  });
+
+  it('the code is created once, updated when it differs and never sent when equal', async () => {
+    const api = new FakeCt();
+    await applyDiscounts(api, [cable5Discount]);
+    expect((await applyDiscountCodes(api, [cable5Code])).map((o) => o.result)).toEqual(['created']);
+    const writes = api.writes;
+    expect((await applyDiscountCodes(api, [cable5Code])).map((o) => o.result)).toEqual(['unchanged']);
+    expect(api.writes).toBe(writes);
+    expect((await applyDiscountCodes(api, [{ ...cable5Code, isActive: false }])).map((o) => o.result)).toEqual(['updated']);
+    expect(cable5Code.code).toBe(CABLE5_CODE.code);
   });
 });

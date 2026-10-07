@@ -1,4 +1,4 @@
-import { formatMoney, getLocalizedString } from './format';
+import { formatMoney, formatMoneyExact, getLocalizedString } from './format';
 
 describe('formatMoney', () => {
   it('whole amounts drop the decimals in en-US', () => {
@@ -32,5 +32,16 @@ describe('getLocalizedString', () => {
     expect(getLocalizedString(undefined, 'en-US')).toBe('');
     expect(getLocalizedString(null, 'en-US')).toBe('');
     expect(getLocalizedString({}, 'en-US')).toBe('');
+  });
+});
+
+describe('formatMoneyExact', () => {
+  it('always shows two fraction digits, also for whole amounts', () => {
+    expect(formatMoneyExact({ centAmount: 500, currencyCode: 'USD' }, 'en-US')).toBe('$5.00');
+    expect(formatMoneyExact({ centAmount: 5999, currencyCode: 'USD' }, 'en-US')).toBe('$59.99');
+  });
+  it('de-DE uses the comma and the symbol after the amount', () => {
+    expect(formatMoneyExact({ centAmount: 5999, currencyCode: 'EUR' }, 'de-DE').replace(/\s/g, ' ')).toBe('59,99 €');
+    expect(formatMoneyExact({ centAmount: 2800, currencyCode: 'EUR' }, 'de-DE').replace(/\s/g, ' ')).toBe('28,00 €');
   });
 });

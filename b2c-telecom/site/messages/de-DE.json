@@ -18,7 +18,8 @@
       "greetingNoName": "Mein Konto"
     },
     "bundle": {
-      "labelCount": "Mein Bundle · {count}"
+      "labelCount": "Mein Bundle · {count}",
+      "label": "Mein Bundle"
     },
     "menu": {
       "open": "Menü öffnen",
@@ -42,7 +43,130 @@
     "placeholder": "Malva Telecom Shop"
   },
   "plp": {},
-  "bundle": {},
+  "bundle": {
+    "title": "Mein Bundle",
+    "empty": {
+      "title": "Ihr Bundle ist leer",
+      "body": "Wählen Sie einen Tarif aus einer Kategorie und fügen Sie dann Extras hinzu.",
+      "phone": "Handytarife",
+      "wireless": "Home-Wireless-Internet",
+      "cable": "Kabel-Internet",
+      "aria": "Hier geht es los"
+    },
+    "kind": {
+      "cable": "Kabel-Internet",
+      "wireless": "Home-Wireless-Internet",
+      "phone": "Handytarif"
+    },
+    "line": {
+      "removePlan": "Tarif entfernen",
+      "remove": "Entfernen",
+      "change": "Ändern",
+      "forPlan": "Für {plan}",
+      "included": "Ohne Aufpreis enthalten",
+      "oneTime": "einmalig",
+      "perMonth": "{amount}/Monat",
+      "term": "{months} Monate Laufzeit",
+      "monthToMonth": "Monatlich kündbar",
+      "removeAria": "{name} entfernen"
+    },
+    "qty": {
+      "label": "Anzahl Leitungen",
+      "decrease": "Weniger Leitungen",
+      "increase": "Mehr Leitungen"
+    },
+    "stock": {
+      "out": "Nicht auf Lager",
+      "few": "Nur noch {count} verfügbar"
+    },
+    "summary": {
+      "title": "Bestellübersicht",
+      "plans": "Tarife",
+      "addons": "Zusatzoptionen",
+      "devices": "Geräte",
+      "monthly": "Monatlich",
+      "oneTime": "Einmalige Gebühren",
+      "discounts": "Rabatte",
+      "tax": "Steuern",
+      "dueToday": "Heute fällig",
+      "taxNote": "Steuern werden an der Kasse berechnet. Das Broadband-Facts-Label jedes Tarifs wird beim Tarif angezeigt."
+    },
+    "cta": {
+      "checkout": "Zur Kasse",
+      "login": "Anmelden und mit Ihrem Konto zur Kasse",
+      "blocked": "Beheben Sie die oben genannten Punkte, um fortzufahren"
+    },
+    "minimum": "Fügen Sie {shortfall} hinzu, um den Mindestbestellwert von {minimum} zu erreichen.",
+    "code": {
+      "label": "Rabattcode",
+      "apply": "Anwenden",
+      "remove": "Code entfernen",
+      "applied": "Code {code} angewendet",
+      "noLonger": "Code {code} gilt nicht mehr: {reason}",
+      "reason": {
+        "unknown-code": "Diesen Code kennen wir nicht.",
+        "not-active": "Dieser Code ist nicht aktiv.",
+        "not-valid": "Dieser Code ist abgelaufen oder noch nicht gültig.",
+        "not-applicable": "Dieser Code gilt nicht für den Inhalt Ihres Bundles.",
+        "max-reached": "Dieser Code wurde bereits zu oft verwendet.",
+        "stopped": "Es gilt bereits ein besseres Angebot, daher wurde dieser Code nicht verwendet."
+      }
+    },
+    "blocked": {
+      "title": "{name} konnte nicht hinzugefügt werden",
+      "generic": "Dieser Artikel kann Ihrem Bundle derzeit nicht hinzugefügt werden.",
+      "replace": "{existing} durch {new} ersetzen",
+      "keep": "{existing} behalten",
+      "dismiss": "Schließen",
+      "quantityFixed": "{name} passt nur einmal in ein Bundle.",
+      "quantityRange": "Sie können {min} bis {max} von {name} haben.",
+      "stock": "Von {name} sind nur noch {available} auf Lager.",
+      "outOfStock": "{name} ist nicht auf Lager.",
+      "parentRequired": "Wählen Sie den Tarif, für den {name} gelten soll.",
+      "replacePlan": "Sie können nur einen Tarif dieser Art haben; ersetzen Sie stattdessen den Tarif in Ihrem Bundle.",
+      "unavailable": "{name} ist derzeit nicht verfügbar.",
+      "ineligible": "{name} steht Ihnen nicht zur Verfügung."
+    },
+    "removeDependents": {
+      "title": "{name} entfernen?",
+      "body": "Diese Artikel gehören dazu: {items}.",
+      "confirm": "Alle entfernen",
+      "cancel": "Behalten"
+    },
+    "issue": {
+      "title": "Bitte prüfen Sie Ihr Bundle",
+      "generic": "Dieser Artikel muss geprüft werden, bevor Sie zur Kasse gehen können.",
+      "scheduleNotPriceable": "Dieser Tarif kann für die volle Laufzeit noch nicht berechnet werden.",
+      "labelMissing": "Dieser Tarif ist vorübergehend nicht verfügbar.",
+      "outOfStock": "Dieser Artikel ist nicht auf Lager.",
+      "removeLine": "{name} entfernen"
+    },
+    "toast": {
+      "added": "{name} wurde Ihrem Bundle hinzugefügt",
+      "view": "Bundle ansehen"
+    },
+    "error": {
+      "generic": "Etwas ist schiefgelaufen. Ihr Bundle wurde nicht geändert."
+    },
+    "prompt": {
+      "title": "{saving}/Monat sparen",
+      "add": "Hinzufügen",
+      "addAria": "{name} hinzufügen und {saving} pro Monat sparen",
+      "cablePhone": "Fügen Sie {name} zu Ihrem Kabel-Internet hinzu und sparen Sie {saving}/Monat.",
+      "secondLine": "Fügen Sie eine zweite Leitung hinzu und sparen Sie {saving}/Monat.",
+      "region": "Sparmöglichkeiten"
+    },
+    "loading": "Ihr Bundle wird geladen",
+    "section": {
+      "plans": "Tarife",
+      "addons": "Zusatzoptionen"
+    },
+    "addons": {
+      "empty": "Noch keine Zusatzoptionen.",
+      "browse": "Zusatzoptionen ansehen"
+    },
+    "home": "Startseite"
+  },
   "checkout": {},
   "account": {},
   "auth": {},
@@ -169,6 +293,71 @@
       "cable": "Kabel-Internet",
       "fixed-wireless": "Home Wireless",
       "mobile": "Mobilfunk"
+    }
+  },
+  "schedule": {
+    "title": "Ihr Preis, Monat für Monat",
+    "col": {
+      "months": "Monate",
+      "dates": "Zeitraum",
+      "amount": "Pro Monat"
+    },
+    "row": {
+      "intro": "Einführungspreis",
+      "standing": "Regulärer Preis"
+    },
+    "dueAtOrder": "Fällig bei Bestellung",
+    "total": "Gesamt über {months} Monate",
+    "afterTerm": "Nach Ihrer Laufzeit von {months} Monaten: {amount}/Monat ab {date}.",
+    "openEnded": "Keine Vertragslaufzeit: jederzeit kündbar. Der Preis kann sich ändern; wir informieren Sie vorher.",
+    "provisional": "Die Daten gehen von einer Bestellung heute aus; sie werden mit der Bestellung festgelegt.",
+    "lines": "x {quantity} Leitungen",
+    "monthRange": "{from}-{to}",
+    "monthFrom": "ab {from}"
+  },
+  "label": {
+    "title": "Broadband Facts",
+    "disclosure": "Fixed & mobile broadband consumer disclosure",
+    "monthlyPrice": "Monthly Price",
+    "monthlyFees": "Provider Monthly Fees",
+    "oneTimeFees": "One-time Fees at the Time of Purchase",
+    "otherFees": "Other Fees",
+    "etf": "Early termination fee",
+    "taxes": "Government taxes",
+    "taxesValue": "Varies by location",
+    "discountsBundles": "Discounts & Bundles",
+    "speeds": "Speeds Provided with Plan",
+    "download": "Typical Download Speed",
+    "upload": "Typical Upload Speed",
+    "latency": "Typical Latency",
+    "data": "Data Included with Monthly Price",
+    "monthlyData": "Monthly data",
+    "additionalData": "Charges for additional data usage: None",
+    "network": "Network Management & Privacy",
+    "networkText": "Our network management practices and privacy policy are available at {networkUrl} and {privacyUrl}.",
+    "support": "Customer Support",
+    "supportText": "Contact us at {phone} or {url}.",
+    "footnote": "Learn more about the terms used on this label at {fcc}. Unique plan ID: {id}",
+    "none": "None",
+    "kind": {
+      "cable": "Cable internet",
+      "wireless": "Home wireless internet",
+      "phone": "Phone plan"
+    },
+    "activationFee": "Activation fee",
+    "lock": "Price locked for {months} months.",
+    "noLock": "Price can change with notice.",
+    "intro": "Introductory price {amount}/mo for the first {months} months, then {standing}/mo.",
+    "step": "Price changes to {amount}/mo from month {month}.",
+    "perMonth": "{amount}/mo",
+    "unlimited": "Unlimited",
+    "gb": "{n} GB",
+    "mbps": "{n} Mbps",
+    "ms": "{n} ms",
+    "discounts": {
+      "cable": "{bundle} off monthly when you add a phone plan.",
+      "wireless": "{bundle} off monthly when you add a phone plan.",
+      "phone": "Second line {secondLine} off. {bundle} off your internet plan when you also have a phone plan."
     }
   }
 }
