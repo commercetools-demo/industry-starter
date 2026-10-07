@@ -180,3 +180,11 @@ Open items: P4 (OA-05 (--skip-checkout)); P5 (OA-05 (--skip-checkout))
 - A new offer appears ~57 s after its release instant (60-second catalog cache); a withdrawn one leaves within ~1 s. Suggested follow-up for H's cache.
 - `addOfferLine` now refuses offers outside their release window (`OFFER_NOT_RELEASED`, 409); added by the orchestrator after the merge.
 - `seed:verify` catalog counts now expect 9 cart discounts and 2 discount codes (L's intro discounts and M's `MALVA-CABLE5`).
+
+## Workstream Q findings (2026-10-07; details in plan/reports/Q-report.md)
+- A plan and a device in one order become ONE Recurring Order (grouping is by schedule, not policy). `applyDeviceRecurringExpiry` sets `expiresAt` only when all lines are device lines of one term; the device end date is stored on the line (`acquisitionEndDate`).
+- `nextOrderAt` = `startsAt` + one month, so `FIRST_GENERATED_ORDER_IS_PAYMENT_NUMBER` is 1, not 2.
+- Price-fallback trap: a financed line with no price for its term silently got the one-time price; guarded before and after the cart call (422 with rollback).
+- A re-added line keeps its old `addedAt`; the API returns lines in insertion order, so the cart mapper sorts by `addedAt`.
+- Handset prices were replaced with the plan's table (Nova 5G has no lease; one variant intentionally lacks its 36-month price) — owner check M-Q-2.
+- `/api/cart/line-items` refuses devices (`USE_DEVICE_ROUTE`); device quantity limit 3; guests can only buy outright; U must call `evaluateFinancing`, `assertDeviceCartIntegrity`, `applyDeviceRecurringExpiry` (`lib/ct/devices.ts`).
