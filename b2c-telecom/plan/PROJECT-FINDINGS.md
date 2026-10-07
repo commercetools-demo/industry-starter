@@ -46,6 +46,13 @@ Everything below was created 2026-10-07 15:19 by the project's sample-data loade
 - Kept: channels `inventory-channel` and `distribution-channel`, zones `europe` and `usa`, shipping methods `standard-shipping` and `express-shipping`, tax category `standard-tax`.
 - Workstream F's own cleanup task (`cleanup-furniture.ts`) therefore only has to prove the project is clean (idempotent no-op) and keep the allow-list guard for future resets.
 
+## Furniture cleanup inventory
+
+Written by `npm run seed:cleanup -- --list` (read-only). The one-off cleanup of 2026-10-07 already removed the sample data; the script stays as an idempotent check and keeps the allow-list guard.
+
+<!-- CLEANUP-LISTING:BEGIN -->
+<!-- CLEANUP-LISTING:END -->
+
 ## Granted scopes (names only, read from the token responses 2026-10-07)
 - **Storefront client (`site/.env.local`, OA-02):** create_anonymous_token, manage_customers, manage_key_value_documents, manage_my_payments, manage_order_edits, manage_orders, manage_payment_methods, manage_payments, manage_recurrence_policies, manage_recurring_orders, manage_sessions, manage_shopping_lists, view_cart_discounts, view_categories, view_customers, view_discount_codes, view_key_value_documents, view_order_edits, view_orders, view_payment_methods, view_payments, view_product_selections, view_products, view_project_settings, view_published_products, view_recurrence_policies, view_recurring_orders, view_sessions, view_shipping_methods, view_shopping_lists, view_standalone_prices, view_tax_categories, view_types.
 - **Seed/admin client (`site/.env.seed`, OA-03):** manage_cart_discounts, manage_categories, manage_customer_groups, manage_customers, manage_discount_codes, manage_key_value_documents, manage_payment_methods, manage_products, manage_project, manage_recurrence_policies, manage_recurring_orders, manage_shipping_methods, manage_states, manage_tax_categories, manage_types (+ matching view_ scopes).
