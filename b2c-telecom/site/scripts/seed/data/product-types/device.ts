@@ -15,7 +15,7 @@ export const deviceType: ProductTypeDraft = {
     shared('memory-gb', required),
     own('os', 'Operating system', 'Betriebssystem', { name: 'enum', values: OS }, { isRequired: true }),
     shared('network-generation', required),
-    own('compatible-plan-families', 'Compatible plan families', 'Kompatible Tarifarten', { name: 'set', elementType: { name: 'enum', values: PHONE_FAMILY } }, { isRequired: true }),
+    own('compatible-plan-families', 'Compatible plan families', 'Kompatible Tarifarten', { name: 'set', elementType: { name: 'enum', values: PHONE_FAMILY } }),
     shared('highlights'),
   ],
 };

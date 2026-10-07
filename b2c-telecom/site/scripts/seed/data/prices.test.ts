@@ -50,11 +50,11 @@ describe('prices', () => {
     ]);
   });
 
-  it('price keys are unique and follow <sku>.<currency>.<policy or once>', () => {
+  it('price keys are unique and follow <sku>_<currency>_<policy or once>', () => {
     const keys = (MANIFEST.product as ProductDraft[]).flatMap((p) => [p.masterVariant, ...p.variants].flatMap((v) => v.prices.map((x) => x.key)));
     expect(new Set(keys).size).toBe(keys.length);
-    expect(priceKey('MLV-CBL-500-24M', 'USD', 'malva-monthly')).toBe('mlv-cbl-500-24m.usd.malva-monthly');
-    expect(priceKey('MLV-EQP-AX3000-BUY', 'EUR', undefined)).toBe('mlv-eqp-ax3000-buy.eur.once');
+    expect(priceKey('MLV-CBL-500-24M', 'USD', 'malva-monthly')).toBe('mlv-cbl-500-24m_usd_malva-monthly');
+    expect(priceKey('MLV-EQP-AX3000-BUY', 'EUR', undefined)).toBe('mlv-eqp-ax3000-buy_eur_once');
   });
 
   it('the table has the specified add-on, equipment and handset prices', () => {

@@ -279,6 +279,7 @@ export class FakeCt implements CtApi {
       throw httpError(400, 'ObjectNotFound', 'Product Search API is not enabled');
     }
     const or = ((body.query as Obj | undefined)?.or ?? []) as Obj[];
+    if (or.length > 50) throw httpError(400, 'InvalidInput', 'The number of expressions cannot exceed 50');
     const wanted = or.map((c) => String((c.exact as Obj).value));
     const hits = wanted.filter((k) => this.indexedKeys.includes(k));
     return { total: hits.length, offset: 0, limit: 1, hits: [] };

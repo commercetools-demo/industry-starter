@@ -65,6 +65,11 @@ export function sharedDefinitionErrors(types: ProductTypeDraft[]): string[] {
   return errors;
 }
 
+/** The platform rejects `isRequired: true` on set attributes (found live in G-17). */
+export function setRequiredErrors(types: ProductTypeDraft[]): string[] {
+  return types.flatMap((t) => t.attributes.filter((a) => a.isRequired && a.type.name === 'set').map((a) => `${t.key}.${a.name}: isRequired is not supported for set attributes`));
+}
+
 /** Offers: every variant has a non-zero USD/US and EUR/DE price; every price key is unique. */
 export function priceErrors(offers: ProductDraft[]): string[] {
   const errors: string[] = [];
@@ -111,6 +116,7 @@ export function validateCatalog(manifest: SeedManifest): string[] {
     ...ownedKeyErrors(manifest),
     ...skuErrors(products),
     ...sharedDefinitionErrors((manifest.productType ?? []) as ProductTypeDraft[]),
+    ...setRequiredErrors((manifest.productType ?? []) as ProductTypeDraft[]),
     ...priceErrors(offers),
     ...referenceErrors(products),
     ...Object.entries(manifest).flatMap(([kind, drafts]) => localeGaps(drafts, kind)),

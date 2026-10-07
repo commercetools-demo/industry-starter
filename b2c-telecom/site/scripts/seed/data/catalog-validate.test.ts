@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MANIFEST } from '.';
 import type { ProductDraft, SeedManifest } from '../types';
-import { localeGaps, priceErrors, referenceErrors, skuErrors, validateCatalog } from './catalog-validate';
+import { localeGaps, priceErrors, referenceErrors, setRequiredErrors, skuErrors, validateCatalog } from './catalog-validate';
 
 function offer(): ProductDraft {
   const found = (MANIFEST.product as ProductDraft[]).find((p) => p.key === 'malva-offer-cable-500');
@@ -36,6 +36,11 @@ describe('catalog validation', () => {
     const bad = offer();
     bad.masterVariant.attributes = [...bad.masterVariant.attributes, { name: 'conflicts-with', value: ['malva-offer-nothing'] }];
     expect(referenceErrors([...(MANIFEST.product as ProductDraft[]).filter((p) => p.key !== bad.key), bad])).toEqual(['malva-offer-cable-500.conflicts-with names "malva-offer-nothing", which does not exist']);
+  });
+
+  it('rejects a required set attribute (the platform refuses it)', () => {
+    const type = { key: 'malva-x', name: 'x', description: 'x', attributes: [{ name: 'a', label: { 'en-US': 'a', 'de-DE': 'a' }, type: { name: 'set' as const, elementType: { name: 'text' as const } }, isRequired: true }] };
+    expect(setRequiredErrors([type])).toEqual(['malva-x.a: isRequired is not supported for set attributes']);
   });
 
   it('finds a key without the malva- prefix', () => {

@@ -46,9 +46,9 @@ export function ls(enUS: string, deDE: string): LocalizedString {
 
 export const POLICY_MONTHLY = 'malva-monthly';
 
-/** `<sku-lower>.<currency-lower>.<policy key or once>` */
+/** `<sku-lower>_<currency-lower>_<policy key or once>` (the platform allows only alphanumerics, underscores and hyphens in keys). */
 export function priceKey(sku: string, currency: Currency, policy: string | undefined): string {
-  return `${sku.toLowerCase()}.${currency.toLowerCase()}.${policy ?? 'once'}`;
+  return `${sku.toLowerCase()}_${currency.toLowerCase()}_${policy ?? 'once'}`;
 }
 
 export function toPriceDraft(sku: string, spec: PriceSpec): PriceDraft {

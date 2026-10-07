@@ -70,7 +70,7 @@ describe('seed-catalog-data scenarios', () => {
         expect(v.prices.some((p) => p.value.currencyCode === 'EUR' && p.country === 'DE'), v.sku).toBe(true);
         for (const p of v.prices) expect(p.value.centAmount).toBeGreaterThan(0);
         // every recurring price is tied to a recurrence policy; one-time prices have none
-        for (const p of v.prices) expect(p.key.endsWith(`.${p.recurrencePolicy ?? 'once'}`)).toBe(true);
+        for (const p of v.prices) expect(p.key.endsWith(`_${p.recurrencePolicy ?? 'once'}`)).toBe(true);
       }
     }
   });

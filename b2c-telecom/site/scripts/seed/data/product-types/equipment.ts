@@ -9,7 +9,7 @@ export const equipmentType: ProductTypeDraft = {
   attributes: [
     own('equipment-kind', 'Equipment kind', 'Geräteart', { name: 'enum', values: EQUIPMENT_KIND }, { isRequired: true, isSearchable: true }),
     own('max-downstream-mbps', 'Maximum downstream (Mbps)', 'Maximaler Download (Mbit/s)', { name: 'number' }, { isRequired: true, isSearchable: true }),
-    own('supported-technologies', 'Supported technologies', 'Unterstützte Technologien', { name: 'set', elementType: { name: 'enum', values: SUPPORTED_TECHNOLOGIES } }, { isRequired: true, isSearchable: true }),
+    own('supported-technologies', 'Supported technologies', 'Unterstützte Technologien', { name: 'set', elementType: { name: 'enum', values: SUPPORTED_TECHNOLOGIES } }, { isSearchable: true }),
     own('wifi-standard', 'Wi-Fi standard', 'WLAN-Standard', { name: 'enum', values: WIFI_STANDARD }, { isRequired: true }),
     // Planner default said `Unique`; the shared definition (constraint None) wins because one name has one definition.
     shared('charge-type', { isRequired: true }),

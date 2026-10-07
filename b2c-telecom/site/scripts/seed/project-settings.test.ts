@@ -76,6 +76,16 @@ describe('project settings', () => {
     expect(lagMs).toBe(2000);
   });
 
+  it('wait loop asks in chunks because the platform rejects more than 50 expressions per query', async () => {
+    const fake = api();
+    await activateProductSearch(fake);
+    const keys = Array.from({ length: 52 }, (_, i) => `k${i}`);
+    fake.indexedKeys = keys;
+    const { lagMs } = await waitForSearchIndex(fake, { expectedKeys: keys, pollMs: 1000, sleep: async () => undefined });
+    expect(lagMs).toBe(0);
+    expect(fake.searchCalls).toBe(3);
+  });
+
   it('wait loop times out with exit code 6', async () => {
     const fake = api();
     await activateProductSearch(fake);
