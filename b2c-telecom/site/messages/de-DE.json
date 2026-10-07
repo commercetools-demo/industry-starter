@@ -527,6 +527,39 @@
         "generic": "Wir konnten Ihre Änderungen nicht speichern. Versuchen Sie es erneut.",
         "purpose": "Wählen Sie mindestens eine Verwendung für diese Adresse."
       }
+    },
+    "paymentMethods": {
+      "title": "Zahlungsmethoden",
+      "intro": "Karten, die Sie beim Bezahlen speichern, erscheinen hier.",
+      "unavailable": "Gespeicherte Zahlungsmethoden sind vorübergehend nicht verfügbar.",
+      "cardLabel": "{brand} endet auf {last4}",
+      "savedCard": "Gespeicherte Karte",
+      "expires": "Läuft ab {date}",
+      "default": "Standard",
+      "brand": {
+        "visa": "Visa",
+        "mastercard": "Mastercard",
+        "amex": "Amex",
+        "unknown": "Karte"
+      },
+      "actions": {
+        "makeDefault": "Als Standard festlegen",
+        "remove": "Entfernen"
+      },
+      "remove": {
+        "title": "Karte entfernen?",
+        "noDefault": "Es bleibt keine Standardmethode. Beim nächsten Bezahlen müssen Sie eine Zahlungsmethode wählen.",
+        "confirm": "Entfernen",
+        "cancel": "Behalten"
+      },
+      "empty": {
+        "title": "Keine gespeicherten Zahlungsmethoden",
+        "body": "Sie haben noch keine Karte gespeichert. Sie können eine speichern, wenn Sie Ihre nächste Bestellung bezahlen.",
+        "cta": "Zu Mein Paket"
+      },
+      "errors": {
+        "generic": "Wir konnten Ihre Zahlungsmethoden nicht aktualisieren. Versuchen Sie es erneut."
+      }
     }
   },
   "auth": {

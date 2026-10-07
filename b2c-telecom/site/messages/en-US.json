@@ -527,6 +527,39 @@
         "generic": "We couldn't save your changes. Try again.",
         "purpose": "Choose at least one use for this address."
       }
+    },
+    "paymentMethods": {
+      "title": "Payment methods",
+      "intro": "Cards you save while checking out appear here.",
+      "unavailable": "Saved payment methods are temporarily unavailable.",
+      "cardLabel": "{brand} ending {last4}",
+      "savedCard": "Saved card",
+      "expires": "Expires {date}",
+      "default": "Default",
+      "brand": {
+        "visa": "Visa",
+        "mastercard": "Mastercard",
+        "amex": "Amex",
+        "unknown": "Card"
+      },
+      "actions": {
+        "makeDefault": "Make default",
+        "remove": "Remove"
+      },
+      "remove": {
+        "title": "Remove this card?",
+        "noDefault": "No default will remain. Your next checkout will ask you to choose a payment method.",
+        "confirm": "Remove",
+        "cancel": "Keep"
+      },
+      "empty": {
+        "title": "No saved payment methods",
+        "body": "You haven't saved a card yet. You can save one when you pay for your next order.",
+        "cta": "Go to My bundle"
+      },
+      "errors": {
+        "generic": "We couldn't update your payment methods. Try again."
+      }
     }
   },
   "auth": {
