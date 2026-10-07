@@ -173,7 +173,7 @@ A11y rules: landmarks `banner` (header), `navigation` (each nav labelled), `main
 - German strings are longer (about 25 %): the header must not wrap at 1024 px in de-DE (Chrome check).
 
 ## Tasks
-- [ ] I-01 Create `lib/cx.ts`, `components/ui/Icon.tsx`, `Button.tsx`, `Pill.tsx`, `Tag.tsx`, `Skeleton.tsx` with colocated tests: variant to class mapping; `href` renders a link; `disabled` attribute and no click; `pressed` sets `aria-pressed`; `loading` sets `aria-busy` and disables; focus-ring class present on every interactive variant; skeleton `aria-hidden`.
+- [x] I-01 Create `lib/cx.ts`, `components/ui/Icon.tsx`, `Button.tsx`, `Pill.tsx`, `Tag.tsx`, `Skeleton.tsx` with colocated tests: variant to class mapping; `href` renders a link; `disabled` attribute and no click; `pressed` sets `aria-pressed`; `loading` sets `aria-busy` and disables; focus-ring class present on every interactive variant; skeleton `aria-hidden`.
 - [ ] I-02 Create `components/ui/Chip.tsx`, `Card.tsx`, `Breadcrumb.tsx` with tests: `aria-pressed` toggles and `onClick` once; count rendered; card tone classes; breadcrumb last item is not a link and has `aria-current="page"`, `nav` has the translated label (use `renderWithProviders`).
 - [ ] I-03 Create `components/ui/Field.tsx` (`Field`, `Input`, `Select`, `Textarea`) with tests: label association (`getByLabelText`); `error` sets `aria-invalid="true"` and `aria-describedby` pointing at visible error text; hint wiring; focus ring class.
 - [ ] I-04 Create `components/ui/QuantityStepper.tsx` with tests: `min`/`max` disable the buttons; clamps; accessible names from props; `onChange` called with the new value once.
