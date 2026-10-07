@@ -4,7 +4,13 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react()],
-  resolve: { alias: { '@': path.resolve(__dirname) } }, // B adds the 'server-only' alias
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname),
+      // the real package throws outside a server bundle
+      'server-only': path.resolve(__dirname, 'test/server-only-stub.ts'),
+    },
+  },
   test: {
     environment: 'jsdom',
     server: { deps: { inline: ['next-intl'] } }, // next-intl's ESM imports next/navigation without an extension
