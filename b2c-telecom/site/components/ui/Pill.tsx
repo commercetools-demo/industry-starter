@@ -30,7 +30,7 @@ export function Pill({ active = false, as = 'link', href, className, onClick, ch
     );
   }
   return (
-    <Link href={href} className={classes} {...aria}>
+    <Link href={href} className={classes} onClick={onClick} {...aria}>
       {children}
     </Link>
   );

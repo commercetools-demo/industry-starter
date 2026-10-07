@@ -9,6 +9,8 @@ vi.mock('@/i18n/routing', async (importOriginal) => ({
   usePathname: () => state.pathname,
 }));
 
+vi.mock('@/hooks/useSwitchMarket', () => ({ useSwitchMarket: () => ({ switchMarket: vi.fn(), pending: false }) }));
+
 import { SiteHeader } from './SiteHeader';
 
 const NAMES = ['Phone plans', 'Wireless internet', 'Cable internet', 'Add-ons', 'Phones and devices'];
