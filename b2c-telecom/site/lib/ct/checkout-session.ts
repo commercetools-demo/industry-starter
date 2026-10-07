@@ -25,7 +25,6 @@ async function sessionsToken(authUrl: string, projectKey: string, clientId: stri
   const basic = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
   let response: Response;
   try {
-    // eslint-disable-next-line no-restricted-globals -- the Sessions API needs its own scope and has no SDK builder
     response = await fetch(`${authUrl.replace(/\/$/, '')}/oauth/token`, {
       method: 'POST',
       headers: { Authorization: `Basic ${basic}`, 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -51,7 +50,6 @@ export async function createCheckoutSession(cartId: string, orderNumber: string,
   const token = await sessionsToken(env.CTP_AUTH_URL, projectKey, env.CTP_CLIENT_ID, env.CTP_CLIENT_SECRET);
   let response: Response;
   try {
-    // eslint-disable-next-line no-restricted-globals -- see above
     response = await fetch(`https://session.${region}.commercetools.com/${projectKey}/sessions`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
