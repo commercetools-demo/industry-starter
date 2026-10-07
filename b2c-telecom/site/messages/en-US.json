@@ -455,6 +455,172 @@
       "done": "We created a new bundle from this order.",
       "pending": "Creating your bundle…",
       "error": "We could not reuse this order. Try again in a moment."
+    },
+    "addresses": {
+      "title": "Addresses",
+      "add": "Add an address",
+      "unavailable": "Your addresses are temporarily unavailable.",
+      "empty": {
+        "title": "No addresses saved yet",
+        "body": "Save a service address so checkout can fill it in for you."
+      },
+      "tag": {
+        "defaultService": "Default service address",
+        "defaultBilling": "Default billing address",
+        "service": "Service",
+        "billing": "Billing"
+      },
+      "makeDefaultService": "Make default service address",
+      "makeDefaultBilling": "Make default billing address",
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "delete": {
+        "title": "Delete this address?",
+        "noDefault": "No default will remain. Your next order will ask you to choose an address.",
+        "confirm": "Delete",
+        "cancel": "Keep"
+      },
+      "dialog": {
+        "addTitle": "Add an address",
+        "editTitle": "Edit address",
+        "save": "Save",
+        "saving": "Saving…",
+        "cancel": "Cancel",
+        "useService": "Use as service address",
+        "useBilling": "Use as billing address",
+        "makeDefault": "Make this my default",
+        "selectState": "Select a state"
+      },
+      "verify": {
+        "title": "We couldn't verify this address",
+        "check": "Check: {fields}.",
+        "suggested": "Suggested address",
+        "useSuggested": "Use suggested address",
+        "keep": "Keep what I typed",
+        "edit": "Edit"
+      },
+      "fields": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "streetName": "Street address",
+        "additionalStreetInfo": "Apt / suite (optional)",
+        "city": "City",
+        "state": "State",
+        "postalCode": "ZIP / Postal code",
+        "country": "Country",
+        "phone": "Phone (optional)"
+      },
+      "countries": {
+        "US": "United States",
+        "DE": "Deutschland"
+      },
+      "errors": {
+        "required": "Required.",
+        "invalidCountry": "Choose a country.",
+        "invalidState": "Choose a state.",
+        "invalidPostalCode": "Enter a 5-digit ZIP code.",
+        "invalidPhone": "Enter a valid phone number.",
+        "tooLong": "Use at most 100 characters.",
+        "limit": "You can keep up to {max} addresses.",
+        "generic": "We couldn't save your changes. Try again.",
+        "purpose": "Choose at least one use for this address."
+      }
+    },
+    "paymentMethods": {
+      "title": "Payment methods",
+      "intro": "Cards you save while checking out appear here.",
+      "unavailable": "Saved payment methods are temporarily unavailable.",
+      "cardLabel": "{brand} ending {last4}",
+      "savedCard": "Saved card",
+      "expires": "Expires {date}",
+      "default": "Default",
+      "brand": {
+        "visa": "Visa",
+        "mastercard": "Mastercard",
+        "amex": "Amex",
+        "unknown": "Card"
+      },
+      "actions": {
+        "makeDefault": "Make default",
+        "remove": "Remove"
+      },
+      "remove": {
+        "title": "Remove this card?",
+        "noDefault": "No default will remain. Your next checkout will ask you to choose a payment method.",
+        "confirm": "Remove",
+        "cancel": "Keep"
+      },
+      "empty": {
+        "title": "No saved payment methods",
+        "body": "You haven't saved a card yet. You can save one when you pay for your next order.",
+        "cta": "Go to My bundle"
+      },
+      "errors": {
+        "generic": "We couldn't update your payment methods. Try again."
+      }
+    },
+    "lists": {
+      "title": "Saved lists",
+      "new": "New list",
+      "unavailable": "Your saved lists are temporarily unavailable.",
+      "items": "{count, plural, one {# item} other {# items}}",
+      "updated": "Updated {date}",
+      "empty": {
+        "title": "You have no saved lists yet.",
+        "body": "A list keeps offers you want to come back to. Start one from the bundle you are building now.",
+        "cta": "Save my bundle as a list",
+        "bundleEmpty": "Your bundle is empty."
+      },
+      "browse": "Browse plans",
+      "backToLists": "All saved lists",
+      "name": {
+        "label": "List name",
+        "create": "Create list",
+        "save": "Save",
+        "cancel": "Cancel",
+        "rename": "Rename list"
+      },
+      "perMonth": "{amount}/mo",
+      "priceNow": "Price now",
+      "priceChanged": "Price changed: was {was}, now {now} ({delta})",
+      "unavailableLine": "No longer available.",
+      "quantity": "Quantity {count}",
+      "term": {
+        "month-to-month": "Month-to-month",
+        "12-months": "12-month price lock",
+        "24-months": "24-month price lock"
+      },
+      "removeLine": "Remove",
+      "linesEmpty": "This list is empty. Save offers to it from the plan pages.",
+      "addAll": "Add all to My bundle",
+      "adding": "Adding…",
+      "moveResult": {
+        "added": "{count, plural, one {# item added to My bundle.} other {# items added to My bundle.}}",
+        "none": "Nothing was added to My bundle.",
+        "view": "View My bundle",
+        "skippedLine": "{name}: {reason}"
+      },
+      "delete": {
+        "action": "Delete list",
+        "title": "Delete this list?",
+        "body": "The list is removed. Items already in My bundle stay there.",
+        "confirm": "Delete",
+        "cancel": "Keep"
+      },
+      "saveTo": "Save to list",
+      "saved": "Saved to {list}",
+      "saveForLater": "Save for later",
+      "saveBundle": "Save bundle as list",
+      "newListOption": "New list…",
+      "chooseList": "Choose a list",
+      "full": "This list is full ({max} items).",
+      "limit": "You can keep up to {max} lists.",
+      "errors": {
+        "generic": "We couldn't update your lists. Try again.",
+        "invalidName": "Enter a name of up to {max} characters."
+      }
     }
   },
   "auth": {

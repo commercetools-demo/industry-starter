@@ -88,7 +88,7 @@ describe('telecom-catalog-model scenarios', () => {
     expect(api.list('inventory')).toHaveLength(19);
     expect(api.list('cart-discounts')).toHaveLength(6);
     expect(api.list('discount-codes')).toHaveLength(1);
-    expect(api.list('types')).toHaveLength(4);
+    expect(api.list('types')).toHaveLength(6);
     expect(api.list('recurrence-policies')).toHaveLength(5);
     expect(api.list('custom-objects')).toHaveLength(11);
     expect(api.list('shipping-methods')).toHaveLength(2);

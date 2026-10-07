@@ -3,6 +3,7 @@
 import { useState, type ReactElement } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { BlockedAddNotice } from '@/components/bundle/BlockedAddNotice';
+import { SaveToListButton } from '@/components/account/SaveToListButton';
 import { Button } from '@/components/ui/Button';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
@@ -108,6 +109,7 @@ export function OfferCard({ offer, highlighted = false }: OfferCardProps): React
             {price === null && !selected ? tp('cta.unavailable') : selected ? t('cta.selected') : t('cta.choose')}
           </Button>
           {selection.blocked ? <BlockedAddNotice blocked={selection.blocked} name={offer.name} onDismiss={selection.dismissBlocked} /> : null}
+          <SaveToListButton offerKey={offer.key} variantId={offer.variants.find((variant) => variant.sku === sku)?.id} />
           <details className="border-t border-border pt-4">
             <summary className="flex min-h-11 cursor-pointer items-center font-display text-md font-bold">{t('customize')}</summary>
             <div className="flex flex-col gap-5 pt-3">

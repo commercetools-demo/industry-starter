@@ -4,6 +4,7 @@ import { useMemo, useState, type ReactElement } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { BlockedAddNotice } from '@/components/bundle/BlockedAddNotice';
 import { useReasonText } from '@/components/bundle/useReasonText';
+import { SaveToListButton } from '@/components/account/SaveToListButton';
 import { Button } from '@/components/ui/Button';
 import { Card, CardBody } from '@/components/ui/Card';
 import { FOCUS_RING } from '@/components/ui/focus';
@@ -109,6 +110,7 @@ export function AddonCard({ offer, highlighted = false }: AddonCardProps): React
           ) : null}
           {state.kind === 'unavailable' && state.reason ? <p className="m-0 text-sm text-text-muted">{reasonText(state.reason)}</p> : null}
           {blocked ? <BlockedAddNotice blocked={blocked} name={offer.name} onDismiss={() => setBlocked(null)} /> : null}
+          <SaveToListButton offerKey={offer.key} />
           {failed ? (
             <p role="alert" className="m-0 text-sm text-danger">
               {tb('error.generic')}

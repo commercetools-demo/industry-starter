@@ -805,3 +805,84 @@ export interface ReorderResult {
   cart: Cart;
   unavailable: ReorderUnavailable[];
 }
+
+// ---- T: addresses, payment methods, lists ----
+export interface SavedAddress {
+  id: string;
+  key?: string;
+  firstName: string;
+  lastName: string;
+  /** The whole street line, e.g. "1 Main St". */
+  streetName: string;
+  /** Apt / suite. */
+  additionalStreetInfo?: string;
+  city: string;
+  /** US: 2-letter code; DE: omitted. */
+  state?: string;
+  postalCode: string;
+  country: 'US' | 'DE';
+  phone?: string;
+  /** The id is in `shippingAddressIds` (service address) / `billingAddressIds`. */
+  isService: boolean;
+  isBilling: boolean;
+  isDefaultService: boolean;
+  isDefaultBilling: boolean;
+}
+export type AddressInput = Omit<SavedAddress, 'id' | 'key' | 'isDefaultService' | 'isDefaultBilling'>;
+export type AddressField = 'firstName' | 'lastName' | 'streetName' | 'city' | 'state' | 'postalCode' | 'country' | 'phone';
+export type AddressFieldError = 'required' | 'invalidCountry' | 'invalidState' | 'invalidPostalCode' | 'invalidPhone' | 'tooLong';
+
+export type CardBrand = 'visa' | 'mastercard' | 'amex' | 'unknown';
+/** What the buyer sees of a stored payment method. Never carries the token, the interface or the interface account. */
+export interface PaymentMethodView {
+  id: string;
+  brand: CardBrand;
+  last4: string | null;
+  /** 'MM/YY'. */
+  expiry: string | null;
+  /** The localized name of the record when it has no card data; '' otherwise (the UI builds "Visa ending 4242" or "Saved card"). */
+  label: string;
+  isDefault: boolean;
+}
+
+export interface SavedList {
+  id: string;
+  name: string;
+  lineCount: number;
+  /** ISO timestamp. */
+  updatedAt: string;
+}
+export type PriceDeltaStatus = 'same' | 'up' | 'down' | 'unknown';
+export interface PriceDelta {
+  status: PriceDeltaStatus;
+  deltaCents: number;
+}
+export interface SavedListLine {
+  lineId: string;
+  offerKey: string;
+  name: string;
+  /** The term of the saved variant (the UI translates it); null for lines without one. */
+  term: TermKey | null;
+  /** Literal descriptor of a variant without a term (a handset: "Black · 256 GB"); '' otherwise. */
+  variantLabel: string;
+  quantity: number;
+  saved: Money | null;
+  current: Money | null;
+  /** `current` is a monthly price (shown "/mo"). */
+  recurring: boolean;
+  delta: PriceDelta;
+  available: boolean;
+  reason?: string;
+}
+export interface SavedListDetail {
+  id: string;
+  name: string;
+  lines: SavedListLine[];
+}
+export interface BundleMoveResult {
+  added: { lineId: string; offerKey: string; name: string }[];
+  /** `messageKey`/`params` (J/K's `offers.reason.*`) let the UI localize a refusal; `message` is the English fallback. */
+  skipped: { lineId: string; offerKey?: string; name: string; reason: { code: string; message: string; messageKey?: string; params?: Record<string, string | number> } }[];
+  /** The bundle after the move (null when nothing could be added and there is no bundle). */
+  cart: Cart | null;
+}
