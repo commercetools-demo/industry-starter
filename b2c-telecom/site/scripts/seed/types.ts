@@ -67,7 +67,7 @@ export interface Reconciler<D extends Draft = Draft, R = unknown> {
   refs(draft: D): Ref[];
   fetch(api: CtApi, key: string): Promise<R | null>;
   create(api: CtApi, draft: D, ctx: Ctx): Promise<void>;
-  diff(existing: R, draft: D): { changes: Change[]; conflict?: string };
+  diff(existing: R, draft: D, ctx?: Ctx): { changes: Change[]; conflict?: string };
   update(api: CtApi, existing: R, changes: Change[], draft: D, ctx: Ctx): Promise<void>;
   remove(api: CtApi, existing: R, ctx: Ctx): Promise<void>;
 }
