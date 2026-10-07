@@ -430,9 +430,8 @@ export async function runSpike(http: Http, env: SpikeEnv, opts: { skipCheckout: 
         const cart = await s.createCart('intro');
         const updated = await s.updateCart(str(cart.id), [{ action: 'addLineItem', sku: str(intro.sku), quantity: 1, recurrenceInfo: recurrence('Fixed') }]);
         const line = arr(updated.lineItems)[0] ?? {};
-        const initialTotal = rec(updated.totalPrice).centAmount;
-        const hasIntro = arr(line.discountedPricePerQuantity).length > 0;
-        const shippingSet = rec(updated.shippingAddress).country === 'US';
+        const lineTotal = (l: Rec): string => String(rec(l.totalPrice).centAmount);
+        const discountCount = (l: Rec): number => arr(l.discountedPricePerQuantity).reduce((n, d) => n + arr(rec(rec(d).discountedPrice).includedDiscounts).length, 0);
         const order = await http.api('POST', 'orders', { cart: { typeId: 'cart', id: str(updated.id) }, version: updated.version, orderNumber: `spike-recurring-${s.stamp}-intro` });
         s.created.orders.push(str(order.id));
         const list = await fetchRecurring(str(order.id));
@@ -441,7 +440,7 @@ export async function runSpike(http: Http, env: SpikeEnv, opts: { skipCheckout: 
         const rline = arr(rcart.lineItems)[0] ?? {};
         return {
           status: 'INFO',
-          evidence: `initial cart total ${String(initialTotal)} (discount on line: ${hasIntro ? 'yes' : 'no'}, address ${shippingSet ? 'set' : 'missing'}); recurring cart line price ${String(rec(rec(rline.price).value).centAmount)} total ${String(rec(rcart.totalPrice).centAmount)} (discounted: ${rline.discountedPricePerQuantity && arr(rline.discountedPricePerQuantity).length > 0 ? 'yes' : 'no'})`,
+          evidence: `list price ${String(rec(rec(line.price).value).centAmount)}; initial cart line total ${lineTotal(line)} with ${discountCount(line)} discount(s); recurring cart line total ${lineTotal(rline)} with ${discountCount(rline)} discount(s)`,
         };
       }),
     );

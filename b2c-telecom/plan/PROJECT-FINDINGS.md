@@ -121,7 +121,7 @@ Verified live on 2026-10-07 against `spec-test-b2c-telecom` through the dev wind
 - These are iStock/Getty files: the "Photos from Pexels" credit text is inaccurate and public hotlinking is not covered. Acceptable for the demo under D-066; see QUESTIONS.md Q-008.
 
 <!-- SPIKE-L:BEGIN -->
-## L - Checkout spike (recurring + one-time) - run 2026-10-07T20:39:35.882Z
+## L - Checkout spike (recurring + one-time) - run 2026-10-07T20:45:50.752Z
 Result: PENDING (OA-05)  |  Gate 2: owner review required
 
 Why: Checkout probes are blocked until OA-05 is done. Best guess from the other probes: A.
@@ -142,7 +142,7 @@ Why: Checkout probes are blocked until OA-05 is done. Best guess from the other 
 | P7 | Recurring order(s) created with a recurring cart holding only recurring lines | PASS | 1 recurring order(s): schedule standard 1 Months; origin RecurringOrder; skus MLV-CBL-500-24M+MLV-PHN-UNL-M2M; modes Fixed+Dynamic |
 | P8 | Recurring cart inherits paymentStrategy Checkout | PASS | inherited: Checkout |
 | P9 | paymentStrategy can be set on a recurring cart | PASS | {action,paymentStrategy} -> readable |
-| P10 | INFO: intro line (Cable 100, 24 months) in the recurring cart | INFO | initial cart total 0 (discount on line: yes, address set); recurring cart line price 3999 total 0 (discounted: yes) |
+| P10 | INFO: intro line (Cable 100, 24 months) in the recurring cart | INFO | list price 3999; initial cart line total 0 with 2 discount(s); recurring cart line total 0 with 2 discount(s) |
 | P11 | INFO: recalculate on a recurring cart | INFO | 200: recurring carts can be updated |
 
 Accepted action field names: {action,paymentStrategy}
@@ -158,5 +158,5 @@ Open items: P4 (OA-05 (--skip-checkout)); P5 (OA-05 (--skip-checkout))
 - **A strategy without an allocation blocks the order**: `POST /orders` on a cart with recurring lines and `paymentStrategy: Checkout` but no allocation fails with `400 InvalidOperation: ... its recurring payment configuration must contain at least one payment allocation.` The same cart with NO recurring payment configuration at all orders fine (this is what G's demo orders do). So whoever sets the strategy must also add the allocation before the order: the hosted Checkout does that after payment (docs: one allocation, 100 % of the order total, one PaymentMethod). U must not set the strategy itself unless an allocation follows.
 - **Allocation shape** (works): `{ action: 'addRecurringPaymentAllocation', id: <UUID>, paymentMethod: { typeId: 'payment-method', id }, allocation: { type: 'Relative', percentage: 100 } }`. The allocation `id` must be a UUID (`Invalid UUID: 'a1'` otherwise). A `PaymentMethod` can be created directly (`POST /payment-methods` with `key, customer, method, paymentInterface, token{value}, paymentMethodStatus: 'Active'`).
 - **Order and recurring order from a mixed cart**: one cart with a Fixed line, a Dynamic line, a one-time Line Item and a Custom Line Item was ordered (`201`). The platform created ONE Recurring Order (schedule standard 1 Months); its recurring cart has `origin = RecurringOrder` and holds ONLY the two recurring lines (Fixed and Dynamic together); the one-time Line Item and the Custom Line Item stay on the order only. The recurring cart inherited `paymentStrategy: Checkout` from the initial cart (no `ensureRecurringPaymentStrategy` needed) and accepts `recalculate`.
-- **Intro discount carry-over (P10, before the L intro discounts are seeded)**: a cable-100 24-month line with a discount on the initial cart (the seeded "first month free", `NonRecurringOrdersOnly`) had total 0 on the recurring cart as well, so `recurringOrderScope` did not stop it; re-check with the L intro discounts (see the L report).
+- **Intro discount carry-over (P10, re-run after `seed:discounts`)**: a cable-100 24-month line (list price 3999) ordered with the L intro discount (`AnyOrder`) AND G's `malva-cd-intro-free-month` (`NonRecurringOrdersOnly`, 100 %) had line total 0 on the initial cart with 2 discounts, and the platform-created recurring cart showed the same line total 0 with the same 2 discounts. So the recurring cart is calculated with the discounts of the initial cart, including the one scoped `NonRecurringOrdersOnly`; neither `recurringOrderScope` nor Fixed makes a discount first-order-only. The two discounts also stack on Cable 100 and Air 5G (intro price, then first month free = 0 payable now): owner question in the L report.
 - ApiError codes are a closed set (E): L reasons travel in `details.reason` (`RECURRENCE_POLICY_MISSING`, `RECURRING_PRICE_MISSING`, `RECURRING_ORDER_BUSY`).
