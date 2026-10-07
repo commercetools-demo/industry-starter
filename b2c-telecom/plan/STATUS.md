@@ -19,7 +19,7 @@ Updated by the developer on each task and by Claude (after Chrome verification) 
 | M | My bundle, Broadband Facts label, discount prompt | 19 | 19 | Merged (verify + live smoke; Chrome C-M pending) | orchestrator | 2026-10-07 |
 | N | Category listings and add-ons page | 16 | 16 | Merged (verify + live smoke curl/Chrome; mobile+Lighthouse pending) | orchestrator | 2026-10-07 |
 | O | Home page | 7 | 7 | Merged (verify + curl smoke; Chrome C-O pending; C-O-5 static shell unmet) | orchestrator | 2026-10-07 |
-| P | Search | 11 | 0 | Not started | | |
+| P | Search | 11 | 0 | Merged (verify + curl live; Chrome C-P pending; header magnifier needs owner sign-off) | orchestrator | 2026-10-07 |
 | Q | Devices and acquisition modes | 13 | 0 | Not started | | |
 | R | Auth pages and identity | 12 | 12 | Merged (verify + curl live auth flows; Chrome C-R pending) | orchestrator | 2026-10-07 |
 | S | Account shell, dashboard and order history | 12 | 0 | Not started | | |
