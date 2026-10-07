@@ -1,17 +1,29 @@
 // @vitest-environment node
 import * as fx from '@/lib/offers/__fixtures__/offers';
-import type { CartLineRef, Offer } from '@/lib/types';
+import type { BuyerContext, CartLineRef, Market, Offer } from '@/lib/types';
 
 const getAllOffers = vi.fn<(market: { locale: string }) => Promise<Offer[]>>();
 const getSession = vi.fn<() => Promise<{ cartId?: string }>>();
 const getCartLineRefs = vi.fn<(cartId: string) => Promise<CartLineRef[]>>();
+const getBuyerContext = vi.fn<(market?: Market) => Promise<BuyerContext>>();
 const { cartWrite } = vi.hoisted(() => ({ cartWrite: vi.fn() }));
 
 vi.mock('@/lib/ct/catalog', () => ({ getAllOffers: (market: { locale: string }) => getAllOffers(market) }));
+vi.mock('@/lib/ct/buyer-context', () => ({ getBuyerContext: (market?: Market) => getBuyerContext(market) }));
 vi.mock('@/lib/ct/session', () => ({ getSession: () => getSession() }));
 vi.mock('@/lib/ct/cart-context', () => ({ getCartLineRefs: (cartId: string) => getCartLineRefs(cartId), writeCart: cartWrite }));
 
 import * as route from './route';
+
+const buyer = (patch: Partial<BuyerContext> = {}): BuyerContext => ({
+  customerType: 'consumer',
+  isExistingCustomer: false,
+  channel: 'online',
+  now: new Date('2026-10-07T12:00:00Z'),
+  held: [],
+  signedIn: false,
+  ...patch,
+});
 
 const post = (body: unknown) =>
   route.POST(new Request('http://localhost/api/offers/compatibility', { method: 'POST', headers: { 'content-type': 'application/json' }, body: typeof body === 'string' ? body : JSON.stringify(body) }));
@@ -22,6 +34,7 @@ beforeEach(() => {
   getAllOffers.mockResolvedValue(fx.ALL_OFFERS);
   getSession.mockResolvedValue({});
   getCartLineRefs.mockResolvedValue([]);
+  getBuyerContext.mockResolvedValue(buyer());
 });
 
 describe('POST /api/offers/compatibility', () => {
@@ -106,5 +119,57 @@ describe('POST /api/offers/compatibility', () => {
   it('reads the catalog of the requested locale market', async () => {
     await post({ offerKey: 'malva-offer-spotify', planOfferKey: 'malva-offer-cable-500', locale: 'de-DE' });
     expect(getAllOffers).toHaveBeenCalledWith({ locale: 'de-DE', currency: 'EUR', country: 'DE' });
+  });
+
+  describe('K checks (held services, exclusivity, eligibility)', () => {
+    it('a held-service conflict returns HELD_SERVICE_CONFLICT without replaces', async () => {
+      getBuyerContext.mockResolvedValue(buyer({ signedIn: true, held: [{ offerKey: 'malva-offer-cable-500', offerName: 'Cable 500', source: 'order', reference: 'MLV-1' }] }));
+      const body = await (await post({ offerKey: 'malva-offer-wireless-5g' })).json();
+      expect(body.verdict.status).toBe('unavailable');
+      expect(body.verdict.reasons.map((reason: { code: string }) => reason.code)).toEqual(['HELD_SERVICE_CONFLICT']);
+      expect(body.verdict.replaces).toBeUndefined();
+    });
+
+    it('a cart conflict returns one EXCLUSIVE_CONFLICT with replaces (J and K do not duplicate it), symmetric in both orders', async () => {
+      getSession.mockResolvedValue({ cartId: 'c' });
+      getCartLineRefs.mockResolvedValue([{ lineItemId: 'NET', offerKey: 'malva-offer-cable-500', quantity: 1 }]);
+      const forward = (await (await post({ offerKey: 'malva-offer-wireless-5g' })).json()).verdict;
+      expect(forward.reasons.map((reason: { code: string }) => reason.code)).toEqual(['EXCLUSIVE_CONFLICT']);
+      expect(forward.replaces).toEqual([{ lineItemId: 'NET', offerKey: 'malva-offer-cable-500', offerName: 'Cable 500' }]);
+      getCartLineRefs.mockResolvedValue([{ lineItemId: 'AIR', offerKey: 'malva-offer-wireless-5g', quantity: 1 }]);
+      const backward = (await (await post({ offerKey: 'malva-offer-cable-500' })).json()).verdict;
+      expect(backward.status).toBe('unavailable');
+      expect(backward.replaces[0].lineItemId).toBe('AIR');
+    });
+
+    it('a non conflicting plan stays allowed with no reasons', async () => {
+      getSession.mockResolvedValue({ cartId: 'c' });
+      getCartLineRefs.mockResolvedValue([{ lineItemId: 'NET', offerKey: 'malva-offer-cable-500', quantity: 1 }]);
+      const body = await (await post({ offerKey: 'malva-offer-phone-unlimited' })).json();
+      expect(body.verdict).toMatchObject({ status: 'allowed', reasons: [] });
+    });
+
+    it('an ineligible candidate is unavailable with its reason, also next to J reasons', async () => {
+      getAllOffers.mockResolvedValue(fx.ALL_OFFERS.map((offer) => (offer.key === 'malva-offer-cable-existing-customer' ? { ...offer, existingCustomer: 'existing' as const } : offer)));
+      const anonymous = await (await post({ offerKey: 'malva-offer-cable-existing-customer' })).json();
+      expect(anonymous.verdict.status).toBe('unavailable');
+      expect(anonymous.verdict.reasons[0]).toMatchObject({ code: 'NOT_ELIGIBLE_EXISTING_CUSTOMER', params: { rule: 'existing' } });
+      getBuyerContext.mockResolvedValue(buyer({ isExistingCustomer: true, signedIn: true }));
+      expect((await (await post({ offerKey: 'malva-offer-cable-existing-customer' })).json()).verdict.status).toBe('allowed');
+    });
+
+    it('answers with the same shape, never writes and an override stays unavailable (absolute)', async () => {
+      getBuyerContext.mockResolvedValue(buyer({ held: [{ offerKey: 'malva-offer-cable-500', offerName: 'Cable 500', source: 'recurring-order', reference: 'RO-1' }] }));
+      const res = await post({ offerKey: 'malva-offer-wireless-5g', override: true });
+      const body = await res.json();
+      expect(Object.keys(body).sort()).toEqual(['mode', 'offerKey', 'verdict']);
+      expect(body.verdict.status).toBe('unavailable');
+      expect(cartWrite).not.toHaveBeenCalled();
+    });
+
+    it('resolves the buyer for the requested market', async () => {
+      await post({ offerKey: 'malva-offer-spotify', planOfferKey: 'malva-offer-cable-500', locale: 'de-DE' });
+      expect(getBuyerContext).toHaveBeenCalledWith({ locale: 'de-DE', currency: 'EUR', country: 'DE' });
+    });
   });
 });
