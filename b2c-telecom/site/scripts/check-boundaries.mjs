@@ -70,7 +70,8 @@ function resolveImport(root, fromRel, specifier) {
     const full = path.join(root, candidate);
     if (existsSync(full) && statSync(full).isFile()) return candidate;
   }
-  return specifier;
+  // A server-layer module that does not exist (yet) is still a server-only target.
+  return /^lib\/(ct|mappers)\//.test(base) ? base : specifier;
 }
 
 function importsOf(source) {
@@ -112,7 +113,8 @@ export function checkBoundaries(rootDir) {
   }
 
   const isFile = (target) => existsSync(path.join(root, target)) && statSync(path.join(root, target)).isFile();
-  const isServerPackage = (target) => SERVER_PACKAGES.some((pkg) => startsWithPackage(target, pkg));
+  const isServerPackage = (target) =>
+    SERVER_PACKAGES.some((pkg) => startsWithPackage(target, pkg)) || /^lib\/(ct|mappers)\//.test(target);
 
   const files = scannedFiles(root);
 

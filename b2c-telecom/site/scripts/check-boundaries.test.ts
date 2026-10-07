@@ -65,6 +65,13 @@ describe('check-boundaries', () => {
     expect(problems).toContain('boundary: hooks/useX.ts -> next/headers (client code reaches a server-only module)');
   });
 
+  it('a client file importing a lib/ct module that does not exist yet is still reported', () => {
+    write('components/ui/Probe.tsx', "import { x } from '@/lib/ct/cart';\nexport const Probe = x;\n");
+    expect(checkBoundaries(dir)).toEqual([
+      'boundary: components/ui/Probe.tsx -> lib/ct/cart (client code reaches a server-only module)',
+    ]);
+  });
+
   it('a server page importing a server module is not a client reach', () => {
     write('lib/ct/cart.ts', SERVER_MODULE);
     write('app/[locale]/bundle/page.tsx', "import { getCart } from '@/lib/ct/cart';\nexport default getCart;\n");

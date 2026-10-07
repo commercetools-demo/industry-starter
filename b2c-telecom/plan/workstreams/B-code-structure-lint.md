@@ -101,7 +101,7 @@ Plus a bullet list of the five boundary rules and "never `fetch('/api/…')` inl
 - [x] B-06 Add blocks 8 and 9 with tests: `lib/offers/x.ts` importing `react` or `@/lib/ct/cart` errors, using `fetch(` errors (`no-restricted-globals`), a pure function is fine; `lib/types.ts` importing `@commercetools/platform-sdk` errors.
 - [x] B-07 Write `scripts/check-boundaries.mjs` (+ `.d.mts`) and `scripts/check-boundaries.test.ts` (temp-dir fixtures, one test per rule 1–5 plus a clean project and the transitive case `components/ui/A.tsx -> lib/format.ts -> lib/ct/cart.ts` with the exact message). Add npm script `check:boundaries` and insert it into `verify` at position 5 of the canonical order (after `check:versions`, before `lint`).
 - [x] B-08 Append the "Where code goes" section to `site/README.md` and extend `test/structure.test.ts` with "New feature added: README names one location and one example per layer" (README contains the three layer rows and the three example paths as text).
-- [ ] B-09 Run `npm run verify`; confirm the real project passes `check:boundaries`. Record the C- checks as ready.
+- [x] B-09 Run `npm run verify`; confirm the real project passes `check:boundaries`. Record the C- checks as ready.
 
 ## Unit tests (scenario → test)
 | Scenario (exact title from the spec) | Capability | Test (file → `it(...)` name) |
