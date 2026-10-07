@@ -1,6 +1,6 @@
 /** Typography of rendered markdown (no typography plugin): headings, paragraphs, lists and links inside a content column. */
 export const PROSE =
-  'font-body text-md leading-loose text-text ' +
+  'font-body text-md leading-[1.75] text-text ' +
   '[&_h2]:mt-9 [&_h2]:mb-3 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:leading-tight [&_h2]:text-brand-950 ' +
   '[&_h3]:mt-7 [&_h3]:mb-2 [&_h3]:font-display [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-brand-950 ' +
   '[&_p]:my-4 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-7 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-7 [&_li]:my-2 ' +

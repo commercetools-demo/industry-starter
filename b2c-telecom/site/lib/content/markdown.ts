@@ -44,7 +44,8 @@ const ENTITIES: Record<string, string> = { '&amp;': '&', '&lt;': '<', '&gt;': '>
 /** Plain text of rendered HTML (for JSON-LD answers). */
 export function stripHtml(html: string): string {
   return html
-    .replace(/<[^>]*>/g, ' ')
+    .replace(/<\/(?:p|li|h[1-6]|div|ul|ol|blockquote)>|<br\s*\/?>/gi, ' ') // block ends separate words; inline tags do not
+    .replace(/<[^>]*>/g, '')
     .replace(/&(?:amp|lt|gt|quot|#39|nbsp);/g, (entity) => ENTITIES[entity] ?? entity)
     .replace(/\s+/g, ' ')
     .trim();
