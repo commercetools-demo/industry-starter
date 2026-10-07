@@ -95,3 +95,16 @@ listing-generated: 2026-10-07T19:21:21.020Z
 - Product Search status lives at `searchIndexing.productsSearch.status` (Activated).
 - `.env.seed` CTP_* variable names are mapped by `scripts/seed/lib.ts`; the file stays gitignored.
 - Shipping methods `malva-shipping-standard` and `malva-delivery-digital` are deferred (seed exit 4 skip) until workstream G defines the product-type attribute `offer-kind`; the platform rejects shipping predicates over unknown attributes. C-F-2 is checked after G.
+
+## Workstream G findings (2026-10-07; details in plan/reports/G-report.md)
+- Inventory mode `None` is the only mode accepting service lines at order time; `TrackOnly`/`ReserveOnOrder` refuse them (OutOfStock). The app must check handset stock itself.
+- An order with a recurring line needs a customer on the cart: guests cannot create one (conflicts with D-035; see QUESTIONS.md Q-007).
+- An order needs a shipping address even for add-on-only carts.
+- `OrderFromCartDraft.custom` cannot change the cart's custom type: type the cart `malva-order` from creation.
+- Product Search: ~2 minutes from write to searchable (no 15-minute reindex seen).
+- Platform limits: required set attributes refused (set attributes are optional), dots not allowed in price keys (`_` used), max 50 search expressions per query.
+- ReserveOnOrder experiments consumed stock; a re-seed restored it.
+
+### G: image hosts
+- All 35 lock entries / 70 URLs are on `media.istockphoto.com`; none on `images.pexels.com`. No photographer, licence or rate-limit data in the response. A clean URL answers 301 to a sized variant, then 200 `image/jpeg`.
+- These are iStock/Getty files: the "Photos from Pexels" credit text is inaccurate and public hotlinking is not covered. Acceptable for the demo under D-066; see QUESTIONS.md Q-008.

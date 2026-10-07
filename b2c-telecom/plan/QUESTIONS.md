@@ -39,3 +39,9 @@ Answer in this file or in chat; the plan continues with the stated default.
 ## Q-006 (workstream X) — Release approvers
 **Question:** Release approvers: removed entirely (D-069); no longer applicable. **Blocking:** no.
 **Answer (owner):** Remove the release approvers entirely (D-069).
+
+## Open, raised by workstream G (2026-10-07)
+- **Q-007** Guest checkout vs recurring orders: a recurring line needs a customer on the cart, so D-035 (guest checkout) cannot create a recurring order. Default taken: checkout requires sign-in or auto-registration. Owner to confirm.
+- **Q-008** Image licensing: seeded images are iStock files, credit page says Pexels. Default: demo only; credit text to say "stock photography". Owner to confirm.
+- **Q-009** Demo customers' password was passed on the command line (`SEED_DEMO_PASSWORD`); decide whether to keep a documented demo password (see G-report).
+- **Q-010** Demo order `MLV-DEMO-0003` has a 0 total: confirm intended.

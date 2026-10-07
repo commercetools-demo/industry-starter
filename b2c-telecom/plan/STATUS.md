@@ -10,7 +10,7 @@ Updated by the developer on each task and by Claude (after Chrome verification) 
 | D | Locale routing, messages, region and language switch | 10 | 10 | Verified | Claude (verify + Chrome C-D-1…7) | 2026-10-07 |
 | E | BFF core | 13 | 13 | Verified | Claude (verify + Chrome/terminal C-E-1…7) | 2026-10-07 |
 | F | Seeding framework, project settings, market and shipping | 15 | 15 | Verified | orchestrator (MCP + terminal) | 2026-10-07 |
-| G | Catalog model, seed data and images | 20 | 0 | Not started | | |
+| G | Catalog model, seed data and images | 20 | 20 | Merged (C-G-1,4,9 + C-F-2 verified; rest pending) | orchestrator | 2026-10-07 |
 | H | Data-loading foundation | 11 | 0 | Not started | | |
 | I | Design system primitives, shell and error pages | 16 | 0 | Not started | | |
 | J | Offer rules: compatibility, add-ons, required equipment | 10 | 0 | Not started | | |
