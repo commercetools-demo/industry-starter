@@ -123,3 +123,44 @@ Verified live on 2026-10-07 against `spec-test-b2c-telecom` through the dev wind
 ## J — catalog lint
 
 `npm run lint:catalog` on 2026-10-07 against spec-test-b2c-telecom (en-US/USD): `Checked 27 offers. 0 error(s), 0 warning(s).` All conflicts are declared on both sides; every reference in included-offers, conflicts-with, compatible-addons and incompatible-with resolves. Live facts that shaped the rules: cable plans include the DOCSIS modem and wireless plans include the 5G gateway (so required equipment kinds are satisfied by inclusion, no equipment line is auto-added); Unlimited Max lists Netflix in compatible-addons (a positive exception to its internet-only attributes); the AX3000 router lists wireless-lite in incompatible-with.
+
+<!-- SPIKE-L:BEGIN -->
+## L - Checkout spike (recurring + one-time) - run 2026-10-07T20:45:50.752Z
+Result: PENDING (OA-05)  |  Gate 2: owner review required
+
+Why: Checkout probes are blocked until OA-05 is done. Best guess from the other probes: A.
+
+| Probe | Title | Status | Evidence |
+| --- | --- | --- | --- |
+| P0 | Policy malva-monthly exists with a 1-month standard schedule | PASS | standard 1 Months |
+| P1 | Cart takes a Fixed, a Dynamic, a one-time Line Item and a Custom Line Item in one update | PASS | 200, 3 line items, 1 custom line item |
+| P1b | Cart with recurring + Custom Line Item only | PASS | 200 |
+| P1c | Cart with recurring + one-time Line Item only | PASS | 200 |
+| P2 | Recurring lines carry a price tied to malva-monthly | PASS | 2 recurring lines tied |
+| P3 | recurringPaymentConfiguration (Checkout) accepted on the initial cart | PASS | #1 HTTP 400 InvalidJsonInput Request body does not contain valid JSON.; #2 200; stored {paymentStrategy,paymentAllocations[]} |
+| P3b | Allocation (100 % to a stored payment method) can be added, as Checkout does after payment | PASS | 200; stored {id,paymentMethod{typeId,id},allocation{type,percentage}} |
+| P4 | Hosted Checkout session for the mixed cart | BLOCKED | OA-05 (--skip-checkout) |
+| P5 | Checkout application readable | BLOCKED | OA-05 (--skip-checkout) |
+| P6 | Order from the mixed cart (Method A) | PASS | 201 |
+| P6b | INFO: order from the same mixed cart with NO recurringPaymentConfiguration (baseline) | INFO | 201; 1 recurring order(s) found immediately; config stored on recurring cart: none |
+| P7 | Recurring order(s) created with a recurring cart holding only recurring lines | PASS | 1 recurring order(s): schedule standard 1 Months; origin RecurringOrder; skus MLV-CBL-500-24M+MLV-PHN-UNL-M2M; modes Fixed+Dynamic |
+| P8 | Recurring cart inherits paymentStrategy Checkout | PASS | inherited: Checkout |
+| P9 | paymentStrategy can be set on a recurring cart | PASS | {action,paymentStrategy} -> readable |
+| P10 | INFO: intro line (Cable 100, 24 months) in the recurring cart | INFO | list price 3999; initial cart line total 0 with 2 discount(s); recurring cart line total 0 with 2 discount(s) |
+| P11 | INFO: recalculate on a recurring cart | INFO | 200: recurring carts can be updated |
+
+Accepted action field names: {action,paymentStrategy}
+Initial cart may mix recurring and one-time lines: yes (P1/P6)   (documented for Orders API Method A; Checkout behaviour per P4)
+Recurring grouping: 1 recurring order(s); Fixed and Dynamic lines in same order: yes
+Fallback plan: M keeps one cart. U creates the session for that cart; after order creation U calls `ensureRecurringPaymentStrategy(order.id)` (a no-op under A) and `stampOrderCustomFields`. Other options: A / A-prime: one mixed cart; F1: Custom Line Items for one-time charges; F2: two carts; F3: Payment Only mode.
+Open items: P4 (OA-05 (--skip-checkout)); P5 (OA-05 (--skip-checkout))
+<!-- SPIKE-L:END -->
+
+## L - scopes and recurring-payment facts (live, 2026-10-07)
+- **Scopes that worked** with the storefront client from `.env.local` (no 403 anywhere in the spike): `manage_recurring_orders`, `view_recurring_orders`, `view_recurrence_policies`, `manage_orders`, `manage_customers`, `manage_payment_methods`, `manage_sessions`, `view_shipping_methods`, `view_tax_categories`, `view_published_products`. No scope was missing. The Checkout Applications read (P5) is still untested (OA-05).
+- **Recurring payment fields exist in the live API and in the OAS** (the plan assumed they did not). `setRecurringPaymentStrategy { paymentStrategy: 'Checkout' }` is accepted on the initial cart; the cart then stores `recurringPaymentConfiguration: { paymentStrategy: 'Checkout', paymentAllocations: [] }`. `setRecurringPaymentConfiguration` needs BOTH `paymentStrategy` and `paymentAllocations` inside `recurringPaymentConfiguration` (the plan's candidate 1 without `paymentAllocations` is refused with `InvalidJsonInput`).
+- **A strategy without an allocation blocks the order**: `POST /orders` on a cart with recurring lines and `paymentStrategy: Checkout` but no allocation fails with `400 InvalidOperation: ... its recurring payment configuration must contain at least one payment allocation.` The same cart with NO recurring payment configuration at all orders fine (this is what G's demo orders do). So whoever sets the strategy must also add the allocation before the order: the hosted Checkout does that after payment (docs: one allocation, 100 % of the order total, one PaymentMethod). U must not set the strategy itself unless an allocation follows.
+- **Allocation shape** (works): `{ action: 'addRecurringPaymentAllocation', id: <UUID>, paymentMethod: { typeId: 'payment-method', id }, allocation: { type: 'Relative', percentage: 100 } }`. The allocation `id` must be a UUID (`Invalid UUID: 'a1'` otherwise). A `PaymentMethod` can be created directly (`POST /payment-methods` with `key, customer, method, paymentInterface, token{value}, paymentMethodStatus: 'Active'`).
+- **Order and recurring order from a mixed cart**: one cart with a Fixed line, a Dynamic line, a one-time Line Item and a Custom Line Item was ordered (`201`). The platform created ONE Recurring Order (schedule standard 1 Months); its recurring cart has `origin = RecurringOrder` and holds ONLY the two recurring lines (Fixed and Dynamic together); the one-time Line Item and the Custom Line Item stay on the order only. The recurring cart inherited `paymentStrategy: Checkout` from the initial cart (no `ensureRecurringPaymentStrategy` needed) and accepts `recalculate`.
+- **Intro discount carry-over (P10, re-run after `seed:discounts`)**: a cable-100 24-month line (list price 3999) ordered with the L intro discount (`AnyOrder`) AND G's `malva-cd-intro-free-month` (`NonRecurringOrdersOnly`, 100 %) had line total 0 on the initial cart with 2 discounts, and the platform-created recurring cart showed the same line total 0 with the same 2 discounts. So the recurring cart is calculated with the discounts of the initial cart, including the one scoped `NonRecurringOrdersOnly`; neither `recurringOrderScope` nor Fixed makes a discount first-order-only. The two discounts also stack on Cable 100 and Air 5G (intro price, then first month free = 0 payable now): owner question in the L report.
+- ApiError codes are a closed set (E): L reasons travel in `details.reason` (`RECURRENCE_POLICY_MISSING`, `RECURRING_PRICE_MISSING`, `RECURRING_ORDER_BUSY`).

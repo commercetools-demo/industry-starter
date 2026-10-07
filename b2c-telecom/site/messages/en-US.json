@@ -35,6 +35,17 @@
   "account": {},
   "auth": {},
   "search": {},
+  "pricing": {
+    "mode": {
+      "fixed": "Price locked for your {months}-month term",
+      "dynamic": "Price can change; we tell you before it does"
+    },
+    "intro": {
+      "cancel": {
+        "rule": "If you cancel during your introductory period you keep the savings you have already received."
+      }
+    }
+  },
   "content": {},
   "errors": {
     "kicker": { "notFound": "404", "unauthorized": "403", "server": "500" },

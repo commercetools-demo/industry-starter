@@ -35,6 +35,17 @@
   "account": {},
   "auth": {},
   "search": {},
+  "pricing": {
+    "mode": {
+      "fixed": "Preis für Ihre Laufzeit von {months} Monaten festgeschrieben",
+      "dynamic": "Preis kann sich ändern; wir informieren Sie vorher"
+    },
+    "intro": {
+      "cancel": {
+        "rule": "Wenn Sie während des Einführungszeitraums kündigen, behalten Sie die bereits erhaltene Ersparnis."
+      }
+    }
+  },
   "content": {},
   "errors": {
     "kicker": { "notFound": "404", "unauthorized": "403", "server": "500" },

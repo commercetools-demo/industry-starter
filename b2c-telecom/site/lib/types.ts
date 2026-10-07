@@ -265,3 +265,79 @@ export interface CandidateEntry {
   offer: Offer;
   verdict: CompatVerdict;
 }
+
+// ===== L: pricing =====
+export type PriceSelectionMode = 'Fixed' | 'Dynamic';
+export interface LineRecurrence {
+  policyKey: 'malva-monthly';
+  priceSelectionMode: PriceSelectionMode;
+}
+
+export type PeriodKind = 'intro' | 'standing' | 'step';
+export interface SchedulePeriod {
+  /** 1-based. */
+  index: number;
+  /** Billing months, inclusive, counted from the order date. `toMonth` 0 = until cancelled. */
+  fromMonth: number;
+  toMonth: number;
+  months: number;
+  /** YYYY-MM-DD, inclusive both ends. */
+  startsOn: string;
+  endsOn: string;
+  /** Per unit (per line of service). */
+  monthlyAmount: Money;
+  kind: PeriodKind;
+}
+export interface AfterTerm {
+  startsOn: string;
+  monthlyAmount: Money;
+  basis: 'month-to-month-price';
+}
+export interface PriceSchedule {
+  v: 1;
+  offerKey: string;
+  sku: string;
+  termMonths: TermMonths;
+  quantity: number;
+  currencyCode: string;
+  priceMode: PriceSelectionMode;
+  /** YYYY-MM-DD (UTC): the intro and the term both start here (D-023). */
+  orderDate: string;
+  /** Month-to-month has ONE open-ended period (toMonth = 0 meaning "until cancelled"). */
+  periods: SchedulePeriod[];
+  /** true for month-to-month. */
+  openEnded: boolean;
+  /** Sum over the term x quantity; null when openEnded. */
+  totalContractValue: Money | null;
+  /** First period amount x quantity + one-time fees of this line (activation fee). */
+  dueAtOrder: Money;
+  /** null for month-to-month. */
+  afterTerm: AfterTerm | null;
+  introEndsOn: string | null;
+  status: 'active' | 'cancelled' | 'amended';
+  cancelledOn?: string;
+  amendedOn?: string;
+  /** The `amendedOn` of the previous version. */
+  supersedes?: string;
+}
+export interface ScheduleError {
+  code: 'PERIOD_NOT_PRICED' | 'NO_STANDING_PRICE' | 'INTRO_NOT_BELOW_STANDING' | 'BAD_DATE';
+  detail?: string;
+}
+export type ScheduleResult = { ok: true; value: PriceSchedule } | { ok: false; error: ScheduleError };
+
+export interface RecurringOrderSummary {
+  id: string;
+  key?: string;
+  originOrderId: string;
+  state: 'Active' | 'Paused' | 'Expired' | 'Canceled' | 'Failed';
+  startsAt: string;
+  nextOrderAt?: string;
+  lastOrderAt?: string;
+  expiresAt?: string;
+  cadence: { unit: 'Days' | 'Weeks' | 'Months'; every: number } | { dayOfMonth: number };
+  /** Total of the recurring cart (engine value). */
+  monthly: Money;
+  lines: { name: string; sku: string; quantity: number; priceSelectionMode: PriceSelectionMode | null }[];
+  failureReason?: string;
+}
