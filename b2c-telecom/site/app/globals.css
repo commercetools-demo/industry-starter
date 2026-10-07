@@ -88,6 +88,7 @@
   --color-overlay: rgb(62 48 25 / 0.5);     /* drawer/modal backdrop = brand-950 at 50% */
   --ext-space-12: 12px; --ext-space-14: 14px; --ext-space-28: 28px; --ext-space-32: 32px;
   --ext-space-36: 36px; --ext-space-48: 48px; --ext-space-56: 56px; --ext-space-64: 64px;
+  --content-width-prose: 720px;             /* reading column of the content pages (W) */
   --ext-text-30: 30px; --ext-text-48: 48px; --ext-text-56: 56px;   /* promo title, page H1, hero H1 */
 }
 
