@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import type { TypeDraft } from '../../types';
-import { cartType, customTypes, customerType, lineItemType, orderType } from '.';
+import { cartType, customTypes, customerType, lineItemType, listLineType, orderType, paymentMethodType } from '.';
 
 const names = (type: TypeDraft): string[] => type.fieldDefinitions.map((f) => f.name);
 
 describe('custom types', () => {
-  it('four types with the architecture keys and resource type ids', () => {
-    expect(customTypes.map((t) => t.key)).toEqual(['malva-line-item', 'malva-cart', 'malva-order', 'malva-customer']);
+  it('six types with the architecture keys and resource type ids', () => {
+    expect(customTypes.map((t) => t.key)).toEqual(['malva-line-item', 'malva-cart', 'malva-order', 'malva-customer', 'malva-payment-method', 'malva-list-line']);
+    expect(paymentMethodType.resourceTypeIds).toEqual(['payment-method']);
+    expect(listLineType.resourceTypeIds).toEqual(['line-item']);
     expect(lineItemType.resourceTypeIds).toEqual(['line-item', 'custom-line-item']);
     expect(cartType.resourceTypeIds).toEqual(['order']);
     expect(orderType.resourceTypeIds).toEqual(['order']);
@@ -31,6 +33,11 @@ describe('custom types', () => {
       ['cancellation', 'String'],
       ['returnRequest', 'String'],
     ]);
+  });
+
+  it('T: payment method descriptor and saved list line fields', () => {
+    expect(paymentMethodType.fieldDefinitions.map((f) => [f.name, f.type.name])).toEqual([['brand', 'Enum'], ['last4', 'String'], ['expMonth', 'Number'], ['expYear', 'Number']]);
+    expect(listLineType.fieldDefinitions.map((f) => [f.name, f.type.name])).toEqual([['offerKey', 'String'], ['savedAmountCents', 'Number'], ['savedCurrency', 'String'], ['savedAt', 'String']]);
   });
 
   it('the enum keys of acquisitionMode are outright, installments, lease', () => {
