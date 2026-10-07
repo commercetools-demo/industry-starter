@@ -5,8 +5,8 @@ Updated by the developer on each task and by Claude (after Chrome verification) 
 | ID | Workstream | Tasks | Done | Status | Verified by | Date |
 | --- | --- | --- | --- | --- | --- | --- |
 | A | Scaffold, tooling, verify script | 10 | 10 | Verified | Claude (verify + Chrome C-A-1…3) | 2026-10-07 |
-| B | Code structure and lint rules | 9 | 0 | Not started | | |
-| C | Design tokens, fonts, styling foundation | 8 | 0 | Not started | | |
+| B | Code structure and lint rules | 9 | 9 | Verified | Claude (verify + C-B checks) | 2026-10-07 |
+| C | Design tokens, fonts, styling foundation | 8 | 8 | Verified | Claude (verify + Chrome C-C-1…6) | 2026-10-07 |
 | D | Locale routing, messages, region and language switch | 10 | 0 | Not started | | |
 | E | BFF core | 13 | 0 | Not started | | |
 | F | Seeding framework, project settings, market and shipping | 15 | 0 | Not started | | |
