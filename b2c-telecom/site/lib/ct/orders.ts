@@ -1,5 +1,6 @@
 import 'server-only';
-import { NOT_RECURRING_GENERATED, ORDER_STATUS_PREDICATE, ORDERS_PAGE_SIZE, RECURRING_SUMMARY_LIMIT, type OrderStatusFilter } from '@/lib/config/account';
+import { cache } from 'react';
+import { DASHBOARD_ORDERS_LIMIT, NOT_RECURRING_GENERATED, ORDER_STATUS_PREDICATE, ORDERS_PAGE_SIZE, RECURRING_SUMMARY_LIMIT, type OrderStatusFilter } from '@/lib/config/account';
 import { mapOrder } from '@/lib/mappers/order';
 import type { Locale, Order, RecurringSummary } from '@/lib/types';
 import { getApiRoot } from './client';
@@ -72,3 +73,12 @@ export async function getRecurringSummaries(customerId: string): Promise<Recurri
     ...(recurring.expiresAt ? { expiresAt: recurring.expiresAt } : {}),
   }));
 }
+
+/**
+ * One read per request for every dashboard panel that needs the orders (Recent orders, Current contract, Your plans, Monthly bill):
+ * they share the answer and fail together by design. React `cache` only deduplicates inside one request; nothing is shared between buyers.
+ */
+export const getCustomerOrdersCached: (customerId: string, locale: Locale) => Promise<Order[]> = cache(async (customerId, locale) => (await getCustomerOrders(customerId, locale, { limit: DASHBOARD_ORDERS_LIMIT })).orders);
+
+/** The recurring-orders read of the dashboard (separate from the orders read: its failure only affects the next bill date). */
+export const getRecurringSummariesCached: (customerId: string) => Promise<RecurringSummary[]> = cache(getRecurringSummaries);
