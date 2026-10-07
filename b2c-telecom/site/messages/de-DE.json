@@ -60,6 +60,22 @@
     }
   },
   "a11y": {},
+  "offers": {
+    "reason": {
+      "SPEED_TOO_LOW": "Unterstützt bis zu {max} Mbit/s; {planName} liefert {needed} Mbit/s.",
+      "TECHNOLOGY_MISMATCH": "Funktioniert nicht mit {planName}.",
+      "FAMILY_MISMATCH": "Für diese Tarifart nicht verfügbar.",
+      "ALREADY_INCLUDED": "Bereits in {planName} enthalten.",
+      "DECLARED_INCOMPATIBLE": "Nicht kompatibel mit {planName}.",
+      "EXCLUSIVE_CONFLICT": "{candidateName} kann nicht zusammen mit {otherName} gebucht werden.",
+      "CATALOG_DATA_INCOMPLETE": "Vorübergehend nicht verfügbar.",
+      "OFFER_NOT_FOUND": "Dieser Artikel ist nicht mehr verfügbar.",
+      "REQUIRED_EQUIPMENT_MISSING": "{planName} benötigt ein kompatibles Gerät ({kind}).",
+      "PARENT_REQUIRED": "Fügen Sie zuerst einen Tarif hinzu.",
+      "AMBIGUOUS_PARENT": "Wählen Sie, zu welchem Tarif das gehört.",
+      "ALREADY_ATTACHED": "Bereits zu {planName} hinzugefügt."
+    }
+  },
   "region": {
     "label": "Region und Sprache",
     "change": "Region ändern",

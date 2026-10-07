@@ -60,6 +60,22 @@
     }
   },
   "a11y": {},
+  "offers": {
+    "reason": {
+      "SPEED_TOO_LOW": "Supports up to {max} Mbps; {planName} delivers {needed} Mbps.",
+      "TECHNOLOGY_MISMATCH": "Doesn't work with {planName}.",
+      "FAMILY_MISMATCH": "Not available for this kind of plan.",
+      "ALREADY_INCLUDED": "Already included with {planName}.",
+      "DECLARED_INCOMPATIBLE": "Not compatible with {planName}.",
+      "EXCLUSIVE_CONFLICT": "{candidateName} can't be held together with {otherName}.",
+      "CATALOG_DATA_INCOMPLETE": "Temporarily unavailable.",
+      "OFFER_NOT_FOUND": "This item is no longer available.",
+      "REQUIRED_EQUIPMENT_MISSING": "{planName} needs a compatible {kind}.",
+      "PARENT_REQUIRED": "Add a plan first.",
+      "AMBIGUOUS_PARENT": "Choose which plan to attach this to.",
+      "ALREADY_ATTACHED": "Already added to {planName}."
+    }
+  },
   "region": {
     "label": "Region and language",
     "change": "Change region",
