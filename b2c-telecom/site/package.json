@@ -23,6 +23,9 @@
     "seed:reset": "tsx scripts/seed/reset.ts",
     "seed:settings": "tsx scripts/seed/project-settings.ts",
     "seed:cleanup": "tsx scripts/seed/cleanup-furniture.ts",
+    "seed:images": "tsx scripts/seed/update-images.ts",
+    "seed:experiments": "tsx scripts/seed/experiments/platform-checks.ts",
+    "seed:export-serviceability": "tsx scripts/seed/export-serviceability.ts",
     "verify": "npm run check:secrets && npm run check:lockfile && npm run check:versions && npm run check:tokens && npm run check:boundaries && npm run lint && npm run typecheck && npm test && npm run build && npm run check:bundle && npm run check:dev-routes"
   },
   "dependencies": {
