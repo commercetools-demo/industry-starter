@@ -220,7 +220,8 @@
       "term": "{months} months · ends {date}",
       "monthToMonth": "Month-to-month",
       "perMonth": "{amount}/mo",
-      "unknownTerm": "—"
+      "unknownTerm": "—",
+      "months": "{months} months"
     },
     "type": {
       "cable": "Cable internet",

@@ -220,7 +220,8 @@
       "term": "{months} Monate · endet am {date}",
       "monthToMonth": "Monatlich kündbar",
       "perMonth": "{amount}/Monat",
-      "unknownTerm": "—"
+      "unknownTerm": "—",
+      "months": "{months} Monate"
     },
     "type": {
       "cable": "Kabelinternet",
