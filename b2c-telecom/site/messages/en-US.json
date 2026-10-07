@@ -42,7 +42,85 @@
   "home": {
     "placeholder": "Malva Telecom storefront"
   },
-  "plp": {},
+  "plp": {
+    "home": "Home",
+    "count": {
+      "plans": "{count, plural, one {# plan} other {# plans}}",
+      "addons": "{count, plural, one {# add-on} other {# add-ons}}",
+      "items": "{count, plural, one {# item} other {# items}}",
+      "devices": "{count, plural, one {# device} other {# devices}}"
+    },
+    "sort": {
+      "label": "Sort",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low"
+    },
+    "filter": {
+      "label": "Filter",
+      "all": "All",
+      "unlimited": "Unlimited",
+      "data-capped": "Data-capped",
+      "5g": "5G",
+      "lte": "LTE",
+      "up-to-500": "Up to 500 Mbps",
+      "1-gbps": "1 Gbps",
+      "music": "Music",
+      "video": "Video",
+      "extras": "Extras",
+      "clear": "Clear filters",
+      "remove": "Remove filter {label}",
+      "applied": "Active filters"
+    },
+    "empty": {
+      "title": "Nothing here yet",
+      "body": "These offers are not available in your market right now. Try one of these instead."
+    },
+    "nomatch": {
+      "plans": "No plans match these filters",
+      "addons": "No add-ons match these filters",
+      "items": "No items match these filters",
+      "devices": "No devices match these filters"
+    },
+    "upsell": {
+      "title": "Make it yours with add-ons",
+      "body": "{names} and more can be added to any plan.",
+      "cta": "Browse add-ons"
+    },
+    "blurb": {
+      "cable": "Fast cable internet with a price lock. Pick the speed that fits your home.",
+      "wireless": "Home internet over our 5G and LTE network, set up in minutes.",
+      "phone": "Plans for every phone, billed monthly with no surprises.",
+      "addons": "Streaming, music and extras, billed with your Malva plan. Works with phone, wireless and cable.",
+      "streaming": "Music and video, billed with your Malva plan.",
+      "protection": "Security and device protection for your plan.",
+      "equipment": "Routers, modems and gateways. Rent them monthly or buy them once.",
+      "devices": "Phones and devices, paid outright, in installments or leased."
+    },
+    "h1": {
+      "addons": "Add-ons for any plan"
+    },
+    "browseBy": "Browse by type",
+    "price": {
+      "unavailable": "Price not available"
+    },
+    "cta": {
+      "unavailable": "Unavailable"
+    },
+    "meta": {
+      "title": "{name} | Malva Telecom",
+      "description": "{name} from Malva Telecom: plans and add-ons billed monthly."
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {n}"
+    },
+    "device": {
+      "from": "From {price}",
+      "fromMonthly": "From {price}/mo"
+    }
+  },
   "bundle": {
     "title": "My bundle",
     "empty": {
@@ -252,6 +330,61 @@
   },
   "a11y": {},
   "offers": {
+    "cta": {
+      "choose": "Choose plan",
+      "selected": "Selected ✓"
+    },
+    "perMonth": "/mo",
+    "term": {
+      "label": "Contract term",
+      "month-to-month": "Month-to-month",
+      "12-months": "12 months",
+      "24-months": "24 months",
+      "locked": "Deselect to change the contract term"
+    },
+    "validity": {
+      "month-to-month": "Month-to-month",
+      "12-months": "12-month price lock",
+      "24-months": "24-month price lock"
+    },
+    "lines": "Lines",
+    "customize": "Customize",
+    "hint": "Choose this plan to add extras",
+    "addons": "Add-ons",
+    "equipment": "Equipment",
+    "included": "Included",
+    "browseAll": "Browse all add-ons",
+    "rent": "Rent {price}/mo",
+    "buy": "Buy {price}",
+    "needsPlan": "Needs a compatible plan in your bundle",
+    "equipmentKind": {
+      "router": "Router",
+      "modem": "Modem",
+      "extender": "Extender",
+      "gateway": "Gateway"
+    },
+    "replace": {
+      "title": "Replace your plan?",
+      "body": "Replace {held} with {next}?",
+      "confirm": "Replace",
+      "cancel": "Keep current",
+      "dependents": "Switching removes {count, plural, one {# add-on} other {# add-ons}}."
+    },
+    "remove": {
+      "title": "Remove this plan?",
+      "body": "Remove {name} and its {count, plural, one {# add-on} other {# add-ons}}?",
+      "confirm": "Remove",
+      "cancel": "Keep"
+    },
+    "addon": {
+      "add": "Add to bundle",
+      "added": "Added ✓",
+      "needsPlan": "Needs a plan",
+      "choosePlan": "Choose a plan",
+      "included": "Included",
+      "oneTime": "one time",
+      "unavailable": "Unavailable"
+    },
     "reason": {
       "SPEED_TOO_LOW": "Supports up to {max} Mbps; {planName} delivers {needed} Mbps.",
       "TECHNOLOGY_MISMATCH": "Doesn't work with {planName}.",
