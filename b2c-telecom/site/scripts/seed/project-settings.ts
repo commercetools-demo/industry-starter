@@ -27,7 +27,8 @@ type Project = {
   countries?: string[];
   currencies?: string[];
   languages?: string[];
-  searchIndexing?: { products?: { status?: string } };
+  // `productsSearch` is the Product Search API (D-056); `products` is the deprecated Product Projection Search index
+  searchIndexing?: { productsSearch?: { status?: string } };
 };
 
 async function readProject(api: CtApi): Promise<Project> {
@@ -46,7 +47,7 @@ export async function checkProjectSettings(api: CtApi): Promise<SettingsReport> 
     ...REQUIRED.currencies.filter((c) => !currencies.includes(c)).map((c) => `currency ${c}`),
     ...REQUIRED.languages.filter((l) => !languages.includes(l)).map((l) => `language ${l}`),
   ];
-  return { countries, currencies, languages, missing, searchStatus: project.searchIndexing?.products?.status ?? 'Deactivated' };
+  return { countries, currencies, languages, missing, searchStatus: project.searchIndexing?.productsSearch?.status ?? 'Deactivated' };
 }
 
 export function missingMessage(report: SettingsReport): string {
@@ -68,7 +69,7 @@ export async function applyProjectSettings(api: CtApi, report: SettingsReport): 
 /** Activates Product Search (mode ProductsSearch only; ProductProjectionsSearch is unavailable for new projects). */
 export async function activateProductSearch(api: CtApi): Promise<'already-active' | 'activated'> {
   const project = await readProject(api);
-  const status = project.searchIndexing?.products?.status;
+  const status = project.searchIndexing?.productsSearch?.status;
   if (status === 'Activated' || status === 'Indexing') return 'already-active';
   await api.post('', { version: project.version, actions: [{ action: 'changeProductSearchIndexingEnabled', enabled: true, mode: 'ProductsSearch' }] });
   return 'activated';

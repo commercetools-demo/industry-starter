@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { activateProductSearch, applyProjectSettings, checkProjectSettings, main as settingsMain, waitForSearchIndex } from './project-settings';
 import { main as seedMain } from './seed';
+import { buildManifest } from './manifest';
 import { FakeCt } from './test/fake-ct';
+import { offerType } from './test/fixtures';
 
 const SOURCE = { CTP_SEED_PROJECT_KEY: 'spec-test-b2c-telecom' };
 const CONFIRM = ['--confirm-project', 'spec-test-b2c-telecom'];
+const manifest = { ...buildManifest(), productType: [offerType] };
 
 function api(countries = ['GB', 'DE', 'US']): FakeCt {
   const fake = new FakeCt();
@@ -18,7 +21,7 @@ describe('project settings', () => {
   it('Project settings missing: stops before writing and names the setting and where to change it', async () => {
     const fake = api(['GB', 'US']);
     const lines: string[] = [];
-    const code = await seedMain(CONFIRM, { api: fake, source: SOURCE, log: (l) => lines.push(l) });
+    const code = await seedMain(CONFIRM, { api: fake, source: SOURCE, manifest, log: (l) => lines.push(l) });
     const out = lines.join('\n');
     expect(code).toBe(3);
     expect(out).toContain('Project settings missing: country DE');
@@ -38,7 +41,7 @@ describe('project settings', () => {
 
   it('seed with --apply-project-settings fixes the project, then writes', async () => {
     const fake = api(['GB', 'US']);
-    const code = await seedMain([...CONFIRM, '--apply-project-settings', '--no-wait'], { api: fake, source: SOURCE, log: () => undefined });
+    const code = await seedMain([...CONFIRM, '--apply-project-settings', '--no-wait'], { api: fake, source: SOURCE, manifest, log: () => undefined });
     expect(code).toBe(0);
     expect(fake.project.countries).toEqual(['GB', 'US', 'DE']);
     expect(fake.byKey('tax-categories', 'malva-telecom-services')).toBeDefined();
@@ -55,10 +58,10 @@ describe('project settings', () => {
 
   it('seed activates Product Search after writing and a second run does not activate again', async () => {
     const fake = api();
-    await seedMain([...CONFIRM, '--no-wait'], { api: fake, source: SOURCE, log: () => undefined });
-    expect((fake.project.searchIndexing as { products: { status: string } }).products.status).toBe('Activated');
+    await seedMain([...CONFIRM, '--no-wait'], { api: fake, source: SOURCE, manifest, log: () => undefined });
+    expect((fake.project.searchIndexing as { productsSearch: { status: string } }).productsSearch.status).toBe('Activated');
     const updates = fake.projectUpdates.length;
-    await seedMain([...CONFIRM, '--no-wait'], { api: fake, source: SOURCE, log: () => undefined });
+    await seedMain([...CONFIRM, '--no-wait'], { api: fake, source: SOURCE, manifest, log: () => undefined });
     expect(fake.projectUpdates).toHaveLength(updates);
   });
 

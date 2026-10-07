@@ -3,6 +3,7 @@ import { shippingMethods } from './data/shipping';
 import { buildManifest } from './manifest';
 import { main } from './seed';
 import { FakeCt } from './test/fake-ct';
+import { offerType } from './test/fixtures';
 import type { ProductTypeDraft, SeedManifest } from './types';
 
 const SOURCE = { CTP_SEED_PROJECT_KEY: 'spec-test-b2c-telecom' };
@@ -31,8 +32,8 @@ describe('seed command', () => {
     expect(code).toBe(0);
     expect(out).toMatch(/unchanged\s+taxCategory malva-telecom-services/);
     expect(out).toMatch(/would update\s+customerGroup consumer/);
-    expect(out).toMatch(/would create\s+shippingMethod malva-shipping-standard/);
-    expect(out).toMatch(/PLAN create=\d+ update=1 unchanged=\d+ skip=0/);
+    expect(out).toMatch(/would skip\s+shippingMethod malva-shipping-standard.*attribute "offer-kind" is not defined/);
+    expect(out).toMatch(/PLAN create=\d+ update=1 unchanged=\d+ skip=2/);
     expect(api.writes).toBe(0);
   });
 
@@ -59,16 +60,29 @@ describe('seed command', () => {
     expect(out).toContain('"some-other-project"');
   });
 
-  it('seeds the market-level kinds and a second run writes nothing', async () => {
+  it('seeds the market-level kinds, defers the shipping methods until a product type defines offer-kind, and a second run writes nothing', async () => {
     const api = baseline();
     const first = await seed(api, ['--confirm-project', 'spec-test-b2c-telecom']);
-    expect(first.code).toBe(0);
+    expect(first.code).toBe(4);
     expect(first.out).toContain('zones: US=usa DE=europe');
+    expect(first.out).toMatch(/skipped\s+shippingMethod malva-shipping-standard\s+\(attribute "offer-kind" is not defined by any product type yet/);
+    expect(api.keysOf('shipping-methods')).toEqual([]);
     api.writes = 0;
     const second = await seed(api, ['--confirm-project', 'spec-test-b2c-telecom']);
+    expect(api.writes).toBe(0);
+    expect(second.out).toMatch(/SUMMARY created=0 updated=0 unchanged=\d+ skipped=2 failed=0/);
+  });
+
+  it('creates the shipping methods once a product type defines offer-kind', async () => {
+    const api = baseline();
+    const m = { ...buildManifest(), productType: [offerType] };
+    const first = await seed(api, ['--confirm-project', 'spec-test-b2c-telecom'], m);
+    expect(first.code).toBe(0);
+    expect(api.keysOf('shipping-methods').sort()).toEqual(['malva-delivery-digital', 'malva-shipping-standard']);
+    api.writes = 0;
+    const second = await seed(api, ['--confirm-project', 'spec-test-b2c-telecom'], m);
     expect(second.code).toBe(0);
     expect(api.writes).toBe(0);
-    expect(second.out).toMatch(/SUMMARY created=0 updated=0 unchanged=\d+ skipped=0 failed=0/);
   });
 
   it('exits 3 on validation errors before any write', async () => {

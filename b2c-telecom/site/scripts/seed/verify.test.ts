@@ -89,7 +89,7 @@ describe('seed:verify', () => {
 
   it('fails the search check with the remedy when indexing is deactivated', async () => {
     const api = await fullySeeded();
-    (api.project.searchIndexing as { products: { status: string } }).products.status = 'Deactivated';
+    (api.project.searchIndexing as { productsSearch: { status: string } }).productsSearch.status = 'Deactivated';
     const { out } = await run(api);
     expect(out).toMatch(/FAIL\s+product search active.*npm run seed:settings -- --confirm-project spec-test-b2c-telecom/);
   });
@@ -101,6 +101,19 @@ describe('seed:verify', () => {
     rate.price.centAmount = 500;
     const { out } = await run(api);
     expect(out).toMatch(/FAIL\s+shipping zones.*malva-delivery-digital has a non-zero rate/);
+  });
+
+  it('defers the shipping methods until a product type defines offer-kind, then requires them', async () => {
+    const api = new FakeCt();
+    api.seed('zones', { key: 'usa', name: 'usa', locations: [{ country: 'US' }] });
+    api.seed('zones', { key: 'europe', name: 'europe', locations: [{ country: 'DE' }] });
+    await seedMain(['--confirm-project', 'spec-test-b2c-telecom', '--no-wait'], { api, source: SOURCE, log: () => undefined });
+    const early = await run(api);
+    expect(early.out).toMatch(/PASS\s+shipping zones.*deferred until the product types define offer-kind/);
+    expect(early.code).toBe(0);
+    api.seed('product-types', { key: 'malva-offer', name: 'o', attributes: [{ name: 'offer-kind', savedToLineItem: true }] });
+    const later = await run(api);
+    expect(later.out).toMatch(/FAIL\s+shipping zones.*malva-shipping-standard missing/);
   });
 
   it('refuses an unknown project key', async () => {

@@ -213,6 +213,17 @@ export async function validateManifest(
   return errors;
 }
 
+export function predicateAttributes(draft: Draft): string[] {
+  return predicateTexts(draft).flatMap((text) => [...text.matchAll(ATTRIBUTE_IN_PREDICATE)].map((m) => m[1] ?? m[2]));
+}
+
+/** Names of attributes that a predicate may use: savedToLineItem attributes of the manifest's and the project's product types. */
+export async function knownLineItemAttributes(api: CtApi, manifest: SeedManifest): Promise<Set<string>> {
+  const names = new Set<string>();
+  await collectLineItemAttributes(api, (manifest.productType ?? []) as ProductTypeDraft[], names);
+  return names;
+}
+
 function predicateTexts(draft: Draft): string[] {
   const record = draft as unknown as Record<string, unknown>;
   const out: string[] = [];

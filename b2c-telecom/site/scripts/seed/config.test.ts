@@ -1,10 +1,11 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { mkdtempSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ALLOWED_PROJECT_KEYS, assertEchoedKey, assertTarget, isOwnedKey, TargetError } from './config';
 import { isDemoMode } from '@/lib/ct/env-core';
-import { parseEnvText } from './lib';
+import { loadSeedEnv, parseEnvText } from './lib';
 
 const siteDir = path.resolve(__dirname, '../..');
 
@@ -48,6 +49,23 @@ describe('DEMO_MODE', () => {
 describe('env parsing', () => {
   it('parses KEY=value lines and ignores comments', () => {
     expect(parseEnvText('# c\nA=1\nB="two"\n\nC=')).toEqual({ A: '1', B: 'two', C: '' });
+  });
+});
+
+describe('loadSeedEnv', () => {
+  it('maps the storefront-style names of the seed file to the seed names and lets the process environment win', () => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'seedenv-'));
+    const file = path.join(dir, '.env.seed');
+    writeFileSync(file, 'CTP_PROJECT_KEY=from-file\nCTP_CLIENT_ID=id-from-file\nCTP_SEED_AUTH_URL=auth-from-file\nCTP_AUTH_URL=ignored\n');
+    const env = loadSeedEnv(file, { CTP_SEED_CLIENT_ID: 'id-from-process' });
+    expect(env.CTP_SEED_PROJECT_KEY).toBe('from-file');
+    expect(env.CTP_SEED_CLIENT_ID).toBe('id-from-process');
+    expect(env.CTP_SEED_AUTH_URL).toBe('auth-from-file');
+  });
+
+  it('never reads the storefront variables of the process environment', () => {
+    const env = loadSeedEnv('/nonexistent/.env.seed', { CTP_PROJECT_KEY: 'storefront-project' });
+    expect(env.CTP_SEED_PROJECT_KEY).toBeUndefined();
   });
 });
 

@@ -86,10 +86,15 @@ export const shipping: Check = {
       const zones = (await api.get('zones', { where: `locations(country="${country}")`, limit: 1 })) as { results?: unknown[] } | null;
       if (!zones?.results?.length) problems.push(`no zone holds ${country}`);
     }
+    // The platform rejects the method predicates until a product type defines the offer-kind line item attribute (G).
+    const types = (await getAll(api, 'product-types')) as { attributes?: { name: string; savedToLineItem?: boolean }[] }[];
+    const offerKindDefined = types.some((t) => (t.attributes ?? []).some((a) => a.name === 'offer-kind' && a.savedToLineItem === true));
+    const deferred: string[] = [];
     for (const key of ['malva-shipping-standard', 'malva-delivery-digital']) {
       const m = (await api.get(`shipping-methods/key=${key}`)) as Obj | null;
       if (!m) {
-        problems.push(`shipping method ${key} missing`);
+        if (offerKindDefined) problems.push(`shipping method ${key} missing`);
+        else deferred.push(key);
         continue;
       }
       if (m.active !== true) problems.push(`${key} is not active`);
@@ -100,7 +105,8 @@ export const shipping: Check = {
       }
       if (rates.some((r) => r.centAmount !== 0)) problems.push(`${key} has a non-zero rate`);
     }
-    return problems.length === 0 ? ok() : fail(problems.join('; '));
+    if (problems.length > 0) return fail(problems.join('; '));
+    return deferred.length > 0 ? ok(`deferred until the product types define offer-kind: ${deferred.join(', ')}`) : ok();
   },
 };
 

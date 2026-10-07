@@ -3,6 +3,7 @@ import { buildManifest } from './manifest';
 import { main as reset } from './reset';
 import { main as seed } from './seed';
 import { FakeCt } from './test/fake-ct';
+import { offerType } from './test/fixtures';
 import type { CategoryDraft, SeedManifest } from './types';
 
 const SOURCE = { CTP_SEED_PROJECT_KEY: 'spec-test-b2c-telecom' };
@@ -13,7 +14,7 @@ const parent: CategoryDraft = { key: 'malva-cat-parent', name: label('P'), slug:
 const child: CategoryDraft = { key: 'malva-cat-child', name: label('C'), slug: label('c'), parent: 'malva-cat-parent' };
 
 function manifest(): SeedManifest {
-  return { ...buildManifest(), category: [parent, child] };
+  return { ...buildManifest(), productType: [offerType], category: [parent, child] };
 }
 
 async function seeded(): Promise<FakeCt> {
@@ -50,6 +51,7 @@ describe('seed:reset', () => {
     expect(api.keysOf('customer-groups')).toEqual(['vip']);
     expect(api.keysOf('shipping-methods')).toEqual([]);
     expect(api.keysOf('tax-categories')).toEqual([]);
+    expect(api.keysOf('product-types')).toEqual([]);
     expect(api.keysOf('recurrence-policies')).toEqual([]);
     // adopted zones are never deleted
     expect(api.keysOf('zones').sort()).toEqual(['europe', 'usa']);

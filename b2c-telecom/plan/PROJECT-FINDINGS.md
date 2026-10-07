@@ -51,6 +51,27 @@ Everything below was created 2026-10-07 15:19 by the project's sample-data loade
 Written by `npm run seed:cleanup -- --list` (read-only). The one-off cleanup of 2026-10-07 already removed the sample data; the script stays as an idempotent check and keeps the allow-list guard.
 
 <!-- CLEANUP-LISTING:BEGIN -->
+#### Delete set
+- product types (0): (none)
+- products (0): (none)
+- cart discounts (0): (none)
+- discount codes (0): (none)
+- inventory entries (0): (none)
+- categories (0): (none)
+
+#### Not deleted (recorded only)
+- orders (0): (none)
+- carts (0): (none)
+- customers (0): (none)
+- shipping-methods (2): express-shipping, standard-shipping
+- tax-categories (1): standard-tax
+- zones (2): europe, usa
+- stores (0): (none)
+- channels (2): distribution-channel, inventory-channel
+- cart-discounts (kept) (0): (none)
+
+listing-sha256: ca357ca06aa02b07e100c9311f5ca87928c0d6ffec4d8fb61bdea4a5b46f680c
+listing-generated: 2026-10-07T19:21:21.020Z
 <!-- CLEANUP-LISTING:END -->
 
 ## Granted scopes (names only, read from the token responses 2026-10-07)
@@ -58,3 +79,14 @@ Written by `npm run seed:cleanup -- --list` (read-only). The one-off cleanup of 
 - **Seed/admin client (`site/.env.seed`, OA-03):** manage_cart_discounts, manage_categories, manage_customer_groups, manage_customers, manage_discount_codes, manage_key_value_documents, manage_payment_methods, manage_products, manage_project, manage_recurrence_policies, manage_recurring_orders, manage_shipping_methods, manage_states, manage_tax_categories, manage_types (+ matching view_ scopes).
 - **Not granted to the seed client:** `manage_orders`, `manage_zones`, `manage_stores`, `manage_order_edits`. The cleanup nevertheless deleted orders, carts and the store, so the platform accepted those with the granted scopes; if a later task gets a 403 on orders, carts, zones or stores, ask the owner to add the scope (note it in `QUESTIONS.md`).
 - Recurring-orders and recurrence-policy scope names are confirmed present on both clients.
+
+## F: seeding framework live run (2026-10-07, seed client, project spec-test-b2c-telecom only)
+- `.env.seed` (owner's file) uses the names `CTP_PROJECT_KEY`, `CTP_AUTH_URL`, `CTP_API_URL`, `CTP_CLIENT_ID`, `CTP_CLIENT_SECRET`, `CTP_SCOPES`; the seed loader maps them to the `CTP_SEED_*` names (only values read from the `.env.seed` file; the storefront process variables are never read). `.env.seed.example` documents the `CTP_SEED_*` names; both work.
+- Seed client reads worked without extra scopes: zones, stores, orders, carts, customers, channels (`seed:cleanup --list` read all of them). Adopting zones needs no `manage_zones`.
+- `seed:cleanup -- --list` on the live project: delete set empty (0 product types, products, categories, inventory, discounts, codes); `--execute --confirm-project spec-test-b2c-telecom` printed `Nothing to clean up.` (exit 0). The listing hash of the empty set is in the block above.
+- `seed -- --confirm-project spec-test-b2c-telecom` created: tax category `malva-telecom-services` (US and DE rates 0), customer groups `consumer`, `small-business`, `employee`, `existing-customer`, recurrence policy `malva-monthly` (standard, 1 Months). Second run: all `unchanged`, no write.
+- Adopted zones (written to the run context and printed): `US=usa`, `DE=europe`. No `malva-zone-*` zone was created.
+- **Finding: shipping method predicates over an unknown attribute are rejected.** `POST shipping-methods` with predicate ``lineItemExists(attributes.`offer-kind` in (...)) = true`` answered `Unknown field 'attributes.offer-kind'.` because no product type defines `offer-kind` yet. The seeder now skips the two Malva shipping methods with the reason `attribute "offer-kind" is not defined by any product type yet; seed the product types first` (exit 4) and creates them in the first run after G has seeded the product types. The backtick escaping itself is still unproven (G-18 must confirm it with a live `matching-cart` call).
+- **Finding: Product Search activation state is `searchIndexing.productsSearch.status`**, not `searchIndexing.products` (that field is the deprecated Product Projection Search index and stays `Deactivated`). After `changeProductSearchIndexingEnabled` (`enabled: true`, `mode: ProductsSearch`) `productsSearch.status` was `Activated` immediately (no `Indexing` state seen, zero products). `seed:settings -- --check-only` prints `product search: Activated`.
+- `seed:verify` live: all 9 checks PASS (the shipping check reports `deferred until the product types define offer-kind`), `All checks passed.`
+- `seed -- --confirm-project wrong-key` exits 2 and names the key found.

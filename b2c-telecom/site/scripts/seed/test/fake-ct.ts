@@ -108,7 +108,7 @@ export class FakeCt implements CtApi {
       countries: ['GB', 'DE', 'US'],
       currencies: ['EUR', 'GBP', 'USD'],
       languages: ['en-GB', 'de-DE', 'en-US'],
-      searchIndexing: { products: { status: 'Deactivated' }, orders: { status: 'Activated' } },
+      searchIndexing: { products: { status: 'Deactivated' }, productsSearch: { status: 'Deactivated' }, orders: { status: 'Activated' } },
     };
   }
 
@@ -260,8 +260,8 @@ export class FakeCt implements CtApi {
           break;
         case 'changeProductSearchIndexingEnabled': {
           if (a.mode !== 'ProductsSearch') throw httpError(400, 'InvalidOperation', 'mode not supported');
-          const idx = this.project.searchIndexing as { products: { status: string } };
-          idx.products.status = a.enabled ? 'Activated' : 'Deactivated';
+          const idx = this.project.searchIndexing as { productsSearch: { status: string } };
+          idx.productsSearch.status = a.enabled ? 'Activated' : 'Deactivated';
           break;
         }
         default:
@@ -274,7 +274,7 @@ export class FakeCt implements CtApi {
 
   private search(body: Obj): unknown {
     this.searchCalls += 1;
-    const status = (this.project.searchIndexing as { products: { status: string } }).products.status;
+    const status = (this.project.searchIndexing as { productsSearch: { status: string } }).productsSearch.status;
     if (status === 'Deactivated' || this.searchCalls <= this.searchReadyAfter) {
       throw httpError(400, 'ObjectNotFound', 'Product Search API is not enabled');
     }

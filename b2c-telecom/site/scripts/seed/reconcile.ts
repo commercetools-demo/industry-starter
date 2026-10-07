@@ -1,5 +1,6 @@
 // Planning and execution of a seed run. Sequential on purpose (category locking, version conflicts).
 import { CtHttpError, type CtApi } from './lib';
+import { predicateAttributes } from './validate';
 import { SkipError, type AnyReconciler, Change, Ctx, Draft, Kind, Outcome, Plan, PlanItem, SeedManifest } from './types';
 
 export interface ItemResult {
@@ -25,13 +26,19 @@ function blockedBy(r: AnyReconciler, draft: Draft, blocked: Map<string, string>)
 }
 
 /** Reads the project (GET only) and decides create / update / unchanged / skip for every draft. */
-export async function planAll(api: CtApi, manifest: SeedManifest, reconcilers: AnyReconciler[], ctx: Ctx = newCtx()): Promise<Plan> {
+export async function planAll(
+  api: CtApi,
+  manifest: SeedManifest,
+  reconcilers: AnyReconciler[],
+  ctx: Ctx = newCtx(),
+  knownAttributes?: Set<string>,
+): Promise<Plan> {
   const plan: Plan = [];
   const blocked = new Map<string, string>();
   for (const r of sortedReconcilers(reconcilers, manifest)) {
     for (const draft of manifest[r.kind] ?? []) {
       const item: PlanItem = { kind: r.kind, key: draft.key, action: 'unchanged', changes: [] };
-      const dependency = blockedBy(r, draft, blocked);
+      const dependency = blockedBy(r, draft, blocked) ?? missingAttribute(draft, knownAttributes);
       if (dependency) {
         item.action = 'skip';
         item.reason = dependency;
@@ -55,6 +62,13 @@ export async function planAll(api: CtApi, manifest: SeedManifest, reconcilers: A
     }
   }
   return plan;
+}
+
+/** The platform rejects a predicate over an attribute no product type defines yet (workstream G seeds them). */
+function missingAttribute(draft: Draft, known: Set<string> | undefined): string | undefined {
+  if (!known) return undefined;
+  const missing = predicateAttributes(draft).filter((name) => !known.has(name));
+  return missing.length > 0 ? `attribute "${missing[0]}" is not defined by any product type yet; seed the product types first` : undefined;
 }
 
 const MAX_CONFLICT_RETRIES = 3;

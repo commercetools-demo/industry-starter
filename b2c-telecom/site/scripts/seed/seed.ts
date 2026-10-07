@@ -9,7 +9,7 @@ import { activateProductSearch, applyProjectSettings, checkProjectSettings, miss
 import { warnings } from './reconcilers/productType';
 import { renderPlan, renderReport } from './report';
 import type { AnyReconciler, Kind, SeedManifest } from './types';
-import { validateManifest } from './validate';
+import { knownLineItemAttributes, validateManifest } from './validate';
 
 export interface SeedDeps {
   api?: CtApi;
@@ -62,7 +62,7 @@ export async function main(argv: string[], deps: SeedDeps = {}): Promise<number>
     }
 
     const ctx = newCtx();
-    const plan = await planAll(api, manifest, reconcilers, ctx);
+    const plan = await planAll(api, manifest, reconcilers, ctx, await knownLineItemAttributes(api, full));
     if (planOnly) {
       log(json ? JSON.stringify({ plan }) : renderPlan(plan));
       return EXIT.OK;

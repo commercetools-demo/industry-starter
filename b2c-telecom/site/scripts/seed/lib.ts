@@ -62,6 +62,10 @@ export function loadSeedEnv(file = '.env.seed', source: Record<string, string | 
   } catch {
     // no file: the process environment alone is used
   }
+  // The owner's .env.seed may use the storefront variable names (CTP_*); only values read from that file are mapped.
+  for (const name of ['PROJECT_KEY', 'AUTH_URL', 'API_URL', 'CLIENT_ID', 'CLIENT_SECRET', 'SCOPES']) {
+    if (fromFile[`CTP_SEED_${name}`] === undefined && fromFile[`CTP_${name}`] !== undefined) fromFile[`CTP_SEED_${name}`] = fromFile[`CTP_${name}`];
+  }
   return { ...fromFile, ...Object.fromEntries(Object.entries(source).filter(([, v]) => v !== undefined && v !== '')) };
 }
 
