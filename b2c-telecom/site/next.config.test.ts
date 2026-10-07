@@ -21,7 +21,13 @@ describe('next.config', () => {
   it('sends Cache-Control: no-store for the four auth pages', async () => {
     const config = await loadConfig('production');
     const rules = (await config.headers?.()) ?? [];
-    expect(rules).toEqual([{ source: '/:locale/(login|register|forgot-password|reset-password)', headers: [{ key: 'Cache-Control', value: 'no-store' }] }]);
+    expect(rules[0]).toEqual({ source: '/:locale/(login|register|forgot-password|reset-password)', headers: [{ key: 'Cache-Control', value: 'no-store' }] });
+  });
+
+  it('sends Cache-Control: private, no-store for every account page', async () => {
+    const config = await loadConfig('production');
+    const rules = (await config.headers?.()) ?? [];
+    expect(rules).toContainEqual({ source: '/:locale/account/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] });
   });
 
   it('includes dev.ts page extensions in development only', async () => {

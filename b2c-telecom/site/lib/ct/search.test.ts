@@ -9,7 +9,8 @@ import type { ProductProjection } from '@commercetools/platform-sdk';
 
 const post = vi.fn();
 const search = vi.fn(() => ({ post }));
-vi.mock('./client', () => ({ getApiRoot: () => ({ products: () => ({ search }) }) }));
+const getProject = vi.fn();
+vi.mock('./client', () => ({ getApiRoot: () => ({ products: () => ({ search }), get: () => ({ execute: getProject }) }) }));
 vi.mock('./timeout', () => ({ withTimeout: (promise: Promise<unknown>) => promise }));
 vi.mock('./categories', () => ({
   getCategoryTree: async () => buildCategoryTree((categoryFixture as unknown as SdkCategory[]).map((category) => mapCategory(category, 'en-US'))),
@@ -22,7 +23,8 @@ vi.mock('./catalog', () => ({
   }),
 }));
 
-import { buildSearchRequest, searchOffers, type SearchParams } from './search';
+import { ApiError } from '@/lib/api-error';
+import { buildOfferTextQuery, buildSearchRequest, getSearchLanguages, resetSearchLanguagesCache, searchOfferHits, searchOffers, type SearchParams } from './search';
 
 const base: SearchParams = { locale: 'en-US', currency: 'USD', country: 'US' };
 const typeFilter = { exact: { field: 'productType', value: 'OFFER-TYPE' } };
@@ -121,5 +123,105 @@ describe('searchOffers', () => {
     expect(result.offers[0]).toMatchObject({ key: 'malva-offer-appletv', facts: { kind: 'addon', tag: 'video' }, headline: { recurring: { centAmount: 1000 } } });
     expect(result.categoryFacet).toEqual([{ key: 'malva-cat-streaming', count: 1 }]);
     expect(result.bandFacet).toEqual([{ id: 'lt-25', count: 1 }]);
+  });
+});
+
+// ===== P: offer text search =====
+type TextQuery = { and?: unknown[]; or?: Record<string, Record<string, unknown>>[] };
+const clausesOf = (text: string, locale: 'en-US' | 'de-DE' = 'en-US'): Record<string, Record<string, unknown>>[] =>
+  (buildOfferTextQuery({ text, locale }) as unknown as { query: TextQuery }).query.or ?? [];
+
+describe('buildOfferTextQuery', () => {
+  it('Part number pasted: SKU clause is built only for an identifier-shaped query', () => {
+    for (const sku of ['MLV-CBL-500-24M', 'mlv-cbl-500-24m']) {
+      expect(clausesOf(sku)[0]).toEqual({ exact: { field: 'variants.sku', value: sku, caseInsensitive: true, boost: 10 } });
+    }
+    expect(clausesOf('cable 500').some((clause) => 'exact' in clause)).toBe(false);
+    expect(clausesOf('ab').some((clause) => 'exact' in clause)).toBe(false);
+  });
+
+  it('Misspelt query: a fuzzy expression with level 2 is part of the query', () => {
+    expect(clausesOf('Unlimitd', 'de-DE')).toContainEqual({ fuzzy: { field: 'name', language: 'de-DE', value: 'Unlimitd', level: 2 } });
+    expect(clausesOf('Unlimitd', 'de-DE').filter((clause) => 'fuzzy' in clause)).toHaveLength(1);
+  });
+
+  it('full text on the URL locale with boost 3, limit 100 and matching variants marked', () => {
+    expect(clausesOf('cable 500')).toContainEqual({ fullText: { field: 'name', language: 'en-US', value: 'cable 500', boost: 3 } });
+    expect(buildOfferTextQuery({ text: 'cable', locale: 'en-US' })).toMatchObject({ limit: 100, offset: 0, markMatchingVariants: true });
+  });
+
+  it('a half-typed word is found through an escaped, case-insensitive wildcard (fullTextPrefix is rejected by the API)', () => {
+    expect(clausesOf('Unlim*')).toContainEqual({ wildcard: { field: 'name', language: 'en-US', value: '*Unlim\\**', caseInsensitive: true } });
+    expect(JSON.stringify(clausesOf('Unlim'))).not.toContain('fullTextPrefix');
+  });
+
+  it('cuts a query longer than 100 characters and stays far below the 50-expression limit', () => {
+    const clauses = clausesOf('x'.repeat(150));
+    expect((clauses.find((clause) => 'fullText' in clause)?.fullText?.value as string).length).toBe(100);
+    expect(clauses.length).toBeLessThanOrEqual(4);
+  });
+
+  it('restricts hits to the offer product type when its id is known', () => {
+    const body = buildOfferTextQuery({ text: 'cable', locale: 'en-US', offerTypeId: 'OFFER-TYPE' }) as unknown as { query: TextQuery };
+    expect(body.query.and?.[0]).toEqual(typeFilter);
+  });
+});
+
+describe('searchOfferHits', () => {
+  it('maps hit ids and the SKUs of partially matching variants', async () => {
+    post.mockReturnValue({
+      execute: async () => ({
+        body: {
+          total: 2,
+          results: [
+            { id: 'P1', matchingVariants: { allMatched: false, matchedVariants: [{ id: 2, sku: 'MLV-CBL-500-24M' }] } },
+            { id: 'P2', matchingVariants: { allMatched: true, matchedVariants: [] } },
+          ],
+        },
+      }),
+    });
+    const result = await searchOfferHits({ text: 'cable', locale: 'en-US' });
+    expect(result).toEqual({
+      total: 2,
+      hits: [
+        { id: 'P1', matchedSkus: ['MLV-CBL-500-24M'] },
+        { id: 'P2', matchedSkus: [] },
+      ],
+    });
+    expect(JSON.stringify(post.mock.calls.at(-1))).toContain('OFFER-TYPE');
+  });
+
+  it.each([400, 500])('an HTTP %i answer throws an ApiError without leaking the upstream error', async (statusCode) => {
+    post.mockReturnValue({ execute: async () => Promise.reject(Object.assign(new Error('secret upstream detail'), { statusCode })) });
+    const error = await searchOfferHits({ text: 'cable', locale: 'en-US' }).catch((caught: unknown) => caught);
+    expect(error).toBeInstanceOf(ApiError);
+    expect((error as ApiError).code).toBe('UPSTREAM_ERROR');
+    expect((error as ApiError).message).not.toContain('secret');
+  });
+});
+
+describe('getSearchLanguages', () => {
+  beforeEach(() => {
+    resetSearchLanguagesCache();
+    getProject.mockReset();
+    getProject.mockResolvedValue({ body: { languages: ['en-GB', 'de-DE', 'en-US'] } });
+    vi.useFakeTimers();
+  });
+  afterEach(() => vi.useRealTimers());
+
+  it('caches the project languages for one hour and refreshes afterwards', async () => {
+    expect(await getSearchLanguages()).toEqual(['en-GB', 'de-DE', 'en-US']);
+    vi.advanceTimersByTime(59 * 60 * 1000);
+    await getSearchLanguages();
+    expect(getProject).toHaveBeenCalledTimes(1);
+    vi.advanceTimersByTime(2 * 60 * 1000);
+    await getSearchLanguages();
+    expect(getProject).toHaveBeenCalledTimes(2);
+  });
+
+  it('an upstream failure throws an ApiError and is not cached', async () => {
+    getProject.mockRejectedValueOnce(new Error('boom'));
+    await expect(getSearchLanguages()).rejects.toBeInstanceOf(ApiError);
+    expect(await getSearchLanguages()).toContain('en-US');
   });
 });

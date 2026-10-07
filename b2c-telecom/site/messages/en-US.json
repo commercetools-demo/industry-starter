@@ -40,7 +40,48 @@
     "copyright": "© 2026 Malva Telecom"
   },
   "home": {
-    "placeholder": "Malva Telecom storefront"
+    "placeholder": "Malva Telecom storefront",
+    "hero": {
+      "eyebrow": "New customers",
+      "title": "Fast fiber cable. Zero surprises.",
+      "sub": "Up to {speed} at home from {price}/mo, with price locked for {months} months.",
+      "subNoLock": "Up to {speed} at home from {price}/mo.",
+      "cta": "See cable plans",
+      "imageLabel": "Hero image placeholder",
+      "imageAlt": "Malva Telecom cable internet at home",
+      "speed": {
+        "gbps": "{value, number} Gbps",
+        "mbps": "{value, number} Mbps"
+      }
+    },
+    "promo": {
+      "phone": {
+        "eyebrow": "PHONE PLANS",
+        "title": "Plans from {price} a line",
+        "titleNoPrice": "Plans for every phone",
+        "cta": "Shop phone plans"
+      },
+      "addons": {
+        "eyebrow": "ADD-ONS",
+        "title": "{names} and more on your bill",
+        "titleNoNames": "Streaming, music and extras on your bill",
+        "cta": "Browse add-ons"
+      }
+    },
+    "categories": {
+      "title": "Shop by category",
+      "from": "From {price}/mo →",
+      "browse": "Browse all →"
+    },
+    "addons": {
+      "title": "Popular add-ons",
+      "viewAll": "View all →",
+      "price": "{price}/mo"
+    },
+    "meta": {
+      "title": "Malva Telecom: phone, wireless and cable internet",
+      "description": "Compare phone plans, home wireless and cable internet with locked prices and add-ons on one bill."
+    }
   },
   "plp": {
     "home": "Home",
@@ -246,7 +287,176 @@
     "home": "Home"
   },
   "checkout": {},
-  "account": {},
+  "account": {
+    "breadcrumb": "Home / My account",
+    "home": "Home",
+    "title": "My account",
+    "nav": {
+      "label": "Account",
+      "overview": "Overview",
+      "orders": "Orders",
+      "addresses": "Addresses",
+      "payments": "Payment methods",
+      "lists": "Saved lists"
+    },
+    "hi": "Hi, {firstName}",
+    "card": {
+      "account": "ACCOUNT",
+      "bill": "MONTHLY BILL",
+      "address": "DELIVERY ADDRESS"
+    },
+    "accountNo": "Account no. {number} · Active",
+    "nextBill": "Next bill {date}",
+    "noBills": "No upcoming bills.",
+    "nextBillUnavailable": "Next bill date unavailable",
+    "change": {
+      "title": "Want to change something?",
+      "browse": "Browse plans",
+      "logout": "Log out"
+    },
+    "address": {
+      "none": "No address saved yet.",
+      "add": "Add an address",
+      "manage": "Manage addresses"
+    },
+    "recent": {
+      "title": "Recent orders",
+      "all": "All orders",
+      "empty": "No orders yet.",
+      "browse": "Browse plans"
+    },
+    "contract": {
+      "title": "Current contract",
+      "cols": {
+        "item": "Item",
+        "type": "Type",
+        "started": "Started",
+        "term": "Term",
+        "price": "Price"
+      },
+      "empty": "You have no active services yet.",
+      "note": "The early-termination fee is shown on each plan's Broadband Facts label.",
+      "term": "{months} months · ends {date}",
+      "monthToMonth": "Month-to-month",
+      "perMonth": "{amount}/mo",
+      "unknownTerm": "—",
+      "months": "{months} months"
+    },
+    "type": {
+      "cable": "Cable internet",
+      "wireless": "Home wireless",
+      "phone": "Phone plan",
+      "addon": "Add-on",
+      "equipment": "Equipment",
+      "installments": "Device installments",
+      "lease": "Device lease",
+      "outright": "Device",
+      "other": "Other"
+    },
+    "device": {
+      "variant": "{name} {memory} GB, {color}"
+    },
+    "color": {
+      "black": "Black",
+      "silver": "Silver",
+      "violet": "Violet"
+    },
+    "plans": {
+      "title": "Your plans",
+      "empty": "Your plan labels appear here once you have an active plan."
+    },
+    "unavailable": "This section is unavailable right now. Try again in a moment.",
+    "loading": "Loading",
+    "orders": {
+      "title": "Your orders",
+      "cols": {
+        "order": "Order",
+        "placed": "Placed",
+        "items": "Items",
+        "status": "Status",
+        "total": "Total"
+      },
+      "empty": "No orders yet.",
+      "emptyFilter": "No orders match this filter.",
+      "showAll": "Show all",
+      "browse": "Browse plans",
+      "total": "{today} today · {monthly}/mo",
+      "totalOnly": "{today} today",
+      "more": "{names} +{count}",
+      "filterLabel": "Filter orders by status",
+      "listLabel": "Your orders",
+      "pagination": "Pages",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "filter": {
+      "all": "All",
+      "open": "Open",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "page": "Page {page} of {pages}",
+    "status": {
+      "placed": "Placed",
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "unknown": "Unknown"
+    },
+    "order": {
+      "title": "Order",
+      "heading": "Order {orderNumber}",
+      "placed": "Placed {date}",
+      "serviceStart": "Service start {date}",
+      "items": "Items",
+      "cols": {
+        "item": "Item",
+        "type": "Type",
+        "qty": "Qty",
+        "unit": "Unit price",
+        "total": "Total"
+      },
+      "perMonth": "{amount}/mo",
+      "partOf": "Part of {plan}",
+      "totals": "Totals",
+      "dueAtOrder": "Due at order",
+      "monthlyAfter": "Monthly after that",
+      "modeOutright": "Pay in full",
+      "modeInstallments": "Installments, {months} months",
+      "modeLease": "Lease, {months} months",
+      "modeTotal": {
+        "outright": "Pay in full {amount}",
+        "installments": "Installments {amount}/mo",
+        "lease": "Lease {amount}/mo"
+      },
+      "finalPayment": "Final payment {date}",
+      "returnBy": "Return by {date}",
+      "schedule": "Your agreed prices",
+      "labels": "Broadband Facts at the time of your order",
+      "noLabel": "Label not available for this order.",
+      "delivery": "Delivery address",
+      "deliveryStatus": "Delivery status",
+      "noAddress": "No delivery address on this order.",
+      "print": "Print receipt",
+      "receiptFor": "Receipt for order {orderNumber}",
+      "receiptCustomer": "Customer: {name}",
+      "buyAgain": "Buy again",
+      "notFound": "We could not find that order",
+      "notFoundBody": "It may belong to a different account.",
+      "allOrders": "All orders",
+      "itemsLabel": "Order items"
+    },
+    "reorder": {
+      "unavailable": "These items could not be added: {names}.",
+      "unavailableTitle": "Some items are not available",
+      "continue": "Continue to My bundle",
+      "done": "We created a new bundle from this order.",
+      "pending": "Creating your bundle…",
+      "error": "We could not reuse this order. Try again in a moment."
+    }
+  },
   "auth": {
     "login": {
       "title": "Log in",
@@ -325,7 +535,57 @@
       "action": "Review My bundle"
     }
   },
-  "search": {},
+  "search": {
+    "open": "Search",
+    "title": "Search",
+    "inputLabel": "Search plans, add-ons and equipment",
+    "placeholder": "Plan name or part number",
+    "submit": "Search",
+    "found": "{count, plural, one {# result} other {# results}} for “{query}”",
+    "sort": {
+      "label": "Sort",
+      "relevance": "Best match",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low"
+    },
+    "all": "All ({count})",
+    "categoriesLabel": "Narrow by category",
+    "kind": {
+      "plan": "Plan",
+      "addon": "Add-on",
+      "equipment": "Equipment",
+      "device": "Device"
+    },
+    "from": "From {price}/mo",
+    "fromOneTime": "From {price}",
+    "priceUnavailable": "Price not available",
+    "partNumber": "Part number match",
+    "bestMatch": "Best match: part number {sku}",
+    "viewIn": "View in {category}",
+    "none": {
+      "title": "No results for “{query}”",
+      "body": "Check the spelling or try a shorter term. We cannot suggest corrections, but these categories may help."
+    },
+    "browse": "Browse categories",
+    "start": {
+      "hint": "Type at least 2 characters."
+    },
+    "popular": "Popular searches",
+    "unsupported": {
+      "title": "Search is not available in this language",
+      "body": "Switch the language of the site to continue searching."
+    },
+    "error": {
+      "title": "Search is temporarily unavailable",
+      "body": "Please try again in a moment.",
+      "retry": "Try again"
+    },
+    "truncated": "Showing the 100 best matches. Refine your search.",
+    "meta": {
+      "title": "Search",
+      "titleQuery": "“{query}” | Search | Malva Telecom"
+    }
+  },
   "pricing": {
     "mode": {
       "fixed": "Price locked for your {months}-month term",

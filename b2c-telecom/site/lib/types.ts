@@ -153,6 +153,8 @@ export interface Category {
   parentId?: string;
   orderHint?: string;
   image?: string;
+  /** Alternative text of `image` (the asset name; names the photographer). */
+  imageAlt?: string;
   children: Category[];
 }
 /** Minor units; min inclusive, max exclusive. */
@@ -643,4 +645,163 @@ export interface FinancingDecision {
   limit: Money;
   /** ISO. */
   decidedAt: string;
+}
+
+// ===== P: search =====
+export type SearchViewState = 'start' | 'results' | 'none' | 'unsupported-language' | 'error';
+export interface SearchResultItem {
+  offerKey: string;
+  name: string;
+  kind: 'plan' | 'addon' | 'equipment' | 'device';
+  categoryKey: string;
+  categoryName: string;
+  /** Master variant price: the monthly price when there is one, else the one-time price; null when neither. */
+  fromPrice: Money | null;
+  /** True when `fromPrice` is a monthly price. */
+  fromPriceRecurring: boolean;
+  /** Set when the query is a variant SKU (case-insensitive) or the API reported a partial variant match. */
+  matchedSku: string | null;
+  /** First plan highlight, else null. */
+  highlight: string | null;
+  /** Canonical link with locale prefix (`offerHref`), for JSON consumers. */
+  href: string;
+  /** The same link without the locale prefix (`offerPath`), for the locale-aware `Link`. */
+  path: string;
+}
+export interface SearchCategoryCount {
+  key: string;
+  name: string;
+  count: number;
+}
+export interface SearchView {
+  state: SearchViewState;
+  query: string;
+  /** Results in the current category filter (before paging). */
+  total: number;
+  /** More matches existed than MAX_HITS. */
+  truncated: boolean;
+  /** The current page. */
+  items: SearchResultItem[];
+  categories: SearchCategoryCount[];
+  page: number;
+  pageCount: number;
+}
+
+// ===== S: orders and account =====
+export type OrderStatus = 'placed' | 'processing' | 'shipped' | 'delivered' | 'completed' | 'cancelled' | 'unknown';
+/** What an order line is, derived from the line alone (no catalog read). */
+export type OrderLineKind = 'internet-plan' | 'phone-plan' | 'device' | 'equipment' | 'addon' | 'other';
+/** The "Type" column of the contract table. */
+export type OrderLineFamily = 'cable' | 'wireless' | 'phone' | 'addon' | 'equipment' | 'installments' | 'lease' | 'outright' | 'other';
+/** The device line's acquisition, read from the line's custom fields (never inferred from a price). */
+export interface OrderLineAcquisition {
+  mode: AcquisitionMode;
+  termMonths: number | null;
+  /** YYYY-MM-DD: the last installment date or the return-by date; the line's own field `acquisitionEndDate` when present, else computed. */
+  endDate: string | null;
+}
+export type DeviceColor = 'black' | 'silver' | 'violet';
+export interface OrderLine {
+  id: string;
+  sku: string;
+  offerKey: string;
+  name: string;
+  imageUrl?: string;
+  quantity: number;
+  kind: OrderLineKind;
+  family: OrderLineFamily;
+  /** Handset lines: memory and colour parsed from the SKU (`MLV-DEV-NOVAPRO-BLK-256`). */
+  deviceVariant: { memoryGb: string; color: DeviceColor } | null;
+  recurring: boolean;
+  priceMode: PriceSelectionMode | null;
+  /** 0 = month-to-month, null = unknown. */
+  termMonths: number | null;
+  unitPrice: Money;
+  total: Money;
+  parentLineId: string | null;
+  acquisition: OrderLineAcquisition | null;
+}
+export interface AddressView {
+  id: string;
+  name: string;
+  line1: string;
+  line2: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  isDefaultShipping: boolean;
+}
+export interface Order {
+  id: string;
+  orderNumber: string;
+  /** ISO timestamp. */
+  createdAt: string;
+  status: OrderStatus;
+  orderState: string;
+  shipmentState: string | null;
+  /** YYYY-MM-DD (UTC): the stored service start, else the order date. */
+  serviceStartDate: string;
+  lines: OrderLine[];
+  /** `order.totalPrice`: due at order. */
+  total: Money;
+  /** Sum of the recurring lines at their standing price (the intro price is not the monthly price "after that"). */
+  monthly: Money;
+  shippingAddress: AddressView | null;
+  /** Parsed `priceSchedule` (L); empty when absent or invalid. */
+  schedules: PriceSchedule[];
+  /** Parsed `labelSnapshot` (M), the labels as they were at order time; null when absent or invalid. */
+  labels: LabelSnapshot['labels'] | null;
+}
+export interface OrderListItem {
+  id: string;
+  orderNumber: string;
+  createdAt: string;
+  status: OrderStatus;
+  /** Names of the first two lines; `more` = the rest. */
+  itemNames: string[];
+  more: number;
+  /** Due at order. */
+  total: Money;
+  monthly: Money;
+}
+export interface ContractRow {
+  key: string;
+  orderNumber: string;
+  sku: string;
+  name: string;
+  deviceVariant: OrderLine['deviceVariant'];
+  family: OrderLineFamily;
+  /** YYYY-MM-DD. */
+  startedOn: string;
+  /** 0 = month-to-month, null = unknown. */
+  termMonths: number | null;
+  /** YYYY-MM-DD, committed terms and device payments only. */
+  endsOn: string | null;
+  /** Current monthly amount of the row (quantity included). */
+  monthly: Money;
+}
+export interface RecurringSummary {
+  id: string;
+  originOrderId: string;
+  state: RecurringOrderSummary['state'];
+  nextOrderAt?: string;
+  expiresAt?: string;
+}
+export interface ActivePlan {
+  key: string;
+  orderNumber: string;
+  sku: string;
+  name: string;
+  /** The stored label of the order; null for an order without a snapshot. */
+  label: BroadbandLabelData | null;
+}
+export interface ReorderUnavailable {
+  sku: string;
+  name: string;
+  reason: 'not-available' | 'recurrence-lost';
+}
+export interface ReorderResult {
+  cart: Cart;
+  unavailable: ReorderUnavailable[];
 }
