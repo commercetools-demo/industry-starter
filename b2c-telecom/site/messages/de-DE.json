@@ -9,6 +9,17 @@
   "account": {},
   "auth": {},
   "search": {},
+  "pricing": {
+    "mode": {
+      "fixed": "Preis für Ihre Laufzeit von {months} Monaten festgeschrieben",
+      "dynamic": "Preis kann sich ändern; wir informieren Sie vorher"
+    },
+    "intro": {
+      "cancel": {
+        "rule": "Wenn Sie während des Einführungszeitraums kündigen, behalten Sie die bereits erhaltene Ersparnis."
+      }
+    }
+  },
   "content": {},
   "errors": {},
   "a11y": {},
