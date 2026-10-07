@@ -1,10 +1,42 @@
 {
   "common": {
-    "brand": "Malva"
+    "brand": "Malva",
+    "toast": {
+      "dismiss": "Schließen"
+    },
+    "breadcrumb": "Brotkrumenpfad"
+  },
+  "shell": {
+    "home": "Malva Telecom Startseite",
+    "skipToContent": "Zum Inhalt springen",
+    "nav": {
+      "primary": "Hauptnavigation"
+    },
+    "account": {
+      "login": "Anmelden",
+      "greeting": "Hallo, {firstName}",
+      "greetingNoName": "Mein Konto"
+    },
+    "bundle": {
+      "labelCount": "Mein Bundle · {count}"
+    },
+    "menu": {
+      "open": "Menü öffnen",
+      "close": "Menü schließen",
+      "title": "Menü"
+    },
+    "locale": {
+      "label": "Sprache und Region",
+      "en-US": "English (US)",
+      "de-DE": "Deutsch (Deutschland)"
+    }
   },
   "nav": {},
   "footer": {
-    "photoCredit": "Fotos von Pexels"
+    "photoCredit": "Fotos von Pexels",
+    "nav": "Fußzeile",
+    "support": "Support",
+    "copyright": "© 2026 Malva Telecom"
   },
   "home": {
     "placeholder": "Malva Telecom Shop"
@@ -15,8 +47,45 @@
   "account": {},
   "auth": {},
   "search": {},
+  "pricing": {
+    "mode": {
+      "fixed": "Preis für Ihre Laufzeit von {months} Monaten festgeschrieben",
+      "dynamic": "Preis kann sich ändern; wir informieren Sie vorher"
+    },
+    "intro": {
+      "cancel": {
+        "rule": "Wenn Sie während des Einführungszeitraums kündigen, behalten Sie die bereits erhaltene Ersparnis."
+      }
+    }
+  },
   "content": {},
-  "errors": {},
+  "errors": {
+    "kicker": {
+      "notFound": "404",
+      "unauthorized": "403",
+      "server": "500"
+    },
+    "notFound": {
+      "title": "Diese Seite haben wir nicht gefunden",
+      "body": "Die Adresse ist vielleicht falsch geschrieben oder das Angebot ist nicht mehr verfügbar. Suchen Sie oder gehen Sie zurück zu unseren Tarifen.",
+      "searchLabel": "Malva durchsuchen",
+      "searchButton": "Suchen",
+      "browse": "Unsere Tarife ansehen"
+    },
+    "home": "Zur Startseite",
+    "server": {
+      "title": "Bei uns ist etwas schiefgelaufen",
+      "body": "Wir konnten diese Seite nicht vollständig laden. Ihr Bundle und Ihre Anmeldung sind unverändert. Bitte versuchen Sie es erneut.",
+      "retry": "Erneut versuchen"
+    },
+    "reference": "Referenz: {reference}",
+    "unauthorized": {
+      "title": "Dafür fehlt Ihnen die Berechtigung",
+      "body": "Sie sind angemeldet, aber Ihr Konto darf das nicht. Falls Sie das für einen Fehler halten, wenden Sie sich an den Support und nennen Sie die Referenz.",
+      "account": "Zu meinem Konto",
+      "support": "Support kontaktieren"
+    }
+  },
   "a11y": {},
   "offers": {
     "reason": {
