@@ -18,6 +18,12 @@ describe('next.config', () => {
     expect(hostnames.some((hostname) => hostname.includes('**'))).toBe(false);
   });
 
+  it('sends Cache-Control: no-store for the four auth pages', async () => {
+    const config = await loadConfig('production');
+    const rules = (await config.headers?.()) ?? [];
+    expect(rules).toEqual([{ source: '/:locale/(login|register|forgot-password|reset-password)', headers: [{ key: 'Cache-Control', value: 'no-store' }] }]);
+  });
+
   it('includes dev.ts page extensions in development only', async () => {
     const dev = await loadConfig('development');
     expect(dev.pageExtensions).toContain('dev.ts');
