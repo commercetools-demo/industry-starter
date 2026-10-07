@@ -1,20 +1,30 @@
 {
   "common": {
     "brand": "Malva",
-    "toast": { "dismiss": "Dismiss" },
+    "toast": {
+      "dismiss": "Dismiss"
+    },
     "breadcrumb": "Breadcrumb"
   },
   "shell": {
     "home": "Malva Telecom home",
     "skipToContent": "Skip to content",
-    "nav": { "primary": "Main navigation" },
+    "nav": {
+      "primary": "Main navigation"
+    },
     "account": {
       "login": "Log in",
       "greeting": "Hi, {firstName}",
       "greetingNoName": "My account"
     },
-    "bundle": { "labelCount": "My bundle · {count}" },
-    "menu": { "open": "Open menu", "close": "Close menu", "title": "Menu" },
+    "bundle": {
+      "labelCount": "My bundle · {count}"
+    },
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu",
+      "title": "Menu"
+    },
     "locale": {
       "label": "Language and region",
       "en-US": "English (US)",
@@ -28,7 +38,9 @@
     "support": "Support",
     "copyright": "© 2026 Malva Telecom"
   },
-  "home": { "placeholder": "Malva Telecom storefront" },
+  "home": {
+    "placeholder": "Malva Telecom storefront"
+  },
   "plp": {},
   "bundle": {},
   "checkout": {},
@@ -48,7 +60,11 @@
   },
   "content": {},
   "errors": {
-    "kicker": { "notFound": "404", "unauthorized": "403", "server": "500" },
+    "kicker": {
+      "notFound": "404",
+      "unauthorized": "403",
+      "server": "500"
+    },
     "notFound": {
       "title": "We couldn't find that page",
       "body": "The address may be mistyped, or the offer is no longer available. Search, or head back to our plans.",
@@ -84,7 +100,14 @@
       "REQUIRED_EQUIPMENT_MISSING": "{planName} needs a compatible {kind}.",
       "PARENT_REQUIRED": "Add a plan first.",
       "AMBIGUOUS_PARENT": "Choose which plan to attach this to.",
-      "ALREADY_ATTACHED": "Already added to {planName}."
+      "ALREADY_ATTACHED": "Already added to {planName}.",
+      "HELD_SERVICE_CONFLICT": "You already have {otherName}, which can't be combined with {candidateName}.",
+      "NOT_ELIGIBLE_AUDIENCE": "{offerName} isn't available for your account type.",
+      "NOT_ELIGIBLE_EXISTING_CUSTOMER": "{rule, select, existing {{offerName} is for existing Malva customers.} other {{offerName} is for new customers only.}}",
+      "NOT_ELIGIBLE_CHANNEL": "{offerName} isn't available in this sales channel.",
+      "NOT_STARTED": "{offerName} isn't available yet.",
+      "ENDED": "{offerName} has ended.",
+      "NOT_SERVICEABLE": "{offerName} isn't available at {postalCode}."
     }
   },
   "region": {
@@ -97,5 +120,15 @@
     "cartEmptied": "Your bundle was emptied because prices differ in {market}. Removed: {lines}",
     "switched": "Region changed to {market}",
     "error": "We could not change the region. Please try again."
+  },
+  "serviceability": {
+    "notServed": "We don't serve {postalCode} yet.",
+    "partial": "Available at {postalCode}: {technologies}.",
+    "invalid": "Enter a valid ZIP code.",
+    "tech": {
+      "cable": "Cable internet",
+      "fixed-wireless": "Home wireless",
+      "mobile": "Phone"
+    }
   }
 }

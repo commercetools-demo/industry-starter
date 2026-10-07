@@ -266,6 +266,44 @@ export interface CandidateEntry {
   verdict: CompatVerdict;
 }
 
+// ===== K: eligibility and exclusivity =====
+export type CustomerType = 'consumer' | 'small-business' | 'employee';
+export interface ServiceLocation {
+  postalCode: string;
+  country: CountryCode;
+  /** cable, fixed-wireless, mobile */
+  served: Record<Technology, boolean>;
+  anyServed: boolean;
+  /** ISO time of the (cached) answer. */
+  checkedAt: string;
+}
+export interface HeldService {
+  offerKey: string;
+  offerName: string;
+  source: 'order' | 'recurring-order';
+  /** Order number or recurring order id. */
+  reference: string;
+}
+/** Server-side only (contains a Date), never serialized to the client. */
+export interface BuyerContext {
+  customerType: CustomerType;
+  isExistingCustomer: boolean;
+  channel: string;
+  now: Date;
+  location?: ServiceLocation;
+  held: HeldService[];
+  signedIn: boolean;
+}
+export interface ConflictFinding {
+  source: 'cart' | 'held';
+  candidateKey: string;
+  otherKey: string;
+  otherName: string;
+  lineItemId?: string;
+  reference?: string;
+  declaredBy: 'candidate' | 'other' | 'both';
+}
+export type AvailabilityState = 'no-location' | 'served' | 'partially-served' | 'not-served';
 // ===== L: pricing =====
 export type PriceSelectionMode = 'Fixed' | 'Dynamic';
 export interface LineRecurrence {

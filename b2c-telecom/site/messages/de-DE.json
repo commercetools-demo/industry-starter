@@ -1,20 +1,30 @@
 {
   "common": {
     "brand": "Malva",
-    "toast": { "dismiss": "Schließen" },
+    "toast": {
+      "dismiss": "Schließen"
+    },
     "breadcrumb": "Brotkrumenpfad"
   },
   "shell": {
     "home": "Malva Telecom Startseite",
     "skipToContent": "Zum Inhalt springen",
-    "nav": { "primary": "Hauptnavigation" },
+    "nav": {
+      "primary": "Hauptnavigation"
+    },
     "account": {
       "login": "Anmelden",
       "greeting": "Hallo, {firstName}",
       "greetingNoName": "Mein Konto"
     },
-    "bundle": { "labelCount": "Mein Bundle · {count}" },
-    "menu": { "open": "Menü öffnen", "close": "Menü schließen", "title": "Menü" },
+    "bundle": {
+      "labelCount": "Mein Bundle · {count}"
+    },
+    "menu": {
+      "open": "Menü öffnen",
+      "close": "Menü schließen",
+      "title": "Menü"
+    },
     "locale": {
       "label": "Sprache und Region",
       "en-US": "English (US)",
@@ -28,7 +38,9 @@
     "support": "Support",
     "copyright": "© 2026 Malva Telecom"
   },
-  "home": { "placeholder": "Malva Telecom Shop" },
+  "home": {
+    "placeholder": "Malva Telecom Shop"
+  },
   "plp": {},
   "bundle": {},
   "checkout": {},
@@ -48,7 +60,11 @@
   },
   "content": {},
   "errors": {
-    "kicker": { "notFound": "404", "unauthorized": "403", "server": "500" },
+    "kicker": {
+      "notFound": "404",
+      "unauthorized": "403",
+      "server": "500"
+    },
     "notFound": {
       "title": "Diese Seite haben wir nicht gefunden",
       "body": "Die Adresse ist vielleicht falsch geschrieben oder das Angebot ist nicht mehr verfügbar. Suchen Sie oder gehen Sie zurück zu unseren Tarifen.",
@@ -84,7 +100,14 @@
       "REQUIRED_EQUIPMENT_MISSING": "{planName} benötigt ein kompatibles Gerät ({kind}).",
       "PARENT_REQUIRED": "Fügen Sie zuerst einen Tarif hinzu.",
       "AMBIGUOUS_PARENT": "Wählen Sie, zu welchem Tarif das gehört.",
-      "ALREADY_ATTACHED": "Bereits zu {planName} hinzugefügt."
+      "ALREADY_ATTACHED": "Bereits zu {planName} hinzugefügt.",
+      "HELD_SERVICE_CONFLICT": "Sie haben bereits {otherName}; das lässt sich nicht mit {candidateName} kombinieren.",
+      "NOT_ELIGIBLE_AUDIENCE": "{offerName} ist für Ihren Kontotyp nicht verfügbar.",
+      "NOT_ELIGIBLE_EXISTING_CUSTOMER": "{rule, select, existing {{offerName} gilt nur für bestehende Malva-Kunden.} other {{offerName} gilt nur für Neukunden.}}",
+      "NOT_ELIGIBLE_CHANNEL": "{offerName} ist in diesem Vertriebskanal nicht verfügbar.",
+      "NOT_STARTED": "{offerName} ist noch nicht verfügbar.",
+      "ENDED": "{offerName} ist beendet.",
+      "NOT_SERVICEABLE": "{offerName} ist unter {postalCode} nicht verfügbar."
     }
   },
   "region": {
@@ -97,5 +120,15 @@
     "cartEmptied": "Ihr Bundle wurde geleert, weil die Preise in {market} abweichen. Entfernt: {lines}",
     "switched": "Region geändert auf {market}",
     "error": "Die Region konnte nicht geändert werden. Bitte versuchen Sie es erneut."
+  },
+  "serviceability": {
+    "notServed": "Unter {postalCode} sind wir noch nicht verfügbar.",
+    "partial": "Verfügbar unter {postalCode}: {technologies}.",
+    "invalid": "Bitte geben Sie eine gültige Postleitzahl ein.",
+    "tech": {
+      "cable": "Kabel-Internet",
+      "fixed-wireless": "Home Wireless",
+      "mobile": "Mobilfunk"
+    }
   }
 }

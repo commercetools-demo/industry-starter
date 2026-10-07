@@ -124,6 +124,15 @@ Verified live on 2026-10-07 against `spec-test-b2c-telecom` through the dev wind
 
 `npm run lint:catalog` on 2026-10-07 against spec-test-b2c-telecom (en-US/USD): `Checked 27 offers. 0 error(s), 0 warning(s).` All conflicts are declared on both sides; every reference in included-offers, conflicts-with, compatible-addons and incompatible-with resolves. Live facts that shaped the rules: cable plans include the DOCSIS modem and wireless plans include the 5G gateway (so required equipment kinds are satisfied by inclusion, no equipment line is auto-added); Unlimited Max lists Netflix in compatible-addons (a positive exception to its internet-only attributes); the AX3000 router lists wireless-lite in incompatible-with.
 
+## K — holdings and customer groups
+
+Read live on 2026-10-07 with the storefront client (read-only) against spec-test-b2c-telecom:
+- `orders().get({ where: 'customerId="<id>"', sort: 'createdAt desc', limit: 100 })` works; order lines carry `productKey` equal to the offer key (`malva-offer-cable-500`) and the `offerKey` custom field with the same value. `orderState` of the demo orders is `Confirmed`.
+- `recurringOrders().get({ where: 'customer(id="<id>")', sort: 'createdAt desc', limit: 100, expand: ['cart'] })` works with the storefront client (no 403, so `view_recurring_orders` is granted); lines are `recurringOrder.cart.obj.lineItems` (same `productKey` and `offerKey` rule); `recurringOrderState` is `Active` on all demo recurring orders.
+- Demo customers: Alex Rivera holds MLV-DEMO-0001 (Cable 500) and MLV-DEMO-0002 (Phone Unlimited + Spotify) with two Active recurring orders; Jo Kim holds MLV-DEMO-0003 (Air 5G) with one; Lena, Pat and Sam have no orders.
+- Customer Groups (key to id): `consumer`, `small-business`, `employee`, `existing-customer` (4 groups). Demo customers have exactly ONE group in `customerGroup` (Alex and Jo `existing-customer`, Lena `consumer`, Pat `employee`, Sam `small-business`); `customerGroupAssignments` is `[]` for all of them. K reads both fields.
+- No seeded offer has `start-time`/`end-time` or a non-empty `audience`, so the schedule and audience rules are proven by unit tests only. Live extras: `malva-offer-cable-existing-customer` is hidden for anonymous buyers (rule `existing`), `malva-offer-phone-online-only` stays visible (channel `online`).
+- Serviceability stub, live through `/api/dev/catalog?view=visible`: ZIP 60601 hides the 3 wireless plans, 99999 hides every offer (`not-served`), 59001 (mobile only) hides internet plans, equipment and internet-only add-ons (4 of 13 add-on offers remain: Spotify, Apple Music, Cloud 200, Device Care).
 <!-- SPIKE-L:BEGIN -->
 ## L - Checkout spike (recurring + one-time) - run 2026-10-07T20:45:50.752Z
 Result: PENDING (OA-05)  |  Gate 2: owner review required
