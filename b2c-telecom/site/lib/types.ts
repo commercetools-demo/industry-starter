@@ -100,6 +100,8 @@ export interface OfferVariant {
   oneTimePrice?: Money;
   /** Devices only: every recurring (installment, lease) price of the market, lowest first. */
   financedPrices?: Money[];
+  /** Devices only (Q): the same prices with the id of their recurrence policy; Q maps the id to a mode and term. */
+  financedOptions?: { policyId: string; amount: Money }[];
   /** Only when the variant has an inventory entry (equipment, devices); undefined = not tracked (services, D-019). */
   availableQuantity?: number;
   images: string[];

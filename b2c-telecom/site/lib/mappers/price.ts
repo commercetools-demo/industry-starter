@@ -57,6 +57,24 @@ export function selectPrices(prices: ReadonlyArray<RawPrice>, market: Market, no
   return { ...(recurring ? { recurring } : {}), ...(oneTime ? { oneTime } : {}) };
 }
 
+/**
+ * Every recurring price of the market with the id of its recurrence policy (device installments and leases): one entry per policy,
+ * the country-specific price winning over a country-less one, then the lowest amount. Policy ids are resolved to keys by Q's
+ * `getDevicePolicyMap`, so the catalog cache stays free of any policy lookup.
+ */
+export function selectFinancedOptions(prices: ReadonlyArray<RawPrice>, market: Market, now: Date, sku = ''): { policyId: string; amount: Money }[] {
+  const byPolicy = new Map<string, RawPrice[]>();
+  for (const price of applicable(prices, market, now, sku)) {
+    const policy = price.recurrencePolicy as { id?: unknown } | undefined;
+    if (typeof policy?.id !== 'string') continue;
+    byPolicy.set(policy.id, [...(byPolicy.get(policy.id) ?? []), price]);
+  }
+  return [...byPolicy.entries()].flatMap(([policyId, list]) => {
+    const amount = lowest(preferCountry(list, market));
+    return amount ? [{ policyId, amount }] : [];
+  });
+}
+
 /** Every recurring price of the market (device installments and leases), lowest first. */
 export function selectRecurringPrices(prices: ReadonlyArray<RawPrice>, market: Market, now: Date, sku = ''): Money[] {
   return preferCountry(

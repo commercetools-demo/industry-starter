@@ -30,7 +30,7 @@ import {
   attrStringSet,
   type RawAttribute,
 } from './attributes';
-import { selectPrices, selectRecurringPrices, type RawPrice } from './price';
+import { selectFinancedOptions, selectPrices, selectRecurringPrices, type RawPrice } from './price';
 
 type Attrs = ReadonlyArray<RawAttribute> | undefined;
 
@@ -183,7 +183,7 @@ function mapVariant(variant: ProductVariant, isMaster: boolean, kind: OfferKind,
     // Handset installment and lease prices are Q's financing options, never the "monthly price" of the offer.
     ...(selected.recurring && kind !== 'device' ? { recurringPrice: selected.recurring } : {}),
     ...(selected.oneTime ? { oneTimePrice: selected.oneTime } : {}),
-    ...(financed.length > 0 ? { financedPrices: financed } : {}),
+    ...(financed.length > 0 ? { financedPrices: financed, financedOptions: selectFinancedOptions(prices, ctx.market, ctx.now, sku) } : {}),
     ...(typeof variant.availability?.availableQuantity === 'number' ? { availableQuantity: variant.availability.availableQuantity } : {}),
     images: (variant.images ?? []).map((image) => image.url),
     attributes: plain,
