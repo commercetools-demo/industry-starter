@@ -3,10 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check:lockfile": "node scripts/check-lockfile.mjs",
+    "check:versions": "node scripts/check-versions.mjs",
+    "verify": "npm run check:lockfile && npm run check:versions && npm run lint && npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
     "@commercetools/checkout-browser-sdk": "^1.7.5",
@@ -38,5 +44,8 @@
     "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^5.0.3"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
