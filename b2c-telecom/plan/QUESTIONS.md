@@ -59,3 +59,4 @@ Answer in this file or in chat; the plan continues with the stated default.
 - **Q-019** (from P) The header search magnifier is undrawn: owner sign-off needed (`HEADER_SEARCH_ENABLED` in `lib/config/search.ts` switches it off). German catalog names are English, so `/de-DE/search?q=Tarif` finds nothing.
 - **TODO for M (from S):** `PriceSchedule` shows "Dates assume you order today" on order detail pages; needs a prop to suppress. "Buy again" confirms with a toast, not the planned `?reordered` banner on `/bundle`.
 - **Note (S):** `scripts/seed/create-qa-order.ts` / `cleanup-qa.ts` create and remove QA customers and orders (cleanup also removes `chrome-r-*` customers).
+- **Q-020** (from T) German wording clash: T's pages say "Zahlungsmethoden"/"Gespeicherte Listen", S's navigation says "Zahlungsarten"/"Merklisten". Default: unify on S's navigation wording when the German copy is reviewed (SO-09).

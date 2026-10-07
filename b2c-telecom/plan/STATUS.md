@@ -23,7 +23,7 @@ Updated by the developer on each task and by Claude (after Chrome verification) 
 | Q | Devices and acquisition modes | 13 | 13 | Merged (verify + curl/MCP live; Chrome C-Q pending) | orchestrator | 2026-10-07 |
 | R | Auth pages and identity | 12 | 12 | Merged (verify + curl live auth flows; Chrome C-R pending) | orchestrator | 2026-10-07 |
 | S | Account shell, dashboard and order history | 12 | 12 | Merged (verify + curl live; Chrome C-S pending) | orchestrator | 2026-10-07 |
-| T | Address book, payment methods, saved lists | 15 | 0 | Not started | | |
+| T | Address book, payment methods, saved lists | 15 | 15 | Merged (verify + live API checks; Chrome C-T pending) | orchestrator | 2026-10-07 |
 | U | Hosted checkout and order confirmation | 17 | 0 | Not started | | |
 | V | Post-purchase: cancel and device return | 12 | 0 | Not started | | |
 | W | Content pages | 10 | 10 | Merged (verify + curl smoke; Chrome C-W pending) | orchestrator | 2026-10-07 |

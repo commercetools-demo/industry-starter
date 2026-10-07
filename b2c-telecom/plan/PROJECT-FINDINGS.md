@@ -188,3 +188,11 @@ Open items: P4 (OA-05 (--skip-checkout)); P5 (OA-05 (--skip-checkout))
 - A re-added line keeps its old `addedAt`; the API returns lines in insertion order, so the cart mapper sorts by `addedAt`.
 - Handset prices were replaced with the plan's table (Nova 5G has no lease; one variant intentionally lacks its 36-month price) — owner check M-Q-2.
 - `/api/cart/line-items` refuses devices (`USE_DEVICE_ROUTE`); device quantity limit 3; guests can only buy outright; U must call `evaluateFinancing`, `assertDeviceCartIntegrity`, `applyDeviceRecurringExpiry` (`lib/ct/devices.ts`).
+
+## T: Payment Methods, lists, addresses (2026-10-07; details in plan/reports/T-report.md)
+- The platform does NOT clear a previous default Payment Method: a second default is refused (400 InvalidOperation); clearing the old default first is mandatory.
+- Storefront client can read payment methods and shopping lists; writes to payment methods with it were not tried (M-T-1).
+- Shopping-list line `custom` uses Type resource id `line-item`; `shopping-list-line-item` does not exist.
+- `addAddress` + `addShippingAddressId` + `setDefaultShippingAddress` in one update work with an address `key`; removing the default address promotes no other address.
+- Shopping-list `where` has no `matches`; delete by key prefix needs list-and-filter.
+- New custom types `malva-payment-method` and `malva-list-line` (seed:verify now expects 6 custom types).
