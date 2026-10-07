@@ -554,3 +554,41 @@ export interface MergeNote {
   count: number;
   names: string;
 }
+
+// ===== P: search =====
+export type SearchViewState = 'start' | 'results' | 'none' | 'unsupported-language' | 'error';
+export interface SearchResultItem {
+  offerKey: string;
+  name: string;
+  kind: 'plan' | 'addon' | 'equipment' | 'device';
+  categoryKey: string;
+  categoryName: string;
+  /** Master variant price: the monthly price when there is one, else the one-time price; null when neither. */
+  fromPrice: Money | null;
+  /** True when `fromPrice` is a monthly price. */
+  fromPriceRecurring: boolean;
+  /** Set when the query is a variant SKU (case-insensitive) or the API reported a partial variant match. */
+  matchedSku: string | null;
+  /** First plan highlight, else null. */
+  highlight: string | null;
+  /** Canonical link with locale prefix (`offerHref`). */
+  href: string;
+}
+export interface SearchCategoryCount {
+  key: string;
+  name: string;
+  count: number;
+}
+export interface SearchView {
+  state: SearchViewState;
+  query: string;
+  /** Results in the current category filter (before paging). */
+  total: number;
+  /** More matches existed than MAX_HITS. */
+  truncated: boolean;
+  /** The current page. */
+  items: SearchResultItem[];
+  categories: SearchCategoryCount[];
+  page: number;
+  pageCount: number;
+}
