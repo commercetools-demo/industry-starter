@@ -28,8 +28,16 @@
     "seed:experiments": "tsx scripts/seed/experiments/platform-checks.ts",
     "job:schedule-sweep": "tsx --conditions=react-server scripts/jobs/schedule-sweep.ts",
     "seed:discounts": "tsx --conditions=react-server scripts/seed/discounts.ts",
+    "seed:customer-fields": "tsx scripts/seed/customer-fields.ts",
     "spike:recurring-checkout": "tsx --conditions=react-server scripts/spike/recurring-checkout.ts",
     "seed:export-serviceability": "tsx scripts/seed/export-serviceability.ts",
+    "release:validate": "tsx scripts/seed/release.ts validate",
+    "release:preview": "tsx scripts/seed/release.ts preview",
+    "release:apply": "tsx scripts/seed/release.ts apply",
+    "release:cancel": "tsx scripts/seed/release.ts cancel",
+    "release:rollback": "tsx scripts/seed/release.ts rollback",
+    "release:history": "tsx scripts/seed/release.ts history",
+    "release:verify": "tsx scripts/seed/release.ts verify",
     "verify": "npm run check:secrets && npm run check:lockfile && npm run check:versions && npm run check:tokens && npm run check:boundaries && npm run lint && npm run typecheck && npm test && npm run build && npm run check:bundle && npm run check:dev-routes"
   },
   "dependencies": {

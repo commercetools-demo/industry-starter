@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
   pageExtensions: isProd ? ['tsx', 'ts', 'jsx', 'js'] : ['tsx', 'ts', 'jsx', 'js', 'dev.tsx', 'dev.ts'],
   // Content pages read markdown from disk at request time (W): Netlify functions only see traced files.
   outputFileTracingIncludes: { '/**': ['./content/**/*', './scripts/seed/data/product-images.json'] },
+  // The auth pages carry per-visitor state (and the reset token in the URL): never cached by a browser or proxy (R).
+  async headers() {
+    return [{ source: '/:locale/(login|register|forgot-password|reset-password)', headers: [{ key: 'Cache-Control', value: 'no-store' }] }];
+  },
   images: {
     unoptimized: true, // the commercetools image CDN rejects Next optimiser query parameters
     remotePatterns: [

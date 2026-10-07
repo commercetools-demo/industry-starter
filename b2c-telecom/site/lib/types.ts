@@ -537,3 +537,20 @@ export interface ListingParams {
   /** The offer to scroll to and highlight (canonical offer link). */
   offer: string | null;
 }
+
+// ===== R: account user =====
+export interface AccountUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  customerNumber?: string;
+  isEmailVerified: boolean;
+  createdAt: string;
+}
+/** Shown as a toast after a sign-in merged the anonymous bundle: `count` lines of the merged bundle need attention (`names` joined). */
+export interface MergeNote {
+  key: 'review';
+  count: number;
+  names: string;
+}

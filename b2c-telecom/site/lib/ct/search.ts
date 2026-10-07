@@ -9,6 +9,7 @@ import { getPriceBands } from '@/lib/config/price-bands';
 import { LISTING_PAGE_SIZE } from '@/lib/config/facets';
 import { flattenTree } from '@/lib/mappers/category';
 import { mapOffer, mergeFacts } from '@/lib/mappers/offer';
+import { filterReleased } from '@/lib/offers/release';
 import type { CurrencyCode, CountryCode, Locale, Offer, SearchResult, SearchSort } from '@/lib/types';
 import { marketFromLocale } from '@/lib/config/markets';
 import { getCatalogFacts, getProductTypeIds, OFFER_TYPE_KEY } from './catalog';
@@ -136,9 +137,11 @@ export async function searchOffers(p: SearchParams): Promise<SearchResult> {
     const offer = mergeFacts(mapped, facts);
     if (offer.facts !== null && (offer.headline.recurring || offer.headline.oneTime)) offers.push(offer);
   }
+  // Coordinated release (X): unreleased and ended offers never reach a result page; the total drops by the removed count.
+  const released = filterReleased(offers, new Date());
   return {
-    offers,
-    total: body.total,
+    offers: released,
+    total: body.total - (offers.length - released.length),
     page: Math.max(1, p.page ?? 1),
     pageSize: p.pageSize ?? LISTING_PAGE_SIZE,
     categoryFacet: buckets(body, 'categories').flatMap((bucket) => {

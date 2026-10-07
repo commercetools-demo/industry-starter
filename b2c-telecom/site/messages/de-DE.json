@@ -247,7 +247,84 @@
   },
   "checkout": {},
   "account": {},
-  "auth": {},
+  "auth": {
+    "login": {
+      "title": "Anmelden",
+      "subtitle": "Zugriff auf Ihre Tarife, Ihren Vertrag und Ihre Rechnung.",
+      "submit": "Anmelden",
+      "pending": "Anmeldung läuft…",
+      "error": "Geben Sie eine gültige E-Mail-Adresse und ein gültiges Passwort ein.",
+      "forgot": "Passwort vergessen?",
+      "create": "Neu bei Malva? Konto erstellen",
+      "resetDone": "Passwort geändert. Melden Sie sich mit Ihrem neuen Passwort an."
+    },
+    "field": {
+      "email": "E-Mail",
+      "password": "Passwort",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "newPassword": "Neues Passwort"
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "submit": "Konto erstellen",
+      "pending": "Konto wird erstellt…",
+      "haveAccount": "Sie haben bereits ein Konto? Anmelden",
+      "exists": "Zu dieser E-Mail-Adresse gibt es bereits ein Konto. Melden Sie sich an oder setzen Sie Ihr Passwort zurück."
+    },
+    "forgot": {
+      "title": "Passwort zurücksetzen",
+      "subtitle": "Geben Sie Ihre E-Mail-Adresse ein, wir bereiten einen Link zum Zurücksetzen vor.",
+      "submit": "Link senden",
+      "pending": "Link wird vorbereitet…",
+      "confirm": "Falls zu dieser E-Mail-Adresse ein Konto existiert, wurde ein Link zum Zurücksetzen vorbereitet.",
+      "demoBanner": "Demomodus: Der E-Mail-Versand ist deaktiviert.",
+      "demoLink": "Link zum Zurücksetzen öffnen",
+      "unverifiedHint": "Mit dem neuen Passwort können Sie sich anmelden; Ihre E-Mail-Adresse wird beim Abschluss bestätigt.",
+      "backToLogin": "Zurück zur Anmeldung"
+    },
+    "reset": {
+      "title": "Neues Passwort wählen",
+      "submit": "Passwort ändern",
+      "pending": "Passwort wird geändert…",
+      "expiredTitle": "Dieser Link zum Zurücksetzen ist nicht mehr gültig",
+      "expiredBody": "Fordern Sie unten einen neuen Link an.",
+      "sendNew": "Neuen Link senden"
+    },
+    "password": {
+      "show": "Passwort anzeigen",
+      "hide": "Passwort verbergen",
+      "requirements": "Passwortanforderungen",
+      "summary": "{met} von {total} Anforderungen erfüllt",
+      "met": "erfüllt",
+      "notMet": "nicht erfüllt",
+      "rule": {
+        "min-length": "Verwenden Sie mindestens 10 Zeichen.",
+        "max-length": "Verwenden Sie höchstens 128 Zeichen.",
+        "lowercase": "Fügen Sie einen Kleinbuchstaben hinzu.",
+        "uppercase": "Fügen Sie einen Großbuchstaben hinzu.",
+        "digit": "Fügen Sie eine Zahl hinzu.",
+        "not-email": "Verwenden Sie Ihre E-Mail-Adresse nicht im Passwort."
+      }
+    },
+    "validation": {
+      "firstName": "Geben Sie Ihren Vornamen ein (bis zu 60 Zeichen).",
+      "lastName": "Geben Sie Ihren Nachnamen ein (bis zu 60 Zeichen).",
+      "email": "Geben Sie eine gültige E-Mail-Adresse ein.",
+      "password": "Geben Sie ein Passwort ein.",
+      "generic": "Etwas ist schiefgelaufen. Versuchen Sie es erneut.",
+      "unavailable": "Der Dienst ist vorübergehend nicht verfügbar. Versuchen Sie es erneut."
+    },
+    "rateLimited": "Zu viele Versuche. Versuchen Sie es später erneut.",
+    "logout": {
+      "label": "Abmelden",
+      "pending": "Abmeldung läuft…"
+    },
+    "mergeNote": {
+      "review": "{count} Artikel in Ihrem Paket erfordern Ihre Aufmerksamkeit: {names}.",
+      "action": "Mein Paket prüfen"
+    }
+  },
   "search": {},
   "pricing": {
     "mode": {
@@ -262,8 +339,13 @@
   },
   "content": {
     "fallbackNotice": "Diese Seite ist in dieser Sprache noch nicht verfügbar. Es wird die englische Version angezeigt.",
-    "faq": { "topicsNav": "Themen", "allQuestions": "Alle Fragen" },
-    "support": { "popular": "Häufige Fragen" },
+    "faq": {
+      "topicsNav": "Themen",
+      "allQuestions": "Alle Fragen"
+    },
+    "support": {
+      "popular": "Häufige Fragen"
+    },
     "contact": {
       "heading": "Schreiben Sie uns",
       "cta": "E-Mail an den Support",
@@ -282,14 +364,21 @@
       "withdrawnTitle": "Dieser Artikel ist nicht mehr verfügbar",
       "withdrawnLink": "Artikel zu {topic} ansehen"
     },
-    "tags": { "internet": "Internet", "phone": "Mobilfunk", "pricing": "Preise", "labels": "Informationsblätter" },
+    "tags": {
+      "internet": "Internet",
+      "phone": "Mobilfunk",
+      "pricing": "Preise",
+      "labels": "Informationsblätter"
+    },
     "legal": {
       "effective": "Gültig seit {date}",
       "superseded": "Dies ist eine ersetzte Version. Sie galt bis {until}.",
       "viewCurrent": "Aktuelle Version ansehen",
       "earlier": "Frühere Versionen"
     },
-    "credits": { "photoBy": "Foto von {name} auf Pexels" },
+    "credits": {
+      "photoBy": "Foto von {name} auf Pexels"
+    },
     "footer": {
       "label": "Unternehmen und Rechtliches",
       "about": "Über uns",

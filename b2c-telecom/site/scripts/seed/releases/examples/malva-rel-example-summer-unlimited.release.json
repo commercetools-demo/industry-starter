@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "key": "malva-rel-example-summer-unlimited",
+  "name": "Summer Unlimited campaign (example)",
+  "author": "Malva commerce team",
+  "releaseAt": "2026-12-01T09:00:00Z",
+  "createOffers": [
+    {
+      "key": "malva-offer-phone-unlimited-summer",
+      "productType": "malva-offer",
+      "name": { "en-US": "Unlimited Summer", "de-DE": "Unlimited Sommer" },
+      "slug": { "en-US": "phone-unlimited-summer", "de-DE": "phone-unlimited-summer" },
+      "categories": ["malva-cat-phone-plans"],
+      "categoryOrderHints": { "malva-cat-phone-plans": "0.55" },
+      "taxCategory": "malva-telecom-services",
+      "masterVariant": {
+        "sku": "MLV-PHN-UNL-SUMMER-M2M",
+        "key": "mlv-phn-unl-summer-m2m",
+        "attributes": [
+          { "name": "offer-kind", "value": "base-package" },
+          { "name": "offer-family", "value": "phone" },
+          { "name": "anchors", "value": ["malva-phone-unlimited"] },
+          { "name": "included-offers", "value": ["malva-offer-spotify"] },
+          { "name": "audience", "value": ["consumer", "small-business", "employee"] },
+          { "name": "existing-customer", "value": "any" },
+          { "name": "network-generation", "value": "5g" },
+          { "name": "data-gb", "value": -1 },
+          { "name": "contract-term", "value": "month-to-month" },
+          { "name": "charge-type", "value": "monthly" }
+        ],
+        "prices": [
+          { "key": "mlv-phn-unl-summer-m2m_usd_malva-monthly", "value": { "currencyCode": "USD", "centAmount": 4000 }, "country": "US", "recurrencePolicy": "malva-monthly" },
+          { "key": "mlv-phn-unl-summer-m2m_eur_malva-monthly", "value": { "currencyCode": "EUR", "centAmount": 4000 }, "country": "DE", "recurrencePolicy": "malva-monthly" }
+        ]
+      },
+      "variants": [],
+      "publish": true
+    }
+  ],
+  "patchOffers": [],
+  "withdrawOffers": ["malva-offer-phone-online-only"],
+  "reinstateOffers": [],
+  "replaces": [{ "old": "malva-offer-phone-online-only", "new": "malva-offer-phone-unlimited-summer" }],
+  "createCartDiscounts": [
+    {
+      "key": "malva-cd-rel-example-5-off",
+      "name": { "en-US": "Summer: $5 off each phone line", "de-DE": "Sommer: 5 € weniger pro Handytarif" },
+      "description": {
+        "en-US": "Example of a campaign promotion released together with its offer.",
+        "de-DE": "Beispiel einer Kampagnen-Aktion, die zusammen mit ihrem Angebot freigeschaltet wird."
+      },
+      "value": { "type": "absolute", "money": [{ "currencyCode": "USD", "centAmount": 500 }, { "currencyCode": "EUR", "centAmount": 500 }] },
+      "cartPredicate": "true",
+      "target": { "type": "lineItems", "predicate": "attributes.`offer-family` = \"phone\"" },
+      "sortOrder": "0.91",
+      "stackingMode": "Stacking",
+      "isActive": true,
+      "requiresDiscountCode": false,
+      "recurringOrderScope": { "type": "AnyOrder" }
+    }
+  ],
+  "withdrawCartDiscounts": [],
+  "reinstateCartDiscounts": [],
+  "externalChecklist": ["Summer campaign banner approved and deployed on Netlify"]
+}

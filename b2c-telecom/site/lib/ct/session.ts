@@ -12,6 +12,7 @@ export const SESSION_MAX_AGE_SECONDS = 2_592_000; // 30 days, fixed (not sliding
 export const SESSION_FIELDS: readonly (keyof SessionData)[] = [
   'anonymousId',
   'customerId',
+  'signedInAt',
   'cartId',
   'lastOrderNumber',
   'locale',
