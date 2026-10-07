@@ -937,6 +937,8 @@ export interface OrderConfirmationView {
   order: Order;
   /** Full view (owner or the session that placed it) or limited (capability link). */
   full: boolean;
+  /** The signed-in customer owns the order (account links and the cancel sentence are for owners only). */
+  owner: boolean;
   /** Contact email (full view only). */
   email: string | null;
   isGuest: boolean;

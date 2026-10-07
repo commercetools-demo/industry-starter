@@ -1244,7 +1244,8 @@
       "start": "Ihr Anschluss startet am {date}.",
       "ships": "Ihre Geräte werden separat versandt. Die Sendungsverfolgung erscheint auf Ihrer Bestellseite, sobald sie unterwegs sind.",
       "cancel": "Doch umentschieden? Sie können bis {date} stornieren.",
-      "support": "Fragen? Support kontaktieren"
+      "support": "Fragen? Support kontaktieren",
+      "manage": "Bestellung verwalten"
     },
     "pending": {
       "title": "Wir prüfen Ihre Bestellung {orderNumber}",

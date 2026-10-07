@@ -1244,7 +1244,8 @@
       "start": "Your service starts on {date}.",
       "ships": "Your equipment ships separately. Tracking appears on your order page once it ships.",
       "cancel": "Need to change your mind? You can cancel until {date}.",
-      "support": "Questions? Contact support"
+      "support": "Questions? Contact support",
+      "manage": "Manage order"
     },
     "pending": {
       "title": "We're checking on your order {orderNumber}",

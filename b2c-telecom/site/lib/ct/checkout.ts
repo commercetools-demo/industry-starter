@@ -375,11 +375,13 @@ export async function getOrderForConfirmation(session: SessionData, orderNumber:
   let order = await orderByNumber(orderNumber);
   if (!order) return null;
   if (!hasStamp(order) && (await finalizeOrder(order))) order = (await orderByNumber(orderNumber)) ?? order;
-  const full = (Boolean(order.customerId) && order.customerId === session.customerId) || session.lastOrderNumber === orderNumber;
+  const owner = Boolean(order.customerId) && order.customerId === session.customerId;
+  const full = owner || session.lastOrderNumber === orderNumber;
   const locale = marketOfOrder(order).locale;
   return {
     order: mapOrder(order, locale),
     full,
+    owner,
     email: full ? (order.customerEmail ?? null) : null,
     isGuest: !order.customerId,
     paymentState: order.paymentState ?? null,
