@@ -21,7 +21,7 @@ Updated by the developer on each task and by Claude (after Chrome verification) 
 | O | Home page | 7 | 0 | Not started | | |
 | P | Search | 11 | 0 | Not started | | |
 | Q | Devices and acquisition modes | 13 | 0 | Not started | | |
-| R | Auth pages and identity | 12 | 0 | Not started | | |
+| R | Auth pages and identity | 12 | 12 | Merged (verify + curl live auth flows; Chrome C-R pending) | orchestrator | 2026-10-07 |
 | S | Account shell, dashboard and order history | 12 | 0 | Not started | | |
 | T | Address book, payment methods, saved lists | 15 | 0 | Not started | | |
 | U | Hosted checkout and order confirmation | 17 | 0 | Not started | | |
