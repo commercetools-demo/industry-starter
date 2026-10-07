@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ContentArticle } from '@/components/content/ContentArticle';
 import { Link } from '@/i18n/routing';
+import { getImageCredits } from '@/lib/content/credits';
 import { dayBefore, formatDate } from '@/lib/content/format';
 import { contentMetadata } from '@/lib/content/metadata';
 import { LEGAL_SLUGS, getPolicy, legalPath } from '@/lib/content/policies';
@@ -42,6 +43,7 @@ export default async function LegalPage({ params, searchParams }: Props) {
   if (!doc) notFound();
   const t = await getTranslations({ locale, namespace: 'content' });
   const path = legalPath(doc.policy);
+  const credits = doc.policy === 'image-credits' ? getImageCredits() : [];
   const showEarlier = doc.superseded || doc.earlier.length > 0;
   const dateLinks = [...(doc.superseded ? [doc.effective] : []), ...doc.earlier];
 
@@ -62,6 +64,17 @@ export default async function LegalPage({ params, searchParams }: Props) {
         </div>
       }
     >
+      {credits.length > 0 ? (
+        <ul className="m-0 mt-5 flex list-none flex-col gap-1 p-0 font-body text-md">
+          {credits.map((credit) => (
+            <li key={credit.photographer}>
+              <a href={credit.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center text-text-link underline underline-offset-4">
+                {t('credits.photoBy', { name: credit.photographer })}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : null}
       {showEarlier ? (
         <section aria-labelledby="earlier-versions" className="mt-9">
           <h2 id="earlier-versions" className="m-0 mb-3 font-display text-xl font-semibold text-brand-950">
