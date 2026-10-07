@@ -326,7 +326,8 @@
       "buyAgain": "Buy again",
       "notFound": "We could not find that order",
       "notFoundBody": "It may belong to a different account.",
-      "allOrders": "All orders"
+      "allOrders": "All orders",
+      "itemsLabel": "Order items"
     },
     "reorder": {
       "unavailable": "These items could not be added: {names}.",

@@ -326,7 +326,8 @@
       "buyAgain": "Erneut bestellen",
       "notFound": "Diese Bestellung wurde nicht gefunden",
       "notFoundBody": "Sie gehört möglicherweise zu einem anderen Konto.",
-      "allOrders": "Alle Bestellungen"
+      "allOrders": "Alle Bestellungen",
+      "itemsLabel": "Bestellpositionen"
     },
     "reorder": {
       "unavailable": "Diese Artikel konnten nicht hinzugefügt werden: {names}.",
