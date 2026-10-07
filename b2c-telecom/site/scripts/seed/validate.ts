@@ -118,6 +118,13 @@ export async function validateManifest(
     }
   }
 
+  // categories are created sequentially, parents first
+  const categories = drafts(manifest, 'category') as { key: string; parent?: string }[];
+  categories.forEach((c, index) => {
+    const parentIndex = c.parent ? categories.findIndex((p) => p.key === c.parent) : -1;
+    if (parentIndex > index) errors.push({ kind: 'category', key: c.key, message: `Category "${c.key}" is listed before its parent "${c.parent}"` });
+  });
+
   // references
   const existsCache = new Map<string, boolean>();
   const exists = async (kind: Kind, key: string): Promise<boolean> => {

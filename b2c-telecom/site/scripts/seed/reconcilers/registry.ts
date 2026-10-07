@@ -1,5 +1,7 @@
 import type { AnyReconciler, Kind } from '../types';
+import { categoryReconciler } from './category';
 import { customerGroupReconciler } from './customerGroup';
+import { productTypeReconciler } from './productType';
 import { recurrencePolicyReconciler } from './recurrencePolicy';
 import { taxCategoryReconciler } from './taxCategory';
 import { typeReconciler } from './type';
@@ -12,6 +14,8 @@ export const reconcilers: AnyReconciler[] = [
   zoneCoverageReconciler,
   customerGroupReconciler,
   recurrencePolicyReconciler,
+  productTypeReconciler,
+  categoryReconciler,
 ];
 
 export function getReconciler(kind: Kind): AnyReconciler | undefined {

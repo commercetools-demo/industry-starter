@@ -3,6 +3,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ALLOWED_PROJECT_KEYS, assertEchoedKey, assertTarget, isOwnedKey, TargetError } from './config';
+import { isDemoMode } from '@/lib/ct/env-core';
 import { parseEnvText } from './lib';
 
 const siteDir = path.resolve(__dirname, '../..');
@@ -33,6 +34,14 @@ describe('assertTarget', () => {
     expect(isOwnedKey('customerGroup', 'consumer')).toBe(true);
     expect(isOwnedKey('category', 'consumer')).toBe(false);
     expect(isOwnedKey('category', 'furniture')).toBe(false);
+  });
+});
+
+describe('DEMO_MODE', () => {
+  it('defaults to false and reads true/1', () => {
+    expect(isDemoMode({})).toBe(false);
+    expect(isDemoMode({ DEMO_MODE: 'true' })).toBe(true);
+    expect(isDemoMode({ DEMO_MODE: 'false' })).toBe(false);
   });
 });
 
