@@ -7,8 +7,9 @@ import { checkQuantity } from '@/lib/cart/quantity';
 import { codeStateInfo, mapCart } from '@/lib/mappers/cart';
 import { removalPlan } from '@/lib/offers/addons';
 import { toDateOnly } from '@/lib/pricing/dates';
+import { getPrompts } from '@/lib/ct/prompts';
 import type { SessionData } from '@/lib/session-types';
-import type { BlockedAdd, Cart, DiscountCodeReason, Market, Offer, OfferVariant, ServiceLocation } from '@/lib/types';
+import type { BlockedAdd, Cart, DiscountCodeReason, DiscountPrompt, Market, Offer, OfferVariant, ServiceLocation } from '@/lib/types';
 import { getAvailableQuantities } from './availability';
 import { getBuyerContext } from './buyer-context';
 import {
@@ -275,4 +276,12 @@ export async function removeDiscountCode(session: SessionData, market: Market, r
     updateCart(fresh, [{ action: 'removeDiscountCode', discountCode: { typeId: 'discount-code', id: info.discountCode.id } }]),
   );
   return outcome((await mapForMarket(updated, market)).cart);
+}
+
+/** The discount prompts of the session's cart (never cached: priced from a prospective cart on every call). */
+export async function getBundlePrompts(session: SessionData, market: Market): Promise<DiscountPrompt[]> {
+  const ct = await getActiveCartForSession(session, market);
+  if (!ct || ct.lineItems.length === 0) return [];
+  const [offersByKey, buyer, discountKeyById] = await Promise.all([offersByKeyFor(market), getBuyerContext(market), getCartDiscountKeys()]);
+  return getPrompts({ ct, market, offersByKey, buyer, discountKeyById });
 }
