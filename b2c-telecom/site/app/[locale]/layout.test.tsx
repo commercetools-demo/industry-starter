@@ -85,7 +85,7 @@ describe('[locale] layout', () => {
   it('the header shows the nav item, the account slot and the bundle pill', async () => {
     await renderLayout('en-US');
     expect(screen.getAllByText('account slot').length).toBeGreaterThan(0);
-    expect(screen.getByRole('link', { name: 'My bundle · 0' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'My bundle' })).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: 'Phone plans' }).length).toBeGreaterThan(0);
   });
 

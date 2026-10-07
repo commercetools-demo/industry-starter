@@ -18,7 +18,8 @@
       "greetingNoName": "Mein Konto"
     },
     "bundle": {
-      "labelCount": "Mein Bundle · {count}"
+      "labelCount": "Mein Bundle · {count}",
+      "label": "Mein Bundle"
     },
     "menu": {
       "open": "Menü öffnen",
