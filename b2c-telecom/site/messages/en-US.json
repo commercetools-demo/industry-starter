@@ -1,0 +1,26 @@
+{
+  "common": { "brand": "Malva" },
+  "nav": {},
+  "footer": {},
+  "home": { "placeholder": "Malva Telecom storefront" },
+  "plp": {},
+  "bundle": {},
+  "checkout": {},
+  "account": {},
+  "auth": {},
+  "search": {},
+  "content": {},
+  "errors": {},
+  "a11y": {},
+  "region": {
+    "label": "Region and language",
+    "change": "Change region",
+    "option": {
+      "en-US": "United States (English, USD)",
+      "de-DE": "Germany (German, EUR)"
+    },
+    "cartEmptied": "Your bundle was emptied because prices differ in {market}. Removed: {lines}",
+    "switched": "Region changed to {market}",
+    "error": "We could not change the region. Please try again."
+  }
+}
