@@ -343,6 +343,12 @@ export function toGuardLines(cart: CtCart): GuardLine[] {
   });
 }
 
+/** Creates a throwaway probe cart (discount prompt). The answer is the priced cart; the caller deletes it. */
+export async function createProbeCart(draft: CartDraft): Promise<CtCart> {
+  const { body } = await withTimeout(getApiRoot().carts().post({ body: draft, queryArgs: { expand: CART_EXPAND } }).execute(), 'cart.probe');
+  return body;
+}
+
 /** Removes a cart (probe carts of the discount prompt). */
 export async function deleteCart(cart: Pick<CtCart, 'id' | 'version'>): Promise<void> {
   await withTimeout(getApiRoot().carts().withId({ ID: cart.id }).delete({ queryArgs: { version: cart.version } }).execute(), 'cart.delete');

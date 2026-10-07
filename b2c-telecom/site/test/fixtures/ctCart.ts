@@ -15,6 +15,10 @@ export interface LineSpec {
   parent?: string;
   /** Cart Discount ids applied to the line. */
   discounts?: string[];
+  /** Cents granted per unit by each discount in `discounts` (default 1). */
+  discountCents?: number;
+  /** How many units carry the discounts (default: all units). */
+  discountedUnits?: number;
   currency?: string;
 }
 
@@ -57,7 +61,18 @@ export function ctLine(spec: LineSpec, currency = 'USD'): unknown {
     quantity,
     totalPrice: cents(total, currency),
     discountedPricePerQuantity: spec.discounts
-      ? [{ quantity, discountedPrice: { value: cents(total / quantity, currency), includedDiscounts: spec.discounts.map((id) => ({ discount: { typeId: 'cart-discount', id }, discountedAmount: cents(1, currency) })) } }]
+      ? [
+          ...(spec.discountedUnits !== undefined && spec.discountedUnits < quantity
+            ? [{ quantity: quantity - spec.discountedUnits, discountedPrice: { value: cents(spec.price, currency), includedDiscounts: [] } }]
+            : []),
+          {
+            quantity: spec.discountedUnits ?? quantity,
+            discountedPrice: {
+              value: cents(total / quantity, currency),
+              includedDiscounts: spec.discounts.map((id) => ({ discount: { typeId: 'cart-discount', id }, discountedAmount: cents(spec.discountCents ?? 1, currency) })),
+            },
+          },
+        ]
       : [],
     ...(spec.mode ? { recurrenceInfo: { recurrencePolicy: { typeId: 'recurrence-policy', id: 'pol-1' }, priceSelectionMode: spec.mode } } : {}),
     custom: { type: { typeId: 'type', id: 'type-line' }, fields },
