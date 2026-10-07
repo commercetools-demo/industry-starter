@@ -3,6 +3,7 @@ import type { NextResponse } from 'next/server';
 import { ApiError } from '@/lib/api-error';
 import { MAX_BODY_BYTES, MIN_RESPONSE_MS } from '@/lib/config/auth';
 import { json } from '@/lib/ct/http';
+import { updateSession } from '@/lib/ct/session';
 
 // Shared by the five /api/auth routes. Every answer is `Cache-Control: no-store` (json() sets it).
 
@@ -77,13 +78,23 @@ export async function padResponse(startedAt: number, minMs: number = MIN_RESPONS
   if (remaining > 0) await sleep(remaining);
 }
 
-/** Maps what a route throws: refusals and ApiErrors keep their status; everything else is a generic 500 that is logged without values. */
+/** Writes the signed-in session (fresh token, so a fresh `iat`) and replaces the cart reference. Keeps `anonymousId`. */
+export async function startCustomerSession(response: NextResponse, customerId: string, cartId: string | undefined): Promise<void> {
+  await updateSession({ customerId, cartId, signedInAt: String(Date.now()) }, response);
+}
+
+/**
+ * Maps what a route throws: refusals and ApiErrors keep their status; a commercetools or network failure is a generic 502; the rest a
+ * generic 500. Only the error name and status are logged: an SDK error carries the original request, which holds the password.
+ */
 export function authFailure(error: unknown): NextResponse {
   if (error instanceof AuthRefusal) return error.toResponse();
   if (error instanceof ApiError) {
     if (error.code === 'FORBIDDEN') return authError(403, 'FORBIDDEN', error.message);
     return json(error.toBody(), { status: error.status });
   }
-  console.error('[auth] unexpected failure', error instanceof Error ? error.name : 'unknown');
+  const status = typeof (error as { statusCode?: unknown } | null)?.statusCode === 'number' ? (error as { statusCode: number }).statusCode : undefined;
+  console.error('[auth] failure', error instanceof Error ? error.name : 'unknown', status ?? '');
+  if (status !== undefined) return json({ error: { code: 'UPSTREAM_ERROR', message: 'The service is temporarily unavailable' } }, { status: 502 });
   return json({ error: { code: 'INTERNAL', message: 'Something went wrong' } }, { status: 500 });
 }
