@@ -92,3 +92,8 @@ export function shouldValidateAtBuild(source: EnvSource = process.env): boolean 
 export function maybeValidateAtBuild(source: EnvSource = process.env): void {
   if (shouldValidateAtBuild(source)) validateEnv(source, { requireCheckout: true });
 }
+
+/** Optional DEMO_MODE (default false): when true the BFF stamps the demo marker on carts, orders and customers it creates. */
+export function isDemoMode(source: EnvSource = process.env): boolean {
+  return flag(source, 'DEMO_MODE', false);
+}
