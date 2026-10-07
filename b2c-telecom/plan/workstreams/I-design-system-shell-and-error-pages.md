@@ -188,7 +188,7 @@ A11y rules: landmarks `banner` (header), `navigation` (each nav labelled), `main
 - [x] I-13 Create `components/errors/ErrorView.tsx`, `app/[locale]/not-found.tsx`, `app/[locale]/[...rest]/page.tsx`, `app/not-found.tsx`, the `errors.*` message keys (both locales), tests: `not-found` has a `search` form with `action="/en-US/search"`, `name="q"`, and category links; catch-all calls `notFound` (mock `next/navigation`); root not-found has no data calls.
 - [x] I-14 Create `app/[locale]/error.tsx`, `app/global-error.tsx`, `app/[locale]/dev/error/page.tsx` with tests: `error.tsx` never renders `error.message`, shows `Reference: abc123` for `digest: 'abc123'`, "Try again" calls `reset`, makes no `fetch` call and no cookie write; `global-error` renders `<html>`/`<body>` and both languages; dev page returns 404 outside development.
 - [x] I-15 Create `lib/auth/guards.ts` and `app/[locale]/unauthorized/page.tsx` with tests: `requireSession` with no session calls `redirect` with `/en-US/login?next=%2Faccount%2Forders`; `sanitizeNext` rejects `//evil.com`, `https://x`, `/\\x`, over-long and control-character input; `unauthorized` page ignores an invalid `ref`, has `robots` noindex metadata.
-- [ ] I-16 Create `lib/contrast.test.ts` (§7 table) and make it pass; run `npm run verify`; run `node plan/verify-plan.mjs --sync`; leave the C-I lines for Claude.
+- [x] I-16 Create `lib/contrast.test.ts` (§7 table) and make it pass; run `npm run verify`; run `node plan/verify-plan.mjs --sync`; leave the C-I lines for Claude.
 
 ## Unit tests (scenario → test)
 | Scenario (exact title from the spec) | Capability | Test (file → `it(...)` name) |
