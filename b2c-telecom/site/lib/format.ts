@@ -11,6 +11,11 @@ export function formatMoney(money: Money, locale: Locale): string {
   }).format(money.centAmount / 100);
 }
 
+/** Like `formatMoney` but always with two fraction digits ($59.00): used where cents matter (bundle totals, prices, savings). */
+export function formatMoneyExact(money: Money, locale: Locale): string {
+  return new Intl.NumberFormat(locale, { style: 'currency', currency: money.currencyCode, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(money.centAmount / 100);
+}
+
 /** Exact locale, then the same language in another region, then en-US, then the first non-empty value, then ''. */
 export function getLocalizedString(value: Record<string, string> | undefined | null, locale: string): string {
   if (!value) return '';
