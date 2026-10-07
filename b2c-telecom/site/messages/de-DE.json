@@ -116,7 +116,15 @@
       "generic": "Dieser Artikel kann Ihrem Bundle derzeit nicht hinzugefügt werden.",
       "replace": "{existing} durch {new} ersetzen",
       "keep": "{existing} behalten",
-      "dismiss": "Schließen"
+      "dismiss": "Schließen",
+      "quantityFixed": "{name} passt nur einmal in ein Bundle.",
+      "quantityRange": "Sie können {min} bis {max} von {name} haben.",
+      "stock": "Von {name} sind nur noch {available} auf Lager.",
+      "outOfStock": "{name} ist nicht auf Lager.",
+      "parentRequired": "Wählen Sie den Tarif, für den {name} gelten soll.",
+      "replacePlan": "Sie können nur einen Tarif dieser Art haben; ersetzen Sie stattdessen den Tarif in Ihrem Bundle.",
+      "unavailable": "{name} ist derzeit nicht verfügbar.",
+      "ineligible": "{name} steht Ihnen nicht zur Verfügung."
     },
     "removeDependents": {
       "title": "{name} entfernen?",

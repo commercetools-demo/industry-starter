@@ -116,7 +116,15 @@
       "generic": "This item cannot be added to your bundle right now.",
       "replace": "Replace {existing} with {new}",
       "keep": "Keep {existing}",
-      "dismiss": "Close"
+      "dismiss": "Close",
+      "quantityFixed": "Only one {name} fits in a bundle.",
+      "quantityRange": "You can have {min} to {max} of {name}.",
+      "stock": "Only {available} of {name} left in stock.",
+      "outOfStock": "{name} is out of stock.",
+      "parentRequired": "Choose which plan {name} is for.",
+      "replacePlan": "You can only have one plan of this kind; replace the one in your bundle instead.",
+      "unavailable": "{name} is not available right now.",
+      "ineligible": "{name} is not available to you."
     },
     "removeDependents": {
       "title": "Remove {name}?",
