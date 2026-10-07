@@ -637,7 +637,8 @@
     "limit": "Sie können dasselbe Gerät mit derselben Zahlungsart bis zu {max} Mal hinzufügen.",
     "line": {
       "term": "Über {months} Monate",
-      "mode": "Zahlungsart"
+      "mode": "Zahlungsart",
+      "quantity": "Anzahl: {count}"
     },
     "financing": {
       "declinedTitle": "Die Finanzierung für dieses Paket konnte nicht genehmigt werden.",
@@ -648,6 +649,7 @@
     "totals": {
       "title": "Geräte nach Zahlungsart",
       "byMode": "{mode}: {count} Artikel, heute fällig {due}, monatlich {monthly}"
-    }
+    },
+    "section": "Geräte"
   }
 }

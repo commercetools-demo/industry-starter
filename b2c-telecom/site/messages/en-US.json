@@ -637,7 +637,8 @@
     "limit": "You can add up to {max} of the same device and payment option.",
     "line": {
       "term": "Over {months} months",
-      "mode": "Payment option"
+      "mode": "Payment option",
+      "quantity": "Quantity: {count}"
     },
     "financing": {
       "declinedTitle": "We could not approve financing for this bundle.",
@@ -648,6 +649,7 @@
     "totals": {
       "title": "Devices by payment option",
       "byMode": "{mode}: {count} item(s), due today {due}, monthly {monthly}"
-    }
+    },
+    "section": "Devices"
   }
 }

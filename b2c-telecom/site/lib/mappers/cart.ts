@@ -4,6 +4,7 @@ import { ACTIVATION_FEE_SLUG_PREFIX } from '@/lib/config/cart';
 import { MONTHLY_POLICY_KEY } from '@/lib/config/pricing';
 import { getMinimumOrder, shortfall } from '@/lib/cart/minimum';
 import { readAcquisition } from '@/lib/devices/acquisition';
+import { devicePricesOf } from '@/lib/mappers/device';
 import { refersTo } from '@/lib/offers/refs';
 import { getLocalizedString } from '@/lib/format';
 import { buildLabel, formatLabelMoney } from '@/lib/pricing/label';
@@ -40,6 +41,8 @@ export interface CartMapDeps {
   today: string;
   /** Cart Discount id to key (references in a cart carry the id only). */
   discountKeyById: Record<string, string>;
+  /** Recurrence policy id to key of the device policies (workstream Q); only needed when the cart has a device line. */
+  devicePolicyKeys?: Record<string, string>;
 }
 
 const zero = (currencyCode: string): Money => ({ centAmount: 0, currencyCode });
@@ -81,6 +84,14 @@ function discountKeys(line: LineItem, deps: CartMapDeps): string[] {
 
 function issueFor(code: string, messageKey: string, line: Pick<CartLine, 'id' | 'offerKey'>, extra: Record<string, string | number> = {}): BundleIssue {
   return { code, severity: 'blocking', lineId: line.id, offerKey: line.offerKey, resolution: 'none', reasons: [{ code, messageKey, params: extra, offerKeys: [line.offerKey] }] };
+}
+
+/** Color, memory and prices per mode of a device line's variant (Q); empty when the variant lacks a color or a memory. */
+function deviceOf(variant: Offer['variants'][number], deps: CartMapDeps): { device?: NonNullable<CartLine['device']> } {
+  const color = variant.attributes.color;
+  const memoryGb = Number(variant.attributes['memory-gb']);
+  if (typeof color !== 'string' || !Number.isFinite(memoryGb)) return {};
+  return { device: { color, memoryGb, prices: devicePricesOf(variant, deps.devicePolicyKeys ?? {}) } };
 }
 
 export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Cart {
@@ -133,6 +144,7 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
       label: null,
       stock: null,
       ...(acquisition ? { acquisition } : {}),
+      ...(acquisition && variant ? deviceOf(variant, deps) : {}),
     };
   });
 

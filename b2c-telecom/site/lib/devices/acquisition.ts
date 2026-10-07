@@ -135,3 +135,22 @@ export function readAcquisition(custom: Record<string, unknown> | undefined): Li
   const decision = text(custom?.financingDecisionId);
   return { mode, termMonths: term, endOfTerm, ...(endDate ? { endDate: endDate.slice(0, 10) } : {}), ...(decision ? { financingDecisionId: decision } : {}) };
 }
+
+/**
+ * The quote of a line that is already in the bundle, from the engine's line total (authoritative, discounts included) and the recorded
+ * mode: outright is due in full; a financed line pays its total every month (the first payment is due at checkout). The end date is the
+ * recorded one when the financing decision fixed it, else computed from `today`.
+ */
+export function lineQuote(total: Money, acquisition: LineAcquisition, today: Date): AcquisitionQuote {
+  if (acquisition.mode === 'outright') return { mode: 'outright', termMonths: 0, dueNow: total, totalPayable: total, endOfTerm: 'owned' };
+  const endDate = acquisition.endDate ?? computeEndDate(acquisition.mode, acquisition.termMonths, today);
+  return {
+    mode: acquisition.mode,
+    termMonths: acquisition.termMonths,
+    dueNow: total,
+    recurring: { amount: total, payments: acquisition.termMonths, remaining: acquisition.termMonths - 1 },
+    totalPayable: { centAmount: total.centAmount * acquisition.termMonths, currencyCode: total.currencyCode },
+    endOfTerm: acquisition.endOfTerm,
+    ...(endDate ? { endDate } : {}),
+  };
+}

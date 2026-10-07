@@ -430,6 +430,8 @@ export interface CartLine {
   stock: { available: number | null; inStock: boolean } | null;
   /** Device lines only (Q): how the device is acquired, read from the line custom fields. */
   acquisition?: LineAcquisition;
+  /** Device lines only (Q): the variant's color and memory and its prices per mode, so the bundle can offer "Change how you pay". */
+  device?: { color: string; memoryGb: number; prices: DevicePrices };
 }
 export type DiscountCodeReason = 'unknown-code' | 'not-active' | 'not-valid' | 'not-applicable' | 'max-reached' | 'stopped';
 export interface CartDiscountCodeInfo {

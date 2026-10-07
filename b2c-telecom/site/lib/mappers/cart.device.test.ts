@@ -1,7 +1,7 @@
 // @vitest-environment node
 import type { Cart as CtCart } from '@commercetools/platform-sdk';
 import { cartOffersByKey } from '@/lib/cart/__fixtures__/offers';
-import { NOVA_5G_OFFER, NOVA_PRO_OFFER } from '@/lib/devices/__fixtures__/offers';
+import { NOVA_5G_OFFER, NOVA_PRO_OFFER, POLICY_KEY_BY_ID } from '@/lib/devices/__fixtures__/offers';
 import { ctCart } from '@/test/fixtures/ctCart';
 import { mapCart, type CartMapDeps } from './cart';
 
@@ -65,5 +65,23 @@ describe('device lines in the mapped cart', () => {
     );
     expect(cart.lines.find((line) => line.id === 'D2')?.acquisition).toMatchObject({ financingDecisionId: 'stub-0000abcd', endDate: '2028-09-07' });
     expect(cart.lines.find((line) => line.id === 'P1')?.acquisition).toBeUndefined();
+  });
+
+  it("carries the variant's color, memory and prices per mode so the bundle can offer another way to pay", () => {
+    const cart = mapCart(
+      withFields(ctCart({ lines: [financedLine] }), { D2: { acquisitionMode: 'installments', acquisitionTermMonths: 24 } }),
+      ctx,
+      { ...deps(), devicePolicyKeys: POLICY_KEY_BY_ID },
+    );
+    expect(cart.lines[0]?.device).toMatchObject({ color: 'black', memoryGb: 512 });
+    expect(cart.lines[0]?.device?.prices.outright?.centAmount).toBe(118800);
+    expect(cart.lines[0]?.device?.prices.installments[24]?.centAmount).toBe(4950);
+    expect(cart.lines[0]?.device?.prices.lease[24]?.centAmount).toBe(3900);
+  });
+
+  it('without the policy keys the line still maps, with the outright price only', () => {
+    const cart = mapCart(withFields(ctCart({ lines: [financedLine] }), { D2: { acquisitionMode: 'installments', acquisitionTermMonths: 24 } }), ctx, deps());
+    expect(cart.lines[0]?.device?.prices.installments).toEqual({});
+    expect(cart.lines[0]?.device?.prices.outright?.centAmount).toBe(118800);
   });
 });
