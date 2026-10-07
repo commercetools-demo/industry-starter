@@ -54,7 +54,7 @@ export const cableGig: Offer = {
 
 export const wireless5g: Offer = {
   ...planFacts(fx.wireless5g, { typicalDownloadMbps: 200, typicalUploadMbps: 20, typicalLatencyMs: 25, dataGb: -1, priceLockMonths: 12, earlyTerminationFee: 'None' }),
-  variants: [variant('MLV-AIR-5G-12M', '12-months', 12, { recurring: 5500 }, true)],
+  variants: [variant('MLV-AIR-5G-12M', '12-months', 12, { recurring: 5500 }, true), variant('MLV-AIR-5G-M2M', 'month-to-month', 0, { recurring: 6500 })],
 };
 
 const phoneBase = { typicalDownloadMbps: 100, typicalUploadMbps: 20, typicalLatencyMs: 30, earlyTerminationFee: 'None' };

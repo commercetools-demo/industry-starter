@@ -3,6 +3,7 @@ import type { Cart as CtCart, CartDraft, CartUpdateAction, LineItem } from '@com
 import { ApiError } from '@/lib/api-error';
 import { ACTIVATION_FEE_SLUG_PREFIX, CART_DELETE_DAYS, MAX_PHONE_LINES } from '@/lib/config/cart';
 import { getLocalizedString } from '@/lib/format';
+import type { GuardLine } from '@/lib/cart/guard';
 import { dependentQuantity } from '@/lib/offers/addons';
 import type { SessionData } from '@/lib/session-types';
 import type { Market, Offer, OfferVariant } from '@/lib/types';
@@ -326,6 +327,20 @@ export async function normalizeCart(cart: CtCart, offersByKey: Record<string, Of
   }
   if (actions.length === 0) return cart;
   return updateCart(cart, actions);
+}
+
+/** The cart's line items as the rule engines (J, K) and the guard read them. */
+export function toGuardLines(cart: CtCart): GuardLine[] {
+  return cart.lineItems.map((line) => {
+    const parentLineItemId = parentIdOfLine(line);
+    return {
+      lineItemId: line.id,
+      offerKey: offerKeyOfLine(line),
+      sku: line.variant.sku ?? '',
+      quantity: line.quantity,
+      ...(parentLineItemId === undefined ? {} : { parentLineItemId }),
+    };
+  });
 }
 
 /** Removes a cart (probe carts of the discount prompt). */
