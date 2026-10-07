@@ -6,7 +6,7 @@ export interface SiteConfig {
   heroImageUrl: string;
 }
 
-export const DEFAULT_HERO_IMAGE_URL = 'https://picsum.photos/seed/malva-hero/1200/1200';
+export const DEFAULT_HERO_IMAGE_URL = 'https://media.istockphoto.com/id/1178545179/photo/close-up-of-fresh-and-juicy-vegetables-from-garden-bed.jpg';
 
 type Source = Record<string, string | undefined>;
 

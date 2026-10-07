@@ -1,1 +1,578 @@
-{}
+{
+  "bananas": [
+    {
+      "url": "https://media.istockphoto.com/id/1291262112/photo/banana.jpg",
+      "dimensions": {
+        "h": 466,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/120492078/photo/banana.jpg",
+      "dimensions": {
+        "h": 459,
+        "w": 612
+      }
+    }
+  ],
+  "roma-tomatoes": [
+    {
+      "url": "https://media.istockphoto.com/id/153553040/photo/plum-tomatoes.jpg",
+      "dimensions": {
+        "h": 542,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/503114477/photo/plum-tomatoes.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "gala-apples": [
+    {
+      "url": "https://media.istockphoto.com/id/499774742/photo/fresh-gala-apples-isolated-on-white.jpg",
+      "dimensions": {
+        "h": 440,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1061732642/photo/bunch-of-royal-gala-apples.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "strawberries": [
+    {
+      "url": "https://media.istockphoto.com/id/1412854156/photo/strawberries-isolated-strawberry-whole-and-a-half-on-white-background-strawberry-slice-with.jpg",
+      "dimensions": {
+        "h": 401,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1885453213/photo/fresh-ripe-strawberries-falling-on-white-background.jpg",
+      "dimensions": {
+        "h": 612,
+        "w": 437
+      }
+    }
+  ],
+  "potatoes": [
+    {
+      "url": "https://media.istockphoto.com/id/157430678/photo/three-potatoes.jpg",
+      "dimensions": {
+        "h": 498,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1475113258/photo/raw-potatoes-freshly-cut-in-half-isolated-on-white-background.jpg",
+      "dimensions": {
+        "h": 482,
+        "w": 612
+      }
+    }
+  ],
+  "carrots": [
+    {
+      "url": "https://media.istockphoto.com/id/1388403435/photo/fresh-carrots-isolated-on-white-background.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/2150710300/photo/overhead-view-of-freshly-sliced-organic-carrots-on-cutting-board.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "whole-milk": [
+    {
+      "url": "https://media.istockphoto.com/id/1142707573/photo/gallon-milk-jug-3-78-l.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1206913154/photo/milk-carton-box-on-white-background.jpg",
+      "dimensions": {
+        "h": 612,
+        "w": 522
+      }
+    }
+  ],
+  "oat-drink": [
+    {
+      "url": "https://media.istockphoto.com/id/1137363899/photo/glass-of-oat-drink-next-to-a-pile-of-dry-oats-isolated-on-white-from-above.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1197838684/photo/oat-milk-fresh-organic-and-vegetarian-drinks.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "free-range-eggs": [
+    {
+      "url": "https://media.istockphoto.com/id/1322511698/photo/chicken-with-freshly-laid-eggs.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1297154905/photo/free-range-hen-eggs-an-open-egg.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "greek-yogurt": [
+    {
+      "url": "https://media.istockphoto.com/id/695749542/photo/natural-creamy-greek-yoghurt-on-wooden-table-background.jpg",
+      "dimensions": {
+        "h": 416,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/927134424/photo/plain-yogurt-is-super-healthy.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "cheddar": [
+    {
+      "url": "https://media.istockphoto.com/id/672526776/photo/cheddar-cheese-isolated-on-white-background.jpg",
+      "dimensions": {
+        "h": 481,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/531048911/photo/portion-of-cheddar.jpg",
+      "dimensions": {
+        "h": 400,
+        "w": 612
+      }
+    }
+  ],
+  "salted-butter": [
+    {
+      "url": "https://media.istockphoto.com/id/499721531/photo/butter-sticks.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/2200634255/photo/preparing-homemade-viral-butter-board.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "sourdough-loaf": [
+    {
+      "url": "https://media.istockphoto.com/id/2149862799/photo/freshly-baked-sourdough-bread-sliced-on-a-wooden-cutting-board.jpg",
+      "dimensions": {
+        "h": 250,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1330509379/photo/four-sourdough-bread-loaves-in-a-baking-tray-handmade-just-baked.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "wholemeal-bread": [
+    {
+      "url": "https://media.istockphoto.com/id/474679296/photo/organic-homemade-whole-wheat-bread.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/842797430/photo/dietary-fiber-food-still-life.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "croissants": [
+    {
+      "url": "https://media.istockphoto.com/id/178462137/photo/croissant-isolated-on-white.jpg",
+      "dimensions": {
+        "h": 519,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1372262769/photo/delicious-fresh-croissant-isolated-on-white-background.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "bagels": [
+    {
+      "url": "https://media.istockphoto.com/id/1054864282/photo/bagel-with-poppy-seeds-directly-above.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/534159727/photo/hearty-breakfast-sandwich-on-a-bagel.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "rye-bread": [
+    {
+      "url": "https://media.istockphoto.com/id/508489708/photo/fresh-rye-bread.jpg",
+      "dimensions": {
+        "h": 438,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/679553024/photo/the-girl-cuts-whole-wheat-rye-bread-on-a-wooden-table.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "brioche-buns": [
+    {
+      "url": "https://media.istockphoto.com/id/2206857809/photo/empty-brioche-bun.jpg",
+      "dimensions": {
+        "h": 405,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/2157667752/photo/homemade-baked-sweet-hawaiian-buns-ready-to-eat-closeup-on-the-wooden-board-horizontal.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "basmati-rice": [
+    {
+      "url": "https://media.istockphoto.com/id/519309790/photo/pile-of-raw-basmati-rice-with-a-spoon.jpg",
+      "dimensions": {
+        "h": 401,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/491090528/photo/cooked-rice.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "spaghetti": [
+    {
+      "url": "https://media.istockphoto.com/id/1420910486/photo/spaghetti-and-beef-meatballs-with-tomato-sauce-in-white-dish-on-wooden-rustic-board-italian.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1344241923/photo/spaghetti-with-meatballs-and-tomato-sauce-italian-pasta.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "olive-oil": [
+    {
+      "url": "https://media.istockphoto.com/id/1206682746/photo/pouring-extra-virgin-olive-oil-in-a-glass-bowl.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/464433694/photo/olive-oil.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "rolled-oats": [
+    {
+      "url": "https://media.istockphoto.com/id/1975071660/photo/oat-flakes-isolated-on-white-background.jpg",
+      "dimensions": {
+        "h": 319,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/184599434/photo/oat-background.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "chickpeas": [
+    {
+      "url": "https://media.istockphoto.com/id/538181649/photo/preserved-chick-peas.jpg",
+      "dimensions": {
+        "h": 371,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/183323861/photo/can-of-chick-pea.jpg",
+      "dimensions": {
+        "h": 612,
+        "w": 417
+      }
+    }
+  ],
+  "peanut-butter": [
+    {
+      "url": "https://media.istockphoto.com/id/1305693160/photo/peanut-butter-in-an-open-jar-and-peanuts-in-the-skin-are-scattered-on-the-blue-table-space.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1051092868/photo/peanut-paste-in-an-open-jar-and-peanuts.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "sparkling-water": [
+    {
+      "url": "https://media.istockphoto.com/id/451992561/photo/pouring-mineral-water-in-the-glass.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/479267572/photo/woman-with-glass-of-sparkling-water.jpg",
+      "dimensions": {
+        "h": 458,
+        "w": 612
+      }
+    }
+  ],
+  "orange-juice": [
+    {
+      "url": "https://media.istockphoto.com/id/152971676/photo/glass-of-orange-juice-and-fresh-oranges.jpg",
+      "dimensions": {
+        "h": 612,
+        "w": 474
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1282705707/photo/delicious-freshly-squeezed-orange-juice-from-organic-oranges-from-the-own-tree.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "green-tea": [
+    {
+      "url": "https://media.istockphoto.com/id/628986454/photo/glass-cup-with-fresh-green-tea.jpg",
+      "dimensions": {
+        "h": 405,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/2154095453/photo/female-hands-with-cup-of-hot-tea.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "ground-coffee": [
+    {
+      "url": "https://media.istockphoto.com/id/1254503533/photo/using-coffee-ground-as-a-fertilizer.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1072068026/photo/coffee-beans-and-ground-coffee-heap-isolated-on-white-background.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "apple-juice": [
+    {
+      "url": "https://media.istockphoto.com/id/503096289/photo/apple-juice-pouring-from-red-apples-into-a-glass.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1323857956/photo/drinking-glass-full-of-apple-juice-isolated-on-white.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "kombucha": [
+    {
+      "url": "https://media.istockphoto.com/id/1396531488/photo/flavored-kombucha-tea-bottles-in-the-kitchen.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1396531657/photo/close-up-of-woman-making-kombucha-at-home.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "dish-soap": [
+    {
+      "url": "https://media.istockphoto.com/id/172857643/photo/a-bottle-of-green-dishwashing-detergent.jpg",
+      "dimensions": {
+        "h": 611,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1073145628/photo/crockery-is-washed-off-in-the-sink-with-dishwashing-detergent.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "paper-towels": [
+    {
+      "url": "https://media.istockphoto.com/id/167771183/photo/kitchen-towel.jpg",
+      "dimensions": {
+        "h": 406,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/2170420361/photo/woman-is-tearing-a-piece-of-paper-towel-in-a-kitchen-at-home.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "laundry-liquid": [
+    {
+      "url": "https://media.istockphoto.com/id/1413851639/photo/fabric-softener-and-detergent-bottles.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/949218798/photo/person-pouring-detergent-in-lid.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "sponges": [
+    {
+      "url": "https://media.istockphoto.com/id/474926768/photo/yellow-sponge-isolated-on-the-white-background-with-clipping-path.jpg",
+      "dimensions": {
+        "h": 407,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/885414472/photo/cleaning-the-sink-in-kitchen.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    }
+  ],
+  "trash-bags": [
+    {
+      "url": "https://media.istockphoto.com/id/629612856/photo/a-pile-of-black-garbage-bags.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/467408308/photo/garbage-bag-trash-waste.jpg",
+      "dimensions": {
+        "h": 612,
+        "w": 573
+      }
+    }
+  ],
+  "beeswax-wraps": [
+    {
+      "url": "https://media.istockphoto.com/id/1178321599/photo/close-up-of-woman-wrapping-sandwich-in-reusable-environmentally-friendly-beeswax-wrap.jpg",
+      "dimensions": {
+        "h": 408,
+        "w": 612
+      }
+    },
+    {
+      "url": "https://media.istockphoto.com/id/1317505095/photo/wrapping-sandwich-in-a-beeswax-cloth-top-view-ethical-consumerism.jpg",
+      "dimensions": {
+        "h": 395,
+        "w": 612
+      }
+    }
+  ]
+}
