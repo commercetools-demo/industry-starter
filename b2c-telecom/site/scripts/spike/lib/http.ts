@@ -7,6 +7,8 @@ export class SpikeHttpError extends Error {
     readonly status: number,
     readonly code: string | undefined,
     message: string,
+    /** Parsed error body (never contains credentials); for debugging only. */
+    readonly body?: Rec,
   ) {
     super(message.slice(0, 200));
     this.name = 'SpikeHttpError';
@@ -81,8 +83,8 @@ export function createHttp(env: SpikeEnv, fetchImpl: typeof fetch = fetch): Http
       parsed = { message: text.slice(0, 200) };
     }
     if (!res.ok) {
-      const first = (parsed.errors as { code?: string; message?: string }[] | undefined)?.[0];
-      throw new SpikeHttpError(res.status, first?.code, first?.message ?? (typeof parsed.message === 'string' ? parsed.message : `HTTP ${res.status}`));
+      const first = (parsed.errors as { code?: string; message?: string; detailedErrorMessage?: string }[] | undefined)?.[0];
+      throw new SpikeHttpError(res.status, first?.code, first?.detailedErrorMessage ?? first?.message ?? (typeof parsed.message === 'string' ? parsed.message : `HTTP ${res.status}`), parsed);
     }
     return { status: res.status, body: parsed };
   }

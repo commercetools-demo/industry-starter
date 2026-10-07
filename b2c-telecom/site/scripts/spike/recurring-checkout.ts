@@ -2,7 +2,7 @@
 // with recurringPaymentConfiguration.paymentStrategy = Checkout, and become an Order plus a Recurring Order?
 // Run: npm run spike:recurring-checkout -- [--skip-checkout] [--keep]
 // Creates only resources keyed `spike-recurring-*` (plus a throwaway customer) in spec-test-b2c-telecom and deletes them at the end.
-import { randomBytes } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { decide } from './lib/decide';
 import { renderFindings, SPIKE_BEGIN, SPIKE_END, writeBetweenMarkers, type FindingsExtras } from './lib/findings';
@@ -45,6 +45,7 @@ class Spike {
   customerId = '';
   taxCategoryId = '';
   policyId = '';
+  paymentMethodId = '';
   constructor(
     readonly http: Http,
     readonly env: SpikeEnv,
@@ -119,6 +120,13 @@ class Spike {
         await this.http.api('DELETE', `carts/${id}?version=${String(c.version)}`);
       });
     }
+    if (this.paymentMethodId) {
+      const id = this.paymentMethodId;
+      await attempt(`payment-method ${id}`, async () => {
+        const pm = await this.http.api('GET', `payment-methods/${id}`);
+        await this.http.api('DELETE', `payment-methods/${id}?version=${String(pm.version)}`);
+      });
+    }
     for (const id of this.created.customers) {
       await attempt(`customer ${id}`, async () => {
         const c = await this.http.api('GET', `customers/${id}`);
@@ -128,6 +136,17 @@ class Spike {
     return left;
   }
 }
+
+/** Allocation ids must be UUIDs (the API says: Invalid UUID). */
+const ALLOCATION_ID = randomUUID();
+
+/** What the hosted Checkout does after the payment: one allocation of 100 % to the stored payment method. */
+const allocationAction = (paymentMethodId: string): Rec => ({
+  action: 'addRecurringPaymentAllocation',
+  id: ALLOCATION_ID,
+  paymentMethod: { typeId: 'payment-method', id: paymentMethodId },
+  allocation: { type: 'Relative', percentage: 100 },
+});
 
 const PAYMENT_ATTEMPTS: Rec[] = [
   { action: 'setRecurringPaymentConfiguration', recurringPaymentConfiguration: { paymentStrategy: 'Checkout' } },
@@ -159,6 +178,20 @@ export async function runSpike(http: Http, env: SpikeEnv, opts: { skipCheckout: 
     const customerId = str(rec(customer.customer).id);
     s.customerId = customerId;
     s.created.customers.push(customerId);
+    try {
+      const pm = await http.api('POST', 'payment-methods', {
+        key: `spike-recurring-pm-${s.stamp}`,
+        name: { 'en-US': 'Spike stand-in payment method' },
+        customer: { typeId: 'customer', id: customerId },
+        method: 'card',
+        paymentInterface: 'spike',
+        token: { value: `spike-${randomBytes(6).toString('hex')}` },
+        paymentMethodStatus: 'Active',
+      });
+      s.paymentMethodId = str(pm.id);
+    } catch (err) {
+      extras.openItems.push(`stand-in payment method not created: ${formatError(err)}`);
+    }
     const taxes = arr((await http.api('GET', 'tax-categories?limit=50')).results);
     s.taxCategoryId = str(taxes.find((t) => str(t.key).startsWith('malva-'))?.id);
     const fixed = await s.variant('malva-offer-cable-500', (v) => attrKey(v, 'contract-term') === '24-months');
@@ -248,6 +281,15 @@ export async function runSpike(http: Http, env: SpikeEnv, opts: { skipCheckout: 
         return { status: 'FAIL', evidence: `initial-cart-rejects-config: ${attempts.join('; ').slice(0, 400)}` };
       }),
     );
+    results.push(
+      await runProbe('P3b', 'Allocation (100 % to a stored payment method) can be added, as Checkout does after payment', async () => {
+        if (!main || !s.paymentMethodId) return { status: 'UNKNOWN', evidence: 'no cart or stand-in payment method' };
+        const updated = await s.updateCart(str(main.id), [allocationAction(s.paymentMethodId)]);
+        const cfg = rec(updated.recurringPaymentConfiguration);
+        const first = arr(cfg.paymentAllocations)[0];
+        return arr(cfg.paymentAllocations).length === 1 ? { status: 'PASS', evidence: `200; stored ${shapeOf(first)}` } : { status: 'FAIL', evidence: 'allocation not stored' };
+      }),
+    );
     main = main ? await s.getCart(str(main.id)) : main;
 
     // P4, P5
@@ -287,6 +329,17 @@ export async function runSpike(http: Http, env: SpikeEnv, opts: { skipCheckout: 
         orderId = str(order.id);
         s.created.orders.push(orderId);
         return { status: 'PASS', evidence: '201' };
+      }),
+    );
+
+    results.push(
+      await runProbe('P6b', 'INFO: order from the same mixed cart with NO recurringPaymentConfiguration (baseline)', async () => {
+        const cart = await s.createCart('baseline');
+        const updated = await s.updateCart(str(cart.id), [addFixed, addDynamic, addOneTime, activation]);
+        const placed = await http.api('POST', 'orders', { cart: { typeId: 'cart', id: str(updated.id) }, version: updated.version, orderNumber: `spike-recurring-${s.stamp}-base` });
+        s.created.orders.push(str(placed.id));
+        const list = await http.api('GET', `recurring-orders?where=${encodeURIComponent(`originOrder(id="${str(placed.id)}")`)}&expand=cart&limit=20`);
+        return { status: 'INFO', evidence: `201; ${arr(list.results).length} recurring order(s) found immediately; config stored on recurring cart: ${shapeOf(rec(rec(rec(arr(list.results)[0]).cart).obj).recurringPaymentConfiguration) || 'none'}` };
       }),
     );
 
@@ -343,7 +396,8 @@ export async function runSpike(http: Http, env: SpikeEnv, opts: { skipCheckout: 
           let done = false;
           for (const action of candidates) {
             try {
-              const updated = await s.updateCart(cartId, [action]);
+              let updated = await s.updateCart(cartId, [action]);
+              if (s.paymentMethodId && arr(rec(updated.recurringPaymentConfiguration).paymentAllocations).length === 0) updated = await s.updateCart(cartId, [allocationAction(s.paymentMethodId)]);
               done = rec(updated.recurringPaymentConfiguration).paymentStrategy === 'Checkout';
               notes.push(`${shapeOf(action)} -> ${done ? 'readable' : 'not readable'}`);
               if (done) break;
@@ -400,7 +454,7 @@ export async function runSpike(http: Http, env: SpikeEnv, opts: { skipCheckout: 
 }
 
 function probeRank(id: string): number {
-  const ids = ['P0', 'P1', 'P1b', 'P1c', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11'];
+  const ids = ['P0', 'P1', 'P1b', 'P1c', 'P2', 'P3', 'P3b', 'P4', 'P5', 'P6', 'P6b', 'P7', 'P8', 'P9', 'P10', 'P11'];
   const i = ids.indexOf(id);
   return i < 0 ? 99 : i;
 }
