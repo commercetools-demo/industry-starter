@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactElement, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
+import { DrawerSearchLink } from '@/components/search/HeaderSearchLink';
 import { FOCUS_RING_ON_BRAND } from '@/components/ui/focus';
 import { CloseIcon, MenuIcon } from '@/components/ui/Icon';
 import { Pill } from '@/components/ui/Pill';
 import { Link, usePathname } from '@/i18n/routing';
+import { HEADER_SEARCH_ENABLED } from '@/lib/config/search';
 import { cx } from '@/lib/cx';
 import { activeNavKey, type NavItem } from '@/lib/nav';
 import type { Market } from '@/lib/utils';
@@ -116,6 +118,7 @@ export function MobileDrawer({ items, account, locale }: MobileDrawerProps): Rea
                 <CloseIcon />
               </button>
             </div>
+            {HEADER_SEARCH_ENABLED ? <DrawerSearchLink onNavigate={close} /> : null}
             <nav aria-label={t('nav.primary')} className="flex flex-col gap-3">
               {items.map((item) => {
                 const isActive = active === item.key;

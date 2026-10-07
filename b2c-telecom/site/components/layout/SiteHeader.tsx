@@ -1,7 +1,9 @@
 import type { ReactElement, ReactNode } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import { HeaderSearchLink } from '@/components/search/HeaderSearchLink';
 import { FOCUS_RING_ON_BRAND } from '@/components/ui/focus';
+import { HEADER_SEARCH_ENABLED } from '@/lib/config/search';
 import { cx } from '@/lib/cx';
 import type { NavItem } from '@/lib/nav';
 import type { Market } from '@/lib/utils';
@@ -39,6 +41,7 @@ export function SiteHeader({ items, account, bundle }: SiteHeaderProps): ReactEl
           <div className="hidden md:block">
             <LocaleSwitcher current={locale} />
           </div>
+          {HEADER_SEARCH_ENABLED ? <HeaderSearchLink /> : null}
           <div className="hidden md:block">{account}</div>
           {bundle}
           <MobileDrawer items={items} account={account} locale={locale} />
