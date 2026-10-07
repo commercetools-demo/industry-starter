@@ -455,6 +455,78 @@
       "done": "We created a new bundle from this order.",
       "pending": "Creating your bundle…",
       "error": "We could not reuse this order. Try again in a moment."
+    },
+    "addresses": {
+      "title": "Addresses",
+      "add": "Add an address",
+      "unavailable": "Your addresses are temporarily unavailable.",
+      "empty": {
+        "title": "No addresses saved yet",
+        "body": "Save a service address so checkout can fill it in for you."
+      },
+      "tag": {
+        "defaultService": "Default service address",
+        "defaultBilling": "Default billing address",
+        "service": "Service",
+        "billing": "Billing"
+      },
+      "makeDefaultService": "Make default service address",
+      "makeDefaultBilling": "Make default billing address",
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "delete": {
+        "title": "Delete this address?",
+        "noDefault": "No default will remain. Your next order will ask you to choose an address.",
+        "confirm": "Delete",
+        "cancel": "Keep"
+      },
+      "dialog": {
+        "addTitle": "Add an address",
+        "editTitle": "Edit address",
+        "save": "Save",
+        "saving": "Saving…",
+        "cancel": "Cancel",
+        "useService": "Use as service address",
+        "useBilling": "Use as billing address",
+        "makeDefault": "Make this my default",
+        "selectState": "Select a state"
+      },
+      "verify": {
+        "title": "We couldn't verify this address",
+        "check": "Check: {fields}.",
+        "suggested": "Suggested address",
+        "useSuggested": "Use suggested address",
+        "keep": "Keep what I typed",
+        "edit": "Edit"
+      },
+      "fields": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "streetName": "Street address",
+        "additionalStreetInfo": "Apt / suite (optional)",
+        "city": "City",
+        "state": "State",
+        "postalCode": "ZIP / Postal code",
+        "country": "Country",
+        "phone": "Phone (optional)"
+      },
+      "countries": {
+        "US": "United States",
+        "DE": "Deutschland"
+      },
+      "errors": {
+        "required": "Required.",
+        "invalidCountry": "Choose a country.",
+        "invalidState": "Choose a state.",
+        "invalidPostalCode": "Enter a 5-digit ZIP code.",
+        "invalidPhone": "Enter a valid phone number.",
+        "tooLong": "Use at most 100 characters.",
+        "limit": "You can keep up to {max} addresses.",
+        "generic": "We couldn't save your changes. Try again.",
+        "purpose": "Choose at least one use for this address."
+      }
     }
   },
   "auth": {

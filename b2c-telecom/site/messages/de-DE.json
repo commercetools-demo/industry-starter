@@ -455,6 +455,78 @@
       "done": "Wir haben aus dieser Bestellung ein neues Paket erstellt.",
       "pending": "Ihr Paket wird erstellt…",
       "error": "Wir konnten diese Bestellung nicht übernehmen. Versuchen Sie es gleich noch einmal."
+    },
+    "addresses": {
+      "title": "Adressen",
+      "add": "Adresse hinzufügen",
+      "unavailable": "Ihre Adressen sind vorübergehend nicht verfügbar.",
+      "empty": {
+        "title": "Noch keine Adressen gespeichert",
+        "body": "Speichern Sie eine Anschlussadresse, damit der Checkout sie für Sie ausfüllt."
+      },
+      "tag": {
+        "defaultService": "Standard-Anschlussadresse",
+        "defaultBilling": "Standard-Rechnungsadresse",
+        "service": "Anschluss",
+        "billing": "Rechnung"
+      },
+      "makeDefaultService": "Als Standard-Anschlussadresse festlegen",
+      "makeDefaultBilling": "Als Standard-Rechnungsadresse festlegen",
+      "actions": {
+        "edit": "Bearbeiten",
+        "delete": "Löschen"
+      },
+      "delete": {
+        "title": "Adresse löschen?",
+        "noDefault": "Es bleibt keine Standardadresse. Bei Ihrer nächsten Bestellung müssen Sie eine Adresse wählen.",
+        "confirm": "Löschen",
+        "cancel": "Behalten"
+      },
+      "dialog": {
+        "addTitle": "Adresse hinzufügen",
+        "editTitle": "Adresse bearbeiten",
+        "save": "Speichern",
+        "saving": "Wird gespeichert…",
+        "cancel": "Abbrechen",
+        "useService": "Als Anschlussadresse verwenden",
+        "useBilling": "Als Rechnungsadresse verwenden",
+        "makeDefault": "Als meinen Standard festlegen",
+        "selectState": "Bundesstaat wählen"
+      },
+      "verify": {
+        "title": "Wir konnten diese Adresse nicht prüfen",
+        "check": "Bitte prüfen: {fields}.",
+        "suggested": "Vorgeschlagene Adresse",
+        "useSuggested": "Vorgeschlagene Adresse verwenden",
+        "keep": "Meine Eingabe behalten",
+        "edit": "Bearbeiten"
+      },
+      "fields": {
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "streetName": "Straße und Hausnummer",
+        "additionalStreetInfo": "Zusatz (optional)",
+        "city": "Ort",
+        "state": "Bundesstaat",
+        "postalCode": "Postleitzahl",
+        "country": "Land",
+        "phone": "Telefon (optional)"
+      },
+      "countries": {
+        "US": "United States",
+        "DE": "Deutschland"
+      },
+      "errors": {
+        "required": "Pflichtfeld.",
+        "invalidCountry": "Wählen Sie ein Land.",
+        "invalidState": "Wählen Sie einen Bundesstaat.",
+        "invalidPostalCode": "Geben Sie eine fünfstellige Postleitzahl ein.",
+        "invalidPhone": "Geben Sie eine gültige Telefonnummer ein.",
+        "tooLong": "Höchstens 100 Zeichen.",
+        "limit": "Sie können bis zu {max} Adressen speichern.",
+        "generic": "Wir konnten Ihre Änderungen nicht speichern. Versuchen Sie es erneut.",
+        "purpose": "Wählen Sie mindestens eine Verwendung für diese Adresse."
+      }
     }
   },
   "auth": {
