@@ -164,7 +164,8 @@
     "addons": {
       "empty": "No add-ons yet.",
       "browse": "Browse add-ons"
-    }
+    },
+    "home": "Home"
   },
   "checkout": {},
   "account": {},

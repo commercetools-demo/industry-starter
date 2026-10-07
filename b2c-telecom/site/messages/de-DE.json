@@ -164,7 +164,8 @@
     "addons": {
       "empty": "Noch keine Zusatzoptionen.",
       "browse": "Zusatzoptionen ansehen"
-    }
+    },
+    "home": "Startseite"
   },
   "checkout": {},
   "account": {},
