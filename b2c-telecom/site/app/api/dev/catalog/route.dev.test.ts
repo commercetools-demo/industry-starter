@@ -1,5 +1,6 @@
 // @vitest-environment node
-import type { Category, Offer } from '@/lib/types';
+import * as fx from '@/lib/offers/__fixtures__/offers';
+import type { BuyerContext, Category, Offer } from '@/lib/types';
 
 const root: Category = { id: 'c1', key: 'malva-cat-cable-internet', name: 'Cable internet', slug: 'cable-internet', slugs: {}, children: [] };
 const offer = {
@@ -16,8 +17,12 @@ vi.mock('@/lib/ct/categories', () => ({
   getCategoryTree: async () => [root],
   getCategoryByKey: async (key: string) => (key === root.key ? root : null),
 }));
+let categoryOffers: Offer[] = [offer];
+const baseBuyer: BuyerContext = { customerType: 'consumer', isExistingCustomer: false, channel: 'online', now: new Date('2026-10-07T12:00:00Z'), held: [], signedIn: false };
+vi.mock('@/lib/ct/buyer-context', () => ({ getBuyerContext: async () => baseBuyer }));
 vi.mock('@/lib/ct/catalog', () => ({
-  getOffersInCategory: async () => [offer],
+  getAllOffers: async () => categoryOffers,
+  getOffersInCategory: async () => categoryOffers,
   getOfferByKey: async (key: string) => (key === offer.key ? offer : null),
 }));
 vi.mock('@/lib/ct/search', () => ({
@@ -80,6 +85,48 @@ describe('GET /api/dev/catalog', () => {
       const body = await (await get('view=search&q=cable')).json();
       expect(body.total).toBe(1);
       expect(body.offers[0].key).toBe('malva-offer-cable-500');
+    });
+
+    describe('view=visible (K)', () => {
+      const existingOnly: Offer = { ...fx.cableExisting, existingCustomer: 'existing' };
+      const scheduled: Offer = { ...fx.cable100, startTime: '2030-01-01T00:00:00Z', endTime: '2031-01-01T00:00:00Z' };
+      beforeEach(() => {
+        categoryOffers = [fx.cable500, existingOnly, fx.wireless5g, scheduled, fx.phoneEssential];
+      });
+      afterEach(() => {
+        categoryOffers = [offer];
+      });
+      const visible = async (query: string) => (await get(`view=visible&category=malva-cat-cable-internet&${query}`)).json();
+      const keys = (body: { offers: { key: string }[] }) => body.offers.map((entry) => entry.key);
+
+      it('anonymous without a ZIP: no-location, existing-customer and not-yet-started offers hidden', async () => {
+        const body = await visible('');
+        expect(body.availability).toEqual({ state: 'no-location', technologies: [] });
+        expect(keys(body)).toEqual(['malva-offer-cable-500', 'malva-offer-wireless-5g', 'malva-offer-phone-essential']);
+        expect(body.hiddenCount).toBe(2);
+        expect(body.offers[0]).toEqual({ key: 'malva-offer-cable-500', name: 'Cable 500' });
+      });
+
+      it('existing=1 shows the existing-customer offer; now overrides the clock', async () => {
+        expect(keys(await visible('existing=1'))).toContain('malva-offer-cable-existing-customer');
+        expect(keys(await visible('now=2030-06-01T00:00:00Z'))).toContain('malva-offer-cable-100');
+        expect(keys(await visible('now=2031-06-01T00:00:00Z'))).not.toContain('malva-offer-cable-100');
+      });
+
+      it('postalCode filters by serviceability and reports the availability', async () => {
+        const cableOnly = await visible('postalCode=60601');
+        expect(keys(cableOnly)).toEqual(['malva-offer-cable-500', 'malva-offer-phone-essential']);
+        expect(cableOnly.availability.state).toBe('partially-served');
+        const none = await visible('postalCode=99999');
+        expect(none.availability.state).toBe('not-served');
+        expect(none.offers).toEqual([]);
+        expect(none.hiddenCount).toBe(5);
+      });
+
+      it('rejects a bad postalCode, customerType, now or category', async () => {
+        for (const bad of ['postalCode=abc', 'customerType=vip', 'now=yesterday']) expect((await get(`view=visible&${bad}`)).status, bad).toBe(400);
+        expect((await get('view=visible&category=nope')).status).toBe(404);
+      });
     });
   });
 });
