@@ -11,7 +11,7 @@ function deps(hits: { id: string; matchedSkus: string[] }[], overrides: Partial<
   return {
     locale: 'en-US',
     tree: TREE,
-    languages: ['en-GB', 'de-DE', 'en-US'],
+    getLanguages: async () => ['en-GB', 'de-DE', 'en-US'],
     searchOfferHits: async () => ({ total: hits.length, hits }),
     getOffers: async () => offers,
     ...overrides,
@@ -42,7 +42,7 @@ describe('runSearch', () => {
 
   it('Unsupported language: reports the language is not supported instead of an empty result', async () => {
     const search = vi.fn();
-    const view = await runSearch(params(), deps([], { languages: ['en-GB', 'en-US'], locale: 'de-DE', searchOfferHits: search }));
+    const view = await runSearch(params(), deps([], { getLanguages: async () => ['en-GB', 'en-US'], locale: 'de-DE', searchOfferHits: search }));
     expect(view.state).toBe('unsupported-language');
     expect(search).not.toHaveBeenCalled();
   });

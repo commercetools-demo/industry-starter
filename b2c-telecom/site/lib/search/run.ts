@@ -17,8 +17,8 @@ export interface SearchHit {
 export interface RunSearchDeps {
   locale: Locale;
   tree: Category[];
-  /** Languages configured in the project (`getSearchLanguages`). */
-  languages: string[];
+  /** Languages configured in the project (`getSearchLanguages`). Read only for a searchable query. */
+  getLanguages: () => Promise<string[]>;
   searchOfferHits: (input: { text: string; locale: Locale }) => Promise<{ total: number; hits: SearchHit[] }>;
   /** Offers this buyer may see in this market (`getVisibleOffers(market).offers`). */
   getOffers: () => Promise<Offer[]>;
@@ -42,12 +42,12 @@ function highlightOf(offer: Offer): string | null {
 export async function runSearch(params: SearchParams, deps: RunSearchDeps): Promise<SearchView> {
   const query = params.q;
   if (!isSearchableQuery(query)) return { state: 'start', query, ...EMPTY };
-  // The URL locale is always a project language today; the guard protects against a mis-configured project.
-  if (!deps.languages.includes(deps.locale)) return { state: 'unsupported-language', query, ...EMPTY };
 
   let result: Awaited<ReturnType<RunSearchDeps['searchOfferHits']>>;
   let offers: Offer[];
   try {
+    // The URL locale is always a project language today; the guard protects against a mis-configured project.
+    if (!(await deps.getLanguages()).includes(deps.locale)) return { state: 'unsupported-language', query, ...EMPTY };
     [result, offers] = await Promise.all([deps.searchOfferHits({ text: query, locale: deps.locale }), deps.getOffers()]);
   } catch (error) {
     // The query text is never logged (it may be personal data); only the code.
