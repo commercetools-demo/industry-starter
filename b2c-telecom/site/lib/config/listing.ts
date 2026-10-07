@@ -15,3 +15,14 @@ export const PLAN_CATEGORY_BY_FAMILY = {
 } as const;
 /** Query parameter M's "Change" link uses to name the plan line an add-on is for. */
 export const FOR_PARAM = 'for';
+/** The blurb under the H1: message key under `plp.blurb.*` per category key. A category without an entry has no blurb. */
+export const BLURB_KEY_BY_CATEGORY: Readonly<Record<string, string>> = {
+  'malva-cat-cable-internet': 'cable',
+  'malva-cat-home-wireless': 'wireless',
+  'malva-cat-phone-plans': 'phone',
+  'malva-cat-add-ons': 'addons',
+  'malva-cat-streaming': 'streaming',
+  'malva-cat-protection': 'protection',
+  'malva-cat-equipment': 'equipment',
+  'malva-cat-devices': 'devices',
+};
