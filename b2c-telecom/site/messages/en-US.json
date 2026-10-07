@@ -560,6 +560,67 @@
       "errors": {
         "generic": "We couldn't update your payment methods. Try again."
       }
+    },
+    "lists": {
+      "title": "Saved lists",
+      "new": "New list",
+      "unavailable": "Your saved lists are temporarily unavailable.",
+      "items": "{count, plural, one {# item} other {# items}}",
+      "updated": "Updated {date}",
+      "empty": {
+        "title": "You have no saved lists yet.",
+        "body": "A list keeps offers you want to come back to. Start one from the bundle you are building now.",
+        "cta": "Save my bundle as a list",
+        "bundleEmpty": "Your bundle is empty."
+      },
+      "browse": "Browse plans",
+      "backToLists": "All saved lists",
+      "name": {
+        "label": "List name",
+        "create": "Create list",
+        "save": "Save",
+        "cancel": "Cancel",
+        "rename": "Rename list"
+      },
+      "perMonth": "{amount}/mo",
+      "priceNow": "Price now",
+      "priceChanged": "Price changed: was {was}, now {now} ({delta})",
+      "unavailableLine": "No longer available.",
+      "quantity": "Quantity {count}",
+      "term": {
+        "month-to-month": "Month-to-month",
+        "12-months": "12-month price lock",
+        "24-months": "24-month price lock"
+      },
+      "removeLine": "Remove",
+      "linesEmpty": "This list is empty. Save offers to it from the plan pages.",
+      "addAll": "Add all to My bundle",
+      "adding": "Adding…",
+      "moveResult": {
+        "added": "{count, plural, one {# item added to My bundle.} other {# items added to My bundle.}}",
+        "none": "Nothing was added to My bundle.",
+        "view": "View My bundle",
+        "skippedLine": "{name}: {reason}"
+      },
+      "delete": {
+        "action": "Delete list",
+        "title": "Delete this list?",
+        "body": "The list is removed. Items already in My bundle stay there.",
+        "confirm": "Delete",
+        "cancel": "Keep"
+      },
+      "saveTo": "Save to list",
+      "saved": "Saved to {list}",
+      "saveForLater": "Save for later",
+      "saveBundle": "Save bundle as list",
+      "newListOption": "New list…",
+      "chooseList": "Choose a list",
+      "full": "This list is full ({max} items).",
+      "limit": "You can keep up to {max} lists.",
+      "errors": {
+        "generic": "We couldn't update your lists. Try again.",
+        "invalidName": "Enter a name of up to {max} characters."
+      }
     }
   },
   "auth": {

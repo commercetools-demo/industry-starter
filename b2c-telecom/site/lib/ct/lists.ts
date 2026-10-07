@@ -126,6 +126,7 @@ export async function toDetail(list: ShoppingList, market: Market): Promise<Save
       quantity: line.quantity,
       saved,
       current,
+      recurring: available ? (price?.recurring ?? false) : false,
       delta: available ? priceDelta(saved, current) : { status: 'unknown', deltaCents: 0 },
       available,
       ...(price?.reason ? { reason: price.reason } : !price ? { reason: 'NOT_PUBLISHED' } : {}),

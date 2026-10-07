@@ -560,6 +560,67 @@
       "errors": {
         "generic": "Wir konnten Ihre Zahlungsmethoden nicht aktualisieren. Versuchen Sie es erneut."
       }
+    },
+    "lists": {
+      "title": "Gespeicherte Listen",
+      "new": "Neue Liste",
+      "unavailable": "Ihre gespeicherten Listen sind vorübergehend nicht verfügbar.",
+      "items": "{count, plural, one {# Artikel} other {# Artikel}}",
+      "updated": "Aktualisiert am {date}",
+      "empty": {
+        "title": "Sie haben noch keine gespeicherten Listen.",
+        "body": "Eine Liste merkt sich Angebote, zu denen Sie zurückkehren möchten. Starten Sie eine aus dem Paket, das Sie gerade zusammenstellen.",
+        "cta": "Mein Paket als Liste speichern",
+        "bundleEmpty": "Ihr Paket ist leer."
+      },
+      "browse": "Tarife ansehen",
+      "backToLists": "Alle gespeicherten Listen",
+      "name": {
+        "label": "Listenname",
+        "create": "Liste anlegen",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "rename": "Liste umbenennen"
+      },
+      "perMonth": "{amount}/Monat",
+      "priceNow": "Preis jetzt",
+      "priceChanged": "Preis geändert: vorher {was}, jetzt {now} ({delta})",
+      "unavailableLine": "Nicht mehr verfügbar.",
+      "quantity": "Menge {count}",
+      "term": {
+        "month-to-month": "Monatlich kündbar",
+        "12-months": "12 Monate Preisgarantie",
+        "24-months": "24 Monate Preisgarantie"
+      },
+      "removeLine": "Entfernen",
+      "linesEmpty": "Diese Liste ist leer. Speichern Sie Angebote von den Tarifseiten.",
+      "addAll": "Alles in Mein Paket legen",
+      "adding": "Wird hinzugefügt…",
+      "moveResult": {
+        "added": "{count, plural, one {# Artikel in Mein Paket gelegt.} other {# Artikel in Mein Paket gelegt.}}",
+        "none": "Es wurde nichts in Mein Paket gelegt.",
+        "view": "Mein Paket ansehen",
+        "skippedLine": "{name}: {reason}"
+      },
+      "delete": {
+        "action": "Liste löschen",
+        "title": "Diese Liste löschen?",
+        "body": "Die Liste wird entfernt. Artikel, die schon in Mein Paket liegen, bleiben dort.",
+        "confirm": "Löschen",
+        "cancel": "Behalten"
+      },
+      "saveTo": "In Liste speichern",
+      "saved": "In {list} gespeichert",
+      "saveForLater": "Für später merken",
+      "saveBundle": "Paket als Liste speichern",
+      "newListOption": "Neue Liste…",
+      "chooseList": "Liste wählen",
+      "full": "Diese Liste ist voll ({max} Artikel).",
+      "limit": "Sie können bis zu {max} Listen speichern.",
+      "errors": {
+        "generic": "Wir konnten Ihre Listen nicht aktualisieren. Versuchen Sie es erneut.",
+        "invalidName": "Geben Sie einen Namen mit höchstens {max} Zeichen ein."
+      }
     }
   },
   "auth": {

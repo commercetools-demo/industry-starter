@@ -779,6 +779,8 @@ export interface SavedListLine {
   quantity: number;
   saved: Money | null;
   current: Money | null;
+  /** `current` is a monthly price (shown "/mo"). */
+  recurring: boolean;
   delta: PriceDelta;
   available: boolean;
   reason?: string;

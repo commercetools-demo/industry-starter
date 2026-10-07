@@ -10,6 +10,8 @@ export interface LinePrice {
   variantLabel: string;
   /** The variant's monthly price, else its one-time price, else its lowest financed price; null when unavailable. */
   current: Money | null;
+  /** The current price is a monthly (recurring) price. */
+  recurring: boolean;
   kind?: Offer['kind'];
 }
 
@@ -23,8 +25,11 @@ function describe(variant: OfferVariant): string {
     .join(' · ');
 }
 
-function priceOf(variant: OfferVariant): Money | null {
-  return variant.recurringPrice ?? variant.oneTimePrice ?? variant.financedPrices?.[0] ?? null;
+function priceOf(variant: OfferVariant): { price: Money | null; recurring: boolean } {
+  if (variant.recurringPrice) return { price: variant.recurringPrice, recurring: true };
+  if (variant.oneTimePrice) return { price: variant.oneTimePrice, recurring: false };
+  const financed = variant.financedPrices?.[0];
+  return financed ? { price: financed, recurring: true } : { price: null, recurring: false };
 }
 
 /**
@@ -37,7 +42,7 @@ export function resolveLines(lines: readonly { offerKey: string; variantId: numb
   const result = new Map<string, LinePrice>();
   for (const line of lines) {
     const offer = byKey.get(line.offerKey);
-    const unavailable = (reason: NonNullable<LinePrice['reason']>, name = ''): LinePrice => ({ available: false, reason, name, term: null, variantLabel: '', current: null });
+    const unavailable = (reason: NonNullable<LinePrice['reason']>, name = ''): LinePrice => ({ available: false, reason, name, term: null, variantLabel: '', current: null, recurring: false });
     if (!offer) {
       result.set(lineKey(line.offerKey, line.variantId), unavailable('NOT_PUBLISHED'));
       continue;
@@ -51,7 +56,8 @@ export function resolveLines(lines: readonly { offerKey: string; variantId: numb
       result.set(lineKey(line.offerKey, line.variantId), unavailable('VARIANT_GONE', offer.name));
       continue;
     }
-    result.set(lineKey(line.offerKey, line.variantId), { available: true, name: offer.name, term: variant.term, variantLabel: variant.term ? '' : describe(variant), current: priceOf(variant), kind: offer.kind });
+    const { price, recurring } = priceOf(variant);
+    result.set(lineKey(line.offerKey, line.variantId), { available: true, name: offer.name, term: variant.term, variantLabel: variant.term ? '' : describe(variant), current: price, recurring, kind: offer.kind });
   }
   return result;
 }
