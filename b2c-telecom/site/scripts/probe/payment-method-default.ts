@@ -1,11 +1,11 @@
 // npm run probe:payment-default -- --confirm-project spec-test-b2c-telecom
 // Workstream T: does the platform clear the previous default Payment Method when another one gets `setDefault true`? The storefront
 // clears explicitly either way (lib/ct/payment-methods.ts), so the answer cannot break the feature; it only documents the platform.
-// Creates a throwaway customer and two Payment Methods, tests, prints PLATFORM_CLEARS_PREVIOUS_DEFAULT=true|false, deletes everything.
+// A platform that refuses the second default (400) also counts as "does not clear". Creates a throwaway customer and two Payment Methods, tests, prints PLATFORM_CLEARS_PREVIOUS_DEFAULT=true|false, deletes everything.
 import { randomUUID } from 'node:crypto';
 import { consoleLog, exitCodeForError, parseArgs, type Log } from '../seed/cli';
 import { EXIT } from '../seed/config';
-import { getAdminApi, loadSeedEnv, type CtApi } from '../seed/lib';
+import { CtHttpError, getAdminApi, loadSeedEnv, type CtApi } from '../seed/lib';
 
 interface Versioned {
   id: string;
@@ -35,7 +35,13 @@ export async function probe(api: CtApi): Promise<boolean> {
       await api.post(`payment-methods/${id}`, { version: current.version, actions: [{ action: 'setDefault', default: true }] });
     };
     await setTrue(ids[0] as string);
-    await setTrue(ids[1] as string); // deliberately without clearing the first
+    try {
+      await setTrue(ids[1] as string); // deliberately without clearing the first
+    } catch (error) {
+      // Live finding (2026-10-07): the platform REFUSES a second default (400 InvalidOperation "Customer can only have one default PaymentMethod").
+      if (error instanceof CtHttpError && error.statusCode === 400) return false;
+      throw error;
+    }
     const first = (await api.get(`payment-methods/${ids[0]}`)) as Versioned;
     return first.default === false;
   } finally {
