@@ -16,7 +16,7 @@ Planning complete (all defaults accepted by the owner 2026-10-08). Counts below 
 | I | Error pages, not-found, env guards | 5/5 | 3/3 | Not started |
 | J | Identity: sign-in / create account, session lifecycle, email verification (auto-verify) | 9/9 | 5/15 | Not started |
 | K | Doctor list and search | 9/9 | 19/19 | Not started |
-| L | Doctor profile, booking, booking confirmation | 0/9 | 0/19 | Not started |
+| L | Doctor profile, booking, booking confirmation | 9/9 | 17/19 | Not started |
 | M | Home page | 9/9 | 13/13 | Not started |
 | N | Prescription lookup and dispensing rules | 0/9 | 0/27 | Not started |
 | O | Cart | 0/8 | 0/15 | Not started |
