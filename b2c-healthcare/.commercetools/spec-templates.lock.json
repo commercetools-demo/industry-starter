@@ -1,0 +1,167 @@
+{
+  "receipt_version": 3,
+  "tool": "commercetools-spec-templates",
+  "content_version": "0.2.0",
+  "applied_at": "2026-10-07T18:10:49.815Z",
+  "framework": "openspec",
+  "industry": "healthcare",
+  "model": "B2C",
+  "sides": [],
+  "placement": "specs",
+  "scope": "all",
+  "plan_hash": "06047350818305cb4fcb5be2b55b904d4afdec39cd40d0ce48a2b2f1b1cf5797",
+  "files": [
+    {
+      "path": "openspec/specs/about-us/spec.md",
+      "sha256": "364cb4fcaa8b58b305fcb8d2e8098548b56e38a5a3adee0d80dbd213a737f185"
+    },
+    {
+      "path": "openspec/specs/account-and-self-service/spec.md",
+      "sha256": "d3f6331b9a6ef288a04eda152165549786f1ab531db24d64e86d419786c0c0b4"
+    },
+    {
+      "path": "openspec/specs/account-dashboard/spec.md",
+      "sha256": "719d66d1f040d249bb0027c95ce87e9a5a6301f34c6ff6026f32fd4b9de04aef"
+    },
+    {
+      "path": "openspec/specs/account-registration-request/spec.md",
+      "sha256": "e2f45398bdac5a6a4f86675e764d6723d9e0bcce3c80f8ff11185edbb50e178c"
+    },
+    {
+      "path": "openspec/specs/account-sign-in/spec.md",
+      "sha256": "ef5d5c6a1d8c750c1aa0d1d0502907d10d846247dc18eb3affa78a209abee642"
+    },
+    {
+      "path": "openspec/specs/address-book/spec.md",
+      "sha256": "b46e830c8a7a6175a1147ceff260d596d03058961281b035da9debdb5816776d"
+    },
+    {
+      "path": "openspec/specs/authentication-and-identity/spec.md",
+      "sha256": "8a64836a529790c26b8ba6aae017d5af585c2a4f8be218873eadffa665925881"
+    },
+    {
+      "path": "openspec/specs/benefit-allowance-drawdown/spec.md",
+      "sha256": "98426bfa4e126be5026bf1df654a721e422c9e71287ade62196f43cb9ce1f8e9"
+    },
+    {
+      "path": "openspec/specs/blog-resources/spec.md",
+      "sha256": "264defd2017b1db1553112640ba1f4997576028b823e391e1f7b223f845a4e4a"
+    },
+    {
+      "path": "openspec/specs/cart-management/spec.md",
+      "sha256": "d7137f438289a8aee093976f82a7edd50a18c9818ff6030c212d0154b3c79864"
+    },
+    {
+      "path": "openspec/specs/cart-page/spec.md",
+      "sha256": "07a2ef2d2fa21f6d277c2d05a461c6c3d466a198215ef1456a8bc6eeb6a28031"
+    },
+    {
+      "path": "openspec/specs/checkout-page/spec.md",
+      "sha256": "36e6bdf59c3ee535ab1d4cebc49950ec90fe3e8c4e2c1036a005186043e057d1"
+    },
+    {
+      "path": "openspec/specs/checkout/spec.md",
+      "sha256": "7550e6ae05431702011a104170288b924ea7d917e095ec720807c581e73e552b"
+    },
+    {
+      "path": "openspec/specs/contact-us/spec.md",
+      "sha256": "ad8e2bff1feada6976300a2d52c6fa5e1458f22b78189c9920be9351fe6f84c2"
+    },
+    {
+      "path": "openspec/specs/credentialed-purchase-scope/spec.md",
+      "sha256": "3f2638b6b3fd9a99ecdd3a193a71294f1d411e226ec2d51e0058f2399c2726ed"
+    },
+    {
+      "path": "openspec/specs/discovery-and-browse/spec.md",
+      "sha256": "7d36feef43b1ba316a848546103f401eaf6bc87853aa223cfc4bf210c505c31c"
+    },
+    {
+      "path": "openspec/specs/dispensing-quantity-limit/spec.md",
+      "sha256": "4f4247aac6bf31556e65d6aeba7e7a7457350f4a436fc527ff9f4e57e2813601"
+    },
+    {
+      "path": "openspec/specs/eligible-item-tender-restriction/spec.md",
+      "sha256": "33a8320738a06f34b40f853bbfe4728ebdd7fc88b180f0270cd8d940c954f25f"
+    },
+    {
+      "path": "openspec/specs/email-verification/spec.md",
+      "sha256": "6012023fc4d3b93a675b6913232081d067555ecd5316a2430df5255d8b8c356f"
+    },
+    {
+      "path": "openspec/specs/error-pages/spec.md",
+      "sha256": "499fda6c2ef2ec440e791c608dac01cabd748576cf8ad45d2bd538cd561bf016"
+    },
+    {
+      "path": "openspec/specs/expiry-dated-supply/spec.md",
+      "sha256": "8d7844129d977e22d35cd261760bd115ee5c4e7b784444a7839fc3ef7bd8b598"
+    },
+    {
+      "path": "openspec/specs/faq/spec.md",
+      "sha256": "79a0220c255578228a7bc4de84b4c5eae8d11678559e968de0e7c71b8c8dfcfc"
+    },
+    {
+      "path": "openspec/specs/health-data-minimization/spec.md",
+      "sha256": "c5b0aa83d213bc93440eb2d270fe162837b1c70bf94072e0ff7da9ad78f87fce"
+    },
+    {
+      "path": "openspec/specs/home-landing-page/spec.md",
+      "sha256": "7b7f5fa9db8665be43692907398f650ff3f8dad41a63c005daaa0ad8cdc54124"
+    },
+    {
+      "path": "openspec/specs/order-confirmation-page/spec.md",
+      "sha256": "24dfe3c4f66529d1911731fa571c7c9823d98943b6807b38a081868efe0836f0"
+    },
+    {
+      "path": "openspec/specs/order-history/spec.md",
+      "sha256": "bcf32aeadd4436598c2ad05bb8a00428aa16398badfd2ac773c5bf6901a05812"
+    },
+    {
+      "path": "openspec/specs/password-reset/spec.md",
+      "sha256": "e6beb9d71abe75f745ca0d77a6e8fb41e7e6a0e8407891b9be544d56932250cf"
+    },
+    {
+      "path": "openspec/specs/payer-and-patient-cost-share/spec.md",
+      "sha256": "b672da5f29107c48011424b4d185f4c0247b7d1374c55db86144fde7cbb07c17"
+    },
+    {
+      "path": "openspec/specs/payment-methods/spec.md",
+      "sha256": "ae6aa70364b84a6803f8d98a88c2c1173d08e3aed1d4aef23fbdeb0021a1a494"
+    },
+    {
+      "path": "openspec/specs/policy-pages/spec.md",
+      "sha256": "993c9412087040439f558825ef84ff9cad37691b0c53da462b78939809724830"
+    },
+    {
+      "path": "openspec/specs/post-purchase-order-management/spec.md",
+      "sha256": "d9655cc75d5f9262c3b66f32dd7e150aeaa1ccd9afe5264408666bed3f6b92df"
+    },
+    {
+      "path": "openspec/specs/prescription-bound-supply/spec.md",
+      "sha256": "48c055411f602854dffcc8594c3ab2aa9aac42a2330b8e47b5c00e00a5bcfbce"
+    },
+    {
+      "path": "openspec/specs/product-detail-page/spec.md",
+      "sha256": "6613c304aa88acc74f03845f4187ff99ed269db879bdadfd8b30ec59acb15bf4"
+    },
+    {
+      "path": "openspec/specs/product-listing-page/spec.md",
+      "sha256": "839fd82a63bf8dbb20989ff5a08158c7cfa2d48997d7bc614640db623e5816c8"
+    },
+    {
+      "path": "openspec/specs/saved-lists/spec.md",
+      "sha256": "150163ad3527c6721ba56f1f6a15b5c3207bbbc6778ddcfc6cf2206c9172b2e5"
+    },
+    {
+      "path": "openspec/specs/search-results-page/spec.md",
+      "sha256": "b9a873517b70b03a266c63d1df4316baf6ab89203b842b0894902ea27c32c66b"
+    },
+    {
+      "path": "openspec/specs/subscriptions-and-recurring-orders/spec.md",
+      "sha256": "813d5d7d061a9f2cec4849801ae96879b798ee2716695763e84499cdf87062a1"
+    },
+    {
+      "path": "openspec/specs/switching-region-or-language/spec.md",
+      "sha256": "7af20a54183b4614b98a8beb34e5f73bcbe5c9abd795d84bcf71a143d3719c68"
+    }
+  ]
+}
