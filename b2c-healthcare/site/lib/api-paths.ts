@@ -20,5 +20,7 @@ export const apiDoctorSlots = (doctorKey: string, mode: string): string => `/api
 
 export const API_PRESCRIPTIONS = '/api/prescriptions';
 export const API_PRESCRIPTIONS_LOOKUP = '/api/prescriptions/lookup';
-/** Implemented by the cart workstream (O). */
 export const API_CART_RX_LINES = '/api/cart/rx-lines';
+/** Cart summary for the header count (cheap read, no re-validation). */
+export const API_CART_SUMMARY = '/api/cart?view=summary';
+export const apiCartLine = (id: string): string => `/api/cart/lines/${encodeURIComponent(id)}`;

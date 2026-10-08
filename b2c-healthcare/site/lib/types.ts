@@ -270,3 +270,56 @@ export interface RxQuickPick {
   number: string;
   issuedAt: string;
 }
+
+// ---- cart (workstream O) ----------------------------------------------------------------------
+
+/** Why a cart line can no longer be dispensed; the N rule reasons, plus `UNAVAILABLE` (prescription no longer found). */
+export type CartLineIssue = 'NO_REFILLS' | 'EXPIRED' | 'OUT_OF_STOCK' | 'CEILING' | 'SHELF_LIFE' | 'UNAVAILABLE';
+
+export interface CartLineProblem {
+  reason: CartLineIssue;
+  /** Same extras as the prescription row. */
+  remaining?: number;
+  ceiling?: number;
+  scope?: 'order' | 'period';
+  expiryDate?: string;
+}
+
+/** One medication line. Quantity is the prescribed quantity and is never editable. */
+export interface CartLine {
+  id: string;
+  sku: string;
+  name: LocalizedString;
+  rxNumber: string;
+  rxLineRef: string;
+  /** Prescribed quantity shown as "Qty N" (the platform quantity counts packs). */
+  prescribedQty: number;
+  unitPrice: Money;
+  /** Platform line total. */
+  totalPrice: Money;
+  /** The unit price differs from the one seen on the previous read. */
+  priceUpdated: boolean;
+  /** Set by re-validation on load; the line stays in the cart until the patient removes it. */
+  unavailable?: CartLineProblem;
+}
+
+export interface CartShipping {
+  name: string;
+  /** Platform shipping price (after discounts); zero is shown as FREE. */
+  price: Money;
+}
+
+/** The whole cart as the page needs it. Every amount comes from the platform response. */
+export interface Cart extends CartSummary {
+  lines: CartLine[];
+  /** Sum of the platform line totals (integer cents) in the server mapper; null for an empty cart. */
+  subtotal: Money | null;
+  /** null until a shipping method is set (never the case for carts we create). */
+  shipping: CartShipping | null;
+  /** `cart.totalPrice`. */
+  total: Money;
+  /** Number of lines that failed re-validation; Checkout is disabled while above zero. */
+  unavailableCount: number;
+}
+
+export const isFullCart = (cart: CartSummary | Cart | null | undefined): cart is Cart => Boolean(cart && 'lines' in cart);

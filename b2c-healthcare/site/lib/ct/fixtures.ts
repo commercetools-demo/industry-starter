@@ -24,3 +24,11 @@ export async function loadRxFixtures(): Promise<RxFixtures | null> {
   if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
   return import('./rx-fixtures');
 }
+
+export type CartFixtures = typeof import('./cart-fixtures');
+
+/** In-memory cart for browser checks with `MALVA_FIXTURES=1` (workstream O); same switch and guard. */
+export async function loadCartFixtures(): Promise<CartFixtures | null> {
+  if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
+  return import('./cart-fixtures');
+}

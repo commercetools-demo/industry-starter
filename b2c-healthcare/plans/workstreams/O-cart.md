@@ -10,7 +10,7 @@ Cart page `/cart` (sign-in required, "Sign in to view your cart."): page head "Y
 Concurrency: 409 → refetch + retry once (G-08).
 
 ## Tasks
-- [ ] O-01 `lib/ct/cart.ts`: `getOrCreateCart`, `addRxLines`, `removeLine`, `getCartValidated` (recalculate, reasons from N rules), mapper `Cart`/`CartLine` in `lib/mappers/cart.ts` and types in `lib/types.ts`; tests with SDK fixtures [SKILL: commercetools-storefront] [SPEC: cart-management]
+- [x] O-01 `lib/ct/cart.ts`: `getOrCreateCart`, `addRxLines`, `removeLine`, `getCartValidated` (recalculate, reasons from N rules), mapper `Cart`/`CartLine` in `lib/mappers/cart.ts` and types in `lib/types.ts`; tests with SDK fixtures [SKILL: commercetools-storefront] [SPEC: cart-management]
 - [ ] O-02 Route handlers `GET /api/cart`, `POST /api/cart/rx-lines`, `DELETE /api/cart/lines/[id]` using `handle()` + `withCartRetry`; session `cartId` set/cleared; 401 without customer; tests incl. stale cartId tolerated [SKILL: commercetools-storefront] [SPEC: cart-management]
 - [ ] O-03 Replace-not-duplicate rule and "no quantity editing" (API rejects a quantity change); tests [SPEC: design-cart]
 - [ ] O-04 Re-validation on load with typed `unavailableReason` and `Price updated` note (`lastSeenUnitPrice`); tests per case [SKILL: commercetools-commerce-patterns] [SPEC: design-cart]

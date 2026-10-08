@@ -27,6 +27,7 @@ export const CUSTOM_TYPES = [
       field('credentialRef', 'Credential reference', 'String'),
       field('eligibleForRestricted', 'Eligible for restricted funds', 'Boolean'),
       field('coveredAmount', 'Covered amount', 'Money'),
+      field('lastSeenUnitPrice', 'Unit price at the previous cart read', 'Money'),
     ],
   },
   {
