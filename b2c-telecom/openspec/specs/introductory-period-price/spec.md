@@ -7,6 +7,10 @@
 
 Opening periods — a week free, a month at no charge, a reduced rate for six months — are how connectivity is sold, and they are also the single most common source of billing disputes. The reason is that the promotion is measured from the start of service, not from the campaign calendar: two customers buying the same offer on the same day can have different end dates if their service starts at different times. Treated as an ordinary time-windowed promotion, the free period ends for everyone at once and ends early for whoever was provisioned late. The customer's own dates are what they were sold and what they will hold the operator to, so the period has to be anchored to them and stated to them in advance.
 
+## Plan notes
+
+**As built by workstreams L and G (D-023, D-065).** The intro period starts at the order date, independent of the service-start date (the cancellation window, D-023). `recurringOrderScope` cannot limit a discount to the first order, so the stored schedule is the promise (Q-014). G's "first month free" discount also stacks on Cable 100 and Air 5G, so the first charge can be 0 (Q-013).
+
 ## Requirements
 
 ### Requirement: A free or reduced opening period that ends on a known date

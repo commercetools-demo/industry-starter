@@ -7,6 +7,10 @@
 
 Verification proves the buyer controls the address the account is keyed on, which is what makes later recovery and notification trustworthy. The page is reached by clicking a link that may be hours or days old, so the expired case is the common case rather than the exception, and a dead end there abandons an account that has already been created.
 
+## Plan notes
+
+**Reduced to auto-verify at registration (D-031: no email at all).** The server creates the email token and confirms it immediately when a consumer registers (workstream R); there is no verification email, link, resend path or `/verify-email` page. "Token valid address confirmed" and "Link opened twice" are tested in their reduced form. "Token expired" and "Resend needs an identified account" are not built (no link exists).
+
 ## Requirements
 
 ### Requirement: Email verification by token with a recoverable resend path
