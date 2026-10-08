@@ -50,4 +50,31 @@ export async function GET() {
 - `handle(fn)` returns the value as JSON and maps any thrown error to a safe `{ error }` (never the raw SDK error, request body or credentials). Throw `new ApiError(status, 'safe message')` for your own errors.
 - Public endpoints (catalog) skip `requireCustomer()`.
 - Tests: mock `@/lib/session` and `@/lib/ct/*`; use `expectUnauthenticated(handler, [ctMock])` and `expectSanitizedError(handler, ['secret text'])` from `@/test/api`. Session/JWT tests need `// @vitest-environment node` (jose does not accept jsdom `Uint8Array`).
-- Session cookie: `malva_session` (HTTP-only, SameSite=Lax, 30 days) holds `customerId`, `cartId`, `country`, `currency`, `locale` only; use the helpers in `lib/session.ts` (`getSession`, `updateSession`, `setCustomer`, `setCart`, `clearCustomer`, `clearCart`).
+- Session cookie: `malva_session` (HTTP-only, SameSite=Lax, 30 days) holds `customerId`, `cartId`, `country`, `currency`, `locale` only; use the helpers in `lib/session.ts` (`getSession`, `updateSession`, `setCustomer`, `setCart`, `clearCustomer`, `clearCart`, `setLocale`).
+
+## Data loading: Server/Client boundary and cache TTLs
+
+| Data | Where it loads | Cache |
+| --- | --- | --- |
+| Catalog (listing, detail, search results) | Server Component calls `lib/ct/*` directly; independent calls in `Promise.all` | none (prices depend on currency/country); per-request `cache()` via `getProductByKeyCached`, shared by `generateMetadata` and the page |
+| Cart, account, orders, appointments, labs | `'use client'` SWR hook (`hooks/`) to Route Handler to `lib/ct/*` | none, never `unstable_cache` |
+| First paint of cart and user | root layout seeds `SWRConfig fallback` (`KEY_CART`, `KEY_ACCOUNT`) from the session; a stale `cartId` is cleared and tolerated | none |
+
+`unstable_cache` is for public data identical for every visitor only:
+
+| Function | TTL |
+| --- | --- |
+| `getProjectSettings` (`lib/ct/project.ts`; also drives `getValidCountryConfig`) | 300 s |
+| `getCategoryTree` (`lib/ct/categories.ts`) | 60 s |
+| `getShippingMethods` (`lib/ct/shipping.ts`) | 60 s |
+
+Never cache prices, carts, accounts, orders, availability or anything that receives `customerId`, `cartId` or a session (a test scans `lib/ct/*`).
+
+Rules:
+- Pass only serializable props from Server to Client Components; put handlers in a `'use client'` child.
+- Client code uses hooks and the path constants in `lib/api-paths.ts` (a literal `fetch('/api/...')` fails lint). SWR keys live in `lib/cache-keys.ts`.
+- `redirect()` and `notFound()` stay outside `try/catch` (or the catch calls `unstable_rethrow`); a test scans for it.
+- Cart mutations run in `withCartRetry(fn)` (`lib/api-retry.ts`): `fn` refetches the cart itself, a 409 retries once.
+- Sign-out calls `useClearPatientState()` (`hooks/sign-out.ts`), which writes `null` to both keys (SWR would otherwise fall back to the layout fallback).
+- Region switching is atomic: `POST /api/locale { locale }` writes locale, country and currency from `COUNTRY_CONFIG` and clears `cartId` on a currency change.
+- Search uses `searchProducts` (`lib/ct/search.ts`, Product Search API).
