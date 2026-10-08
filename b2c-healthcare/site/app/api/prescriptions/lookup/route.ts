@@ -1,10 +1,9 @@
 import { handle, requireCustomer } from '@/lib/api';
 import { readJsonObject } from '@/lib/auth-route';
-import { getRateLimitStatus, recordFailedLookup } from '@/lib/ct/ratelimit';
 import { lookupPrescription } from '@/lib/ct/prescriptions';
 import { getPatient } from '@/lib/ct/patient';
 import { notFoundMessage } from '@/lib/dispense/rx-number';
-import { NO_STORE, rxContextOf } from '@/lib/rx-route';
+import { lookupLimiter, NO_STORE, rxContextOf } from '@/lib/rx-route';
 
 /** Same text and status for a number that does not exist and one that belongs to someone else. */
 const RATE_LIMITED = 'Too many lookups. Please try again in a few minutes.';
@@ -22,7 +21,8 @@ export async function POST(request: Request): Promise<Response> {
     const body = await readJsonObject(request);
     const input = typeof body.rx === 'string' ? body.rx : '';
 
-    const status = await getRateLimitStatus(session.customerId);
+    const limiter = await lookupLimiter();
+    const status = await limiter.status(session.customerId);
     if (status.limited) {
       return Response.json({ code: 'RATE_LIMITED', error: RATE_LIMITED, retryAfterSeconds: status.retryAfterSeconds }, { status: 429, headers: { ...NO_STORE, 'retry-after': String(status.retryAfterSeconds) } });
     }
@@ -30,7 +30,7 @@ export async function POST(request: Request): Promise<Response> {
     const patient = await getPatient(session.customerId);
     const view = patient ? await lookupPrescription(patient, input, rxContextOf(session)) : null;
     if (!view) {
-      await recordFailedLookup(session.customerId);
+      await limiter.recordFailure(session.customerId);
       return Response.json({ code: 'NOT_FOUND', error: notFoundMessage(input) }, { status: 404, headers: NO_STORE });
     }
     return Response.json(view, { headers: NO_STORE });

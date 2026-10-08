@@ -40,4 +40,27 @@ export function fixtureSupply(skus: string[]): Map<string, Supply> {
   return out;
 }
 
+/** In-memory stand-in for `lib/ct/ratelimit.ts` (same numbers: 5 failed lookups per 10 minutes per customer). */
+const failures = new Map<string, number[]>();
+const WINDOW_MS = 10 * 60 * 1000;
+const MAX_FAILURES = 5;
+
+function limitStatus(list: number[], now: number) {
+  const limited = list.length >= MAX_FAILURES;
+  return { limited, remaining: Math.max(0, MAX_FAILURES - list.length), retryAfterSeconds: limited ? Math.ceil((Math.min(...list) + WINDOW_MS - now) / 1000) : 0 };
+}
+
+export const fixtureRateLimit = {
+  async status(customerId: string) {
+    const now = Date.now();
+    return limitStatus((failures.get(customerId) ?? []).filter((t) => now - t < WINDOW_MS), now);
+  },
+  async recordFailure(customerId: string) {
+    const now = Date.now();
+    const list = [...(failures.get(customerId) ?? []).filter((t) => now - t < WINDOW_MS), now];
+    failures.set(customerId, list);
+    return limitStatus(list, now);
+  },
+};
+
 export { fixtureMedicineBySku };
