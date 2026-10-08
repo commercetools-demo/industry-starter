@@ -20,7 +20,7 @@ Planning complete (all defaults accepted by the owner 2026-10-08). Counts below 
 | M | Home page | 0/9 | 0/13 | Not started |
 | N | Prescription lookup and dispensing rules | 0/9 | 0/27 | Not started |
 | O | Cart | 0/8 | 0/15 | Not started |
-| P | Address book | 0/6 | 0/5 | Not started |
+| P | Address book | 6/6 | 5/5 | Not started |
 | Q | Checkout and payment | 0/9 | 0/17 | Not started |
 | R | Account area: shell, overview, labs, appointments | 0/10 | 0/24 | Not started |
 | S | Orders: confirmation and tracking, history, post-purchase | 0/9 | 0/13 | Not started |
