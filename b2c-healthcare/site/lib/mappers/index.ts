@@ -13,5 +13,5 @@ export function mapMoney(money: Pick<TypedMoney, 'centAmount' | 'currencyCode' |
 
 /** Copies a localized string; the locale lookup itself happens at render time, never here with a hard-coded key. */
 export function mapLocalizedString(value: Record<string, string> | undefined): LocalizedString {
-  return { ...(value ?? {}) };
+  return { ...value };
 }
