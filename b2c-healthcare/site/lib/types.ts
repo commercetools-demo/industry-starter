@@ -14,6 +14,61 @@ export interface Money {
   fractionDigits: number;
 }
 
+/** Consultation mode; each maps to a price channel (`mlv-remote`, `mlv-office`). */
+export type ConsultationMode = 'remote' | 'office';
+
+/** Doctor as shown in lists and cards (resolved for one locale; fees from the channel prices). */
+export interface DoctorCard {
+  id: string;
+  key: string;
+  slug: string;
+  name: string;
+  specialty: string;
+  specialtyKey: string;
+  yearsExperience: number;
+  clinicName: string;
+  city: string;
+  modes: ConsultationMode[];
+  /** Fee per offered mode, from the price on the mode's channel; absent when the doctor does not offer it. */
+  fees: Partial<Record<ConsultationMode, Money>>;
+  /** Average review rating (1-5), null without reviews. */
+  rating: number | null;
+  reviewCount: number;
+  /** Two letters for the avatar fallback. */
+  initials: string;
+  /** Pexels portrait (clean URL) or null: the avatar then shows the initials. */
+  portraitUrl: string | null;
+}
+
+/** Full doctor profile. */
+export interface Doctor extends DoctorCard {
+  bio: string;
+  languages: string[];
+  education: string;
+  timezone: string;
+}
+
+/** Medicine as shown in lists and detail pages (one variant, one price per pack). */
+export interface Medication {
+  id: string;
+  key: string;
+  slug: string;
+  name: string;
+  description: string;
+  sku: string | null;
+  strength: string;
+  dosageForm: string;
+  rxOnly: boolean;
+  dispenseUnit: string;
+  minRemainingShelfLifeDays: number | null;
+  maxQtyPerOrder: number | null;
+  hsaEligible: boolean;
+  controlClass: string | null;
+  price: Money | null;
+  imageUrl: string | null;
+  categoryIds: string[];
+}
+
 /** Minimal cart for first paint (header count); the cart workstream extends it. */
 export interface CartSummary {
   id: string;

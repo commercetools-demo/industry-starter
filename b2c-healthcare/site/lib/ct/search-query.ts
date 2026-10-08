@@ -131,6 +131,8 @@ export function buildSearchRequest(params: SearchParams): ProductSearchRequest {
       priceCountry: params.country,
       ...(params.priceChannelId ? { priceChannel: params.priceChannelId } : {}),
       localeProjection: [params.locale],
+      // Doctor fees are read from the prices on the mode channels (lib/mappers/doctor.ts).
+      expand: ['masterVariant.prices[*].channel'],
     },
   };
 }

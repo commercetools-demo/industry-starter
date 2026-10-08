@@ -18,18 +18,19 @@ import {
 
 export type { SessionData } from '@/lib/session-core';
 
-// Fails at import when SESSION_SECRET is missing or short (except NODE_ENV=test): no fallback key.
-const SECRET = resolveSecret(process.env.SESSION_SECRET, process.env.NODE_ENV);
+// Fails on first use when SESSION_SECRET is missing or short (except NODE_ENV=test): no fallback key.
+// Resolved lazily so `next build` can import route modules with an empty environment.
+const secret = (): string => resolveSecret(process.env.SESSION_SECRET, process.env.NODE_ENV);
 
 /** Reads the session from the request cookie. Invalid or expired cookies yield an empty session. */
 export async function getSession(): Promise<SessionData> {
   const store = await cookies();
-  return verifySession(store.get(SESSION_COOKIE)?.value, SECRET);
+  return verifySession(store.get(SESSION_COOKIE)?.value, secret());
 }
 
 async function write(data: SessionData): Promise<SessionData> {
   const store = await cookies();
-  store.set(SESSION_COOKIE, await signSession(data, SECRET), sessionCookieOptions(process.env.NODE_ENV));
+  store.set(SESSION_COOKIE, await signSession(data, secret()), sessionCookieOptions(process.env.NODE_ENV));
   return data;
 }
 
