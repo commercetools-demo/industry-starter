@@ -1,4 +1,5 @@
 import { jwtVerify, SignJWT } from 'jose';
+import { COUNTRY_CONFIG, isSupportedLocale } from '@/lib/utils';
 
 /**
  * Pure session primitives (no Next.js imports) so they can be unit-tested.
@@ -89,3 +90,16 @@ export const withLocale = (
   s: SessionData,
   locale: { locale: string; country?: string; currency?: string },
 ): SessionData => applyPatch(s, locale);
+
+/**
+ * Atomic region change: locale, country and currency are always written together, derived from
+ * COUNTRY_CONFIG (never from caller-supplied country/currency). A currency change drops `cartId`
+ * because the cart is priced in the previous currency. Unsupported locales throw.
+ */
+export function withRegion(s: SessionData, locale: string): SessionData {
+  if (!isSupportedLocale(locale)) throw new Error(`Unsupported locale: ${locale}`);
+  const { country, currency } = COUNTRY_CONFIG[locale];
+  const patch: Partial<Record<SessionKey, string | undefined>> = { locale, country, currency };
+  if (s.currency !== currency) patch.cartId = undefined;
+  return applyPatch(s, patch);
+}

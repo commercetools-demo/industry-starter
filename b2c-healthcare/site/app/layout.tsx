@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
 import { Lato, Poppins, Roboto } from "next/font/google";
+import { SwrProvider } from "@/components/providers/SwrProvider";
+import { getSwrFallback } from "@/lib/swr-fallback";
 import "./globals.css";
 
 // Self-hosted by next/font at build time (no runtime request to Google).
@@ -32,10 +34,10 @@ export const metadata: Metadata = {
 // The root layout is the only one that may render <html>; lang follows the active locale
 // (set by proxy.ts for /<locale>/... routes, default locale elsewhere).
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const locale = await getLocale();
+  const [locale, fallback] = await Promise.all([getLocale(), getSwrFallback()]);
   return (
     <html lang={locale} className={`${poppins.variable} ${lato.variable} ${roboto.variable}`}>
-      <body className="font-body">{children}</body>
+      <body className="font-body"><SwrProvider fallback={fallback}>{children}</SwrProvider></body>
     </html>
   );
 }

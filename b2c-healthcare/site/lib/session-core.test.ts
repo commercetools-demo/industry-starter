@@ -12,6 +12,7 @@ import {
   withCart,
   withCustomer,
   withLocale,
+  withRegion,
   withoutCart,
   withoutCustomer,
 } from './session-core';
@@ -118,5 +119,28 @@ describe('storefront-bff-and-session: Session lifecycle fields', () => {
       country: 'US',
       currency: 'USD',
     });
+  });
+
+  it('Partial update rejected / Handing off the cart conflict: withRegion writes all three from COUNTRY_CONFIG', () => {
+    expect(withRegion({ customerId: 'c1', cartId: 'k1', currency: 'USD' }, 'en-US')).toEqual({
+      customerId: 'c1',
+      cartId: 'k1',
+      locale: 'en-US',
+      country: 'US',
+      currency: 'USD',
+    });
+  });
+
+  it('Handing off the cart conflict: a currency change clears cartId', () => {
+    expect(withRegion({ cartId: 'k1', currency: 'EUR', country: 'DE', locale: 'de-DE' }, 'en-US')).toEqual({
+      locale: 'en-US',
+      country: 'US',
+      currency: 'USD',
+    });
+    expect(withRegion({ cartId: 'k1' }, 'en-US').cartId).toBeUndefined();
+  });
+
+  it('withRegion rejects an unsupported locale', () => {
+    expect(() => withRegion({}, 'xx-XX')).toThrow(/Unsupported/);
   });
 });
