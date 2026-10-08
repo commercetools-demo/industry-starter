@@ -10,3 +10,7 @@ export const API_AUTH_REGISTER = '/api/auth/register';
 export const API_AUTH_LOGOUT = '/api/auth/logout';
 export const API_AUTH_ME = '/api/auth/me';
 export const API_ACCOUNT_PASSWORD = '/api/account/password';
+export const API_PRESCRIPTIONS = '/api/prescriptions';
+export const API_PRESCRIPTIONS_LOOKUP = '/api/prescriptions/lookup';
+/** Implemented by the cart workstream (O). */
+export const API_CART_RX_LINES = '/api/cart/rx-lines';
