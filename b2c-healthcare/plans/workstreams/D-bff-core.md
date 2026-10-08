@@ -21,7 +21,7 @@ Frontend client scopes: B2C template + `manage_sessions`, `manage_orders`; extra
 - [x] D-04 `lib/api.ts` `handle()` + `requireCustomer()` (401 before any ct call) and the test helper `expectUnauthenticated(handler)` and `expectSanitizedError(handler)`; document the template in `site/README.md` [SKILL: commercetools-storefront] [SPEC: storefront-bff-and-session]
 - [x] D-05 `lib/types.ts`, `lib/mappers/index.ts` skeleton, `lib/utils` use of `getLocalizedString`/`formatMoney` asserted by a mapper test; lint test: SDK import outside `lib/ct`,`lib/mappers` fails [SKILL: commercetools-storefront] [SPEC: storefront-bff-and-session]
 - [x] D-06 `app/api/health/route.ts` (dev only) and `scripts/check-no-health-in-release.mjs` (fails if the file exists when `NODE_ENV=production` build) wired into `verify:build` [SKILL: commercetools-platform] [SPEC: storefront-bff-and-session]
-- [ ] D-07 `.env.example` scope list with reasons (as in Design) and a unit test that every scope in `.env.example` has a reason comment [SKILL: commercetools-platform] [SPEC: storefront-bff-and-session]
+- [x] D-07 `.env.example` scope list with reasons (as in Design) and a unit test that every scope in `.env.example` has a reason comment [SKILL: commercetools-platform] [SPEC: storefront-bff-and-session]
 - [ ] D-08 Live check (needs OA-02/03): with `.env.local` set, `curl localhost:3000/api/health` returns `{"ok":true,"projectKey":"spec-test-b2c-healthcare"}`; record the output in the PR [SKILL: commercetools-platform] [SPEC: storefront-bff-and-session]
 
 ## Scenarios
@@ -32,7 +32,7 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [x] No raw HTTP to commercetools
 - [x] Missing configuration
 #### storefront-bff-and-session › Least-privilege API client
-- [ ] Scope review
+- [x] Scope review
 #### storefront-bff-and-session › Server-managed session in an opaque cookie
 - [x] Session contents
 - [x] Tampered or expired cookie
