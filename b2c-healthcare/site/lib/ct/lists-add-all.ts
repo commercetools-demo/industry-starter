@@ -27,9 +27,9 @@ export async function addListToCart(
   );
   const groups = new Map<string, { lineRef: string; name: string }[]>();
   for (const item of list.lineItems) {
-    const name = localizedName(item.name, input.ctx.locale);
-    const fields = listLineFieldsOf(item);
     const entry = catalog.get(item.variant?.sku ?? '');
+    const name = entry?.medication.name || localizedName(item.name, input.ctx.locale);
+    const fields = listLineFieldsOf(item);
     if (!fields || !entry || entry.medication.sellableInRegion === false || !entry.medication.price) notAdded.push({ name, reason: 'UNAVAILABLE' });
     else groups.set(fields.rxNumber, [...(groups.get(fields.rxNumber) ?? []), { lineRef: fields.rxLineRef, name }]);
   }

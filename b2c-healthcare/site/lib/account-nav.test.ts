@@ -13,7 +13,7 @@ describe('design-account-area: account nav registry', () => {
   });
 
   it('starts with the four designed items; addresses and profile follow', () => {
-    expect(ACCOUNT_NAV.map((i) => i.key)).toEqual(['overview', 'labs', 'appointments', 'orders', 'addresses', 'profile']);
+    expect(ACCOUNT_NAV.map((i) => i.key)).toEqual(['overview', 'labs', 'appointments', 'orders', 'lists', 'addresses', 'profile']);
   });
 
   it.each([
@@ -23,6 +23,7 @@ describe('design-account-area: account nav registry', () => {
     ['/account/labs/LAB-50302?x=1', 'labs'],
     ['/account/appointments', 'appointments'],
     ['/account/addresses', 'addresses'],
+    ['/account/lists/mlv-list-1', 'lists'],
   ])('%s activates %s', (path, key) => {
     expect(activeAccountItem(path)?.key).toBe(key);
   });

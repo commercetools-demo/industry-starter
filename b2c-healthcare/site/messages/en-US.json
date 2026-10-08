@@ -424,7 +424,8 @@
       "addresses": "Addresses",
       "profile": "Profile",
       "signOut": "Sign out",
-      "signOutFailed": "We could not sign you out. Please try again."
+      "signOutFailed": "We could not sign you out. Please try again.",
+      "lists": "My medicines"
     },
     "overview": {
       "title": "Overview",
@@ -747,7 +748,13 @@
       "CEILING_ORDER": "Limit of {ceiling} per order · {remaining} available",
       "CEILING_PERIOD": "Monthly limit of {ceiling} reached · {remaining} available this calendar month",
       "SHELF_LIFE": "Stock expires {date}, too soon to meet the minimum shelf life"
-    }
+    },
+    "saveToList": "Save to My medicines",
+    "saving": "Saving",
+    "saved": "Saved to My medicines",
+    "savedAlready": "Already in My medicines",
+    "saveFailed": "We could not save these medications. Please try again.",
+    "viewList": "View My medicines"
   },
   "cart": {
     "metaTitle": "Your cart",
@@ -947,5 +954,59 @@
       "failed": "We could not reorder. Please try again.",
       "nothing": "None of these medications can be added right now."
     }
+  },
+  "lists": {
+    "metaTitle": "My medicines",
+    "title": "My medicines",
+    "sub": "Lists of the medicines you order again and again. Add a whole list to your cart in one step.",
+    "empty": "You have no saved lists yet.",
+    "emptyHint": "Save medicines from a prescription, or turn what is in your cart into a list.",
+    "fromRx": "Find a prescription",
+    "nameLabel": "List name",
+    "namePlaceholder": "e.g. Monthly medicines",
+    "create": "Create list",
+    "fromCart": "Save my cart as a list",
+    "creating": "Creating",
+    "createFailed": "We could not create the list. Please try again.",
+    "cartEmpty": "Your cart is empty, so there is nothing to save yet.",
+    "loadFailed": "We could not load your lists. Please try again.",
+    "lineCount": "{count, plural, =0 {No medicines} one {# medicine} other {# medicines}}",
+    "updated": "Updated {date}",
+    "open": "Open",
+    "back": "← All lists",
+    "notFound": "We could not find that list.",
+    "noLines": "This list has no medicines yet. Save them from a prescription.",
+    "addAll": "Add all to cart",
+    "adding": "Adding",
+    "remove": "Remove",
+    "removeLabel": "Remove {name} from the list",
+    "removeFailed": "We could not remove that medicine. Please try again.",
+    "rename": "Rename",
+    "renameLabel": "New name",
+    "renameSave": "Save name",
+    "renameFailed": "We could not rename the list. Please try again.",
+    "delete": "Delete list",
+    "deleteConfirm": "Delete this list for good?",
+    "deleteYes": "Yes, delete",
+    "deleteFailed": "We could not delete the list. Please try again.",
+    "price": "Price now: {price}",
+    "priceUp": "Up {amount} since you saved it.",
+    "priceDown": "Down {amount} since you saved it.",
+    "unavailable": "No longer available to order",
+    "priceNote": "Prices are today's catalog prices. Your cart shows the final price.",
+    "addAllResult": {
+      "added": "Added to your cart: {names}.",
+      "notAdded": "Not added: {names}.",
+      "nothing": "None of these medicines can be added right now.",
+      "viewCart": "View cart",
+      "failed": "We could not add this list to your cart. Please try again.",
+      "reason": {
+        "NO_REFILLS": "no refills left",
+        "EXPIRED": "prescription expired",
+        "OUT_OF_STOCK": "out of stock",
+        "UNAVAILABLE": "no longer available"
+      }
+    },
+    "cancel": "Cancel"
   }
 }

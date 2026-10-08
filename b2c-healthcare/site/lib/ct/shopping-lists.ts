@@ -16,7 +16,7 @@ import type { Money } from '@/lib/types';
  */
 
 export class ListLimitError extends Error {
-  constructor(readonly reason: 'LINES' | 'NAME') {
+  constructor(readonly reason: 'LINES' | 'NAME' | 'EMPTY') {
     super(`list limit: ${reason}`);
     this.name = 'ListLimitError';
   }

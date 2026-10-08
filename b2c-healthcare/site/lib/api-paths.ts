@@ -43,3 +43,10 @@ export const API_CHECKOUT_SESSION = '/api/checkout/session';
 export const API_CHECKOUT_PLACE = '/api/checkout/place';
 /** Development only (fake payment provider); answers 404 everywhere else. */
 export const API_CHECKOUT_DEMO_AUTHORIZE = '/api/checkout/demo-authorize';
+
+// Workstream T (saved lists, auto-refill, payment methods)
+export const API_LISTS = '/api/lists';
+export const API_LISTS_SAVE = '/api/lists/save';
+export const apiList = (id: string): string => `${API_LISTS}/${encodeURIComponent(id)}`;
+export const apiListLine = (id: string, lineId: string): string => `${apiList(id)}/lines/${encodeURIComponent(lineId)}`;
+export const apiListAddAll = (id: string): string => `${apiList(id)}/add-all-to-cart`;

@@ -9,7 +9,8 @@ export const listNotFound = () => new ApiError(404, LIST_NOT_FOUND);
 /** Maps a list limit to a 422 the buyer can read (no stack, no commercetools text). */
 export function listLimitError(error: unknown): never {
   if (error instanceof ListLimitError) {
-    throw new ApiError(422, error.reason === 'NAME' ? 'Give the list a name.' : 'A list can hold up to 250 medicines.');
+    const text = { NAME: 'Give the list a name.', LINES: 'A list can hold up to 250 medicines.', EMPTY: 'Your cart is empty, so there is nothing to save yet.' }[error.reason];
+    throw new ApiError(422, text);
   }
   throw error;
 }

@@ -3,7 +3,8 @@ import type { ShoppingList } from '@commercetools/platform-sdk';
 import type { Patient } from '@/lib/ct/patient';
 import { findOwnPrescription, type RxContext } from '@/lib/ct/prescriptions';
 import { getCatalogBySku } from '@/lib/ct/rx-catalog';
-import { addLines, getOrCreateDefaultList, getOwnList, type LineInput } from '@/lib/ct/shopping-lists';
+import { getCartSummary } from '@/lib/ct/cart';
+import { addLines, createList, getOrCreateDefaultList, getOwnList, ListLimitError, type LineInput } from '@/lib/ct/shopping-lists';
 import { DEFAULT_LIST_ID, type ListLineView, type ListView } from '@/lib/lists-types';
 import { listLineFieldsOf, localizedName, mapListSummary } from '@/lib/mappers/shopping-list';
 
@@ -58,4 +59,17 @@ export async function saveRxLines(
   const result = await addLines(list.id, customerId, lines);
   if (!result) return null;
   return { listId: list.id, saved: result.added, alreadySaved: lines.length - result.added };
+}
+
+/**
+ * "Create a first list from the current cart": every prescription line in the signed-in customer's cart becomes a list
+ * line (SKU, prescription reference, the price the cart shows now). An empty cart is a readable refusal.
+ */
+export async function createListFromCart(customerId: string, cartId: string | undefined, name: string, ctx: RxContext): Promise<ShoppingList> {
+  const cart = await getCartSummary(customerId, cartId, ctx.currency);
+  const lines: LineInput[] = (cart?.lines ?? [])
+    .filter((l) => l.rxNumber && l.rxLineRef && l.sku)
+    .map((l) => ({ sku: l.sku, rxNumber: l.rxNumber, rxLineRef: l.rxLineRef, price: l.unitPrice }));
+  if (lines.length === 0) throw new ListLimitError('EMPTY');
+  return createList(customerId, name, ctx.locale, { lines });
 }

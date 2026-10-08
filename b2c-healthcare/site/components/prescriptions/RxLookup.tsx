@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/Card';
 import { PageHead } from '@/components/ui/PageHead';
 import { useToast } from '@/components/ui/Toast';
 import { useAddRxLines, type AddRxLines } from '@/hooks/use-cart';
+import { useListActions } from '@/hooks/use-lists';
 import { API_PRESCRIPTIONS_LOOKUP } from '@/lib/api-paths';
 import { echoable } from '@/lib/dispense/rx-number';
 import type { RxQuickPick, RxView } from '@/lib/types';
@@ -35,6 +36,7 @@ export function RxLookup({ quickPicks, addRxLines }: RxLookupProps) {
   const toast = useToast();
   const cartAdd = useAddRxLines();
   const add = addRxLines ?? cartAdd;
+  const { saveRx } = useListActions();
   const [state, setState] = useState<State>({ status: 'idle' });
 
   async function search(input: string) {
@@ -77,6 +79,7 @@ export function RxLookup({ quickPicks, addRxLines }: RxLookupProps) {
             key={state.view.number}
             view={state.view}
             onAdd={add}
+            onSave={saveRx}
             onAdded={() => toast.show({ message: t('added'), action: { label: t('viewCart'), href: '/cart' } })}
           />
         ) : null}
