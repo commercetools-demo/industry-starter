@@ -19,7 +19,7 @@ Frontend client scopes: B2C template + `manage_sessions`, `manage_orders`; extra
 - [x] D-02 `lib/session.ts` (+ `lib/session-core.ts` pure sign/verify for tests): tamper, expiry, no-fallback, payload allow-list, cookie flags; tests per scenario [SKILL: commercetools-storefront] [SPEC: storefront-bff-and-session]
 - [x] D-03 Session lifecycle helpers (`setCustomer`, `setCart`, `clearCustomer`, `clearCart`, `setLocale` placeholder for G) with tests: sign-out keeps locale, order clears cart [SKILL: commercetools-storefront] [SPEC: storefront-bff-and-session]
 - [x] D-04 `lib/api.ts` `handle()` + `requireCustomer()` (401 before any ct call) and the test helper `expectUnauthenticated(handler)` and `expectSanitizedError(handler)`; document the template in `site/README.md` [SKILL: commercetools-storefront] [SPEC: storefront-bff-and-session]
-- [ ] D-05 `lib/types.ts`, `lib/mappers/index.ts` skeleton, `lib/utils` use of `getLocalizedString`/`formatMoney` asserted by a mapper test; lint test: SDK import outside `lib/ct`,`lib/mappers` fails [SKILL: commercetools-storefront] [SPEC: storefront-bff-and-session]
+- [x] D-05 `lib/types.ts`, `lib/mappers/index.ts` skeleton, `lib/utils` use of `getLocalizedString`/`formatMoney` asserted by a mapper test; lint test: SDK import outside `lib/ct`,`lib/mappers` fails [SKILL: commercetools-storefront] [SPEC: storefront-bff-and-session]
 - [ ] D-06 `app/api/health/route.ts` (dev only) and `scripts/check-no-health-in-release.mjs` (fails if the file exists when `NODE_ENV=production` build) wired into `verify:build` [SKILL: commercetools-platform] [SPEC: storefront-bff-and-session]
 - [ ] D-07 `.env.example` scope list with reasons (as in Design) and a unit test that every scope in `.env.example` has a reason comment [SKILL: commercetools-platform] [SPEC: storefront-bff-and-session]
 - [ ] D-08 Live check (needs OA-02/03): with `.env.local` set, `curl localhost:3000/api/health` returns `{"ok":true,"projectKey":"spec-test-b2c-healthcare"}`; record the output in the PR [SKILL: commercetools-platform] [SPEC: storefront-bff-and-session]
@@ -45,8 +45,8 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [x] Failure shape
 - [x] No SDK in handlers
 #### storefront-bff-and-session › Type boundary
-- [ ] Component imports
-- [ ] Localized strings and money
+- [x] Component imports
+- [ ] Localized strings and money — N/A: needs getLocalizedString/formatMoney from lib/utils.ts (workstream C); see plans/notes/D-todos.md
 #### storefront-bff-and-session › Connection health check
 - [ ] Valid credentials
 - [ ] Not shipped
