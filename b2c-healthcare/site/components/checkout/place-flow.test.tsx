@@ -113,6 +113,20 @@ describe('design-checkout: Place order (Q-06)', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('We could not place your order. Your cart is kept.');
   });
 
+  it('order-confirmation-page: Placement outcome unknown: no answer from the place request goes to /order, not to an error that invites a second payment', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (path: string) => {
+        if (path === '/api/checkout/demo-authorize') return json({ status: 'authorized' });
+        throw new Error('connection reset');
+      }),
+    );
+    const user = userEvent.setup();
+    renderWithProviders(<Harness mode="demo" />);
+    await user.click(screen.getByRole('button', { name: 'Place order' }));
+    await waitFor(() => expect(router.push).toHaveBeenCalledWith('/order'));
+  });
+
   it('with the real widget the button is the SDK payment button, a click places nothing by itself', async () => {
     const user = userEvent.setup();
     renderWithProviders(<Harness mode="psp" />);

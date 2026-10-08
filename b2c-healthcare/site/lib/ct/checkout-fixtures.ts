@@ -4,6 +4,7 @@ import type { PaymentProvider } from '@/lib/checkout/payment-provider';
 import type { CheckoutContext, MethodOutcome } from '@/lib/ct/checkout';
 import type { PlaceOrderInput, PlaceOrderOutcome } from '@/lib/ct/orders';
 import * as cartFixtures from '@/lib/ct/cart-fixtures';
+import type { OrderView } from '@/lib/order-types';
 import type { AddressInput, CheckoutState, DeliveryOption, Money } from '@/lib/types';
 
 /**
@@ -79,6 +80,7 @@ export async function setShippingMethod(ctx: CheckoutContext, key: string): Prom
 // ---------------------------------------------------------------- placing an order (fixtures only)
 
 const placed = new Map<string, PlaceOrderOutcome>();
+const fixtureOrders = new Map<string, { customerId: string; view: OrderView }>();
 let orderSeq = 0;
 
 type Total = { centAmount: number; currencyCode: string };
@@ -111,9 +113,41 @@ export async function placeOrder(input: PlaceOrderInput, provider: PaymentProvid
     return { ok: false, code: 'TOTALS_MOVED' };
   }
   orderSeq += 1;
+  const a = state.cart.shippingAddress;
+  const view: OrderView = {
+    id: `fixture-order-${orderSeq}`,
+    orderNumber: `MLV-${String(orderSeq).padStart(6, '0')}`,
+    status: 'received',
+    shipmentState: null,
+    createdAt: ctx.now.toISOString(),
+    lines: state.cart.lines.map((l) => ({ name: l.name['en-US'] ?? Object.values(l.name)[0] ?? '', quantity: l.prescribedQty })),
+    deliverTo: `${a.street}, ${a.city}, ${a.state} ${a.zip}`,
+    sameDay: state.cart.shippingMethodKey === SAME_DAY_METHOD_KEY,
+    total,
+    refund: 'none',
+    cancellable: true,
+  };
+  fixtureOrders.set(view.id, { customerId: ctx.customerId, view });
   cartFixtures.clearCart(ctx.customerId);
   held.delete(ctx.customerId);
   const outcome: PlaceOrderOutcome = { ok: true, replay: false, orderId: `fixture-order-${orderSeq}`, orderNumber: `MLV-${String(orderSeq).padStart(6, '0')}` };
   placed.set(idempotencyKey, { ...outcome, replay: true });
   return outcome;
+}
+
+// ---------------------------------------------------------------- reading orders back (fixtures only)
+
+/** An order placed in this process, only for its own customer (a foreign id is as good as unknown). */
+export function fixtureOrder(id: string, customerId: string): OrderView | null {
+  const held = fixtureOrders.get(id);
+  return held && held.customerId === customerId ? held.view : null;
+}
+
+export const fixtureOrderList = (customerId: string): OrderView[] =>
+  [...fixtureOrders.values()].filter((o) => o.customerId === customerId).map((o) => o.view).reverse();
+
+/** QA only: moves a fixture order to a state (`?`-less, no route): used by tests and by hand in a dev shell. */
+export function setFixtureOrderState(id: string, patch: Partial<Pick<OrderView, 'status' | 'shipmentState' | 'refund' | 'cancellable'>>): void {
+  const held = fixtureOrders.get(id);
+  if (held) held.view = { ...held.view, ...patch };
 }

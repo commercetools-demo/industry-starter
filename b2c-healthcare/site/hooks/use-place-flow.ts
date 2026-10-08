@@ -52,6 +52,9 @@ export function usePlaceFlow({ cart, mode, simulateDecline, refresh }: PlaceFlow
     placing.current = true;
     const result = await placeOrder(cart);
     if (result.ok) router.push(`/order/${encodeURIComponent(result.orderId)}`);
+    // No usable answer from the place request: the order may exist (workstream S, "placement outcome unknown").
+    // `/order` states that and sends the buyer to the order list; it never says "placed".
+    else if (result.code === 'FAILED') router.push('/order');
     else fail(result.code);
   }, [cart, placeOrder, router, fail]);
 
