@@ -865,5 +865,87 @@
       "EMPTY_CART": "Your cart is empty.",
       "generic": "We could not place your order. Your cart is kept. Please try again."
     }
+  },
+  "orders": {
+    "metaTitle": "Your order",
+    "placed": "Order placed",
+    "cancelledBadge": "Order cancelled",
+    "title": "Your medication is on its way.",
+    "cancelledTitle": "This order was cancelled.",
+    "rows": {
+      "order": "Order",
+      "items": "Items",
+      "deliverTo": "Deliver to",
+      "estimate": "Estimate",
+      "total": "Total",
+      "shipment": "Shipment"
+    },
+    "estimate": {
+      "sameDay": "Today by 8 pm",
+      "standard": "1–2 business days"
+    },
+    "progress": "Order progress",
+    "steps": {
+      "received": "Order received",
+      "pharmacist-review": "Pharmacist review",
+      "packed-shipped": "Packed and shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    },
+    "myOrders": "My orders",
+    "searchRx": "Search another RX",
+    "unknown": {
+      "title": "We could not confirm your order",
+      "body": "We do not know yet whether your order was placed. Check your orders before you try again, so you are not charged twice.",
+      "check": "Check your orders"
+    },
+    "shipment": {
+      "Pending": "Not shipped yet",
+      "Ready": "Ready to ship",
+      "Shipped": "Shipped",
+      "Delivered": "Delivered",
+      "Partial": "Partly shipped: part of your order is on its way and the rest follows",
+      "Backorder": "Waiting for stock",
+      "Delayed": "Delayed"
+    },
+    "refund": {
+      "requested": "Refund requested. Your payment was released; it can take a few business days to show on your statement.",
+      "refunded": "Refunded"
+    },
+    "cancel": {
+      "action": "Cancel order",
+      "confirm": "Cancel this order? Your prescription refill is given back and your payment is released.",
+      "yes": "Yes, cancel the order",
+      "keep": "Keep my order",
+      "failed": "We could not cancel this order. It may already be on its way.",
+      "tooLate": "This order is already packed and can no longer be cancelled."
+    },
+    "returns": "Medicines that have been dispensed cannot be returned.",
+    "list": {
+      "track": "Track",
+      "reorder": "Reorder",
+      "loadFailed": "We could not load your orders. Please try again.",
+      "placedOn": "Placed {date}",
+      "status": {
+        "received": "Received",
+        "pharmacist-review": "Pharmacist review",
+        "packed-shipped": "Packed and shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled"
+      }
+    },
+    "reorder": {
+      "added": "Added to your cart: {names}.",
+      "notAdded": "Not added: {names}.",
+      "reason": {
+        "NO_REFILLS": "no refills left",
+        "EXPIRED": "prescription expired",
+        "OUT_OF_STOCK": "out of stock",
+        "UNAVAILABLE": "no longer available"
+      },
+      "viewCart": "View cart",
+      "failed": "We could not reorder. Please try again.",
+      "nothing": "None of these medications can be added right now."
+    }
   }
 }
