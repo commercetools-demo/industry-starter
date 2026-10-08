@@ -87,6 +87,13 @@ describe('home-landing-page › Landing page with session-resolved buyer context
     expect(screen.queryByRole('link', { name: 'Sign in' })).toBeNull();
   });
 
+  it('the header search entry (D-017) links to the search page and is keyboard reachable', async () => {
+    getSession.mockResolvedValue({});
+    await renderLayout();
+    const header = screen.getByRole('banner');
+    expect(within(header).getByRole('link', { name: messages.search.label })).toHaveAttribute('href', '/en-US/search');
+  });
+
   it('the page body never reads the session (shared markup: nothing buyer-specific can be cached into it)', async () => {
     getSession.mockResolvedValue({ customerId: 'c1' });
     await LocaleHome({ params });

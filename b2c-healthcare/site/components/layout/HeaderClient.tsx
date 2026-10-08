@@ -8,6 +8,7 @@ import { AccountSlot } from './AccountSlot';
 import { CartButton } from './CartButton';
 import { HomeAccountSlot } from './HomeAccountSlot';
 import { MobileMenu } from './MobileMenu';
+import { SearchLink } from './SearchLink';
 import { DesktopLinks, useNavItems, type HeaderVariant } from './NavLinks';
 
 export interface HeaderClientProps {
@@ -48,6 +49,7 @@ export function HeaderClient({ variant, hasArticles = false, children }: HeaderC
               <AccountSlot />
             </>
           )}
+          <SearchLink />
           <MobileMenu items={items} home={home} />
         </div>
       </div>
