@@ -15,6 +15,7 @@ let calls: Array<{ method: string; path: string; body?: Record<string, unknown> 
 let signedOut = false;
 
 function server(path: string, init: RequestInit = {}): Response {
+  if (path === '/api/auth/me') return json({ id: 'c1', firstName: 'Alex', lastName: 'Chen' });
   const method = init.method ?? 'GET';
   const body = init.body ? (JSON.parse(String(init.body)) as Record<string, unknown>) : undefined;
   calls.push({ method, path, body });
@@ -55,7 +56,9 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 const fillValid = async (user: ReturnType<typeof userEvent.setup>, over: { state?: string; zip?: string } = {}) => {
+  await user.clear(screen.getByLabelText(/First name/));
   await user.type(screen.getByLabelText(/First name/), 'Alex');
+  await user.clear(screen.getByLabelText(/Last name/));
   await user.type(screen.getByLabelText(/Last name/), 'Chen');
   await user.type(screen.getByLabelText(/Street address/), '5 Pine Rd');
   await user.type(screen.getByLabelText(/^City/), 'Denver');

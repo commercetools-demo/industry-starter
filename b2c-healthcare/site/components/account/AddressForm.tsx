@@ -6,6 +6,7 @@ import { Checkbox, Input, Select } from '@/components/ui/Inputs';
 import {
   ADDRESS_FIELD_ORDER,
   US_STATES,
+  newAddressDefaults,
   validateAddress,
   type AddressField,
   type AddressProblems,
@@ -17,6 +18,8 @@ import type { Address, AddressInput } from '@/lib/types';
 export interface AddressFormProps {
   /** Present when editing; absent when adding. */
   initial?: Address;
+  /** Account name that pre-fills a new address (ignored when editing). */
+  prefillName?: { firstName?: string; lastName?: string } | null;
   /** Saves; resolves with the outcome (the form shows field problems, the warning and failures itself). */
   onSave: (input: AddressInput, options: SaveOptions) => Promise<AddressResult>;
   onCancel: () => void;
@@ -27,14 +30,12 @@ export interface AddressFormProps {
 type Values = Record<AddressField, string>;
 const FIELD_ID = (field: AddressField) => `address-${field}`;
 
-const EMPTY: Values = { firstName: '', lastName: '', street: '', street2: '', city: '', state: '', zip: '', phone: '' };
-
 /**
  * Add / edit form. The same `validateAddress` runs here and on the server: inline errors per field, focus moves to
  * the first one, the submit button is busy while the request runs. A state that does not match the ZIP raises a
  * warning (fields named, nearest state offered) and nothing is stored until the patient chooses "Save anyway".
  */
-export function AddressForm({ initial, onSave, onCancel, onSaved }: AddressFormProps) {
+export function AddressForm({ initial, prefillName, onSave, onCancel, onSaved }: AddressFormProps) {
   const t = useTranslations('account.addresses.form');
   const [values, setValues] = useState<Values>(
     initial
@@ -48,7 +49,7 @@ export function AddressForm({ initial, onSave, onCancel, onSaved }: AddressFormP
           zip: initial.zip,
           phone: initial.phone,
         }
-      : EMPTY,
+      : newAddressDefaults(prefillName),
   );
   const [makeDefault, setMakeDefault] = useState(false);
   const [problems, setProblems] = useState<AddressProblems>({});

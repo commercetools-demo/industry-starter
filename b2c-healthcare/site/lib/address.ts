@@ -109,6 +109,11 @@ export function defaultAddress(addresses: readonly Address[]): Address | null {
   return addresses.find((address) => address.isDefault) ?? null;
 }
 
+/** Blank form values for a new address; the name defaults to the account's name (checkout and the address book). */
+export function newAddressDefaults(account?: { firstName?: string; lastName?: string } | null): AddressInput {
+  return { firstName: account?.firstName ?? '', lastName: account?.lastName ?? '', street: '', street2: '', city: '', state: '', zip: '', phone: '' };
+}
+
 /** Display name of an address, "First Last". */
 export function addressName(address: Pick<Address, 'firstName' | 'lastName'>): string {
   return `${address.firstName} ${address.lastName}`.trim();

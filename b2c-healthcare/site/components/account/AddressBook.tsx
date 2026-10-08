@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
+import { useAccount } from '@/hooks/use-account';
 import { useAddresses } from '@/hooks/use-addresses';
 import type { Address } from '@/lib/types';
 import { AddressForm } from './AddressForm';
@@ -19,6 +20,7 @@ export function AddressBook() {
   const common = useTranslations('common');
   const errors = useTranslations('errors');
   const toast = useToast();
+  const { data: account } = useAccount();
   const { addresses, error, add, update, remove, makeDefault } = useAddresses();
   const [dialog, setDialog] = useState<Dialog>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -74,7 +76,7 @@ export function AddressBook() {
         )}
       </div>
       <Modal open={dialog?.kind === 'add'} onClose={close} title={t('form.addTitle')}>
-        <AddressForm onSave={add} onCancel={close} onSaved={() => (close(), toast.show({ message: t('toast.saved') }))} />
+        <AddressForm prefillName={account} onSave={add} onCancel={close} onSaved={() => (close(), toast.show({ message: t('toast.saved') }))} />
       </Modal>
       <Modal open={dialog?.kind === 'edit'} onClose={close} title={t('form.editTitle')}>
         {dialog?.kind === 'edit' ? (
