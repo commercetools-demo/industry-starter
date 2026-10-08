@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import useSWR, { useSWRConfig } from 'swr';
 import { describe, expect, it } from 'vitest';
 import { makeJsonRequest, makeRequest, withSessionCookie } from './request';
@@ -13,6 +14,11 @@ function CacheSize() {
   return <p>{`size:${[...cache.keys()].length}`}</p>;
 }
 
+function Brand() {
+  const t = useTranslations('common');
+  return <p>{t('brand')}</p>;
+}
+
 describe('test helpers', () => {
   it('renderWithProviders renders and jest-dom matchers are installed', async () => {
     renderWithProviders(<Probe id="a" />);
@@ -23,6 +29,11 @@ describe('test helpers', () => {
   it('renderWithProviders gives every render a fresh SWR cache', () => {
     renderWithProviders(<CacheSize />);
     expect(screen.getByText('size:0')).toBeInTheDocument();
+  });
+
+  it('renderWithProviders provides next-intl with the en-US catalog', () => {
+    renderWithProviders(<Brand />);
+    expect(screen.getByText('Malva Healthcare')).toBeInTheDocument();
   });
 
   it('makeRequest builds an absolute Request and passes init through', async () => {
