@@ -78,6 +78,8 @@ export interface Booking {
   startsAt: string;
   patientRef?: PatientRef;
   guest?: GuestContact;
+  /** Signed-in patients only: the contact phone (a guest's phone is in `guest`). */
+  phone?: string;
   reason: string;
   createdAt: string;
   status: BookingStatus;

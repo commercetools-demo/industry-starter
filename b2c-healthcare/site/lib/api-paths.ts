@@ -10,3 +10,5 @@ export const API_AUTH_REGISTER = '/api/auth/register';
 export const API_AUTH_LOGOUT = '/api/auth/logout';
 export const API_AUTH_ME = '/api/auth/me';
 export const API_ACCOUNT_PASSWORD = '/api/account/password';
+export const API_BOOKINGS = '/api/bookings';
+export const apiDoctorSlots = (doctorKey: string, mode: string): string => `/api/doctors/${encodeURIComponent(doctorKey)}/slots?mode=${encodeURIComponent(mode)}`;

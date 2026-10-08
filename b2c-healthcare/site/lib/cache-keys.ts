@@ -4,3 +4,6 @@
  */
 export const KEY_CART = 'cart';
 export const KEY_ACCOUNT = 'account';
+
+/** Free times of one doctor in one mode (workstream L). Never cached beyond the open page. */
+export const keyDoctorSlots = (doctorKey: string, mode: string) => ['doctor-slots', doctorKey, mode] as const;

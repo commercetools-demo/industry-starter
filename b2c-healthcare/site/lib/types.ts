@@ -149,3 +149,60 @@ export interface DoctorAvailability {
 export interface DoctorListItem extends DoctorCard {
   next: DoctorAvailability | null;
 }
+
+/** A verified patient's review as shown on a doctor profile (workstream L). */
+export interface DoctorReview {
+  id: string;
+  rating: number;
+  title?: string;
+  text?: string;
+  /** ISO timestamp; shown as "Verified patient · Mon YYYY". */
+  createdAt: string;
+}
+
+/** Doctor profile page data: the full doctor plus the verified reviews (empty when none). */
+export interface DoctorProfile extends Doctor {
+  reviews: DoctorReview[];
+}
+
+/** One free time of a day, as the booking panel needs it. */
+export interface BookingSlot {
+  /** UTC instant; this is what the booking request sends back. */
+  startsAt: string;
+  /** Clinic-local `HH:mm`. */
+  time: string;
+}
+
+/** A day of the 7-day picker (clinic-local date), with its free times (possibly none). */
+export interface SlotDay {
+  /** `YYYY-MM-DD` in the clinic zone. */
+  date: string;
+  slots: BookingSlot[];
+}
+
+/** Body of `GET /api/doctors/:key/slots`. */
+export interface SlotsResponse {
+  mode: ConsultationMode;
+  /** IANA zone of the clinic (named to the visitor for remote sessions). */
+  timezone: string;
+  days: SlotDay[];
+}
+
+/** Body of a successful `POST /api/bookings`. */
+export interface BookingCreated {
+  reference: string;
+}
+
+/** What `/booked/<ref>` shows. Contains the booker's name only for the greeting; no reason text, phone or email. */
+export interface BookingView {
+  reference: string;
+  firstName: string;
+  doctorName: string;
+  specialty: string;
+  clinicName: string;
+  mode: ConsultationMode;
+  startsAt: string;
+  timezone: string;
+  fee: Money | null;
+  guest: boolean;
+}

@@ -62,7 +62,7 @@ export function DoctorList({ items, mode, state }: { items: DoctorListItem[]; mo
     <ul className="m-0 grid list-none gap-4 p-0">
       {items.map((doctor) => (
         <li key={doctor.key}>
-          <DoctorCard doctor={doctor} mode={mode} />
+          <DoctorCard doctor={doctor} mode={mode} from={listingHref(`/doctors/${mode}`, state)} />
         </li>
       ))}
     </ul>

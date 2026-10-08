@@ -17,12 +17,15 @@ export interface BookingInput {
   reason: string;
   patientRef?: string;
   guest?: GuestContact;
+  /** Signed-in patients: contact phone. */
+  phone?: string;
 }
 
 /** Who is asking: a signed-in patient (by `patientRef`) or a guest (by the booking's email). */
 export interface Requester { patientRef?: string; guestEmail?: string }
 
-export const GUEST_RETENTION_DAYS = 7;
+/** Guest bookings (and their reason text) are unreadable, and may be purged, this long after the visit (Q-025). */
+export const GUEST_RETENTION_DAYS = 90;
 export const CANCEL_LEAD_MS = MIN_LEAD_MS;
 
 export class BookingValidationError extends Error {
@@ -75,6 +78,7 @@ function validate(input: BookingInput): string {
   const reason = input.reason?.trim() ?? '';
   if (reason.length === 0 || reason.length > 500) throw new BookingValidationError('reason must be 1 to 500 characters');
   if (Boolean(input.patientRef) === Boolean(input.guest)) throw new BookingValidationError('exactly one of patientRef and guest is required');
+  if (input.phone !== undefined && !input.phone.trim()) throw new BookingValidationError('phone must not be empty');
   if (input.guest && (!input.guest.name.trim() || !/^[^@\s]+@[^@\s]+$/.test(input.guest.email) || !input.guest.phone.trim())) {
     throw new BookingValidationError('guest name, email and phone are required');
   }
@@ -111,6 +115,7 @@ export async function createBooking(input: BookingInput, now: Date = new Date())
     startsAt,
     ...(input.patientRef ? { patientRef: input.patientRef } : {}),
     ...(input.guest ? { guest: { name: input.guest.name.trim(), email: input.guest.email.trim(), phone: input.guest.phone.trim() } } : {}),
+    ...(input.phone && !input.guest ? { phone: input.phone.trim() } : {}),
     reason: input.reason.trim(),
     createdAt: now.toISOString(),
     status: 'booked',
@@ -142,6 +147,15 @@ export async function getBookingForSession(reference: string, who: Requester, no
   if (!/^BK-[A-Z0-9]{10}$/.test(reference)) return null;
   const stored = await getObject<Booking>(CONTAINERS.booking, reference);
   return stored && visibleTo(stored.value, who, now) ? stored.value : null;
+}
+
+/** The booking by reference for a caller that has already proven access (a signed `malva_bk` cookie entry); only the expiry is applied. */
+export async function getBookingByReference(reference: string, now: Date = new Date()): Promise<Booking | null> {
+  if (!/^BK-[A-Z0-9]{10}$/.test(reference)) return null;
+  const stored = await getObject<Booking>(CONTAINERS.booking, reference);
+  if (!stored) return null;
+  const { expiresAt } = stored.value;
+  return expiresAt && Date.parse(expiresAt) < now.getTime() ? null : stored.value;
 }
 
 /** A patient's bookings, soonest first. */
