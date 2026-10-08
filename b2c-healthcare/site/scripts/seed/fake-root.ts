@@ -146,11 +146,14 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
   root.products = () => ({
     ...collection('products'),
     search: () => ({
-      post: (a: { body: { query?: { fullText?: { value: string } } } }) => ({
+      post: (a: { body: { query?: { fullText?: { value: string }; prefix?: { value: string } } } }) => ({
         execute: async () => {
           fake.searchCalls += 1;
           const term = a.body.query?.fullText?.value?.toLowerCase();
-          const hits = fake.store.products.filter((p) => !term || JSON.stringify((p.masterData as Rec).staged).toLowerCase().includes(term));
+          const prefix = a.body.query?.prefix?.value;
+          const hits = fake.store.products.filter(
+            (p) => (!term || JSON.stringify((p.masterData as Rec).staged).toLowerCase().includes(term)) && (!prefix || String(p.key).startsWith(prefix)),
+          );
           return { body: { total: fake.searchTotal ?? hits.length, results: hits.slice(0, 1).map((p) => ({ id: p.id })) } };
         },
       }),
