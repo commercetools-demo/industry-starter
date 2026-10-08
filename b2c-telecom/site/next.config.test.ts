@@ -30,6 +30,14 @@ describe('next.config', () => {
     expect(rules).toContainEqual({ source: '/:locale/account/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] });
   });
 
+  it('sends Cache-Control: private, no-store for the checkout and the order confirmation', async () => {
+    const config = await loadConfig('production');
+    const rules = (await config.headers?.()) ?? [];
+    const priv = [{ key: 'Cache-Control', value: 'private, no-store' }];
+    expect(rules).toContainEqual({ source: '/:locale/bundle/checkout', headers: priv });
+    expect(rules).toContainEqual({ source: '/:locale/order-confirmation/:path*', headers: priv });
+  });
+
   it('includes dev.ts page extensions in development only', async () => {
     const dev = await loadConfig('development');
     expect(dev.pageExtensions).toContain('dev.ts');

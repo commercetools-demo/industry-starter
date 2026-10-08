@@ -68,11 +68,11 @@ describe('BundleView', () => {
     stubServer(cart);
     const first = renderWithProviders(<BundleView initialCart={cart} signedIn={false} links={[...links]} />);
     expect(screen.getByRole('link', { name: 'Check out' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Log in to check out with your account' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Sign in to use saved details' })).toBeInTheDocument();
     first.unmount();
     renderWithProviders(<BundleView initialCart={cart} signedIn links={[...links]} />);
     expect(screen.getByRole('link', { name: 'Check out' })).toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: 'Log in to check out with your account' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Sign in to use saved details' })).not.toBeInTheDocument();
   });
 
   it('Quantity changed: the stepper sends one PATCH and the page shows the server cart', async () => {

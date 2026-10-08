@@ -98,6 +98,11 @@ describe('createSessionToken', () => {
     expect(await getSession()).toEqual({});
   });
 
+  it('keeps the pending order fields of the checkout (U)', async () => {
+    const payload = decodeJwt(await createSessionToken({ pendingOrderNumber: 'MLV-AAAAAAAA', pendingCartId: 'c', pendingTotalCents: '1000' }));
+    expect(payload).toMatchObject({ pendingOrderNumber: 'MLV-AAAAAAAA', pendingCartId: 'c', pendingTotalCents: '1000' });
+  });
+
   it('drops undefined fields', async () => {
     const payload = decodeJwt(await createSessionToken({ customerId: undefined, cartId: 'k' }));
     expect(Object.keys(payload).sort()).toEqual(['cartId', 'exp', 'iat']);

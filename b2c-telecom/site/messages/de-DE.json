@@ -212,7 +212,7 @@
     },
     "cta": {
       "checkout": "Zur Kasse",
-      "login": "Anmelden und mit Ihrem Konto zur Kasse",
+      "login": "Anmelden und gespeicherte Daten nutzen",
       "blocked": "Beheben Sie die oben genannten Punkte, um fortzufahren"
     },
     "minimum": "Fügen Sie {shortfall} hinzu, um den Mindestbestellwert von {minimum} zu erreichen.",
@@ -286,7 +286,132 @@
     },
     "home": "Startseite"
   },
-  "checkout": {},
+  "checkout": {
+    "title": "Kasse",
+    "home": "Startseite",
+    "bundle": "Mein Paket",
+    "stepsLabel": "Schritte der Kasse",
+    "step": {
+      "contact": "Kontakt",
+      "address": "Anschlussadresse",
+      "delivery": "Lieferung",
+      "review": "Prüfen",
+      "payment": "Zahlung"
+    },
+    "continue": "Weiter",
+    "continueToPayment": "Weiter zur Zahlung",
+    "saving": "Wird gespeichert…",
+    "back": "Zurück",
+    "contact": {
+      "heading": "Kontaktdaten",
+      "email": "E-Mail",
+      "phone": "Mobiltelefon (optional)",
+      "signIn": "Sie haben ein Konto? Anmelden",
+      "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein.",
+      "phoneInvalid": "Geben Sie eine gültige Telefonnummer ein.",
+      "accountEmail": "Das ist die E-Mail-Adresse Ihres Kontos.",
+      "signInRequired": "Ihr Paket enthält monatliche Positionen. Melden Sie sich an oder erstellen Sie ein Konto, um zu bestellen.",
+      "createAccount": "Konto erstellen"
+    },
+    "address": {
+      "heading": "Anschlussadresse",
+      "billingSame": "Rechnungsadresse ist identisch",
+      "billingHeading": "Rechnungsadresse",
+      "useOther": "Andere Adresse verwenden",
+      "useSaved": "Gespeicherte Adresse verwenden",
+      "choose": "Anschlussadresse wählen",
+      "notServiceable": "Diese Adresse können wir für {names} nicht versorgen.",
+      "change": "Adresse ändern",
+      "editBundle": "Mein Paket bearbeiten",
+      "country": "Land: {country}"
+    },
+    "delivery": {
+      "heading": "Lieferung",
+      "loading": "Liefermethoden werden gesucht…",
+      "none": {
+        "title": "Für diese Adresse gibt es keine Liefermethode für Ihre Geräte.",
+        "body": "Verwenden Sie eine andere Adresse oder entfernen Sie Geräte aus Mein Paket.",
+        "change": "Andere Anschlussadresse verwenden",
+        "bundle": "Mein Paket bearbeiten"
+      }
+    },
+    "review": {
+      "heading": "Bestellung prüfen",
+      "plans": "Tarife",
+      "devices": "Geräte",
+      "addons": "Zusatzangebote und Ausstattung",
+      "contact": "Kontakt",
+      "serviceAddress": "Anschlussadresse",
+      "billingAddress": "Rechnungsadresse",
+      "delivery": "Lieferung",
+      "change": "Ändern",
+      "serviceStart": "Ihr Anschluss startet am {date}.",
+      "agree": "Ich habe den Preisplan und das Breitband-Informationsblatt gelesen und stimme den <terms>Bedingungen</terms> zu.",
+      "agreeRequired": "Setzen Sie den Haken, um fortzufahren.",
+      "quantity": "Menge {count}",
+      "perMonth": "{amount}/Monat",
+      "oneTime": "{amount} einmalig"
+    },
+    "summary": {
+      "title": "Bestellübersicht",
+      "toggle": "Bestellübersicht · {total}",
+      "plans": "Tarife",
+      "addons": "Zusatzangebote",
+      "devices": "Ausstattung und Geräte",
+      "oneTime": "Einmalige Gebühren",
+      "discounts": "Rabatte",
+      "shipping": "Versand",
+      "tax": "Steuer",
+      "dueToday": "Heute fällig",
+      "monthly": "Monatlich danach",
+      "contractTotal": "Gesamt über die Laufzeit"
+    },
+    "payment": {
+      "heading": "Zahlung",
+      "loading": "Sichere Zahlung wird geladen…",
+      "demo": {
+        "title": "Demo-Modus: Die Zahlung wird simuliert",
+        "body": "Es wird keine Karte belastet. Die Bestellung wird genau so aufgegeben wie in der gehosteten Kasse.",
+        "pay": "Bestellung aufgeben (Demo)"
+      }
+    },
+    "error": {
+      "NOT_SERVICEABLE": "Diese Adresse können wir nicht für alles in Ihrem Paket versorgen. Ändern Sie die Adresse oder bearbeiten Sie Mein Paket.",
+      "NO_ADDRESS": "Fügen Sie zuerst eine Anschlussadresse hinzu.",
+      "NO_CONTACT": "Geben Sie zuerst Ihre E-Mail-Adresse ein.",
+      "NO_DELIVERY": "Wählen Sie zuerst eine Liefermethode.",
+      "ELIGIBILITY_LOST": "Etwas in Ihrem Paket ist für Sie nicht mehr verfügbar. Prüfen Sie Mein Paket.",
+      "FINANCING_DECLINED": "Die Finanzierung wurde nicht genehmigt. Zahlen Sie sofort oder wählen Sie in Mein Paket eine andere Laufzeit.",
+      "DEVICE_PRICE_INVALID": "Ein Geräte-Preis passt nicht zur Zahlungsdauer. Wählen Sie die Laufzeit in Mein Paket erneut.",
+      "CHECKOUT_UNAVAILABLE": "Die Zahlung ist gerade nicht verfügbar. Versuchen Sie es gleich noch einmal.",
+      "ALREADY_ORDERED": "Dieses Paket wurde bereits bestellt.",
+      "NO_CART": "Ihr Paket ist leer.",
+      "EMPTY_CART": "Ihr Paket ist leer.",
+      "INVALID_ADDRESS": "Prüfen Sie die markierten Adressfelder.",
+      "INVALID_EMAIL": "Geben Sie eine gültige E-Mail-Adresse ein.",
+      "COUNTRY_MISMATCH": "Dieser Shop liefert nur in sein eigenes Land.",
+      "SHIPPING_METHOD_NOT_AVAILABLE": "Diese Liefermethode ist nicht mehr verfügbar. Wählen Sie eine andere.",
+      "generic": "Etwas ist schiefgelaufen. Versuchen Sie es erneut."
+    },
+    "financing": {
+      "declined": "Die Finanzierung wurde nicht genehmigt. Zahlen Sie sofort oder wählen Sie in Mein Paket eine andere Laufzeit."
+    },
+    "totalChanged": "Die Summe hat sich von {old} auf {new} geändert. Prüfen Sie Ihre Bestellung und zahlen Sie erneut.",
+    "reviewAgain": "Erneut prüfen",
+    "paymentFailed": "Die Zahlung ist fehlgeschlagen. Versuchen Sie es erneut oder nutzen Sie eine andere Karte.",
+    "cancelled": "Die Zahlung wurde abgebrochen. Ihr Paket bleibt unverändert.",
+    "expired": "Ihre Zahlungssitzung ist abgelaufen.",
+    "restart": "Zahlung neu starten",
+    "placementFailed": {
+      "title": "Wir konnten Ihre Bestellung nicht aufgeben",
+      "body": "In Ihrem Paket hat sich etwas geändert (Preis, Rabatt oder Verfügbarkeit). Prüfen Sie die Bestellung und versuchen Sie es erneut.",
+      "review": "Meine Bestellung prüfen",
+      "bundle": "Zurück zu Mein Paket"
+    },
+    "finishing": "Ihre Zahlung ist eingegangen. Wir schließen Ihre Bestellung ab.",
+    "finishRetry": "Erneut versuchen",
+    "finishLink": "Bestellung öffnen"
+  },
   "account": {
     "breadcrumb": "Startseite / Mein Konto",
     "home": "Startseite",
@@ -1077,5 +1202,64 @@
       "byMode": "{mode}: {count} Artikel, heute fällig {due}, monatlich {monthly}"
     },
     "section": "Geräte"
+  },
+  "confirmation": {
+    "title": "Bestellbestätigung",
+    "home": "Startseite",
+    "heading": {
+      "Open": "Bestellung aufgegeben.",
+      "Confirmed": "Bestellung bestätigt.",
+      "Complete": "Bestellung abgeschlossen.",
+      "Cancelled": "Diese Bestellung wurde storniert."
+    },
+    "sentence": {
+      "Open": "Ihre Bestellnummer lautet {orderNumber}. Wir haben Ihre Bestellung und Ihre Zahlung erhalten.",
+      "Confirmed": "Ihre Bestellung {orderNumber} ist bestätigt und wird eingerichtet.",
+      "Complete": "Alles zu Bestellung {orderNumber} wurde geliefert.",
+      "Cancelled": "Bestellung {orderNumber} wurde storniert."
+    },
+    "state": {
+      "Open": "Bestellung aufgegeben",
+      "Confirmed": "Bestätigt",
+      "Complete": "Abgeschlossen",
+      "Cancelled": "Storniert"
+    },
+    "payment": {
+      "Paid": "Zahlung: bezahlt",
+      "Pending": "Zahlung: ausstehend",
+      "BalanceDue": "Zahlung: Betrag offen",
+      "Failed": "Zahlung: fehlgeschlagen"
+    },
+    "limited": "Das ist eine Übersicht zu Bestellung {orderNumber}. Melden Sie sich als Käufer an, um die ganze Bestellung zu sehen.",
+    "summary": "Bestellübersicht",
+    "service": "Anschluss",
+    "serviceStart": "Anschluss ab {date}",
+    "serviceAddress": "Anschlussadresse",
+    "contact": "Bestätigung für {email}",
+    "schedule": "Preisplan",
+    "labels": "Breitband-Informationsblatt",
+    "viewLabels": "Breitband-Informationsblatt ansehen",
+    "next": {
+      "title": "Wie es weitergeht",
+      "start": "Ihr Anschluss startet am {date}.",
+      "ships": "Ihre Geräte werden separat versandt. Die Sendungsverfolgung erscheint auf Ihrer Bestellseite, sobald sie unterwegs sind.",
+      "cancel": "Doch umentschieden? Sie können bis {date} stornieren.",
+      "support": "Fragen? Support kontaktieren",
+      "manage": "Bestellung verwalten"
+    },
+    "pending": {
+      "title": "Wir prüfen Ihre Bestellung {orderNumber}",
+      "body": "Falls Sie belastet wurden, erscheint sie hier in Kürze.",
+      "check": "Erneut prüfen",
+      "back": "Zurück zur Zahlung"
+    },
+    "print": "Beleg drucken",
+    "viewOrder": "Bestellung ansehen",
+    "continue": "Weiter einkaufen",
+    "history": "Zur Bestellübersicht",
+    "createAccount": "Konto erstellen",
+    "guest": {
+      "keep": "Bewahren Sie Ihre Bestellnummer {orderNumber} auf. Für die Sendungsverfolgung brauchen Sie ein Konto."
+    }
   }
 }

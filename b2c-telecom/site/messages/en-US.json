@@ -212,7 +212,7 @@
     },
     "cta": {
       "checkout": "Check out",
-      "login": "Log in to check out with your account",
+      "login": "Sign in to use saved details",
       "blocked": "Resolve the items above to continue"
     },
     "minimum": "Add {shortfall} more to reach the {minimum} minimum order.",
@@ -286,7 +286,132 @@
     },
     "home": "Home"
   },
-  "checkout": {},
+  "checkout": {
+    "title": "Checkout",
+    "home": "Home",
+    "bundle": "My bundle",
+    "stepsLabel": "Checkout steps",
+    "step": {
+      "contact": "Contact",
+      "address": "Service address",
+      "delivery": "Delivery",
+      "review": "Review",
+      "payment": "Payment"
+    },
+    "continue": "Continue",
+    "continueToPayment": "Continue to payment",
+    "saving": "Saving…",
+    "back": "Back",
+    "contact": {
+      "heading": "Contact details",
+      "email": "Email",
+      "phone": "Mobile phone (optional)",
+      "signIn": "Have an account? Sign in",
+      "emailInvalid": "Enter a valid email address.",
+      "phoneInvalid": "Enter a valid phone number.",
+      "accountEmail": "This is the email of your account.",
+      "signInRequired": "Your bundle has monthly items. Sign in or create an account to place the order.",
+      "createAccount": "Create an account"
+    },
+    "address": {
+      "heading": "Service address",
+      "billingSame": "Billing address is the same",
+      "billingHeading": "Billing address",
+      "useOther": "Use a different address",
+      "useSaved": "Use a saved address",
+      "choose": "Choose a service address",
+      "notServiceable": "We can't serve this address with {names}.",
+      "change": "Change address",
+      "editBundle": "Edit My bundle",
+      "country": "Country: {country}"
+    },
+    "delivery": {
+      "heading": "Delivery",
+      "loading": "Looking for delivery methods…",
+      "none": {
+        "title": "We can't deliver equipment to this address with any delivery method.",
+        "body": "Use a different service address, or remove the equipment and devices from My bundle.",
+        "change": "Use a different service address",
+        "bundle": "Edit My bundle"
+      }
+    },
+    "review": {
+      "heading": "Review your order",
+      "plans": "Plans",
+      "devices": "Devices",
+      "addons": "Add-ons and equipment",
+      "contact": "Contact",
+      "serviceAddress": "Service address",
+      "billingAddress": "Billing address",
+      "delivery": "Delivery",
+      "change": "Change",
+      "serviceStart": "Your service starts {date}.",
+      "agree": "I have read the price schedule and the Broadband Facts label and agree to the <terms>terms</terms>.",
+      "agreeRequired": "Tick the box to continue.",
+      "quantity": "Quantity {count}",
+      "perMonth": "{amount}/mo",
+      "oneTime": "{amount} one-time"
+    },
+    "summary": {
+      "title": "Order summary",
+      "toggle": "Order summary · {total}",
+      "plans": "Plans",
+      "addons": "Add-ons",
+      "devices": "Equipment and devices",
+      "oneTime": "One-time fees",
+      "discounts": "Discounts",
+      "shipping": "Shipping",
+      "tax": "Tax",
+      "dueToday": "Due today",
+      "monthly": "Monthly after today",
+      "contractTotal": "Total over the term"
+    },
+    "payment": {
+      "heading": "Payment",
+      "loading": "Loading secure payment…",
+      "demo": {
+        "title": "Demo mode: payment is simulated",
+        "body": "No card is charged. The order is placed exactly as the hosted checkout would place it.",
+        "pay": "Place order (demo)"
+      }
+    },
+    "error": {
+      "NOT_SERVICEABLE": "We can't serve this address for everything in your bundle. Change the address or edit My bundle.",
+      "NO_ADDRESS": "Add a service address first.",
+      "NO_CONTACT": "Enter your email first.",
+      "NO_DELIVERY": "Choose a delivery method first.",
+      "ELIGIBILITY_LOST": "Something in your bundle is no longer available to you. Review My bundle.",
+      "FINANCING_DECLINED": "Financing wasn't approved. Pay in full instead or choose another term in My bundle.",
+      "DEVICE_PRICE_INVALID": "A device price isn't valid for its payment term. Choose the term again in My bundle.",
+      "CHECKOUT_UNAVAILABLE": "Payment is unavailable right now. Try again in a moment.",
+      "ALREADY_ORDERED": "This bundle has already been ordered.",
+      "NO_CART": "Your bundle is empty.",
+      "EMPTY_CART": "Your bundle is empty.",
+      "INVALID_ADDRESS": "Check the highlighted address fields.",
+      "INVALID_EMAIL": "Enter a valid email address.",
+      "COUNTRY_MISMATCH": "This store ships to its own country only.",
+      "SHIPPING_METHOD_NOT_AVAILABLE": "That delivery method is no longer available. Choose another.",
+      "generic": "Something went wrong. Try again."
+    },
+    "financing": {
+      "declined": "Financing wasn't approved for this order. Pay in full instead, or choose another term in My bundle."
+    },
+    "totalChanged": "The total changed from {old} to {new}. Review your order and pay again.",
+    "reviewAgain": "Review again",
+    "paymentFailed": "Your payment didn't go through. Try again or use another card.",
+    "cancelled": "Payment was cancelled. Your bundle is unchanged.",
+    "expired": "Your payment session expired.",
+    "restart": "Start payment again",
+    "placementFailed": {
+      "title": "We couldn't place your order",
+      "body": "Something changed in your bundle (a price, discount or availability). Review your order and try again.",
+      "review": "Review my order",
+      "bundle": "Back to My bundle"
+    },
+    "finishing": "Your payment went through. We're finishing your order.",
+    "finishRetry": "Try again",
+    "finishLink": "Open your order"
+  },
   "account": {
     "breadcrumb": "Home / My account",
     "home": "Home",
@@ -1077,5 +1202,64 @@
       "byMode": "{mode}: {count} item(s), due today {due}, monthly {monthly}"
     },
     "section": "Devices"
+  },
+  "confirmation": {
+    "title": "Order confirmation",
+    "home": "Home",
+    "heading": {
+      "Open": "Order placed.",
+      "Confirmed": "Order confirmed.",
+      "Complete": "Order complete.",
+      "Cancelled": "This order was cancelled."
+    },
+    "sentence": {
+      "Open": "Your order number is {orderNumber}. We've received your order and your payment.",
+      "Confirmed": "Your order {orderNumber} is confirmed and being set up.",
+      "Complete": "Everything on order {orderNumber} has been delivered.",
+      "Cancelled": "Order {orderNumber} was cancelled."
+    },
+    "state": {
+      "Open": "Order placed",
+      "Confirmed": "Confirmed",
+      "Complete": "Complete",
+      "Cancelled": "Cancelled"
+    },
+    "payment": {
+      "Paid": "Payment: paid",
+      "Pending": "Payment: pending",
+      "BalanceDue": "Payment: balance due",
+      "Failed": "Payment: failed"
+    },
+    "limited": "This is a summary of order {orderNumber}. Sign in as the buyer to see the full order.",
+    "summary": "Order summary",
+    "service": "Service",
+    "serviceStart": "Service start {date}",
+    "serviceAddress": "Service address",
+    "contact": "Confirmation for {email}",
+    "schedule": "Price schedule",
+    "labels": "Broadband Facts",
+    "viewLabels": "View Broadband Facts label",
+    "next": {
+      "title": "What happens next",
+      "start": "Your service starts on {date}.",
+      "ships": "Your equipment ships separately. Tracking appears on your order page once it ships.",
+      "cancel": "Need to change your mind? You can cancel until {date}.",
+      "support": "Questions? Contact support",
+      "manage": "Manage order"
+    },
+    "pending": {
+      "title": "We're checking on your order {orderNumber}",
+      "body": "If you were charged, it will appear here shortly.",
+      "check": "Check again",
+      "back": "Back to payment"
+    },
+    "print": "Print receipt",
+    "viewOrder": "View order",
+    "continue": "Continue shopping",
+    "history": "Go to order history",
+    "createAccount": "Create an account",
+    "guest": {
+      "keep": "Keep your order number {orderNumber}. Order tracking needs an account."
+    }
   }
 }

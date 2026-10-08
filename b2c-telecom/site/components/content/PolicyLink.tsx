@@ -1,6 +1,6 @@
 import type { ReactElement, ReactNode } from 'react';
 import { Link } from '@/i18n/routing';
-import { legalPath, type LegalSlug } from '@/lib/content/policies';
+import { legalPath, type LegalSlug } from '@/lib/content/legal-slugs';
 
 type PolicyLinkProps = { policy: LegalSlug; children: ReactNode; className?: string };
 

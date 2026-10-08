@@ -1,5 +1,6 @@
 import { EXIT } from '../seed/config';
 import type { CtApi } from '../seed/lib';
+import { main as placeOrder, placeTestOrder } from './place-test-order';
 import { main as setPrice, setListLinePrice } from './set-list-line-price';
 import { main as setPublished, setOfferPublished } from './set-offer-published';
 
@@ -49,5 +50,23 @@ describe('demo helpers', () => {
     const fake = api({ 'products/key=malva-offer-x': { version: 2 } });
     expect(await setPublished(['--confirm-project', 'spec-test-b2c-telecom', 'malva-offer-x', 'false'], { api: fake, source: SOURCE, log: () => undefined })).toBe(EXIT.OK);
     expect(fake.posts).toHaveLength(1);
+  });
+
+  it('places an order from an Active cart with the generated number and prints nothing else', async () => {
+    const fake = api({ 'carts/c1': { id: 'c1', version: 3, cartState: 'Active' } });
+    const lines: string[] = [];
+    expect(await placeOrder(['--confirm-project', 'spec-test-b2c-telecom', '--cart-id', 'c1'], { api: fake, source: SOURCE, log: (line) => lines.push(line) })).toBe(EXIT.OK);
+    expect(lines).toHaveLength(1);
+    expect(lines[0]).toMatch(/^MLV-[0-9A-HJKMNP-TV-Z]{8}$/);
+    expect(fake.posts).toEqual([{ path: 'orders', body: { cart: { typeId: 'cart', id: 'c1' }, version: 3, orderNumber: lines[0], paymentState: 'Paid' } }]);
+    expect(JSON.stringify(fake.posts)).not.toContain('Recurring');
+  });
+
+  it('refuses a cart that is missing or already ordered, and a missing project confirmation', async () => {
+    const fake = api({ 'carts/c2': { id: 'c2', version: 1, cartState: 'Ordered' } });
+    await expect(placeTestOrder(fake, 'nope')).rejects.toThrow('No cart');
+    await expect(placeTestOrder(fake, 'c2')).rejects.toThrow('only an Active cart');
+    expect(await placeOrder(['--cart-id', 'c2'], { api: fake, source: SOURCE, log: () => undefined })).toBe(EXIT.TARGET_REFUSED);
+    expect(fake.posts).toHaveLength(0);
   });
 });

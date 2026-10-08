@@ -18,12 +18,13 @@ function collect(dir: string, out: string[]): string[] {
 }
 
 // scripts/** and the two ct-owning folders may use the SDK; nothing else does (types come from @/lib/types).
+// The hosted Checkout's browser SDK (`@commercetools/checkout-browser-sdk`, workstream U) is a client widget, not the API SDK: allowed in components.
 describe('no SDK leak', () => {
   it('no file outside lib/ct, lib/mappers and scripts imports @commercetools/*', () => {
     const files = SCANNED.filter((dir) => existsSync(path.join(root, dir))).flatMap((dir) => collect(dir, []));
     const offenders = files
       .filter((file) => !ALLOWED.some((prefix) => file.startsWith(prefix)))
-      .filter((file) => /from\s+['"]@commercetools\/|import\(\s*['"]@commercetools\/|require\(\s*['"]@commercetools\//.test(readFileSync(path.join(root, file), 'utf8')));
+      .filter((file) => /from\s+['"]@commercetools\/(?!checkout-browser-sdk)|import\(\s*['"]@commercetools\/(?!checkout-browser-sdk)|require\(\s*['"]@commercetools\/(?!checkout-browser-sdk)/.test(readFileSync(path.join(root, file), 'utf8')));
     expect(offenders).toEqual([]);
   });
 });
