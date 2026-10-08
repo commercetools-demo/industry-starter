@@ -352,6 +352,7 @@
       "reason": "Reason for visit",
       "reasonPlaceholder": "Briefly describe your symptoms or question",
       "consent": "We use your reason for visit only to prepare your appointment. Bookings made as a guest are deleted 90 days after the visit unless you create an account.",
+      "consentPatient": "We use your reason for visit only to prepare your appointment.",
       "confirm": "Confirm booking",
       "confirming": "Booking…",
       "taken": "That time is no longer available. Pick another time.",

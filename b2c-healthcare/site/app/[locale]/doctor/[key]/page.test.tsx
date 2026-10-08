@@ -20,7 +20,17 @@ vi.mock('@/i18n/routing', async (importOriginal) => ({
 }));
 const getDoctor = vi.fn();
 vi.mock('@/lib/ct/doctors', () => ({ getDoctorByKeyCached: (...a: unknown[]) => getDoctor(...a) }));
-vi.mock('@/lib/session', () => ({ getSession: async () => ({}) }));
+const getSession = vi.fn();
+vi.mock('@/lib/session', () => ({ getSession: () => getSession() }));
+const getCustomerById = vi.fn();
+vi.mock('@/lib/ct/identity', () => ({ getCustomerById: (...a: unknown[]) => getCustomerById(...a) }));
+const panel = vi.fn();
+vi.mock('@/components/booking/BookingPanel', () => ({
+  BookingPanel: (props: unknown) => {
+    panel(props);
+    return <div data-testid="panel-stub" />;
+  },
+}));
 
 import DoctorPage, { generateMetadata } from './page';
 import DoctorNotFound from './not-found';
@@ -60,7 +70,43 @@ const render = async (query: Record<string, string> = {}, key = 'mlv-doc-amara-o
 
 beforeEach(() => {
   getDoctor.mockReset().mockResolvedValue(doctor());
+  getSession.mockReset().mockResolvedValue({});
+  getCustomerById.mockReset();
+  panel.mockClear();
   notFound.mockClear();
+});
+
+describe('design-pdp: Booking panel wiring (page)', () => {
+  it('opens in the mode the list sent (when offered), with the doctor fees, for a guest', async () => {
+    await render({ m: 'office' });
+    expect(screen.getByTestId('panel-stub')).toBeInTheDocument();
+    expect(panel).toHaveBeenCalledWith({
+      doctor: { key: 'mlv-doc-amara-okafor', name: 'Dr. Amara Okafor', modes: ['remote', 'office'], fees: { remote: money(3500), office: money(5500) } },
+      initialMode: 'office',
+      patient: null,
+    });
+    expect(getCustomerById).not.toHaveBeenCalled();
+  });
+
+  it('Who is booking: a signed-in visitor is passed with the name and email of the account', async () => {
+    getSession.mockResolvedValue({ customerId: 'c1' });
+    getCustomerById.mockResolvedValue({ id: 'c1', email: 'sam.rivera@example.com', firstName: 'Sam', lastName: 'Rivera', isEmailVerified: true });
+    await render({ m: 'remote' });
+    expect(panel.mock.calls[0][0]).toMatchObject({ patient: { name: 'Sam Rivera', email: 'sam.rivera@example.com' } });
+  });
+
+  it('Who is booking: an account that cannot be read is treated as a guest, not an error', async () => {
+    getSession.mockResolvedValue({ customerId: 'c1' });
+    getCustomerById.mockRejectedValue(new Error('down'));
+    await render({ m: 'remote' });
+    expect(panel.mock.calls[0][0]).toMatchObject({ patient: null });
+  });
+
+  it('a one-mode doctor opens in the mode it offers, whatever `m` says', async () => {
+    getDoctor.mockResolvedValue(doctor({ modes: ['office'], fees: { office: money(5500) } }));
+    await render({ m: 'remote' });
+    expect(panel.mock.calls[0][0]).toMatchObject({ initialMode: 'office' });
+  });
 });
 
 describe('design-pdp: Doctor profile layout', () => {

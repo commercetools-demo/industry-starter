@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { BookingPanel } from '@/components/booking/BookingPanel';
+import type { BookingPatient } from '@/components/booking/BookingModal';
 import { ProfileAbout, ProfileHeader, ProfileReviews } from '@/components/doctors/DoctorProfile';
 import { Link } from '@/i18n/routing';
 import { getDoctorByKeyCached } from '@/lib/ct/doctors';
+import { getCustomerById } from '@/lib/ct/identity';
 import { backToList, isConsultationMode } from '@/lib/doctor-back';
 import { getSession } from '@/lib/session';
 import type { ConsultationMode } from '@/lib/types';
@@ -21,6 +24,18 @@ async function priceContext(locale: string) {
   return { currency: session.currency ?? region.currency, country: session.country ?? region.country, session };
 }
 
+/** The signed-in patient for the panel footer and the confirm dialog (name and email come from the account, never from the cookie). */
+async function currentPatient(customerId: string | undefined): Promise<BookingPatient | null> {
+  if (!customerId) return null;
+  try {
+    const user = await getCustomerById(customerId);
+    if (!user) return null;
+    return { name: [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email, email: user.email };
+  } catch {
+    return null;
+  }
+}
+
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale, key } = await params;
   const { currency, country } = await priceContext(locale);
@@ -35,14 +50,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 /**
  * Doctor profile (design-pdp). The product read is shared with `generateMetadata` (one call per request); an
- * unknown key is a real 404 (`not-found.tsx`). The booking panel is added next to the content (workstream L-04).
+ * unknown key is a real 404 (`not-found.tsx`).
  */
 export default async function DoctorPage({ params, searchParams }: { params: Params; searchParams: SearchParams }) {
   const { locale, key } = await params;
   setRequestLocale(locale);
   const query = await searchParams;
-  const { currency, country } = await priceContext(locale);
-  const doctor = await getDoctorByKeyCached(key, locale, currency, country);
+  const { currency, country, session } = await priceContext(locale);
+  const [doctor, patient] = await Promise.all([getDoctorByKeyCached(key, locale, currency, country), currentPatient(session.customerId)]);
   if (!doctor) notFound();
   const t = await getTranslations('doctor');
 
@@ -64,7 +79,7 @@ export default async function DoctorPage({ params, searchParams }: { params: Par
           <ProfileAbout doctor={doctor} />
           <ProfileReviews reviews={doctor.reviews} />
         </div>
-        <aside data-testid="booking-column" />
+        <BookingPanel doctor={{ key: doctor.key, name: doctor.name, modes: doctor.modes, fees: doctor.fees }} initialMode={mode} patient={patient} />
       </div>
     </div>
   );

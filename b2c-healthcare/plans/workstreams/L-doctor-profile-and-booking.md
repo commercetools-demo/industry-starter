@@ -13,9 +13,9 @@ Booking panel (client, data uncached from `GET /api/doctors/:key/slots?mode=`): 
 ## Tasks
 - [x] L-01 `lib/ct/doctors.ts getDoctorByKey` (+reviews F-04, rating stats) and mapper `DoctorProfile`; cached/`cache()`d product read shared with `generateMetadata`; 404 mapping; tests [SKILL: commercetools-storefront] [SPEC: design-pdp]
 - [x] L-02 Profile page server components (header, About, Reviews omitted when empty) + back-link context (`back` param sanitised); tests incl. unknown doctor → 404 [SPEC: design-pdp]
-- [ ] L-03 `GET /api/doctors/[key]/slots` (uncached, `Cache-Control: no-store`) returning days → slots with zone label; test no caching and past-slot hiding [SKILL: commercetools-storefront] [SPEC: product-detail-page]
-- [ ] L-04 `BookingPanel` client: mode toggle (disabled unsupported mode), day picker, slot grid, empty-day note, "Booking as…" footer; fee from the chosen mode; no-price state; tests [SPEC: product-detail-page]
-- [ ] L-05 `BookingModal` (guest + signed-in variants, validation, consent line from messages, close/Escape/focus trap, busy state), tests per scenario [SPEC: design-pdp]
+- [x] L-03 `GET /api/doctors/[key]/slots` (uncached, `Cache-Control: no-store`) returning days → slots with zone label; test no caching and past-slot hiding [SKILL: commercetools-storefront] [SPEC: product-detail-page]
+- [x] L-04 `BookingPanel` client: mode toggle (disabled unsupported mode), day picker, slot grid, empty-day note, "Booking as…" footer; fee from the chosen mode; no-price state; tests [SPEC: product-detail-page]
+- [x] L-05 `BookingModal` (guest + signed-in variants, validation, consent line from messages, close/Escape/focus trap, busy state), tests per scenario [SPEC: design-pdp]
 - [ ] L-06 `POST /api/bookings` (validates with zod-less manual validator, uses session patient when signed in, requestId idempotency, 409 slot-taken, never logs `reason`), `lib/booking-access.ts` signed `malva_bk` cookie; tests incl. concurrent claims → one winner [SKILL: commercetools-commerce-patterns] [SPEC: design-pdp]
 - [ ] L-07 `/booked/[ref]` page with access rule (owner/guest-session only, else not found), content rows, guest nudge vs "My appointments"; tests incl. other visitor [SPEC: design-pdp]
 - [ ] L-08 Health-data guard test: a test that boots the booking route with a spy logger and asserts `reason`, `phone`, `email` never reach any log call or error response [SPEC: design-pdp]
@@ -30,24 +30,24 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [x] Back link keeps context
 - [x] Unknown doctor
 #### design-pdp › Booking panel
-- [ ] Mode toggle
-- [ ] Day and slots
-- [ ] Day with no free time
-- [ ] Who is booking
+- [x] Mode toggle
+- [x] Day and slots
+- [x] Day with no free time
+- [x] Who is booking
 #### design-pdp › Confirm booking modal
-- [ ] Guest
-- [ ] Signed-in patient
-- [ ] Close
-- [ ] Slot taken meanwhile
+- [x] Guest
+- [x] Signed-in patient
+- [x] Close
+- [x] Slot taken meanwhile
 - [ ] Health data minimization
 #### design-pdp › Booking confirmation page
 - [ ] Confirmation content
 - [ ] Guest nudge
 - [ ] Access to a booking
 #### product-detail-page › Product detail page showing the buyer's effective price
-- [ ] Quantity crosses a tier
-- [ ] No price resolves
-- [ ] Variant out of stock
+- [ ] Quantity crosses a tier — N/A: a consultation is booked, not ordered by quantity; one price per mode, no tiers
+- [x] No price resolves
+- [ ] Variant out of stock — N/A: a doctor has no inventory; free times (not stock) are covered by the booking panel scenarios
 <!-- SCENARIOS:END -->
 
 ## Browser recipe
