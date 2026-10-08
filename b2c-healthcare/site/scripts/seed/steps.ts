@@ -1,9 +1,10 @@
 import { CATEGORIES, categoryDrafts } from './data/categories';
+import { SAME_DAY_ZONE, SHIPPING_METHODS } from './data/shipping';
 import { STATES, stateDraft, transitionRefs } from './data/states';
 import { TAX_CATEGORIES } from './data/tax';
 import { CHANNELS, CUSTOM_TYPES, PRODUCT_TYPES } from './data/types';
 import {
-  applyActions, diffProductType, diffTax, diffType, ensureKeyed, listAll, pickDiff,
+  applyActions, diffProductType, diffShipping, diffTax, diffType, diffZone, ensureKeyed, listAll, pickDiff,
   type Ctx, type EnsureResult, type Rec, type Step,
 } from './lib';
 
@@ -62,4 +63,12 @@ export function categorySteps(ctx: Ctx): Step[] {
   return drafts.map((d, i) => ({ name: `category ${CATEGORIES[i].key}`, run: () => ensureKeyed(ctx, 'categories', d, diffCategory) }));
 }
 
-export const foundationSteps = (ctx: Ctx): Step[] => [...channelSteps(ctx), ...taxSteps(ctx), ...stateSteps(ctx), ...typeSteps(ctx), ...categorySteps(ctx)];
+/** Zone first, then methods (a method references its zone and tax category by key). */
+export function shippingSteps(ctx: Ctx): Step[] {
+  return [
+    { name: `zone ${SAME_DAY_ZONE.key}`, run: () => ensureKeyed(ctx, 'zones', SAME_DAY_ZONE, diffZone) },
+    ...SHIPPING_METHODS.map((m) => ({ name: `shipping method ${m.key}`, run: () => ensureKeyed(ctx, 'shippingMethods', m, diffShipping) })),
+  ];
+}
+
+export const foundationSteps = (ctx: Ctx): Step[] => [...channelSteps(ctx), ...taxSteps(ctx), ...stateSteps(ctx), ...typeSteps(ctx), ...categorySteps(ctx), ...shippingSteps(ctx)];

@@ -240,9 +240,10 @@ export const diffZone = (e: Rec, d: Rec): string | null => {
   return norm(e) === norm(d) ? null : 'locations differ';
 };
 
-type ZoneRate = { zone: { key?: string; id?: string }; shippingRates: { price: { centAmount: number; currencyCode: string }; freeAbove?: unknown }[] };
+type ZoneRate = { shippingRates: { price: { centAmount: number; currencyCode: string }; freeAbove?: { centAmount: number } }[] };
+/** A stored zone rate references the zone by id only, so the zone is not compared here; the rates (cents) and the default flag are. */
 export const diffShipping = (e: Rec, d: Rec): string | null => {
-  const flat = (r: Rec) => sortedJson(((r.zoneRates as ZoneRate[]) ?? []).flatMap((z) => z.shippingRates.map((s) => [z.zone.key ?? null, s.price.centAmount, s.price.currencyCode, s.freeAbove ?? null])));
+  const flat = (r: Rec) => sortedJson(((r.zoneRates as ZoneRate[]) ?? []).flatMap((z) => z.shippingRates.map((s) => [s.price.centAmount, s.price.currencyCode, s.freeAbove?.centAmount ?? null])));
   if (e.isDefault !== d.isDefault) return `isDefault differs (existing ${String(e.isDefault)}, wanted ${String(d.isDefault)})`;
   return flat(e) === flat(d) ? null : 'zone rates differ (check the cents)';
 };
