@@ -13,50 +13,50 @@ Rules (BFF-only enforcement, D-028, **documented gap**: direct API calls can byp
 Add to cart (`POST /api/cart/rx-lines`) is implemented in O (cart core); N provides the validation function `validateRxSelection(patientRef, rx, lineRefs)` used by both.
 
 ## Tasks
-- [ ] N-01 `lib/dispense/rules.ts` pure functions: `checkAuthorization`, `checkCeiling`, `checkShelfLife` returning typed refusal reasons (`NO_REFILLS | EXPIRED | OUT_OF_STOCK | CEILING | SHELF_LIFE | OK` + remaining quantity) with table tests for every scenario of the three specs [SKILL: commercetools-commerce-patterns] [SPEC: prescription-bound-supply]
-- [ ] N-02 `lib/ct/dispense-ledger.ts`: read remaining, `consumeAuthorization(orderId, lines)` idempotent on order id (second call is a no-op), `restoreAuthorization(orderId)`; optimistic-concurrency tests with simulated version conflicts and retries [SKILL: commercetools-commerce-patterns] [SPEC: prescription-bound-supply]
-- [ ] N-03 Per-party/per-period ceiling: `lib/ct/ceilings.ts` (`getUsedInPeriod(patientRef, sku, month)`, written by N-02), tests: second order inside period refused on cumulative count, period rollover frees the ceiling, ceiling lowered while a cart is open [SKILL: commercetools-commerce-patterns] [SPEC: dispensing-quantity-limit]
-- [ ] N-04 Native limits: confirm the seed's `setInventoryLimits`, map `LineItemQuantityAboveLimit`-style platform errors to the same refusal message shape; test mapper [SKILL: commercetools-platform] [SPEC: dispensing-quantity-limit]
-- [ ] N-05 `lib/ct/shelf-life.ts`: promise computed from inventory `expiryDate` and `minRemainingShelfLifeDays`; short-dated presentation (actual expiry + own price), excluded stock with reason; "undated goods unaffected"; tests [SKILL: commercetools-commerce-patterns] [SPEC: expiry-dated-supply]
-- [ ] N-06 `POST /api/prescriptions/lookup` with normalisation, rate limit, identical not-found for foreign/unknown, no logging of input; tests per scenario incl. "same message for both" and 429 [SKILL: commercetools-storefront] [SPEC: design-plp]
-- [ ] N-07 `GET /api/prescriptions` (own prescriptions for quick-picks, no-store) and `validateRxSelection` used by O [SKILL: commercetools-storefront] [SPEC: prescription-bound-supply]
-- [ ] N-08 Page `/prescriptions` + `RxLookupForm`, `RxResultCard`, `MedicationRow` (disabled-with-reason states, select-all, selected count and total, empty "Your medications will appear here after you search."), toast "Added to cart · View cart →" 5 s (wired to O's hook); tests [SPEC: design-plp]
-- [ ] N-09 Order-line record shape `lib/dispense/line-record.ts` (`rxNumber`, `rxLineRef`, `prescribedQty`, `authorizationParams` copy, `suppliedLots[]`) + test that no `sig`/diagnosis/name-of-condition fields exist in the type; used by Q [SPEC: prescription-bound-supply]
+- [x] N-01 `lib/dispense/rules.ts` pure functions: `checkAuthorization`, `checkCeiling`, `checkShelfLife` returning typed refusal reasons (`NO_REFILLS | EXPIRED | OUT_OF_STOCK | CEILING | SHELF_LIFE | OK` + remaining quantity) with table tests for every scenario of the three specs [SKILL: commercetools-commerce-patterns] [SPEC: prescription-bound-supply]
+- [x] N-02 `lib/ct/dispense-ledger.ts`: read remaining, `consumeAuthorization(orderId, lines)` idempotent on order id (second call is a no-op), `restoreAuthorization(orderId)`; optimistic-concurrency tests with simulated version conflicts and retries [SKILL: commercetools-commerce-patterns] [SPEC: prescription-bound-supply]
+- [x] N-03 Per-party/per-period ceiling: `lib/ct/ceilings.ts` (`getUsedInPeriod(patientRef, sku, month)`, written by N-02), tests: second order inside period refused on cumulative count, period rollover frees the ceiling, ceiling lowered while a cart is open [SKILL: commercetools-commerce-patterns] [SPEC: dispensing-quantity-limit]
+- [x] N-04 Native limits: confirm the seed's `setInventoryLimits`, map `LineItemQuantityAboveLimit`-style platform errors to the same refusal message shape; test mapper [SKILL: commercetools-platform] [SPEC: dispensing-quantity-limit]
+- [x] N-05 `lib/ct/shelf-life.ts`: promise computed from inventory `expiryDate` and `minRemainingShelfLifeDays`; short-dated presentation (actual expiry + own price), excluded stock with reason; "undated goods unaffected"; tests [SKILL: commercetools-commerce-patterns] [SPEC: expiry-dated-supply]
+- [x] N-06 `POST /api/prescriptions/lookup` with normalisation, rate limit, identical not-found for foreign/unknown, no logging of input; tests per scenario incl. "same message for both" and 429 [SKILL: commercetools-storefront] [SPEC: design-plp]
+- [x] N-07 `GET /api/prescriptions` (own prescriptions for quick-picks, no-store) and `validateRxSelection` used by O [SKILL: commercetools-storefront] [SPEC: prescription-bound-supply]
+- [x] N-08 Page `/prescriptions` + `RxLookupForm`, `RxResultCard`, `MedicationRow` (disabled-with-reason states, select-all, selected count and total, empty "Your medications will appear here after you search."), toast "Added to cart · View cart →" 5 s (wired to O's hook); tests [SPEC: design-plp]
+- [x] N-09 Order-line record shape `lib/dispense/line-record.ts` (`rxNumber`, `rxLineRef`, `prescribedQty`, `authorizationParams` copy, `suppliedLots[]`) + test that no `sig`/diagnosis/name-of-condition fields exist in the type; used by Q [SPEC: prescription-bound-supply]
 
 ## Scenarios
 Every scenario is a unit test (or a scripted check) named after it.
 <!-- SCENARIOS:BEGIN (generated by plans/verify-plan.mjs --sync) -->
 #### design-plp › Prescription lookup by RX number
-- [ ] Lookup
-- [ ] Unknown or foreign RX
-- [ ] Before searching
-- [ ] Selection
-- [ ] Add to cart
-- [ ] Medication that cannot be dispensed
-- [ ] Quick-pick badges
+- [x] Lookup
+- [x] Unknown or foreign RX
+- [x] Before searching
+- [x] Selection
+- [x] Add to cart
+- [x] Medication that cannot be dispensed
+- [x] Quick-pick badges
 #### prescription-bound-supply › Supply bound to an authorization, and to what is left on it
-- [ ] Supply within the authorization
-- [ ] Request exceeds what remains
-- [ ] Authorization outside its window
-- [ ] Parameters readable from the order
-- [ ] Abandoned cart consumes nothing
-- [ ] Standing replenishment stops at the window
+- [x] Supply within the authorization
+- [x] Request exceeds what remains
+- [x] Authorization outside its window
+- [x] Parameters readable from the order
+- [x] Abandoned cart consumes nothing
+- [x] Standing replenishment stops at the window
 #### dispensing-quantity-limit › Quantity ceilings that hold across a period, not just a basket
-- [ ] Order within the ceiling
-- [ ] Single request exceeding the ceiling
-- [ ] Second order inside the same period
-- [ ] Request arriving outside the storefront
-- [ ] Period rolls over
-- [ ] Ceiling lowered while a cart is open
-- [ ] Override where permitted
+- [x] Order within the ceiling
+- [x] Single request exceeding the ceiling
+- [x] Second order inside the same period
+- [ ] Request arriving outside the storefront — N/A: limits are enforced in the BFF only (D-028, Q-005 = B); documented in the README "Known gap: limits bypassable through the API"
+- [x] Period rolls over
+- [x] Ceiling lowered while a cart is open
+- [ ] Override where permitted — N/A: excluded for B2C in the spec
 #### expiry-dated-supply › Remaining shelf life promised before buying, and kept afterwards
-- [ ] Remaining life shown before commitment
-- [ ] Account minimum excludes unsuitable stock
-- [ ] Short dated stock offered on its own terms
-- [ ] Supplied lot recorded
-- [ ] Stock ages before dispatch
-- [ ] Mixed lots on one line
-- [ ] Undated goods unaffected
+- [x] Remaining life shown before commitment
+- [x] Account minimum excludes unsuitable stock
+- [x] Short dated stock offered on its own terms
+- [x] Supplied lot recorded
+- [x] Stock ages before dispatch
+- [x] Mixed lots on one line
+- [x] Undated goods unaffected
 <!-- SCENARIOS:END -->
 
 ## Browser recipe

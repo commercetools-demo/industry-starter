@@ -25,6 +25,8 @@ export interface Prescription {
   refillsLeft: number;
   /** ISO date after which the prescription cannot be dispensed; absent means no expiry. */
   expiresAt?: string;
+  /** Order ids that consumed a refill (dispense ledger, workstream N); makes the decrement idempotent in one versioned write. */
+  consumedBy?: string[];
   lines: PrescriptionLine[];
 }
 

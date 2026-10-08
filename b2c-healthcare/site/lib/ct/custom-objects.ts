@@ -11,6 +11,8 @@ export const CONTAINERS = {
   credential: 'malva-credential',
   counter: 'malva-counter',
   ratelimit: 'malva-ratelimit',
+  /** One entry per order id: what an order consumed from which prescription (workstream N). */
+  dispenseLedger: 'malva-dispense-ledger',
 } as const;
 
 export interface StoredObject<T> { key: string; version: number; value: T }

@@ -623,5 +623,43 @@
       "bookAnother": "Book another",
       "home": "Back to home"
     }
+  },
+  "rx": {
+    "metaTitle": "Prescriptions",
+    "title": "Prescriptions",
+    "sub": "Enter the RX number from your doctor to review your medications and order delivery.",
+    "inputLabel": "RX number",
+    "inputPlaceholder": "e.g. RX-48213",
+    "search": "Search",
+    "searching": "Searching",
+    "yours": "Your prescriptions",
+    "empty": "Your medications will appear here after you search.",
+    "notFound": "We couldn’t find “{input}”. Check the number printed on your prescription.",
+    "rateLimited": "Too many lookups. Please try again in a few minutes.",
+    "error": "We could not look up your prescription. Please try again.",
+    "prescribedBy": "Prescribed by {doctor} · {date}",
+    "patient": "Patient: {name}",
+    "refillsLeft": "{count, plural, one {# refill left} other {# refills left}}",
+    "selectAll": "Select all medications",
+    "qty": "Qty {count}",
+    "selected": "{count} selected",
+    "total": "Informational total. Your cart shows the final price.",
+    "addToCart": "Add to cart",
+    "adding": "Adding",
+    "addFailed": "We could not add these medications to your cart. Please try again.",
+    "added": "Added to cart",
+    "viewCart": "View cart →",
+    "shelfLife": "{months, plural, one {Minimum # month} other {Minimum # months}} of shelf life on delivery",
+    "shortDated": "Short-dated · expires {date}",
+    "monthlyNote": "Limits count calendar months.",
+    "reason": {
+      "NO_REFILLS": "No refills left",
+      "NO_REFILLS_SOME": "Only {remaining} left on this prescription",
+      "EXPIRED": "This prescription has expired",
+      "OUT_OF_STOCK": "Out of stock",
+      "CEILING_ORDER": "Limit of {ceiling} per order · {remaining} available",
+      "CEILING_PERIOD": "Monthly limit of {ceiling} reached · {remaining} available this calendar month",
+      "SHELF_LIFE": "Stock expires {date}, too soon to meet the minimum shelf life"
+    }
   }
 }

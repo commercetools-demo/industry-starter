@@ -17,3 +17,8 @@ export const API_ACCOUNT_PROFILE = '/api/account/profile';
 
 export const API_BOOKINGS = '/api/bookings';
 export const apiDoctorSlots = (doctorKey: string, mode: string): string => `/api/doctors/${encodeURIComponent(doctorKey)}/slots?mode=${encodeURIComponent(mode)}`;
+
+export const API_PRESCRIPTIONS = '/api/prescriptions';
+export const API_PRESCRIPTIONS_LOOKUP = '/api/prescriptions/lookup';
+/** Implemented by the cart workstream (O). */
+export const API_CART_RX_LINES = '/api/cart/rx-lines';

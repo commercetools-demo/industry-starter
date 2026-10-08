@@ -228,3 +228,45 @@ export interface BookingView {
   fee: Money | null;
   guest: boolean;
 }
+
+// ---- prescriptions (workstream N) -------------------------------------------------------------
+
+/** `ok` can be selected; `short-dated` can be selected on its own terms; the rest are the refusal reasons shown on the row. */
+export type RxLineStatus = 'ok' | 'short-dated' | 'NO_REFILLS' | 'EXPIRED' | 'OUT_OF_STOCK' | 'CEILING' | 'SHELF_LIFE';
+
+/** One medication row of a prescription card; shown to the owner of the prescription only. */
+export interface RxLineView {
+  lineRef: string;
+  name: string;
+  sig: string;
+  qty: number;
+  /** Catalog pack price (the short-dated price for a short-dated row); null when the catalog has none. */
+  price: Money | null;
+  status: RxLineStatus;
+  selectable: boolean;
+  /** "N available" under the rule that refused (units for refills, packs for stock and ceilings). */
+  remaining?: number;
+  ceiling?: number;
+  /** `order` per-order limit, `period` calendar-month ceiling. */
+  scope?: 'order' | 'period';
+  /** Actual expiry of the stock (short-dated and shelf-life rows). */
+  expiryDate?: string;
+  /** "Minimum N months of shelf life on delivery"; null for undated goods or no promise. */
+  minShelfLifeMonths: number | null;
+}
+
+export interface RxView {
+  number: string;
+  prescriber: string;
+  /** ISO date. */
+  issuedAt: string;
+  refillsLeft: number;
+  patientName: string;
+  lines: RxLineView[];
+}
+
+/** The signed-in patient's own prescriptions for quick-picks (numbers and dates only; no medication data). */
+export interface RxQuickPick {
+  number: string;
+  issuedAt: string;
+}
