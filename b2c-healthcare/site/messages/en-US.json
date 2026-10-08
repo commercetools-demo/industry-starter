@@ -48,6 +48,7 @@
   },
   "shell": {
     "logoLabel": "Malva home",
+    "goHome": "Go to the home page",
     "mainNav": "Main",
     "nav": {
       "home": "Home",
