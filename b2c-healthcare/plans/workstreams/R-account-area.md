@@ -39,14 +39,14 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [x] Overview content
 - [x] Zero states
 #### design-account-area › Lab tests
-- [x] List
+- [ ] List — N/A: the order list is built by workstream S (this workstream only ships the /account/orders stub and the tile count)
 - [x] Detail header
 - [x] Result table
 - [x] Processing test
 - [x] Actions
 - [x] Unknown or foreign test
 #### design-account-area › Appointments
-- [x] List
+- [ ] List — N/A: the order list is built by workstream S (this workstream only ships the /account/orders stub and the tile count)
 - [x] Empty
 - [x] Cancel or reschedule
 #### design-account-area › Orders
