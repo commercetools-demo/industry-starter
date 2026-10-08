@@ -7,6 +7,10 @@
 
 Connectivity products conflict in ways a general catalog has no vocabulary for: two plans on one line, a legacy tariff alongside its replacement, a promotional package that cannot be held with the loyalty rate the customer already has. None of these are stock problems and none are price problems, so nothing in an ordinary cart notices them. The conflict is real all the same, and where it is discovered decides what it costs. Caught in the cart it is a choice the customer makes for themselves. Caught after the order it is a provisioning failure, a retention call and, often, a refund — for a rule that was known before the customer ever clicked.
 
+## Plan notes
+
+**As built by workstream K (D-021, D-022).** All refusals are absolute (no agent override). "Conflict with a service already held" reads the customer's non-cancelled orders and recurring orders (D-021). Replacement is offered as a choice in the listing and the bundle ("Replace X with Y"). Cart-line conflicts reported by J and K are de-duplicated (`dedupeVerdict`).
+
 ## Requirements
 
 ### Requirement: Offers that cannot be held at the same time

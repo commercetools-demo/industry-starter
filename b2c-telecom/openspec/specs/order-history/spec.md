@@ -7,6 +7,10 @@
 
 Order history is the highest-risk read in the account area, because the difference between "my orders" and "my company's orders" is an authorization decision and not a filter on a list. A buyer scoped to their own identity can never be shown a colleague's purchase, while an administrator who cannot see the team's orders has no way to reconcile spend, so both scopes have to be explicit.
 
+## Plan notes
+
+**B2B scope excluded (D-005, D-059, D-070).** No role-based visibility of other members' orders (`as-associate` endpoints), no cost-center filter and no invoice download. "Own orders only" and "Detail of an order not theirs" are built as: a customer sees only orders whose `customerId` equals the session's (no `/me` endpoints, D-070; a foreign order number answers like a missing one). "Reorder with an unavailable item" uses cart replication plus a published-SKU check (S). Shipment tracking links and returns inside the history are not built (tracking has no source; the return flow is workstream V, D-040).
+
 ## Requirements
 
 ### Requirement: Order history scoped to what the buyer may see

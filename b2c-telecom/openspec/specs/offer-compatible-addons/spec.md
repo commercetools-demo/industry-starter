@@ -7,6 +7,10 @@
 
 A connectivity offer is never one thing. It is a base service plus the extras that may ride on it — premium content, extra lines, a router, protection — and the set of extras that may ride on it is a property of that particular offer, not of the catalog. Sold the other way round, as a flat list of extras a customer may add to anything, the cart will happily accept combinations the network cannot deliver, and the failure surfaces at provisioning: days after the sale, as an order that cannot be fulfilled and a customer who was already told yes. Compatibility is cheap to enforce at add time and expensive to discover afterwards.
 
+## Plan notes
+
+**As built by workstream J (Q-011).** "Incompatible add on refused" is tested with the reason `FAMILY_MISMATCH` (the allow-list reading was dropped because it contradicted the seed). Add-ons follow their parent through the line custom field `parentLineItemId`; removing a plan with dependents needs confirmation (`cascade=true`, D-026).
+
 ## Requirements
 
 ### Requirement: Add-ons an offer allows, and nothing else
