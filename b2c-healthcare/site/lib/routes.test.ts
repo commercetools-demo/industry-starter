@@ -15,7 +15,7 @@ function pagePatterns(dir: string = appDir): string[][] {
       if (entry.isDirectory()) walk(join(current, entry.name));
       else if (entry.name === 'page.tsx') {
         const segments = relative(dir, current).split(sep).filter(Boolean);
-        if (!segments.some((segment) => segment.startsWith('%5F') || segment.startsWith('_'))) out.push(segments);
+        if (!segments.some((segment) => segment.startsWith('%5F') || segment.startsWith('_') || segment.startsWith('[...'))) out.push(segments);
       }
     }
   };
