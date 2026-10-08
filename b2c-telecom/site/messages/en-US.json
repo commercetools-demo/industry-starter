@@ -1263,6 +1263,9 @@
     }
   },
   "orders": {
+    "actions": {
+      "title": "Order actions"
+    },
     "cancel": {
       "button": "Cancel order",
       "until": "You can cancel this order until {date}.",
@@ -1301,6 +1304,7 @@
     },
     "cancelled": {
       "title": "This order was cancelled on {date}.",
+      "titleNoDate": "This order was cancelled.",
       "reason": "Reason: {reason}",
       "noCharges": "No further charges will be made."
     },

@@ -1263,6 +1263,9 @@
     }
   },
   "orders": {
+    "actions": {
+      "title": "Bestellaktionen"
+    },
     "cancel": {
       "button": "Bestellung stornieren",
       "until": "Sie können diese Bestellung bis zum {date} stornieren.",
@@ -1301,6 +1304,7 @@
     },
     "cancelled": {
       "title": "Diese Bestellung wurde am {date} storniert.",
+      "titleNoDate": "Diese Bestellung wurde storniert.",
       "reason": "Grund: {reason}",
       "noCharges": "Es fallen keine weiteren Kosten an."
     },
