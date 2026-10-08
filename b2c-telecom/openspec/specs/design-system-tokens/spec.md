@@ -9,6 +9,10 @@ The Malva Telecom design (Honey Locust yellow structure, After-Party Pink action
 
 Design reference: `design/DESIGN.md`, token source `design/source/_ds/tokens.css`.
 
+## Plan notes
+
+**As built by workstream C (D-053).** Tokens carry over verbatim; the extension block adds `--color-danger: #a1262b` and `--ext-` prefixed off-scale values. Some contrast figures in the plan were corrected (white on pink-950 is 15.74).
+
 ## Requirements
 
 ### Requirement: Design tokens carried verbatim and used by name

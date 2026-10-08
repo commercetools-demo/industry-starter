@@ -7,6 +7,10 @@
 
 A connectivity campaign is never one edit. It is a new offer, the prices that go with it, the promotion that funds it, and the withdrawal of whatever it replaces — authored over days by several people and meant to appear at one moment. Released piecemeal, the intermediate states are all sellable: the new offer live at the old price, the promotion active with nothing to apply to, the replaced offer withdrawn before its successor appears. Each is a real order at a wrong price, honoured because the customer did nothing wrong. Campaigns also have launch times that marketing has already committed to externally, so "go live when the last edit is saved" is not a plan. Grouping the changes and releasing them together is what makes the launch an event rather than a window of inconsistency.
 
+## Plan notes
+
+**Seeder-applied release manifests, no approval UI (D-057, D-069).** A release is a manifest validated, previewed (CLI report) and applied all-or-nothing by the seeding framework, scheduled through offer `end-time` and price validity; rollback applies the previous manifest. Excluded: the approval UI and the scenario "Authoring and releasing are separate" (D-069: no approver list, second-person approval or operator identity gate); "Preview before approval" is built as a preview before apply. As built: the new offer can lag up to the 60 s catalog TTL after the release instant (X finding 1).
+
 ## Requirements
 
 ### Requirement: A campaign's changes going live as one, or not at all

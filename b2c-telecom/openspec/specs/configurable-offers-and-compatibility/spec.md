@@ -9,6 +9,10 @@ A Malva offer is something a buyer assembles: a plan tier, a contract term, extr
 
 This capability implements the data and evaluation side of `offer-compatible-addons` and `mutually-exclusive-offers` for the Malva catalog.
 
+## Plan notes
+
+**As built by workstream J (D-022, D-024, D-025).** Rules are pure TypeScript shared by server and client (`lib/offers/`); no API Extension. `compatible-addons` and `compatible-equipment` are positive exceptions that skip family, technology and speed rules (Q-011); "Explicit exception overrides computed compatibility" is built that way. Included equipment satisfies required kinds, so live plans auto-add no equipment line today. Rule errors use the `OFFER_RULE_VIOLATION` 409 body.
+
 ## Requirements
 
 ### Requirement: Configurable offers with compatibility computed from catalog data
