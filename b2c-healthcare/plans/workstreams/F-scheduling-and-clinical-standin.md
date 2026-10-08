@@ -20,7 +20,7 @@ Server modules and seed data for everything that is **not** catalog data. All ar
 - [x] F-05 `lib/ct/ratelimit.ts` (5 failed lookups / 10 min / customer in `malva-ratelimit`, optimistic concurrency) with tests incl. window rollover [SKILL: commercetools-commerce-patterns]
 - [x] F-06 Seed data files: `data/schedules.ts`, `patients.ts`, `prescriptions.ts`, `labs.ts`, `reviews.ts`, `credentials.ts`, `bookings.ts` (past booking) and their seeding in `seed.ts`; customers created with `isEmailVerified` true and an address each; no real people, emails use `example.com` [SKILL: commercetools-catalog-migration] (live check pending: seed run, see plans/notes/F-todos.md)
 - [x] F-07 `seed:verify` additions: containers/counts, every lab's `orderedByDoctorKey` exists as a product, every RX line SKU exists, Sam's prescriptions match the prototype, a second seed run is a no-op [SKILL: commercetools-platform] (live check pending: `npm run seed:verify` on the project, see plans/notes/F-todos.md)
-- [ ] F-08 `scripts/seed/advance-order.ts <orderNumber> <state>` (QA tool moving an order through `mlv-*` states; refuses unknown transitions) [SKILL: commercetools-platform]
+- [x] F-08 `scripts/seed/advance-order.ts <orderNumber> <state>` (QA tool moving an order through `mlv-*` states; refuses unknown transitions) [SKILL: commercetools-platform] (live check pending: see plans/notes/F-todos.md)
 
 ## Scenarios
 No OpenSpec scenarios; acceptance = unit tests above and the Browser recipe.
