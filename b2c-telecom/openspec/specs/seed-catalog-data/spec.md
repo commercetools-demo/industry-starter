@@ -7,6 +7,10 @@
 
 Seed data is not filler. The storefront's hardest behaviours are compatibility refusals, included extras, term pricing and conflicting services, and a catalog without a case for each one means those behaviours are only ever tested by whoever happens to invent the right data by hand. The seed catalog is therefore specified as a set of named demonstration cases, each backed by concrete offers, so that a developer, a demo and an automated test all find the same router that cannot carry the top fiber speed and the same add-on that applies only to phone plans.
 
+## Plan notes
+
+**As built by workstream G (D-018, D-058).** 6 product types, 8 categories, 52 products (25 descriptive, 27 offers), 19 inventory entries, 6 cart discounts and the code `WELCOME10`, 5 demo customers and 3 demo orders. No Stores or Product Selections. EUR prices are the USD price rounded to whole euros. Demo order `MLV-DEMO-0003` totals 0 because the first-month-free discount applies (Q-010). Handset prices were replaced by workstream Q (M-Q-2).
+
 ## Requirements
 
 ### Requirement: Seed catalog that exercises every telecom rule
