@@ -7,3 +7,6 @@ Anything out of scope noticed while working. One bullet each: `- (workstream, ta
 - (T, T-14) "Save for later" for anonymous visitors only links to sign-in; the offer is not saved automatically after sign-in. A follow-up could remember the offer key in the return URL.
 - (T, T-13) `DashboardExtras` (S's slot for a saved-lists preview on the dashboard) is still empty.
 - (U, U-16) German copy of `checkout.*` and `confirmation.*` in `messages/de-DE.json` is machine-translated and needs native review (formal Sie-form).
+- (Y, Y-01) No Content-Security-Policy header in v1 (the other security headers are set in `next.config.ts` and `netlify.toml`); a CSP needs nonces for Next inline scripts, the hotlinked image hosts and the Checkout browser SDK.
+- (Z, Z-03) `npm audit` reports high and critical findings in the transitive dependency tree (first noted by A); triage before any public release.
+- (Z, Z-03) In-memory rate limits (`lib/rate-limit.ts`) are per server instance and not reliable on serverless hosting; move to a shared store if abuse protection matters.
