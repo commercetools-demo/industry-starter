@@ -17,7 +17,7 @@ Routes: `POST /api/auth/login`, `/register`, `/logout`, `GET /api/auth/me` (mini
 - [ ] J-05 `SignInCard` client component (modes, reason, errors, `busy`, focus to first error), pages `app/[locale]/login/page.tsx`; redirect logic and "already signed in" redirect; tests [SPEC: account-sign-in]
 - [ ] J-06 Registration: validation (name, email format, password ≥ 10 chars with the same rule server and client from `lib/password-policy.ts`), duplicate email → generic non-revealing outcome, auto-verified result; tests [SKILL: commercetools-storefront] [SPEC: account-registration-request]
 - [ ] J-07 Email verification functions and scenarios (token valid, expired → recoverable "send a fresh one" state, resend needs an identified account, link opened twice) as server functions with tests; documented as demo-hidden in `site/README.md` [SKILL: commercetools-storefront] [SPEC: email-verification]
-- [ ] J-08 Hooks `use-account` real implementation (`GET /api/auth/me`), `signOut()` clears keys (G-07) and redirects to `/login`; header slot (H-05) shows initials; tests [SPEC: authentication-and-identity]
+- [x] J-08 Hooks `use-account` real implementation (`GET /api/auth/me`), `signOut()` clears keys (G-07) and redirects to `/login`; header slot (H-05) shows initials; tests [SPEC: authentication-and-identity]
 - [ ] J-09 Protected-route wiring: `RequireSignIn` used by a generic `(protected)` layout; after sign-in the patient lands on the stored `next`; test open-redirect rejection [SPEC: account-sign-in]
 
 ## Scenarios

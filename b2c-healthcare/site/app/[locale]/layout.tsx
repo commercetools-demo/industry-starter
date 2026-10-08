@@ -32,8 +32,8 @@ export default async function LocaleLayout({
   const [messages, user, t] = await Promise.all([getMessages(), getHeaderUser(), getTranslations('common')]);
   return (
     <IntlProvider locale={locale} messages={messages}>
-      {/* Adds the display name to the id-only user of the root fallback; signed out adds nothing. */}
-      <SwrProvider fallback={user ? { [KEY_ACCOUNT]: user } : {}}>
+      {/* Adds the display name to the id-only user of the root fallback; `null` marks an anonymous visitor so useAccount does not call /api/auth/me on first paint. */}
+      <SwrProvider fallback={{ [KEY_ACCOUNT]: user }}>
         <ToastProvider>
           <a
             href="#main"
