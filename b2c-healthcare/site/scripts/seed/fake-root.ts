@@ -28,7 +28,8 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
   for (const [k, list] of Object.entries(initial)) fake.store[k] = list.map((r) => materialize(k, { ...r }));
 
   function materialize(kind: string, draft: Rec): Rec {
-    const r: Rec = { id: `id-${(counter += 1)}`, version: 1, ...draft };
+    // clone: a stored resource must never alias the data constants the seed builds drafts from
+    const r: Rec = { id: `id-${(counter += 1)}`, version: 1, ...structuredClone(draft) };
     if (kind === 'products') {
       if (!r.masterData) {
         const d = draft as { masterVariant?: Rec; variants?: Rec[]; publish?: boolean; name?: Rec };
