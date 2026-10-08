@@ -7,6 +7,10 @@
 
 A multi-year connectivity contract is rarely one price. The discount steps down each year, or an introductory rate gives way to a standing one, and the headline figure the customer is sold on is the cheapest period of several. Presenting only that figure is how a contract becomes a complaint: the customer agreed to a number they were shown and is later billed one they were not. The schedule is also the thing the business needs to be able to state, because total contract value, not the first month, is what the commitment is worth. A price that is only known one period at a time cannot be summed, cannot be compared against a competing quote, and cannot be defended at the first increase.
 
+## Plan notes
+
+**As built by workstream L (D-013, D-065).** The schedule is stored per order as a Custom Field (`priceSchedule`, `{"v":1,"schedules":[...]}`); billing owns charging, commerce only stores the promise. Open-ended periods use `endsOn 9999-12-31`. "Mid term change reprices the remainder" is a library capability (`amendFrom`); there is no plan-change UI (D-040).
+
 ## Requirements
 
 ### Requirement: What it costs in every year of the term, before signing
