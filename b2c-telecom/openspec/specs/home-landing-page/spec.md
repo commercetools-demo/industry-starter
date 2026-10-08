@@ -7,6 +7,10 @@
 
 The landing page is the one page every visitor loads, so it is the page most worth caching and the page where caching does the most damage. Its shared merchandising is identical for everyone, while cart count, account identity, entitled promotions and account warnings differ per buyer and per company. Mixing the two into one cacheable response is how one buyer's company name or negotiated offer ends up on another buyer's screen.
 
+## Plan notes
+
+**B2B-only parts excluded (D-005).** Not built: personalised (contract) promotions, contract expiry and account alerts, quick order widget, announcements and system alerts, recently ordered and recommended for you; header search, cart count and account menu belong to the shell (I, P). "Anonymous visitor" and "Expired session" are built (O: the page itself never reads the session). As built, the page cannot be static: the layout's `AccountSlot` reads the session cookie, so every page is dynamic (Q-018); catalog reads are cached 60 s. Hero and tile content derive from the live catalog, not from a CMS.
+
 ## Requirements
 
 ### Requirement: Landing page with session-resolved buyer context

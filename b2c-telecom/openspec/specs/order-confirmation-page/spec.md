@@ -7,6 +7,10 @@
 
 This page is the buyer's receipt and the only artefact they will quote back when something goes wrong, so the reference has to be the order's real identifier and the state has to be the order's real state. An order that has been submitted into an approval flow is not yet a commitment to deliver; telling the buyer it is confirmed produces a purchase their own organization has not authorized and a delivery expectation nobody owns.
 
+## Plan notes
+
+**B2B part excluded (D-005):** the "Approval pending notice". Built (U) at `/<locale>/order-confirmation/<orderNumber>` with a true-state banner; "Order placed", "Placement outcome unknown" and "Revisited later" are tested. No confirmation email, receipt PDF or invoice document exists (D-031, D-059): the page has a print stylesheet instead.
+
 ## Requirements
 
 ### Requirement: Order confirmation stating reference and true order state

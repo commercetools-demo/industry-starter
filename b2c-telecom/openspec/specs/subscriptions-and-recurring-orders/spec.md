@@ -7,6 +7,10 @@
 
 A recurring order is a standing commitment, and the commitment is what makes it valuable to both sides. If the only way to change one is to cancel it, every change is a churn risk; and because a recurring order spans months, whether its price is locked or re-evaluated is a decision the buyer is entitled to understand up front.
 
+## Plan notes
+
+**As built by workstream L.** "Schedule changed in place" is not built: changing cadence or quantity is a plan change (D-040); the monthly cadence is fixed by the policy `malva-monthly` (D-012). Charging each period is out of scope (D-059): only a dry-run sweep (`job:schedule-sweep`) exists. Creating an order with a recurring line creates the Recurring Order automatically (needs a customer on the cart). `paymentStrategy` is never set by the storefront (L finding: it blocks the order without a payment allocation); the hosted Checkout live proof (spike P4, P5) waits for OA-05.
+
 ## Requirements
 
 ### Requirement: Subscriptions and recurring orders

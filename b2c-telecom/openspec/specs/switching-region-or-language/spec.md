@@ -7,6 +7,10 @@
 
 Locale is not a display setting. Currency and country are inputs to price selection and to which products are sellable at all, so a half-applied region switch produces a cart priced in one currency against a catalog from another — which fails at checkout, not at the switch.
 
+## Plan notes
+
+**As built by workstream D (D-004).** Markets are en-US/USD/US and de-DE/EUR/DE only; the locale prefix is always present. A cart in another currency is treated as no cart and the buyer is told which lines were emptied. German strings are machine-translated and need native review (SO-09).
+
 ## Requirements
 
 ### Requirement: Switching region or language

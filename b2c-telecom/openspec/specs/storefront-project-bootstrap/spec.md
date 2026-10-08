@@ -7,6 +7,10 @@
 
 Malva Telecom sells cable internet, home wireless internet, phone plans and add-ons such as Spotify and Apple TV. Before any of those pages exist, the project needs a foundation that every later change can assume: one framework version, one styling approach, one way to run it, and one rule for where secrets live. A bootstrap done by hand drifts: a Next.js line with known security fixes missing, a styling setup that differs between two laptops, a commercetools secret that ends up in the browser bundle because a variable was named with the public prefix. Fixing any of these after pages are built means touching every page, so the bootstrap is specified once and verified mechanically.
 
+## Plan notes
+
+**Reduced by D-003.** "CI" language becomes the local `npm run verify` (and `verify:release`); there is no CI. The deploy part (Netlify) is workstream Y: Package directory `b2c-telecom` is untested on real Netlify and the build needs `CTP_CHECKOUT_APP_KEY` (Q-025).
+
 ## Requirements
 
 ### Requirement: Reproducible Malva Telecom storefront bootstrap on current Next.js

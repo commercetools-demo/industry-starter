@@ -7,6 +7,10 @@
 
 Discretionary discounting is how connectivity is actually closed, and it is controlled by rationing rather than by approval: each agent may give away so much, and the code itself is common so that it can be communicated once and reported on as one campaign. The control only works if the count is kept per agent. Counted globally, the fastest-discounting agent consumes everyone's allowance in a week; not counted at all, the discretionary discount becomes the standard price and the margin assumption behind the campaign is gone. The awkward part is that the limit must bind at the moment of sale — an allowance discovered to be overspent in next month's reporting has already been given away, and nobody is going to claw it back from the customer.
 
+## Plan notes
+
+**Deferred (D-022, D-005).** v1 has no agent mode, so nothing in this capability is built or tested: all seven scenarios ("Within allowance accepted", "Exhausted allowance refused", "Code still valid for others", "Counted on the order not the cart", "Canceled order releases the allowance", "No agent identified", "Concurrent applications at the limit") stay as the contract for a later change. Every compatibility, conflict and eligibility refusal is absolute for buyers. The plan verifier does not track these titles (`NOT_BUILT`).
+
 ## Requirements
 
 ### Requirement: A shared discount code with an allowance per selling agent

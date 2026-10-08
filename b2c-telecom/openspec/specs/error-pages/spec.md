@@ -7,6 +7,10 @@
 
 The three failures share a shell but not a recovery: a dead URL is recovered by searching, a refused action is recovered by asking whoever administers the buyer's permissions, and a server fault is recovered by retrying. Collapsing them into one generic apology converts a permission problem into a support ticket, because the buyer cannot tell that the storefront worked correctly and their access did not.
 
+## Plan notes
+
+**As built by workstream I.** The 500 page is the Next error boundary, not a CDN-served page. `/unauthorized` shows only a reference (no permission vocabulary, D-005).
+
 ## Requirements
 
 ### Requirement: Error pages that name the failure and route the buyer back

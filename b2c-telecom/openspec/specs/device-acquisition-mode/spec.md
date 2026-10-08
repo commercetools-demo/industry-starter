@@ -7,6 +7,10 @@
 
 Connectivity hardware is the same physical thing whichever way it is paid for, and the way it is paid for is the customer's decision, not a property of the product. A handset bought outright, the same handset over twenty-four installments, and the same handset on a lease that ends with its return are one SKU and three commercial agreements, differing in what is owed today, what is owed monthly, who owns the device, and what happens at the end. Modeling them as three products triples the catalog and guarantees drift the moment a specification changes. Modeling them as one product with no mode on the line loses the distinction that decides the invoice and the end-of-term obligation. The mode belongs on the line, chosen at purchase, and it has to survive onto the order because everything downstream — billing, asset tracking, returns, upgrade eligibility — is a different process for each one.
 
+## Plan notes
+
+**As built by workstreams G and Q (D-015, D-060).** All six scenarios are built. One product and one SKU per device; mode and term are line item custom fields; financed lines use the policies `malva-device-installment-12/24/36` and `malva-device-lease-24`. A plan plus a device in one order produce ONE Recurring Order (grouping is by schedule), so the device end date is stored on the line (`acquisitionEndDate`) and the platform expiry is set only for device-only orders. The credit decision is a deterministic stub (flag `creditApproved`, limit USD 2,500 / EUR 2,300). Guests can only buy outright. Handset demo prices are placeholders (M-Q-2).
+
 ## Requirements
 
 ### Requirement: The same hardware bought outright, in installments, or on lease

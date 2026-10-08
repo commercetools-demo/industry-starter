@@ -7,6 +7,10 @@
 
 Procurement-style buyers arrive with an identifier, not a description: they paste a part number from a datasheet or a previous invoice and expect one answer. Relevance ranking over product names does not reliably put an exact identifier match first, and a buyer who has to scan a ranked list for the code they already typed will use the phone instead. The same search box still has to serve descriptive queries, so identifier matching is an additional path, not a replacement.
 
+## Plan notes
+
+**As built by workstream P (D-056).** "Misspelt query" uses fuzzy matching on Product Search (no "Did you mean" correction); type-ahead suggestions are not built (Product Projection Search is unavailable). "Part number pasted" flags an exact SKU. Detail-page links are replaced by `offerHref`. German catalog names are English, so German queries find nothing (Q-019).
+
 ## Requirements
 
 ### Requirement: Search results with exact part-number resolution

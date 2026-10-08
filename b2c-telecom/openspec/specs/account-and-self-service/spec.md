@@ -7,6 +7,10 @@
 
 Every stored detail a buyer cannot change themselves becomes a support ticket, and a stale default address becomes a misdelivered order. In B2B the same surface additionally decides who inside a company may change shared account data, so self-service and permission are the same problem.
 
+## Plan notes
+
+**B2B parts excluded (D-005).** Business Unit and Associate permission surfaces are not built; the personal address book is workstream T and the account shell is S. Payment methods are list-only (D-032); net terms and credit line are excluded. "Address added and defaulted" and "Last address removed" are built in T. As built: removing the default address leaves no default and promotes none (live finding).
+
 ## Requirements
 
 ### Requirement: Account and self-service

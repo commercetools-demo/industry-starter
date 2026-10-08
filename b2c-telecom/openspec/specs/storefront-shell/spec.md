@@ -9,6 +9,10 @@ Every page shares one frame. The prototype's frame carries three things that mus
 
 Design reference: `design/specs/shell.md`.
 
+## Plan notes
+
+**Terms and mobile per D-050, D-051.** UI term is "My bundle" (route `/bundle`); "Support" goes to `/<locale>/support`; below 768 px the header collapses into a slide-in drawer (undrawn UI, D-068). Server reads live in `app/[locale]/_shell/` (`AccountSlot`, `loadNavItems`) because components may not import `lib/ct`. The signed-in first name costs one uncached customer read per page (Q-012). Header search is a magnifier behind `HEADER_SEARCH_ENABLED` (D-064).
+
 ## Requirements
 
 ### Requirement: Sticky shell with session-resolved account and bundle state

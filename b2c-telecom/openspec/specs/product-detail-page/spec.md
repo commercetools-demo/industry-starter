@@ -7,6 +7,10 @@
 
 The detail page is where a buyer decides, so it is the page a wrong price costs the most on. A variant can carry many prices at once - list, customer-group, channel-scoped, time-bound, tiered - and only one of them is the buyer's. Showing the list price beside a contract price, or ignoring the tier the buyer's quantity has already crossed, produces a total at checkout that does not match the page the buyer agreed to.
 
+## Plan notes
+
+**Superseded by `plp-led-catalog-navigation` (D-052).** There is no product detail route: `/product/<x>` and `/p/<x>` answer 404 (tested in N). Offers are configured and added from the category listing at `/<locale>/shop/<slug>?offer=<key>` (`offerHref`). The scenarios "Quantity crosses a tier", "No price resolves" and "Variant out of stock" are not built (no tier or contract pricing; services have no inventory, D-019). The spec is kept as the record. The plan verifier does not track these titles (`NOT_BUILT`).
+
 ## Requirements
 
 ### Requirement: Product detail page showing the buyer's effective price

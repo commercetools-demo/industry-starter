@@ -7,6 +7,10 @@
 
 Checkout cannot complete without a shipping method that matches the buyer's address, a tax category on every product and a store that defines which products and languages the buyer sees. For Malva these are mostly formalities: SIM cards, routers and activation kits ship at no charge, and the add-ons ship nothing at all. Because they are formalities they get forgotten, and an empty project fails at the last step with a message that points nowhere. Seeding them alongside the catalog means a newly seeded project can take an order from the first listing to the confirmation page.
 
+## Plan notes
+
+**As built by workstream F.** Zones `usa` and `europe` are adopted, not created. The sample shipping methods `standard-shipping` and `express-shipping` cannot be deleted and match every cart, so the BFF keeps only methods whose key starts with `malva-` (`malva-shipping-standard`, `malva-delivery-digital`); their predicates depend on the `offer-kind` attribute (created by G), so they appear in the first seed after the product types. Tax is one 0 % category per country (D-044). Product Search is activated through `searchIndexing.productsSearch` (D-056).
+
 ## Requirements
 
 ### Requirement: Zero-cost shipping and the market settings checkout depends on

@@ -7,6 +7,10 @@
 
 Every page in this storefront reads or changes commercetools data, and the rules that keep that safe are structural, not stylistic: the browser never talks to commercetools, secrets never leave the server, and components never see raw platform types. If the structure is left to each contributor, the first component that imports the SDK directly puts a secret in the bundle and the first one that reads a raw `ProductProjection` couples the whole UI to the platform schema. Fixing the folder layout and the three layers up front makes the right place for new code obvious and makes violations detectable by tooling.
 
+## Plan notes
+
+**As built by workstreams B and E.** The session module is `lib/ct/session.ts`. The stateless signed cookie (`malva-session`, HttpOnly, SameSite=lax) holds references and `signedInAt` only, never a commercetools token (D-030); customer data is read with the storefront client-credentials client and always filtered by the session's `customerId` (D-070). Boundaries are enforced by ESLint and `check:boundaries`; server modules must start with `import 'server-only'`.
+
 ## Requirements
 
 ### Requirement: Storefront code structure with a server-only commercetools boundary

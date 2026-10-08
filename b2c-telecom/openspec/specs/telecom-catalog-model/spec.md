@@ -7,6 +7,10 @@
 
 A telecom catalog is not one kind of product. An internet plan is described by speed and technology, a phone plan by data and lines, an add-on by the provider it resells, and a router by the speeds it can carry. If they share one loose type, the attributes that make compatibility decidable (a router's maximum speed, an add-on's eligible plan families) end up as free text in descriptions, and every rule has to be written as a hard-coded exception. Modelling each kind as its own product type with typed, searchable attributes lets compatibility, filtering and comparison be computed from data, and lets the same data be seeded, edited in the Merchant Center and read by the storefront without translation.
 
+## Plan notes
+
+**As built by workstream G (differences from the spec's attribute table).** Added: `end-time`, `offer-family`, `intro-free-months`, `price-steps`, `addon-tag`, `label-plan-id`, `bundle-discount-text`, `activation-fee` (also a one-time price on cable variants) and plan facts copied onto offers. `isRequired` is dropped on set attributes (the platform refuses it); empty sets are omitted. Extra recurrence policies `malva-device-installment-12/24/36` and `malva-device-lease-24` (D-060). Customer-group keys are `consumer`, `small-business`, `employee`, `existing-customer` (no `malva-` prefix, D-058). Price keys use `_`, not `.`. No Stores or Product Selections (D-058).
+
 ## Requirements
 
 ### Requirement: Telecom catalog model

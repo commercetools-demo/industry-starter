@@ -7,6 +7,10 @@
 
 A named list only earns its place if converting it back into a cart is a single act; a buyer who reorders the same forty-line kit every month gains nothing from a list they have to re-key. The failure mode that matters is the silent one: a discontinued or de-assorted line dropped without comment is discovered at delivery, not at checkout, so the conversion has to be explicit about what it left behind.
 
+## Plan notes
+
+**B2B-only parts excluded (D-005).** "Share list with the account's users" and company lists through `as-associate` are not built; lists belong to a customer and need sign-in (D-035). "List converted in one operation", "Line no longer purchasable" and "No lists yet" are built (T). As built: lines are added through the bundle API (`addToBundle`, so compatibility and eligibility rules apply) rather than `addShoppingList`; anonymous "Save for later" only links to sign-in.
+
 ## Requirements
 
 ### Requirement: Saved and requisition lists with bulk add to cart

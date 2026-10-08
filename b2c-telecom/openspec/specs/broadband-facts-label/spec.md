@@ -9,6 +9,10 @@ US broadband providers must make a standardized consumer disclosure (the "broadb
 
 Design reference: `design/specs/broadband-label.md`, `design/source/BroadbandLabel.dc.html`.
 
+## Plan notes
+
+**As built by workstream M (D-053).** The label is rendered in English in both locales by design (FCC format) and its CSS module is literal (the only component exempt from the token lint). Legal provider text and URLs in `lib/config/label.ts` are placeholders. The label snapshot is stored on the order as `labelSnapshot` (`LabelSnapshot` v1, matched to lines by SKU) and shown again in the account (`AccountPlanLabels`).
+
 ## Requirements
 
 ### Requirement: Broadband Facts label derived from the plan being sold

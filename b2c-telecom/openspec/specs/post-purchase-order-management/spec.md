@@ -7,6 +7,10 @@
 
 "Where is my order" is the highest-volume support contact in commerce, and every one of those contacts is a self-service gap. Returns are the same problem with money attached: a buyer who cannot start one calls, and a return whose refund state is invisible generates a second call.
 
+## Plan notes
+
+**Cancel before service start and 30-day device return request only (D-040, D-062).** Built (V): cancel an order strictly before its stored service-start date (order state transition plus a cancellation record, recurring order cancelled) and request a device return within 30 days (a return record on the order). Not built: plan changes, mid-term amendments, partial cancellation, return processing (labels, receiving, restock, refund money movement), carrier integration and tracking events. Orders with lead time 0 (phone, wireless) cannot be cancelled online (D-062). "Shipment state visible", "Partial shipment", "Return started" and "Refund state visible" are built as read-only views of platform states; the demo script `demo:advance-order` writes them.
+
 ## Requirements
 
 ### Requirement: Post-purchase order management

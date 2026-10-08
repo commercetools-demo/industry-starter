@@ -7,6 +7,10 @@
 
 Checkout is the one irreversible step. Shipping cost and tax are not known until an address and a delivery method exist, so the total moves during the flow; a buyer who is charged an amount they were never shown disputes the order, and a payment authorized for a stale amount fails on capture.
 
+## Plan notes
+
+**As built by workstream U (D-041, D-042, D-061).** Hosted Checkout in Payment Only mode with Adyen; not yet proven live because OA-05 is open (the U-01 gate is unticked). "Totals moved after authorization" is handled by a total re-check and a new checkout session. Additions: a demo-mode payment path (`CHECKOUT_DEMO_PAYMENT`) that places the order as Paid, and a placement-failed panel. `paymentStrategy` is never set by the storefront.
+
 ## Requirements
 
 ### Requirement: Checkout

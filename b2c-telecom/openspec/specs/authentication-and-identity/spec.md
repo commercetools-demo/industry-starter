@@ -7,6 +7,10 @@
 
 Anything the buyer built before signing in is lost unless it is deliberately carried across, and the sign-in surface is the most probed part of a storefront: error messages that distinguish "unknown email" from "wrong password" hand an attacker a list of valid accounts.
 
+## Plan notes
+
+**Reduced by D-031 and D-033.** "Sign in carries the anonymous cart" and "Failed sign in is ambiguous" are built in R as written. "Password reset does not confirm the email" holds with the demo link shown only when `DEMO_SHOW_RESET_LINK=true` (never emailed); "Verification before recovery" is reduced because new accounts are auto-verified (D-031). No `/api/auth/me` endpoint exists (D-070).
+
 ## Requirements
 
 ### Requirement: Authentication and identity

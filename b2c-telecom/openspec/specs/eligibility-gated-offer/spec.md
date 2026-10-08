@@ -7,6 +7,10 @@
 
 In most industries the catalog is what the merchant sells and eligibility is an exception. In connectivity it is the other way round: an offer exists only where the network reaches, only for the kind of customer it was built for, and often only in the channel it was funded for. A fiber tier is meaningless at an address it does not serve, and a rate built for public-sector buyers is not for everyone who finds the URL. So eligibility is not a filter applied late to a universal catalog — it is what makes the catalog true for the person looking at it. Applying it in some surfaces and not others is worse than not applying it at all, because the offer a customer found in search and cannot add is a support call, and the one they can add but cannot be given is a canceled order.
 
+## Plan notes
+
+**As built by workstream K (D-020, D-021, D-059).** Serviceability is a built-in deterministic table stub (ZIP codes, cached 5 min; G's Custom Object table exists but is not read). Customer type comes from the Customer Group. "Ineligible offer absent not refused" is implemented by filtering listings. The existing-customer cable offer is deduplicated behind Cable 500 and reachable only through `?offer=` (Q-017). No agent override (D-022). Business-unit entitlement is not built (D-005).
+
 ## Requirements
 
 ### Requirement: Offers resolved from where the service reaches and who is asking

@@ -7,6 +7,10 @@
 
 A telecom listing with grey placeholders is hard to judge, and hand-picking photos for dozens of categories and products does not survive a second developer or a fresh project. Pexels offers free photography through an API, which makes it possible to give every category and product an image automatically. Two things make that go wrong if left implicit: the API is rate limited and a naive seeder re-queries it on every run, and the service requires visible credit. The result also has to be stable, because a catalog whose pictures change on every seed is impossible to demo or screenshot.
 
+## Plan notes
+
+**Method per D-055 (accepted risk), licensing per D-066.** Images come from the public pexels.com search endpoint without an API key, are written to the committed lock file `site/scripts/seed/data/product-images.json` and hotlinked. Live result: all 70 URLs are `media.istockphoto.com` (Getty) files with no photographer or licence field, so "Credit shown to the buyer" shows a generic credit (footer and `/legal/image-credits` say Pexels: open Q-008, Q-015). "No key and no lock entry" is implemented as "no lookup possible". The hosts `images.pexels.com` and `media.istockphoto.com` are allowed. Demo only.
+
 ## Requirements
 
 ### Requirement: Seeded imagery sourced from Pexels, deterministically and with credit

@@ -7,6 +7,10 @@
 
 This content exists to be found by a search engine and cited in a sales conversation, which makes addressability the requirement and layout a detail. An article reachable only through a filtered listing earns no ranking and cannot be linked from an email, so the filters and the related-content block are conveniences over the CMS taxonomy rather than the route to the content.
 
+## Plan notes
+
+**As built by workstream W (D-034).** Articles are versioned files; "Article withdrawn" and "Article without tags" are built as file-based behaviour. German articles are machine-translated.
+
 ## Requirements
 
 ### Requirement: Articles addressable and indexable independently of the listing
