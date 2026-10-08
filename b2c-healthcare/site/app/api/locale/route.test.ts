@@ -4,14 +4,16 @@ import { makeJsonRequest, makeRequest } from '@/test/request';
 
 const getValidCountryConfig = vi.fn();
 const setLocale = vi.fn();
+const getSession = vi.fn();
 vi.mock('@/lib/ct/locale-validation', () => ({ getValidCountryConfig: () => getValidCountryConfig() }));
-vi.mock('@/lib/session', () => ({ setLocale: (arg: unknown) => setLocale(arg), getSession: vi.fn() }));
+vi.mock('@/lib/session', () => ({ setLocale: (arg: unknown) => setLocale(arg), getSession: () => getSession() }));
 
 import { POST } from './route';
 
 describe('storefront-locale-routing: Locale in the session is atomic', () => {
   beforeEach(() => {
     getValidCountryConfig.mockReset().mockResolvedValue({ 'en-US': { country: 'US', currency: 'USD', language: 'en' } });
+    getSession.mockReset().mockResolvedValue({});
     setLocale.mockReset().mockResolvedValue({ locale: 'en-US', country: 'US', currency: 'USD' });
   });
 
@@ -31,7 +33,7 @@ describe('storefront-locale-routing: Locale in the session is atomic', () => {
   it('Partial update rejected: locale alone is completed from COUNTRY_CONFIG', async () => {
     const response = await POST(makeJsonRequest('/api/locale', { locale: 'en-US' }));
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ locale: 'en-US', country: 'US', currency: 'USD' });
+    expect(await response.json()).toEqual({ locale: 'en-US', country: 'US', currency: 'USD', cartCleared: false });
     expect(setLocale).toHaveBeenCalledExactlyOnceWith({ locale: 'en-US' });
   });
 

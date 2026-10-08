@@ -9,7 +9,7 @@ v1 sells in one region (`en-US`, D-005), so the switcher is **not shown** while 
 
 ## Tasks
 - [x] W-01 `components/layout/RegionSwitcher.tsx` rendered only when more than one valid region; test hidden with one, shown with two [SPEC: switching-region-or-language]
-- [ ] W-02 Switch flow: call `/api/locale`, navigate with `getPathname` to the same page in the new locale; tests for before-cart and with-cart (cart cleared + message) [SKILL: commercetools-storefront] [SPEC: switching-region-or-language]
+- [x] W-02 Switch flow: call `/api/locale`, navigate with `getPathname` to the same page in the new locale; tests for before-cart and with-cart (cart cleared + message) [SKILL: commercetools-storefront] [SPEC: switching-region-or-language]
 - [ ] W-03 "Not sellable in this region" handling in doctor/medication reads (no price for currency → flagged) and in search; tests [SKILL: commercetools-storefront] [SPEC: switching-region-or-language]
 - [ ] W-04 Document in `site/README.md` how to add a region (`COUNTRY_CONFIG`, prices in the seed, messages file) and prove with a throwaway second entry in a test [SPEC: switching-region-or-language]
 

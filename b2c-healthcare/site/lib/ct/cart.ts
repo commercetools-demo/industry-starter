@@ -21,12 +21,16 @@ export const STANDARD_SHIPPING_KEY = 'mlv-standard';
 
 const isNotFound = (error: unknown): boolean => (error as { statusCode?: number } | null)?.statusCode === 404;
 
-async function fetchActiveCart(customerId: string, cartId: string | undefined): Promise<CtCart | null> {
+/**
+ * `currency` is the visitor's region currency (workstream W): a cart's currency is fixed at creation, so after a region
+ * switch the old cart (left Active to expire) is ignored, never read, re-priced or added to.
+ */
+async function fetchActiveCart(customerId: string, cartId: string | undefined, currency?: string): Promise<CtCart | null> {
   if (cartId) {
     try {
       const { body } = await apiRoot.carts().withId({ ID: cartId }).get().execute();
-      // Never act on a cart that is not the signed-in customer's own, or that is no longer Active.
-      if (body.cartState === 'Active' && body.customerId === customerId) return body;
+      // Never act on a cart that is not the signed-in customer's own, that is no longer Active, or priced in another currency.
+      if (body.cartState === 'Active' && body.customerId === customerId && (!currency || body.totalPrice.currencyCode === currency)) return body;
     } catch (error) {
       if (!isNotFound(error)) throw error;
     }
@@ -34,7 +38,15 @@ async function fetchActiveCart(customerId: string, cartId: string | undefined): 
   // No usable cartId (stale, cleared by sign-out): the customer's newest Active cart, if any.
   const { body } = await apiRoot
     .carts()
-    .get({ queryArgs: { where: 'customerId=:id and cartState="Active"', 'var.id': customerId, sort: 'lastModifiedAt desc', limit: 1 } })
+    .get({
+      queryArgs: {
+        where: currency ? 'customerId=:id and cartState="Active" and totalPrice(currencyCode=:currency)' : 'customerId=:id and cartState="Active"',
+        'var.id': customerId,
+        ...(currency ? { 'var.currency': currency } : {}),
+        sort: 'lastModifiedAt desc',
+        limit: 1,
+      },
+    })
     .execute();
   return body.results[0] ?? null;
 }
@@ -60,7 +72,7 @@ async function createCart(customerId: string, ctx: RxContext): Promise<CtCart> {
 
 /** The customer's Active cart (created when none exists). */
 export async function getOrCreateCart(customerId: string, cartId: string | undefined, ctx: RxContext): Promise<CtCart> {
-  return (await fetchActiveCart(customerId, cartId)) ?? (await createCart(customerId, ctx));
+  return (await fetchActiveCart(customerId, cartId, ctx.currency)) ?? (await createCart(customerId, ctx));
 }
 
 async function update(cart: CtCart, actions: CartUpdateAction[]): Promise<CtCart> {
@@ -106,11 +118,11 @@ export async function addRxLines(customerId: string, cartId: string | undefined,
 }
 
 /** Removes one line. A line that is not in the cart (already removed in another tab) is not an error. */
-export async function removeLine(customerId: string, cartId: string | undefined, lineId: string): Promise<CartOutcome | null> {
+export async function removeLine(customerId: string, cartId: string | undefined, lineId: string, currency?: string): Promise<CartOutcome | null> {
   const fixtures = await loadCartFixtures();
   if (fixtures) return fixtures.removeLine(customerId, lineId);
   const updated = await withCartRetry(async () => {
-    const cart = await fetchActiveCart(customerId, cartId);
+    const cart = await fetchActiveCart(customerId, cartId, currency);
     if (!cart) return null;
     if (!cart.lineItems.some((i) => i.id === lineId)) return cart;
     return update(cart, [{ action: 'removeLineItem', lineItemId: lineId }]);
@@ -119,10 +131,10 @@ export async function removeLine(customerId: string, cartId: string | undefined,
 }
 
 /** Cheap read for the header count: no re-validation, no write. */
-export async function getCartSummary(customerId: string, cartId: string | undefined): Promise<Cart | null> {
+export async function getCartSummary(customerId: string, cartId: string | undefined, currency?: string): Promise<Cart | null> {
   const fixtures = await loadCartFixtures();
   if (fixtures) return fixtures.getCart(customerId);
-  const cart = await fetchActiveCart(customerId, cartId);
+  const cart = await fetchActiveCart(customerId, cartId, currency);
   return cart ? mapCart(cart) : null;
 }
 
@@ -135,12 +147,12 @@ export async function getCartSummary(customerId: string, cartId: string | undefi
 export async function getCartValidated(patient: Patient, customerId: string, cartId: string | undefined, ctx: RxContext): Promise<Cart | null> {
   const fixtures = await loadCartFixtures();
   if (fixtures) return fixtures.getCartValidated(patient, customerId, ctx);
-  const before = await fetchActiveCart(customerId, cartId);
+  const before = await fetchActiveCart(customerId, cartId, ctx.currency);
   if (!before) return null;
   if (before.lineItems.length === 0) return mapCart(before);
 
   const recalculated = await withCartRetry(async () => {
-    const cart = (await fetchActiveCart(customerId, before.id)) ?? before;
+    const cart = (await fetchActiveCart(customerId, before.id, ctx.currency)) ?? before;
     return update(cart, [{ action: 'recalculate', updateProductData: true }]);
   });
 
@@ -155,7 +167,7 @@ export async function getCartValidated(patient: Patient, customerId: string, car
       stale.push({ action: 'setLineItemCustomField', lineItemId: item.id, name: 'lastSeenUnitPrice', value: { currencyCode: unit.currencyCode, centAmount: unit.centAmount } });
     }
   }
-  const final = stale.length ? await withCartRetry(async () => update((await fetchActiveCart(customerId, before.id)) ?? recalculated, stale)) : recalculated;
+  const final = stale.length ? await withCartRetry(async () => update((await fetchActiveCart(customerId, before.id, ctx.currency)) ?? recalculated, stale)) : recalculated;
   const problems = await checkLines(patient, final.lineItems.map((i) => ({ id: i.id, rx: rxFieldsOf(i) })), ctx);
   return mapCart(final, { problems, priceUpdated });
 }

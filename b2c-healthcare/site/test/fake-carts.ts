@@ -87,7 +87,7 @@ export function createFakeCarts(prices: Record<string, number> = {}): FakeCarts 
     for (const item of cart.lineItems) item.totalPrice = money(item.price.value.centAmount * item.quantity);
     const subtotal = cart.lineItems.reduce((s, i) => s + i.totalPrice.centAmount, 0);
     const shipping = cart.shippingInfo?.price.centAmount ?? 0;
-    cart.totalPrice = money(subtotal + shipping);
+    cart.totalPrice = money(subtotal + shipping, cart.totalPrice.currencyCode);
     return cart;
   };
 
@@ -113,7 +113,10 @@ export function createFakeCarts(prices: Record<string, number> = {}): FakeCarts 
     get: ({ queryArgs }: { queryArgs?: Record<string, unknown> } = {}) => ({
       execute: async () => {
         const id = queryArgs?.['var.id'];
-        const results = [...state.carts.values()].filter((c) => c.customerId === id && c.cartState === 'Active');
+        const currency = queryArgs?.['var.currency'];
+        const results = [...state.carts.values()].filter(
+          (c) => c.customerId === id && c.cartState === 'Active' && (currency === undefined || c.totalPrice.currencyCode === currency),
+        );
         return { body: { results, count: results.length } };
       },
     }),

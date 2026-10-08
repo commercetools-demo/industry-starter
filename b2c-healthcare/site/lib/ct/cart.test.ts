@@ -75,6 +75,23 @@ describe('cart-management: cart creation and lines (O-01)', () => {
     expect((await getOrCreateCart('c-sam', old.id, ctx)).id).not.toBe(old.id);
   });
 
+  it('Region switched with a cart: the old cart in the previous currency is ignored by every read and left to expire', async () => {
+    const eur = { locale: 'de-DE', currency: 'EUR', country: 'DE' };
+    const old = await addRxLines('c-sam', undefined, 'RX-77102', [sel('RX-77102-1', 'MED-ator')], ctx);
+    // After the switch the session has no cartId and the region is EUR: the old USD cart is neither found nor modified.
+    expect(await getCartSummary('c-sam', undefined, 'EUR')).toBeNull();
+    expect(await getCartSummary('c-sam', old.cart.id, 'EUR')).toBeNull();
+    expect(await removeLine('c-sam', old.cart.id, old.cart.lines[0]!.id, 'EUR')).toBeNull();
+    expect(await getCartValidated(patient, 'c-sam', old.cart.id, eur)).toBeNull();
+    expect(fake.carts.get(old.cart.id)).toMatchObject({ cartState: 'Active', version: old.cart.version });
+    // The next add starts a new cart in the new currency; the old one is untouched.
+    const fresh = await addRxLines('c-sam', undefined, 'RX-77102', [sel('RX-77102-1', 'MED-ator')], eur);
+    expect(fresh.cart.id).not.toBe(old.cart.id);
+    expect(fake.creates.at(-1)).toMatchObject({ currency: 'EUR', country: 'DE' });
+    expect((await getCartSummary('c-sam', undefined, 'EUR'))?.id).toBe(fresh.cart.id);
+    expect((await getCartSummary('c-sam', undefined, 'USD'))?.id).toBe(old.cart.id);
+  });
+
   it('Remove: removes the line and returns the recalculated cart', async () => {
     const { cart } = await addRxLines('c-sam', undefined, 'RX-77102', [sel('RX-77102-1', 'MED-ator'), sel('RX-77102-2', 'MED-lis')], ctx);
     const out = await removeLine('c-sam', cart.id, cart.lines[0]!.id);
