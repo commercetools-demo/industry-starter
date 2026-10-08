@@ -32,6 +32,22 @@ function statusOf(error: unknown): number | undefined {
 
 /** Maps any thrown value to a safe `{ error }` response: never the raw error, request body or credentials. */
 export function toErrorResponse(error: unknown): Response {
+  return noStore(toErrorResponseInner(error));
+}
+
+/** Patient data is never cached by a browser, proxy or CDN (design-account-area: Caching). Keeps a Cache-Control the handler set itself. */
+export function noStore(response: Response): Response {
+  if (!response.headers.has('cache-control')) {
+    try {
+      response.headers.set('cache-control', 'no-store');
+    } catch {
+      // immutable headers (a redirect or fetch response): leave as it is
+    }
+  }
+  return response;
+}
+
+function toErrorResponseInner(error: unknown): Response {
   if (error instanceof ApiError) return Response.json({ error: error.message }, { status: error.status });
   const status = statusOf(error);
   if (status && status < 500) {
@@ -57,7 +73,7 @@ export function toErrorResponse(error: unknown): Response {
 export async function handle(fn: () => Promise<unknown> | unknown): Promise<Response> {
   try {
     const result = await fn();
-    return result instanceof Response ? result : Response.json(result ?? null);
+    return noStore(result instanceof Response ? result : Response.json(result ?? null));
   } catch (error) {
     return toErrorResponse(error);
   }

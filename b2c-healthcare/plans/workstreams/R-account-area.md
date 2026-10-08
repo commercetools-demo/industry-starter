@@ -13,10 +13,10 @@ Layout `app/[locale]/account/layout.tsx`: 240 px side nav (Overview, Lab tests, 
 - R-07: after sign-in/registration, guest bookings (cookie `malva_bk` refs and bookings whose email matches the **verified** account email) are attached to the patient (`patientRef` set, guest fields removed, `expiresAt` cleared).
 
 ## Tasks
-- [ ] R-01 `lib/clinical` use: `lib/ct/account-summary.ts` (`getOverview(customerId)` running labs/appointments/orders reads with `Promise.allSettled`, each result `ok|error`) and `/api/account/overview`; tests incl. one service down and session invalid [SKILL: commercetools-storefront] [SPEC: account-dashboard]
+- [x] R-01 `lib/clinical` use: `lib/ct/account-summary.ts` (`getOverview(customerId)` running labs/appointments/orders reads with `Promise.allSettled`, each result `ok|error`) and `/api/account/overview`; tests incl. one service down and session invalid [SKILL: commercetools-storefront] [SPEC: account-dashboard]
 - [ ] R-02 Account layout + side nav registry + Sign out; `no-store` headers; sign-in prompt when no session; tests (nav active state, sign-out clears keys, stacking class) [SPEC: design-account-area]
 - [ ] R-03 Overview page (greeting, tiles, latest labs, zero states, per-tile error state); tests for each scenario [SPEC: account-dashboard]
-- [ ] R-04 `lib/labs.ts` (`flagFor(value, low, high)`, `markerPosition` clamp 4–96, range label "< N") with table tests; `/api/account/labs`, `/api/account/labs/[id]` (404 identical for foreign/unknown) [SKILL: commercetools-platform] [SPEC: design-account-area]
+- [x] R-04 `lib/labs.ts` (`flagFor(value, low, high)`, `markerPosition` clamp 4–96, range label "< N") with table tests; `/api/account/labs`, `/api/account/labs/[id]` (404 identical for foreign/unknown) [SKILL: commercetools-platform] [SPEC: design-account-area]
 - [ ] R-05 Labs list + detail pages and `RangeBar` component (flag as text + colour), processing state, "Discuss with a doctor" link to the ordering doctor; tests [SPEC: design-account-area]
 - [ ] R-06 PDF download `GET /api/account/labs/[id]/pdf` (pdf-lib, server-side, no values in URL/logs, `no-store`), 404 for foreign; test the bytes start with `%PDF` and contain the test name [SPEC: design-account-area]
 - [ ] R-07 `attachGuestBookings(customerId, verifiedEmail, cookieRefs)` called from login/register routes (J) via an exported hook; tests: only verified-email matches attach; other guests untouched [SKILL: commercetools-platform] [SPEC: design-account-area]
