@@ -7,6 +7,10 @@
 
 The dashboard owns no data of its own: it is a fan-out over order, approval, list and finance queries that are all session-specific, so a cached or wrongly scoped panel shows one buyer another buyer's business. An omitted panel is equally damaging in the other direction, because a buyer cannot tell "nothing is waiting for you" from "this failed to load" and stops trusting the page.
 
+## Plan notes
+
+**B2B-only parts excluded (D-005).** Not built: "Pending approvals count", "Outstanding invoices summary", "Pending approvals widget", "Quick order shortcut" and the notifications and alerts banner. The "Saved lists preview" slot (`DashboardExtras`) is still empty. Built (S): bill summary, contract table, recent orders, plan labels and a delivery-address card, each panel in its own Suspense with a failure state. The three scenarios ("Nothing yet on the account", "One backing service down", "Session no longer valid") are built as written. No company or business-unit scope exists; all queries are scoped by the session's `customerId` (D-070).
+
 ## Requirements
 
 ### Requirement: Session-scoped account dashboard with explicit empty states

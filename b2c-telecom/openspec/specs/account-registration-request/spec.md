@@ -7,6 +7,10 @@
 
 A self-registered buyer has not yet been vetted: for a business account the seller still has to check tax and credit details and decide which assortment and prices apply, and for a consumer account the address still has to be proven. Activating on submission would let an unvetted buyer transact at default prices, so the request and the active account are two different states and the page has to make the difference visible.
 
+## Plan notes
+
+**Not built (D-005, D-031).** Consumers register instantly at `/register` (workstream R), are auto-verified and signed in; there is no company registration, request queue or activation step. The scenarios "Request recorded not active", "Address already registered" and "Verification link expired" are not built (the duplicate-email refusal exists on the instant registration route, tested in R). The "Industry or segment dropdown" component is excluded for B2C. The spec is kept for a later change.
+
 ## Requirements
 
 ### Requirement: Account request held until the seller activates it

@@ -7,6 +7,10 @@
 
 Sign-in is the only page on the account group that an unauthenticated stranger can reach, so it is where account enumeration, credential stuffing and session fixation are attempted. Enterprise buyers additionally arrive through their own identity provider rather than a password, which is a different trust path with different cart and session consequences, not a styling variant of the same form.
 
+## Plan notes
+
+**As built by workstream R.** Customers are global (D-030); there is no federated sign-in, so "Federated buyer has no local password" is not built and "Buyer bound to another entry point" holds only in reduced form (the generic refusal for a hand-made store-bound customer). "Credentials accepted" and "Unknown and wrong are indistinguishable" are built (byte-identical 401). The session is a stateless signed cookie holding no customer token (`lib/ct/session.ts`); sessions are invalidated through `signedInAt` against the customer field `sessionsValidAfter`. Anonymous carts merge at sign-in.
+
 ## Requirements
 
 ### Requirement: Buyer sign-in with password or federated identity
