@@ -1,0 +1,175 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createFakeObjects, type FakeObjects } from '@/test/fake-custom-objects';
+
+interface FakeOrder { id: string; version: number; customerId: string; orderNumber: string; stateKey: string; payment: FakePayment }
+interface FakePayment { id: string; version: number; transactions: { type: string; state: string; amount: { centAmount: number; currencyCode: string } }[]; amountPlanned: { centAmount: number; currencyCode: string } }
+
+let objects: FakeObjects;
+let order: FakeOrder;
+const calls: string[] = [];
+
+const money = (centAmount: number) => ({ type: 'centPrecision', currencyCode: 'USD', centAmount, fractionDigits: 2 });
+const sdkOrder = (o: FakeOrder) => ({
+  id: o.id,
+  version: o.version,
+  customerId: o.customerId,
+  orderNumber: o.orderNumber,
+  createdAt: '2026-10-08T10:00:00Z',
+  state: { obj: { key: o.stateKey } },
+  totalPrice: money(1875),
+  lineItems: [{ name: { 'en-US': 'Atorvastatin 20 mg' }, quantity: 1 }],
+  paymentInfo: { payments: [{ obj: structuredClone(o.payment) }] },
+});
+
+vi.mock('@/lib/ct/client', () => ({
+  apiRoot: {
+    customObjects: () => objects.customObjects(),
+    orders: () => ({
+      get: ({ queryArgs }: { queryArgs: { where: string } }) => ({
+        execute: async () => {
+          const m = /id="([^"]+)" and customerId="([^"]+)"/.exec(queryArgs.where);
+          return { body: { results: m && order.id === m[1] && order.customerId === m[2] ? [sdkOrder(order)] : [] } };
+        },
+      }),
+      withId: () => ({
+        get: () => ({ execute: async () => ({ body: sdkOrder(order) }) }),
+        post: ({ body }: { body: { actions: { action: string; state: { key: string } }[] } }) => ({
+          execute: async () => {
+            calls.push('transition');
+            // The seeded State machine: packed-shipped and later cannot become cancelled.
+            if (order.stateKey !== 'mlv-received' && order.stateKey !== 'mlv-pharmacist-review') throw Object.assign(new Error('InvalidOperation'), { statusCode: 400 });
+            order.stateKey = body.actions[0]!.state.key;
+            order.version += 1;
+            return { body: sdkOrder(order) };
+          },
+        }),
+      }),
+    }),
+    payments: () => ({
+      withId: () => ({
+        get: () => ({ execute: async () => ({ body: structuredClone(order.payment) }) }),
+        post: ({ body }: { body: { actions: { transaction: FakePayment['transactions'][number] }[] } }) => ({
+          execute: async () => {
+            calls.push('markRefund');
+            order.payment.transactions.push(body.actions[0]!.transaction);
+            order.payment.version += 1;
+            return { body: order.payment };
+          },
+        }),
+      }),
+    }),
+  },
+}));
+vi.mock('@/lib/ct/fixtures', () => ({ loadCheckoutFixtures: async () => null }));
+
+import type { Prescription } from '@/lib/clinical/types';
+import { CONTAINERS } from '@/lib/ct/custom-objects';
+import { consumeAuthorization } from '@/lib/ct/dispense-ledger';
+import { cancelOrderForCustomer } from './order-cancel';
+import * as hooks from './order-cancel-hooks';
+
+const NOW = new Date('2026-10-08T12:00:00Z');
+const provider = () => ({ kind: 'demo' as const, createSession: vi.fn(), getAuthorization: vi.fn(), release: vi.fn(async () => undefined) });
+const refills = () => (objects.objects.find((o) => o.container === CONTAINERS.rx && o.key === 'RX-77102')!.value as Prescription).refillsLeft;
+
+beforeEach(async () => {
+  calls.length = 0;
+  objects = createFakeObjects();
+  const rx: Prescription = { number: 'RX-77102', patientRef: 'pt_sam', prescriber: 'Dr. Test', issuedAt: '2026-09-24', refillsLeft: 3, lines: [{ lineRef: 'RX-77102-1', sku: 'MED-a', name: 'A', sig: 'sig', qty: 30 }] };
+  objects.objects.push({ id: 'seed', container: CONTAINERS.rx, key: 'RX-77102', version: 1, value: rx, createdAt: '', lastModifiedAt: '' });
+  await consumeAuthorization('ord-1', [{ patientRef: 'pt_sam', rxNumber: 'RX-77102', lineRef: 'RX-77102-1', sku: 'MED-a', qty: 30, packs: 1, periodCeiling: 3, perOrderMax: 3 }], NOW);
+  order = {
+    id: 'ord-1',
+    version: 1,
+    customerId: 'c-sam',
+    orderNumber: 'MLV-000001',
+    stateKey: 'mlv-received',
+    payment: { id: 'pay-1', version: 1, amountPlanned: { centAmount: 1875, currencyCode: 'USD' }, transactions: [{ type: 'Authorization', state: 'Success', amount: { centAmount: 1875, currencyCode: 'USD' } }] },
+  };
+  vi.restoreAllMocks();
+});
+
+describe('post-purchase-order-management: cancel before packing', () => {
+  it('sets the state to cancelled, restores the refill, marks the payment for refund and releases the authorization', async () => {
+    expect(refills()).toBe(2);
+    const p = provider();
+    const outcome = await cancelOrderForCustomer('ord-1', 'c-sam', p, 'en-US');
+    expect(outcome).toMatchObject({ kind: 'cancelled', alreadyCancelled: false, order: { status: 'cancelled', refund: 'requested', cancellable: false } });
+    expect(order.stateKey).toBe('mlv-cancelled');
+    expect(refills()).toBe(3);
+    expect(order.payment.transactions.filter((t) => t.type === 'Refund')).toEqual([{ type: 'Refund', state: 'Initial', amount: { centAmount: 1875, currencyCode: 'USD' } }]);
+    expect(p.release).toHaveBeenCalledWith('pay-1');
+  });
+
+  it('also allowed during pharmacist review, calls the allowance and restricted hooks', async () => {
+    order.stateKey = 'mlv-pharmacist-review';
+    const allowance = vi.spyOn(hooks, 'restoreAllowance');
+    const restricted = vi.spyOn(hooks, 'restoreRestricted');
+    expect((await cancelOrderForCustomer('ord-1', 'c-sam', provider(), 'en-US')).kind).toBe('cancelled');
+    expect(allowance).toHaveBeenCalledWith('ord-1');
+    expect(restricted).toHaveBeenCalledWith('ord-1');
+  });
+
+  it('refill restored once and not twice: cancelling again changes nothing (no second refill, no second refund marker)', async () => {
+    await cancelOrderForCustomer('ord-1', 'c-sam', provider(), 'en-US');
+    const second = await cancelOrderForCustomer('ord-1', 'c-sam', provider(), 'en-US');
+    expect(second).toMatchObject({ kind: 'cancelled', alreadyCancelled: true });
+    expect(refills()).toBe(3);
+    expect(order.payment.transactions.filter((t) => t.type === 'Refund')).toHaveLength(1);
+    expect(calls.filter((c) => c === 'transition')).toHaveLength(1);
+  });
+
+  it('a cancel that stopped after the state change is completed by the retry', async () => {
+    const failing = provider();
+    failing.release.mockRejectedValue(new Error('psp down'));
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    expect((await cancelOrderForCustomer('ord-1', 'c-sam', failing, 'en-US')).kind).toBe('cancelled');
+    const ok = provider();
+    await cancelOrderForCustomer('ord-1', 'c-sam', ok, 'en-US');
+    expect(ok.release).toHaveBeenCalledWith('pay-1');
+    expect(refills()).toBe(3);
+  });
+
+  it('works without a payment service (not configured): the refund marker is still written', async () => {
+    expect((await cancelOrderForCustomer('ord-1', 'c-sam', null, 'en-US')).kind).toBe('cancelled');
+    expect(order.payment.transactions.some((t) => t.type === 'Refund')).toBe(true);
+  });
+});
+
+describe('post-purchase-order-management: cancel is refused when too late', () => {
+  it.each(['mlv-packed-shipped', 'mlv-delivered'])('%s: too late, nothing restored, nothing released', async (stateKey) => {
+    order.stateKey = stateKey;
+    const p = provider();
+    expect(await cancelOrderForCustomer('ord-1', 'c-sam', p, 'en-US')).toEqual({ kind: 'too-late' });
+    expect(refills()).toBe(2);
+    expect(p.release).not.toHaveBeenCalled();
+    expect(order.stateKey).toBe(stateKey);
+  });
+
+  it('the platform refusing the transition (packed in the meantime) is too late, and restores nothing', async () => {
+    // The page read said "received"; by the time the transition runs the order is packed.
+    const p = provider();
+    const read = order;
+    Object.defineProperty(read, 'stateKey', {
+      get: (() => {
+        let n = 0;
+        return () => (n++ === 0 ? 'mlv-received' : 'mlv-packed-shipped');
+      })(),
+      set: () => undefined,
+      configurable: true,
+    });
+    expect(await cancelOrderForCustomer('ord-1', 'c-sam', p, 'en-US')).toEqual({ kind: 'too-late' });
+    expect(refills()).toBe(2);
+  });
+});
+
+describe('order-history: Detail of an order not theirs (cancel)', () => {
+  it('a foreign order and an unknown id are the same not-found, and nothing is touched', async () => {
+    const p = provider();
+    expect(await cancelOrderForCustomer('ord-1', 'c-alex', p, 'en-US')).toEqual({ kind: 'not-found' });
+    expect(await cancelOrderForCustomer('nope', 'c-sam', p, 'en-US')).toEqual({ kind: 'not-found' });
+    expect(refills()).toBe(2);
+    expect(order.stateKey).toBe('mlv-received');
+    expect(p.release).not.toHaveBeenCalled();
+  });
+});

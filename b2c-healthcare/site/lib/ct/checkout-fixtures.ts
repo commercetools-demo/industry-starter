@@ -151,3 +151,13 @@ export function setFixtureOrderState(id: string, patch: Partial<Pick<OrderView, 
   const held = fixtureOrders.get(id);
   if (held) held.view = { ...held.view, ...patch };
 }
+
+/** Cancel in fixtures: same rule as the platform path (only before packed-shipped); no ledger or payment to touch. */
+export function cancelFixtureOrder(id: string, customerId: string): { kind: 'not-found' } | { kind: 'too-late' } | { kind: 'cancelled'; order: OrderView; alreadyCancelled: boolean } {
+  const held = fixtureOrders.get(id);
+  if (!held || held.customerId !== customerId) return { kind: 'not-found' };
+  if (held.view.status === 'cancelled') return { kind: 'cancelled', order: held.view, alreadyCancelled: true };
+  if (!held.view.cancellable) return { kind: 'too-late' };
+  held.view = { ...held.view, status: 'cancelled', cancellable: false, refund: 'requested' };
+  return { kind: 'cancelled', order: held.view, alreadyCancelled: false };
+}

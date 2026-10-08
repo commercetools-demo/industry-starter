@@ -16,7 +16,7 @@
 - [x] S-04 `/order/[id]` page: sign-in prompt, not-found, "outcome unknown" fallback; `unknown` path test [SPEC: order-confirmation-page]
 - [x] S-05 `/account/orders` page (list, empty, Track) replacing the R stub; count source for the overview [SPEC: order-history]
 - [x] S-06 Reorder `POST /api/orders/[id]/reorder` re-validating each line via N and reporting the ones not added; tests [SKILL: commercetools-commerce-patterns] [SPEC: order-history]
-- [ ] S-07 Cancel `POST /api/orders/[id]/cancel` (allowed states, restore authorization, payment refund request marker); tests incl. refill restored once and not twice [SKILL: commercetools-commerce-patterns] [SPEC: post-purchase-order-management]
+- [x] S-07 Cancel `POST /api/orders/[id]/cancel` (allowed states, restore authorization, payment refund request marker); tests incl. refill restored once and not twice [SKILL: commercetools-commerce-patterns] [SPEC: post-purchase-order-management]
 - [ ] S-08 Shipment/partial/refund presentation on the order card and N/A mapping with reasons for returns of dispensed items [SPEC: post-purchase-order-management]
 - [ ] S-09 Extend `advance-order.ts` (F-08) to set `shipmentState` and `Partial` for QA [SKILL: commercetools-platform] [SPEC: post-purchase-order-management]
 
