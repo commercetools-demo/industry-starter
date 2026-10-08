@@ -132,3 +132,18 @@ export interface ShippingMethodInfo {
 export interface ApiErrorBody {
   error: string;
 }
+
+/** Next free slot of a doctor in the current mode (workstream K): drives the card badge and the "Available today" filter. */
+export interface DoctorAvailability {
+  /** UTC instant of the slot. */
+  startsAt: string;
+  /** Clinic-local date (`YYYY-MM-DD`). */
+  localDate: string;
+  /** True when `localDate` is today in the clinic time zone. */
+  isToday: boolean;
+}
+
+/** A doctor card plus the availability for the listing mode (null: no slot in the next 7 days). */
+export interface DoctorListItem extends DoctorCard {
+  next: DoctorAvailability | null;
+}
