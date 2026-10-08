@@ -13,7 +13,7 @@ Planning complete (all defaults accepted by the owner 2026-10-08). Counts below 
 | F | Scheduling, clinical stand-in, demo patients, reviews, order states (seed + `lib/ct` modules) | 8/8 | 0/0 | Not started |
 | G | Data-loading foundation: types, mappers, cached reads, SWR keys | 9/9 | 14/16 | Not started |
 | H | Design-system primitives and shell: nav, mobile menu, footer, toast, modal, protected-route prompt | 10/10 | 11/11 | Not started |
-| I | Error pages, not-found, env guards | 0/5 | 0/3 | Not started |
+| I | Error pages, not-found, env guards | 5/5 | 3/3 | Not started |
 | J | Identity: sign-in / create account, session lifecycle, email verification (auto-verify) | 0/9 | 0/15 | Not started |
 | K | Doctor list and search | 0/9 | 0/19 | Not started |
 | L | Doctor profile, booking, booking confirmation | 0/9 | 0/19 | Not started |
