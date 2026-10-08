@@ -20,7 +20,7 @@ Footer/nav links added in H footers point here (H-08 had omitted undesigned link
 - [x] V-04 About page from content only, no commercetools imports (lint test: `app/[locale]/about` imports nothing from `lib/ct`) [SKILL: commercetools-storefront] [SPEC: about-us]
 - [x] V-05 Contact page (plain text blocks, emergency disclaimer) and N/A mapping with reasons in the checklist [SPEC: contact-us]
 - [x] V-06 Journal list + article pages with metadata, category filter, empty and withdrawn states, 3 seeded articles; tests [SPEC: blog-resources]
-- [ ] V-07 Sitemap (`app/sitemap.ts`) and robots listing static pages and articles; absolute canonical/hreflang URLs; tests [SPEC: blog-resources]
+- [x] V-07 Sitemap (`app/sitemap.ts`) and robots listing static pages and articles; absolute canonical/hreflang URLs; tests [SPEC: blog-resources]
 - [ ] V-08 Turn on footer/home links for the pages that now exist (route manifest `lib/routes.ts`), test that every footer link resolves to an existing route [SPEC: faq]
 
 ## Scenarios
