@@ -26,7 +26,7 @@ export function forbiddenTracked(paths) {
   });
 }
 
-/** Names of the form NEXT_PUBLIC_<secret> (also catches NEXT_PUBLIC_CTP_* in general). */
+/** Names of the form <public prefix><secret> (any public-prefixed CTP variable is also caught). */
 export function publicPrefixHits(text) {
   const prefix = 'NEXT_PUBLIC_';
   const hits = [];
