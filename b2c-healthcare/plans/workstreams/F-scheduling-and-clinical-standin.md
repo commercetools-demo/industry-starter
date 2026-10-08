@@ -14,7 +14,7 @@ Server modules and seed data for everything that is **not** catalog data. All ar
 
 ## Tasks
 - [x] F-01 `lib/clinical/types.ts` and interfaces `PrescriptionSource`, `LabSource`, `CredentialSource`; README header "demo stand-in"; Custom-Object implementations in `lib/ct/clinical-store.ts` (server-only) [SKILL: commercetools-platform]
-- [ ] F-02 `lib/ct/scheduling.ts`: `listFreeSlots(doctorKey, mode, fromDate, days)` with `Intl` time-zone maths (DST-safe), `claimSlot` (version 0 create), `releaseSlot`, tests incl. DST day, past slots, <2 h hiding, concurrent claim → second fails [SKILL: commercetools-commerce-patterns]
+- [x] F-02 `lib/ct/scheduling.ts`: `listFreeSlots(doctorKey, mode, fromDate, days)` with `Intl` time-zone maths (DST-safe), `claimSlot` (version 0 create), `releaseSlot`, tests incl. DST day, past slots, <2 h hiding, concurrent claim → second fails [SKILL: commercetools-commerce-patterns] (live check pending: `smoke-slots.ts`, see plans/notes/F-todos.md)
 - [ ] F-03 `lib/ct/bookings.ts`: `createBooking` (claims slot then writes booking; rolls back the claim if the write fails), `getBookingForSession`, `listBookingsForPatient`, `cancelBooking` (releases slot, ≥2 h before), guest expiry field; idempotent on a client-supplied `requestId` [SKILL: commercetools-platform]
 - [ ] F-04 `lib/ct/reviews.ts`: `listVerifiedReviews(productId)` (only `verifiedPatient`), rating statistics read through the product projection [SKILL: commercetools-platform]
 - [ ] F-05 `lib/ct/ratelimit.ts` (5 failed lookups / 10 min / customer in `malva-ratelimit`, optimistic concurrency) with tests incl. window rollover [SKILL: commercetools-commerce-patterns]
