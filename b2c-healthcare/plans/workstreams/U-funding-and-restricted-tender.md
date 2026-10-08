@@ -13,7 +13,7 @@ All four are **mock-backed** (Q-060…Q-065 defaults accepted). Each sits behind
 Order meta: `custom.mlv-order-meta` records `allowanceApplied` and `restrictedApplied`.
 
 ## Tasks
-- [ ] U-01 `lib/funding/resolver.ts` interface + demo implementation + failure mode; table tests per medication class and `unresolved` [SKILL: commercetools-commerce-patterns] [SPEC: payer-and-patient-cost-share]
+- [x] U-01 `lib/funding/resolver.ts` interface + demo implementation + failure mode; table tests per medication class and `unresolved` [SKILL: commercetools-commerce-patterns] [SPEC: payer-and-patient-cost-share]
 - [ ] U-02 Cart integration: set external line price + `coveredAmount`, re-resolve on every cart mutation/load, response shape with `youOwe`/`planCovers`; tests incl. basket change altering cover on an existing line [SKILL: commercetools-commerce-patterns] [SPEC: payer-and-patient-cost-share]
 - [ ] U-03 Pre-order re-resolve + compare in `placeOrder` (Q-05), `unresolved` blocks checkout; tests "figures unchanged between review and payment" and "resolver unavailable" [SKILL: commercetools-checkout] [SPEC: payer-and-patient-cost-share]
 - [ ] U-04 Cart/checkout UI for two figures, "Not covered" vs "unresolved" visuals; tests [SPEC: payer-and-patient-cost-share]
