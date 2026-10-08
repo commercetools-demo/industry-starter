@@ -66,3 +66,13 @@ Answer in this file or in chat; the plan continues with the stated default.
 - **Blocked (OA-05):** U-01 gate not ticked; hosted-widget checks C-U-10, 11, 12, 14, 19, 20 and M-U-1..3 wait for the Checkout application + Adyen connector. Unknown until then: `futureOrderNumber` acceptance, completion message codes, whether the connector adds the payment allocation.
 - **Q-024** (from V) Order-number validation uses a looser shape than U's `MLV-...` pattern so QA orders (`QA-...`) can be tested. Default: keep loose; confirm.
 - **Q-025** (from Y) The Netlify build requires `CTP_CHECKOUT_APP_KEY`; without OA-05 the first deploy fails (`CHECKOUT_DEMO_PAYMENT=true` does not cover the build requirement). Owner: do OA-05 first, or accept relaxing that build requirement for a demo deploy. Also untested: Package directory `b2c-telecom` on real Netlify (pre-approved fallback in the Y workstream file).
+
+
+## Owner answers (2026-10-08)
+- **Q-007 DECIDED:** guests are forced to open an account one step before payment (new checkout step "Account"; implemented by agent AA).
+- **Q-008 DECIDED:** OK to use the Pexels script for images; product images must show everywhere (agent BB); credit wording truthful.
+- **Q-009, Q-010, Q-011, Q-015 DECIDED:** OK (as built).
+- **Q-012 DECIDED:** keep the header first-name lookup.
+- **Q-013 DECIDED:** keep (first month free stacks). **Q-014 DECIDED:** accept.
+- **OA-05 DONE:** `CTP_CHECKOUT_APP_KEY` set in `site/.env.local`, Checkout application installed, connector "checkout" (agent CC runs L-09 and wires U to the live Checkout).
+- Not yet answered: Q-016 to Q-025 (defaults stay as built).
