@@ -26,7 +26,7 @@ Planning complete (all defaults accepted by the owner 2026-10-08). Counts below 
 | S | Orders: confirmation and tracking, history, post-purchase | 0/9 | 0/13 | Not started |
 | T | Saved lists ("My medicines"), recurring orders / auto-refill, saved payment methods | 0/10 | 0/10 | Not started |
 | U | Funding and restricted tender: payer cost-share, benefit allowance, eligible-item tender, credentialed purchase scope | 0/14 | 0/26 | Not started |
-| V | Static content: FAQ, contact, about, policies, health journal | 0/8 | 0/16 | Not started |
+| V | Static content: FAQ, contact, about, policies, health journal | 8/8 | 12/16 | Not started |
 | W | Region and language switching (v1: single region, structure only) | 0/4 | 0/3 | Not started |
 | X | Health-data minimization hardening and privacy operations | 0/8 | 0/7 | Not started |
 | Y | Deployment | 0/5 | 0/0 | Not started |
