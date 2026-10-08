@@ -109,15 +109,7 @@ function specialtyMatch(q: string) {
  * the default order all use the same value. The fee is the price on the channel of the current mode.
  */
 export async function searchDoctors(params: SearchDoctorsParams): Promise<DoctorSearchResult> {
-  const now = params.now ?? new Date();
-  const q = cleanQuery(params.q);
-  const fx = await loadFixtures();
-  const { cards, facets } = await candidates(params, q, fx);
-  const withMode = cards.filter((c) => c.modes.includes(params.mode));
-  const listed: DoctorListItem[] = await Promise.all(
-    withMode.map(async (card) => ({ ...card, next: await nextAvailability(card.key, params.mode, now, fx) })),
-  );
-  const visible = (params.today ? listed.filter((d) => d.next?.isToday) : listed).sort(compareDoctors);
+  const { items: visible, facets } = await listDoctors(params);
   const pageSize = doctorPageSize();
   const page = clampPage(params.page ?? 1, visible.length, pageSize);
   return {
@@ -128,4 +120,18 @@ export async function searchDoctors(params: SearchDoctorsParams): Promise<Doctor
     pageSize,
     facets,
   };
+}
+
+/** Every doctor of the mode after all filters, availability attached and ordered, without paging (home page, stats). */
+export async function listDoctors(params: SearchDoctorsParams): Promise<{ items: DoctorListItem[]; facets: FacetResult[] }> {
+  const now = params.now ?? new Date();
+  const q = cleanQuery(params.q);
+  const fx = await loadFixtures();
+  const { cards, facets } = await candidates(params, q, fx);
+  const withMode = cards.filter((c) => c.modes.includes(params.mode));
+  const listed: DoctorListItem[] = await Promise.all(
+    withMode.map(async (card) => ({ ...card, next: await nextAvailability(card.key, params.mode, now, fx) })),
+  );
+  const items = (params.today ? listed.filter((d) => d.next?.isToday) : listed).sort(compareDoctors);
+  return { items, facets };
 }
