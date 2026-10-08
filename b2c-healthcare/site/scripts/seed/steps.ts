@@ -1,12 +1,13 @@
 import { CATEGORIES, categoryDrafts } from './data/categories';
 import { DOCTORS, doctorDraft, doctorKey } from './data/doctors';
 import type { ImageEntry } from './data/images';
+import { MEDICATIONS, medicationDraft, medicationInventory, medKey, medSku } from './data/medications';
 import { SAME_DAY_ZONE, SHIPPING_METHODS } from './data/shipping';
 import { STATES, stateDraft, transitionRefs } from './data/states';
 import { TAX_CATEGORIES } from './data/tax';
 import { CHANNELS, CUSTOM_TYPES, PRODUCT_TYPES } from './data/types';
 import {
-  applyActions, diffProduct, diffProductType, diffShipping, diffTax, diffType, diffZone, ensureKeyed, listAll, pickDiff,
+  applyActions, diffInventory, diffProduct, diffProductType, inventoryDraft, diffShipping, diffTax, diffType, diffZone, ensureKeyed, listAll, pickDiff,
   type Ctx, type EnsureResult, type Rec, type Step,
 } from './lib';
 
@@ -80,6 +81,21 @@ export function doctorSteps(ctx: Ctx, o: ProductOptions = {}): Step[] {
     name: `product ${doctorKey(d)}`,
     run: () => ensureKeyed(ctx, 'products', doctorDraft(d, o.images?.[doctorKey(d)] ?? []), diffProduct),
   }));
+}
+
+/** Medication products, then one inventory entry per SKU with the native cart limit (and the expiry field on the demo SKU). */
+export function medicationSteps(ctx: Ctx, o: ProductOptions = {}): Step[] {
+  const meds = MEDICATIONS.filter((d) => !o.only || medKey(d) === o.only);
+  return [
+    ...meds.map((d) => ({
+      name: `product ${medKey(d)}`,
+      run: () => ensureKeyed(ctx, 'products', medicationDraft(d, o.images?.[medKey(d)] ?? []), diffProduct),
+    })),
+    ...meds.map((d) => ({
+      name: `inventory ${medSku(d)}`,
+      run: () => ensureKeyed(ctx, 'inventory', inventoryDraft(medicationInventory(d)), diffInventory),
+    })),
+  ];
 }
 
 export const foundationSteps = (ctx: Ctx): Step[] => [...channelSteps(ctx), ...taxSteps(ctx), ...stateSteps(ctx), ...typeSteps(ctx), ...categorySteps(ctx), ...shippingSteps(ctx)];
