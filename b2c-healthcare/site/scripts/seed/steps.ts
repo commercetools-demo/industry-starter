@@ -1,10 +1,12 @@
 import { CATEGORIES, categoryDrafts } from './data/categories';
+import { DOCTORS, doctorDraft, doctorKey } from './data/doctors';
+import type { ImageEntry } from './data/images';
 import { SAME_DAY_ZONE, SHIPPING_METHODS } from './data/shipping';
 import { STATES, stateDraft, transitionRefs } from './data/states';
 import { TAX_CATEGORIES } from './data/tax';
 import { CHANNELS, CUSTOM_TYPES, PRODUCT_TYPES } from './data/types';
 import {
-  applyActions, diffProductType, diffShipping, diffTax, diffType, diffZone, ensureKeyed, listAll, pickDiff,
+  applyActions, diffProduct, diffProductType, diffShipping, diffTax, diffType, diffZone, ensureKeyed, listAll, pickDiff,
   type Ctx, type EnsureResult, type Rec, type Step,
 } from './lib';
 
@@ -69,6 +71,15 @@ export function shippingSteps(ctx: Ctx): Step[] {
     { name: `zone ${SAME_DAY_ZONE.key}`, run: () => ensureKeyed(ctx, 'zones', SAME_DAY_ZONE, diffZone) },
     ...SHIPPING_METHODS.map((m) => ({ name: `shipping method ${m.key}`, run: () => ensureKeyed(ctx, 'shippingMethods', m, diffShipping) })),
   ];
+}
+
+export interface ProductOptions { images?: Record<string, ImageEntry[]>; only?: string }
+
+export function doctorSteps(ctx: Ctx, o: ProductOptions = {}): Step[] {
+  return DOCTORS.filter((d) => !o.only || doctorKey(d) === o.only).map((d) => ({
+    name: `product ${doctorKey(d)}`,
+    run: () => ensureKeyed(ctx, 'products', doctorDraft(d, o.images?.[doctorKey(d)] ?? []), diffProduct),
+  }));
 }
 
 export const foundationSteps = (ctx: Ctx): Step[] => [...channelSteps(ctx), ...taxSteps(ctx), ...stateSteps(ctx), ...typeSteps(ctx), ...categorySteps(ctx), ...shippingSteps(ctx)];

@@ -250,6 +250,18 @@ export const diffShipping = (e: Rec, d: Rec): string | null => {
 
 export const diffNames = (e: Rec, d: Rec): string | null => pickDiff(e, d, ['name']);
 
+type Variant = { sku?: string; prices?: { value: { centAmount: number; currencyCode: string } }[] };
+const masterOf = (e: Rec): Variant => ((e.masterData as { staged?: { masterVariant?: Variant } } | undefined)?.staged?.masterVariant ?? {});
+
+/** Products are not rewritten; the SKU and the prices (cents per currency) are compared so a wrong fee or price is reported. */
+export const diffProduct = (e: Rec, d: Rec): string | null => {
+  const want = d.masterVariant as Variant;
+  const have = masterOf(e);
+  if (have.sku !== want.sku) return `sku ${String(have.sku)} differs from ${String(want.sku)}`;
+  const prices = (v: Variant) => sortedJson((v.prices ?? []).map((p) => [p.value.currencyCode, p.value.centAmount]));
+  return prices(have) === prices(want) ? null : 'prices differ';
+};
+
 // ---------------------------------------------------------------- inventory (keyed by `mlv-inv-<sku>`)
 
 export interface InventoryWanted { sku: string; quantityOnStock: number; maxCartQuantity?: number; custom?: Rec }
