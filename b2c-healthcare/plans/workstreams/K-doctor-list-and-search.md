@@ -15,9 +15,9 @@ Search (D-017/Q-033): header and home search submit to `/search?q=`; results pag
 - [x] K-04 Pages `doctors/[mode]/page.tsx` (only `remote|office`; else 404), mode switch via `SegmentedControl` links, Pagination (design-system), count line; metadata; cached facets (not availability) [SKILL: commercetools-storefront] [SPEC: design-plp]
 - [x] K-05 Narrow-screen card layout (right column under text at < 900 px) and `PageHead` filter overlap −24 px per design; screenshot test not required, CSS class test [SPEC: design-plp]
 - [x] K-06 Empty/error: facet combo with no matches (offers "clear filters"), search service error state (not a blank page) [SPEC: product-listing-page]
-- [ ] K-07 `lib/ct/search-all.ts`: doctors + medicines search, exact SKU resolution first, query sanitising, no-result suggestions, language guard; tests per search scenario [SKILL: commercetools-platform] [SPEC: search-results-page]
-- [ ] K-08 `app/[locale]/search/page.tsx` with grouped results, empty state, `/search?q=` from header/home; no query text in analytics/logs (I-03) [SPEC: search-results-page]
-- [ ] K-09 Discovery: specialty chips component and `/doctors/remote?specialty=` entry points; "Browse a category / Nothing matches" scenarios [SPEC: discovery-and-browse]
+- [x] K-07 `lib/ct/search-all.ts`: doctors + medicines search, exact SKU resolution first, query sanitising, no-result suggestions, language guard; tests per search scenario [SKILL: commercetools-platform] [SPEC: search-results-page]
+- [x] K-08 `app/[locale]/search/page.tsx` with grouped results, empty state, `/search?q=` from header/home; no query text in analytics/logs (I-03) [SPEC: search-results-page]
+- [x] K-09 Discovery: specialty chips component and `/doctors/remote?specialty=` entry points; "Browse a category / Nothing matches" scenarios [SPEC: discovery-and-browse]
 
 ## Scenarios
 Every scenario is a unit test (or a scripted check) named after it.

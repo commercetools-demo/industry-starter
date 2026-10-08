@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ActiveFilters, DoctorList } from '@/components/doctors/DoctorList';
+import { SpecialtyChips } from '@/components/doctors/SpecialtyChips';
 import { DoctorFilters } from '@/components/doctors/DoctorFilters';
 import { ButtonLink } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -77,7 +78,8 @@ export default async function DoctorsPage({ params, searchParams }: { params: Pa
       </PageHead>
       <div className="mx-auto max-w-content px-5 nav:px-8">
         <DoctorFilters mode={mode} state={state} />
-        <div className="mt-4">
+        <SpecialtyChips mode={mode} selected={state.specialty} className="mt-4" />
+        <div className="mt-3">
           <ActiveFilters mode={mode} state={state} />
         </div>
         {result ? (

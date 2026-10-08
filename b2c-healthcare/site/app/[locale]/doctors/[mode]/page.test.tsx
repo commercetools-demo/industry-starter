@@ -154,6 +154,15 @@ describe('design-plp: Doctor list by consultation mode (page)', () => {
     expect(screen.getByRole('search')).toHaveClass('-mt-6', 'relative');
   });
 
+  it('Browse a category: /doctors/remote?specialty=dermatology lists that specialty and marks its chip', async () => {
+    searchDoctors.mockResolvedValue(result([doctor(1)]));
+    await render('remote', { specialty: 'dermatology' });
+    expect(searchDoctors).toHaveBeenCalledWith(expect.objectContaining({ specialty: 'dermatology' }));
+    const nav = screen.getByRole('navigation', { name: 'Browse by specialty' });
+    expect(within(nav).getByRole('link', { name: 'Dermatology' })).toHaveAttribute('aria-current', 'true');
+    expect(within(nav).getByRole('link', { name: 'Cardiology' })).toHaveAttribute('href', '/en-US/doctors/remote?specialty=cardiology');
+  });
+
   it('metadata: titled per mode', async () => {
     expect(await generateMetadata({ params: Promise.resolve({ locale: 'en-US', mode: 'office' }) })).toMatchObject({ title: 'Office visits with a doctor' });
   });
