@@ -8,6 +8,8 @@ vi.mock('next/font/google', () => {
   return { Poppins: font('poppins'), Lato: font('lato'), Roboto: font('roboto') };
 });
 
+vi.mock('@/lib/swr-fallback', () => ({ getSwrFallback: async () => ({}) }));
+
 import RootLayout from './layout';
 
 describe('storefront-locale-routing: Messages and document language', () => {

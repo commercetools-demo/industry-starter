@@ -14,7 +14,7 @@ Locale items finished here: `getValidCountryConfig()` filters `COUNTRY_CONFIG` a
 - [x] G-03 `lib/ct/categories.ts` (`getCategoryTree`, cached 60 s) and `lib/ct/shipping.ts` `getShippingMethods` public read (cached 60 s) with tests that no function receiving session data is wrapped by `unstable_cache` (a lint-ish test scanning `lib/ct/*` for `unstable_cache(` next to `customerId|cartId|session`) [SKILL: commercetools-storefront] [SPEC: storefront-data-loading]
 - [x] G-04 `lib/ct/search.ts` thin Product Search wrapper (`apiRoot.products().search()`, never `productProjections().search()`), query builders for text + facet + sort + paging, with unit tests on the generated query objects [SKILL: commercetools-platform] [SPEC: storefront-data-loading]
 - [x] G-05 React `cache()` wrappers (`getProductByKeyCached`) shared by `generateMetadata` and page; test that two calls in one request invoke the client once [SKILL: commercetools-storefront] [SPEC: storefront-data-loading]
-- [ ] G-06 Root layout SWR fallback from the session: `lib/ct/cart-read.ts` stub `getActiveCartSafe(cartId)` returning `null` and clearing the session when missing; test stale cart tolerance and anonymous first paint [SKILL: commercetools-storefront] [SPEC: storefront-data-loading]
+- [x] G-06 Root layout SWR fallback from the session: `lib/ct/cart-read.ts` stub `getActiveCartSafe(cartId)` returning `null` and clearing the session when missing; test stale cart tolerance and anonymous first paint [SKILL: commercetools-storefront] [SPEC: storefront-data-loading]
 - [ ] G-07 `hooks/use-cart.ts` and `hooks/use-account.ts` placeholders (typed, call nothing yet), `hooks/sign-out.ts` clearing both keys; lint test: direct `fetch('/api/…')` in a component fails [SPEC: storefront-data-loading]
 - [ ] G-08 `lib/api-retry.ts` `withCartRetry(fn)` (409 → refetch → retry once) with tests; document Server/Client boundary and the cache TTL table in `site/README.md` [SKILL: commercetools-storefront] [SPEC: storefront-data-loading]
 - [ ] G-09 `lib/types.ts` real types for `Doctor`, `DoctorCard`, `Medication`, `Category` and their mappers (`lib/mappers/doctor.ts`, `medication.ts`) incl. fee per mode from channel prices, rating from statistics, initials/portrait; tests with SDK fixtures [SKILL: commercetools-storefront] [SPEC: storefront-data-loading]
@@ -30,9 +30,9 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [x] Per-patient data never shared
 - [x] Request de-duplication
 #### storefront-data-loading › Initial client state from the session
-- [ ] Signed-in first paint
-- [ ] Stale cart reference
-- [ ] User object source
+- [x] Signed-in first paint
+- [x] Stale cart reference
+- [x] User object source
 #### storefront-data-loading › Cache keys and invalidation
 - [ ] Sign-out
 - [ ] Concurrent cart update

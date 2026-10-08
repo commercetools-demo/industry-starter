@@ -14,6 +14,21 @@ export interface Money {
   fractionDigits: number;
 }
 
+/** Minimal cart for first paint (header count); the cart workstream extends it. */
+export interface CartSummary {
+  id: string;
+  version: number;
+  itemCount: number;
+  currencyCode: string;
+}
+
+/** Signed-in user as the client sees it. The session cookie has ids only; names come from getCustomerById. */
+export interface AccountUser {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+}
+
 /** Product fields every catalog page needs (title, description, imagery). */
 export interface ProductBasics {
   id: string;
