@@ -18,6 +18,8 @@ vi.mock('@/lib/ct/identity', async (importOriginal) => ({
   getCustomerById: (a: unknown) => identity.getCustomerById(a),
   changePassword: (...a: unknown[]) => identity.changePassword(...a),
 }));
+const attachAfterSignIn = vi.fn();
+vi.mock('@/lib/attach-guest-bookings', () => ({ attachAfterSignIn: (u: unknown) => attachAfterSignIn(u) }));
 const getSession = vi.fn();
 const updateSession = vi.fn();
 vi.mock('@/lib/session', () => ({ getSession: () => getSession(), updateSession: (p: unknown) => updateSession(p) }));
@@ -34,6 +36,7 @@ const loginBody = { email: 'sam@example.com', password: 'secret-pass-123' };
 
 beforeEach(() => {
   for (const fn of Object.values(identity)) fn.mockReset();
+  attachAfterSignIn.mockReset().mockResolvedValue(undefined);
   getSession.mockReset().mockResolvedValue({});
   updateSession.mockReset().mockResolvedValue({});
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
@@ -241,5 +244,25 @@ describe('password reset is intentionally absent (D-032)', () => {
       });
     const paths = walk(join(process.cwd(), 'app')).filter((p) => /reset|forgot/i.test(p));
     expect(paths).toEqual([]);
+  });
+});
+
+describe('design-account-area: guest bookings attach after sign-in (R-07 hook)', () => {
+  it('login passes the customer, the email and its verified flag to the hook', async () => {
+    identity.login.mockResolvedValue({ user: sam, cartId: 'cart-1' });
+    await loginRoute(makeJsonRequest('/api/auth/login', loginBody));
+    expect(attachAfterSignIn).toHaveBeenCalledExactlyOnceWith({ customerId: 'c1', email: 'sam@example.com', emailVerified: true });
+  });
+
+  it('a failed sign-in attaches nothing', async () => {
+    identity.login.mockRejectedValue(new InvalidCredentialsError());
+    await loginRoute(makeJsonRequest('/api/auth/login', loginBody));
+    expect(attachAfterSignIn).not.toHaveBeenCalled();
+  });
+
+  it('registration passes the verification outcome of the new account', async () => {
+    identity.register.mockResolvedValue({ user: { ...sam, isEmailVerified: false }, cartId: undefined, emailVerified: false });
+    await registerRoute(makeJsonRequest('/api/auth/register', { name: 'Sam Rivera', email: 'sam@example.com', password: 'secret-pass-123' }));
+    expect(attachAfterSignIn).toHaveBeenCalledExactlyOnceWith({ customerId: 'c1', email: 'sam@example.com', emailVerified: false });
   });
 });

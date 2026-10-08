@@ -19,7 +19,7 @@ Layout `app/[locale]/account/layout.tsx`: 240 px side nav (Overview, Lab tests, 
 - [x] R-04 `lib/labs.ts` (`flagFor(value, low, high)`, `markerPosition` clamp 4–96, range label "< N") with table tests; `/api/account/labs`, `/api/account/labs/[id]` (404 identical for foreign/unknown) [SKILL: commercetools-platform] [SPEC: design-account-area]
 - [x] R-05 Labs list + detail pages and `RangeBar` component (flag as text + colour), processing state, "Discuss with a doctor" link to the ordering doctor; tests [SPEC: design-account-area]
 - [x] R-06 PDF download `GET /api/account/labs/[id]/pdf` (pdf-lib, server-side, no values in URL/logs, `no-store`), 404 for foreign; test the bytes start with `%PDF` and contain the test name [SPEC: design-account-area]
-- [ ] R-07 `attachGuestBookings(customerId, verifiedEmail, cookieRefs)` called from login/register routes (J) via an exported hook; tests: only verified-email matches attach; other guests untouched [SKILL: commercetools-platform] [SPEC: design-account-area]
+- [x] R-07 `attachGuestBookings(customerId, verifiedEmail, cookieRefs)` called from login/register routes (J) via an exported hook; tests: only verified-email matches attach; other guests untouched [SKILL: commercetools-platform] [SPEC: design-account-area]
 - [ ] R-08 Appointments page (upcoming/past, empty state) + cancel flow `POST /api/bookings/[ref]/cancel` (≥ 2 h rule, ownership, releases slot); tests [SPEC: design-account-area]
 - [ ] R-09 Cache/log guard test: every `/api/account/*` response has `Cache-Control: no-store`; lab values/reasons never reach the logger (spy) [SPEC: design-account-area]
 - [ ] R-10 Register `/labs` → `/account/labs` redirect and `/account/orders` stub; message keys [SPEC: design-account-area]
