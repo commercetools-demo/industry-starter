@@ -16,4 +16,9 @@ export const apiAccountAddressDefault = (id: string) => `${apiAccountAddress(id)
 export const API_ACCOUNT_PROFILE = '/api/account/profile';
 
 export const API_BOOKINGS = '/api/bookings';
+// Workstream R (account area)
+export const API_ACCOUNT_OVERVIEW = '/api/account/overview';
+export const API_ACCOUNT_LABS = '/api/account/labs';
+export const apiAccountLabPdf = (id: string): string => `${API_ACCOUNT_LABS}/${encodeURIComponent(id)}/pdf`;
+export const apiBookingCancel = (reference: string): string => `${API_BOOKINGS}/${encodeURIComponent(reference)}/cancel`;
 export const apiDoctorSlots = (doctorKey: string, mode: string): string => `/api/doctors/${encodeURIComponent(doctorKey)}/slots?mode=${encodeURIComponent(mode)}`;

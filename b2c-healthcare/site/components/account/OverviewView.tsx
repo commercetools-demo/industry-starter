@@ -1,5 +1,4 @@
 import { useTranslations } from 'next-intl';
-import { Card } from '@/components/ui/Card';
 import { Link } from '@/i18n/routing';
 import type { Overview, Section } from '@/lib/account-types';
 import { LabRows } from './LabRows';
@@ -38,7 +37,7 @@ export function OverviewView({ overview }: { overview: Overview }) {
         <Tile href="/account/appointments" label={t('tileAppointments')} section={appointments} count={appointments.status === 'ok' ? appointments.data.upcoming : 0} />
         <Tile href="/account/orders" label={t('tileOrders')} section={orders} count={orders.status === 'ok' ? orders.data.count : 0} />
       </div>
-      <Card as="section" aria-labelledby="latest-labs" className="p-0">
+      <section aria-labelledby="latest-labs" className="rounded-lg bg-surface shadow-sm">
         <h2 id="latest-labs" className="px-5 pt-5 pb-2 font-display text-xl font-semibold text-navy-900">
           {t('latestTitle')}
         </h2>
@@ -51,7 +50,7 @@ export function OverviewView({ overview }: { overview: Overview }) {
         ) : (
           <LabRows labs={labs.data.latest} />
         )}
-      </Card>
+      </section>
     </div>
   );
 }

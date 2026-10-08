@@ -17,7 +17,7 @@ Layout `app/[locale]/account/layout.tsx`: 240 px side nav (Overview, Lab tests, 
 - [x] R-02 Account layout + side nav registry + Sign out; `no-store` headers; sign-in prompt when no session; tests (nav active state, sign-out clears keys, stacking class) [SPEC: design-account-area]
 - [x] R-03 Overview page (greeting, tiles, latest labs, zero states, per-tile error state); tests for each scenario [SPEC: account-dashboard]
 - [x] R-04 `lib/labs.ts` (`flagFor(value, low, high)`, `markerPosition` clamp 4–96, range label "< N") with table tests; `/api/account/labs`, `/api/account/labs/[id]` (404 identical for foreign/unknown) [SKILL: commercetools-platform] [SPEC: design-account-area]
-- [ ] R-05 Labs list + detail pages and `RangeBar` component (flag as text + colour), processing state, "Discuss with a doctor" link to the ordering doctor; tests [SPEC: design-account-area]
+- [x] R-05 Labs list + detail pages and `RangeBar` component (flag as text + colour), processing state, "Discuss with a doctor" link to the ordering doctor; tests [SPEC: design-account-area]
 - [ ] R-06 PDF download `GET /api/account/labs/[id]/pdf` (pdf-lib, server-side, no values in URL/logs, `no-store`), 404 for foreign; test the bytes start with `%PDF` and contain the test name [SPEC: design-account-area]
 - [ ] R-07 `attachGuestBookings(customerId, verifiedEmail, cookieRefs)` called from login/register routes (J) via an exported hook; tests: only verified-email matches attach; other guests untouched [SKILL: commercetools-platform] [SPEC: design-account-area]
 - [ ] R-08 Appointments page (upcoming/past, empty state) + cancel flow `POST /api/bookings/[ref]/cancel` (≥ 2 h rule, ownership, releases slot); tests [SPEC: design-account-area]
@@ -36,15 +36,15 @@ Every scenario is a unit test (or a scripted check) named after it.
 #### design-account-area › Account layout and navigation
 - [x] Sign out
 #### design-account-area › Overview
-- [ ] Overview content
-- [ ] Zero states
+- [x] Overview content
+- [x] Zero states
 #### design-account-area › Lab tests
-- [ ] List
-- [ ] Detail header
-- [ ] Result table
-- [ ] Processing test
-- [ ] Actions
-- [ ] Unknown or foreign test
+- [x] List
+- [x] Detail header
+- [x] Result table
+- [x] Processing test
+- [x] Actions
+- [x] Unknown or foreign test
 #### design-account-area › Appointments
 - [ ] List
 - [ ] Empty
@@ -56,9 +56,9 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [ ] Cross-patient access
 - [ ] Caching
 #### account-dashboard › Session-scoped account dashboard with explicit empty states
-- [ ] Nothing yet on the account
-- [ ] One backing service down
-- [ ] Session no longer valid
+- [x] Nothing yet on the account
+- [x] One backing service down
+- [x] Session no longer valid
 <!-- SCENARIOS:END -->
 
 ## Browser recipe
