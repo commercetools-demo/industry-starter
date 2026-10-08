@@ -28,7 +28,7 @@ Updated by the developer on each task and by Claude (after Chrome verification) 
 | V | Post-purchase: cancel and device return | 12 | 12 | Merged (verify + curl live; Chrome C-V pending) | orchestrator | 2026-10-07 |
 | W | Content pages | 10 | 10 | Merged (verify + curl smoke; Chrome C-W pending) | orchestrator | 2026-10-07 |
 | X | Coordinated offer release | 8 | 8 | Merged (verify + live release run by junior; Chrome C-X-4 pending N) | orchestrator | 2026-10-07 |
-| Y | Netlify deployment | 7 | 0 | Not started | | |
+| Y | Netlify deployment | 7 | 6 | Merged (verify:release local; deploy blocked on OA-06/OA-05) | orchestrator | 2026-10-07 |
 | Z | Release readiness | 7 | 0 | Not started | | |
 
 Task counts are checked by `node plan/verify-plan.mjs` against the checkbox lists in each workstream file.
