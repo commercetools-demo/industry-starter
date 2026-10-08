@@ -12,7 +12,7 @@ Concurrency: 409 → refetch + retry once (G-08).
 ## Tasks
 - [x] O-01 `lib/ct/cart.ts`: `getOrCreateCart`, `addRxLines`, `removeLine`, `getCartValidated` (recalculate, reasons from N rules), mapper `Cart`/`CartLine` in `lib/mappers/cart.ts` and types in `lib/types.ts`; tests with SDK fixtures [SKILL: commercetools-storefront] [SPEC: cart-management]
 - [x] O-02 Route handlers `GET /api/cart`, `POST /api/cart/rx-lines`, `DELETE /api/cart/lines/[id]` using `handle()` + `withCartRetry`; session `cartId` set/cleared; 401 without customer; tests incl. stale cartId tolerated [SKILL: commercetools-storefront] [SPEC: cart-management]
-- [ ] O-03 Replace-not-duplicate rule and "no quantity editing" (API rejects a quantity change); tests [SPEC: design-cart]
+- [x] O-03 Replace-not-duplicate rule and "no quantity editing" (API rejects a quantity change); tests [SPEC: design-cart]
 - [ ] O-04 Re-validation on load with typed `unavailableReason` and `Price updated` note (`lastSeenUnitPrice`); tests per case [SKILL: commercetools-commerce-patterns] [SPEC: design-cart]
 - [ ] O-05 `hooks/use-cart.ts` real implementation (SWR, mutations with optimistic-free revalidation, `addWithToast`), header count binding (lines) [SPEC: cart-management]
 - [ ] O-06 `CartPage` (lines card, summary, FREE badge/fee, Checkout button disabled with reason, empty state, anonymous prompt via `RequireSignIn`), live region "Removed <name>"; tests [SPEC: cart-page]
