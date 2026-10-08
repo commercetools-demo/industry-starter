@@ -1,8 +1,9 @@
 import { screen } from '@testing-library/react';
-import type { Order as CtOrder } from '@commercetools/platform-sdk';
 import { mapOrder } from '@/lib/mappers/order';
 import { orderA, orderDevice } from '@/test/fixtures/orders';
 import { renderWithProviders } from '@/test/utils';
+
+type CtOrder = ReturnType<typeof orderDevice>;
 import { CancellationNotice } from './CancellationNotice';
 import { OrderActions } from './OrderActions';
 

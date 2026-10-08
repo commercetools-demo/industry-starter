@@ -1,10 +1,13 @@
 import type { ReactElement } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { PriceSchedule } from '@/components/bundle/PriceSchedule';
+import { CancellationNotice } from '@/components/orders/CancellationNotice';
+import { OrderActions } from '@/components/orders/OrderActions';
+import { ReturnsSection } from '@/components/orders/ReturnsSection';
+import { ShipmentSection } from '@/components/orders/ShipmentSection';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { formatDate, formatDateTime } from '@/lib/account/format';
 import type { ActivePlan, Locale, Order } from '@/lib/types';
-import { OrderActions } from './OrderActions';
 import { OrderLines } from './OrderLines';
 import { OrderStatusTag } from './OrderStatusTag';
 import { OrderTotals } from './OrderTotals';
@@ -16,7 +19,7 @@ import './receipt.css';
 const H2 = 'm-0 font-display text-2xl font-bold tracking-ui';
 
 /** One order: items, totals, the agreed prices, the Broadband Facts of the day, delivery, and the actions. */
-export function OrderDetail({ order, customerName }: { order: Order; customerName: string }): ReactElement {
+export function OrderDetail({ order, customerName, nowIso }: { order: Order; customerName: string; nowIso?: string }): ReactElement {
   const t = useTranslations('account');
   const locale = useLocale() as Locale;
 
@@ -50,6 +53,11 @@ export function OrderDetail({ order, customerName }: { order: Order; customerNam
         <OrderLines order={order} />
         <OrderTotals order={order} />
       </section>
+
+      <CancellationNotice order={order} />
+      <OrderActions order={order} {...(nowIso ? { nowIso } : {})} />
+      <ShipmentSection order={order} />
+      <ReturnsSection order={order} />
 
       {schedules.length > 0 ? (
         <section aria-labelledby="order-schedule" className="flex flex-col gap-5">
@@ -94,7 +102,6 @@ export function OrderDetail({ order, customerName }: { order: Order; customerNam
       <div className="flex flex-wrap items-center gap-3" data-print="hide">
         {order.status === 'cancelled' ? null : <ReorderButton orderNumber={order.orderNumber} />}
         <PrintReceiptButton />
-        <OrderActions order={order} />
       </div>
     </div>
   );

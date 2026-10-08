@@ -1,8 +1,9 @@
 import { screen, within } from '@testing-library/react';
-import type { Order as CtOrder } from '@commercetools/platform-sdk';
 import { mapOrder } from '@/lib/mappers/order';
 import { orderA, orderDevice } from '@/test/fixtures/orders';
 import { renderWithProviders } from '@/test/utils';
+
+type CtOrder = ReturnType<typeof orderDevice>;
 import { ShipmentSection } from './ShipmentSection';
 
 const withShipping = (order: CtOrder, deliveries: unknown[], shipmentState?: string): CtOrder =>

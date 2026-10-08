@@ -5,6 +5,7 @@ import { OrderDetail } from '@/components/account/OrderDetail';
 import { requireCustomerPage } from '@/lib/auth/guard';
 import { isLocale } from '@/lib/config/markets';
 import { getOrderForCustomer } from '@/lib/ct/orders';
+import { postPurchaseNow } from '@/lib/orders/now';
 
 // Session-specific: read on every request, never cached, never indexed.
 export const dynamic = 'force-dynamic';
@@ -36,5 +37,6 @@ export default async function OrderPage({ params }: Props) {
   const order = await getOrderForCustomer(orderNumber, customer.id, locale);
   if (!order) notFound();
   const customerName = [customer.firstName, customer.lastName].map((part) => part?.trim() ?? '').filter(Boolean).join(' ');
-  return <OrderDetail order={order} customerName={customerName} />;
+  // The cancel and return windows are decided from one clock read on the server (DEV_NOW_OFFSET_DAYS only moves it in `next dev`).
+  return <OrderDetail order={order} customerName={customerName} nowIso={postPurchaseNow().toISOString()} />;
 }
