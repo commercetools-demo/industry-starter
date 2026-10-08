@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   checkAuthorization,
   checkCeiling,
+  checkReplenishmentRun,
   checkShelfLife,
   checkStock,
   daysBetween,
@@ -51,6 +52,22 @@ describe('prescription-bound-supply: Authorization outside its window', () => {
 
   it('expiry is the reason even when the authorization is also exhausted', () => {
     expect(checkAuthorization({ refillsLeft: 0, lineQty: 30, today: '2026-03-02', expiresAt: '2026-03-01' }).reason).toBe('EXPIRED');
+  });
+});
+
+describe('prescription-bound-supply: Standing replenishment stops at the window', () => {
+  const base = { refillsLeft: 2, lineQty: 30, expiresAt: '2026-12-31' };
+
+  it('runs while the authorization is in date with refills left', () => {
+    expect(checkReplenishmentRun({ ...base, today: '2026-11-01' })).toEqual({ run: true });
+  });
+
+  it('the next run after the window closes places no order and records expiry as the reason', () => {
+    expect(checkReplenishmentRun({ ...base, today: '2027-01-01' })).toEqual({ run: false, reason: 'EXPIRED', recordedAs: 'authorization-expired' });
+  });
+
+  it('the next run after the last refill places no order and records exhaustion', () => {
+    expect(checkReplenishmentRun({ ...base, refillsLeft: 0, today: '2026-11-01' })).toEqual({ run: false, reason: 'NO_REFILLS', recordedAs: 'authorization-exhausted' });
   });
 });
 

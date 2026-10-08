@@ -70,6 +70,23 @@ export function checkAuthorization(i: AuthorizationInput): Check {
   return { reason: 'OK', remaining };
 }
 
+export type ReplenishmentDecision =
+  | { run: true }
+  /** The run does not place an order; `reason` is recorded on the standing order so a blocked run does not look like an outage. */
+  | { run: false; reason: 'EXPIRED' | 'NO_REFILLS'; recordedAs: string };
+
+/**
+ * Gate for a standing replenishment (subscription / recurring order, workstream T): a schedule is not an entitlement.
+ * Checked before each generated order; when the authorization has lapsed or is exhausted the run is skipped and the
+ * reason is returned for T to record.
+ */
+export function checkReplenishmentRun(i: Omit<AuthorizationInput, 'requestedQty'>): ReplenishmentDecision {
+  const check = checkAuthorization(i);
+  if (check.reason === 'OK') return { run: true };
+  const reason = check.reason === 'EXPIRED' ? 'EXPIRED' : 'NO_REFILLS';
+  return { run: false, reason, recordedAs: reason === 'EXPIRED' ? 'authorization-expired' : 'authorization-exhausted' };
+}
+
 // ---------------------------------------------------------------- stock
 
 export function checkStock(i: { available: number; requested: number }): Check {
