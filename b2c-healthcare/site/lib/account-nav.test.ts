@@ -13,7 +13,7 @@ describe('design-account-area: account nav registry', () => {
   });
 
   it('starts with the four designed items; addresses and profile follow', () => {
-    expect(ACCOUNT_NAV.map((i) => i.key)).toEqual(['overview', 'labs', 'appointments', 'orders', 'lists', 'auto-refill', 'addresses', 'profile']);
+    expect(ACCOUNT_NAV.map((i) => i.key)).toEqual(['overview', 'labs', 'appointments', 'orders', 'lists', 'auto-refill', 'payment-methods', 'addresses', 'profile']);
   });
 
   it.each([
@@ -25,6 +25,7 @@ describe('design-account-area: account nav registry', () => {
     ['/account/addresses', 'addresses'],
     ['/account/lists/mlv-list-1', 'lists'],
     ['/account/auto-refill', 'auto-refill'],
+    ['/account/payment-methods', 'payment-methods'],
   ])('%s activates %s', (path, key) => {
     expect(activeAccountItem(path)?.key).toBe(key);
   });

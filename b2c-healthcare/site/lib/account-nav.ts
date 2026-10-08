@@ -20,6 +20,7 @@ export const ACCOUNT_NAV: readonly AccountNavItem[] = [
   { key: 'orders', href: '/account/orders', labelKey: 'orders' },
   { key: 'lists', href: '/account/lists', labelKey: 'lists' },
   { key: 'auto-refill', href: '/account/auto-refill', labelKey: 'autoRefill' },
+  { key: 'payment-methods', href: '/account/payment-methods', labelKey: 'paymentMethods' },
   { key: 'addresses', href: '/account/addresses', labelKey: 'addresses' },
   { key: 'profile', href: '/account/profile', labelKey: 'profile' },
 ];

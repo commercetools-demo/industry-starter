@@ -43,7 +43,7 @@ describe('design-account-area: Account layout and navigation', () => {
     renderShell();
     const nav = screen.getByRole('navigation', { name: 'Account navigation' });
     const names = within(nav).getAllByRole('link').map((a) => a.textContent);
-    expect(names).toEqual(['Overview', 'Lab tests', 'Appointments', 'Orders', 'My medicines', 'Auto-refill', 'Addresses', 'Profile']);
+    expect(names).toEqual(['Overview', 'Lab tests', 'Appointments', 'Orders', 'My medicines', 'Auto-refill', 'Payment methods', 'Addresses', 'Profile']);
     const current = within(nav).getAllByRole('link').filter((a) => a.getAttribute('aria-current') === 'page');
     expect(current.map((a) => a.textContent)).toEqual(['Lab tests']);
     expect(current[0]?.className).toContain('bg-action');

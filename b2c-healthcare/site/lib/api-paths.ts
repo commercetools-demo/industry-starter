@@ -52,3 +52,6 @@ export const apiListLine = (id: string, lineId: string): string => `${apiList(id
 export const apiListAddAll = (id: string): string => `${apiList(id)}/add-all-to-cart`;
 export const API_AUTO_REFILL = '/api/auto-refill';
 export const apiAutoRefill = (id: string): string => `${API_AUTO_REFILL}/${encodeURIComponent(id)}`;
+export const API_PAYMENT_METHODS = '/api/payment-methods';
+export const apiPaymentMethod = (id: string, confirm = false): string => `${API_PAYMENT_METHODS}/${encodeURIComponent(id)}${confirm ? '?confirm=1' : ''}`;
+export const apiPaymentMethodDefault = (id: string): string => `${API_PAYMENT_METHODS}/${encodeURIComponent(id)}/default`;

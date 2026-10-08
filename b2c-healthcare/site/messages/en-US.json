@@ -426,7 +426,8 @@
       "signOut": "Sign out",
       "signOutFailed": "We could not sign you out. Please try again.",
       "lists": "My medicines",
-      "autoRefill": "Auto-refill"
+      "autoRefill": "Auto-refill",
+      "paymentMethods": "Payment methods"
     },
     "overview": {
       "title": "Overview",
@@ -1099,5 +1100,31 @@
       "view": "See your auto-refills",
       "failed": "We could not set up auto-refill. Please try again."
     }
+  },
+  "paymentMethods": {
+    "metaTitle": "Payment methods",
+    "title": "Payment methods",
+    "sub": "Cards you saved while paying. Malva never sees your card number: only the card brand and the last four digits are shown here.",
+    "empty": "No payment methods saved.",
+    "emptyHint": "You can save a card while you pay at checkout. Tick \"Save this card\" in the payment form.",
+    "addAtCheckout": "Go to your cart",
+    "loadFailed": "We could not load your payment methods. Please try again.",
+    "unavailable": "Payment methods are not available right now.",
+    "card": "{brand} ending {last4}",
+    "cardNoDigits": "{brand}",
+    "expires": "Expires {month}/{year}",
+    "default": "Default",
+    "makeDefault": "Make default",
+    "remove": "Remove",
+    "removeLabel": "Remove {card}",
+    "makeDefaultLabel": "Make {card} the default",
+    "failed": "We could not do that. Please try again.",
+    "defaultRemoved": "The default card was removed. No card is the default now: you will choose one at your next checkout.",
+    "removed": "Card removed.",
+    "refillsPaused": "{count, plural, one {# auto-refill was} other {# auto-refills were}} paused because it was charged to this card. Choose another card and resume it.",
+    "dependsWarning": "{count, plural, one {An auto-refill is} other {# auto-refills are}} charged to this card. If you remove it, {count, plural, one {it} other {they}} will be paused.",
+    "removeAnyway": "Remove and pause",
+    "keep": "Keep this card",
+    "note": "Refunds to a saved card cannot be reversed automatically. If you need one, contact us."
   }
 }
