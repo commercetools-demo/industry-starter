@@ -18,7 +18,7 @@ Footer/nav links added in H footers point here (H-08 had omitted undesigned link
 - [x] V-02 Policy pages (3) with effective date, version access, checkout links; tests incl. superseded version and not-translated fallback [SPEC: policy-pages]
 - [x] V-03 FAQ page (grouped, full answers in HTML, anchors/deep links) with tests that the answer text is present without JS [SPEC: faq]
 - [x] V-04 About page from content only, no commercetools imports (lint test: `app/[locale]/about` imports nothing from `lib/ct`) [SKILL: commercetools-storefront] [SPEC: about-us]
-- [ ] V-05 Contact page (plain text blocks, emergency disclaimer) and N/A mapping with reasons in the checklist [SPEC: contact-us]
+- [x] V-05 Contact page (plain text blocks, emergency disclaimer) and N/A mapping with reasons in the checklist [SPEC: contact-us]
 - [ ] V-06 Journal list + article pages with metadata, category filter, empty and withdrawn states, 3 seeded articles; tests [SPEC: blog-resources]
 - [ ] V-07 Sitemap (`app/sitemap.ts`) and robots listing static pages and articles; absolute canonical/hreflang URLs; tests [SPEC: blog-resources]
 - [ ] V-08 Turn on footer/home links for the pages that now exist (route manifest `lib/routes.ts`), test that every footer link resolves to an existing route [SPEC: faq]
@@ -31,10 +31,10 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [ ] Feedback collector unreachable — N/A: the v1 FAQ has no "Was this helpful?" collector (omitted by design, so it cannot be unreachable); test asserts no vote control and no fetch
 - [x] Answer not translated
 #### contact-us › Contact page that confirms only enquiries support has accepted
-- [ ] Enquiry accepted downstream
-- [ ] Routing unavailable
-- [ ] Chat script absent
-- [ ] Region without an office
+- [ ] Enquiry accepted downstream — N/A: no contact form in v1 (Q-072), so there is no enquiry to accept; the page lists phone and email as plain text
+- [ ] Routing unavailable — N/A: no contact form in v1 (Q-072), so nothing is routed downstream
+- [ ] Chat script absent — N/A: no chat script in v1 (Q-072); a test asserts the page renders no script, iframe or form
+- [x] Region without an office
 #### about-us › About page assembled entirely from published CMS content
 - [x] Editor publishes a correction
 - [x] Commerce tier degraded
