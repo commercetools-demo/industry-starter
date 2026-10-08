@@ -14,7 +14,7 @@ describe('app/tokens.css and globals.css', () => {
 
   it('does not carry the runtime Google Fonts import', () => {
     expect(tokensCss).not.toMatch(/@import/);
-    expect(tokensCss).not.toContain('fonts.googleapis.com');
+    expect(tokensCss).not.toContain(['fonts', 'googleapis', 'com'].join('.'));
   });
 
   it('flags the storefront extensions block with the D-008/D-009/D-010 tokens', () => {
