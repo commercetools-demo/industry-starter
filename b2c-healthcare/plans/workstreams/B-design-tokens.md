@@ -10,7 +10,7 @@ Contrast: unit-test the ratios with a small WCAG function (white on #2aa7ff ≈ 
 Design lint: copy `design/source/_ds/_adherence.oxlintrc.json` rules verbatim into `site/.oxlintrc.json`, with the token allow-list **generated** from `tokens.css` by a script (so it never drifts).
 
 ## Tasks
-- [ ] B-01 Copy the token declarations verbatim into `app/tokens.css` (minus the font `@import`), import it from `app/globals.css`, add the `@theme inline` mapping; add the "storefront extensions" block [SPEC: design-system-tokens]
+- [x] B-01 Copy the token declarations verbatim into `app/tokens.css` (minus the font `@import`), import it from `app/globals.css`, add the `@theme inline` mapping; add the "storefront extensions" block [SPEC: design-system-tokens]
 - [ ] B-02 `next/font` for Poppins, Lato, Roboto in `app/layout.tsx` exposing `--font-display/--font-meta/--font-body` (self-hosted, `display: swap`); test that no `fonts.googleapis.com` string exists in `app/` [SPEC: design-system-tokens]
 - [ ] B-03 `scripts/check-token-parity.mjs` (replaces the stub): compares every custom property of `design/source/_ds/tokens.css` with `app/tokens.css`; names missing, renamed or changed tokens; ignores the extensions block. Tests with fixture CSS for each failure kind [SPEC: design-system-tokens]
 - [ ] B-04 `site/.oxlintrc.json` from the adherence file plus `scripts/gen-lint-allowlist.mjs`; wire into `npm run check`; test: a fixture component with `#fff`, `padding: 13px` and `font-family: Arial` yields the rule messages [SPEC: design-system-tokens]
