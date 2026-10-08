@@ -2,6 +2,7 @@ import { ApiError, handle } from '@/lib/api';
 import { validateSignIn } from '@/lib/auth-validation';
 import { FIELDS_INVALID, LOGIN_FAILED, clientKeyOf, readJsonObject, toAccountUser, tooManyAttempts } from '@/lib/auth-route';
 import { InvalidCredentialsError, TooManyAttemptsError, login } from '@/lib/ct/identity';
+import { attachAfterSignIn } from '@/lib/attach-guest-bookings';
 import { getSession, updateSession } from '@/lib/session';
 
 /**
@@ -26,6 +27,8 @@ export async function POST(request: Request): Promise<Response> {
       });
       // `cartId: undefined` removes a stale anonymous cart that did not come back with the customer.
       await updateSession({ customerId: outcome.user.id, cartId: outcome.cartId });
+      // Guest bookings made in this browser, or under this verified email, become the patient's (R-07; never throws).
+      await attachAfterSignIn({ customerId: outcome.user.id, email: outcome.user.email, emailVerified: outcome.user.isEmailVerified });
       return toAccountUser(outcome.user);
     } catch (error) {
       if (error instanceof InvalidCredentialsError) throw new ApiError(401, LOGIN_FAILED);

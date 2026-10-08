@@ -1,6 +1,7 @@
 import { ApiError, handle } from '@/lib/api';
 import { FIELDS_INVALID, REGISTER_REFUSED, clientKeyOf, readJsonObject, toAccountUser, tooManyAttempts } from '@/lib/auth-route';
 import { EmailUnavailableError, TooManyAttemptsError, ValidationError, register } from '@/lib/ct/identity';
+import { attachAfterSignIn } from '@/lib/attach-guest-bookings';
 import { getSession, updateSession } from '@/lib/session';
 
 /**
@@ -21,6 +22,7 @@ export async function POST(request: Request): Promise<Response> {
         clientKey: clientKeyOf(request),
       });
       await updateSession({ customerId: outcome.user.id, cartId: outcome.cartId });
+      await attachAfterSignIn({ customerId: outcome.user.id, email: outcome.user.email, emailVerified: outcome.emailVerified });
       return Response.json({ ...toAccountUser(outcome.user), emailVerified: outcome.emailVerified }, { status: 201 });
     } catch (error) {
       if (error instanceof ValidationError) return Response.json({ error: FIELDS_INVALID, fields: error.problems }, { status: 400 });
