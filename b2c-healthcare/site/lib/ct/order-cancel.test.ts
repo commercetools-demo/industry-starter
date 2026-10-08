@@ -60,7 +60,7 @@ vi.mock('@/lib/ct/client', () => ({
     }),
   },
 }));
-vi.mock('@/lib/ct/fixtures', () => ({ loadCheckoutFixtures: async () => null }));
+vi.mock('@/lib/ct/fixtures', () => ({ loadCheckoutFixtures: async () => null, loadFundingFixtures: async () => null }));
 
 import type { Prescription } from '@/lib/clinical/types';
 import { CONTAINERS } from '@/lib/ct/custom-objects';
@@ -171,5 +171,24 @@ describe('order-history: Detail of an order not theirs (cancel)', () => {
     expect(refills()).toBe(2);
     expect(order.stateKey).toBe('mlv-received');
     expect(p.release).not.toHaveBeenCalled();
+  });
+});
+
+describe('benefit-allowance-drawdown: Return restores the balance (cancel hook, workstream U)', () => {
+  it('cancelling an order that drew from the allowance gives the amount back once, even when the cancel is repeated', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+    try {
+      const { drawdown, getBalance, grantCycle } = await import('./allowance');
+      await grantCycle('pt_sam', '2026-10', 5000);
+      await drawdown('pt_sam', 'ord-1', 3000, NOW);
+      expect(await getBalance('pt_sam', NOW)).toBe(2000);
+      await cancelOrderForCustomer('ord-1', 'c-sam', provider(), 'en-US');
+      expect(await getBalance('pt_sam', NOW)).toBe(5000);
+      await cancelOrderForCustomer('ord-1', 'c-sam', provider(), 'en-US');
+      expect(await getBalance('pt_sam', NOW)).toBe(5000);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

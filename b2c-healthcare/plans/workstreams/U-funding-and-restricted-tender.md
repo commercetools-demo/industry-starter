@@ -17,7 +17,7 @@ Order meta: `custom.mlv-order-meta` records `allowanceApplied` and `restrictedAp
 - [x] U-02 Cart integration: set external line price + `coveredAmount`, re-resolve on every cart mutation/load, response shape with `youOwe`/`planCovers`; tests incl. basket change altering cover on an existing line [SKILL: commercetools-commerce-patterns] [SPEC: payer-and-patient-cost-share]
 - [x] U-03 Pre-order re-resolve + compare in `placeOrder` (Q-05), `unresolved` blocks checkout; tests "figures unchanged between review and payment" and "resolver unavailable" [SKILL: commercetools-checkout] [SPEC: payer-and-patient-cost-share]
 - [x] U-04 Cart/checkout UI for two figures, "Not covered" vs "unresolved" visuals; tests [SPEC: payer-and-patient-cost-share]
-- [ ] U-05 `lib/ct/allowance.ts`: balance, `drawdown(orderId, amount)` idempotent on order id with version-conflict retry, `restoreAllowance`, `grantCycle` idempotent; tests: covers/partly covers/concurrent orders/return to open vs closed cycle [SKILL: commercetools-commerce-patterns] [SPEC: benefit-allowance-drawdown]
+- [x] U-05 `lib/ct/allowance.ts`: balance, `drawdown(orderId, amount)` idempotent on order id with version-conflict retry, `restoreAllowance`, `grantCycle` idempotent; tests: covers/partly covers/concurrent orders/return to open vs closed cycle [SKILL: commercetools-commerce-patterns] [SPEC: benefit-allowance-drawdown]
 - [ ] U-06 Allowance as its own Payment before the card in `placeOrder`; remainder amount to the Checkout payment; tests incl. "allowance covers the order → no other tender taken" [SKILL: commercetools-checkout] [SPEC: benefit-allowance-drawdown]
 - [ ] U-07 `scripts/reload-allowances.ts` + Netlify scheduled function wrapper; tests: run twice = once, forfeit not carried; `/account/allowance` page with lapsing amount/date; "not cash" test [SKILL: commercetools-commerce-patterns] [SPEC: benefit-allowance-drawdown]
 - [ ] U-08 `lib/funding/eligibility.ts`: copy flag to line, `splitBasket(lines, discounts)` pro-rata apportionment, shipping excluded; table tests for wholly/mixed/none and re-split [SKILL: commercetools-commerce-patterns] [SPEC: eligible-item-tender-restriction]
@@ -39,12 +39,12 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [x] Figures unchanged between review and payment
 - [x] Resolver unavailable
 #### benefit-allowance-drawdown › A sponsor's allowance, drawn down first and reloaded on a cycle
-- [ ] Allowance covers the order
-- [ ] Allowance partly covers the order
+- [x] Allowance covers the order
+- [x] Allowance partly covers the order
 - [ ] Balance visible before committing
 - [ ] Cycle reload
 - [ ] Forfeiture is announced
-- [ ] Return restores the balance
+- [x] Return restores the balance
 - [ ] Allowance is not cash
 #### eligible-item-tender-restriction › A restricted instrument paying only for the lines it may pay for
 - [ ] Wholly eligible basket

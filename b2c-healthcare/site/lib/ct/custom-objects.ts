@@ -15,6 +15,10 @@ export const CONTAINERS = {
   dispenseLedger: 'malva-dispense-ledger',
   /** One entry per checkout attempt (idempotency key = cart id + version): the double-submit lock (workstream Q). */
   orderAttempt: 'malva-order-attempt',
+  /** One entry per member per monthly cycle: `{granted, consumed, lapsed, ...}` under optimistic concurrency (workstream U). */
+  allowance: 'malva-allowance',
+  /** One entry per order that drew from an allowance (key = order id): finds the cycle again on cancel (workstream U). */
+  allowanceLedger: 'malva-allowance-ledger',
 } as const;
 
 export interface StoredObject<T> { key: string; version: number; value: T }
