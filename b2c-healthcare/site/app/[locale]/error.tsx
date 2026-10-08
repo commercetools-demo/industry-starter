@@ -1,18 +1,8 @@
 'use client';
-import { useTranslations } from 'next-intl';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
+import { FaultView } from '@/components/layout/FaultView';
 
-// Shell of the route error boundary; workstream I replaces the copy and adds the specific cases.
-// The error itself is never rendered or logged here: its message can echo configuration or input.
-export default function LocaleError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  const t = useTranslations();
-  return (
-    <div className="mx-auto max-w-content px-5 py-14 nav:px-8">
-      <Card className="mx-auto grid max-w-110 gap-4" role="alert">
-        <p className="text-lg text-navy-900">{t('errors.generic')}</p>
-        <Button onClick={reset}>{t('common.retry')}</Button>
-      </Card>
-    </div>
-  );
+// Route error boundary inside the locale layout, so the header and footer stay (the session and cart
+// are untouched by a render fault). Only `digest` is used; the error text and stack are never shown.
+export default function LocaleError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  return <FaultView reset={reset} digest={error.digest} />;
 }
