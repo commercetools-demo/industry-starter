@@ -323,3 +323,59 @@ export interface Cart extends CartSummary {
 }
 
 export const isFullCart = (cart: CartSummary | Cart | null | undefined): cart is Cart => Boolean(cart && 'lines' in cart);
+
+// ---------------------------------------------------------------- checkout (workstream Q)
+
+/** A delivery method the platform says fits the cart (matching-cart), with the price of the rate that matches. */
+export interface DeliveryOption {
+  key: string;
+  /** Platform method name; the card shows its own localized label per known key. */
+  name: string;
+  price: Money;
+}
+
+/** The cart as checkout shows it: every amount is the platform's, taken from the last cart read. */
+export interface CheckoutCart extends Cart {
+  /** Address set on the cart; null until one is saved. */
+  shippingAddress: AddressInput | null;
+  /** Key of the selected delivery method; null until one is set. */
+  shippingMethodKey: string | null;
+  /** `taxedPrice.totalTax`; null while the platform has not calculated tax. */
+  tax: Money | null;
+}
+
+/** Which payment path the page uses. `demo` is the dev-only fake provider (never in production). */
+export type PaymentMode = 'psp' | 'demo';
+
+/** Everything the checkout page renders, read from the server. */
+export interface CheckoutState {
+  cart: CheckoutCart;
+  options: DeliveryOption[];
+  /** False when the platform has no delivery method for the cart's address. */
+  deliverable: boolean;
+  paymentMode: PaymentMode;
+}
+
+/** The Checkout session the browser SDK needs. */
+export interface PaymentSessionInfo {
+  sessionId: string;
+  projectKey: string;
+  region: string;
+}
+
+export type PlaceOrderFailure =
+  | 'EMPTY_CART'
+  | 'ADDRESS_MISSING'
+  | 'NO_DELIVERY_METHOD'
+  | 'LINES_UNAVAILABLE'
+  | 'TOTALS_MOVED'
+  | 'PAYMENT_REQUIRED'
+  | 'PAYMENT_DECLINED'
+  | 'DISPENSE_REFUSED'
+  | 'PLACEMENT_FAILED'
+  | 'IN_PROGRESS';
+
+export interface PlacedOrder {
+  orderId: string;
+  orderNumber: string;
+}

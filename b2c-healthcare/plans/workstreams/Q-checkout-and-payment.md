@@ -14,7 +14,7 @@ Page `/checkout` (sign-in required "Sign in to check out."; empty cart → "Your
 Totals always from the cart; "Address changes the total" is satisfied because tax is 0% (D-033) but the re-read is still performed and tested with a fixture whose tax changes.
 
 ## Tasks
-- [ ] Q-01 `lib/checkout/config.ts` (`SAME_DAY_CUTOFF`, tz) + `lib/ct/shipping-options.ts` `getOptionsForCart(cartId, now)` combining platform matching methods with the cut-off; tests incl. just-before/after 14:00 and out-of-state address [SKILL: commercetools-commerce-patterns] [SPEC: checkout-page]
+- [x] Q-01 `lib/checkout/config.ts` (`SAME_DAY_CUTOFF`, tz) + `lib/ct/shipping-options.ts` `getOptionsForCart(cartId, now)` combining platform matching methods with the cut-off; tests incl. just-before/after 14:00 and out-of-state address [SKILL: commercetools-commerce-patterns] [SPEC: checkout-page]
 - [ ] Q-02 `PUT /api/checkout/address` and `PUT /api/checkout/shipping-method` handlers: set on cart, re-read, return the cart; tests: totals taken from the response, no method for address → 422 [SKILL: commercetools-storefront] [SPEC: checkout-page]
 - [ ] Q-03 `AddressCard`, `DeliverySpeedCard` (RadioCard, 1.5 px azure border when selected), validation focus handling, "Same-day not available" state; tests [SPEC: design-checkout]
 - [ ] Q-04 `POST /api/checkout/session` and `PaymentCard` mounting the Checkout browser SDK; env names in `.env.example` (`CTP_CHECKOUT_*`, public application key only is `NEXT_PUBLIC_*`-free by design: pass it via a server-rendered prop); a test asserting no input with `autocomplete=cc-*` exists in storefront code [SKILL: commercetools-checkout] [SPEC: design-checkout]
