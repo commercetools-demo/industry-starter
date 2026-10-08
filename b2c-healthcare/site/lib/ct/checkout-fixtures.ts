@@ -80,7 +80,9 @@ export async function setShippingMethod(ctx: CheckoutContext, key: string): Prom
 // ---------------------------------------------------------------- placing an order (fixtures only)
 
 const placed = new Map<string, PlaceOrderOutcome>();
-const fixtureOrders = new Map<string, { customerId: string; view: OrderView }>();
+// On globalThis: the route handlers that place and cancel and the pages that read are separate bundles in `next dev`.
+const orderStore = globalThis as unknown as { __malvaFixtureOrders?: Map<string, { customerId: string; view: OrderView }> };
+const fixtureOrders = (orderStore.__malvaFixtureOrders ??= new Map());
 let orderSeq = 0;
 
 type Total = { centAmount: number; currencyCode: string };
