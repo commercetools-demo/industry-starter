@@ -15,7 +15,7 @@ Design lint: copy `design/source/_ds/_adherence.oxlintrc.json` rules verbatim in
 - [x] B-03 `scripts/check-token-parity.mjs` (replaces the stub): compares every custom property of `design/source/_ds/tokens.css` with `app/tokens.css`; names missing, renamed or changed tokens; ignores the extensions block. Tests with fixture CSS for each failure kind [SPEC: design-system-tokens]
 - [x] B-04 `site/.oxlintrc.json` from the adherence file plus `scripts/gen-lint-allowlist.mjs`; wire into `npm run check`; test: a fixture component with `#fff`, `padding: 13px` and `font-family: Arial` yields the rule messages [SPEC: design-system-tokens]
 - [x] B-05 Contrast helper `lib/a11y/contrast.ts` + tests for the pairs listed in Design; record D-010 evidence in `plans/DECISIONS.md` [SPEC: design-system-tokens]
-- [ ] B-06 Global focus ring: `:focus-visible { outline: var(--focus-ring) }` for `a, button, input, select, textarea, [tabindex]`; test that `globals.css` has no `outline: 0`/`none` without a replacement [SPEC: design-system-tokens]
+- [x] B-06 Global focus ring: `:focus-visible { outline: var(--focus-ring) }` for `a, button, input, select, textarea, [tabindex]`; test that `globals.css` has no `outline: 0`/`none` without a replacement [SPEC: design-system-tokens]
 - [ ] B-07 Dev-only page `app/[locale]/_tokens/page.tsx` is created in H; here create `components/dev/TokenSwatches.tsx` (colors, type scale, radii, shadows, status badges, primary button on azure with navy label vs white label) with a render test [SPEC: design-system-tokens]
 - [ ] B-08 Wire parity + design lint into `npm run check` and prove failure: temporarily rename a token → check fails naming it (put this in the PR description) [SPEC: storefront-project-bootstrap]
 

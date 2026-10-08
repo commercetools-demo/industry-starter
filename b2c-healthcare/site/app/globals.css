@@ -1,6 +1,18 @@
 @import 'tailwindcss';
 @import './tokens.css';
 
+/* Visible keyboard focus on every interactive element (design-system-tokens: Keyboard focus).
+   Unlayered on purpose: component utilities cannot remove the ring by accident. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
 /* Tailwind v4 theme mapping: utilities read the design tokens (declared in tokens.css). */
 @theme inline {
   --color-*: initial;
