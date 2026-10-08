@@ -14,6 +14,19 @@ export interface Money {
   fractionDigits: number;
 }
 
+/** Product fields every catalog page needs (title, description, imagery). */
+export interface ProductBasics {
+  id: string;
+  key: string;
+  productTypeId: string;
+  name: LocalizedString;
+  slug: LocalizedString;
+  description: LocalizedString;
+  sku: string | null;
+  imageUrls: string[];
+  categoryIds: string[];
+}
+
 /** A catalog category with its children nested (public, identical for every visitor). */
 export interface Category {
   id: string;
