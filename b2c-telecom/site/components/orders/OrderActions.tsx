@@ -1,9 +1,10 @@
 import type { ReactElement, ReactNode } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
-import { cancelEligibility } from '@/lib/orders/postPurchaseRules';
+import { cancelEligibility, returnEligibility } from '@/lib/orders/postPurchaseRules';
 import type { Locale, Order } from '@/lib/types';
 import { CancelOrderDialog, type EtfRow } from './CancelOrderDialog';
+import { ReturnRequestDialog } from './ReturnRequestDialog';
 
 /** `March 12, 2026` / `12. März 2026`: long form, in UTC so a date-only value never shifts with the viewer's time zone. */
 function longDate(value: string, locale: Locale): string {
@@ -37,7 +38,10 @@ export function OrderActions({ order, nowIso }: { order: Order; nowIso?: string 
   const now = nowIso ? new Date(nowIso) : new Date();
   const cancel = cancelEligibility(order, now);
   const showCancel = cancel.allowed || (cancel.block !== 'ALREADY_CANCELLED' && cancel.block !== 'ORDER_COMPLETE');
-  if (!showCancel) return null;
+  const hasDevice = order.lines.some((line) => line.acquisition !== null);
+  const giveBack = returnEligibility(order, now);
+  const showReturn = hasDevice && !(!giveBack.allowed && giveBack.block === 'ORDER_CANCELLED');
+  if (!showCancel && !showReturn) return null;
 
   return (
     <section aria-label={t('actions.title')} className="flex w-full flex-col gap-5">
@@ -55,6 +59,18 @@ export function OrderActions({ order, nowIso }: { order: Order; nowIso?: string 
                 {t('cancel.contact')}
               </Button>
             </>
+          )}
+        </Box>
+      ) : null}
+      {showReturn ? (
+        <Box>
+          {giveBack.allowed ? (
+            <>
+              <p className="m-0 text-md">{t('return.until', { date: longDate(giveBack.until, locale) })}</p>
+              <ReturnRequestDialog orderNumber={order.orderNumber} lines={giveBack.lines} />
+            </>
+          ) : (
+            <p className="m-0 text-md">{t(`return.block.${giveBack.block as 'WINDOW_CLOSED'}`)}</p>
           )}
         </Box>
       ) : null}

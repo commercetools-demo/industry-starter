@@ -50,6 +50,37 @@ describe('OrderActions: cancel box', () => {
   });
 });
 
+describe('OrderActions: return box', () => {
+  const MAY = '2026-05-10T12:00:00.000Z'; // the device order was placed on 2026-05-02
+  it('offers the return of a device until 30 days after the order date', () => {
+    view(orderDevice(), MAY);
+    expect(screen.getByText('You can return a device until June 1, 2026 (30 days after ordering).')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Return a device' })).toBeInTheDocument();
+  });
+
+  it('says the window has ended', () => {
+    view(orderDevice(), '2026-06-02T12:00:00.000Z');
+    expect(screen.getByText('The 30-day return window for this order has ended.')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Return a device' })).not.toBeInTheDocument();
+  });
+
+  it('says every device already has a return request', () => {
+    const returned = patched(orderDevice(), { returnInfo: [{ items: [{ id: 'r', type: 'LineItemReturnItem', lineItemId: 'd2', quantity: 1, shipmentState: 'Advised', paymentState: 'NonRefundable' }] }] });
+    view(returned, MAY);
+    expect(screen.getByText('Every device on this order already has a return request.')).toBeInTheDocument();
+  });
+
+  it('shows no return box for an order without a device or for a cancelled order', () => {
+    view(orderA());
+    expect(screen.queryByText(/return/i)).not.toBeInTheDocument();
+  });
+
+  it('hides the return box on a cancelled order', () => {
+    view(patched(orderDevice(), { orderState: 'Cancelled' }), MAY);
+    expect(screen.queryByRole('button', { name: 'Return a device' })).not.toBeInTheDocument();
+  });
+});
+
 describe('CancellationNotice', () => {
   const cancelled = (record: unknown) => {
     const base = orderA();
