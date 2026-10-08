@@ -14,7 +14,26 @@
     "generic": "Something went wrong. Please try again.",
     "notFound": "We could not find that page.",
     "network": "We could not reach the server. Check your connection and try again.",
-    "unauthorized": "Please sign in to continue."
+    "unauthorized": "Please sign in to continue.",
+    "notFoundPage": {
+      "title": "We could not find that page",
+      "body": "The address may be mistyped, or the page may have moved. Pick up where you left off:",
+      "home": "Go to the home page",
+      "doctors": "Find a doctor",
+      "prescriptions": "Prescriptions"
+    },
+    "doctorNotFound": "Doctor not found.",
+    "backToSearch": "Back to search",
+    "orderNotFound": "Order not found.",
+    "notFoundShort": "Not found.",
+    "fault": {
+      "title": "Something went wrong on our side",
+      "body": "This is not caused by anything you did. Your account and cart are unchanged. Please try again.",
+      "retry": "Try again",
+      "home": "Go to the home page",
+      "reference": "Reference: {id}"
+    },
+    "expiredSession": "Your session has ended. Sign in to continue."
   },
   "ui": {
     "busy": "Working",
