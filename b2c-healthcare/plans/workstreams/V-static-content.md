@@ -14,7 +14,7 @@ No CMS exists, so content is **files in the repo** under `site/content/` (Markdo
 Footer/nav links added in H footers point here (H-08 had omitted undesigned links; this workstream turns them on via the route manifest).
 
 ## Tasks
-- [ ] V-01 `lib/content.ts` loader (front matter parse, locale fallback, effective-date handling, withdrawn flag) with tests; content folders and draft files [SPEC: policy-pages]
+- [x] V-01 `lib/content.ts` loader (front matter parse, locale fallback, effective-date handling, withdrawn flag) with tests; content folders and draft files [SPEC: policy-pages]
 - [ ] V-02 Policy pages (3) with effective date, version access, checkout links; tests incl. superseded version and not-translated fallback [SPEC: policy-pages]
 - [ ] V-03 FAQ page (grouped, full answers in HTML, anchors/deep links) with tests that the answer text is present without JS [SPEC: faq]
 - [ ] V-04 About page from content only, no commercetools imports (lint test: `app/[locale]/about` imports nothing from `lib/ct`) [SKILL: commercetools-storefront] [SPEC: about-us]
