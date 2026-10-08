@@ -7,6 +7,9 @@ export const ACCOUNT_KEY_PREFIX = 'account:';
 export const KEY_ADDRESSES = 'account:addresses';
 export const KEY_PAYMENT_METHODS = 'account:payment-methods';
 export const KEY_LISTS = 'account:lists';
-export const keyList = (id: string): string => `account:lists:${id}`;
+/** V: the order the last cancel/return answered with (the order pages are server-rendered; `router.refresh()` shows the new state). */
+export const keyOrder = (orderNumber: string): string => `account:orders:${orderNumber}`;
+export const KEY_ORDERS = 'account:orders';
+export const keyList =(id: string): string => `account:lists:${id}`;
 /** The checkout state (U): the cart plus contact, addresses and delivery; the server page passes it as the SWR fallback. */
 export const KEY_CHECKOUT = '/api/checkout/review';

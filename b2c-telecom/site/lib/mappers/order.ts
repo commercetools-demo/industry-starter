@@ -1,5 +1,6 @@
 import 'server-only';
 import type { Address, LineItem, Order as CtOrder } from '@commercetools/platform-sdk';
+import { CANCEL_REASONS } from '@/lib/config/postPurchase';
 import { getLocalizedString } from '@/lib/format';
 import { addMonths, parseDateOnly } from '@/lib/pricing/dates';
 import { parseLabelSnapshot as parseStoredLabelSnapshot } from '@/lib/pricing/label';
@@ -11,12 +12,16 @@ import type {
   Locale,
   LabelSnapshot,
   Money,
+  CancellationRecord,
   Order,
+  OrderDelivery,
   OrderLine,
   OrderLineAcquisition,
   OrderLineFamily,
   OrderLineKind,
   OrderListItem,
+  OrderParcel,
+  OrderReturn,
   OrderStatus,
   PriceSchedule,
   PriceSelectionMode,
@@ -194,6 +199,74 @@ export function mapAddress(address: Address, defaultId?: string | undefined): Ad
   };
 }
 
+// ---- post-purchase (V): shipments, returns, cancellation ------------------------------------------------------------------------
+
+type DeliveryItems = { id: string; quantity: number }[] | undefined;
+
+function mapDeliveryItems(items: DeliveryItems, names: Map<string, string>): { lineItemId: string; name: string; quantity: number }[] {
+  return (items ?? []).map((item) => ({ lineItemId: item.id, name: names.get(item.id) ?? item.id, quantity: item.quantity }));
+}
+
+/** `shippingInfo.deliveries` with their parcels; the tracking reference is plain text (no carrier integration, D-059). */
+export function mapDeliveries(order: CtOrder, names: Map<string, string>): OrderDelivery[] {
+  return (order.shippingInfo?.deliveries ?? []).map((delivery) => ({
+    id: delivery.id,
+    createdAt: delivery.createdAt,
+    items: mapDeliveryItems(delivery.items, names),
+    parcels: delivery.parcels.map((parcel): OrderParcel => {
+      const trackingId = text(parcel.trackingData?.trackingId);
+      const carrier = text(parcel.trackingData?.carrier);
+      return { id: parcel.id, ...(trackingId ? { trackingId } : {}), ...(carrier ? { carrier } : {}), items: mapDeliveryItems(parcel.items, names) };
+    }),
+  }));
+}
+
+/** `returnInfo`: line item returns only; each item keeps the platform's goods and refund state. */
+export function mapReturns(order: CtOrder, names: Map<string, string>): OrderReturn[] {
+  return (order.returnInfo ?? []).map((info) => ({
+    ...(info.returnDate ? { returnDate: info.returnDate } : {}),
+    items: info.items.flatMap((item) => {
+      const lineItemId = (item as { lineItemId?: string }).lineItemId;
+      if (lineItemId === undefined) return [];
+      return [
+        {
+          id: item.id,
+          lineItemId,
+          name: names.get(lineItemId) ?? lineItemId,
+          quantity: item.quantity,
+          ...(item.comment ? { comment: item.comment } : {}),
+          shipmentState: String(item.shipmentState),
+          paymentState: String(item.paymentState),
+        },
+      ];
+    }),
+  }));
+}
+
+/** The stored cancellation record; undefined for anything unreadable. */
+export function parseCancellation(json: unknown): CancellationRecord | undefined {
+  if (typeof json !== 'string' || json === '') return undefined;
+  try {
+    const value: unknown = JSON.parse(json);
+    if (typeof value !== 'object' || value === null) return undefined;
+    const { reason, note, cancelledAt } = value as Record<string, unknown>;
+    if (typeof reason !== 'string' || !(CANCEL_REASONS as readonly string[]).includes(reason) || typeof cancelledAt !== 'string') return undefined;
+    return { reason: reason as CancellationRecord['reason'], ...(typeof note === 'string' && note !== '' ? { note } : {}), cancelledAt, by: 'customer' };
+  } catch {
+    return undefined;
+  }
+}
+
+/** Early-termination fee text of each line, from the stored label of that line's SKU (never computed). */
+function etfOf(lines: OrderLine[], labels: Order['labels']): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const line of lines) {
+    const etf = labels?.find((entry) => entry.sku === line.sku)?.label.etf;
+    if (etf) result[line.id] = etf;
+  }
+  return result;
+}
+
 export function mapOrder(order: CtOrder, locale: Locale): Order {
   const fields = fieldsOf(order.custom);
   const stored = text(fields?.serviceStartDate);
@@ -202,6 +275,9 @@ export function mapOrder(order: CtOrder, locale: Locale): Order {
   const lines = order.lineItems.map((line) => mapLine(line, locale, schedules, serviceStartDate));
   const currencyCode = order.totalPrice.currencyCode;
   const monthly = lines.filter((line) => line.recurring).reduce((sum, line) => sum + standingMonthly(line, schedules).centAmount, 0);
+  const names = new Map(lines.map((line) => [line.id, line.name]));
+  const labels = parseLabelSnapshot(fields?.labelSnapshot);
+  const cancellation = parseCancellation(fields?.cancellation);
   return {
     id: order.id,
     orderNumber: order.orderNumber ?? order.id,
@@ -215,7 +291,11 @@ export function mapOrder(order: CtOrder, locale: Locale): Order {
     monthly: { centAmount: monthly, currencyCode },
     shippingAddress: order.shippingAddress ? mapAddress(order.shippingAddress) : null,
     schedules,
-    labels: parseLabelSnapshot(fields?.labelSnapshot),
+    labels,
+    deliveries: mapDeliveries(order, names),
+    returns: mapReturns(order, names),
+    ...(cancellation ? { cancellation } : {}),
+    etfByLine: etfOf(lines, labels),
   };
 }
 
