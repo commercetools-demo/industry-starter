@@ -6,7 +6,7 @@ Planning complete (all defaults accepted by the owner 2026-10-08). Counts below 
 | WS | Name | Tasks done/total | Scenarios ticked/total | Status |
 | --- | --- | --- | --- | --- |
 | A | Scaffold, tooling, `npm run check` | 9/9 | 6/9 | Not started |
-| B | Design tokens, fonts, design lint, token parity | 0/8 | 0/11 | Not started |
+| B | Design tokens, fonts, design lint, token parity | 8/8 | 8/11 | Not started |
 | C | Locale routing, messages, region config | 6/6 | 6/7 | Not started |
 | D | BFF core: commercetools client, session, env, health | 7/8 | 14/16 | Not started |
 | E | Seed: clean sample data, catalog data model, shipping, tax, images | 0/10 | 0/0 | Not started |
