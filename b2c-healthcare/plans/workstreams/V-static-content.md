@@ -15,7 +15,7 @@ Footer/nav links added in H footers point here (H-08 had omitted undesigned link
 
 ## Tasks
 - [x] V-01 `lib/content.ts` loader (front matter parse, locale fallback, effective-date handling, withdrawn flag) with tests; content folders and draft files [SPEC: policy-pages]
-- [ ] V-02 Policy pages (3) with effective date, version access, checkout links; tests incl. superseded version and not-translated fallback [SPEC: policy-pages]
+- [x] V-02 Policy pages (3) with effective date, version access, checkout links; tests incl. superseded version and not-translated fallback [SPEC: policy-pages]
 - [ ] V-03 FAQ page (grouped, full answers in HTML, anchors/deep links) with tests that the answer text is present without JS [SPEC: faq]
 - [ ] V-04 About page from content only, no commercetools imports (lint test: `app/[locale]/about` imports nothing from `lib/ct`) [SKILL: commercetools-storefront] [SPEC: about-us]
 - [ ] V-05 Contact page (plain text blocks, emergency disclaimer) and N/A mapping with reasons in the checklist [SPEC: contact-us]
@@ -40,9 +40,9 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [ ] Commerce tier degraded
 - [ ] Locale without translation
 #### policy-pages › Policy pages stating the effective date of the text shown
-- [ ] Opened from checkout
-- [ ] Version superseded
-- [ ] Policy not translated
+- [x] Opened from checkout
+- [x] Version superseded
+- [x] Policy not translated
 #### blog-resources › Articles addressable and indexable independently of the listing
 - [ ] Filter matches nothing
 - [ ] Article withdrawn
