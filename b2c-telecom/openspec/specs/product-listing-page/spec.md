@@ -7,6 +7,10 @@
 
 A listing is only useful if a buyer can narrow it, share it and come back to it. State held in the client instead of the request breaks the back button, breaks a pasted link and makes the page impossible to cache, which matters most here because catalog cards are the largest shared payload in the storefront. Keeping the state in the request is also what lets the shared card data be cached while price and availability stay per-buyer.
 
+## Plan notes
+
+**As built by workstream N (D-019).** The availability indicator and availability facet are not built (services have no inventory); there is no price facet. The sort select is undrawn UI (D-064, D-068).
+
 ## Requirements
 
 ### Requirement: Category listing with request-derived filter and page state
