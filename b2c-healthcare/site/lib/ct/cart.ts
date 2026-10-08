@@ -25,7 +25,7 @@ const isNotFound = (error: unknown): boolean => (error as { statusCode?: number 
  * `currency` is the visitor's region currency (workstream W): a cart's currency is fixed at creation, so after a region
  * switch the old cart (left Active to expire) is ignored, never read, re-priced or added to.
  */
-async function fetchActiveCart(customerId: string, cartId: string | undefined, currency?: string): Promise<CtCart | null> {
+export async function fetchActiveCart(customerId: string, cartId: string | undefined, currency?: string): Promise<CtCart | null> {
   if (cartId) {
     try {
       const { body } = await apiRoot.carts().withId({ ID: cartId }).get().execute();

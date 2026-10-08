@@ -60,7 +60,7 @@ describe('foundation data (types, states, categories, tax, channels)', () => {
     expect(med?.attributes.map((a) => a.name)).toEqual(['strength', 'dosageForm', 'rxOnly', 'dispenseUnit', 'minRemainingShelfLifeDays', 'maxQtyPerOrder', 'hsaEligible', 'controlClass']);
     const byKey = Object.fromEntries(CUSTOM_TYPES.map((t) => [t.key, t]));
     expect(byKey['mlv-rx-line'].resourceTypeIds).toEqual(['line-item']);
-    expect(byKey['mlv-rx-line'].fieldDefinitions.map((f) => f.name)).toEqual(['rxNumber', 'rxLineRef', 'prescribedQty', 'credentialRef', 'eligibleForRestricted', 'coveredAmount', 'lastSeenUnitPrice']);
+    expect(byKey['mlv-rx-line'].fieldDefinitions.map((f) => f.name)).toEqual(['rxNumber', 'rxLineRef', 'prescribedQty', 'credentialRef', 'eligibleForRestricted', 'coveredAmount', 'lastSeenUnitPrice', 'dispensedQty', 'authorizationParams', 'suppliedLots']);
     expect(byKey['mlv-patient'].resourceTypeIds).toEqual(['customer']);
     expect(byKey['mlv-order-meta'].resourceTypeIds).toEqual(['order']);
     expect(byKey['mlv-review-meta'].resourceTypeIds).toEqual(['review']);

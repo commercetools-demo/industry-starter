@@ -28,6 +28,10 @@ export const CUSTOM_TYPES = [
       field('eligibleForRestricted', 'Eligible for restricted funds', 'Boolean'),
       field('coveredAmount', 'Covered amount', 'Money'),
       field('lastSeenUnitPrice', 'Unit price at the previous cart read', 'Money'),
+      // Written at order placement (workstream Q, N-09): what the order line supplied and on what authorization.
+      field('dispensedQty', 'Dispensed quantity', 'Number'),
+      field('authorizationParams', 'Authorization parameters at placement (JSON)', 'String'),
+      field('suppliedLots', 'Supplied lots (JSON, filled at packing)', 'String'),
     ],
   },
   {

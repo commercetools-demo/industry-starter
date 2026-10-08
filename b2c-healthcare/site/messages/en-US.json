@@ -758,10 +758,10 @@
     "empty": "Your cart is empty.",
     "findPrescription": "Find a prescription",
     "added": "Added to cart",
-    "viewCart": "View cart \u2192",
+    "viewCart": "View cart →",
     "lines": "Medications in your cart",
     "qty": "Qty {count}",
-    "rxQty": "{rx} \u00b7 Qty {count}",
+    "rxQty": "{rx} · Qty {count}",
     "remove": "Remove",
     "removeLabel": "Remove {name} from your cart",
     "removed": "Removed {name}",
@@ -793,5 +793,77 @@
     "failed": "We could not switch region. Try again.",
     "notAvailableTitle": "Not available in this region",
     "notAvailableBody": "This is not offered in the region you selected, so there is no price to show. Switch region to see it."
+  },
+  "checkout": {
+    "metaTitle": "Checkout",
+    "title": "Checkout",
+    "loading": "Loading checkout",
+    "loadFailed": "We could not load checkout. Please try again.",
+    "retry": "Try again",
+    "empty": "Your cart is empty.",
+    "findPrescription": "Find a prescription",
+    "address": {
+      "title": "Delivery address",
+      "saved": "Saved addresses",
+      "savedChoose": "Choose a saved address",
+      "noDefault": "You have no default address. Choose a saved one or enter a new one.",
+      "use": "Use this address",
+      "using": "Delivering to {name}, {city}, {state} {zip}.",
+      "saveFailed": "We could not save this address. Please try again.",
+      "undeliverable": "We cannot deliver to this address with any delivery option. Check the state and ZIP code, or use a different address."
+    },
+    "delivery": {
+      "title": "Delivery speed",
+      "needAddress": "Save your delivery address to see the delivery options.",
+      "none": "No delivery option is available for this address. Check the state and ZIP code, or use a different address.",
+      "sameDayUnavailable": "Same-day delivery is not available for this order. It needs a New York, Texas or Illinois address and an order placed before 2 pm Eastern.",
+      "free": "FREE",
+      "changeFailed": "We could not change the delivery option. Please try again.",
+      "unavailable": "That delivery option is no longer available. The summary shows what applies now.",
+      "methods": {
+        "mlv-standard": "Standard · 1–2 days",
+        "mlv-same-day": "Same-day · by 8 pm"
+      }
+    },
+    "payment": {
+      "title": "Payment",
+      "demoBanner": "DEMO payment (no PSP configured)",
+      "demoNote": "This build has no payment service connected. No card is used and no money moves. It exists to check the page.",
+      "demoDecline": "Simulate a declined payment",
+      "loading": "Loading the payment form",
+      "needAddress": "Save your delivery address to continue to payment.",
+      "loadFailed": "The payment form could not be loaded. Please try again.",
+      "unavailable": "Payment is not available right now. Your cart is kept; please try again later.",
+      "retry": "Reload payment",
+      "declined": "Your payment was declined. No order was placed and your cart is kept. Try another payment method."
+    },
+    "summary": {
+      "title": "Order summary",
+      "lines": "Medications in this order",
+      "qty": "Qty {count}",
+      "tax": "Tax",
+      "delivery": "Delivery",
+      "free": "FREE",
+      "total": "Total",
+      "placeOrder": "Place order",
+      "placing": "Placing your order",
+      "needAddress": "Save your delivery address to place your order.",
+      "notDeliverable": "No delivery option is available for this address.",
+      "notIncluded": "{count, plural, one {# item cannot be filled} other {# items cannot be filled}}. Go back to your cart to remove {count, plural, one {it} other {them}}.",
+      "backToCart": "Back to cart"
+    },
+    "place": {
+      "TOTALS_MOVED": "The total changed after your payment was authorized, so your order was not placed. Review the summary and pay the new amount.",
+      "PAYMENT_REQUIRED": "Authorize your payment before placing the order.",
+      "PAYMENT_DECLINED": "Your payment was declined. No order was placed and your cart is kept.",
+      "LINES_UNAVAILABLE": "An item in your cart can no longer be filled. Go back to your cart to review it. No order was placed.",
+      "ADDRESS_MISSING": "Save your delivery address before placing the order.",
+      "NO_DELIVERY_METHOD": "No delivery option is available for this address. No order was placed.",
+      "DISPENSE_REFUSED": "A prescription can no longer be filled, so the order was not placed. Your payment was released.",
+      "PLACEMENT_FAILED": "We could not place your order just now. Your payment was released and your cart is kept. Please try again.",
+      "IN_PROGRESS": "Your order is already being placed. Please wait a moment.",
+      "EMPTY_CART": "Your cart is empty.",
+      "generic": "We could not place your order. Your cart is kept. Please try again."
+    }
   }
 }

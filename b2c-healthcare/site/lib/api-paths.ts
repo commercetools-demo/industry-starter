@@ -29,3 +29,11 @@ export const API_CART_RX_LINES = '/api/cart/rx-lines';
 /** Cart summary for the header count (cheap read, no re-validation). */
 export const API_CART_SUMMARY = '/api/cart?view=summary';
 export const apiCartLine = (id: string): string => `/api/cart/lines/${encodeURIComponent(id)}`;
+
+export const API_CHECKOUT = '/api/checkout';
+export const API_CHECKOUT_ADDRESS = '/api/checkout/address';
+export const API_CHECKOUT_SHIPPING_METHOD = '/api/checkout/shipping-method';
+export const API_CHECKOUT_SESSION = '/api/checkout/session';
+export const API_CHECKOUT_PLACE = '/api/checkout/place';
+/** Development only (fake payment provider); answers 404 everywhere else. */
+export const API_CHECKOUT_DEMO_AUTHORIZE = '/api/checkout/demo-authorize';
