@@ -196,3 +196,8 @@ Open items: P4 (OA-05 (--skip-checkout)); P5 (OA-05 (--skip-checkout))
 - `addAddress` + `addShippingAddressId` + `setDefaultShippingAddress` in one update work with an address `key`; removing the default address promotes no other address.
 - Shopping-list `where` has no `matches`; delete by key prefix needs list-and-filter.
 - New custom types `malva-payment-method` and `malva-list-line` (seed:verify now expects 6 custom types).
+
+## V: cancel and return (2026-10-07; details in plan/reports/V-report.md)
+- The platform refuses `addDelivery` on orders without a shipping method (400 "Shipping method is not set"): plan-only, phone-only and QA-script orders cannot be advanced to shipped. C-V-7 needs an order placed through checkout with equipment.
+- Return item is created in `Advised` state; a repeat request gives 400 `QUANTITY_TOO_HIGH`.
+- Cancel order of operations: recurring orders first, then order state; reason stored in `custom.fields.cancellation`; repeat cancel is a no-op; after service start the API answers `SERVICE_STARTED`.

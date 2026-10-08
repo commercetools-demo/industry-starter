@@ -64,3 +64,4 @@ Answer in this file or in chat; the plan continues with the stated default.
 - **Q-022** (from U) Demo-mode payment (`CHECKOUT_DEMO_PAYMENT=true`, or unset outside production with empty `CTP_CHECKOUT_APP_KEY`) places an order as Paid; in production without a key checkout answers `CHECKOUT_UNAVAILABLE`. Acceptable for the Netlify demo? Default: yes, flagged in the UI as a demo.
 - **Q-023** (from U) Service start uses the longest install lead (as M's stamp), not the earliest as the plan text says. Default: longest.
 - **Blocked (OA-05):** U-01 gate not ticked; hosted-widget checks C-U-10, 11, 12, 14, 19, 20 and M-U-1..3 wait for the Checkout application + Adyen connector. Unknown until then: `futureOrderNumber` acceptance, completion message codes, whether the connector adds the payment allocation.
+- **Q-024** (from V) Order-number validation uses a looser shape than U's `MLV-...` pattern so QA orders (`QA-...`) can be tested. Default: keep loose; confirm.

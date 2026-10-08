@@ -25,7 +25,7 @@ Updated by the developer on each task and by Claude (after Chrome verification) 
 | S | Account shell, dashboard and order history | 12 | 12 | Merged (verify + curl live; Chrome C-S pending) | orchestrator | 2026-10-07 |
 | T | Address book, payment methods, saved lists | 15 | 15 | Merged (verify + live API checks; Chrome C-T pending) | orchestrator | 2026-10-07 |
 | U | Hosted checkout and order confirmation | 17 | 16 | Merged (verify + live demo-payment flow; hosted Checkout blocked on OA-05) | orchestrator | 2026-10-07 |
-| V | Post-purchase: cancel and device return | 12 | 0 | Not started | | |
+| V | Post-purchase: cancel and device return | 12 | 12 | Merged (verify + curl live; Chrome C-V pending) | orchestrator | 2026-10-07 |
 | W | Content pages | 10 | 10 | Merged (verify + curl smoke; Chrome C-W pending) | orchestrator | 2026-10-07 |
 | X | Coordinated offer release | 8 | 8 | Merged (verify + live release run by junior; Chrome C-X-4 pending N) | orchestrator | 2026-10-07 |
 | Y | Netlify deployment | 7 | 0 | Not started | | |
