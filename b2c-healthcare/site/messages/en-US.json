@@ -303,5 +303,73 @@
     "unsupportedDescription": "Search in English. We do not have results in that language, which is different from there being no matches.",
     "errorTitle": "Search is not available right now",
     "errorDescription": "We could not run your search. Please try again in a moment."
+  },
+  "home": {
+    "metaTitle": "Malva Healthcare: see a doctor by video or in person",
+    "metaDescription": "Book a video or office visit, look up a prescription and have your medicine delivered, and read your lab results, all in one place.",
+    "hero": {
+      "title": "Care that comes to you, or the other way round.",
+      "lead": "See a doctor by video, book an office visit, and get prescriptions delivered to your door, all in one place.",
+      "chipsLabel": "Browse by specialty",
+      "chips": {
+        "general-practice": "General practice",
+        "dermatology": "Dermatology",
+        "pediatrics": "Pediatrics"
+      },
+      "availableChip": "{count, plural, one {# doctor} other {# doctors}} available today"
+    },
+    "services": {
+      "title": "Everything you need, under one roof",
+      "sub": "From a video visit to a prescription at your door, Malva keeps your care connected.",
+      "remote": { "icon": "Video", "title": "Remote sessions", "text": "Talk to a licensed doctor by video from any device.", "cta": "Start a session" },
+      "office": { "icon": "Visit", "title": "Office visits", "text": "Book in-person appointments at partner clinics near you.", "cta": "Find a clinic" },
+      "prescriptions": { "icon": "Rx", "title": "Prescriptions", "text": "Look up a prescription by its RX number and order it.", "cta": "Manage prescriptions" },
+      "delivery": { "icon": "Meds", "title": "Medicine delivery", "text": "Order your medication and receive it at home.", "cta": "Order medicine" },
+      "labs": { "icon": "Lab", "title": "Lab tests", "text": "Read your lab results in your account.", "cta": "View lab tests" },
+      "records": { "icon": "Rec", "title": "Health records", "text": "Your visits, lab results and orders in one place.", "cta": "View account" }
+    },
+    "steps": {
+      "title": "How Malva works",
+      "one": { "title": "Tell us what's wrong", "text": "Search by symptom, doctor or pick a specialty." },
+      "two": { "title": "Choose your doctor", "text": "See availability, fees and reviews up front." },
+      "three": { "title": "Meet by video or in person", "text": "Join from any device, or visit the clinic." },
+      "four": { "title": "Get your care plan", "text": "Prescriptions and follow-ups land in your account." }
+    },
+    "available": {
+      "title": "Doctors available today",
+      "sub": "Rated by verified patients.",
+      "subNext": "Nobody has a free slot left today. These doctors are available next.",
+      "viewAll": "View all doctors",
+      "mode": { "remote": "Video", "office": "In office" },
+      "book": "Book",
+      "bookWith": "Book with {name}"
+    },
+    "rx": {
+      "title": "Your prescription, delivered",
+      "lead": "Look up your prescription by its RX number, order it and have it delivered.",
+      "listLabel": "What you get",
+      "lookup": "Look up your prescription by RX number",
+      "standard": "Delivery to your door",
+      "sameDay": "Same-day delivery in selected states",
+      "autoRefill": "Auto-refills you can pause anytime",
+      "order": "Order medicine",
+      "find": "Find by RX number"
+    },
+    "stats": {
+      "label": "Malva in numbers",
+      "doctors": "Doctors on Malva",
+      "rating": "Average patient rating",
+      "ratingValue": "{rating} / 5",
+      "availableToday": "Doctors available today"
+    },
+    "journal": {
+      "title": "From the health journal",
+      "all": "All articles",
+      "meta": "{category} · {minutes} min read"
+    },
+    "cta": {
+      "title": "Feeling unwell? See a doctor today.",
+      "button": "Book a visit"
+    }
   }
 }
