@@ -25,16 +25,16 @@ Every scenario is a unit test (or a scripted check) named after it. Tick when it
 #### storefront-project-bootstrap › Supported framework and dependency versions
 - [x] Version gate
 - [x] Tailwind v4 without a config file
-- [x] Reproducible install (scaffold.test.ts + clean-clone dry run, see A-todos.md)
+- [ ] Reproducible install
 #### storefront-project-bootstrap › Directory layout
 - [x] Server-only boundary
-- [x] Server-only modules guarded at build time (guard test in restrictions.test.ts is vacuous until lib/ct and lib/session exist; it then enforces import of server-only)
+- [ ] Server-only modules guarded at build time
 #### storefront-project-bootstrap › Secrets and environment files
 - [x] No public prefix on secrets
 - [x] Nothing committed
 #### storefront-project-bootstrap › Local quality gate
 - [x] Gate on a clean scaffold
-- [x] Token parity wired (stub until B)
+- [ ] Token parity wired
 <!-- SCENARIOS:END -->
 
 ## Browser recipe
