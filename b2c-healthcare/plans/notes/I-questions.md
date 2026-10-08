@@ -1,0 +1,12 @@
+# Workstream I: questions and the defaults chosen
+
+| # | Question | Default chosen |
+| --- | --- | --- |
+| 1 | The design gives no error-page look (SO-03). | Reused `Card`, `ButtonLink`, Poppins heading and the sign-in card proportions (max-w-110). `components/layout/NotFoundView.tsx` and `FaultView.tsx`; copy under `errors.*` (additive). |
+| 2 | Spec says the 404 carries a "search entry point". There is no search UI in the shell yet. | Links Home, Find a doctor (`/doctors/remote`) and Prescriptions; the header (with nav) stays because the catch-all renders inside the locale layout. K may add a search box later. |
+| 3 | `global-error.tsx` replaces the root layout, so there is no intl provider. | English copy hard-coded (same text as `errors.fault`), plain `next/link` to `/` (the proxy redirects to the locale), `lang` from `DEFAULT_LOCALE`. |
+| 4 | Where is `requireSessionOrPrompt`? The plan names `app/[locale]/(protected)/layout`. | A layout cannot know the reason key, so it is a server helper `lib/require-session.tsx` that returns `{ signedIn: true, customerId }` or `{ signedIn: false, prompt }`. No `(protected)` route group was created (pages stay where their workstream puts them). |
+| 5 | How does an API 401 reach the prompt? | `lib/http.ts` (`HttpError`, `fetchJson`, `isUnauthorized`) plus client component `SignInOnUnauthorized` (error + reason, renders `RequireSignIn`). The hooks in G/H do not use it yet; owners adopt it. |
+| 6 | I-05 says the env guard page is shown when a variable is missing, but `instrumentation.ts` (workstream B, tested) already aborts server start naming a missing CTP variable in development. | Kept the fail-fast (not changed: another spec scenario). The page (`lib/env-guard.tsx`, called first in `app/layout.tsx`) is the second line: it covers `SESSION_SECRET` (not checked at start) and any case where start-up validation did not run. Verified with `npm run dev`: with CTP vars set and no SESSION_SECRET, the plain page names `SESSION_SECRET` (HTTP 200, dev only). |
+| 7 | Dev-only fault route. | `/en-US/_boom` (`app/[locale]/%5Fboom/page.tsx`), `notFound()` in production (tested; `next start` returned 404). In dev, Next's own overlay shows the thrown message (dev behaviour); production strips it. |
+| 8 | Which log field names are dropped? | `reason, results, value, sig, email, phone` (plan) plus body/requestBody/responseBody/payload/headers/cookie(s)/authorization/password/token/secret/query/querystring/search; strings lose `?query` and e-mail addresses; an Error is reduced to `{ name, status }`. |
