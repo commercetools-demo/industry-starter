@@ -59,14 +59,25 @@ describe('navigation model', () => {
     expect(NAV_BREAKPOINT_PX).toBe(900);
   });
 
-  it('footer: only live pages are linked and every live target is one of the designed routes', () => {
+  it('footer: only live pages are linked and every live target is a designed or content route', () => {
     const live = FOOTER_COLUMNS.flatMap((c) => c.links.filter((l) => l.live).map((l) => l.href));
     expect(live.length).toBeGreaterThan(0);
     for (const href of live) {
-      expect(['/doctors/remote', '/doctors/office', '/prescriptions', '/account/labs']).toContain(href);
+      expect([
+        '/doctors/remote',
+        '/doctors/office',
+        '/prescriptions',
+        '/account/labs',
+        '/about',
+        '/contact',
+        '/faq',
+        '/policies/shipping-and-returns',
+        '/policies/terms',
+        '/policies/privacy',
+      ]).toContain(href);
     }
     const company = FOOTER_COLUMNS.find((c) => c.headingKey === 'company');
-    expect(company?.links.every((l) => !l.live)).toBe(true);
+    expect(company?.links.every((l) => l.live)).toBe(true);
   });
 });
 

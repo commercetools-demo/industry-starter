@@ -21,7 +21,9 @@ export interface ContentDoc {
   fellBack: boolean;
 }
 
-export const CONTENT_ROOT = join(process.cwd(), 'content');
+// The content folder is traced into the deployment by `outputFileTracingIncludes` in next.config.ts, so the
+// bundler is told not to trace the whole project from this dynamic path.
+export const CONTENT_ROOT = join(/* turbopackIgnore: true */ process.cwd(), 'content');
 
 function unquote(value: string): string {
   const m = /^(["'])(.*)\1$/.exec(value);

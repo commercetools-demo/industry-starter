@@ -81,7 +81,11 @@
       "orderMedicine": "Order medicine",
       "prescriptions": "Prescriptions",
       "about": "About",
-      "contact": "Contact"
+      "contact": "Contact",
+      "faq": "FAQ",
+      "shipping": "Shipping and returns",
+      "terms": "Terms and conditions",
+      "privacy": "Privacy policy"
     },
     "signInRequired": {
       "title": "Sign in to Malva",
