@@ -27,7 +27,7 @@ import { Footer } from '@/components/layout/Footer';
 import type { Article } from '@/lib/content';
 import type { HomeDoctor, HomeSnapshot } from '@/lib/ct/home';
 import type { DoctorListItem } from '@/lib/types';
-import LocaleHome from './page';
+import LocaleHome, { generateMetadata } from './page';
 
 const params = Promise.resolve({ locale: 'en-US' });
 const h = messages.home;
@@ -349,6 +349,22 @@ describe('design-home-page › Closing call to action', () => {
     expect(row.className).toContain('flex-wrap');
     expect(container.innerHTML).not.toContain('whitespace-nowrap');
     expect(container.innerHTML).not.toContain('overflow-x');
+  });
+});
+
+describe('home-landing-page › Metadata', () => {
+  it('title, description, absolute canonical and hreflang alternates (with x-default) for the home page', async () => {
+    vi.stubEnv('SITE_URL', 'https://malva.example/');
+    const metadata = await generateMetadata({ params });
+    expect(metadata.title).toBe(h.metaTitle);
+    expect(metadata.description).toBe(h.metaDescription);
+    expect(metadata.alternates?.canonical).toBe('https://malva.example/en-US');
+    expect(metadata.alternates?.languages).toEqual({ 'en-US': 'https://malva.example/en-US', 'x-default': 'https://malva.example/en-US' });
+    expect(metadata.robots).toBeUndefined();
+  });
+
+  it('the description makes no claim the service cannot back (no numbers, no emergency care)', () => {
+    expect(h.metaDescription).not.toMatch(/\d|emergenc|24\/7|minutes/i);
   });
 });
 

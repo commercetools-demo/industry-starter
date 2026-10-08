@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { AvailableToday } from '@/components/home/AvailableToday';
 import { ClosingCta } from '@/components/home/ClosingCta';
 import { Hero } from '@/components/home/Hero';
@@ -13,6 +13,7 @@ import { getPublishedArticles } from '@/lib/content';
 import { getHomeSnapshot, hasSameDayMethod } from '@/lib/ct/home';
 import { autoRefillEnabled } from '@/lib/features';
 import { showJournal } from '@/lib/routes';
+import { pageMetadata } from '@/lib/seo';
 import { COUNTRY_CONFIG, DEFAULT_LOCALE, isSupportedLocale } from '@/lib/utils';
 
 /** Journal cards on the home page. */
@@ -47,4 +48,9 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
   );
 }
 
-export const metadata: Metadata = {};
+/** Title, description, absolute canonical (`<SITE_URL>/<locale>`) and hreflang alternates for every supported locale plus x-default. */
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'home' });
+  return pageMetadata({ locale, path: '/', title: t('metaTitle'), description: t('metaDescription') });
+}
