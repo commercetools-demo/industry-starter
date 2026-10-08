@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { advanceOrder, normalizeState, TransitionRefusedError } from './advance-order';
+import { advanceOrder, normalizeState, setShipmentState, SHIPMENT_STATES, TransitionRefusedError } from './advance-order';
 import { createFakeRoot } from './fake-root';
 import { makeCtx } from './lib';
 import { runSeed } from './seed';
@@ -75,5 +75,34 @@ describe('advance-order.ts (F-08)', () => {
   it('normalizeState adds the prefix once', () => {
     expect(normalizeState('delivered')).toBe('mlv-delivered');
     expect(normalizeState('mlv-delivered')).toBe('mlv-delivered');
+  });
+});
+
+describe('advance-order.ts: shipment state (workstream S)', () => {
+  it('Partial shipment: sets shipmentState with changeShipmentState, independent of the order state', async () => {
+    const fake = await withOrder('mlv-packed-shipped');
+    expect(await setShipmentState(ctxOf(fake), 'MLV-1001', 'partial')).toEqual({ orderNumber: 'MLV-1001', shipmentState: 'Partial', changed: true });
+    expect(fake.store.orders[0].shipmentState).toBe('Partial');
+    expect(stateOfOrder(fake)).toBe('mlv-packed-shipped');
+    expect(fake.log.filter((l) => l.kind === 'orders').map((l) => l.actions)).toEqual([['changeShipmentState']]);
+  });
+
+  it('same value is a no-op; dry run writes nothing', async () => {
+    const fake = await withOrder('mlv-received');
+    await setShipmentState(ctxOf(fake), 'MLV-1001', 'Shipped');
+    const before = fake.log.length;
+    expect(await setShipmentState(ctxOf(fake), 'MLV-1001', 'Shipped')).toMatchObject({ changed: false });
+    expect(await setShipmentState(ctxOf(fake, true), 'MLV-1001', 'Delivered')).toMatchObject({ changed: true });
+    expect(fake.log.length).toBe(before);
+    expect(fake.store.orders[0].shipmentState).toBe('Shipped');
+  });
+
+  it('refuses an unknown value, bad order characters and an unknown order before any write', async () => {
+    const fake = await withOrder('mlv-received');
+    const before = fake.log.length;
+    await expect(setShipmentState(ctxOf(fake), 'MLV-1001', 'Lost')).rejects.toThrow(SHIPMENT_STATES.join(', '));
+    await expect(setShipmentState(ctxOf(fake), 'x" or 1=1', 'Partial')).rejects.toBeInstanceOf(TransitionRefusedError);
+    await expect(setShipmentState(ctxOf(fake), 'NOPE-1', 'Partial')).rejects.toThrow('No order');
+    expect(fake.log.length).toBe(before);
   });
 });

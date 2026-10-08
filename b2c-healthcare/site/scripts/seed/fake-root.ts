@@ -71,6 +71,7 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
       case 'publish': if (md) md.published = true; break;
       case 'setTransitions': r.transitions = a.transitions; break;
       case 'transitionState': r.state = { typeId: 'state', id: fake.store.states.find((s) => s.key === (a.state as { key?: string }).key)?.id }; break;
+      case 'changeShipmentState': r.shipmentState = a.shipmentState; break;
       case 'setInventoryLimits': r.maxCartQuantity = a.maxCartQuantity; r.minCartQuantity = a.minCartQuantity; break;
       case 'removeImage':
         if (md) for (const v of [md.staged.masterVariant, ...md.staged.variants]) if (v.id === a.variantId) v.images = ((v.images as { url: string }[]) ?? []).filter((i) => i.url !== a.imageUrl);

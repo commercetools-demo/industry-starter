@@ -43,7 +43,7 @@ npm run seed:verify
 | Script | What it does |
 | --- | --- |
 | `smoke-slots.ts` | `npx tsx scripts/seed/smoke-slots.ts [doctor-key] [remote\|office]`: prints free slots and claims one twice (`version: 0`); the second claim must fail with 409; the test claim is deleted |
-| `advance-order.ts` (`seed:advance`) | `npm run seed:advance -- <orderNumber> <state> [--dry-run]`: QA tool, moves an order through the `mlv-*` states; refuses unknown transitions |
+| `advance-order.ts` (`seed:advance`) | `npm run seed:advance -- <orderNumber> <state> [--shipment <ShipmentState>] [--dry-run]`: QA tool, moves an order through the `mlv-*` states (refuses unknown transitions); `--shipment Partial` (or Pending, Ready, Shipped, Delivered, Backorder, Delayed) sets the order's `shipmentState` for the order page |
 
 `reset-seed.ts` does not delete reviews, customers or Custom Objects; see `plans/notes/F-todos.md`.
 

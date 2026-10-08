@@ -4,7 +4,12 @@ import { coll, getAdminRoot, isMain, listAll, makeCtx, parseFlags, PREFIX, withR
 /**
  * QA tool: moves one order to the next `mlv-*` state so the order timeline can be checked without waiting for a pharmacy.
  *
- *   npm run seed:advance -- <orderNumber> <state> [--dry-run]     (state: `pharmacist-review` or `mlv-pharmacist-review`)
+ *   npm run seed:advance -- <orderNumber> <state> [--shipment <ShipmentState>] [--dry-run]     (state: `pharmacist-review` or `mlv-pharmacist-review`)
+ *   npm run seed:advance -- <orderNumber> --shipment Partial                                    (only the shipment state)
+ *
+ * `--shipment` sets the order's `shipmentState` (workstream S, QA of the order page): Pending, Ready, Shipped, Delivered,
+ * Partial (shown as "partly shipped"), Backorder or Delayed. It is independent of the State (a `Partial` order is
+ * usually `mlv-packed-shipped`) and is applied after the state move, in a separate update.
  *
  * Only transitions defined in data/states.ts are accepted (received -> pharmacist-review -> packed-shipped -> delivered,
  * and cancelled from the first two); anything else is refused before any write. An order with no state may only enter the initial state.
@@ -17,6 +22,26 @@ export class TransitionRefusedError extends Error {
 }
 
 export const normalizeState = (s: string) => (s.startsWith(PREFIX) ? s : `${PREFIX}${s}`);
+
+export const SHIPMENT_STATES = ['Pending', 'Ready', 'Shipped', 'Delivered', 'Partial', 'Backorder', 'Delayed'] as const;
+export type ShipmentStateName = (typeof SHIPMENT_STATES)[number];
+
+/** Sets `shipmentState` on one order (`changeShipmentState`). Case-insensitive input; unknown values are refused before any write. */
+export async function setShipmentState(ctx: Ctx, orderNumber: string, value: string): Promise<{ orderNumber: string; shipmentState: ShipmentStateName; changed: boolean }> {
+  const shipmentState = SHIPMENT_STATES.find((s) => s.toLowerCase() === value.toLowerCase());
+  if (!shipmentState) throw new TransitionRefusedError(`Unknown shipment state "${value}". Known: ${SHIPMENT_STATES.join(', ')}`);
+  if (!/^[\w-]+$/.test(orderNumber)) throw new TransitionRefusedError('The order number may contain only letters, digits, - and _.');
+  const order = (await listAll(ctx.root, 'orders', `orderNumber="${orderNumber}"`))[0];
+  if (!order) throw new TransitionRefusedError(`No order with number ${orderNumber}.`);
+  if (order.shipmentState === shipmentState) return { orderNumber, shipmentState, changed: false };
+  if (!ctx.dryRun) {
+    await withRetry(
+      () => coll(ctx.root, 'orders').withId({ ID: order.id as string }).post({ body: { version: order.version, actions: [{ action: 'changeShipmentState', shipmentState }] } }).execute(),
+      ctx.sleep,
+    );
+  }
+  return { orderNumber, shipmentState, changed: true };
+}
 
 export interface AdvanceResult { orderNumber: string; from: string | null; to: string; changed: boolean }
 
@@ -54,11 +79,21 @@ export async function advanceOrder(ctx: Ctx, orderNumber: string, target: string
 async function main() {
   const argv = process.argv.slice(2);
   const flags = parseFlags(argv);
-  const [orderNumber, state] = argv.filter((a) => !a.startsWith('--'));
-  if (!orderNumber || !state) throw new Error('Usage: advance-order.ts <orderNumber> <state> [--dry-run]');
+  const shipmentAt = argv.indexOf('--shipment');
+  const shipment = shipmentAt === -1 ? undefined : argv[shipmentAt + 1];
+  if (shipmentAt !== -1 && (!shipment || shipment.startsWith('--'))) throw new Error('--shipment needs a value');
+  const [orderNumber, state] = argv.filter((a, i) => !a.startsWith('--') && i !== shipmentAt + 1);
+  if (!orderNumber || (!state && !shipment)) throw new Error('Usage: advance-order.ts <orderNumber> [<state>] [--shipment <ShipmentState>] [--dry-run]');
   const { root } = await getAdminRoot();
-  const r = await advanceOrder(makeCtx(root, flags), orderNumber, state);
-  console.log(r.changed ? `${flags.dryRun ? 'would move' : 'moved'} order ${r.orderNumber}: ${r.from ?? '(no state)'} -> ${r.to}` : `order ${r.orderNumber} is already in ${r.to}`);
+  const ctx = makeCtx(root, flags);
+  if (state) {
+    const r = await advanceOrder(ctx, orderNumber, state);
+    console.log(r.changed ? `${flags.dryRun ? 'would move' : 'moved'} order ${r.orderNumber}: ${r.from ?? '(no state)'} -> ${r.to}` : `order ${r.orderNumber} is already in ${r.to}`);
+  }
+  if (shipment) {
+    const r = await setShipmentState(ctx, orderNumber, shipment);
+    console.log(r.changed ? `${flags.dryRun ? 'would set' : 'set'} shipment state of ${r.orderNumber}: ${r.shipmentState}` : `order ${r.orderNumber} already has shipment state ${r.shipmentState}`);
+  }
 }
 
 if (isMain(__filename)) main().catch((e) => { console.error(e instanceof Error ? e.message : e); process.exit(1); });

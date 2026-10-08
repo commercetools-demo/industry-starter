@@ -18,7 +18,7 @@
 - [x] S-06 Reorder `POST /api/orders/[id]/reorder` re-validating each line via N and reporting the ones not added; tests [SKILL: commercetools-commerce-patterns] [SPEC: order-history]
 - [x] S-07 Cancel `POST /api/orders/[id]/cancel` (allowed states, restore authorization, payment refund request marker); tests incl. refill restored once and not twice [SKILL: commercetools-commerce-patterns] [SPEC: post-purchase-order-management]
 - [ ] S-08 Shipment/partial/refund presentation on the order card and N/A mapping with reasons for returns of dispensed items [SPEC: post-purchase-order-management]
-- [ ] S-09 Extend `advance-order.ts` (F-08) to set `shipmentState` and `Partial` for QA [SKILL: commercetools-platform] [SPEC: post-purchase-order-management]
+- [x] S-09 Extend `advance-order.ts` (F-08) to set `shipmentState` and `Partial` for QA [SKILL: commercetools-platform] [SPEC: post-purchase-order-management]
 
 ## Scenarios
 Every scenario is a unit test (or a scripted check) named after it.
