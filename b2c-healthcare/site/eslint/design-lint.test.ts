@@ -77,7 +77,10 @@ export const f = "font-family:'Poppins', sans-serif";
     for (const file of ['app', 'components'].flatMap((d) => walk(join(root, d)))) {
       if (!/\.(tsx?|css)$/.test(file) || /\.test\.|tokens\.css$|globals\.css$/.test(file)) continue;
       for (const m of readFileSync(file, 'utf8').matchAll(/var\(\s*(--[\w-]+)/g)) {
-        if (!allowed.has(m[1]) && !m[1].startsWith('--tw-')) unknown.push(`${file}: ${m[1]}`);
+        const name = m[1];
+        // a trailing "-" is a template prefix (var(--color-${scale}-...)): some token must start with it
+        const known = name.endsWith('-') ? [...allowed].some((t) => t.startsWith(name)) : allowed.has(name);
+        if (!known && !name.startsWith('--tw-')) unknown.push(`${file}: ${name}`);
       }
     }
     expect(unknown).toEqual([]);
