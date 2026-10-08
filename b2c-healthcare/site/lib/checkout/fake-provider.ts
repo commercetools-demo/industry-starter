@@ -1,5 +1,5 @@
 import 'server-only';
-import type { AuthorizationState, PaymentCartRef, PaymentProvider } from './payment-provider';
+import { StoredMethodNotFoundError, type AuthorizationState, type PaymentCartRef, type PaymentProvider, type StoredMethodDescriptor } from './payment-provider';
 
 /**
  * DEMO PAYMENT PROVIDER: development and tests only.
@@ -21,6 +21,8 @@ export interface FakePaymentProvider extends PaymentProvider {
   readonly kind: 'demo';
   /** Records an authorization (or a decline) for the cart at the amount it has now. */
   authorize(cart: PaymentCartRef, options?: { decline?: boolean }): AuthorizationState;
+  /** Test helper: a saved card for a customer (descriptor only: there is no card number anywhere in the fake). */
+  addStoredMethod(customerId: string, card: { brand: string; last4: string; expMonth?: number; expYear?: number; isDefault?: boolean }): StoredMethodDescriptor;
   /** Test helper: forget everything. */
   reset(): void;
   /** Test helper: payment ids released so far. */
@@ -30,7 +32,12 @@ export interface FakePaymentProvider extends PaymentProvider {
 export function createFakePaymentProvider(): FakePaymentProvider {
   const held = new Map<string, Held>();
   const released: string[] = [];
+  // On globalThis: in `next dev` the account pages and the route handlers are separate bundles, each with its own module copy.
+  const g = globalThis as unknown as { __malvaFakeStoredMethods?: Map<string, (StoredMethodDescriptor & { customerId: string })[]> };
+  const stored = (g.__malvaFakeStoredMethods ??= new Map<string, (StoredMethodDescriptor & { customerId: string })[]>());
   let seq = 0;
+  const mine = (customerId: string) => stored.get(customerId) ?? [];
+  const strip = (m: StoredMethodDescriptor & { customerId: string }): StoredMethodDescriptor => ({ id: m.id, brand: m.brand, last4: m.last4, expMonth: m.expMonth, expYear: m.expYear, isDefault: m.isDefault });
 
   const stateOf = (h: Held | undefined): AuthorizationState => {
     if (!h || h.status === 'released') return { status: 'none' };
@@ -55,6 +62,27 @@ export function createFakePaymentProvider(): FakePaymentProvider {
         }
       }
     },
+    async listStoredMethods(customerId) {
+      const all = mine(customerId).map(strip);
+      return [...all.filter((m) => m.isDefault), ...all.filter((m) => !m.isDefault)];
+    },
+    async setDefaultStoredMethod(customerId, methodId) {
+      const list = mine(customerId);
+      if (!list.some((m) => m.id === methodId)) throw new StoredMethodNotFoundError();
+      // Same semantics as the real adapter: the previous default is cleared explicitly.
+      for (const m of list) m.isDefault = m.id === methodId;
+    },
+    async removeStoredMethod(customerId, methodId) {
+      const list = mine(customerId);
+      if (!list.some((m) => m.id === methodId)) throw new StoredMethodNotFoundError();
+      stored.set(customerId, list.filter((m) => m.id !== methodId));
+    },
+    addStoredMethod(customerId, card) {
+      seq += 1;
+      const entry = { id: `demo-pm-${seq}`, customerId, brand: card.brand, last4: card.last4, expMonth: card.expMonth ?? 12, expYear: card.expYear ?? 2030, isDefault: card.isDefault ?? mine(customerId).length === 0 };
+      stored.set(customerId, [...mine(customerId).map((m) => (entry.isDefault ? { ...m, isDefault: false } : m)), entry]);
+      return strip(entry);
+    },
     authorize(cart, options = {}) {
       seq += 1;
       const entry: Held = {
@@ -67,6 +95,7 @@ export function createFakePaymentProvider(): FakePaymentProvider {
       return stateOf(entry);
     },
     reset() {
+      stored.clear();
       held.clear();
       released.length = 0;
     },

@@ -19,6 +19,22 @@ export type AuthorizationState =
   | { status: 'declined'; paymentId: string }
   | { status: 'authorized'; paymentId: string; centAmount: number; currencyCode: string };
 
+/**
+ * A saved payment method as the buyer may see it: brand, last four digits, expiry and the default flag. The provider
+ * token (the only card reference commercetools holds, `PaymentMethod.token.value`) is deliberately NOT part of this
+ * type: no code outside the adapter can read it, render it or log it (payment-methods: "the only card reference the
+ * storefront holds is the provider's token").
+ */
+export interface StoredMethodDescriptor {
+  /** The commercetools PaymentMethod id (an identifier, not a secret). */
+  id: string;
+  brand: string;
+  last4: string;
+  expMonth: number | null;
+  expYear: number | null;
+  isDefault: boolean;
+}
+
 export interface PaymentProvider {
   readonly kind: PaymentMode;
   /** A Checkout session for the cart (amount = the cart's total; the SDK reads it from the cart). */
@@ -27,6 +43,27 @@ export interface PaymentProvider {
   getAuthorization(cartId: string): Promise<AuthorizationState>;
   /** Voids an authorization that must not be captured (stale amount, failed order). Idempotent. */
   release(paymentId: string): Promise<void>;
+  /** The customer's saved methods (Checkout Stored Payment Methods, cards only), descriptors only. */
+  listStoredMethods(customerId: string): Promise<StoredMethodDescriptor[]>;
+  /**
+   * Makes one saved method the default. `setDefault` is a per-method boolean (spec open question: it is not known
+   * whether the platform clears the previous default), so the adapter clears every other default explicitly.
+   * Throws `StoredMethodNotFoundError` for an id that is not the customer's.
+   */
+  setDefaultStoredMethod(customerId: string, methodId: string): Promise<void>;
+  /**
+   * Removes a saved method. No other method is promoted to default (the buyer chooses at the next checkout).
+   * Throws `StoredMethodNotFoundError` for an id that is not the customer's.
+   */
+  removeStoredMethod(customerId: string, methodId: string): Promise<void>;
+}
+
+/** The id is not one of the customer's saved methods (unknown and somebody else's are the same). */
+export class StoredMethodNotFoundError extends Error {
+  constructor() {
+    super('stored method not found');
+    this.name = 'StoredMethodNotFoundError';
+  }
 }
 
 /** The payment service is not configured (OA-04) or unreachable. The message is safe to show. */

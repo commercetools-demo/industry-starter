@@ -425,7 +425,8 @@
       "profile": "Profile",
       "signOut": "Sign out",
       "signOutFailed": "We could not sign you out. Please try again.",
-      "lists": "My medicines"
+      "lists": "My medicines",
+      "autoRefill": "Auto-refill"
     },
     "overview": {
       "title": "Overview",
@@ -939,7 +940,8 @@
         "packed-shipped": "Packed and shipped",
         "delivered": "Delivered",
         "cancelled": "Cancelled"
-      }
+      },
+      "autoRefill": "Auto-refill"
     },
     "reorder": {
       "added": "Added to your cart: {names}.",
@@ -1022,6 +1024,80 @@
         "prescription-missing": "we could not find the prescription",
         "payment-method-missing": "there is no saved payment method"
       }
+    },
+    "metaTitle": "Auto-refill",
+    "title": "Auto-refill",
+    "sub": "Have your regular medicines refilled on a schedule. Every refill is checked against your prescription first, and you can pause, skip or stop at any time.",
+    "empty": "You have no auto-refills yet.",
+    "emptyHint": "Choose medicines below to set one up.",
+    "loadFailed": "We could not load your auto-refills. Please try again.",
+    "state": {
+      "Active": "Active",
+      "Paused": "Paused",
+      "Expired": "Ended",
+      "Canceled": "Canceled",
+      "Failed": "Needs attention"
+    },
+    "cadence": {
+      "monthly": "Every month",
+      "quarterly": "Every 3 months",
+      "other": "Custom schedule"
+    },
+    "next": "Next refill: {date}",
+    "nextSkipping": "The refill due {date} will be skipped.",
+    "pausedNote": "Paused: no further refills until you resume.",
+    "canceledNote": "Canceled: no further refills.",
+    "failedNote": "The last refill could not be created (for example a payment that did not go through). No further refills until this is resolved. Resume to try again.",
+    "last": "Last refill: {date}",
+    "noLast": "No refill has been created yet.",
+    "lastWas": "The last refill was on {date}.",
+    "priceDynamic": "Priced at the catalog price on the day each refill is created, so the amount can change.",
+    "priceFixed": "Priced at the amount set when you started, whatever the catalog price does.",
+    "pause": "Pause",
+    "resume": "Resume",
+    "skip": "Skip next refill",
+    "cancel": "Cancel auto-refill",
+    "cancelConfirm": "Stop this auto-refill for good?",
+    "cancelYes": "Yes, cancel it",
+    "keep": "Keep it",
+    "scheduleLabel": "Schedule",
+    "scheduleSave": "Change schedule",
+    "scheduleNote": "A new schedule applies from the next refill.",
+    "failed": "We could not do that. Please try again.",
+    "busy": "A refill is being prepared right now. Try again in a moment.",
+    "resumeBlocked": {
+      "authorization-expired": "Your prescription has expired, so this cannot be resumed.",
+      "authorization-exhausted": "Your prescription has no refills left, so this cannot be resumed.",
+      "prescription-missing": "We could not find the prescription, so this cannot be resumed.",
+      "payment-method-missing": "Save a payment method first, then resume.",
+      "ceiling": "A dispensing limit applies right now."
+    },
+    "setup": {
+      "title": "Set up auto-refill",
+      "intro": "Choose the medicines and how often. The first refill comes one schedule after today.",
+      "needMethod": "Auto-refill charges a saved payment method.",
+      "addMethod": "Save a payment method",
+      "noRx": "Medicines that can be refilled will appear here once you have a prescription with refills left.",
+      "rxHeading": "Prescription {number}",
+      "howOften": "How often",
+      "start": "Set up auto-refill",
+      "starting": "Setting up",
+      "done": "Auto-refill is set up: {names}.",
+      "notIncluded": "Not included: {names}.",
+      "failed": "We could not set up auto-refill. Please try again.",
+      "reason": {
+        "NO_REFILLS": "no refills left",
+        "EXPIRED": "prescription expired",
+        "OUT_OF_STOCK": "out of stock",
+        "UNAVAILABLE": "no longer available"
+      }
+    },
+    "orderCard": {
+      "button": "Auto-refill this order",
+      "busy": "Setting up",
+      "done": "Auto-refill is set up.",
+      "view": "See your auto-refills",
+      "failed": "We could not set up auto-refill. Please try again."
     }
   }
 }

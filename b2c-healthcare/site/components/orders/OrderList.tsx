@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Badge, type BadgeVariant } from '@/components/ui/Badge';
 import { Button, ButtonLink } from '@/components/ui/Button';
+import { OrderAutoRefill } from '@/components/auto-refill/OrderAutoRefill';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useOrderActions } from '@/hooks/use-orders';
@@ -34,7 +35,7 @@ function ReorderNotice({ result }: { result: ReorderResult }) {
   );
 }
 
-function OrderCard({ order }: { order: OrderView }) {
+function OrderCard({ order, autoRefill }: { order: OrderView; autoRefill: boolean }) {
   const t = useTranslations('orders');
   const locale = useLocale();
   const { reorder } = useOrderActions();
@@ -76,6 +77,7 @@ function OrderCard({ order }: { order: OrderView }) {
         </div>
       </div>
       {result ? <ReorderNotice result={result} /> : null}
+      {autoRefill && order.status !== 'cancelled' ? <OrderAutoRefill orderId={order.id} /> : null}
       {failed ? (
         <p role="alert" className="text-sm text-danger-700">
           {t('reorder.failed')}
@@ -86,7 +88,7 @@ function OrderCard({ order }: { order: OrderView }) {
 }
 
 /** `/account/orders`: the customer's orders, newest first. `orders: null` means the read failed. */
-export function OrderList({ orders }: { orders: OrderView[] | null }) {
+export function OrderList({ orders, autoRefill = false }: { orders: OrderView[] | null; autoRefill?: boolean }) {
   const t = useTranslations('orders.list');
   const empty = useTranslations('account.orders');
   if (orders === null) {
@@ -111,7 +113,7 @@ export function OrderList({ orders }: { orders: OrderView[] | null }) {
   return (
     <div className="grid gap-4" data-order-list>
       {orders.map((order) => (
-        <OrderCard key={order.id} order={order} />
+        <OrderCard key={order.id} order={order} autoRefill={autoRefill} />
       ))}
     </div>
   );

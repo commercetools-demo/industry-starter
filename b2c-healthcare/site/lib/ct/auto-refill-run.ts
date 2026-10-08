@@ -5,6 +5,7 @@ import { apiRoot } from '@/lib/ct/client';
 import { getUsedBySku, monthOf, periodCeilingFor } from '@/lib/ct/ceilings';
 import { consumeAuthorization, DispenseRefusedError, type ConsumeLine } from '@/lib/ct/dispense-ledger';
 import { nextOrderNumber } from '@/lib/ct/order-number';
+import { loadRxFixtures } from '@/lib/ct/fixtures';
 import { getPatient } from '@/lib/ct/patient';
 import { findOwnPrescription } from '@/lib/ct/prescriptions';
 import { cancelRecurring, listActiveRecurring, paymentMethodOf, pauseRecurring, skipNextRecurring } from '@/lib/ct/recurring';
@@ -50,17 +51,16 @@ const emptySummary = (): CheckSummary => ({ seen: 0, notDue: 0, alreadyChecked: 
 
 const isoDay = (iso: string): string => iso.slice(0, 10);
 
-async function gatherLines(ro: RecurringOrder): Promise<{ lines: RunLine[]; hasPaymentMethod: boolean }> {
+async function gatherLines(ro: RecurringOrder, runFor: string): Promise<{ lines: RunLine[]; hasPaymentMethod: boolean }> {
   const cart = expandedCart(ro);
   const items = (cart?.lineItems ?? []).map((item) => ({ item, fields: rxFieldsOf(item) }));
   const patient = ro.customer ? await getPatient(ro.customer.id) : null;
-  const runFor = ro.nextOrderAt ?? '';
   const skus = items.map(({ item }) => item.variant?.sku ?? '').filter(Boolean);
   const currency = cart?.totalPrice?.currencyCode ?? 'USD';
   const country = cart?.country ?? 'US';
   const [catalog, used] = await Promise.all([
     getCatalogBySku(skus, { locale: 'en-US', currency, country }),
-    patient ? getUsedBySku(patient.patientRef, monthOf(runFor)) : Promise.resolve(new Map<string, number>()),
+    patient && !(await loadRxFixtures()) ? getUsedBySku(patient.patientRef, monthOf(runFor)) : Promise.resolve(new Map<string, number>()),
   ]);
   const lines: RunLine[] = [];
   for (const { item, fields } of items) {
@@ -80,6 +80,16 @@ async function gatherLines(ro: RecurringOrder): Promise<{ lines: RunLine[]; hasP
   return { lines, hasPaymentMethod: paymentMethodOf(cart) !== null };
 }
 
+/**
+ * Would a run on `day` go ahead? Used when a paused auto-refill is resumed: resuming a series whose prescription has
+ * lapsed is refused with the reason instead of being paused again at the next check. Ceilings do not block a resume.
+ */
+export async function previewDecision(ro: RecurringOrder, day: Date): Promise<ReturnType<typeof decideRun>> {
+  const { lines, hasPaymentMethod } = await gatherLines(ro, day.toISOString());
+  if (lines.length === 0) return { run: false, action: 'pause', outcome: 'skipped', reason: 'prescription-missing', lineRefs: [] };
+  return decideRun({ lines, today: day.toISOString().slice(0, 10), hasPaymentMethod });
+}
+
 /** Phase 1. */
 export async function checkRuns(now: Date = new Date(), lookaheadHours: number = DEFAULT_LOOKAHEAD_HOURS): Promise<CheckSummary> {
   const summary = emptySummary();
@@ -97,7 +107,7 @@ export async function checkRuns(now: Date = new Date(), lookaheadHours: number =
         summary.alreadyChecked += 1;
         continue;
       }
-      const { lines, hasPaymentMethod } = await gatherLines(ro);
+      const { lines, hasPaymentMethod } = await gatherLines(ro, runFor);
       const decision = lines.length === 0 ? null : decideRun({ lines, today: isoDay(runFor), hasPaymentMethod });
       const entry: RefillLogEntry = { recurringOrderId: ro.id, runAt: now.toISOString(), runFor, outcome: 'allowed' };
       if (decision === null) {

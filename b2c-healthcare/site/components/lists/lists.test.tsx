@@ -136,7 +136,8 @@ describe('saved-lists: list detail prices and lines', () => {
     await user.type(input, 'Winter');
     await user.click(screen.getByRole('button', { name: 'Save name' }));
     await waitFor(() => expect(refresh).toHaveBeenCalled());
-    expect(JSON.parse((fetchMock.mock.calls[0]?.[1] as RequestInit).body as string)).toEqual({ name: 'Winter' });
+    const renameInit = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(JSON.parse(renameInit.body as string)).toEqual({ name: 'Winter' });
 
     await user.click(screen.getByRole('button', { name: 'Delete list' }));
     expect(fetchMock).toHaveBeenCalledTimes(1);

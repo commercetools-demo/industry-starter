@@ -50,3 +50,5 @@ export const API_LISTS_SAVE = '/api/lists/save';
 export const apiList = (id: string): string => `${API_LISTS}/${encodeURIComponent(id)}`;
 export const apiListLine = (id: string, lineId: string): string => `${apiList(id)}/lines/${encodeURIComponent(lineId)}`;
 export const apiListAddAll = (id: string): string => `${apiList(id)}/add-all-to-cart`;
+export const API_AUTO_REFILL = '/api/auto-refill';
+export const apiAutoRefill = (id: string): string => `${API_AUTO_REFILL}/${encodeURIComponent(id)}`;

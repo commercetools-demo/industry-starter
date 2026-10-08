@@ -8,7 +8,7 @@ import { rxFieldsOf } from '@/lib/mappers/cart';
 import type { NotAddedReason, ReorderResult } from '@/lib/order-types';
 import type { RxLineStatus } from '@/lib/types';
 
-const REASON: Partial<Record<RxLineStatus, NotAddedReason>> = { NO_REFILLS: 'NO_REFILLS', EXPIRED: 'EXPIRED', OUT_OF_STOCK: 'OUT_OF_STOCK' };
+export const REASON: Partial<Record<RxLineStatus, NotAddedReason>> = { NO_REFILLS: 'NO_REFILLS', EXPIRED: 'EXPIRED', OUT_OF_STOCK: 'OUT_OF_STOCK' };
 
 const nameOf = (name: Record<string, string>, locale: string): string => name[locale] ?? Object.values(name)[0] ?? '';
 

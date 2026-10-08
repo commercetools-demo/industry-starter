@@ -1,6 +1,7 @@
 import 'server-only';
 import type { Payment } from '@commercetools/platform-sdk';
 import { apiRoot } from '@/lib/ct/client';
+import { listStored, removeStored, setDefaultStored } from '@/lib/ct/stored-methods';
 import { log } from '@/lib/log';
 import { PaymentUnavailableError, type AuthorizationState, type PaymentCartRef, type PaymentProvider } from '@/lib/checkout/payment-provider';
 
@@ -128,5 +129,10 @@ export function createCheckoutProvider(config: CheckoutProviderConfig = readChec
         throw new PaymentUnavailableError();
       }
     },
+
+    // Saved methods live on the PaymentMethod API (Checkout Stored Payment Methods, OA-04), see lib/ct/stored-methods.ts.
+    listStoredMethods: (customerId: string) => listStored(customerId),
+    setDefaultStoredMethod: (customerId: string, methodId: string) => setDefaultStored(customerId, methodId),
+    removeStoredMethod: (customerId: string, methodId: string) => removeStored(customerId, methodId),
   };
 }

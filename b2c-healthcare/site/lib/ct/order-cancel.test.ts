@@ -69,7 +69,7 @@ import { cancelOrderForCustomer } from './order-cancel';
 import * as hooks from './order-cancel-hooks';
 
 const NOW = new Date('2026-10-08T12:00:00Z');
-const provider = () => ({ kind: 'demo' as const, createSession: vi.fn(), getAuthorization: vi.fn(), release: vi.fn(async () => undefined) });
+const provider = () => ({ kind: 'demo' as const, createSession: vi.fn(), getAuthorization: vi.fn(), release: vi.fn(async () => undefined), listStoredMethods: vi.fn(), setDefaultStoredMethod: vi.fn(), removeStoredMethod: vi.fn() });
 const refills = () => (objects.objects.find((o) => o.container === CONTAINERS.rx && o.key === 'RX-77102')!.value as Prescription).refillsLeft;
 
 beforeEach(async () => {

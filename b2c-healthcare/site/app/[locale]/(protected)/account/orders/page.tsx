@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { AccountHeading } from '@/components/account/AccountShell';
 import { OrderList } from '@/components/orders/OrderList';
 import { listOrdersForCustomer } from '@/lib/ct/orders-read';
+import { autoRefillEnabled } from '@/lib/features';
 import { requireSessionOrPrompt } from '@/lib/require-session';
 import { pageMetadata } from '@/lib/seo';
 
@@ -28,7 +29,7 @@ export default async function OrdersPage({ params }: Props) {
   return (
     <>
       <AccountHeading title={t('title')} />
-      <OrderList orders={orders} />
+      <OrderList orders={orders} autoRefill={autoRefillEnabled()} />
     </>
   );
 }
