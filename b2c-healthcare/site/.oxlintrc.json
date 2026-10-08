@@ -48,6 +48,7 @@
       "--color-action",
       "--color-action-hover",
       "--color-action-label",
+      "--color-action-label-hover",
       "--color-border",
       "--color-border-brand",
       "--color-brand-100",

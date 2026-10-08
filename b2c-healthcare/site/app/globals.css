@@ -66,6 +66,7 @@
   --color-action: var(--color-action);
   --color-action-hover: var(--color-action-hover);
   --color-action-label: var(--color-action-label);
+  --color-action-label-hover: var(--color-action-label-hover);
   --color-success: var(--color-success);
 
   --font-display: var(--font-display);

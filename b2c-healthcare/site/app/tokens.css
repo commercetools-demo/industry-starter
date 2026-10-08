@@ -112,6 +112,8 @@
 
   /* D-010 / SO-01: label on the azure fill (white is ~2.6:1 and fails AA) */
   --color-action-label: var(--color-navy-900);
+  /* navy-900 on --color-action-hover (brand-600) is only 4.38:1; navy-950 reaches 5.54:1 */
+  --color-action-label-hover: var(--color-navy-950);
 
   /* Focus ring (B-06) */
   --focus-ring: 2px solid var(--color-brand-700);
