@@ -6,9 +6,9 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, '.'),
+      '@': resolve(import.meta.dirname, '.'),
       // `server-only` throws outside a React Server environment; tests stub it.
-      'server-only': resolve(__dirname, 'test/server-only-stub.ts'),
+      'server-only': resolve(import.meta.dirname, 'test/server-only-stub.ts'),
     },
   },
   test: {

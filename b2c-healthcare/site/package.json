@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint && oxlint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check": "npm run typecheck && npm run lint && node scripts/check-versions.mjs && node scripts/check-token-parity.mjs && npm run test",
@@ -40,6 +40,7 @@
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5",
+    "typescript-eslint": "^8.71.1",
     "vitest": "^5.0.3"
   }
 }
