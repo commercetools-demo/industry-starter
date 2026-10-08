@@ -12,7 +12,12 @@ vi.mock('next-intl/server', () => ({
 }));
 vi.mock('@/i18n/routing', async (importOriginal) => ({ ...(await importOriginal<object>()), usePathname: () => '/' }));
 
+const getHomeSnapshot = vi.fn();
+vi.mock('@/lib/ct/home', () => ({ getHomeSnapshot: (...a: unknown[]) => getHomeSnapshot(...a) }));
+
 import { Footer } from '@/components/layout/Footer';
+import type { HomeDoctor, HomeSnapshot } from '@/lib/ct/home';
+import type { DoctorListItem } from '@/lib/types';
 import LocaleHome from './page';
 
 const params = Promise.resolve({ locale: 'en-US' });
@@ -22,8 +27,30 @@ async function renderHome() {
   return renderWithProviders(await LocaleHome({ params }));
 }
 
+const usd = (centAmount: number) => ({ centAmount, currencyCode: 'USD', fractionDigits: 2 });
+
+function entry(n: number, o: { mode?: 'remote' | 'office'; today?: boolean; date?: string; rating?: number | null } = {}): HomeDoctor {
+  const doctor: DoctorListItem = {
+    id: `d${n}`, key: `mlv-doc-${n}`, slug: `d${n}`, name: `Dr. Number ${n}`, specialty: 'Cardiology', specialtyKey: 'cardiology',
+    yearsExperience: 7, clinicName: '', city: 'austin', modes: ['remote', 'office'], fees: { remote: usd(3500), office: usd(6000) },
+    rating: o.rating === undefined ? 4.8 : o.rating, reviewCount: 12, initials: 'DN', portraitUrl: null,
+    next: { startsAt: '2026-10-08T17:00:00.000Z', localDate: o.date ?? '2026-10-08', isToday: o.today ?? true },
+  };
+  return { doctor, mode: o.mode ?? 'remote' };
+}
+
+function snapshot(partial: Partial<HomeSnapshot> = {}): HomeSnapshot {
+  return {
+    available: { state: 'none', items: [] },
+    stats: { doctorCount: null, averageRating: null, availableToday: null },
+    ...partial,
+  };
+}
+
 beforeEach(() => {
   vi.unstubAllEnvs();
+  getHomeSnapshot.mockReset();
+  getHomeSnapshot.mockResolvedValue(null);
 });
 
 describe('design-home-page › Home page sections in design order', () => {
@@ -99,6 +126,58 @@ describe('design-home-page › Home page sections in design order', () => {
     expect(circles.map((c) => c.textContent)).toEqual(['1', '2', '3', '4']);
     expect(circles.every((c) => c.classList.contains('bg-navy-700') && c.classList.contains('size-11'))).toBe(true);
     expect(container.querySelector('ol')).not.toBeNull();
+  });
+});
+
+describe('design-home-page › Doctors available today from live availability', () => {
+  it('Doctors available: cards with avatar, name, specialty and years, rating, badge, lead fee with mode and a Book link', async () => {
+    getHomeSnapshot.mockResolvedValue(
+      snapshot({ available: { state: 'today', items: [entry(1), entry(2, { mode: 'office' }), entry(3)] } }),
+    );
+    await renderHome();
+    const section = screen.getByRole('region', { name: 'Doctors available today' });
+    const cards = within(section).getAllByTestId('home-doctor-card');
+    expect(cards).toHaveLength(3);
+    const first = within(cards[0] as HTMLElement);
+    expect(first.getByRole('heading', { name: 'Dr. Number 1' })).toBeInTheDocument();
+    expect(first.getByText('Cardiology · 7 yrs experience')).toBeInTheDocument();
+    expect(first.getByText('★ 4.8 (12 reviews)')).toBeInTheDocument();
+    expect(first.getByText('Available today')).toBeInTheDocument();
+    expect(first.getByText(/Video/)).toHaveTextContent('Video · $35.00');
+    expect(first.getByRole('link', { name: 'Book with Dr. Number 1' })).toHaveAttribute('href', '/en-US/doctor/mlv-doc-1?m=remote');
+    expect(within(cards[1] as HTMLElement).getByText(/In office/)).toHaveTextContent('In office · $60.00');
+    expect(within(section).getByRole('link', { name: 'View all doctors' })).toHaveAttribute('href', '/en-US/doctors/remote');
+    expect(section).toHaveTextContent(h.available.sub);
+  });
+
+  it('No availability today: the next available day replaces the badge and the lead line says so', async () => {
+    getHomeSnapshot.mockResolvedValue(
+      snapshot({ available: { state: 'next', items: [entry(1, { today: false, date: '2026-10-13' })] } }),
+    );
+    await renderHome();
+    const section = screen.getByRole('region', { name: 'Doctors available today' });
+    expect(within(section).getByText('Next: Tue 13')).toBeInTheDocument();
+    expect(within(section).queryByText('Available today')).toBeNull();
+    expect(section).toHaveTextContent(h.available.subNext);
+  });
+
+  it('No availability today: with nobody free in the next days, or when the source is down, the section is hidden', async () => {
+    getHomeSnapshot.mockResolvedValue(snapshot());
+    const first = await renderHome();
+    expect(screen.queryByRole('region', { name: 'Doctors available today' })).toBeNull();
+    expect(screen.queryByTestId('home-doctor-card')).toBeNull();
+    first.unmount();
+    getHomeSnapshot.mockResolvedValue(null);
+    await renderHome();
+    expect(screen.queryByRole('region', { name: 'Doctors available today' })).toBeNull();
+    // The static sections still render.
+    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
+  });
+
+  it('a doctor without reviews shows "No reviews yet" instead of a rating', async () => {
+    getHomeSnapshot.mockResolvedValue(snapshot({ available: { state: 'today', items: [entry(1, { rating: null })] } }));
+    await renderHome();
+    expect(screen.getByText('No reviews yet')).toBeInTheDocument();
   });
 });
 
