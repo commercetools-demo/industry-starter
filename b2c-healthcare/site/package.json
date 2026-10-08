@@ -9,7 +9,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "check": "npm run typecheck && npm run lint"
+    "check": "npm run typecheck && npm run lint && node scripts/check-versions.mjs && node scripts/check-token-parity.mjs && npm run test",
+    "verify:build": "npm run check && npm run build"
   },
   "dependencies": {
     "@commercetools/platform-sdk": "^8.27.0",
