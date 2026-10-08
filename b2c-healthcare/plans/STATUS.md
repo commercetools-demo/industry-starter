@@ -14,8 +14,8 @@ Planning complete (all defaults accepted by the owner 2026-10-08). Counts below 
 | G | Data-loading foundation: types, mappers, cached reads, SWR keys | 9/9 | 14/16 | Not started |
 | H | Design-system primitives and shell: nav, mobile menu, footer, toast, modal, protected-route prompt | 10/10 | 11/11 | Not started |
 | I | Error pages, not-found, env guards | 5/5 | 3/3 | Not started |
-| J | Identity: sign-in / create account, session lifecycle, email verification (auto-verify) | 0/9 | 0/15 | Not started |
-| K | Doctor list and search | 0/9 | 0/19 | Not started |
+| J | Identity: sign-in / create account, session lifecycle, email verification (auto-verify) | 9/9 | 5/15 | Not started |
+| K | Doctor list and search | 9/9 | 19/19 | Not started |
 | L | Doctor profile, booking, booking confirmation | 0/9 | 0/19 | Not started |
 | M | Home page | 0/9 | 0/13 | Not started |
 | N | Prescription lookup and dispensing rules | 0/9 | 0/27 | Not started |

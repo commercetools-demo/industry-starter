@@ -36,12 +36,12 @@ Every scenario is a unit test (or a scripted check) named after it.
 #### account-registration-request › Account request held until the seller activates it
 - [ ] Request recorded not active — N/A: customers are active immediately (D-029, documented in README); the recorded-account part is covered by the register tests, the pending/no-ordering part does not apply
 - [x] Address already registered
-- [x] Verification link expired (server function `confirmEmail`; no UI entry point by D-029)
+- [ ] Verification link expired
 #### email-verification › Email verification by token with a recoverable resend path
-- [x] Token valid address confirmed (server function; no UI entry point)
-- [x] Token expired (server function; no UI entry point)
-- [x] Resend needs an identified account (server function `requestFreshVerification`; no UI entry point)
-- [x] Link opened twice (server function; no UI entry point)
+- [ ] Token valid address confirmed
+- [ ] Token expired
+- [ ] Resend needs an identified account
+- [ ] Link opened twice
 <!-- SCENARIOS:END -->
 
 ## Browser recipe
