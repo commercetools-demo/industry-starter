@@ -25,6 +25,7 @@
     "seed:reset": "tsx scripts/seed/reset.ts",
     "seed:settings": "tsx scripts/seed/project-settings.ts",
     "seed:cleanup": "tsx scripts/seed/cleanup-furniture.ts",
+    "demo:advance-order": "tsx scripts/demo/advance-order.ts",
     "seed:images": "tsx scripts/seed/update-images.ts",
     "seed:experiments": "tsx scripts/seed/experiments/platform-checks.ts",
     "job:schedule-sweep": "tsx --conditions=react-server scripts/jobs/schedule-sweep.ts",
