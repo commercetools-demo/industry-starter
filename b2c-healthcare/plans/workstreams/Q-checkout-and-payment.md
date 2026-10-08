@@ -20,7 +20,7 @@ Totals always from the cart; "Address changes the total" is satisfied because ta
 - [x] Q-04 `POST /api/checkout/session` and `PaymentCard` mounting the Checkout browser SDK; env names in `.env.example` (`CTP_CHECKOUT_*`, public application key only is `NEXT_PUBLIC_*`-free by design: pass it via a server-rendered prop); a test asserting no input with `autocomplete=cc-*` exists in storefront code [SKILL: commercetools-checkout] [SPEC: design-checkout]
 - [x] Q-05 `lib/ct/orders.ts` `placeOrder(cartId, expectedTotal, idempotencyKey)`: re-validate, compare totals, create order with `orderNumber`, state, line custom fields from N-09, consume authorization, clear cart; tests for success, mismatch refusal, last-moment failure keeps cart, retry with same key returns the same order [SKILL: commercetools-commerce-patterns] [SPEC: checkout]
 - [x] Q-06 `POST /api/checkout/place` + client `PlaceOrderButton` (busy/disabled, double-activation test), redirect to `/order/<id>`; declined-payment message path [SKILL: commercetools-checkout] [SPEC: design-checkout]
-- [ ] Q-07 `OrderSummary` (lines, Delivery FREE/fee, Total navy 20 px, sticky), empty-cart and anonymous states; tests [SPEC: design-checkout]
+- [x] Q-07 `OrderSummary` (lines, Delivery FREE/fee, Total navy 20 px, sticky), empty-cart and anonymous states; tests [SPEC: design-checkout]
 - [x] Q-08 Counter helper `lib/ct/order-number.ts` (optimistic concurrency retries) with concurrency tests [SKILL: commercetools-platform] [SPEC: checkout]
 - [ ] Q-09 README section "Payment lifecycle in the demo" (authorize only, how to capture/refund by hand, Stripe sandbox cards) and owner manual test M-Q-1 [SPEC: checkout]
 
