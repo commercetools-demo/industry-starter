@@ -36,6 +36,17 @@ npm run seed:verify
 | `fake-root.ts` | in-memory project used by the unit tests; refuses the same deletions the real API refuses (published product, category with children, ...) |
 | `data/` | `types.ts`, `states.ts`, `categories.ts`, `tax.ts`, `shipping.ts`, `doctors.ts`, `medications.ts`, `site-slots.ts`, generated `product-images.json` / `site-images.json` |
 
+## Clinical stand-in (workstream F)
+
+`seed.ts` also seeds (not with `--only`): 3 to 6 verified reviews per doctor, Custom Objects `malva-schedule` (8), `malva-rx` (4), `malva-lab` (5), `malva-credential` (1), `malva-booking` (1 past booking), and three synthetic patients (`sam.rivera@`, `alex.chen@`, `jordan.lee@example.com`; verified email, one default address, `mlv-patient.patientRef`). The customers need `SEED_PATIENT_PASSWORD` (without it they are skipped). Prescriptions and the past booking are never overwritten (refills change when an order dispenses); schedules, labs and credentials are compared and a difference stops the run.
+
+| Script | What it does |
+| --- | --- |
+| `smoke-slots.ts` | `npx tsx scripts/seed/smoke-slots.ts [doctor-key] [remote\|office]`: prints free slots and claims one twice (`version: 0`); the second claim must fail with 409; the test claim is deleted |
+| `advance-order.ts` (`seed:advance`) | `npm run seed:advance -- <orderNumber> <state> [--dry-run]`: QA tool, moves an order through the `mlv-*` states; refuses unknown transitions |
+
+`reset-seed.ts` does not delete reviews, customers or Custom Objects; see `plans/notes/F-todos.md`.
+
 ## Images
 
 `update-images.ts` uses the public JSON endpoint behind pexels.com/search (undocumented, public web client id). It may break; the fallback is the official Pexels API with a key (needs a small change in `searchPexels`). Pexels licence: free to use, attribution not required; the photographer is stored in `site-images.json` when the response provides it. Stored URLs are clean (no query, no fragment): `cleanUrl()`.

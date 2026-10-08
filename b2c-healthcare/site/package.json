@@ -13,6 +13,7 @@
     "seed:reset": "tsx scripts/seed/reset-seed.ts",
     "seed:inventory": "tsx scripts/seed/inventory-project.ts",
     "seed:wait": "tsx scripts/seed/wait-for-search.ts",
+    "seed:advance": "tsx scripts/seed/advance-order.ts",
         "lint": "eslint && oxlint -c eslint/oxlint.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
