@@ -21,6 +21,7 @@
     "verify:build": "npm run check && npm run build && node scripts/check-bundle.mjs && node scripts/check-no-health-in-release.mjs"
   },
   "dependencies": {
+    "@commercetools/checkout-browser-sdk": "^1.7.5",
     "@commercetools/platform-sdk": "^8.27.0",
     "@commercetools/ts-client": "^4.10.0",
     "jose": "^6.2.12",

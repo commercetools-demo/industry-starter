@@ -40,3 +40,14 @@ export async function loadCheckoutFixtures(): Promise<CheckoutFixtures | null> {
   if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
   return import('./checkout-fixtures');
 }
+
+export type FakePaymentModule = typeof import('@/lib/checkout/fake-provider');
+
+/**
+ * The DEMO payment provider (workstream Q): in-memory authorizations, no payment service. Same guard as the other
+ * loaders: null in production and unless `MALVA_FIXTURES=1`, so the fake can never take a real order's payment path.
+ */
+export async function loadFakePaymentProvider(): Promise<FakePaymentModule | null> {
+  if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
+  return import('@/lib/checkout/fake-provider');
+}

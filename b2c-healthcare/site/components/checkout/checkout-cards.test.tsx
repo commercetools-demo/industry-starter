@@ -24,7 +24,7 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-const save = (result: Awaited<ReturnType<Parameters<typeof AddressCard>[0]['onSave']>> = { ok: true }) => vi.fn(async (_input: AddressInput) => result);
+const save = (result: Awaited<ReturnType<Parameters<typeof AddressCard>[0]['onSave']>> = { ok: true }) => vi.fn(async (): Promise<typeof result> => result);
 
 describe('design-checkout: Delivery address (Q-03)', () => {
   it('Prefill: the default address fills the fields and they stay editable', async () => {

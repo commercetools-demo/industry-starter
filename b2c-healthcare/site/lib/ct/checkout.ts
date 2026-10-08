@@ -13,7 +13,7 @@ import { getOptionsForCart } from '@/lib/ct/shipping-options';
 import { toCtAddress } from '@/lib/mappers/address';
 import { rxFieldsOf } from '@/lib/mappers/cart';
 import { mapCheckoutCart } from '@/lib/mappers/checkout';
-import type { AddressInput, CartLineProblem, CheckoutState, DeliveryOption } from '@/lib/types';
+import type { AddressInput, CartLineProblem, CheckoutCart, CheckoutState, DeliveryOption } from '@/lib/types';
 
 /**
  * Checkout reads and writes (workstream Q). The page never keeps its own copy of the summary: after every change to
@@ -113,4 +113,12 @@ export async function setCheckoutShippingMethod(ctx: CheckoutContext, key: strin
     throw error;
   }
   return { state: await stateOf(cart.id, ctx), accepted: true };
+}
+
+/** The cart as payment sees it: read now (no recalculation, no re-validation), amounts as the platform holds them. */
+export async function readPaymentCart(ctx: CheckoutContext): Promise<CheckoutCart | null> {
+  const fixtures = await loadCheckoutFixtures();
+  if (fixtures) return (await fixtures.readCheckout(ctx))?.cart ?? null;
+  const cart = await fetchActiveCart(ctx.customerId, ctx.cartId);
+  return cart ? mapCheckoutCart(await readCart(cart.id)) : null;
 }
