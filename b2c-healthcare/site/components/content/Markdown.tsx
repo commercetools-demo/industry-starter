@@ -1,11 +1,11 @@
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import { Link } from '@/i18n/routing';
 import { parseMarkdown, type Inline } from '@/lib/markdown';
 
 function renderInline(parts: readonly Inline[]): ReactNode[] {
   return parts.map((part, index) => {
     const text = part.bold ? <strong key={index}>{part.text}</strong> : part.text;
-    if (!part.href) return part.bold ? text : <span key={index}>{part.text}</span>;
+    if (!part.href) return part.bold ? text : <Fragment key={index}>{part.text}</Fragment>;
     const className = 'text-text-link underline hover:text-brand-800';
     return part.href.startsWith('/') ? (
       <Link key={index} href={part.href} className={className}>

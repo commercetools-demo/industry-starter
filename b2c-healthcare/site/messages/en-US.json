@@ -124,7 +124,6 @@
         "lab-results": "Lab results",
         "account-privacy": "Account and privacy"
       },
-      "linkToQuestion": "Link to this question: {question}",
       "empty": "No questions are published yet."
     },
     "contact": {
