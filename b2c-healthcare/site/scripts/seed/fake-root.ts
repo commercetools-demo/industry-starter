@@ -38,7 +38,7 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
         r.masterData = { published: !!d.publish, staged: { name: d.name, masterVariant: { id: 1, ...(d.masterVariant ?? {}) }, variants: d.variants ?? [] } };
       }
     }
-    if (kind === 'categories') {
+    if (kind === 'categories' && !draft.ancestors) {
       const parent = draft.parent ? fake.store.categories.find((c) => c.key === ref(draft.parent) || c.id === ref(draft.parent)) : undefined;
       r.ancestors = parent ? [...((parent.ancestors as Rec[]) ?? []), { typeId: 'category', id: parent.id }] : [];
     }

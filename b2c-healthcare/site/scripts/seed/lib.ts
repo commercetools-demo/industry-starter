@@ -144,6 +144,10 @@ export type EnsureResult = 'created' | 'updated' | 'ok' | 'would-create' | 'woul
 interface Coll {
   get(a?: { queryArgs?: Rec }): { execute(): Promise<{ body: { results: Rec[]; total?: number } }> };
   post(a: { body: unknown }): { execute(): Promise<{ body: Rec }> };
+  withId(a: { ID: string }): {
+    post(a: { body: unknown }): { execute(): Promise<{ body: Rec }> };
+    delete(a: { queryArgs: Rec }): { execute(): Promise<{ body: Rec }> };
+  };
   withKey(a: { key: string }): {
     get(a?: { queryArgs?: Rec }): { execute(): Promise<{ body: Rec }> };
     post(a: { body: unknown }): { execute(): Promise<{ body: Rec }> };
