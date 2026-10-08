@@ -10,7 +10,7 @@ Planning complete (all defaults accepted by the owner 2026-10-08). Counts below 
 | C | Locale routing, messages, region config | 6/6 | 6/7 | Not started |
 | D | BFF core: commercetools client, session, env, health | 7/8 | 14/16 | Not started |
 | E | Seed: clean sample data, catalog data model, shipping, tax, images | 9/10 | 0/0 | Not started |
-| F | Scheduling, clinical stand-in, demo patients, reviews, order states (seed + `lib/ct` modules) | 0/8 | 0/0 | Not started |
+| F | Scheduling, clinical stand-in, demo patients, reviews, order states (seed + `lib/ct` modules) | 8/8 | 0/0 | Not started |
 | G | Data-loading foundation: types, mappers, cached reads, SWR keys | 9/9 | 14/16 | Not started |
 | H | Design-system primitives and shell: nav, mobile menu, footer, toast, modal, protected-route prompt | 0/10 | 0/11 | Not started |
 | I | Error pages, not-found, env guards | 0/5 | 0/3 | Not started |
