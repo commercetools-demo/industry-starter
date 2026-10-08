@@ -13,7 +13,7 @@ v1 supports one region: `en-US` (country US, currency USD, language en). `COUNTR
 - [x] C-02 `i18n/routing.ts` (`defineRouting`, locales from `COUNTRY_CONFIG`, `localePrefix: 'always'`, `createNavigation`), `i18n/request.ts`, `messages/en-US.json` (start with `common` and `errors` namespaces), next-intl plugin in `next.config.ts` plus `images.unoptimized: true` and `images.remotePatterns` for `images.pexels.com` and `storage.googleapis.com` [SPEC: storefront-locale-routing]
 - [x] C-03 `proxy.ts` with matcher `['/((?!api|_next|favicon|.*\\..*).*)', '/']`; tests: unprefixed → `/en-US/…` redirect, valid cookie respected, excluded paths untouched, unsupported `/fr-FR/x` → default-locale equivalent [SPEC: storefront-locale-routing]
 - [x] C-04 `app/[locale]/layout.tsx` sets `<html lang>` from the locale and wraps `NextIntlClientProvider`; `app/layout.tsx` keeps fonts (B); missing-key handler (`onError`/`getMessageFallback`) with tests for dev vs production behaviour [SPEC: storefront-locale-routing]
-- [ ] C-05 Lint rule test that `next/link` and `next/navigation` imports in locale UI fail (rule exists from A-06; add the locale-specific fixtures) and a codemod-free note in `site/README.md` [SPEC: storefront-locale-routing]
+- [x] C-05 Lint rule test that `next/link` and `next/navigation` imports in locale UI fail (rule exists from A-06; add the locale-specific fixtures) and a codemod-free note in `site/README.md` [SPEC: storefront-locale-routing]
 - [ ] C-06 Extend `renderWithProviders` with `NextIntlClientProvider` + `messages/en-US.json` [SPEC: storefront-locale-routing]
 
 ## Scenarios
@@ -27,7 +27,7 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [x] Excluded paths
 - [x] Unsupported locale in the URL
 #### storefront-locale-routing › Locale-aware navigation only
-- [ ] Bare Next link
+- [x] Bare Next link
 #### storefront-locale-routing › Messages and document language
 - [x] Missing key
 <!-- SCENARIOS:END -->
