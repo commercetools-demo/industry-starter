@@ -26,6 +26,7 @@ export function mapMedication(projection: ProductProjection, options: Medication
   const variant = projection.masterVariant;
   const attributes = variant.attributes;
   const controlClass = attrEnumKey(findAttribute(attributes, 'controlClass'));
+  const price = packPrice(projection, currency);
   return {
     id: projection.id,
     key: projection.key ?? projection.id,
@@ -41,7 +42,8 @@ export function mapMedication(projection: ProductProjection, options: Medication
     maxQtyPerOrder: attrNumber(findAttribute(attributes, 'maxQtyPerOrder')),
     hsaEligible: attrBoolean(findAttribute(attributes, 'hsaEligible')),
     controlClass: controlClass.length > 0 && controlClass !== 'none' ? controlClass : null,
-    price: packPrice(projection, currency),
+    price,
+    sellableInRegion: price !== null,
     imageUrl: variant.images?.[0]?.url ?? null,
     categoryIds: projection.categories.map((c) => c.id),
   };

@@ -136,13 +136,23 @@ export function buildFacets(): ProductSearchFacetExpression[] {
   }));
 }
 
+/**
+ * Only products with a price in the visitor's currency are sellable in the region, so search never lists the others
+ * (switching-region-or-language: a product without a price there is not shown, rather than shown with a broken price).
+ */
+export function buildSellableFilter(currency: string): Query {
+  return { filter: [{ exact: { field: 'variants.prices.currencyCode', value: currency } }] };
+}
+
 /** The complete request body for `apiRoot.products().search().post({ body })`. */
 export function buildSearchRequest(params: SearchParams): ProductSearchRequest {
   const { limit, offset } = buildPaging(params.page, params.pageSize);
-  const query = buildQuery(params);
+  const restriction = buildQuery(params);
+  const sellable = buildSellableFilter(params.currency);
+  const query: Query = restriction ? { and: [restriction, sellable] } : sellable;
   const sort = buildSort(params.sort, params.locale, params.currency);
   return {
-    ...(query ? { query } : {}),
+    query,
     ...(sort ? { sort } : {}),
     facets: buildFacets(),
     limit,

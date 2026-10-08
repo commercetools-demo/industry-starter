@@ -109,6 +109,22 @@ describe('design-pdp: Booking panel wiring (page)', () => {
   });
 });
 
+describe('switching-region-or-language: Product not sellable in the new region (profile page)', () => {
+  it('a doctor with no fee in the visitor currency shows "not available in this region" and no booking panel', async () => {
+    getDoctor.mockResolvedValue(doctor({ fees: {}, modes: [], sellableInRegion: false }));
+    await render({ m: 'remote' });
+    expect(screen.getByRole('heading', { name: 'Not available in this region' })).toBeInTheDocument();
+    expect(screen.queryByTestId('panel-stub')).not.toBeInTheDocument();
+    expect(panel).not.toHaveBeenCalled();
+  });
+
+  it('a sellable doctor keeps the booking panel and no notice', async () => {
+    await render({ m: 'remote' });
+    expect(screen.getByTestId('panel-stub')).toBeInTheDocument();
+    expect(screen.queryByText('Not available in this region')).not.toBeInTheDocument();
+  });
+});
+
 describe('design-pdp: Doctor profile layout', () => {
   it('Profile content: header card, About card with Education, Languages and Clinic', async () => {
     await render({ m: 'remote' });
