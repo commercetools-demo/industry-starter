@@ -30,9 +30,6 @@ export interface MutableCart {
   totalPrice: FakeMoney;
   shippingInfo?: { shippingMethodName: string; price: FakeMoney };
 }
-type CtCart = MutableCart;
-type Mut<T> = T;
-type LineItem = FakeLine;
 
 export interface FakeCarts {
   carts: Map<string, MutableCart>;
@@ -65,7 +62,7 @@ export function createFakeCarts(prices: Record<string, number> = {}): FakeCarts 
     return cents;
   };
 
-  const lineItem = (sku: string, quantity: number, custom: LineItem['custom']): Mut<LineItem> => {
+  const lineItem = (sku: string, quantity: number, custom: FakeLine['custom']): FakeLine => {
     seq += 1;
     const cents = priceOf(sku);
     return {
@@ -77,7 +74,7 @@ export function createFakeCarts(prices: Record<string, number> = {}): FakeCarts 
       quantity,
       totalPrice: money(cents * quantity),
       ...(custom ? { custom } : {}),
-    } as unknown as Mut<LineItem>;
+    } as unknown as FakeLine;
   };
 
   const reprice = (cart: MutableCart, refresh: boolean): MutableCart => {
@@ -101,7 +98,7 @@ export function createFakeCarts(prices: Record<string, number> = {}): FakeCarts 
       if (cart.lineItems.length === before) throw { statusCode: 400, body: { errors: [{ code: 'InvalidOperation' }] } };
     } else if (a.action === 'addLineItem') {
       const custom = a.custom as { type: { key: string }; fields: Record<string, unknown> };
-      cart.lineItems.push(lineItem(String(a.sku), Number(a.quantity), { type: { typeId: 'type', id: 't', ...custom.type }, fields: custom.fields } as LineItem['custom']));
+      cart.lineItems.push(lineItem(String(a.sku), Number(a.quantity), { type: { typeId: 'type', id: 't', ...custom.type }, fields: custom.fields } as FakeLine['custom']));
     } else if (a.action === 'setLineItemCustomField') {
       const item = cart.lineItems.find((i) => i.id === a.lineItemId);
       if (!item?.custom) throw { statusCode: 400, body: { errors: [{ code: 'InvalidOperation' }] } };
