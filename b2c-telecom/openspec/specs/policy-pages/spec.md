@@ -7,6 +7,10 @@
 
 These pages carry the terms a buyer is held to, so which text applied on which date is a matter of record rather than presentation. Checkout links to them at the moment of consent, which means the address has to outlive any restructure of the content system and the page has to be readable without abandoning the purchase. The failure mode is a silent edit: a policy that changed with no effective date cannot be reconciled against an order placed before the change.
 
+## Plan notes
+
+**As built by workstream W (D-034).** Policies are versioned files under `site/content/` with effective dates; `?asOf=` shows an earlier version (capped at today; superseded versions are `noindex`). All legal text is placeholder text pending SO-08; German is machine-translated.
+
 ## Requirements
 
 ### Requirement: Policy pages stating the effective date of the text shown

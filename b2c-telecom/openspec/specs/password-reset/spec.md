@@ -7,6 +7,10 @@
 
 Account recovery is the one unauthenticated flow that hands over control of an account, so the token is the whole of the authorization. Two things follow: the token has to be validated on the server before the new password is accepted, and the page must never let its own responses reveal which email addresses have accounts, since that turns recovery into an account-enumeration tool.
 
+## Plan notes
+
+**Demo-mode link on screen (D-033, D-031).** Requesting a reset creates the commercetools reset token (60-minute TTL, single use, `invalidateOlderTokens = true`); with `DEMO_SHOW_RESET_LINK=true` the confirmation page shows the link under a "demo mode: email delivery disabled" banner, otherwise only the generic "if the account exists" message. Nothing is ever emailed. As built (R): a reset invalidates older sessions through the customer custom field `sessionsValidAfter` and the session field `signedInAt`; the "not-email" password rule is applied by the client and by registration, not by the reset route (no email is known before the token is used). Scenarios are built as written ("Token valid password changed", "Token expired or consumed", "Address with no account", "Password fails policy").
+
 ## Requirements
 
 ### Requirement: Password reset gated on a valid, unexpired reset token

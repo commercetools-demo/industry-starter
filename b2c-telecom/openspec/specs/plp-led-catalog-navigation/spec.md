@@ -9,6 +9,10 @@ Malva Telecom does not sell products one at a time to people who already know th
 
 This capability supersedes the `product-detail-page` spec and the detail-page links in `discovery-and-browse` and `search-results-page` for this project.
 
+## Plan notes
+
+**As built by workstream N (D-052).** Category route `/<locale>/shop/<slug>` with the `?offer=<key>` anchor; other-locale slugs redirect 307; an unknown slug and `/product/<x>` answer 404. "Mobile navigation" is the slide-in drawer built in I (D-051). The default sort is cheapest first (no order hint, Q-016); only `price-asc` and `price-desc` exist. The header shows root categories only; child categories are linked from a "Browse by type" strip.
+
 ## Requirements
 
 ### Requirement: Category listings as the only catalog surface

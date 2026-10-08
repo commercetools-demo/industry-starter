@@ -7,6 +7,10 @@
 
 A saved card is the most sensitive thing an account page touches, and the only version of it that is safe to keep is a token the provider can redeem and the storefront cannot. Anchoring the requirement on the representation, rather than on the add and remove buttons, is what keeps the page out of card-data scope. In a business account this page reads two systems of record at once: the vault for instruments, and the finance system for terms and credit, which have very different availability characteristics.
 
+## Plan notes
+
+**List-only with seeded records (D-032).** The account page lists, sets the default and removes payment-method records; there is no tokenisation form, so "Card tokenized then listed" is excluded (cards are saved only inside the hosted Checkout when the Adyen connector has Stored Payment Methods on, OA-05). The "Net terms and credit line summary" and "Add new card form" components are excluded (D-005, D-032). "Default method removed" and "No methods saved" are built (T). As built: record keys are `malva-pm-<slug>-<8 chars of customer id>` (project-wide uniqueness); the platform refuses a second default, so the old default is cleared first; writes need `manage_payment_methods` on the storefront client (M-T-1).
+
 ## Requirements
 
 ### Requirement: Saved payment methods and account payment terms
