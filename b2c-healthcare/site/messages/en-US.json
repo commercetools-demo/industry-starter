@@ -661,5 +661,42 @@
       "CEILING_PERIOD": "Monthly limit of {ceiling} reached · {remaining} available this calendar month",
       "SHELF_LIFE": "Stock expires {date}, too soon to meet the minimum shelf life"
     }
+  },
+  "cart": {
+    "metaTitle": "Your cart",
+    "title": "Your cart",
+    "loading": "Loading your cart",
+    "loadFailed": "We could not load your cart. Please try again.",
+    "retry": "Try again",
+    "empty": "Your cart is empty.",
+    "findPrescription": "Find a prescription",
+    "added": "Added to cart",
+    "viewCart": "View cart \u2192",
+    "lines": "Medications in your cart",
+    "qty": "Qty {count}",
+    "rxQty": "{rx} \u00b7 Qty {count}",
+    "remove": "Remove",
+    "removeLabel": "Remove {name} from your cart",
+    "removed": "Removed {name}",
+    "removeFailed": "We could not remove that item. Please try again.",
+    "priceUpdated": "Price updated",
+    "unavailable": "Not available",
+    "summary": "Summary",
+    "subtotal": "Subtotal",
+    "delivery": "Standard delivery",
+    "free": "FREE",
+    "total": "Total",
+    "notIncluded": "{count, plural, one {# unavailable item} other {# unavailable items}} not included. Remove {count, plural, one {it} other {them}} to continue.",
+    "checkout": "Checkout",
+    "fixItems": "Fix {count, plural, one {# item} other {# items}} to continue",
+    "reason": {
+      "NO_REFILLS": "No refills left",
+      "EXPIRED": "This prescription has expired",
+      "OUT_OF_STOCK": "Out of stock",
+      "CEILING_ORDER": "Limit of {ceiling} per order",
+      "CEILING_PERIOD": "Monthly limit of {ceiling} reached",
+      "SHELF_LIFE": "Stock expires {date}, too soon to meet the minimum shelf life",
+      "UNAVAILABLE": "This prescription can no longer be filled"
+    }
   }
 }
