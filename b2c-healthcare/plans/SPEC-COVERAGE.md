@@ -24,7 +24,7 @@ Every capability under `openspec/specs/` and `openspec/changes/bootstrap-storefr
 | design-checkout | Q (checkout), S (order) | in | |
 | checkout-page | Q | in | |
 | checkout | Q | in | |
-| payment-methods | Q (widget), T (saved methods) | in | net terms / credit line excluded (B2C) |
+| payment-methods | T | in | net terms / credit line excluded (B2C) |
 | order-confirmation-page | S | in | |
 | order-history | S | in | |
 | post-purchase-order-management | S | in | cancellation per Q |

@@ -25,4 +25,5 @@ Only for what a machine cannot do (real card in the PSP sandbox, real inbox, leg
 
 | ID | Workstream | What to do | Expected | Needs | Status |
 | --- | --- | --- | --- | --- | --- |
-| *(none yet)* | | | | | |
+| M-Q-1 | Q | 1) Open the deployed or local `/en-US/checkout` as Sam with a dispensable RX line. 2) In the payment widget enter Stripe sandbox card `4242 4242 4242 4242`, any future expiry, any CVC. 3) Place order. | Order page `/en-US/order/<id>` shows "Order placed"; payment appears in Stripe sandbox dashboard as authorised; declined card `4000 0000 0000 0002` keeps the cart and shows an inline message | OA-04 done | TODO |
+| M-T-1 | T | 1) At checkout tick "Save this card" and pay with the sandbox card. 2) Open `/en-US/account/payment-methods`. 3) Set it as default, then remove it. | Card shows as brand + last4 + expiry only (never the full number); default flag follows; "No methods saved" after removal | OA-04 done (stored payment methods enabled) | TODO |
