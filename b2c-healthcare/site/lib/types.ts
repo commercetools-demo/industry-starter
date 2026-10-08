@@ -14,6 +14,34 @@ export interface Money {
   fractionDigits: number;
 }
 
+/** A catalog category with its children nested (public, identical for every visitor). */
+export interface Category {
+  id: string;
+  key: string;
+  name: LocalizedString;
+  slug: LocalizedString;
+  parentId: string | null;
+  orderHint: string;
+  children: Category[];
+}
+
+/** One shipping rate of a method, per zone (public data). */
+export interface ShippingRateInfo {
+  zoneId: string;
+  price: Money;
+  freeAbove: Money | null;
+}
+
+/** An active shipping method as shown before a cart exists. */
+export interface ShippingMethodInfo {
+  id: string;
+  key: string;
+  name: string;
+  description: LocalizedString;
+  isDefault: boolean;
+  rates: ShippingRateInfo[];
+}
+
 /** Body of every non-2xx BFF response (see lib/api.ts). */
 export interface ApiErrorBody {
   error: string;
