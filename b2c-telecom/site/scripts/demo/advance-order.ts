@@ -41,6 +41,10 @@ const shippingOrder = (order: RawOrder): RawLine[] => [...order.lineItems].sort(
 
 /** The update actions of one flag. Pure: the same order and flag always give the same actions. */
 export function planAdvance(order: RawOrder, mode: AdvanceMode, options: { line?: string | undefined; now?: Date } = {}): Action[] {
+  // Live finding (V): the platform refuses addDelivery on an order without a shipping method ("Shipping method is not set").
+  if ((mode === 'ship-two-parcels' || mode === 'ship-all') && order.shippingInfo === undefined) {
+    throw new Error('This order has no shipping method, so the platform cannot add deliveries: use an order placed through checkout with equipment.');
+  }
   switch (mode) {
     case 'ship-two-parcels': {
       const [first, second] = shippingOrder(order);

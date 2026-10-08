@@ -6,6 +6,7 @@ const SOURCE = { CTP_SEED_PROJECT_KEY: 'spec-test-b2c-telecom', CTP_SEED_AUTH_UR
 const ORDER: RawOrder = {
   id: 'o1',
   version: 7,
+  shippingInfo: { deliveries: [] },
   lineItems: [
     { id: 'plan', quantity: 1, recurrenceInfo: {} },
     { id: 'router', quantity: 1 },
@@ -49,6 +50,12 @@ describe('planAdvance', () => {
     ]);
     const complete = { ...ORDER, shippingInfo: { deliveries: [{ items: ORDER.lineItems.map((line) => ({ id: line.id, quantity: line.quantity })) }] } };
     expect(planAdvance(complete, 'ship-all')).toEqual([{ action: 'changeShipmentState', shipmentState: 'Shipped' }]);
+  });
+
+  it('refuses to ship an order without a shipping method', () => {
+    const { shippingInfo: _unused, ...bare } = ORDER;
+    void _unused;
+    expect(() => planAdvance(bare, 'ship-all')).toThrow('no shipping method');
   });
 
   it('--deliver sets Delivered', () => {
