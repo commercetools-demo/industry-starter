@@ -2,19 +2,10 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { parseFrontMatter, requireString } from './frontmatter';
 import { renderMarkdown } from './markdown';
+import { LEGAL_SLUGS, isLegalSlug, legalPath, type LegalSlug } from './legal-slugs';
 import { ContentError, DATE_PATTERN, FALLBACK_LOCALE, contentRoot, type ContentLocale, type ContentOptions } from './types';
 
-export const LEGAL_SLUGS = ['shipping-returns', 'terms', 'privacy', 'image-credits'] as const;
-export type LegalSlug = (typeof LEGAL_SLUGS)[number];
-
-export function isLegalSlug(value: string): value is LegalSlug {
-  return (LEGAL_SLUGS as readonly string[]).includes(value);
-}
-
-/** Locale-agnostic path; callers use the locale-aware `Link`. */
-export function legalPath(policy: LegalSlug): string {
-  return `/legal/${policy}`;
-}
+export { LEGAL_SLUGS, isLegalSlug, legalPath, type LegalSlug };
 
 export interface PolicyDoc {
   policy: LegalSlug;
