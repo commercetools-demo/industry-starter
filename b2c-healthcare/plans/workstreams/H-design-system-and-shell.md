@@ -14,7 +14,7 @@ Smoke page `/[locale]` proves routing + messages + tokens + commercetools connec
 - [x] H-01 `Button`, `Badge`, `Card`, `Avatar`, `PageHead` with tests (variants, disabled, busy, status-colour mapping "available/free/ready = success, processing = warning, out-of-range = danger, info = next availability") [SPEC: design-storefront-shell]
 - [x] H-02 Form primitives (`Field`, `Input`, `Select`, `Textarea`, `Checkbox`, `RadioCard`) with label association and error text/`aria-describedby` tests [SPEC: design-storefront-shell]
 - [x] H-03 `SegmentedControl`, `Pagination`, `Skeleton`, `EmptyState`, `StatusTimeline` with keyboard tests [SPEC: design-storefront-shell]
-- [ ] H-04 `Modal` (focus trap, Escape, overlay click, focus return) and `ToastProvider`/`useToast`/`LiveRegion` (5 s) with tests; extend `renderWithProviders` [SPEC: design-storefront-shell]
+- [x] H-04 `Modal` (focus trap, Escape, overlay click, focus return) and `ToastProvider`/`useToast`/`LiveRegion` (5 s) with tests; extend `renderWithProviders` [SPEC: design-storefront-shell]
 - [ ] H-05 `Header` server shell + `HeaderClient` islands (`CartButton`, `AccountSlot`) reading `use-cart`/`use-account` fallback; tests: anonymous, signed-in with count, expired session (no stale count/initials), home variant [SKILL: commercetools-storefront] [SPEC: design-storefront-shell]
 - [ ] H-06 Active-section mapping `lib/nav.ts` with table-driven tests for every route in the spec scenario [SPEC: design-storefront-shell]
 - [ ] H-07 Mobile menu drawer (< 900 px): open/close, focus management, links, Sign in/Cart; test with a media-query mock [SPEC: design-storefront-shell]

@@ -67,8 +67,8 @@ describe('Pagination', () => {
   });
 
   it('renders nothing for a single page', () => {
-    const { container } = renderWithProviders(<Pagination page={1} pageCount={1} onChange={() => {}} />);
-    expect(container).toBeEmptyDOMElement();
+    renderWithProviders(<Pagination page={1} pageCount={1} onChange={() => {}} />);
+    expect(screen.queryByRole('navigation')).toBeNull();
   });
 
   it('buttons: current page is marked, previous is disabled on page 1, keyboard moves on', async () => {
