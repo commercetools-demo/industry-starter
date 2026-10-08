@@ -90,7 +90,8 @@ export function MobileMenu({ items, home = false }: MobileMenuProps) {
             <Link href="/doctors/remote" onClick={close} className={ROW}>
               {t('bookVisit')}
             </Link>
-          ) : (
+          ) : null}
+          {!home || user ? (
             <Link
               href="/cart"
               onClick={close}
@@ -104,8 +105,8 @@ export function MobileMenu({ items, home = false }: MobileMenuProps) {
                 </span>
               ) : null}
             </Link>
-          )}
-          {user && !home ? (
+          ) : null}
+          {user ? (
             <Link href="/account" onClick={close} className={ROW}>
               {t('account')}
             </Link>
