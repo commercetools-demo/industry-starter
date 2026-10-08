@@ -12,29 +12,20 @@ const REASON: Partial<Record<RxLineStatus, NotAddedReason>> = { NO_REFILLS: 'NO_
 
 const nameOf = (name: Record<string, string>, locale: string): string => name[locale] ?? Object.values(name)[0] ?? '';
 
-/**
- * Reorder = re-run the prescription rules (N: `validateRxSelection`, now, not as they were when the order was
- * placed) for every line of a past order and add the lines that may still be dispensed through the same path as
- * "Add to cart" (`addRxLines`: the platform cart stays authoritative for prices). Every line that could not be added
- * is named with its reason: no refills, expired, out of stock, or unavailable (no longer on the prescription, the
- * prescription is gone, the platform's own limit refused). Nothing is dropped silently. Also answers the id of the
- * cart that now holds the lines (the first add may have created it), for the session.
- */
-export async function reorderOrder(
-  order: Pick<Order, 'lineItems'>,
-  input: { customerId: string; cartId: string | undefined; patient: Patient; ctx: RxContext; locale: string },
-): Promise<{ result: ReorderResult; cartId: string | undefined }> {
-  const { customerId, cartId, patient, ctx, locale } = input;
-  const added: string[] = [];
-  const notAdded: ReorderResult['notAdded'] = [];
-  const groups = new Map<string, { lineRef: string; name: string }[]>();
-  for (const item of order.lineItems) {
-    const name = nameOf(item.name, locale);
-    const f = rxFieldsOf(item);
-    if (!f) notAdded.push({ name, reason: 'UNAVAILABLE' });
-    else groups.set(f.rxNumber, [...(groups.get(f.rxNumber) ?? []), { lineRef: f.rxLineRef, name }]);
-  }
+type Groups = Map<string, { lineRef: string; name: string }[]>;
 
+/**
+ * The shared core of "reorder" and "add a whole saved list" (workstream T): re-validates every prescription line now
+ * (N `validateRxSelection`), adds the dispensable ones through `addRxLines`, and names each one that could not be
+ * added with its reason into `out.notAdded`. Returns the id of the cart that now holds the lines.
+ */
+export async function addPrescribedGroups(
+  groups: Groups,
+  out: ReorderResult,
+  input: { customerId: string; cartId: string | undefined; patient: Patient; ctx: RxContext },
+): Promise<string | undefined> {
+  const { customerId, cartId, patient, ctx } = input;
+  const { added, notAdded } = out;
   let currentCartId = cartId;
   for (const [rxNumber, lines] of groups) {
     const nameOfRef = (ref: string) => lines.find((l) => l.lineRef === ref)?.name ?? '';
@@ -58,5 +49,32 @@ export async function reorderOrder(
       for (const a of selection.accepted) notAdded.push({ name: nameOfRef(a.lineRef), reason: 'UNAVAILABLE' });
     }
   }
+  return currentCartId;
+}
+
+/**
+ * Reorder = re-run the prescription rules (N: `validateRxSelection`, now, not as they were when the order was
+ * placed) for every line of a past order and add the lines that may still be dispensed through the same path as
+ * "Add to cart" (`addRxLines`: the platform cart stays authoritative for prices). Every line that could not be added
+ * is named with its reason: no refills, expired, out of stock, or unavailable (no longer on the prescription, the
+ * prescription is gone, the platform's own limit refused). Nothing is dropped silently. Also answers the id of the
+ * cart that now holds the lines (the first add may have created it), for the session.
+ */
+export async function reorderOrder(
+  order: Pick<Order, 'lineItems'>,
+  input: { customerId: string; cartId: string | undefined; patient: Patient; ctx: RxContext; locale: string },
+): Promise<{ result: ReorderResult; cartId: string | undefined }> {
+  const { customerId, cartId, patient, ctx, locale } = input;
+  const added: string[] = [];
+  const notAdded: ReorderResult['notAdded'] = [];
+  const groups = new Map<string, { lineRef: string; name: string }[]>();
+  for (const item of order.lineItems) {
+    const name = nameOf(item.name, locale);
+    const f = rxFieldsOf(item);
+    if (!f) notAdded.push({ name, reason: 'UNAVAILABLE' });
+    else groups.set(f.rxNumber, [...(groups.get(f.rxNumber) ?? []), { lineRef: f.rxLineRef, name }]);
+  }
+
+  const currentCartId = await addPrescribedGroups(groups, { added, notAdded }, { customerId, cartId, patient, ctx });
   return { result: { added, notAdded }, cartId: currentCartId };
 }

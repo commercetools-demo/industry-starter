@@ -11,7 +11,7 @@
 
 ## Tasks
 - [x] T-01 `lib/ct/shopping-lists.ts` (create, list, rename, add/remove line, delete) + mapper; tests [SKILL: commercetools-storefront] [SPEC: saved-lists]
-- [ ] T-02 `POST /api/lists/[id]/add-all-to-cart` using N validation; result `{ added[], notAdded[{name,reason}] }` with the cart updated for the added ones; tests for all-added, partial, none, empty list [SKILL: commercetools-commerce-patterns] [SPEC: saved-lists]
+- [x] T-02 `POST /api/lists/[id]/add-all-to-cart` using N validation; result `{ added[], notAdded[{name,reason}] }` with the cart updated for the added ones; tests for all-added, partial, none, empty list [SKILL: commercetools-commerce-patterns] [SPEC: saved-lists]
 - [ ] T-03 Lists UI (`/account/lists`, detail, "Save to My medicines" on `RxResultCard`, empty state, price-delta note); tests [SPEC: saved-lists]
 - [ ] T-04 Seed `mlv-monthly` and `mlv-quarterly` Recurrence Policies in `seed.ts`; `lib/ct/recurring.ts` (create from order, pause, resume, skip, change schedule, cancel) with tests mapping each scenario [SKILL: commercetools-commerce-patterns] [SPEC: subscriptions-and-recurring-orders]
 - [ ] T-05 `netlify/functions/auto-refill-run.ts` scheduled handler + pure `decideRun(recurringOrder, rxState, ceilings)`; gate tests: lapses between runs → no order and reason recorded; exhausted stops the series [SKILL: commercetools-commerce-patterns] [SPEC: subscriptions-and-recurring-orders]
