@@ -329,3 +329,10 @@ Evidence (screenshots, traces) is kept under `plan/evidence/<check-id>/` only wh
 - 2026-10-07 · D · C-D-1…7 · 7 pass / 0 fail · / → 307 /en-US; /de-DE lang=de-DE German text; POST /api/locale de-DE → EUR/DE, fr-FR and bad JSON → 400 VALIDATION; /fr-FR/x → /en-US/fr-FR/x 404; GET /api/locale 405; no overflow at the browser's 500 px floor; console clean
 - 2026-10-07 · B, C · C-B-1…2, C-C-1…6 · 8 pass / 0 fail · /dev/tokens: tokens resolve, fonts self-hosted (3 woff2, no Google requests), CTA pill #8745ae, Lighthouse desktop a11y 96 / best practices 100 / SEO 80 (dev page, noindex expected); production build returns 404 for /dev/tokens; C-B-2 covered by B's lint probe + check:boundaries tests (terminal)
 - 2026-10-07 · A · C-A-1…3 · 3 pass / 0 fail · dev server on :3000 (title, console clean, only same-origin requests, `/does-not-exist` 404) and production `next start` on :3010 (no `NEXT_PUBLIC_` string in HTML)
+
+## Orchestrator browser pass (2026-10-07, Chrome at the 485 px window floor, dev server against spec-test-b2c-telecom)
+- `/en-US` home: renders; **defect found and fixed** (`5c95fbe`): the unlayered `a { color }` rule beat Tailwind utilities, so button-styled links (hero CTA, add-ons CTA) and footer links showed purple text on purple/dark backgrounds. After moving the rule into `@layer base` the CTAs and footer are readable. Console: no errors.
+- `/en-US/shop/cable-internet`: 3 plans, term chips, prices, "Choose plan", "Save for later", add-ons banner all render.
+- "Choose plan" on Cable 500 then `/en-US/bundle`: line, price schedule ($59.99/mo, due at order $84.99 with the $25 activation fee, 24-month total $1,439.76), Broadband Facts label, $5.00 bundle prompt, order summary, discount code field render.
+- Login as demo customer `alex.rivera@example.com` (the redirect parameter is `returnTo`, not `next`) merged the bundle (pill "My bundle · 1"); "Check out" opens the checkout wizard at step 1 "Contact" with the account email prefilled.
+- Not run in the browser: payment step (needs OA-05 or demo payment), de-DE pass, Lighthouse, true 375 px width, and the per-workstream C- lines recorded in each STATUS row as pending.
