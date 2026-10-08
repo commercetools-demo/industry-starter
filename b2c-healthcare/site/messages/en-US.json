@@ -303,5 +303,117 @@
     "unsupportedDescription": "Search in English. We do not have results in that language, which is different from there being no matches.",
     "errorTitle": "Search is not available right now",
     "errorDescription": "We could not run your search. Please try again in a moment."
+  },
+  "account": {
+    "addresses": {
+      "title": "Addresses",
+      "sub": "Saved delivery addresses. The default is selected for you at checkout.",
+      "add": "Add address",
+      "listLabel": "Saved addresses",
+      "emptyTitle": "No addresses yet",
+      "emptyBody": "Add a delivery address and it will be ready the next time you order.",
+      "defaultBadge": "Default",
+      "makeDefault": "Make default",
+      "edit": "Edit",
+      "remove": "Remove",
+      "noDefault": "You have no default address. You will be asked to choose one at checkout.",
+      "loadFailed": "We could not load your addresses. Please try again.",
+      "removeTitle": "Remove this address?",
+      "removeBody": "{address} will be removed from your saved addresses.",
+      "removeBodyDefault": "{address} is your default address. If you remove it, you will choose an address at your next order.",
+      "removeConfirm": "Remove address",
+      "toast": {
+        "saved": "Address saved.",
+        "removed": "Address removed.",
+        "defaultSet": "Default address updated."
+      },
+      "form": {
+        "addTitle": "Add an address",
+        "editTitle": "Edit address",
+        "save": "Save address",
+        "saveAnyway": "Save anyway",
+        "cancel": "Cancel",
+        "makeDefault": "Use as my default address",
+        "country": "Country",
+        "countryValue": "United States",
+        "fields": {
+          "firstName": "First name",
+          "lastName": "Last name",
+          "street": "Street address",
+          "street2": "Apartment, suite, unit",
+          "city": "City",
+          "state": "State",
+          "stateChoose": "Select a state",
+          "zip": "ZIP code",
+          "phone": "Phone"
+        },
+        "hints": {
+          "zip": "5 digits, or 9 with a dash (12345-6789).",
+          "phone": "A US number, for example (512) 555-0100."
+        },
+        "problems": {
+          "firstNameRequired": "Enter a first name.",
+          "firstNameInvalid": "That first name is too long.",
+          "lastNameRequired": "Enter a last name.",
+          "lastNameInvalid": "That last name is too long.",
+          "streetRequired": "Enter a street address.",
+          "streetInvalid": "That street address is too long.",
+          "street2Invalid": "That line is too long.",
+          "cityRequired": "Enter a city.",
+          "cityInvalid": "That city name is too long.",
+          "stateRequired": "Select a state.",
+          "stateInvalid": "Select a state from the list.",
+          "zipRequired": "Enter a ZIP code.",
+          "zipInvalid": "Enter a 5-digit ZIP code, or 9 digits with a dash.",
+          "phoneRequired": "Enter a phone number.",
+          "phoneInvalid": "Enter a 10-digit US phone number."
+        },
+        "warningTitle": "Check this address",
+        "warning": "We could not match the {fields} for this address. ZIP code {zip} is usually in {nearest}. Correct it, or save it as it is.",
+        "warningFields": {
+          "state": "state",
+          "zip": "ZIP code",
+          "both": "state and ZIP code"
+        },
+        "saveFailed": "We could not save this address. Please try again."
+      }
+    },
+    "profile": {
+      "title": "Profile",
+      "sub": "Your name and password.",
+      "email": "Email",
+      "name": {
+        "title": "Your name",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "save": "Save name",
+        "saved": "Your name is updated.",
+        "problems": {
+          "firstNameRequired": "Enter your first name.",
+          "firstNameInvalid": "That first name is too long.",
+          "lastNameRequired": "Enter your last name.",
+          "lastNameInvalid": "That last name is too long."
+        }
+      },
+      "password": {
+        "title": "Change password",
+        "current": "Current password",
+        "new": "New password",
+        "confirm": "Repeat new password",
+        "hint": "Use at least {min} characters.",
+        "save": "Change password",
+        "saved": "Your password is changed.",
+        "problems": {
+          "currentRequired": "Enter your current password.",
+          "newRequired": "Enter a new password.",
+          "newTooShort": "Use at least {min} characters.",
+          "newTooLong": "Use at most {max} characters.",
+          "confirmMismatch": "The two passwords do not match."
+        },
+        "wrongCurrent": "Your current password is not correct.",
+        "tooManyAttempts": "Too many attempts. Please try again in a few minutes."
+      },
+      "saveFailed": "We could not save your changes. Please try again."
+    }
   }
 }

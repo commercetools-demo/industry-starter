@@ -7,7 +7,7 @@ import { SWRConfig } from 'swr';
 import tseslint from 'typescript-eslint';
 import { describe, expect, it, vi } from 'vitest';
 import { restrictionConfigs } from '@/eslint/restrictions.mjs';
-import { KEY_ACCOUNT, KEY_CART } from '@/lib/cache-keys';
+import { KEY_ACCOUNT, KEY_ADDRESSES, KEY_CART } from '@/lib/cache-keys';
 import { useAccount } from './use-account';
 import { useCart } from './use-cart';
 import { clearPatientState, useClearPatientState } from './sign-out';
@@ -38,7 +38,8 @@ describe('storefront-data-loading: Cache keys and invalidation', () => {
     await clearPatientState(mutate);
     expect(mutate).toHaveBeenCalledWith(KEY_ACCOUNT, null, { revalidate: false });
     expect(mutate).toHaveBeenCalledWith(KEY_CART, null, { revalidate: false });
-    expect(mutate).toHaveBeenCalledTimes(2);
+    expect(mutate).toHaveBeenCalledWith(KEY_ADDRESSES, null, { revalidate: false });
+    expect(mutate).toHaveBeenCalledTimes(3);
   });
 
   it('Sign-out: after the hook callback runs, the cached cart and account are null, not the layout fallback', async () => {

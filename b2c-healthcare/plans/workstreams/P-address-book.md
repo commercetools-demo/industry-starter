@@ -11,7 +11,7 @@ Addresses are the commercetools **Customer** addresses (`addAddress`, `changeAdd
 - [x] P-01 `lib/address.ts` validators (ZIP, phone normaliser, state list, name required) + mismatch warning table; exhaustive table tests [SPEC: address-book]
 - [x] P-02 `lib/ct/addresses.ts` (`listAddresses`, `addAddress`, `updateAddress`, `removeAddress`, `setDefault`) using customer update actions with version handling; mapper `Address`; tests incl. first address defaults, removing default promotes next, removing last leaves empty [SKILL: commercetools-storefront] [SPEC: account-and-self-service]
 - [x] P-03 Routes `GET/POST /api/account/addresses`, `PATCH/DELETE /api/account/addresses/[id]`, `POST …/default`; 401 and ownership checks (other customer's id → 404); tests [SKILL: commercetools-storefront] [SPEC: address-book]
-- [ ] P-04 `AddressForm` (inline errors, focus first error, busy), `AddressList` (default badge, actions, empty state "No addresses yet"), page `/account/addresses`; tests [SPEC: address-book]
+- [x] P-04 `AddressForm` (inline errors, focus first error, busy), `AddressList` (default badge, actions, empty state "No addresses yet"), page `/account/addresses`; tests [SPEC: address-book]
 - [ ] P-05 `use-addresses` hook; export `defaultAddress()` selector for checkout prefill (name defaults to account name) [SPEC: address-book]
 - [ ] P-06 Name and password change forms on `/account/profile` (reuses J-01 `changePassword`); tests [SKILL: commercetools-storefront] [SPEC: account-and-self-service]
 

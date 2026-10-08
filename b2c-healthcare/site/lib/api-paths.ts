@@ -10,3 +10,7 @@ export const API_AUTH_REGISTER = '/api/auth/register';
 export const API_AUTH_LOGOUT = '/api/auth/logout';
 export const API_AUTH_ME = '/api/auth/me';
 export const API_ACCOUNT_PASSWORD = '/api/account/password';
+export const API_ACCOUNT_ADDRESSES = '/api/account/addresses';
+export const apiAccountAddress = (id: string) => `${API_ACCOUNT_ADDRESSES}/${encodeURIComponent(id)}`;
+export const apiAccountAddressDefault = (id: string) => `${apiAccountAddress(id)}/default`;
+export const API_ACCOUNT_PROFILE = '/api/account/profile';
