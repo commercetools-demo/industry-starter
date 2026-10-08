@@ -1,0 +1,8 @@
+B-08 proof: --color-brand-500 was temporarily renamed to --color-azure-500 in site/app/tokens.css, then `npm run check` was run (exit code 1):
+
+> node scripts/check-token-parity.mjs
+version gate: ok
+token parity: FAILED
+  renamed token: --color-brand-500 -> --color-azure-500
+
+The rename was reverted; `npm run check` passes on the committed state ("token parity: ok (90 tokens)").
