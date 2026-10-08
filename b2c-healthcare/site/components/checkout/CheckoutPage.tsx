@@ -85,14 +85,17 @@ function CheckoutBody({ state, flow, saveAddress, chooseMethod, simulateDecline,
   const t = useTranslations('checkout');
   const { cart, options, deliverable, paymentMode } = state;
   const hasAddress = cart.shippingAddress !== null;
-  const ready = hasAddress && deliverable && cart.shippingMethodKey !== null && cart.unavailableCount === 0;
+  const unresolved = cart.unresolved === true;
+  const ready = hasAddress && deliverable && cart.shippingMethodKey !== null && cart.unavailableCount === 0 && !unresolved;
   const blockedReason = !hasAddress
     ? t('summary.needAddress')
     : !deliverable
       ? t('summary.notDeliverable')
-      : cart.unavailableCount > 0
-        ? t('summary.notIncluded', { count: cart.unavailableCount })
-        : null;
+      : unresolved
+        ? t('summary.coverUnresolved')
+        : cart.unavailableCount > 0
+          ? t('summary.notIncluded', { count: cart.unavailableCount })
+          : null;
 
   const text = (problem: PlaceProblem): string =>
     problem === 'DECLINED' ? t('payment.declined') : problem === 'UNAVAILABLE' ? t('payment.unavailable') : problem === 'FAILED' ? t('place.generic') : t(`place.${problem}`);

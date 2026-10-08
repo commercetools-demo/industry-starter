@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MEDICATIONS, medSku } from '../../scripts/seed/data/medications';
 import { DEMO_SKU_CLASS } from './demo-classes';
-import { createDemoResolver, FundingUnavailableError, getFundingResolver, normalizeScheme, resolverForcedToFail } from './resolver';
+import { createDemoResolver, ORDER_COVER_CAP, FundingUnavailableError, getFundingResolver, normalizeScheme, resolverForcedToFail } from './resolver';
 
 const sam = { patientRef: 'pt_sam', fundingScheme: 'Demo Health Plan' };
 const NOW = new Date('2026-10-08T12:00:00Z');
@@ -27,6 +27,22 @@ describe('payer-and-patient-cost-share: demo resolver', () => {
     ]);
     expect(r.perLine.map((l) => l.status)).toEqual(['partly', 'not-covered']);
     expect(r.perLine[1]).toMatchObject({ covered: 0, owed: 620 });
+  });
+
+  it('Basket change alters existing cover: the plan pays at most the order cap, so a new covered line lowers the others', async () => {
+    const before = await resolver.resolve(sam, [
+      { sku: 'MED-atorvastatin-20-mg', unit: 1875, quantity: 1 },
+      { sku: 'MED-lisinopril-10-mg', unit: 1140, quantity: 1 },
+    ]);
+    expect(before.perLine.map((l) => l.covered)).toEqual([1500, 912]);
+    const after = await resolver.resolve(sam, [
+      { sku: 'MED-atorvastatin-20-mg', unit: 1875, quantity: 1 },
+      { sku: 'MED-lisinopril-10-mg', unit: 1140, quantity: 1 },
+      { sku: 'MED-amoxicillin-500-mg', unit: 1450, quantity: 1 },
+    ]);
+    expect(after.perLine[0].covered).toBeLessThan(1500);
+    expect(after.perLine[0].owed).toBeGreaterThan(375);
+    expect(after.perLine.reduce((sum, l) => sum + l.covered, 0)).toBeLessThanOrEqual(ORDER_COVER_CAP);
   });
 
   it('antibiotics are 50% covered', async () => {

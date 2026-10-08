@@ -3,8 +3,9 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { cx } from '@/components/ui/cx';
 import { formatIsoDate } from '@/lib/format-date';
-import { getLocalizedString, formatMoney } from '@/lib/utils';
+import { getLocalizedString } from '@/lib/utils';
 import type { CartLine, CartLineProblem } from '@/lib/types';
+import { CoverBadge, LinePrice } from './CoverFigures';
 
 export interface CartLineRowProps {
   line: CartLine;
@@ -14,8 +15,11 @@ export interface CartLineRowProps {
 
 function useReason(problem: CartLineProblem): string {
   const t = useTranslations('cart.reason');
+  const tc = useTranslations('credentials.requirement');
   const locale = useLocale();
   switch (problem.reason) {
+    case 'CREDENTIAL':
+      return tc(problem.credential ?? 'NONE');
     case 'CEILING':
       return t(problem.scope === 'period' ? 'CEILING_PERIOD' : 'CEILING_ORDER', { ceiling: problem.ceiling ?? 0 });
     case 'SHELF_LIFE':
@@ -54,15 +58,14 @@ export function CartLineRow({ line, busy, onRemove }: CartLineRowProps) {
         <b className={cx('font-medium text-text-heading', line.unavailable && 'text-neutral-600 line-through')}>{name}</b>
         <div className="font-meta text-sm text-neutral-600">{t('rxQty', { rx: line.rxNumber, count: line.prescribedQty })}</div>
         {line.unavailable ? <Reason problem={line.unavailable} id={noteId} /> : null}
+        <CoverBadge line={line} />
         {line.priceUpdated ? (
           <Badge variant="wait" className="mt-1">
             {t('priceUpdated')}
           </Badge>
         ) : null}
       </div>
-      <b className={cx('text-text-heading sm:order-none', line.unavailable && 'text-neutral-600 line-through')} data-line-price>
-        {formatMoney(line.totalPrice.centAmount, line.totalPrice.currencyCode, locale)}
-      </b>
+      <LinePrice line={line} struck={Boolean(line.unavailable)} />
       <Button
         variant="outline"
         size="sm"

@@ -19,6 +19,8 @@ const MESSAGES: Record<PlaceOrderFailure, string> = {
   PAYMENT_DECLINED: 'Your payment was declined.',
   DISPENSE_REFUSED: 'A prescription can no longer be filled.',
   PLACEMENT_FAILED: 'We could not place your order. Your cart is kept.',
+  COVER_UNRESOLVED: 'We could not confirm what your plan covers. Please try again shortly.',
+  FUNDING_CHANGED: 'Your allowance or covered amount changed. Please review the new amounts.',
   IN_PROGRESS: 'Your order is already being placed.',
 };
 
@@ -32,6 +34,8 @@ const STATUS: Record<PlaceOrderFailure, number> = {
   PAYMENT_DECLINED: 422,
   DISPENSE_REFUSED: 422,
   PLACEMENT_FAILED: 502,
+  COVER_UNRESOLVED: 503,
+  FUNDING_CHANGED: 409,
   IN_PROGRESS: 409,
 };
 

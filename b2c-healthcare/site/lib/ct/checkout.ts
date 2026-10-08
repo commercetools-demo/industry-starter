@@ -4,6 +4,7 @@ import { withCartRetry } from '@/lib/api-retry';
 import { STANDARD_METHOD_KEY } from '@/lib/checkout/config';
 import { paymentModeNow } from '@/lib/checkout/payment-provider';
 import { fetchActiveCart } from '@/lib/ct/cart';
+import { applyFunding, recalcActions } from '@/lib/ct/cart-funding';
 import { checkLines } from '@/lib/ct/cart-validation';
 import { apiRoot } from '@/lib/ct/client';
 import { loadCheckoutFixtures } from '@/lib/ct/fixtures';
@@ -44,11 +45,11 @@ async function update(cart: Pick<CtCart, 'id' | 'version'>, actions: CartUpdateA
 }
 
 /** A cart state read fresh from the platform (the single source of every figure on the page). */
-async function stateOf(cartId: string, ctx: CheckoutContext, problems?: ReadonlyMap<string, CartLineProblem>): Promise<CheckoutState> {
+async function stateOf(cartId: string, ctx: CheckoutContext, problems?: ReadonlyMap<string, CartLineProblem>, unresolved = false): Promise<CheckoutState> {
   const cart = await readCart(cartId);
   const options: DeliveryOption[] = hasLines(cart) ? await getOptionsForCart(cart.id, ctx.now) : [];
   return {
-    cart: mapCheckoutCart(cart, problems ? { problems } : {}),
+    cart: mapCheckoutCart(cart, { ...(problems ? { problems } : {}), ...(unresolved ? { unresolved } : {}) }),
     options,
     deliverable: options.length > 0,
     paymentMode: paymentModeNow(),
@@ -65,9 +66,14 @@ export async function readCheckout(ctx: CheckoutContext): Promise<CheckoutState 
   const before = await fetchActiveCart(ctx.customerId, ctx.cartId);
   if (!before) return null;
   if (!hasLines(before)) return stateOf(before.id, ctx);
-  const recalculated = await withCartRetry(async () => update((await fetchActiveCart(ctx.customerId, before.id)) ?? before, [{ action: 'recalculate', updateProductData: true }]));
-  const problems = await checkLines(ctx.patient, recalculated.lineItems.map((item) => ({ id: item.id, rx: rxFieldsOf(item) })), ctx.rx);
-  return stateOf(recalculated.id, ctx, problems);
+  const recalculated = await withCartRetry(async () => {
+    const cart = (await fetchActiveCart(ctx.customerId, before.id)) ?? before;
+    return update(cart, recalcActions(cart));
+  });
+  // Cost-share is resolved again on every checkout read (workstream U); unresolved blocks the page's Place order.
+  const funded = await applyFunding(recalculated, ctx.patient);
+  const problems = await checkLines(ctx.patient, funded.cart.lineItems.map((item) => ({ id: item.id, rx: rxFieldsOf(item) })), ctx.rx);
+  return stateOf(funded.cart.id, ctx, problems, funded.unresolved);
 }
 
 /**

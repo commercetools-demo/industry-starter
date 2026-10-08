@@ -30,6 +30,8 @@ export function mapCheckoutCart(cart: CtCart, options: CartMapOptions = {}): Che
   return {
     ...base,
     total: taxed ? mapMoney(taxed.totalGross) : base.total,
+    // What the patient owes is the payable total (gross when taxed), as on the cart page.
+    ...(base.youOwe ? { youOwe: taxed ? mapMoney(taxed.totalGross) : base.total } : {}),
     shippingAddress: mapCartAddress(cart.shippingAddress),
     shippingMethodKey: method?.key ?? null,
     tax: taxed ? mapMoney(taxed.totalTax ?? { centAmount: 0, currencyCode: taxed.totalGross.currencyCode, fractionDigits: taxed.totalGross.fractionDigits }) : null,

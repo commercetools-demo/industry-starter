@@ -783,7 +783,8 @@
       "CEILING_ORDER": "Limit of {ceiling} per order",
       "CEILING_PERIOD": "Monthly limit of {ceiling} reached",
       "SHELF_LIFE": "Stock expires {date}, too soon to meet the minimum shelf life",
-      "UNAVAILABLE": "This prescription can no longer be filled"
+      "UNAVAILABLE": "This prescription can no longer be filled",
+      "CREDENTIAL": "Requires a valid credential"
     }
   },
   "region": {
@@ -850,7 +851,8 @@
       "needAddress": "Save your delivery address to place your order.",
       "notDeliverable": "No delivery option is available for this address.",
       "notIncluded": "{count, plural, one {# item cannot be filled} other {# items cannot be filled}}. Go back to your cart to remove {count, plural, one {it} other {them}}.",
-      "backToCart": "Back to cart"
+      "backToCart": "Back to cart",
+      "coverUnresolved": "We could not confirm what your plan covers. Placing the order is unavailable until we can."
     },
     "place": {
       "TOTALS_MOVED": "The total changed after your payment was authorized, so your order was not placed. Review the summary and pay the new amount.",
@@ -863,7 +865,9 @@
       "PLACEMENT_FAILED": "We could not place your order just now. Your payment was released and your cart is kept. Please try again.",
       "IN_PROGRESS": "Your order is already being placed. Please wait a moment.",
       "EMPTY_CART": "Your cart is empty.",
-      "generic": "We could not place your order. Your cart is kept. Please try again."
+      "generic": "We could not place your order. Your cart is kept. Please try again.",
+      "COVER_UNRESOLVED": "We could not confirm what your plan covers, so your order was not placed. Please try again in a moment.",
+      "FUNDING_CHANGED": "Your allowance or covered amount changed while we were placing your order, so it was not placed. Review the new amounts and try again."
     }
   },
   "orders": {
@@ -947,5 +951,42 @@
       "failed": "We could not reorder. Please try again.",
       "nothing": "None of these medications can be added right now."
     }
+  },
+  "funding": {
+    "youOwe": "You owe",
+    "planCovers": "Plan covers",
+    "lineYouOwe": "You owe {amount}",
+    "linePlanCovers": "Plan covers {amount}",
+    "notCovered": "Not covered",
+    "fullyCovered": "Fully covered",
+    "partlyCovered": "Partly covered",
+    "unresolved": "Cover unresolved",
+    "unresolvedLine": "Cover unresolved: we cannot show a price for this item yet.",
+    "unresolvedNote": "We could not confirm what your plan covers right now. Checkout is unavailable until we can. Please try again in a moment.",
+    "unresolvedButton": "Cover unresolved",
+    "retry": "Check again",
+    "tender": {
+      "allowanceBalance": "Allowance balance",
+      "allowanceWouldUse": "This order would use",
+      "forfeits": "Unused allowance is forfeited on {date}. It is not cash and cannot be withdrawn.",
+      "eligibleSubtotal": "Eligible for health account",
+      "restrictedUnavailable": "Health account card (demo) is not available: none of these items are eligible.",
+      "needsOther": "Needs another payment method",
+      "cardPays": "Card pays",
+      "noCard": "No card payment needed",
+      "restrictedTitle": "Health account card (demo)",
+      "restrictedUse": "Pay eligible items with the Health account card (demo)",
+      "restrictedWouldPay": "It would pay {amount} of eligible items.",
+      "restrictedFailed": "We could not change that. Please try again."
+    }
+  },
+  "credentials": {
+    "requirement": {
+      "NONE": "Requires a valid credential for this medicine. You have none on file.",
+      "WRONG_SCOPE": "Your credential does not cover this class of medicine.",
+      "EXPIRED": "Your credential has expired.",
+      "PENDING": "Your credential is awaiting verification."
+    },
+    "requiredLabel": "Credential required"
   }
 }

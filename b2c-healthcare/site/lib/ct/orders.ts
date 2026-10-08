@@ -6,6 +6,7 @@ import type { AuthorizationState, PaymentProvider } from '@/lib/checkout/payment
 import { apiRoot } from '@/lib/ct/client';
 import { loadCheckoutFixtures } from '@/lib/ct/fixtures';
 import type { CheckoutContext } from '@/lib/ct/checkout';
+import { refreshFunding } from '@/lib/ct/cart-funding';
 import { CONTAINERS, createOnly, deleteObject, getObject, putObject, statusOf } from '@/lib/ct/custom-objects';
 import { consumeAuthorization, DispenseRefusedError, type ConsumeLine } from '@/lib/ct/dispense-ledger';
 import { nextOrderNumber } from '@/lib/ct/order-number';
@@ -188,7 +189,7 @@ export async function placeOrder(input: PlaceOrderInput, provider: PaymentProvid
       return finalize({ key: idempotencyKey, ctx, provider, order, orderNumber: acquired.orderNumber, consume: consumeInputFromOrder(ctx, order), auth: await provider.getAuthorization(cartId) });
     }
 
-    const cart = await readCart(cartId);
+    let cart = await readCart(cartId);
     if (!cart || cart.customerId !== ctx.customerId) return retryable('EMPTY_CART');
     if (cart.cartState === 'Ordered') {
       const placed = await existingOrder(cart.id);
@@ -199,6 +200,11 @@ export async function placeOrder(input: PlaceOrderInput, provider: PaymentProvid
       return retryable('EMPTY_CART');
     }
     if (cart.cartState !== 'Active' || cart.lineItems.length === 0) return retryable('EMPTY_CART');
+    // Payer cost-share again, now (U-03): the split the buyer saw may be stale. Unresolved never defaults to the list
+    // price; a changed split changes the total, which the comparison below refuses with the new figures on the cart.
+    const funding = await refreshFunding(cart, ctx.patient);
+    if (funding.unresolved) return retryable('COVER_UNRESOLVED');
+    if (funding.changed) cart = (await readCart(cart.id)) ?? cart;
     if (!mapCartAddress(cart.shippingAddress)) return retryable('ADDRESS_MISSING');
     const methodKey = cart.shippingInfo?.shippingMethod?.obj?.key;
     if (!cart.shippingInfo || !methodKey) return retryable('NO_DELIVERY_METHOD');

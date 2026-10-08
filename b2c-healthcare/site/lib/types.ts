@@ -239,7 +239,10 @@ export interface BookingView {
 // ---- prescriptions (workstream N) -------------------------------------------------------------
 
 /** `ok` can be selected; `short-dated` can be selected on its own terms; the rest are the refusal reasons shown on the row. */
-export type RxLineStatus = 'ok' | 'short-dated' | 'NO_REFILLS' | 'EXPIRED' | 'OUT_OF_STOCK' | 'CEILING' | 'SHELF_LIFE';
+export type RxLineStatus = 'ok' | 'short-dated' | 'NO_REFILLS' | 'EXPIRED' | 'OUT_OF_STOCK' | 'CEILING' | 'SHELF_LIFE' | 'CREDENTIAL';
+
+/** Why a credential does not permit a controlled purchase (workstream U). */
+export type CredentialProblem = 'NONE' | 'WRONG_SCOPE' | 'EXPIRED' | 'PENDING';
 
 /** One medication row of a prescription card; shown to the owner of the prescription only. */
 export interface RxLineView {
@@ -260,6 +263,10 @@ export interface RxLineView {
   expiryDate?: string;
   /** "Minimum N months of shelf life on delivery"; null for undated goods or no promise. */
   minShelfLifeMonths: number | null;
+  /** Controlled class of the product, when it has one (workstream U); the row is shown but unavailable without a valid credential. */
+  controlClass?: string;
+  /** `CREDENTIAL` only. */
+  credential?: CredentialProblem;
 }
 
 export interface RxView {
@@ -281,7 +288,7 @@ export interface RxQuickPick {
 // ---- cart (workstream O) ----------------------------------------------------------------------
 
 /** Why a cart line can no longer be dispensed; the N rule reasons, plus `UNAVAILABLE` (prescription no longer found). */
-export type CartLineIssue = 'NO_REFILLS' | 'EXPIRED' | 'OUT_OF_STOCK' | 'CEILING' | 'SHELF_LIFE' | 'UNAVAILABLE';
+export type CartLineIssue = 'NO_REFILLS' | 'EXPIRED' | 'OUT_OF_STOCK' | 'CEILING' | 'SHELF_LIFE' | 'UNAVAILABLE' | 'CREDENTIAL';
 
 export interface CartLineProblem {
   reason: CartLineIssue;
@@ -290,6 +297,8 @@ export interface CartLineProblem {
   ceiling?: number;
   scope?: 'order' | 'period';
   expiryDate?: string;
+  /** `CREDENTIAL` only: why the credential does not hold (workstream U). */
+  credential?: CredentialProblem;
 }
 
 /** One medication line. Quantity is the prescribed quantity and is never editable. */
@@ -308,7 +317,18 @@ export interface CartLine {
   priceUpdated: boolean;
   /** Set by re-validation on load; the line stays in the cart until the patient removes it. */
   unavailable?: CartLineProblem;
+  /** Payer cost-share (workstream U); absent when the patient has no funding scheme. */
+  cover?: LineCover;
+  /** What the plan covers for this line (line total); present when `cover` is covered/partly/not-covered. */
+  coveredAmount?: Money;
+  /** What the patient owes for this line (the platform line total at the external price). */
+  youOwe?: Money;
+  /** The patient can only buy this against a restricted instrument (eligible item); copied to the line when added. */
+  eligibleForRestricted?: boolean;
 }
+
+/** `unresolved` = the cover could not be determined (different from `not-covered`: no figure is shown). */
+export type LineCover = 'covered' | 'partly' | 'not-covered' | 'unresolved';
 
 export interface CartShipping {
   name: string;
@@ -327,6 +347,23 @@ export interface Cart extends CartSummary {
   total: Money;
   /** Number of lines that failed re-validation; Checkout is disabled while above zero. */
   unavailableCount: number;
+  /** Payer cost-share (workstream U): the amount the patient owes (the platform total) and what the plan covers. */
+  youOwe?: Money;
+  planCovers?: Money;
+  /** The resolver could not answer: no cover figures are shown and Checkout is disabled. */
+  unresolved?: boolean;
+  /** Allowance, restricted instrument and card split for this cart (workstream U); filled by the server reads that know the patient. */
+  tender?: TenderView;
+}
+
+/** How the amount owed would be paid, in tender order: allowance, restricted instrument, card. */
+export interface TenderView {
+  allowance: { balance: Money; applies: Money; forfeitsOn: string } | null;
+  restricted: { available: boolean; reason?: 'none-eligible'; eligibleSubtotal: Money; applies: Money; chosen: boolean };
+  /** What is left for the card; zero means no card payment is taken. */
+  card: Money;
+  /** The part of the total no restricted instrument can pay (ineligible lines and delivery). */
+  needsOtherTender: Money;
 }
 
 export const isFullCart = (cart: CartSummary | Cart | null | undefined): cart is Cart => Boolean(cart && 'lines' in cart);
@@ -385,6 +422,8 @@ export type PlaceOrderFailure =
   | 'PAYMENT_REQUIRED'
   | 'PAYMENT_DECLINED'
   | 'DISPENSE_REFUSED'
+  | 'COVER_UNRESOLVED'
+  | 'FUNDING_CHANGED'
   | 'PLACEMENT_FAILED'
   | 'IN_PROGRESS';
 

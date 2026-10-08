@@ -51,6 +51,7 @@ async function state(ctx: CheckoutContext): Promise<CheckoutState | null> {
       ...cart,
       shipping: { name: chosen.name, price: chosen.price },
       total: usd(subtotal + chosen.price.centAmount),
+      ...(cart.youOwe ? { youOwe: usd(subtotal + chosen.price.centAmount) } : {}),
       shippingAddress: h.address,
       shippingMethodKey: chosen.key,
       tax: zero(),
@@ -100,6 +101,7 @@ export async function placeOrder(input: PlaceOrderInput, provider: PaymentProvid
   const state = await readCheckout(ctx);
   if (!state || state.cart.lineCount === 0) return { ok: false, code: 'EMPTY_CART' };
   if (!state.cart.shippingAddress) return { ok: false, code: 'ADDRESS_MISSING' };
+  if (state.cart.unresolved) return { ok: false, code: 'COVER_UNRESOLVED' };
   const bad = state.cart.lines.filter((l) => l.unavailable).map((l) => l.id);
   if (bad.length > 0) return { ok: false, code: 'LINES_UNAVAILABLE', lineIds: bad };
   const total = state.cart.total;

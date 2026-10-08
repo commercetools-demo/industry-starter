@@ -7,6 +7,8 @@ export interface Patient {
   patientRef: string;
   /** Display name for "Patient: <name>". */
   name: string;
+  /** The customer's `fundingScheme` (payer cost-share, workstream U); absent when the patient has none. */
+  fundingScheme?: string;
 }
 
 /**
@@ -18,9 +20,11 @@ export async function getPatient(customerId: string): Promise<Patient | null> {
   if (fixtures) return fixtures.fixturePatient(customerId);
   try {
     const { body } = await apiRoot.customers().withId({ ID: customerId }).get().execute();
-    const ref = (body.custom?.fields as { patientRef?: unknown } | undefined)?.patientRef;
+    const fields = body.custom?.fields as { patientRef?: unknown; fundingScheme?: unknown } | undefined;
+    const ref = fields?.patientRef;
     if (typeof ref !== 'string' || !ref) return null;
-    return { patientRef: ref, name: [body.firstName, body.lastName].filter(Boolean).join(' ') };
+    const scheme = typeof fields?.fundingScheme === 'string' && fields.fundingScheme ? fields.fundingScheme : undefined;
+    return { patientRef: ref, name: [body.firstName, body.lastName].filter(Boolean).join(' '), ...(scheme ? { fundingScheme: scheme } : {}) };
   } catch (error) {
     if ((error as { statusCode?: number }).statusCode === 404) return null;
     throw error;

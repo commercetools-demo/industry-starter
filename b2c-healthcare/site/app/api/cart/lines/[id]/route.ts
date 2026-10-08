@@ -1,7 +1,7 @@
 import { ApiError, handle, requireCustomer } from '@/lib/api';
 import { removeLine } from '@/lib/ct/cart';
 import { syncCartSession } from '@/lib/cart-route';
-import { NO_STORE, rxContextOf } from '@/lib/rx-route';
+import { NO_STORE, requirePatient, rxContextOf } from '@/lib/rx-route';
 
 type Context = { params: Promise<{ id: string }> };
 const LINE_ID = /^[\w-]{1,100}$/;
@@ -12,7 +12,8 @@ export async function DELETE(_request: Request, { params }: Context): Promise<Re
     const session = await requireCustomer();
     const { id } = await params;
     if (!LINE_ID.test(id)) throw new ApiError(400, 'The request could not be processed.');
-    const outcome = await removeLine(session.customerId, session.cartId, id, rxContextOf(session).currency);
+    const patient = await requirePatient(session.customerId);
+    const outcome = await removeLine(session.customerId, session.cartId, id, rxContextOf(session).currency, patient);
     await syncCartSession(outcome?.cart ?? null);
     return Response.json({ cart: outcome?.cart ?? null }, { headers: NO_STORE });
   });

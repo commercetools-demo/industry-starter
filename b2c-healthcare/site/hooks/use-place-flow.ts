@@ -9,7 +9,7 @@ import type { Money, PaymentMode, PlaceOrderFailure } from '@/lib/types';
 export type PlaceProblem = PlaceOrderFailure | 'DECLINED' | 'UNAVAILABLE' | 'FAILED';
 
 /** Problems after which the page re-reads the cart (the summary may no longer be what the buyer saw). */
-const REFRESH_AFTER: ReadonlySet<PlaceProblem> = new Set(['TOTALS_MOVED', 'LINES_UNAVAILABLE', 'NO_DELIVERY_METHOD', 'ADDRESS_MISSING', 'EMPTY_CART', 'DISPENSE_REFUSED']);
+const REFRESH_AFTER: ReadonlySet<PlaceProblem> = new Set(['TOTALS_MOVED', 'LINES_UNAVAILABLE', 'NO_DELIVERY_METHOD', 'ADDRESS_MISSING', 'EMPTY_CART', 'DISPENSE_REFUSED', 'COVER_UNRESOLVED', 'FUNDING_CHANGED']);
 
 export interface PlaceFlowInput {
   cart: { version: number; total: Money };

@@ -18,6 +18,10 @@ export interface ShopLine {
   name: Record<string, string>;
   variant: { id: number; sku: string };
   price: { id: string; value: Money };
+  /** `ExternalPrice` after `setLineItemPrice` with an external price (workstream U). */
+  priceMode?: 'Platform' | 'ExternalPrice';
+  /** What the platform price of the line is (list), for reverting an external price in the fake. */
+  listCents?: number;
   quantity: number;
   totalPrice: Money;
   custom?: { type: { typeId: 'type'; id: string; key?: string }; fields: Record<string, unknown> };
@@ -73,7 +77,7 @@ export interface FakeShop {
   updates: { id: string; version: number; actions: { action: string; [k: string]: unknown }[] }[];
   orderCreates: unknown[];
   matchingCalls: string[];
-  seedCart: (over?: Partial<ShopCart> & { lines?: { sku: string; cents: number; rxNumber?: string; lineRef?: string }[]; methodKey?: string }) => ShopCart;
+  seedCart: (over?: Partial<ShopCart> & { lines?: { sku: string; cents: number; rxNumber?: string; lineRef?: string; /** external price (what the patient owes) */ owed?: number; covered?: number }[]; methodKey?: string }) => ShopCart;
   apiRoot: unknown;
 }
 
@@ -134,10 +138,15 @@ export function createFakeShop(): FakeShop {
         productId: `p-${l.sku}`,
         name: { 'en-US': `Name of ${l.sku}` },
         variant: { id: 1, sku: l.sku },
-        price: { id: `pr-${l.sku}`, value: usd(l.cents) },
+        price: { id: `pr-${l.sku}`, value: usd(l.owed ?? l.cents) },
+        listCents: l.cents,
+        ...(l.owed !== undefined ? { priceMode: 'ExternalPrice' as const } : {}),
         quantity: 1,
-        totalPrice: usd(l.cents),
-        custom: { type: { typeId: 'type', id: 't', key: 'mlv-rx-line' }, fields: { rxNumber: l.rxNumber ?? 'RX-77102', rxLineRef: l.lineRef ?? `RX-77102-${i + 1}`, prescribedQty: 30 } },
+        totalPrice: usd(l.owed ?? l.cents),
+        custom: {
+          type: { typeId: 'type', id: 't', key: 'mlv-rx-line' },
+          fields: { rxNumber: l.rxNumber ?? 'RX-77102', rxLineRef: l.lineRef ?? `RX-77102-${i + 1}`, prescribedQty: 30, ...(l.covered !== undefined ? { coveredAmount: { currencyCode: 'USD', centAmount: l.covered } } : {}) },
+        },
       })),
       totalPrice: usd(0),
       shippingInfo: { shippingMethodName: method.name, price: usd(method.cents), shippingMethod: { typeId: 'shipping-method', id: `sm-${method.key}`, obj: { key: method.key } } },
@@ -165,6 +174,17 @@ export function createFakeShop(): FakeShop {
       const item = cart.lineItems.find((i) => i.id === a.lineItemId);
       if (!item?.custom) throw err(400, 'InvalidOperation');
       item.custom.fields[String(a.name)] = a.value;
+    } else if (a.action === 'setLineItemPrice') {
+      const item = cart.lineItems.find((i) => i.id === a.lineItemId);
+      if (!item) throw err(400, 'InvalidOperation');
+      const external = a.externalPrice as { centAmount: number } | undefined;
+      if (external) {
+        item.priceMode = 'ExternalPrice';
+        item.price = { ...item.price, value: usd(external.centAmount) };
+      } else {
+        item.priceMode = 'Platform';
+        item.price = { ...item.price, value: usd(item.listCents ?? item.price.value.centAmount) };
+      }
     } else if (a.action !== 'recalculate') throw err(400, 'InvalidOperation');
   }
 

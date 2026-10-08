@@ -25,6 +25,13 @@ export const COVER_PERCENT: Readonly<Record<string, number>> = {
   diabetes: 100,
 };
 
+/**
+ * The demo plan pays at most this much (cents) per order. It is what makes cover depend on the whole basket: when the
+ * covered amounts of all lines exceed it, every line's cover is scaled down together, so adding a line changes the
+ * cover of the lines already there.
+ */
+export const ORDER_COVER_CAP = 3000;
+
 export type CoverStatus = 'covered' | 'partly' | 'not-covered';
 
 export interface FundingPatient {
@@ -84,9 +91,13 @@ export function createDemoResolver(options: DemoResolverOptions = {}): FundingRe
     async resolve(patient, lines) {
       if (options.forceFail) throw new FundingUnavailableError();
       const scheme = normalizeScheme(patient.fundingScheme);
-      const perLine = lines.map((line): ResolvedLine => {
+      const raw = lines.map((line) => {
         const percent = scheme ? (COVER_PERCENT[DEMO_SKU_CLASS[line.sku] ?? ''] ?? 0) : 0;
-        const covered = Math.round((line.unit * percent) / 100);
+        return Math.round((line.unit * percent) / 100);
+      });
+      const coveredTotal = raw.reduce((sum, covered, i) => sum + covered * lines[i].quantity, 0);
+      const perLine = lines.map((line, i): ResolvedLine => {
+        const covered = coveredTotal > ORDER_COVER_CAP ? Math.floor((raw[i] * ORDER_COVER_CAP) / coveredTotal) : raw[i];
         return { sku: line.sku, covered, owed: line.unit - covered, status: statusOf(covered, line.unit - covered) };
       });
       return { scheme, perLine, resolvedAt: now().toISOString() };

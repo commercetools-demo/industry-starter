@@ -100,6 +100,10 @@ export interface SelectedLine {
   /** Limits to carry into the cart check (O) and into `consumeAuthorization` (Q). */
   perOrderMax: number | null;
   periodCeiling: number | null;
+  /** The product's `hsaEligible` (workstream U): copied to the cart line as `eligibleForRestricted` when added. */
+  hsaEligible?: boolean;
+  /** The credential that allowed a controlled product (id and expiry), copied to the cart line; absent for uncontrolled goods. */
+  credential?: { id: string; validTo: string };
 }
 
 export interface RxSelectionResult {
