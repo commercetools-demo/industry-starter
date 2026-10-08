@@ -19,7 +19,7 @@ Booking panel (client, data uncached from `GET /api/doctors/:key/slots?mode=`): 
 - [x] L-06 `POST /api/bookings` (validates with zod-less manual validator, uses session patient when signed in, requestId idempotency, 409 slot-taken, never logs `reason`), `lib/booking-access.ts` signed `malva_bk` cookie; tests incl. concurrent claims → one winner [SKILL: commercetools-commerce-patterns] [SPEC: design-pdp]
 - [x] L-07 `/booked/[ref]` page with access rule (owner/guest-session only, else not found), content rows, guest nudge vs "My appointments"; tests incl. other visitor [SPEC: design-pdp]
 - [x] L-08 Health-data guard test: a test that boots the booking route with a spy logger and asserts `reason`, `phone`, `email` never reach any log call or error response [SPEC: design-pdp]
-- [ ] L-09 Seed support: one doctor offers only `office`, one only `remote` (check `data/doctors.ts`, edit if E seeded both) so disabled-mode behaviour is testable [SKILL: commercetools-catalog-migration] [SPEC: product-detail-page]
+- [x] L-09 Seed support: one doctor offers only `office`, one only `remote` (check `data/doctors.ts`, edit if E seeded both) so disabled-mode behaviour is testable [SKILL: commercetools-catalog-migration] [SPEC: product-detail-page]
 
 ## Scenarios
 Every scenario is a unit test (or a scripted check) named after it.
