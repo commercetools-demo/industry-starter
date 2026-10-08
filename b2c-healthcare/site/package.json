@@ -9,7 +9,7 @@
     "lint": "eslint && oxlint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "check": "npm run typecheck && npm run lint && node scripts/check-versions.mjs && node scripts/check-token-parity.mjs && npm run test",
+    "check": "npm run typecheck && npm run lint && node scripts/check-versions.mjs && node scripts/check-token-parity.mjs && node scripts/check-tracked-files.mjs && npm run test",
     "verify:build": "npm run check && npm run build"
   },
   "dependencies": {
