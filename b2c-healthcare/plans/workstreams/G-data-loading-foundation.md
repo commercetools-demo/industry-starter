@@ -10,7 +10,7 @@ Locale items finished here: `getValidCountryConfig()` filters `COUNTRY_CONFIG` a
 
 ## Tasks
 - [x] G-01 `lib/cache-keys.ts` (`KEY_CART`, `KEY_ACCOUNT`, later keys), `lib/ct/project.ts` `getProjectSettings` (cached 300 s), `lib/ct/locale-validation.ts` `getValidCountryConfig` with tests (region absent from project excluded) [SKILL: commercetools-storefront] [SPEC: storefront-locale-routing]
-- [ ] G-02 Atomic locale write `setLocale` in `lib/session.ts` + `POST /api/locale` (rejects partial/unsupported, resets `cartId` on currency change) with tests [SKILL: commercetools-storefront] [SPEC: storefront-locale-routing]
+- [x] G-02 Atomic locale write `setLocale` in `lib/session.ts` + `POST /api/locale` (rejects partial/unsupported, resets `cartId` on currency change) with tests [SKILL: commercetools-storefront] [SPEC: storefront-locale-routing]
 - [ ] G-03 `lib/ct/categories.ts` (`getCategoryTree`, cached 60 s) and `lib/ct/shipping.ts` `getShippingMethods` public read (cached 60 s) with tests that no function receiving session data is wrapped by `unstable_cache` (a lint-ish test scanning `lib/ct/*` for `unstable_cache(` next to `customerId|cartId|session`) [SKILL: commercetools-storefront] [SPEC: storefront-data-loading]
 - [ ] G-04 `lib/ct/search.ts` thin Product Search wrapper (`apiRoot.products().search()`, never `productProjections().search()`), query builders for text + facet + sort + paging, with unit tests on the generated query objects [SKILL: commercetools-platform] [SPEC: storefront-data-loading]
 - [ ] G-05 React `cache()` wrappers (`getProductByKeyCached`) shared by `generateMetadata` and page; test that two calls in one request invoke the client once [SKILL: commercetools-storefront] [SPEC: storefront-data-loading]
@@ -43,8 +43,8 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [x] Single source
 - [x] Region not configured in commercetools
 #### storefront-locale-routing › Locale in the session is atomic
-- [ ] Partial update rejected
-- [ ] Handing off the cart conflict
+- [x] Partial update rejected
+- [x] Handing off the cart conflict
 <!-- SCENARIOS:END -->
 
 ## Browser recipe

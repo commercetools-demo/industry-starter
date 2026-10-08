@@ -40,7 +40,7 @@ describe('storefront-bff-and-session: session helpers over the cookie store', ()
   });
 
   it('Sign-out: clearCustomer drops customerId and cartId, keeps locale', async () => {
-    await setLocale({ locale: 'en-US', country: 'US', currency: 'USD' });
+    await setLocale({ locale: 'en-US' });
     await setCustomer('c1');
     await setCart('k1');
     expect(await getSession()).toMatchObject({ customerId: 'c1', cartId: 'k1', locale: 'en-US' });

@@ -9,7 +9,7 @@ import {
   verifySession,
   withCart,
   withCustomer,
-  withLocale,
+  withRegion,
   withoutCart,
   withoutCustomer,
   type SessionData,
@@ -52,7 +52,10 @@ export async function clearCustomer(): Promise<SessionData> {
 export async function clearCart(): Promise<SessionData> {
   return write(withoutCart(await getSession()));
 }
-/** Placeholder for workstream G (locale switching). */
-export async function setLocale(locale: { locale: string; country?: string; currency?: string }): Promise<SessionData> {
-  return write(withLocale(await getSession(), locale));
+/**
+ * Atomic region switch: writes locale, country and currency together from COUNTRY_CONFIG and clears
+ * `cartId` when the currency changes. Throws for a locale that is not in COUNTRY_CONFIG.
+ */
+export async function setLocale({ locale }: { locale: string }): Promise<SessionData> {
+  return write(withRegion(await getSession(), locale));
 }
