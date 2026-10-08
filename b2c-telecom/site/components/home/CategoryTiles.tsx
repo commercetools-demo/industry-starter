@@ -25,7 +25,6 @@ export function CategoryTiles({ locale, tiles }: CategoryTilesProps): ReactEleme
             <li key={tile.key} className="flex">
               <Link
                 href={`/shop/${tile.slug}`}
-                aria-label={`${tile.name}. ${action}`}
                 className={`flex w-full flex-col overflow-hidden rounded-xl border border-border bg-surface text-text no-underline hover:shadow-md ${FOCUS_RING}`}
               >
                 <span className="bg-brand-500 p-7 font-display text-3xl font-bold text-text-on-brand">{tile.name}</span>

@@ -26,7 +26,7 @@ const TONE = {
   },
   light: {
     tile: 'bg-brand-100 text-text',
-    eyebrow: 'text-brand-800',
+    eyebrow: 'text-brand-900',
     cta: cx('bg-action text-text-on-pink hover:bg-action-hover', FOCUS_RING),
   },
 } as const;
