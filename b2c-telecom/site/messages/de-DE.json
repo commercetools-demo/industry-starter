@@ -1261,5 +1261,120 @@
     "guest": {
       "keep": "Bewahren Sie Ihre Bestellnummer {orderNumber} auf. Für die Sendungsverfolgung brauchen Sie ein Konto."
     }
+  },
+  "orders": {
+    "cancel": {
+      "button": "Bestellung stornieren",
+      "until": "Sie können diese Bestellung bis zum {date} stornieren.",
+      "title": "Bestellung {orderNumber} stornieren?",
+      "intro": "Damit stornieren Sie die gesamte Bestellung samt monatlicher Tarife. Das kann nicht rückgängig gemacht werden.",
+      "why": "Warum stornieren Sie?",
+      "reason": {
+        "changed_mind": "Ich habe es mir anders überlegt",
+        "better_offer": "Ich habe ein besseres Angebot gefunden",
+        "moving": "Ich ziehe um",
+        "service_not_needed": "Ich brauche den Dienst nicht mehr",
+        "other": "Sonstiges"
+      },
+      "note": "Weitere Angaben",
+      "noteRequired": "Weitere Angaben (erforderlich)",
+      "noteCount": "{count} von {max} Zeichen",
+      "etf": {
+        "title": "Entgelt bei vorzeitiger Kündigung",
+        "line": "{name}: {fee}",
+        "none": "Zu dieser Bestellung ist kein Text zum Entgelt bei vorzeitiger Kündigung gespeichert.",
+        "note": "Sie stornieren vor Beginn Ihres Anschlusses, daher wird kein Entgelt für vorzeitige Kündigung erhoben."
+      },
+      "keep": "Bestellung behalten",
+      "confirm": "Bestellung stornieren",
+      "working": "Ihre Bestellung wird storniert",
+      "close": "Schließen",
+      "done": "Bestellung storniert.",
+      "failed": "Wir konnten Ihre Bestellung nicht stornieren. Versuchen Sie es erneut.",
+      "block": {
+        "SERVICE_STARTED": "Ihr Anschluss ist bereits aktiv, daher kann diese Bestellung online nicht mehr storniert werden.",
+        "NO_START_DATE": "Diese Bestellung kann online nicht storniert werden.",
+        "EQUIPMENT_SHIPPED": "Ihre Geräte wurden bereits versendet, daher kann diese Bestellung online nicht mehr storniert werden.",
+        "HAS_RETURN": "Für diese Bestellung liegt eine Rückgabeanfrage vor, daher kann sie online nicht storniert werden."
+      },
+      "contact": "Support kontaktieren"
+    },
+    "cancelled": {
+      "title": "Diese Bestellung wurde am {date} storniert.",
+      "reason": "Grund: {reason}",
+      "noCharges": "Es fallen keine weiteren Kosten an."
+    },
+    "return": {
+      "button": "Gerät zurückgeben",
+      "until": "Sie können ein Gerät bis zum {date} zurückgeben (30 Tage nach der Bestellung).",
+      "title": "Gerät zurückgeben",
+      "submit": "Rückgabe beantragen",
+      "cancel": "Abbrechen",
+      "done": "Rückgabe beantragt.",
+      "device": "Gerät",
+      "quantity": "Zurückzugebende Menge",
+      "quantityOf": "{quantity} von {ordered}",
+      "decrease": "{name} einmal weniger zurückgeben",
+      "increase": "{name} einmal mehr zurückgeben",
+      "reasonLabel": "Warum geben Sie es zurück?",
+      "reason": {
+        "defective": "Es ist defekt",
+        "not_needed": "Ich brauche es nicht",
+        "wrong_item": "Falscher Artikel",
+        "other": "Sonstiges"
+      },
+      "note": "Weitere Angaben",
+      "noteRequired": "Weitere Angaben (erforderlich)",
+      "notice": "Wir vermerken Ihre Anfrage in Ihrer Bestellung. Rücksendeanweisungen werden in dieser Version nicht automatisch versendet.",
+      "block": {
+        "WINDOW_CLOSED": "Die 30-tägige Rückgabefrist für diese Bestellung ist abgelaufen.",
+        "NO_RETURNABLE_LINES": "Für jedes Gerät dieser Bestellung gibt es bereits eine Rückgabeanfrage."
+      },
+      "error": {
+        "quantity": "Für diese Geräte gibt es bereits eine Rückgabeanfrage. Laden Sie die Seite neu, um sie zu sehen.",
+        "unavailable": "Für diese Bestellung kann keine Rückgabe mehr beantragt werden."
+      },
+      "failed": "Wir konnten Ihre Rückgabeanfrage nicht vermerken. Versuchen Sie es erneut."
+    },
+    "shipments": {
+      "title": "Sendungen",
+      "none": "Es wurde noch nichts versendet.",
+      "shipment": "Sendung {n} von {total}",
+      "created": "Erstellt am {date}",
+      "parcel": "Paket {m} von {k}",
+      "carrier": "Versanddienst",
+      "tracking": "Sendungsnummer",
+      "trackingMissing": "Sendungsnummer noch nicht verfügbar",
+      "item": "{quantity} × {name}",
+      "state": {
+        "Pending": "In Vorbereitung",
+        "Ready": "Versandbereit",
+        "Shipped": "Versendet",
+        "Partial": "Teilweise versendet",
+        "Delivered": "Zugestellt",
+        "Delayed": "Verzögert",
+        "Backorder": "Nachbestellt",
+        "Canceled": "Sendung storniert"
+      }
+    },
+    "returns": {
+      "title": "Rückgaben",
+      "requested": "Beantragt am {date}",
+      "item": "{quantity} × {name}",
+      "goods": "Ware",
+      "refund": "Erstattung",
+      "goodsState": {
+        "Advised": "Rückgabe angefragt",
+        "Returned": "Eingegangen",
+        "BackInStock": "Eingegangen, wieder auf Lager",
+        "Unusable": "Eingegangen, nicht wiederverkaufbar"
+      },
+      "refundState": {
+        "NonRefundable": "Noch nicht fällig",
+        "Initial": "Erstattung ausstehend",
+        "Refunded": "Erstattet",
+        "NotRefunded": "Nicht erstattet"
+      }
+    }
   }
 }

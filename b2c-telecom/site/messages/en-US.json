@@ -1261,5 +1261,120 @@
     "guest": {
       "keep": "Keep your order number {orderNumber}. Order tracking needs an account."
     }
+  },
+  "orders": {
+    "cancel": {
+      "button": "Cancel order",
+      "until": "You can cancel this order until {date}.",
+      "title": "Cancel order {orderNumber}?",
+      "intro": "This cancels the whole order, including your monthly plans. This can't be undone.",
+      "why": "Why are you cancelling?",
+      "reason": {
+        "changed_mind": "I changed my mind",
+        "better_offer": "I found a better offer",
+        "moving": "I'm moving",
+        "service_not_needed": "I don't need this service anymore",
+        "other": "Other"
+      },
+      "note": "Tell us more",
+      "noteRequired": "Tell us more (required)",
+      "noteCount": "{count} of {max} characters",
+      "etf": {
+        "title": "Early-termination fee",
+        "line": "{name}: {fee}",
+        "none": "No early-termination fee text is stored for this order.",
+        "note": "You are cancelling before your service starts, so no early-termination fee is charged."
+      },
+      "keep": "Keep my order",
+      "confirm": "Cancel order",
+      "working": "Cancelling your order",
+      "close": "Close",
+      "done": "Order cancelled.",
+      "failed": "We couldn't cancel your order. Try again.",
+      "block": {
+        "SERVICE_STARTED": "Your service has started, so this order can't be cancelled online.",
+        "NO_START_DATE": "This order can't be cancelled online.",
+        "EQUIPMENT_SHIPPED": "Your equipment has already shipped, so this order can't be cancelled online.",
+        "HAS_RETURN": "This order has a return request, so it can't be cancelled online."
+      },
+      "contact": "Contact support"
+    },
+    "cancelled": {
+      "title": "This order was cancelled on {date}.",
+      "reason": "Reason: {reason}",
+      "noCharges": "No further charges will be made."
+    },
+    "return": {
+      "button": "Return a device",
+      "until": "You can return a device until {date} (30 days after ordering).",
+      "title": "Return a device",
+      "submit": "Request return",
+      "cancel": "Cancel",
+      "done": "Return requested.",
+      "device": "Device",
+      "quantity": "Quantity to return",
+      "quantityOf": "{quantity} of {ordered}",
+      "decrease": "Return one fewer {name}",
+      "increase": "Return one more {name}",
+      "reasonLabel": "Why are you returning it?",
+      "reason": {
+        "defective": "It's faulty",
+        "not_needed": "I don't need it",
+        "wrong_item": "Wrong item",
+        "other": "Other"
+      },
+      "note": "Tell us more",
+      "noteRequired": "Tell us more (required)",
+      "notice": "We'll record your request on your order. Return instructions are not sent automatically in this version.",
+      "block": {
+        "WINDOW_CLOSED": "The 30-day return window for this order has ended.",
+        "NO_RETURNABLE_LINES": "Every device on this order already has a return request."
+      },
+      "error": {
+        "quantity": "A return request already exists for these units. Reload the page to see it.",
+        "unavailable": "A return can't be requested for this order any more."
+      },
+      "failed": "We couldn't record your return request. Try again."
+    },
+    "shipments": {
+      "title": "Shipments",
+      "none": "Nothing has shipped yet.",
+      "shipment": "Shipment {n} of {total}",
+      "created": "Created {date}",
+      "parcel": "Parcel {m} of {k}",
+      "carrier": "Carrier",
+      "tracking": "Tracking reference",
+      "trackingMissing": "Tracking reference not available yet",
+      "item": "{quantity} × {name}",
+      "state": {
+        "Pending": "Preparing",
+        "Ready": "Ready to ship",
+        "Shipped": "Shipped",
+        "Partial": "Partly shipped",
+        "Delivered": "Delivered",
+        "Delayed": "Delayed",
+        "Backorder": "Backordered",
+        "Canceled": "Shipment canceled"
+      }
+    },
+    "returns": {
+      "title": "Returns",
+      "requested": "Requested {date}",
+      "item": "{quantity} × {name}",
+      "goods": "Goods",
+      "refund": "Refund",
+      "goodsState": {
+        "Advised": "Return requested",
+        "Returned": "Received",
+        "BackInStock": "Received, back in stock",
+        "Unusable": "Received, not resellable"
+      },
+      "refundState": {
+        "NonRefundable": "Not due yet",
+        "Initial": "Refund pending",
+        "Refunded": "Refunded",
+        "NotRefunded": "Not refunded"
+      }
+    }
   }
 }
