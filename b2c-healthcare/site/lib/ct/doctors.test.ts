@@ -158,12 +158,14 @@ describe('design-plp: searchDoctors', () => {
 
 describe('design-plp: fixture switch', () => {
   it('is never active in production', async () => {
-    const { fixturesEnabled } = await import('./doctors-fixtures');
+    const { fixturesEnabled, loadFixtures } = await import('./fixtures');
     vi.stubEnv('MALVA_FIXTURES', '1');
     vi.stubEnv('NODE_ENV', 'production');
     expect(fixturesEnabled()).toBe(false);
+    expect(await loadFixtures()).toBeNull();
     vi.stubEnv('NODE_ENV', 'development');
     expect(fixturesEnabled()).toBe(true);
+    expect(await loadFixtures()).not.toBeNull();
     vi.stubEnv('MALVA_FIXTURES', '');
     expect(fixturesEnabled()).toBe(false);
   });

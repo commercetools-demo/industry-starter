@@ -3,7 +3,7 @@ import { mapDoctorCard } from '@/lib/mappers/doctor';
 import { zoneDate } from '@/lib/clinical/slots';
 import { clampPage, cleanQuery, pageCountOf } from '@/lib/listing-url';
 import { matchSpecialtyKeys } from '@/lib/specialties';
-import { fixturesEnabled, fixtureAvailability, fixtureCandidates } from '@/lib/ct/doctors-fixtures';
+import { loadFixtures, type Fixtures } from '@/lib/ct/fixtures';
 import { listFreeSlots, type Mode } from '@/lib/ct/scheduling';
 import { searchProducts, type FacetResult } from '@/lib/ct/search';
 import { buildNameMatch } from '@/lib/ct/search-query';
@@ -50,9 +50,9 @@ export interface DoctorSearchResult {
 }
 
 /** Next free slot in the mode within 7 days; a doctor whose schedule cannot be read shows no badge. */
-async function nextAvailability(doctorKey: string, mode: Mode, now: Date): Promise<DoctorAvailability | null> {
+async function nextAvailability(doctorKey: string, mode: Mode, now: Date, fx: Fixtures | null): Promise<DoctorAvailability | null> {
   try {
-    const slots = fixturesEnabled() ? fixtureAvailability(doctorKey, mode, now) : await listFreeSlots(doctorKey, mode, now, AVAILABILITY_DAYS);
+    const slots = fx ? fx.fixtureAvailability(doctorKey, mode, now) : await listFreeSlots(doctorKey, mode, now, AVAILABILITY_DAYS);
     const slot = slots[0];
     if (!slot) return null;
     const t = zoneDate(slot.timezone, now.getTime());
@@ -74,9 +74,9 @@ export function compareDoctors(a: DoctorListItem, b: DoctorListItem): number {
   return a.name.localeCompare(b.name);
 }
 
-async function candidates(p: SearchDoctorsParams, q: string): Promise<{ cards: DoctorCard[]; facets: FacetResult[] }> {
+async function candidates(p: SearchDoctorsParams, q: string, fx: Fixtures | null): Promise<{ cards: DoctorCard[]; facets: FacetResult[] }> {
   const city = p.mode === 'office' ? p.city : undefined;
-  if (fixturesEnabled()) return fixtureCandidates({ mode: p.mode, q, specialty: p.specialty, city });
+  if (fx) return fx.fixtureCandidates({ mode: p.mode, q, specialty: p.specialty, city });
   const options = { locale: p.locale, currency: p.currency };
   const page = await searchProducts(
     {
@@ -111,10 +111,11 @@ function specialtyMatch(q: string) {
 export async function searchDoctors(params: SearchDoctorsParams): Promise<DoctorSearchResult> {
   const now = params.now ?? new Date();
   const q = cleanQuery(params.q);
-  const { cards, facets } = await candidates(params, q);
+  const fx = await loadFixtures();
+  const { cards, facets } = await candidates(params, q, fx);
   const withMode = cards.filter((c) => c.modes.includes(params.mode));
   const listed: DoctorListItem[] = await Promise.all(
-    withMode.map(async (card) => ({ ...card, next: await nextAvailability(card.key, params.mode, now) })),
+    withMode.map(async (card) => ({ ...card, next: await nextAvailability(card.key, params.mode, now, fx) })),
   );
   const visible = (params.today ? listed.filter((d) => d.next?.isToday) : listed).sort(compareDoctors);
   const pageSize = doctorPageSize();

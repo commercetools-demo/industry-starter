@@ -9,15 +9,6 @@ import { DOCTORS, doctorKey } from '@/scripts/seed/data/doctors';
 import { REVIEWS } from '@/scripts/seed/data/reviews';
 import { SCHEDULES } from '@/scripts/seed/data/schedules';
 
-/**
- * Development-only data switch (`MALVA_FIXTURES=1`): feeds the doctor list and the search page from the seed
- * data (scripts/seed/data) instead of commercetools, so the UI can be checked in a browser without credentials.
- * Never active when NODE_ENV is `production` (see K-questions.md).
- */
-export function fixturesEnabled(): boolean {
-  return process.env.MALVA_FIXTURES === '1' && process.env.NODE_ENV !== 'production';
-}
-
 const USD = (centAmount: number) => ({ centAmount, currencyCode: 'USD', fractionDigits: 2 });
 
 const doctorCards: DoctorCard[] = DOCTORS.map((d) => {

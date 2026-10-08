@@ -3,7 +3,7 @@ import { cleanQuery } from '@/lib/listing-url';
 import { mapDoctorCard } from '@/lib/mappers/doctor';
 import { mapMedication } from '@/lib/mappers/medication';
 import { matchSpecialtyKeys } from '@/lib/specialties';
-import { fixtureDoctorsByText, fixtureMedicineBySku, fixtureMedicinesByText, fixturesEnabled } from '@/lib/ct/doctors-fixtures';
+import { loadFixtures } from '@/lib/ct/fixtures';
 import { searchProducts } from '@/lib/ct/search';
 import { buildNameMatch, type Query } from '@/lib/ct/search-query';
 import { COUNTRY_CONFIG, DEFAULT_LOCALE, isSupportedLocale } from '@/lib/utils';
@@ -75,10 +75,11 @@ export async function searchAll(params: { q: string | undefined; locale: string;
   if (!query) return { status: 'empty-query' };
   if (!isSupportedQueryLanguage(query, params.locale)) return { status: 'unsupported-language', query };
 
-  if (fixturesEnabled()) {
-    const exact = looksLikePartNumber(query) ? fixtureMedicineBySku(query) : null;
-    const doctors = fixtureDoctorsByText(query);
-    const meds = fixtureMedicinesByText(query).filter((m) => m.id !== exact?.id);
+  const fx = await loadFixtures();
+  if (fx) {
+    const exact = looksLikePartNumber(query) ? fx.fixtureMedicineBySku(query) : null;
+    const doctors = fx.fixtureDoctorsByText(query);
+    const meds = fx.fixtureMedicinesByText(query).filter((m) => m.id !== exact?.id);
     return {
       status: 'ok',
       query,
