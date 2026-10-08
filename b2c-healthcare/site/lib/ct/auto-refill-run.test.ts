@@ -9,6 +9,8 @@ const patientMock = vi.hoisted(() => ({ getPatient: vi.fn() }));
 vi.mock('@/lib/ct/patient', () => patientMock);
 const rxMock = vi.hoisted(() => ({ findOwnPrescription: vi.fn() }));
 vi.mock('@/lib/ct/prescriptions', () => rxMock);
+const stored = vi.hoisted(() => ({ listStored: vi.fn() }));
+vi.mock('@/lib/ct/stored-methods', () => stored);
 const ceil = vi.hoisted(() => ({ getUsedBySku: vi.fn() }));
 vi.mock('@/lib/ct/ceilings', async (importOriginal) => ({ ...(await importOriginal<typeof import('@/lib/ct/ceilings')>()), ...ceil }));
 const catalogMock = vi.hoisted(() => ({ getCatalogBySku: vi.fn() }));
@@ -54,6 +56,7 @@ const roOf = (over: Record<string, unknown> = {}, withPayment = true) => ({
 beforeEach(() => {
   for (const m of [...Object.values(rec), ...Object.values(logs), ...Object.values(patientMock), ...Object.values(rxMock), ...Object.values(ceil), ...Object.values(catalogMock), ...Object.values(ledger)]) m.mockReset();
   rec.listActiveRecurring.mockResolvedValue([roOf()]);
+  stored.listStored.mockReset().mockResolvedValue([{ id: 'pm1' }]);
   logs.getRunLog.mockResolvedValue(null);
   patientMock.getPatient.mockResolvedValue({ patientRef: 'pt', name: 'Sam' });
   rxMock.findOwnPrescription.mockResolvedValue({ refillsLeft: 2, expiresAt: '2027-01-01' });
@@ -100,11 +103,15 @@ describe('subscriptions-and-recurring-orders: scheduled check ahead of each run'
     expect(logs.writeRunLog).toHaveBeenCalledWith(expect.objectContaining({ outcome: 'skipped', reason: 'ceiling' }));
   });
 
-  it('no saved payment method on the recurring cart pauses it; the prescription of somebody else (not found) pauses it', async () => {
+  it('no payment method on the recurring cart, or one that was removed since, pauses it; a prescription that is not found pauses it', async () => {
     rec.listActiveRecurring.mockResolvedValue([roOf({}, false)]);
     await checkRuns(NOW);
     expect(logs.writeRunLog).toHaveBeenLastCalledWith(expect.objectContaining({ reason: 'payment-method-missing' }));
     rec.listActiveRecurring.mockResolvedValue([roOf()]);
+    stored.listStored.mockResolvedValue([{ id: 'other-method' }]);
+    await checkRuns(NOW);
+    expect(logs.writeRunLog).toHaveBeenLastCalledWith(expect.objectContaining({ reason: 'payment-method-missing' }));
+    stored.listStored.mockResolvedValue([{ id: 'pm1' }]);
     rxMock.findOwnPrescription.mockResolvedValue(null);
     await checkRuns(NOW);
     expect(logs.writeRunLog).toHaveBeenLastCalledWith(expect.objectContaining({ reason: 'prescription-missing' }));

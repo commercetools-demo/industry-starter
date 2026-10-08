@@ -1,5 +1,6 @@
 import { ApiError, handle, requireCustomer } from '@/lib/api';
 import { readJsonObject } from '@/lib/auth-route';
+import { getPaymentProvider } from '@/lib/checkout/provider';
 import { previewDecision } from '@/lib/ct/auto-refill-run';
 import { cancelRecurring, changeScheduleRecurring, getOwnRecurring, pauseRecurring, resumeRecurring, skipNextRecurring } from '@/lib/ct/recurring';
 import { lastRunsOf } from '@/lib/ct/refill-log';
@@ -34,7 +35,8 @@ export async function POST(request: Request, ctx: Ctx): Promise<Response> {
     if (!FROM[action as RefillAction].includes(refill.recurringOrderState)) return invalidState();
     try {
       if (action === 'resume') {
-        const decision = await previewDecision(refill, new Date());
+        const provider = await getPaymentProvider();
+        const decision = await previewDecision(refill, new Date(), (customerId) => provider.listStoredMethods(customerId));
         if (!decision.run && decision.reason !== 'ceiling') return Response.json({ code: 'RESUME_BLOCKED', reason: decision.reason, error: 'This auto-refill cannot be resumed right now.' }, { status: 409 });
       }
       const updated =

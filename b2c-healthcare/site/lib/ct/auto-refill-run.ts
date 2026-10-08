@@ -10,6 +10,8 @@ import { getPatient } from '@/lib/ct/patient';
 import { findOwnPrescription } from '@/lib/ct/prescriptions';
 import { cancelRecurring, listActiveRecurring, paymentMethodOf, pauseRecurring, skipNextRecurring } from '@/lib/ct/recurring';
 import { getRunLog, writeRunLog, type RefillLogEntry } from '@/lib/ct/refill-log';
+import { listStored } from '@/lib/ct/stored-methods';
+import type { StoredMethodDescriptor } from '@/lib/checkout/payment-provider';
 import { getCatalogBySku } from '@/lib/ct/rx-catalog';
 import { decideRun, type RunLine } from '@/lib/refill/decide-run';
 import { log } from '@/lib/log';
@@ -51,7 +53,16 @@ const emptySummary = (): CheckSummary => ({ seen: 0, notDue: 0, alreadyChecked: 
 
 const isoDay = (iso: string): string => iso.slice(0, 10);
 
-async function gatherLines(ro: RecurringOrder, runFor: string): Promise<{ lines: RunLine[]; hasPaymentMethod: boolean }> {
+type MethodsOf = (customerId: string) => Promise<StoredMethodDescriptor[]>;
+
+/** True when the refill's recurring Cart names a payment method AND that method is still one of the customer's saved methods. */
+async function methodStillSaved(ro: RecurringOrder, methodsOf: MethodsOf): Promise<boolean> {
+  const id = paymentMethodOf(expandedCart(ro));
+  if (!id || !ro.customer) return false;
+  return (await methodsOf(ro.customer.id)).some((m) => m.id === id);
+}
+
+async function gatherLines(ro: RecurringOrder, runFor: string, methodsOf: MethodsOf): Promise<{ lines: RunLine[]; hasPaymentMethod: boolean }> {
   const cart = expandedCart(ro);
   const items = (cart?.lineItems ?? []).map((item) => ({ item, fields: rxFieldsOf(item) }));
   const patient = ro.customer ? await getPatient(ro.customer.id) : null;
@@ -77,15 +88,15 @@ async function gatherLines(ro: RecurringOrder, runFor: string): Promise<{ lines:
       usedInPeriod: used.get(sku) ?? 0,
     });
   }
-  return { lines, hasPaymentMethod: paymentMethodOf(cart) !== null };
+  return { lines, hasPaymentMethod: await methodStillSaved(ro, methodsOf) };
 }
 
 /**
  * Would a run on `day` go ahead? Used when a paused auto-refill is resumed: resuming a series whose prescription has
  * lapsed is refused with the reason instead of being paused again at the next check. Ceilings do not block a resume.
  */
-export async function previewDecision(ro: RecurringOrder, day: Date): Promise<ReturnType<typeof decideRun>> {
-  const { lines, hasPaymentMethod } = await gatherLines(ro, day.toISOString());
+export async function previewDecision(ro: RecurringOrder, day: Date, methodsOf: MethodsOf = listStored): Promise<ReturnType<typeof decideRun>> {
+  const { lines, hasPaymentMethod } = await gatherLines(ro, day.toISOString(), methodsOf);
   if (lines.length === 0) return { run: false, action: 'pause', outcome: 'skipped', reason: 'prescription-missing', lineRefs: [] };
   return decideRun({ lines, today: day.toISOString().slice(0, 10), hasPaymentMethod });
 }
@@ -107,7 +118,7 @@ export async function checkRuns(now: Date = new Date(), lookaheadHours: number =
         summary.alreadyChecked += 1;
         continue;
       }
-      const { lines, hasPaymentMethod } = await gatherLines(ro, runFor);
+      const { lines, hasPaymentMethod } = await gatherLines(ro, runFor, listStored);
       const decision = lines.length === 0 ? null : decideRun({ lines, today: isoDay(runFor), hasPaymentMethod });
       const entry: RefillLogEntry = { recurringOrderId: ro.id, runAt: now.toISOString(), runFor, outcome: 'allowed' };
       if (decision === null) {

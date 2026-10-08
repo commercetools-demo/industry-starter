@@ -17,7 +17,7 @@
 - [x] T-05 `netlify/functions/auto-refill-run.ts` scheduled handler + pure `decideRun(recurringOrder, rxState, ceilings)`; gate tests: lapses between runs → no order and reason recorded; exhausted stops the series [SKILL: commercetools-commerce-patterns] [SPEC: subscriptions-and-recurring-orders]
 - [x] T-06 `malva-refill-log` writer and UI "Last run: skipped — authorization expired" on `/account/auto-refill`; tests [SKILL: commercetools-platform] [SPEC: subscriptions-and-recurring-orders]
 - [x] T-07 Auto-refill UI (`/account/auto-refill`, enable from an order/RX line, pause/resume/skip/cancel/schedule change); `autoRefillEnabled` config flag turned on; tests [SPEC: subscriptions-and-recurring-orders]
-- [ ] T-08 `lib/ct/payment-methods.ts` over Checkout stored methods (list descriptors only, set default with explicit clearing, remove); live-verify the default semantics and record in PROJECT-FINDINGS [SKILL: commercetools-checkout] [SPEC: payment-methods]
+- [x] T-08 `lib/ct/payment-methods.ts` over Checkout stored methods (list descriptors only, set default with explicit clearing, remove); live-verify the default semantics and record in PROJECT-FINDINGS [SKILL: commercetools-checkout] [SPEC: payment-methods]
 - [ ] T-09 Payment methods UI + "No methods saved", "Default method removed" warnings; test no PAN/token ever rendered or logged [SPEC: payment-methods]
 - [ ] T-10 Checkout integration: allow saving a method during payment (checkbox) and paying with a saved one; manual test M-T-1 pre-registered [SKILL: commercetools-checkout] [SPEC: payment-methods]
 

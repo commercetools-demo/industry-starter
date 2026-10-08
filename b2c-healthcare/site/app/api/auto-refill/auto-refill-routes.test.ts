@@ -4,8 +4,8 @@ import { makeJsonRequest } from '@/test/request';
 
 const session = vi.hoisted(() => ({ getSession: vi.fn(), setCart: vi.fn(), clearCart: vi.fn() }));
 vi.mock('@/lib/session', () => session);
+vi.mock('@/lib/checkout/provider', () => ({ getPaymentProvider: async () => ({ kind: 'demo', listStoredMethods: async () => [] }) }));
 vi.mock('@/lib/ct/patient', () => ({ getPatient: async () => ({ patientRef: 'pt_sam', name: 'Sam' }) }));
-vi.mock('@/lib/checkout/provider', () => ({ getPaymentProvider: async () => ({ kind: 'demo' }) }));
 
 const svc = vi.hoisted(() => ({ enableAutoRefill: vi.fn(), listRefills: vi.fn() }));
 vi.mock('@/lib/ct/auto-refill', async () => {
