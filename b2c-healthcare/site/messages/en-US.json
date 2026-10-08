@@ -100,5 +100,87 @@
       "projectUnavailable": "Project connection is not available in this environment.",
       "tokenSheet": "Design token reference"
     }
+  },
+  "doctors": {
+    "remote": {
+      "title": "Remote sessions",
+      "sub": "See a licensed doctor by video from wherever you are. No account needed to book.",
+      "metaTitle": "Remote sessions with a doctor"
+    },
+    "office": {
+      "title": "Office visits",
+      "sub": "Book an in-person appointment at a clinic near you. No account needed to book.",
+      "metaTitle": "Office visits with a doctor"
+    },
+    "mode": {
+      "label": "Consultation type",
+      "remote": "Remote session",
+      "office": "Office visit"
+    },
+    "count": "{count, plural, one {# doctor} other {# doctors}}",
+    "filters": {
+      "label": "Filter doctors",
+      "search": "Search by name or specialty",
+      "searchPlaceholder": "Search by name or specialty",
+      "specialty": "Specialty",
+      "allSpecialties": "All specialties",
+      "city": "City",
+      "allCities": "All cities",
+      "today": "Available today",
+      "clear": "Clear filters"
+    },
+    "card": {
+      "experience": "{years} yrs experience",
+      "rating": "★ {rating} ({count, plural, one {# review} other {# reviews}})",
+      "noReviews": "No reviews yet",
+      "viewProfile": "View profile",
+      "noPrice": "Price not available",
+      "availableToday": "Available today",
+      "next": "Next: {date}"
+    },
+    "empty": {
+      "title": "No doctors match. Try clearing a filter.",
+      "clear": "Clear filters",
+      "browse": "Or browse by specialty"
+    },
+    "error": {
+      "title": "We could not load the doctors",
+      "description": "The doctor search is not responding. Please try again in a moment.",
+      "retry": "Try again"
+    },
+    "browse": {
+      "label": "Browse by specialty",
+      "all": "All specialties"
+    },
+    "activeFilters": "Active filters",
+    "removeFilter": "Remove filter: {name}"
+  },
+  "search": {
+    "title": "Search",
+    "metaTitle": "Search",
+    "label": "Search doctors and medicines",
+    "placeholder": "Doctor, specialty or medicine",
+    "submit": "Search",
+    "resultsFor": "Results for “{query}”",
+    "promptTitle": "What are you looking for?",
+    "promptDescription": "Search by doctor name, specialty or medicine, or paste a medicine part number.",
+    "doctors": "Doctors",
+    "medicines": "Medicines",
+    "doctorCount": "{count, plural, one {# doctor} other {# doctors}}",
+    "medicineCount": "{count, plural, one {# medicine} other {# medicines}}",
+    "exactTitle": "Part number match",
+    "matchedSku": "Matched part number {sku}",
+    "rxOnly": "Prescription only",
+    "otc": "Over the counter",
+    "pack": "per pack",
+    "noPrice": "Price not available",
+    "seeAllDoctors": "See all matching doctors",
+    "findRx": "Find your prescription",
+    "emptyTitle": "Nothing matches “{query}”",
+    "emptyDescription": "Check the spelling or try a shorter search. You can also browse by specialty.",
+    "unsupportedTitle": "That language is not supported yet",
+    "unsupportedDescription": "Search in English. We do not have results in that language, which is different from there being no matches.",
+    "errorTitle": "Search is not available right now",
+    "errorDescription": "We could not run your search. Please try again in a moment."
   }
 }

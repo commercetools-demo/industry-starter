@@ -25,7 +25,6 @@ function first(params: RawParams, name: string): string | undefined {
 
 /** Collapses whitespace, drops control characters and caps the length. */
 export function cleanQuery(value: string | undefined): string {
-  // eslint-disable-next-line no-control-regex
   return (value ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, MAX_QUERY_LENGTH);
 }
 

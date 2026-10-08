@@ -11,7 +11,7 @@ Search (D-017/Q-033): header and home search submit to `/search?q=`; results pag
 ## Tasks
 - [x] K-01 `lib/ct/doctors.ts`: `searchDoctors({ mode, q, specialty, city, today, page })` → `{ items, total, facets }` using G-04 + F-02; fee per mode from channel price; tests with mocked search + slots (filters combine, today filter uses same availability as card) [SKILL: commercetools-platform] [SPEC: design-plp]
 - [x] K-02 `lib/listing-url.ts` (parse/serialize filter state, clamp page) with table tests incl. "page past last result" and "filters survive reload" [SPEC: product-listing-page]
-- [ ] K-03 `DoctorCard`, `AvailabilityBadge`, `DoctorFilters` (client, updates URL with `router.replace`), `DoctorList` server component, no-match card "No doctors match. Try clearing a filter."; keyboard/link tests [SPEC: design-plp]
+- [x] K-03 `DoctorCard`, `AvailabilityBadge`, `DoctorFilters` (client, updates URL with `router.replace`), `DoctorList` server component, no-match card "No doctors match. Try clearing a filter."; keyboard/link tests [SPEC: design-plp]
 - [ ] K-04 Pages `doctors/[mode]/page.tsx` (only `remote|office`; else 404), mode switch via `SegmentedControl` links, Pagination (design-system), count line; metadata; cached facets (not availability) [SKILL: commercetools-storefront] [SPEC: design-plp]
 - [ ] K-05 Narrow-screen card layout (right column under text at < 900 px) and `PageHead` filter overlap −24 px per design; screenshot test not required, CSS class test [SPEC: design-plp]
 - [ ] K-06 Empty/error: facet combo with no matches (offers "clear filters"), search service error state (not a blank page) [SPEC: product-listing-page]
