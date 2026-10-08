@@ -65,6 +65,44 @@
       "photo": "Photo of {name}"
     }
   },
+  "auth": {
+    "signInTitle": "Sign in to Malva",
+    "registerTitle": "Create your account",
+    "reason": {
+      "cart": "Sign in to view your cart.",
+      "prescriptions": "Sign in to look up your prescriptions.",
+      "checkout": "Sign in to check out.",
+      "order": "Sign in to view your order.",
+      "labs": "Sign in to see your lab tests.",
+      "account": "Sign in to open your account."
+    },
+    "fields": {
+      "name": "Full name",
+      "email": "Email",
+      "password": "Password"
+    },
+    "passwordHint": "Use at least {min} characters.",
+    "submitSignIn": "Sign in",
+    "submitRegister": "Create account",
+    "toRegisterPrompt": "New to Malva?",
+    "toRegister": "Create an account",
+    "toSignInPrompt": "Have an account?",
+    "toSignIn": "Sign in",
+    "problems": {
+      "nameRequired": "Enter your full name.",
+      "nameInvalid": "That name is too long.",
+      "emailRequired": "Enter your email address.",
+      "emailInvalid": "Enter a valid email address.",
+      "passwordRequired": "Enter your password.",
+      "passwordTooShort": "Use at least {min} characters.",
+      "passwordTooLong": "Use at most {max} characters."
+    },
+    "failed": "The email or password is not correct.",
+    "refused": "We could not create an account with those details. If you already have one, sign in instead.",
+    "tooManyAttempts": "Too many attempts. Please try again in a few minutes.",
+    "signedIn": "You are signed in.",
+    "created": "Your account is ready and your email address is confirmed."
+  },
   "shell": {
     "logoLabel": "Malva home",
     "goHome": "Go to the home page",

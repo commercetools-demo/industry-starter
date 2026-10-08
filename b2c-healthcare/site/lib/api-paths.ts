@@ -5,3 +5,8 @@
 export const API_CART = '/api/cart';
 export const API_ACCOUNT = '/api/account';
 export const API_LOCALE = '/api/locale';
+export const API_AUTH_LOGIN = '/api/auth/login';
+export const API_AUTH_REGISTER = '/api/auth/register';
+export const API_AUTH_LOGOUT = '/api/auth/logout';
+export const API_AUTH_ME = '/api/auth/me';
+export const API_ACCOUNT_PASSWORD = '/api/account/password';

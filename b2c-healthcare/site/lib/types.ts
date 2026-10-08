@@ -85,6 +85,8 @@ export interface AccountUser {
   id: string;
   firstName?: string;
   lastName?: string;
+  /** The patient's own email; present once `GET /api/auth/me` has answered. */
+  email?: string;
 }
 
 /** Product fields every catalog page needs (title, description, imagery). */
