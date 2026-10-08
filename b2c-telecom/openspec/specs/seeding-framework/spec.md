@@ -7,6 +7,10 @@
 
 The storefront cannot be built or demonstrated against an empty commercetools project, and a hand-entered catalog cannot be reproduced for a second developer, a staging project or a demo reset. A seeding tool fixes that, but only if running it twice is as safe as running it once and it cannot be pointed at the wrong project by accident. Seed scripts that create blindly produce duplicates on the second run, stop half-way with no way to resume, and, worst of all, run happily against a production project because the credentials happened to be in the shell. The framework in this spec is what every seed capability (catalog, images, shipping and market settings) runs inside.
 
+## Plan notes
+
+**As built by workstream F.** Seed code lives in `site/scripts/seed/` (not a sibling `seed/` package). The `Store` `malva-us` and `ProductSelection` `malva-all-offers` components are not built (D-058). Zones `usa` and `europe` are adopted, not created; `.env.seed` values are mapped to `CTP_SEED_*` and every write script requires `--confirm-project spec-test-b2c-telecom` (D-054). The Import API is not used (synchronous API). Release manifests (X) and demo data (G) extend the same framework.
+
 ## Requirements
 
 ### Requirement: Re-runnable, key-addressed seeding
