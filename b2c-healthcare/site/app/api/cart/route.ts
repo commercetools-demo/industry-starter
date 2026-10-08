@@ -13,7 +13,7 @@ export async function GET(request: Request): Promise<Response> {
   return handle(async () => {
     const session = await requireCustomer();
     if (new URL(request.url).searchParams.get('view') === 'summary') {
-      const cart = await getCartSummary(session.customerId, session.cartId);
+      const cart = await getCartSummary(session.customerId, session.cartId, rxContextOf(session).currency);
       await syncCartSession(cart);
       return Response.json(cart ? toSummary(cart) : null, { headers: NO_STORE });
     }

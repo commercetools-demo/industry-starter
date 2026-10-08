@@ -83,6 +83,7 @@ export function mapDoctorCard(projection: ProductProjection, options: DoctorMapO
     reviewCount: stats?.count ?? 0,
     initials: initialsOf(name),
     portraitUrl: projection.masterVariant.images?.[0]?.url ?? null,
+    sellableInRegion: Object.keys(fees).length > 0,
   };
 }
 

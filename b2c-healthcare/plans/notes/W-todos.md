@@ -1,0 +1,10 @@
+# Workstream W: live steps (need a second region in the project; none exists in v1)
+
+No commercetools credentials were available. Browser check done: `npm run dev` with dummy CT variables and `MALVA_FIXTURES=1`, `curl /en-US` returns 200, one `<header>` and no `<select>` (no switcher with one region). A multi-region browser run needs real data; steps for later:
+
+1. Add a second region as in `site/README.md` ("Add a region"): `COUNTRY_CONFIG` entry, project countries/currencies/languages, seed prices in the new currency (E), `messages/<locale>.json`. Locally a new entry is routable at once; `getValidCountryConfig` filters it until the project lists it.
+2. With two valid regions: the header shows the select (desktop). Choose the other region as a signed-in patient with a cart: toast "Your cart was emptied...", URL re-prefixed, the header cart count disappears, the cart page shows no cart. In the MC (`read_carts`) the old cart is still Active in the old currency; add a line again and a new cart in the new currency is created (`customerId`, new `currency`).
+3. Switch back: the old cart is found again (newest Active cart in that currency) unless it expired. Decide whether old-currency carts should be deleted by a job (not built).
+4. Product Search: confirm `variants.prices.currencyCode` is accepted as an `exact` filter (it is used the same way inside the price sort filter) and that doctors priced only on channels (`mlv-remote`, `mlv-office`) match it. If channel prices are not covered by that field, the doctor search would return nothing; then filter on `variants.prices.channel`-aware fields or drop the filter for doctors and rely on `sellableInRegion` (mapper) plus a post-filter.
+5. A doctor/medication without a price in the new currency: profile page shows "Not available in this region"; not in search results.
+6. `getProjectSettings` needs the project scope (G-todos). Without it `getSwitchableRegions` returns `[]` (switcher silently absent): check the dev log if the switcher does not appear.

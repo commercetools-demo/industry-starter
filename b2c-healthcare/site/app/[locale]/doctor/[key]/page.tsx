@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { BookingPanel } from '@/components/booking/BookingPanel';
 import type { BookingPatient } from '@/components/booking/BookingModal';
 import { ProfileAbout, ProfileHeader, ProfileReviews } from '@/components/doctors/DoctorProfile';
+import { NotAvailableInRegion } from '@/components/layout/NotAvailableInRegion';
 import { Link } from '@/i18n/routing';
 import { getDoctorByKeyCached } from '@/lib/ct/doctors';
 import { getCustomerById } from '@/lib/ct/identity';
@@ -79,7 +80,11 @@ export default async function DoctorPage({ params, searchParams }: { params: Par
           <ProfileAbout doctor={doctor} />
           <ProfileReviews reviews={doctor.reviews} />
         </div>
-        <BookingPanel doctor={{ key: doctor.key, name: doctor.name, modes: doctor.modes, fees: doctor.fees }} initialMode={mode} patient={patient} />
+        {doctor.sellableInRegion === false ? (
+          <NotAvailableInRegion />
+        ) : (
+          <BookingPanel doctor={{ key: doctor.key, name: doctor.name, modes: doctor.modes, fees: doctor.fees }} initialMode={mode} patient={patient} />
+        )}
       </div>
     </div>
   );

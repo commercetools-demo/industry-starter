@@ -785,5 +785,13 @@
       "SHELF_LIFE": "Stock expires {date}, too soon to meet the minimum shelf life",
       "UNAVAILABLE": "This prescription can no longer be filled"
     }
+  },
+  "region": {
+    "label": "Region and language",
+    "switching": "Switching region",
+    "cartEmptied": "Your cart was emptied because prices are in a different currency. You can add your prescription lines again.",
+    "failed": "We could not switch region. Try again.",
+    "notAvailableTitle": "Not available in this region",
+    "notAvailableBody": "This is not offered in the region you selected, so there is no price to show. Switch region to see it."
   }
 }

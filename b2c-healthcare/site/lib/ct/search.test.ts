@@ -7,10 +7,27 @@ const post = vi.fn();
 const search = vi.fn(() => ({ post }));
 vi.mock('@/lib/ct/client', () => ({ apiRoot: { products: () => ({ search }) } }));
 
-import { buildFacetFilters, buildPaging, buildQuery, buildSearchRequest, buildSort } from './search-query';
+import { buildFacetFilters, buildPaging, buildQuery, buildSearchRequest, buildSellableFilter, buildSort } from './search-query';
 import { searchProducts } from './search';
 
 const base = { locale: 'en-US', currency: 'USD', country: 'US' };
+
+describe('switching-region-or-language: Product not sellable in the new region (search)', () => {
+  const hasCurrencyFilter = (query: unknown, currency: string) =>
+    JSON.stringify(query).includes(JSON.stringify({ exact: { field: 'variants.prices.currencyCode', value: currency } }));
+
+  it('search only lists products with a price in the visitor currency, alone and combined with text and facets', () => {
+    expect(hasCurrencyFilter(buildSearchRequest({ ...base, currency: 'EUR', country: 'DE' }).query, 'EUR')).toBe(true);
+    const combined = buildSearchRequest({ ...base, text: 'okafor', filters: { specialty: ['general-practice'] } }).query as { and: unknown[] };
+    expect(combined.and).toHaveLength(2);
+    expect(JSON.stringify(combined)).toContain('fullText');
+    expect(hasCurrencyFilter(combined, 'USD')).toBe(true);
+  });
+
+  it('a product that is priced only in another currency is not requested for this region', () => {
+    expect(hasCurrencyFilter(buildSearchRequest(base).query, 'EUR')).toBe(false);
+  });
+});
 
 describe('storefront-data-loading: Product Search query builders', () => {
   it('text query: fullText on name in the locale, all words must match', () => {
@@ -77,7 +94,8 @@ describe('storefront-data-loading: Product Search query builders', () => {
       'city',
       'modes',
     ]);
-    expect(buildSearchRequest(base).query).toBeUndefined();
+    // Nothing else restricts: the only restriction is "has a price in the visitor's currency" (workstream W).
+    expect(buildSearchRequest(base).query).toEqual(buildSellableFilter('USD'));
   });
 });
 

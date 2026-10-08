@@ -10,6 +10,7 @@ import { IntlProvider } from '@/i18n/IntlProvider';
 import { routing } from '@/i18n/routing';
 import { KEY_ACCOUNT } from '@/lib/cache-keys';
 import { getHeaderUser } from '@/lib/header-user';
+import { getSwitchableRegions } from '@/lib/regions';
 import { showJournal } from '@/lib/routes';
 
 export function generateStaticParams() {
@@ -30,7 +31,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const [messages, user, t] = await Promise.all([getMessages(), getHeaderUser(), getTranslations('common')]);
+  const [messages, user, t, regions] = await Promise.all([getMessages(), getHeaderUser(), getTranslations('common'), getSwitchableRegions(locale)]);
   return (
     <IntlProvider locale={locale} messages={messages}>
       {/* Adds the display name to the id-only user of the root fallback; `null` marks an anonymous visitor so useAccount does not call /api/auth/me on first paint. */}
@@ -42,7 +43,7 @@ export default async function LocaleLayout({
           >
             {t('skipToContent')}
           </a>
-          <Header hasArticles={showJournal(locale)} />
+          <Header hasArticles={showJournal(locale)} regions={regions} />
           <main id="main" className="min-h-[60vh] pb-20">
             {children}
           </main>

@@ -38,6 +38,11 @@ export interface DoctorCard {
   initials: string;
   /** Pexels portrait (clean URL) or null: the avatar then shows the initials. */
   portraitUrl: string | null;
+  /**
+   * Set by the mappers: false when the doctor has no fee in the visitor's currency (not sold in this region, workstream W): show
+   * "not available in this region" instead of a price and do not offer booking. Absent means sellable; lists exclude such doctors.
+   */
+  sellableInRegion?: boolean;
 }
 
 /** Full doctor profile. */
@@ -65,6 +70,8 @@ export interface Medication {
   hsaEligible: boolean;
   controlClass: string | null;
   price: Money | null;
+  /** Set by the mappers: false when there is no price in the visitor's currency (not sold in this region): not purchasable, never a broken price. Absent means sellable. */
+  sellableInRegion?: boolean;
   imageUrl: string | null;
   categoryIds: string[];
 }
@@ -323,3 +330,9 @@ export interface Cart extends CartSummary {
 }
 
 export const isFullCart = (cart: CartSummary | Cart | null | undefined): cart is Cart => Boolean(cart && 'lines' in cart);
+
+/** One entry of the region switcher (workstream W): a locale the project can sell in, with its display label. */
+export interface RegionOption {
+  locale: string;
+  label: string;
+}
