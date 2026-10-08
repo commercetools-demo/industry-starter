@@ -6,8 +6,8 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
   setRequestLocale(locale);
   const t = await getTranslations('common');
   return (
-    <main>
+    <div>
       <h1>{t('brand')}</h1>
-    </main>
+    </div>
   );
 }

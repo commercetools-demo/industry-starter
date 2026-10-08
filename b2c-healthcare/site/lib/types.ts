@@ -73,7 +73,10 @@ export interface Medication {
 export interface CartSummary {
   id: string;
   version: number;
+  /** Total quantity across lines. */
   itemCount: number;
+  /** Number of cart lines; the header count bubble shows this (Q-020). */
+  lineCount: number;
   currencyCode: string;
 }
 
