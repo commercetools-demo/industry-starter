@@ -1,5 +1,8 @@
 import 'server-only';
-import { mapDoctorCard } from '@/lib/mappers/doctor';
+import { cache } from 'react';
+import { apiRoot } from '@/lib/ct/client';
+import { listVerifiedReviews } from '@/lib/ct/reviews';
+import { mapDoctor, mapDoctorCard } from '@/lib/mappers/doctor';
 import { zoneDate } from '@/lib/clinical/slots';
 import { clampPage, cleanQuery, pageCountOf } from '@/lib/listing-url';
 import { matchSpecialtyKeys } from '@/lib/specialties';
@@ -7,7 +10,7 @@ import { loadFixtures, type Fixtures } from '@/lib/ct/fixtures';
 import { listFreeSlots, type Mode } from '@/lib/ct/scheduling';
 import { searchProducts, type FacetResult } from '@/lib/ct/search';
 import { buildNameMatch } from '@/lib/ct/search-query';
-import type { ConsultationMode, DoctorAvailability, DoctorCard, DoctorListItem } from '@/lib/types';
+import type { ConsultationMode, DoctorAvailability, DoctorCard, DoctorListItem, DoctorProfile, DoctorReview } from '@/lib/types';
 
 export const DEFAULT_DOCTOR_PAGE_SIZE = 9;
 /** Candidates evaluated for availability per request (the demo catalog is far below this). */
@@ -135,3 +138,60 @@ export async function listDoctors(params: SearchDoctorsParams): Promise<{ items:
   const items = (params.today ? listed.filter((d) => d.next?.isToday) : listed).sort(compareDoctors);
   return { items, facets };
 }
+
+export interface DoctorContext {
+  locale: string;
+  currency: string;
+  country: string;
+}
+
+const SAFE_KEY = /^[\w-]{1,100}$/;
+export const MAX_PROFILE_REVIEWS = 20;
+
+/**
+ * One doctor by product key (the key in the card link), or null when no published doctor has it. The fee per mode
+ * is the price on the mode's channel in the visitor's currency, so the product read is per currency and never put
+ * in a shared cache; `getDoctorByKeyCached` de-duplicates it inside one request (`generateMetadata` + the page).
+ * Reviews are the verified ones only (a failing reviews read hides the card, it does not fail the page).
+ */
+export async function getDoctorByKey(
+  key: string,
+  ctx: DoctorContext,
+  options: { reviews?: boolean } = {},
+): Promise<DoctorProfile | null> {
+  if (!SAFE_KEY.test(key)) return null;
+  const fx = await loadFixtures();
+  if (fx) return fx.fixtureDoctor(key);
+  let projection;
+  try {
+    ({ body: projection } = await apiRoot
+      .productProjections()
+      .withKey({ key })
+      .get({ queryArgs: { priceCurrency: ctx.currency, priceCountry: ctx.country, expand: ['masterVariant.prices[*].channel'] } })
+      .execute());
+  } catch (error) {
+    if ((error as { statusCode?: number }).statusCode === 404) return null;
+    throw error;
+  }
+  const doctor = mapDoctor(projection, { locale: ctx.locale, currency: ctx.currency });
+  let reviews: DoctorReview[] = [];
+  if (options.reviews !== false) {
+    try {
+      reviews = (await listVerifiedReviews(projection.id, MAX_PROFILE_REVIEWS)).map((r) => ({
+        id: r.id,
+        rating: r.rating,
+        ...(r.title ? { title: r.title } : {}),
+        ...(r.text ? { text: r.text } : {}),
+        createdAt: r.createdAt,
+      }));
+    } catch {
+      reviews = [];
+    }
+  }
+  return { ...doctor, reviews };
+}
+
+/** Request-scoped memo (arguments are primitives so React `cache` can match them). */
+export const getDoctorByKeyCached = cache((key: string, locale: string, currency: string, country: string) =>
+  getDoctorByKey(key, { locale, currency, country }),
+);

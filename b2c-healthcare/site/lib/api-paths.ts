@@ -14,3 +14,6 @@ export const API_ACCOUNT_ADDRESSES = '/api/account/addresses';
 export const apiAccountAddress = (id: string) => `${API_ACCOUNT_ADDRESSES}/${encodeURIComponent(id)}`;
 export const apiAccountAddressDefault = (id: string) => `${apiAccountAddress(id)}/default`;
 export const API_ACCOUNT_PROFILE = '/api/account/profile';
+
+export const API_BOOKINGS = '/api/bookings';
+export const apiDoctorSlots = (doctorKey: string, mode: string): string => `/api/doctors/${encodeURIComponent(doctorKey)}/slots?mode=${encodeURIComponent(mode)}`;

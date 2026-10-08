@@ -41,6 +41,15 @@ describe('doctor data', () => {
     }
   });
 
+  it('one doctor offers only remote and one only office, so a disabled mode can be tested (workstream L)', () => {
+    const only = (mode: 'remote' | 'office') => DOCTORS.filter((d) => Object.keys(d.fees).join() === mode).map((d) => d.slug);
+    expect(only('remote')).toEqual(['tomas-alvarez']);
+    expect(only('office')).toEqual(['leila-haddad']);
+    const draft = doctorDraft(DOCTORS.find((d) => d.slug === 'leila-haddad') ?? DOCTORS[0]);
+    expect(draft.masterVariant.prices).toEqual([price(10000, 'office')]);
+    expect(draft.masterVariant.attributes.find((a) => a.name === 'modes')?.value).toEqual(['office']);
+  });
+
   it('a one-mode doctor gets one price and one mode', () => {
     const remoteOnly = { ...DOCTORS[0], fees: { remote: 3500 } };
     const draft = doctorDraft(remoteOnly);

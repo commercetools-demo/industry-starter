@@ -6,7 +6,10 @@ import { DOCTOR_PRODUCT_TYPE_KEY, L } from './types';
 
 export type Mode = 'remote' | 'office';
 
-/** Fees in cents (the prototype's dollars x 100). A mode without a fee is not offered. */
+/**
+ * Fees in cents (the prototype's dollars x 100). A mode without a fee is not offered. Two doctors offer one mode only so the
+ * disabled-mode behaviour of the booking panel can be checked: Dr. Tomás Alvarez is remote only, Dr. Leila Haddad is office only.
+ */
 export interface DoctorDef {
   slug: string;
   name: string;
@@ -30,8 +33,8 @@ export const DOCTORS: DoctorDef[] = [
   { slug: 'marcus-lee', name: 'Dr. Marcus Lee', specialty: 'pediatrics', city: 'austin', timezone: 'America/Chicago', yearsExperience: 11, languages: ['English', 'Mandarin'], education: 'MD, Baylor College of Medicine', clinicName: 'Little Steps Pediatrics · Austin', bio: 'Well-child visits, vaccinations, and care for common childhood illnesses, with calm, parent-friendly guidance.', fees: { remote: 4500, office: 7000 }, imageQuery: 'male pediatrician portrait' },
   { slug: 'sofia-marchetti', name: 'Dr. Sofia Marchetti', specialty: 'cardiology', city: 'austin', timezone: 'America/Chicago', yearsExperience: 18, languages: ['English', 'Italian'], education: 'MD, University of Texas Southwestern', clinicName: 'Heartline Center · Austin', bio: 'Blood pressure, cholesterol, palpitations and long-term heart health, including review of lab and ECG results.', fees: { remote: 9500, office: 14000 }, imageQuery: 'female cardiologist portrait' },
   { slug: 'james-whitfield', name: 'Dr. James Whitfield', specialty: 'orthopedics', city: 'chicago', timezone: 'America/Chicago', yearsExperience: 14, languages: ['English'], education: 'MD, Northwestern University', clinicName: 'MoveWell Ortho · Chicago', bio: 'Joint, back and sports injuries. Remote sessions cover imaging review and rehab planning.', fees: { remote: 8000, office: 12500 }, imageQuery: 'male doctor portrait' },
-  { slug: 'leila-haddad', name: 'Dr. Leila Haddad', specialty: 'gynecology', city: 'chicago', timezone: 'America/Chicago', yearsExperience: 10, languages: ['English', 'Arabic', 'French'], education: 'MD, University of Chicago', clinicName: 'Women’s Health Studio · Chicago', bio: 'Routine exams, contraception, pregnancy planning and menopause care in a private, unhurried setting.', fees: { remote: 6500, office: 10000 }, imageQuery: 'female doctor portrait' },
-  { slug: 'tomas-alvarez', name: 'Dr. Tomás Alvarez', specialty: 'general-practice', city: 'austin', timezone: 'America/Chicago', yearsExperience: 7, languages: ['English', 'Spanish'], education: 'MD, University of Texas Health Science Center', clinicName: 'Malva Clinic · Austin Central', bio: 'Quick, practical primary care for adults, including travel health, sick notes and prescription renewals.', fees: { remote: 3000, office: 5000 }, imageQuery: 'male doctor portrait' },
+  { slug: 'leila-haddad', name: 'Dr. Leila Haddad', specialty: 'gynecology', city: 'chicago', timezone: 'America/Chicago', yearsExperience: 10, languages: ['English', 'Arabic', 'French'], education: 'MD, University of Chicago', clinicName: 'Women’s Health Studio · Chicago', bio: 'Routine exams, contraception, pregnancy planning and menopause care in a private, unhurried setting.', fees: { office: 10000 }, imageQuery: 'female doctor portrait' },
+  { slug: 'tomas-alvarez', name: 'Dr. Tomás Alvarez', specialty: 'general-practice', city: 'austin', timezone: 'America/Chicago', yearsExperience: 7, languages: ['English', 'Spanish'], education: 'MD, University of Texas Health Science Center', clinicName: 'Malva Clinic · Austin Central', bio: 'Quick, practical primary care for adults, including travel health, sick notes and prescription renewals.', fees: { remote: 3000 }, imageQuery: 'male doctor portrait' },
 ];
 
 export const doctorKey = (d: DoctorDef) => `${PREFIX}doc-${d.slug}`;

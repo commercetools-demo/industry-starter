@@ -6,6 +6,8 @@ export interface SegmentItem {
   label: string;
   /** When every item has an href the control is a set of links (navigation); otherwise buttons. */
   href?: string;
+  /** Button items only: not selectable (for example a mode the doctor does not offer). */
+  disabled?: boolean;
 }
 
 export interface SegmentedControlProps {
@@ -37,7 +39,14 @@ export function SegmentedControl({ label, items, value, onChange, className }: S
             {item.label}
           </Link>
         ) : (
-          <button key={item.value} type="button" aria-pressed={active} onClick={() => onChange?.(item.value)} className={classes}>
+          <button
+            key={item.value}
+            type="button"
+            aria-pressed={active}
+            disabled={item.disabled}
+            onClick={() => onChange?.(item.value)}
+            className={cx(classes, 'disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:bg-transparent')}
+          >
             {item.label}
           </button>
         );

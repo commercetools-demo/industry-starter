@@ -5,7 +5,7 @@ let fake: FakeObjects;
 vi.mock('@/lib/ct/client', () => ({ apiRoot: new Proxy({}, { get: (_t, p) => (fake as unknown as Record<string, unknown>)[p as string] }) }));
 
 import {
-  BookingNotFoundError, BookingValidationError, bookingReference, cancelBooking, CancelTooLateError, createBooking, getBookingForSession, listBookingsForPatient,
+  BookingNotFoundError, BookingValidationError, bookingReference, cancelBooking, CancelTooLateError, createBooking, getBookingByReference, getBookingForSession, listBookingsForPatient,
   SlotUnavailableError, type BookingInput,
 } from '@/lib/ct/bookings';
 import { CONTAINERS, putObject } from '@/lib/ct/custom-objects';
@@ -82,11 +82,25 @@ describe('bookings', () => {
     const guest = { name: 'Guest Example', email: 'guest@example.com', phone: '+1 212 555 0100' };
     const { booking } = await createBooking(input({ patientRef: undefined, guest }), NOW);
     expect(booking.guest).toEqual(guest);
-    expect(Date.parse(booking.expiresAt as string)).toBe(Date.parse(SLOT) + 7 * 86_400_000);
+    expect(Date.parse(booking.expiresAt as string)).toBe(Date.parse(SLOT) + 90 * 86_400_000);
     expect(await getBookingForSession(booking.reference, { guestEmail: 'GUEST@example.com' }, NOW)).toMatchObject({ reference: booking.reference });
     expect(await getBookingForSession(booking.reference, { guestEmail: 'other@example.com' }, NOW)).toBeNull();
     expect(await getBookingForSession(booking.reference, { patientRef: 'pt_a' }, NOW)).toBeNull();
-    expect(await getBookingForSession(booking.reference, { guestEmail: guest.email }, new Date('2026-12-01T00:00:00Z'))).toBeNull();
+    expect(await getBookingForSession(booking.reference, { guestEmail: guest.email }, new Date('2027-02-01T00:00:00Z'))).toBeNull();
+  });
+
+  it('getBookingByReference applies only the expiry (access is proven by the caller)', async () => {
+    const guest = { name: 'Guest Example', email: 'guest@example.com', phone: '+1 212 555 0100' };
+    const { booking } = await createBooking(input({ patientRef: undefined, guest }), NOW);
+    expect(await getBookingByReference(booking.reference, NOW)).toMatchObject({ reference: booking.reference });
+    expect(await getBookingByReference(booking.reference, new Date('2027-02-01T00:00:00Z'))).toBeNull();
+    expect(await getBookingByReference('BK-NOPE', NOW)).toBeNull();
+  });
+
+  it('a signed-in booking keeps the contact phone', async () => {
+    const { booking } = await createBooking(input({ phone: ' 212 555 0100 ' }), NOW);
+    expect(booking.phone).toBe('212 555 0100');
+    await expect(createBooking(input({ requestId: 'req-00000009', phone: '  ' }), NOW)).rejects.toBeInstanceOf(BookingValidationError);
   });
 
   it('getBookingForSession: unknown, malformed and foreign references all give null', async () => {

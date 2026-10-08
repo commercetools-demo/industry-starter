@@ -1,9 +1,9 @@
 import 'server-only';
-import { candidateSlots, type Slot } from '@/lib/clinical/slots';
+import { candidateSlots, type Schedule, type Slot } from '@/lib/clinical/slots';
 import { initialsOf } from '@/lib/mappers/doctor';
 import { matchSpecialtyKeys, SPECIALTIES } from '@/lib/specialties';
 import type { FacetResult } from '@/lib/ct/search';
-import type { ConsultationMode, DoctorCard, Medication } from '@/lib/types';
+import type { ConsultationMode, DoctorCard, DoctorProfile, Medication } from '@/lib/types';
 import { MEDICATIONS, medKey, medSku } from '@/scripts/seed/data/medications';
 import { DOCTORS, doctorKey } from '@/scripts/seed/data/doctors';
 import { REVIEWS } from '@/scripts/seed/data/reviews';
@@ -50,6 +50,25 @@ export function fixtureCandidates(p: { mode: ConsultationMode; q: string; specia
     return [...by].map(([value, n]) => ({ value, count: n }));
   };
   return { cards, facets: [{ name: 'specialty', buckets: count('specialtyKey') }, { name: 'city', buckets: count('city') }] };
+}
+
+/** The profile of a seeded doctor (reviews dated back from 2026-09 so the "Mon YYYY" line has something to show). */
+export function fixtureDoctor(key: string): DoctorProfile | null {
+  const def = DOCTORS.find((d) => doctorKey(d) === key);
+  const card = doctorCards.find((c) => c.key === key);
+  if (!def || !card) return null;
+  const reviews = REVIEWS.filter((r) => r.doctorKey === key).map((r, i) => ({
+    id: r.key,
+    rating: r.rating,
+    title: r.title,
+    text: r.text,
+    createdAt: new Date(Date.UTC(2026, 8 - i, 12)).toISOString(),
+  }));
+  return { ...card, bio: def.bio, languages: def.languages, education: def.education, timezone: def.timezone, reviews };
+}
+
+export function fixtureSchedule(doctorKeyValue: string): Schedule | null {
+  return SCHEDULES.find((s) => s.doctorKey === doctorKeyValue)?.schedule ?? null;
 }
 
 export function fixtureAvailability(doctorKeyValue: string, _mode: ConsultationMode, now: Date): Slot[] {

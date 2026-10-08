@@ -2,6 +2,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Avatar } from '@/components/ui/Avatar';
 import { buttonClasses } from '@/components/ui/Button';
 import { Link } from '@/i18n/routing';
+import { doctorHref } from '@/lib/doctor-back';
 import { formatMoney } from '@/lib/utils';
 import type { ConsultationMode, DoctorListItem } from '@/lib/types';
 import { AvailabilityBadge } from './AvailabilityBadge';
@@ -11,7 +12,7 @@ import { AvailabilityBadge } from './AvailabilityBadge';
  * element), so it is keyboard reachable and announced once. Below 900 px (the `nav` breakpoint) the right
  * column drops under the text and spans the full width.
  */
-export function DoctorCard({ doctor, mode }: { doctor: DoctorListItem; mode: ConsultationMode }) {
+export function DoctorCard({ doctor, mode, from }: { doctor: DoctorListItem; mode: ConsultationMode; /** The list URL (locale-less, with its filters) the profile's back link returns to. */ from?: string }) {
   const t = useTranslations('doctors.card');
   const locale = useLocale();
   const fee = doctor.fees[mode];
@@ -24,7 +25,7 @@ export function DoctorCard({ doctor, mode }: { doctor: DoctorListItem; mode: Con
       <Avatar initials={doctor.initials} src={doctor.portraitUrl} name={doctor.name} />
       <div>
         <h3 className="font-display text-lg font-semibold text-brand-700">
-          <Link href={`/doctor/${doctor.key}?m=${mode}`} className="after:absolute after:inset-0 after:content-['']">
+          <Link href={doctorHref(doctor.key, mode, from)} className="after:absolute after:inset-0 after:content-['']">
             {doctor.name}
           </Link>
         </h3>
