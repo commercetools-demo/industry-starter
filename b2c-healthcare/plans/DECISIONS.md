@@ -41,3 +41,17 @@ Binding for juniors. `Confirmed` = fixed by an existing artifact or an owner ans
 | D-032 | No password-reset UI (Q-070); `password-reset` spec not built | Confirmed |
 | D-033 | Tax 0% US on Rx medicine and consultations; Same-day $5 cut-off 14:00 America/New_York, NY/TX/IL only | Confirmed (Q-012/013) |
 | D-027 | All capabilities are in v1, including saved lists, subscriptions/recurring orders, payer cost-share, benefit allowance, eligible-item tender and credentialed purchase scope (workstreams T, U) | Confirmed (Q-006, 2026-10-08) |
+
+## Evidence
+
+### D-010 (workstream B-05; computed by `site/lib/a11y/contrast.ts`, asserted in `contrast.test.ts`)
+| Label on fill | Ratio | WCAG AA (4.5:1, small text) |
+| --- | --- | --- |
+| white on `--color-brand-500` `#2aa7ff` (the prototype) | 2.60 | fails |
+| `--color-navy-900` `#102851` on `--color-brand-500` (chosen, `--color-action-label`) | 5.59 | passes |
+| `--color-navy-900` on `--color-brand-600` `#2593e0` (hover fill) | 4.38 | fails by 0.12 |
+| `--color-navy-950` `#081429` on `--color-brand-600` (hover label, `--color-action-label-hover`) | 5.54 | passes |
+| white on `--color-brand-700` `#1e78b8` (alternative fill, not chosen) | 4.74 | passes |
+
+D-009 status text on the `-50` background: success `#067a05` 4.93, warning `#8a5d00` 4.98, info `#0a6f8c` 5.18, danger `#b3402a` 4.93 (all pass); the 500 status colors on `-50` all fail.
+For SO-01: navy label vs white on a brand-700 fill. `--color-action-label-hover` is a storefront extension added by B because navy-900 does not pass on the hover fill.

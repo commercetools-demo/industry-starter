@@ -3,6 +3,10 @@ import { describe, expect, it, vi } from 'vitest';
 
 const getLocale = vi.fn<() => Promise<string>>();
 vi.mock('next-intl/server', () => ({ getLocale: () => getLocale() }));
+vi.mock('next/font/google', () => {
+  const font = (name: string) => () => ({ variable: `--font-${name}` });
+  return { Poppins: font('poppins'), Lato: font('lato'), Roboto: font('roboto') };
+});
 
 import RootLayout from './layout';
 
