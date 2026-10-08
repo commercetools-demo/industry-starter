@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import type { RegionOption } from '@/lib/types';
 import { HeaderClient } from './HeaderClient';
 import type { HeaderVariant } from './NavLinks';
 
@@ -22,6 +23,8 @@ export function Logo({ inverse = false }: { inverse?: boolean }) {
 export interface HeaderProps {
   variant?: HeaderVariant;
   hasArticles?: boolean;
+  /** Regions for the switcher (workstream W); fewer than two renders none. */
+  regions?: RegionOption[];
 }
 
 /**
@@ -29,10 +32,10 @@ export interface HeaderProps {
  * depends on the visitor (active link, cart count, identity, menu) is in client islands that read
  * session-resolved SWR state, so no per-visitor value is ever part of this markup.
  */
-export function Header({ variant, hasArticles }: HeaderProps) {
+export function Header({ variant, hasArticles, regions }: HeaderProps) {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-surface/95 backdrop-blur-sm">
-      <HeaderClient variant={variant} hasArticles={hasArticles}>
+      <HeaderClient variant={variant} hasArticles={hasArticles} regions={regions}>
         <Logo />
       </HeaderClient>
     </header>

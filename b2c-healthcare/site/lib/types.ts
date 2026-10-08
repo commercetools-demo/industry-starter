@@ -323,3 +323,9 @@ export interface Cart extends CartSummary {
 }
 
 export const isFullCart = (cart: CartSummary | Cart | null | undefined): cart is Cart => Boolean(cart && 'lines' in cart);
+
+/** One entry of the region switcher (workstream W): a locale the project can sell in, with its display label. */
+export interface RegionOption {
+  locale: string;
+  label: string;
+}

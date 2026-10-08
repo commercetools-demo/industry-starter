@@ -2,11 +2,13 @@
 import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { ButtonLink } from '@/components/ui/Button';
+import type { RegionOption } from '@/lib/types';
 import { usePathname } from '@/i18n/routing';
 import { activeSection, isHomePath } from '@/lib/nav';
 import { AccountSlot } from './AccountSlot';
 import { CartButton } from './CartButton';
 import { HomeAccountSlot } from './HomeAccountSlot';
+import { RegionSwitcher } from './RegionSwitcher';
 import { MobileMenu } from './MobileMenu';
 import { SearchLink } from './SearchLink';
 import { DesktopLinks, useNavItems, type HeaderVariant } from './NavLinks';
@@ -16,6 +18,8 @@ export interface HeaderClientProps {
   variant?: HeaderVariant;
   /** The "Health journal" link appears only once articles exist (D-018). */
   hasArticles?: boolean;
+  /** Regions the project can sell in; the switcher is shown only for two or more (none in v1). */
+  regions?: RegionOption[];
   /** The logo, rendered by the server shell. */
   children: ReactNode;
 }
@@ -24,7 +28,7 @@ export interface HeaderClientProps {
  * Interactive part of the header: active section, cart and account islands, mobile menu. The cart
  * count and the signed-in identity are read from session-resolved SWR state inside the islands.
  */
-export function HeaderClient({ variant, hasArticles = false, children }: HeaderClientProps) {
+export function HeaderClient({ variant, hasArticles = false, regions = [], children }: HeaderClientProps) {
   const t = useTranslations('shell');
   const pathname = usePathname();
   const resolved: HeaderVariant = variant ?? (isHomePath(pathname) ? 'home' : 'app');
@@ -50,6 +54,7 @@ export function HeaderClient({ variant, hasArticles = false, children }: HeaderC
             </>
           )}
           <SearchLink />
+          <RegionSwitcher regions={regions} />
           <MobileMenu items={items} home={home} />
         </div>
       </div>
