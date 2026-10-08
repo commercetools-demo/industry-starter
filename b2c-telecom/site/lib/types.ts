@@ -752,6 +752,14 @@ export interface Order {
   schedules: PriceSchedule[];
   /** Parsed `labelSnapshot` (M), the labels as they were at order time; null when absent or invalid. */
   labels: LabelSnapshot['labels'] | null;
+  /** V: shipments with their parcels and tracking references (`shippingInfo.deliveries`). */
+  deliveries: OrderDelivery[];
+  /** V: return requests (`returnInfo`), each item with its own goods and refund state. */
+  returns: OrderReturn[];
+  /** V: why and when the buyer cancelled (custom field `cancellation`); undefined when absent or unreadable. */
+  cancellation?: CancellationRecord;
+  /** V: the early-termination fee text of each plan line, from the stored label snapshot (line id to text). */
+  etfByLine: Record<string, string>;
 }
 export interface OrderListItem {
   id: string;
@@ -943,4 +951,43 @@ export interface OrderConfirmationView {
   email: string | null;
   isGuest: boolean;
   paymentState: string | null;
+}
+
+// ===== V: post-purchase =====
+export type CancelReason = 'changed_mind' | 'better_offer' | 'moving' | 'service_not_needed' | 'other';
+export interface CancellationRecord {
+  reason: CancelReason;
+  note?: string;
+  /** ISO timestamp. */
+  cancelledAt: string;
+  by: 'customer';
+}
+export type ReturnReason = 'defective' | 'not_needed' | 'wrong_item' | 'other';
+export interface OrderParcel {
+  id: string;
+  trackingId?: string;
+  carrier?: string;
+  items: { lineItemId: string; name: string; quantity: number }[];
+}
+export interface OrderDelivery {
+  id: string;
+  createdAt: string;
+  parcels: OrderParcel[];
+  items: { lineItemId: string; name: string; quantity: number }[];
+}
+export type ReturnShipmentLabel = 'Advised' | 'Returned' | 'BackInStock' | 'Unusable';
+export type ReturnPaymentLabel = 'NonRefundable' | 'Initial' | 'Refunded' | 'NotRefunded';
+export interface OrderReturnItem {
+  id: string;
+  lineItemId: string;
+  name: string;
+  quantity: number;
+  comment?: string;
+  /** The platform's value; an unknown one is kept as text so the page can show it raw. */
+  shipmentState: string;
+  paymentState: string;
+}
+export interface OrderReturn {
+  returnDate?: string;
+  items: OrderReturnItem[];
 }
