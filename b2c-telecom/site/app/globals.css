@@ -95,7 +95,8 @@
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-body); font-size: var(--text-md); line-height: 1.5; -webkit-font-smoothing: antialiased; }
-a { color: var(--color-text-link); }
+/* In the base layer so utility classes (button-styled links, footer links) win over the default link color. */
+@layer base { a { color: var(--color-text-link); } }
 :focus-visible { outline: 2px solid var(--color-action); outline-offset: 2px; }
 [data-surface='dark'] :focus-visible, [data-surface='dark']:focus-visible { outline-color: var(--color-brand-500); }
 ::selection { background: var(--color-brand-300); color: var(--color-text-on-brand); }
