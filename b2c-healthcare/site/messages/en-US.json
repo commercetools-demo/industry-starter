@@ -1,0 +1,19 @@
+{
+  "common": {
+    "brand": "Malva Healthcare",
+    "skipToContent": "Skip to main content",
+    "loading": "Loading",
+    "retry": "Try again",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "continue": "Continue",
+    "back": "Back"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "notFound": "We could not find that page.",
+    "network": "We could not reach the server. Check your connection and try again.",
+    "unauthorized": "Please sign in to continue."
+  }
+}

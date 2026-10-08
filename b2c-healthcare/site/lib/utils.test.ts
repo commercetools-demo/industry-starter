@@ -19,7 +19,7 @@ describe('storefront-locale-routing: Region configuration as one table', () => {
       for (const name of readdirSync(dir)) {
         const path = join(dir, name);
         if (statSync(path).isDirectory()) walk(path);
-        else if (/\.tsx$/.test(name) && !/\.test\.tsx$/.test(name)) {
+        else if (name.endsWith('.tsx') && !name.endsWith('.test.tsx')) {
           if (/['"`](en-US|USD)['"`]/.test(readFileSync(path, 'utf8'))) offenders.push(path);
         }
       }
