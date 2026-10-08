@@ -78,3 +78,8 @@ export async function getCartValidated(patient: Patient, customerId: string, ctx
   const problems = await checkLines(patient, lines.map((l) => ({ id: l.id, rx: { rxNumber: l.rxNumber, rxLineRef: l.rxLineRef } })), ctx);
   return view(customerId, lines, problems);
 }
+
+/** After an order is placed (workstream Q): the fixture cart is emptied. */
+export function clearCart(customerId: string): void {
+  carts.delete(customerId);
+}

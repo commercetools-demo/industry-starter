@@ -41,7 +41,7 @@ export interface ShopOrder {
   version: number;
   orderNumber?: string;
   customerId: string;
-  state?: { typeId: 'state'; key: string };
+  state?: { typeId: 'state'; key: string; obj: { key: string } };
   cart: { typeId: 'cart'; id: string };
   lineItems: ShopLine[];
   totalPrice: Money;
@@ -67,11 +67,13 @@ export interface FakeShop {
   unserved: Set<string>;
   /** When set, the next order creation fails once with this error. */
   failNextOrder: unknown;
+  /** When true, the next order is created but the answer is lost (the call throws a 500). */
+  loseNextOrderAnswer: boolean;
   /** Every cart update request, in order. */
   updates: { id: string; version: number; actions: { action: string; [k: string]: unknown }[] }[];
   orderCreates: unknown[];
   matchingCalls: string[];
-  seedCart: (over?: Partial<ShopCart> & { lines?: { sku: string; cents: number; rxNumber?: string; lineRef?: string }[] }) => ShopCart;
+  seedCart: (over?: Partial<ShopCart> & { lines?: { sku: string; cents: number; rxNumber?: string; lineRef?: string }[]; methodKey?: string }) => ShopCart;
   apiRoot: unknown;
 }
 
@@ -89,6 +91,7 @@ export function createFakeShop(): FakeShop {
     taxPercent: {} as Record<string, number>,
     unserved: new Set<string>(),
     failNextOrder: undefined as unknown,
+    loseNextOrderAnswer: false,
     updates: [] as FakeShop['updates'],
     orderCreates: [] as unknown[],
     matchingCalls: [] as string[],
@@ -119,7 +122,8 @@ export function createFakeShop(): FakeShop {
 
   shop.seedCart = (over = {}) => {
     seq += 1;
-    const { lines = [{ sku: 'MED-ator', cents: 1875, rxNumber: 'RX-77102', lineRef: 'RX-77102-1' }], ...rest } = over;
+    const { lines = [{ sku: 'MED-ator', cents: 1875, rxNumber: 'RX-77102', lineRef: 'RX-77102-1' }], methodKey = 'mlv-standard', ...rest } = over;
+    const method = shop.methods.find((m) => m.key === methodKey)!;
     const cart: ShopCart = {
       id: `cart-${seq}`,
       version: 1,
@@ -136,7 +140,7 @@ export function createFakeShop(): FakeShop {
         custom: { type: { typeId: 'type', id: 't', key: 'mlv-rx-line' }, fields: { rxNumber: l.rxNumber ?? 'RX-77102', rxLineRef: l.lineRef ?? `RX-77102-${i + 1}`, prescribedQty: 30 } },
       })),
       totalPrice: usd(0),
-      shippingInfo: { shippingMethodName: 'Standard delivery', price: usd(0), shippingMethod: { typeId: 'shipping-method', id: 'sm-std', obj: { key: 'mlv-standard' } } },
+      shippingInfo: { shippingMethodName: method.name, price: usd(method.cents), shippingMethod: { typeId: 'shipping-method', id: `sm-${method.key}`, obj: { key: method.key } } },
       shippingAddress: { country: 'US' },
       ...rest,
     };
@@ -198,7 +202,7 @@ export function createFakeShop(): FakeShop {
   };
 
   const orderApi = {
-    post: ({ body }: { body: { id: string; version: number; orderNumber?: string; state?: { key: string } } }) => ({
+    post: ({ body }: { body: { cart: { id: string }; version: number; orderNumber?: string; state?: { key: string } } }) => ({
       execute: async () => {
         shop.orderCreates.push(body);
         if (shop.failNextOrder) {
@@ -206,7 +210,7 @@ export function createFakeShop(): FakeShop {
           shop.failNextOrder = undefined;
           throw error;
         }
-        const cart = shop.carts.get(body.id);
+        const cart = shop.carts.get(body.cart.id);
         if (!cart) throw { statusCode: 404 };
         if (cart.version !== body.version) throw { statusCode: 409 };
         if (cart.cartState !== 'Active') throw err(400, 'InvalidOperation');
@@ -217,7 +221,7 @@ export function createFakeShop(): FakeShop {
           version: 1,
           ...(body.orderNumber ? { orderNumber: body.orderNumber } : {}),
           customerId: cart.customerId,
-          ...(body.state ? { state: { typeId: 'state', key: body.state.key } } : {}),
+          ...(body.state ? { state: { typeId: 'state', key: body.state.key, obj: { key: body.state.key } } } : {}),
           cart: { typeId: 'cart', id: cart.id },
           lineItems: structuredClone(cart.lineItems),
           totalPrice: cart.totalPrice,
@@ -227,6 +231,10 @@ export function createFakeShop(): FakeShop {
         shop.orders.push(order);
         cart.cartState = 'Ordered';
         cart.version += 1;
+        if (shop.loseNextOrderAnswer) {
+          shop.loseNextOrderAnswer = false;
+          throw { statusCode: 500 };
+        }
         return { body: structuredClone(order) };
       },
     }),
@@ -238,12 +246,19 @@ export function createFakeShop(): FakeShop {
       },
     }),
     withId: ({ ID }: { ID: string }) => ({
+      get: () => ({
+        execute: async () => {
+          const order = shop.orders.find((o) => o.id === ID);
+          if (!order) throw { statusCode: 404 };
+          return { body: structuredClone(order) };
+        },
+      }),
       post: ({ body }: { body: { version: number; actions: { action: string; state?: { key: string } }[] } }) => ({
         execute: async () => {
           const order = shop.orders.find((o) => o.id === ID);
           if (!order) throw { statusCode: 404 };
           if (body.version !== order.version) throw { statusCode: 409 };
-          for (const a of body.actions) if (a.action === 'transitionState' && a.state) order.state = { typeId: 'state', key: a.state.key };
+          for (const a of body.actions) if (a.action === 'transitionState' && a.state) order.state = { typeId: 'state', key: a.state.key, obj: { key: a.state.key } };
           order.version += 1;
           return { body: structuredClone(order) };
         },

@@ -1,6 +1,8 @@
 import 'server-only';
 import { isBeforeSameDayCutoff, SAME_DAY_METHOD_KEY, STANDARD_METHOD_KEY } from '@/lib/checkout/config';
+import type { PaymentProvider } from '@/lib/checkout/payment-provider';
 import type { CheckoutContext, MethodOutcome } from '@/lib/ct/checkout';
+import type { PlaceOrderInput, PlaceOrderOutcome } from '@/lib/ct/orders';
 import * as cartFixtures from '@/lib/ct/cart-fixtures';
 import type { AddressInput, CheckoutState, DeliveryOption, Money } from '@/lib/types';
 
@@ -72,4 +74,46 @@ export async function setShippingMethod(ctx: CheckoutContext, key: string): Prom
   holdFor(ctx.customerId).methodKey = key;
   const next = await state(ctx);
   return next ? { state: next, accepted: true } : null;
+}
+
+// ---------------------------------------------------------------- placing an order (fixtures only)
+
+const placed = new Map<string, PlaceOrderOutcome>();
+let orderSeq = 0;
+
+type Total = { centAmount: number; currencyCode: string };
+const sameTotal = (a: Total, b: Total) => a.centAmount === b.centAmount && a.currencyCode === b.currencyCode;
+
+/**
+ * Same decisions as `lib/ct/orders.ts` placeOrder, against the in-memory cart and the fake provider: lines,
+ * totals vs. the amount shown and the authorized amount, once per idempotency key. It writes nothing to
+ * commercetools and does not consume refills (fixtures are not a ledger). Never loaded in production.
+ */
+export async function placeOrder(input: PlaceOrderInput, provider: PaymentProvider): Promise<PlaceOrderOutcome> {
+  const { ctx, expectedTotal, idempotencyKey } = input;
+  const prior = placed.get(idempotencyKey);
+  if (prior) return prior;
+  const state = await readCheckout(ctx);
+  if (!state || state.cart.lineCount === 0) return { ok: false, code: 'EMPTY_CART' };
+  if (!state.cart.shippingAddress) return { ok: false, code: 'ADDRESS_MISSING' };
+  const bad = state.cart.lines.filter((l) => l.unavailable).map((l) => l.id);
+  if (bad.length > 0) return { ok: false, code: 'LINES_UNAVAILABLE', lineIds: bad };
+  const total = state.cart.total;
+  const auth = await provider.getAuthorization(state.cart.id);
+  if (!sameTotal(total, expectedTotal)) {
+    if (auth.status === 'authorized' && !sameTotal(total, auth)) await provider.release(auth.paymentId);
+    return { ok: false, code: 'TOTALS_MOVED' };
+  }
+  if (auth.status === 'none') return { ok: false, code: 'PAYMENT_REQUIRED' };
+  if (auth.status === 'declined') return { ok: false, code: 'PAYMENT_DECLINED' };
+  if (!sameTotal(total, auth)) {
+    await provider.release(auth.paymentId);
+    return { ok: false, code: 'TOTALS_MOVED' };
+  }
+  orderSeq += 1;
+  cartFixtures.clearCart(ctx.customerId);
+  held.delete(ctx.customerId);
+  const outcome: PlaceOrderOutcome = { ok: true, replay: false, orderId: `fixture-order-${orderSeq}`, orderNumber: `MLV-${String(orderSeq).padStart(6, '0')}` };
+  placed.set(idempotencyKey, { ...outcome, replay: true });
+  return outcome;
 }

@@ -13,6 +13,8 @@ export const CONTAINERS = {
   ratelimit: 'malva-ratelimit',
   /** One entry per order id: what an order consumed from which prescription (workstream N). */
   dispenseLedger: 'malva-dispense-ledger',
+  /** One entry per checkout attempt (idempotency key = cart id + version): the double-submit lock (workstream Q). */
+  orderAttempt: 'malva-order-attempt',
 } as const;
 
 export interface StoredObject<T> { key: string; version: number; value: T }
