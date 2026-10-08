@@ -4,9 +4,11 @@ import { useTranslations } from 'next-intl';
 import { ButtonLink } from '@/components/ui/Button';
 import { usePathname } from '@/i18n/routing';
 import { activeSection, isHomePath } from '@/lib/nav';
-import { AccountSlot, SIGN_IN_HREF } from './AccountSlot';
+import { AccountSlot } from './AccountSlot';
 import { CartButton } from './CartButton';
+import { HomeAccountSlot } from './HomeAccountSlot';
 import { MobileMenu } from './MobileMenu';
+import { SearchLink } from './SearchLink';
 import { DesktopLinks, useNavItems, type HeaderVariant } from './NavLinks';
 
 export interface HeaderClientProps {
@@ -36,9 +38,7 @@ export function HeaderClient({ variant, hasArticles = false, children }: HeaderC
         <div className="ml-auto flex items-center gap-3 nav:ml-0">
           {home ? (
             <>
-              <ButtonLink href={SIGN_IN_HREF} variant="outline" size="sm" className="max-sm:hidden">
-                {t('signIn')}
-              </ButtonLink>
+              <HomeAccountSlot />
               <ButtonLink href="/doctors/remote" size="sm">
                 {t('bookVisit')}
               </ButtonLink>
@@ -49,6 +49,7 @@ export function HeaderClient({ variant, hasArticles = false, children }: HeaderC
               <AccountSlot />
             </>
           )}
+          <SearchLink />
           <MobileMenu items={items} home={home} />
         </div>
       </div>
