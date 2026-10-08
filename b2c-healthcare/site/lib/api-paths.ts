@@ -30,6 +30,12 @@ export const API_CART_RX_LINES = '/api/cart/rx-lines';
 export const API_CART_SUMMARY = '/api/cart?view=summary';
 export const apiCartLine = (id: string): string => `/api/cart/lines/${encodeURIComponent(id)}`;
 
+// Workstream S (orders)
+export const API_ORDERS = '/api/orders';
+export const apiOrder = (id: string): string => `${API_ORDERS}/${encodeURIComponent(id)}`;
+export const apiOrderCancel = (id: string): string => `${apiOrder(id)}/cancel`;
+export const apiOrderReorder = (id: string): string => `${apiOrder(id)}/reorder`;
+
 export const API_CHECKOUT = '/api/checkout';
 export const API_CHECKOUT_ADDRESS = '/api/checkout/address';
 export const API_CHECKOUT_SHIPPING_METHOD = '/api/checkout/shipping-method';

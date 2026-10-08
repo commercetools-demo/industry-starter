@@ -11,7 +11,7 @@
 
 ## Tasks
 - [x] S-01 `lib/ct/orders-read.ts`: `getOrderForCustomer(id, customerId)` (404-equivalent for foreign/unknown), `listOrdersForCustomer(customerId)`; mapper `Order`, `OrderStatus` from state keys; tests [SKILL: commercetools-storefront] [SPEC: order-confirmation-page]
-- [ ] S-02 `GET /api/orders`, `GET /api/orders/[id]` with 401/404 rules and `no-store`; tests incl. identical not-found for foreign/unknown [SKILL: commercetools-storefront] [SPEC: order-history]
+- [x] S-02 `GET /api/orders`, `GET /api/orders/[id]` with 401/404 rules and `no-store`; tests incl. identical not-found for foreign/unknown [SKILL: commercetools-storefront] [SPEC: order-history]
 - [ ] S-03 `OrderTimeline` driven by state (done/active/pending, cancelled variant) and `OrderConfirmation` card (rows, estimate rule, buttons); tests per state [SPEC: design-checkout]
 - [ ] S-04 `/order/[id]` page: sign-in prompt, not-found, "outcome unknown" fallback; `unknown` path test [SPEC: order-confirmation-page]
 - [ ] S-05 `/account/orders` page (list, empty, Track) replacing the R stub; count source for the overview [SPEC: order-history]
