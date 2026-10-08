@@ -17,8 +17,8 @@ Booking panel (client, data uncached from `GET /api/doctors/:key/slots?mode=`): 
 - [x] L-04 `BookingPanel` client: mode toggle (disabled unsupported mode), day picker, slot grid, empty-day note, "Booking as…" footer; fee from the chosen mode; no-price state; tests [SPEC: product-detail-page]
 - [x] L-05 `BookingModal` (guest + signed-in variants, validation, consent line from messages, close/Escape/focus trap, busy state), tests per scenario [SPEC: design-pdp]
 - [x] L-06 `POST /api/bookings` (validates with zod-less manual validator, uses session patient when signed in, requestId idempotency, 409 slot-taken, never logs `reason`), `lib/booking-access.ts` signed `malva_bk` cookie; tests incl. concurrent claims → one winner [SKILL: commercetools-commerce-patterns] [SPEC: design-pdp]
-- [ ] L-07 `/booked/[ref]` page with access rule (owner/guest-session only, else not found), content rows, guest nudge vs "My appointments"; tests incl. other visitor [SPEC: design-pdp]
-- [ ] L-08 Health-data guard test: a test that boots the booking route with a spy logger and asserts `reason`, `phone`, `email` never reach any log call or error response [SPEC: design-pdp]
+- [x] L-07 `/booked/[ref]` page with access rule (owner/guest-session only, else not found), content rows, guest nudge vs "My appointments"; tests incl. other visitor [SPEC: design-pdp]
+- [x] L-08 Health-data guard test: a test that boots the booking route with a spy logger and asserts `reason`, `phone`, `email` never reach any log call or error response [SPEC: design-pdp]
 - [ ] L-09 Seed support: one doctor offers only `office`, one only `remote` (check `data/doctors.ts`, edit if E seeded both) so disabled-mode behaviour is testable [SKILL: commercetools-catalog-migration] [SPEC: product-detail-page]
 
 ## Scenarios
@@ -39,11 +39,11 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [x] Signed-in patient
 - [x] Close
 - [x] Slot taken meanwhile
-- [ ] Health data minimization
+- [x] Health data minimization
 #### design-pdp › Booking confirmation page
-- [ ] Confirmation content
-- [ ] Guest nudge
-- [ ] Access to a booking
+- [x] Confirmation content
+- [x] Guest nudge
+- [x] Access to a booking
 #### product-detail-page › Product detail page showing the buyer's effective price
 - [ ] Quantity crosses a tier — N/A: a consultation is booked, not ordered by quantity; one price per mode, no tiers
 - [x] No price resolves
