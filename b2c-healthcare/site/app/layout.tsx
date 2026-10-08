@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getLocale } from "next-intl/server";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -6,9 +7,12 @@ export const metadata: Metadata = {
   description: "Malva Healthcare storefront",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+// The root layout is the only one that may render <html>; lang follows the active locale
+// (set by proxy.ts for /<locale>/... routes, default locale elsewhere).
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale();
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body>{children}</body>
     </html>
   );
