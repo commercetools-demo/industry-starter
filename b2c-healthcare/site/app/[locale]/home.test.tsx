@@ -181,6 +181,57 @@ describe('design-home-page › Doctors available today from live availability', 
   });
 });
 
+describe('design-home-page › Statistics and live claims are sourced', () => {
+  const FULL = { doctorCount: 8, averageRating: 4.8, availableToday: 5 };
+  const withStats = (stats: Partial<HomeSnapshot['stats']>) =>
+    getHomeSnapshot.mockResolvedValue(snapshot({ stats: { doctorCount: null, averageRating: null, availableToday: null, ...stats } }));
+
+  it('Statistics band: shows the measured doctor count, rating and doctors available today, and no literal from the prototype', async () => {
+    withStats(FULL);
+    const { container } = await renderHome();
+    const band = screen.getByRole('region', { name: h.stats.label });
+    expect(within(band).getByText('Doctors on Malva').nextElementSibling).toHaveTextContent('8');
+    expect(within(band).getByText('Average patient rating').nextElementSibling).toHaveTextContent('4.8 / 5');
+    expect(within(band).getByText('Doctors available today').nextElementSibling).toHaveTextContent('5');
+    expect(container.textContent).not.toMatch(/2M\+|8,000|15 min|Median wait|Consultations completed/);
+  });
+
+  it.each([
+    ['doctorCount', 'Doctors on Malva'],
+    ['averageRating', 'Average patient rating'],
+    ['availableToday', 'Doctors available today'],
+  ] as const)('Statistics band: a figure without a source (%s) is removed, the others stay', async (field, label) => {
+    withStats({ ...FULL, [field]: null });
+    await renderHome();
+    const band = screen.getByRole('region', { name: h.stats.label });
+    expect(within(band).queryByText(label)).toBeNull();
+    expect(band.querySelectorAll('[data-stat]')).toHaveLength(2);
+  });
+
+  it('Statistics band: with no source at all the band is omitted', async () => {
+    withStats({});
+    await renderHome();
+    expect(screen.queryByRole('region', { name: h.stats.label })).toBeNull();
+  });
+
+  it('Floating chips: the hero chip carries the live count and no delivery chip exists', async () => {
+    withStats(FULL);
+    const { container } = await renderHome();
+    expect(screen.getByTestId('hero-available-chip')).toHaveTextContent('5 doctors available today');
+    expect(container.textContent).not.toMatch(/Rx #|out for delivery/);
+  });
+
+  it('Floating chips: one doctor is singular, and no live count hides the chip', async () => {
+    withStats({ ...FULL, availableToday: 1 });
+    const first = await renderHome();
+    expect(screen.getByTestId('hero-available-chip')).toHaveTextContent('1 doctor available today');
+    first.unmount();
+    withStats({ ...FULL, availableToday: null });
+    await renderHome();
+    expect(screen.queryByTestId('hero-available-chip')).toBeNull();
+  });
+});
+
 describe('design-home-page › Closing call to action', () => {
   it('the band says "Feeling unwell? See a doctor today." with a Book a visit button and no emergency claim', async () => {
     await renderHome();

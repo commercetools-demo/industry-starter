@@ -13,7 +13,7 @@ Route `/[locale]` (replaces the H-10 smoke content; keep the dev-only project li
 - [x] M-03 Hero + search form (submit → search results, empty submit stays), specialty chips → `/doctors/remote?specialty=`; tests [SPEC: design-home-page]
 - [x] M-04 Services grid, how-it-works, closing CTA band, emergency line; links only to routes that exist (test enumerates hrefs against the route manifest) [SPEC: design-home-page]
 - [x] M-05 "Doctors available today" section with the two states (today / next day / hidden) and cards; tests [SPEC: design-home-page]
-- [ ] M-06 Statistics band and hero chip from `getHomeStats` (a figure without a source is not rendered; test removes each) [SPEC: design-home-page]
+- [x] M-06 Statistics band and hero chip from `getHomeStats` (a figure without a source is not rendered; test removes each) [SPEC: design-home-page]
 - [ ] M-07 Prescription-delivery block with capability-gated claims (`hasSameDayMethod`, `autoRefillEnabled` flags from config) and journal row hidden while no articles; tests [SPEC: design-home-page]
 - [ ] M-08 Session-resolved parts: anonymous visitor and expired session render the anonymous header and no stale count; test with the layout fallback [SKILL: commercetools-storefront] [SPEC: home-landing-page]
 - [ ] M-09 Metadata (title, description, canonical, hreflang absolute URLs) [SPEC: home-landing-page]

@@ -5,6 +5,7 @@ import { ClosingCta } from '@/components/home/ClosingCta';
 import { Hero } from '@/components/home/Hero';
 import { HowItWorks } from '@/components/home/HowItWorks';
 import { ServicesGrid } from '@/components/home/ServicesGrid';
+import { StatsBand } from '@/components/home/StatsBand';
 import { siteImage } from '@/content/images';
 import { getHomeSnapshot } from '@/lib/ct/home';
 import { COUNTRY_CONFIG, DEFAULT_LOCALE, isSupportedLocale } from '@/lib/utils';
@@ -22,10 +23,11 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
   const snapshot = await getHomeSnapshot({ locale, currency: region.currency, country: region.country });
   return (
     <>
-      <Hero image={siteImage('home-hero')} availableToday={null} />
+      <Hero image={siteImage('home-hero')} availableToday={snapshot?.stats.availableToday ?? null} />
       <ServicesGrid />
       <HowItWorks />
       <AvailableToday data={snapshot?.available ?? null} />
+      <StatsBand stats={snapshot?.stats ?? null} />
       <ClosingCta />
     </>
   );
