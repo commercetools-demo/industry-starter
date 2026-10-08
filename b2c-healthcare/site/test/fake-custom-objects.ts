@@ -15,12 +15,14 @@ export interface FakeObjects {
 
 const err = (statusCode: number, message: string) => Object.assign(new Error(message), { statusCode, code: statusCode });
 
-/** Supports `value(a="x" and b=true)`; any other predicate matches everything. */
+/** Supports `value(a="x" and b=true and c in ("p", "q"))`; any other predicate matches everything. */
 export function matchPredicate(o: FakeObject, where?: string): boolean {
   if (!where) return true;
   const inner = /^value\((.*)\)$/.exec(where.trim());
   if (!inner) return true;
   return inner[1].split(/\s+and\s+/).every((term) => {
+    const inList = /^(\w+)\s+in\s+\((.*)\)$/.exec(term.trim());
+    if (inList) return [...inList[2].matchAll(/"([^"]*)"/g)].some((v) => v[1] === String((o.value as Record<string, unknown>)[inList[1]]));
     const m = /^(\w+)\s*=\s*(?:"([^"]*)"|(true|false|\d+))$/.exec(term.trim());
     if (!m) return false;
     const have = (o.value as Record<string, unknown>)[m[1]];

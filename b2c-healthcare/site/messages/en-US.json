@@ -1008,5 +1008,20 @@
       }
     },
     "cancel": "Cancel"
+  },
+  "autoRefill": {
+    "lastRun": {
+      "label": "Last check",
+      "allowed": "Last check {date}: your refill was cleared to go ahead.",
+      "skipped": "Last run: skipped ({date}), {reason}.",
+      "stopped": "Auto-refill stopped ({date}), {reason}.",
+      "reason": {
+        "authorization-expired": "your prescription has expired",
+        "authorization-exhausted": "your prescription has no refills left",
+        "ceiling": "a dispensing limit was reached",
+        "prescription-missing": "we could not find the prescription",
+        "payment-method-missing": "there is no saved payment method"
+      }
+    }
   }
 }

@@ -15,7 +15,7 @@
 - [x] T-03 Lists UI (`/account/lists`, detail, "Save to My medicines" on `RxResultCard`, empty state, price-delta note); tests [SPEC: saved-lists]
 - [x] T-04 Seed `mlv-monthly` and `mlv-quarterly` Recurrence Policies in `seed.ts`; `lib/ct/recurring.ts` (create from order, pause, resume, skip, change schedule, cancel) with tests mapping each scenario [SKILL: commercetools-commerce-patterns] [SPEC: subscriptions-and-recurring-orders]
 - [x] T-05 `netlify/functions/auto-refill-run.ts` scheduled handler + pure `decideRun(recurringOrder, rxState, ceilings)`; gate tests: lapses between runs → no order and reason recorded; exhausted stops the series [SKILL: commercetools-commerce-patterns] [SPEC: subscriptions-and-recurring-orders]
-- [ ] T-06 `malva-refill-log` writer and UI "Last run: skipped — authorization expired" on `/account/auto-refill`; tests [SKILL: commercetools-platform] [SPEC: subscriptions-and-recurring-orders]
+- [x] T-06 `malva-refill-log` writer and UI "Last run: skipped — authorization expired" on `/account/auto-refill`; tests [SKILL: commercetools-platform] [SPEC: subscriptions-and-recurring-orders]
 - [ ] T-07 Auto-refill UI (`/account/auto-refill`, enable from an order/RX line, pause/resume/skip/cancel/schedule change); `autoRefillEnabled` config flag turned on; tests [SPEC: subscriptions-and-recurring-orders]
 - [ ] T-08 `lib/ct/payment-methods.ts` over Checkout stored methods (list descriptors only, set default with explicit clearing, remove); live-verify the default semantics and record in PROJECT-FINDINGS [SKILL: commercetools-checkout] [SPEC: payment-methods]
 - [ ] T-09 Payment methods UI + "No methods saved", "Default method removed" warnings; test no PAN/token ever rendered or logged [SPEC: payment-methods]
