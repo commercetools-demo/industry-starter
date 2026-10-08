@@ -18,7 +18,7 @@ Smoke page `/[locale]` proves routing + messages + tokens + commercetools connec
 - [x] H-05 `Header` server shell + `HeaderClient` islands (`CartButton`, `AccountSlot`) reading `use-cart`/`use-account` fallback; tests: anonymous, signed-in with count, expired session (no stale count/initials), home variant [SKILL: commercetools-storefront] [SPEC: design-storefront-shell]
 - [x] H-06 Active-section mapping `lib/nav.ts` with table-driven tests for every route in the spec scenario [SPEC: design-storefront-shell]
 - [x] H-07 Mobile menu drawer (< 900 px): open/close, focus management, links, Sign in/Cart; test with a media-query mock [SPEC: design-storefront-shell]
-- [ ] H-08 `Footer` (app + home variants) and message keys for all shell copy in `messages/en-US.json` [SPEC: design-storefront-shell]
+- [x] H-08 `Footer` (app + home variants) and message keys for all shell copy in `messages/en-US.json` [SPEC: design-storefront-shell]
 - [ ] H-09 `RequireSignIn` component + `lib/next-path.ts` (`sanitizeNext`: only same-origin `/en-US/...` paths) with tests for each reason string and open-redirect attempts [SPEC: design-storefront-shell]
 - [ ] H-10 Smoke page `app/[locale]/page.tsx` (token-styled elements + a message + project key line in dev only), dev-only `app/[locale]/_tokens/page.tsx` using `TokenSwatches`; `error.tsx`/`not-found.tsx` shells; test that `_tokens` 404s in production [SKILL: commercetools-platform] [SPEC: storefront-project-bootstrap]
 

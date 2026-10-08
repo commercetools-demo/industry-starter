@@ -2,6 +2,7 @@ import { hasLocale } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { SwrProvider } from '@/components/providers/SwrProvider';
 import { ToastProvider } from '@/components/ui/Toast';
@@ -44,6 +45,7 @@ export default async function LocaleLayout({
           <main id="main" className="min-h-[60vh] pb-20">
             {children}
           </main>
+          <Footer />
         </ToastProvider>
       </SwrProvider>
     </IntlProvider>
