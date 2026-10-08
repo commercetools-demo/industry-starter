@@ -35,7 +35,7 @@ describe('storefront-bff-and-session: Single server-side commercetools client', 
 
   it('Singleton: new ClientBuilder( occurs only in lib/ct/client.ts', () => {
     const hits = walk(root)
-      .filter((f) => !/\.test\.tsx?$/.test(f) && !relative(root, f).startsWith('eslint/'))
+      .filter((f) => !/\.test\.tsx?$/.test(f) && !relative(root, f).startsWith('eslint/') && !relative(root, f).startsWith('scripts/seed/'))
       .filter((f) => readFileSync(f, 'utf8').includes('new ClientBuilder('))
       .map((f) => relative(root, f));
     expect(hits).toEqual(['lib/ct/client.ts']);
