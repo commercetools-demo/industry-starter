@@ -15,5 +15,89 @@
     "notFound": "We could not find that page.",
     "network": "We could not reach the server. Check your connection and try again.",
     "unauthorized": "Please sign in to continue."
+  },
+  "ui": {
+    "busy": "Working",
+    "optional": "optional",
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page}"
+    },
+    "modal": {
+      "close": "Close dialog"
+    },
+    "toast": {
+      "dismiss": "Dismiss notification"
+    },
+    "timeline": {
+      "done": "completed",
+      "pending": "not yet"
+    },
+    "status": {
+      "available": "Available",
+      "free": "Free",
+      "ready": "Ready",
+      "processing": "Processing",
+      "outOfRange": "Out of range"
+    },
+    "avatar": {
+      "photo": "Photo of {name}"
+    }
+  },
+  "shell": {
+    "logoLabel": "Malva home",
+    "mainNav": "Main",
+    "nav": {
+      "home": "Home",
+      "remote": "Remote sessions",
+      "office": "Office visits",
+      "prescriptions": "Prescriptions",
+      "labs": "Lab tests",
+      "journal": "Health journal"
+    },
+    "cart": "Cart",
+    "cartCount": "{count, plural, one {# item} other {# items}} in cart",
+    "signIn": "Sign in",
+    "bookVisit": "Book a visit",
+    "account": "Your account",
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu",
+      "label": "Menu"
+    },
+    "footer": {
+      "copyright": "© 2026 Malva Healthcare",
+      "emergency": "Not for emergencies — call your local emergency number.",
+      "blurb": "Healthcare that fits around your life — remote, in person and at your door.",
+      "care": "Care",
+      "pharmacy": "Pharmacy",
+      "company": "Company",
+      "videoSessions": "Video sessions",
+      "officeVisits": "Office visits",
+      "labTests": "Lab tests",
+      "orderMedicine": "Order medicine",
+      "prescriptions": "Prescriptions",
+      "about": "About",
+      "contact": "Contact"
+    },
+    "signInRequired": {
+      "title": "Sign in",
+      "action": "Sign in",
+      "cart": "Sign in to view your cart.",
+      "prescriptions": "Sign in to look up your prescriptions.",
+      "checkout": "Sign in to check out.",
+      "order": "Sign in to view your order.",
+      "labs": "Sign in to see your lab tests.",
+      "account": "Sign in to open your account."
+    },
+    "smoke": {
+      "title": "Welcome to Malva Healthcare",
+      "lead": "The storefront foundation is running.",
+      "projectKey": "Connected project: {key}",
+      "projectUnavailable": "Project connection is not available in this environment.",
+      "tokenSheet": "Design token reference"
+    }
   }
 }

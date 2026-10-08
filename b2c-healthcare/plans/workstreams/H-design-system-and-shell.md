@@ -11,7 +11,7 @@ Shell: `Header` (sticky 72 px, white 95% + blur): logo (links to `/en-US`, Q-021
 Smoke page `/[locale]` proves routing + messages + tokens + commercetools connection (calls `getProjectSettings`).
 
 ## Tasks
-- [ ] H-01 `Button`, `Badge`, `Card`, `Avatar`, `PageHead` with tests (variants, disabled, busy, status-colour mapping "available/free/ready = success, processing = warning, out-of-range = danger, info = next availability") [SPEC: design-storefront-shell]
+- [x] H-01 `Button`, `Badge`, `Card`, `Avatar`, `PageHead` with tests (variants, disabled, busy, status-colour mapping "available/free/ready = success, processing = warning, out-of-range = danger, info = next availability") [SPEC: design-storefront-shell]
 - [ ] H-02 Form primitives (`Field`, `Input`, `Select`, `Textarea`, `Checkbox`, `RadioCard`) with label association and error text/`aria-describedby` tests [SPEC: design-storefront-shell]
 - [ ] H-03 `SegmentedControl`, `Pagination`, `Skeleton`, `EmptyState`, `StatusTimeline` with keyboard tests [SPEC: design-storefront-shell]
 - [ ] H-04 `Modal` (focus trap, Escape, overlay click, focus return) and `ToastProvider`/`useToast`/`LiveRegion` (5 s) with tests; extend `renderWithProviders` [SPEC: design-storefront-shell]
