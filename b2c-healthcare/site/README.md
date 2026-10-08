@@ -25,6 +25,18 @@ All variables are listed, without values, in `.env.example`. They are server-onl
 - Strings come from `messages/en-US.json` (`useTranslations` / `getTranslations`). A missing key is logged in development and shows default-locale text in production.
 - `<html lang>` is set in `app/layout.tsx` from the active locale.
 
+## Add a region
+
+v1 sells in one region (`en-US`), so the header shows no region switcher. A switcher appears as soon as two or more regions are valid (`lib/regions.ts`); everything else already works for any number of regions (proven with a throwaway second entry in `lib/add-region.test.ts`).
+
+1. **`COUNTRY_CONFIG` in `lib/utils.ts`**: add one entry, for example `'de-DE': { country: 'DE', currency: 'EUR', language: 'de' }`. Routing (`i18n/routing.ts`), the session region and the switcher all derive from this table; nothing else lists locales.
+2. **commercetools project settings**: add the country, currency and language. `getValidCountryConfig()` (`lib/ct/locale-validation.ts`) leaves out any region the project does not enable, so a half-configured region never shows up in the switcher and `POST /api/locale` refuses it.
+3. **Prices in the seed (workstream E, `scripts/seed/data/*`)**: give every doctor fee (per price channel) and every medication a price in the new currency, then run `npm run seed`. A product without a price in the visitor's currency is not sellable there: search leaves it out, and reads carry `sellableInRegion: false` (the profile page shows "not available in this region"). Also check the shipping zones and rates, the tax category rates and the stock channels for the new country.
+4. **Messages**: add `messages/<locale>.json` (for example `messages/de-DE.json`). It may be partial: a missing key shows the `en-US` text. The `region` namespace holds the switcher texts.
+5. **Test**: extend `COUNTRY_CONFIG` in a test with `vi.mock('@/lib/utils', ...)` as `lib/add-region.test.ts` does; do not add the region to the real table before the project data exists.
+
+A region switch writes locale, country and currency together (`POST /api/locale`). A cart's currency is fixed at creation, so a switch that changes the currency empties the cart (the patient is told, prescription lines can be added again) and the old cart is left to expire; the cart code ignores any cart whose currency differs from the session's.
+
 ## Server versus client (rule stub)
 
 - `lib/ct/**` and `lib/session.ts` are server-only (`import 'server-only'`); components, hooks and context never import them, only types from `lib/types.ts`.
