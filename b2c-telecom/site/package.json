@@ -44,6 +44,9 @@
     "release:rollback": "tsx scripts/seed/release.ts rollback",
     "release:history": "tsx scripts/seed/release.ts history",
     "release:verify": "tsx scripts/seed/release.ts verify",
+    "build:netlify": "npm run check:lockfile && npm run check:secrets && npm run build && npm run check:bundle",
+    "check:release": "node scripts/check-release.mjs",
+    "verify:release": "npm run verify && npm run check:release",
     "verify": "npm run check:secrets && npm run check:lockfile && npm run check:versions && npm run check:tokens && npm run check:boundaries && npm run lint && npm run typecheck && npm test && npm run build && npm run check:bundle && npm run check:dev-routes"
   },
   "dependencies": {

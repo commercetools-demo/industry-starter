@@ -2,6 +2,7 @@ import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 import { IMAGE_HOSTS } from './lib/config/images';
 import { maybeValidateAtBuild } from './lib/ct/env-core';
+import securityHeaders from './config/security-headers.json';
 
 // Netlify builds fail by variable name; local builds validate nothing (so `npm run verify` needs no credentials).
 maybeValidateAtBuild(process.env);
@@ -22,6 +23,8 @@ const nextConfig: NextConfig = {
       // The checkout and the confirmation page show one buyer's cart and order (U): never cached.
       { source: '/:locale/bundle/checkout', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] },
       { source: '/:locale/order-confirmation/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] },
+      // Security headers on every page (Y). The same five are repeated in ../netlify.toml for static assets.
+      { source: '/:path*', headers: securityHeaders },
     ];
   },
   images: {
