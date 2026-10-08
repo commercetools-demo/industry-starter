@@ -15,6 +15,8 @@ export const CONTAINERS = {
   dispenseLedger: 'malva-dispense-ledger',
   /** One entry per checkout attempt (idempotency key = cart id + version): the double-submit lock (workstream Q). */
   orderAttempt: 'malva-order-attempt',
+  /** One entry per scheduled auto-refill check: what the gate decided and why (workstream T). */
+  refillLog: 'malva-refill-log',
 } as const;
 
 export interface StoredObject<T> { key: string; version: number; value: T }
