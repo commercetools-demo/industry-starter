@@ -25,8 +25,8 @@ describe('storefront-data-loading: Product Search query builders', () => {
 
   it('facet filters: enum values multi-select, boolean attribute', () => {
     expect(buildFacetFilters({ specialty: ['cardiology', 'dermatology'], modes: ['remote'], rxOnly: false })).toEqual([
-      { exact: { field: 'variants.attributes.specialty', fieldType: 'enum', values: ['cardiology', 'dermatology'] } },
-      { exact: { field: 'variants.attributes.modes', fieldType: 'enum', values: ['remote'] } },
+      { exact: { field: 'variants.attributes.specialty.key', fieldType: 'enum', values: ['cardiology', 'dermatology'] } },
+      { exact: { field: 'variants.attributes.modes.key', fieldType: 'set_enum', values: ['remote'] } },
       { exact: { field: 'variants.attributes.rxOnly', fieldType: 'boolean', value: false } },
     ]);
     expect(buildFacetFilters({ specialty: [] })).toEqual([]);
@@ -39,7 +39,7 @@ describe('storefront-data-loading: Product Search query builders', () => {
         {
           filter: [
             { exact: { field: 'categoriesSubTree', value: 'c1' } },
-            { exact: { field: 'variants.attributes.modes', fieldType: 'enum', values: ['office'] } },
+            { exact: { field: 'variants.attributes.modes.key', fieldType: 'set_enum', values: ['office'] } },
           ],
         },
       ],

@@ -25,6 +25,8 @@ export interface SearchParams {
   text?: string;
   /** commercetools category id; matches the category and all its descendants. */
   categoryId?: string;
+  /** Extra query expression ANDed with everything else (workstream K: name/specialty/SKU matching). */
+  extraQuery?: Query;
   filters?: SearchFilters;
   sort?: SearchSort;
   /** 1-based page number. */
@@ -38,16 +40,33 @@ export interface SearchParams {
   priceChannelId?: string;
 }
 
-type Query = NonNullable<ProductSearchRequest['query']>;
+export type Query = NonNullable<ProductSearchRequest['query']>;
 type FilterExpression = NonNullable<
   Extract<Query, { filter: unknown }>['filter']
 >[number];
 
 const ENUM_FILTERS = ['specialty', 'city', 'modes'] as const;
+/** `modes` is a set of enum values, the other two are single enums (Product Search field types differ). */
+const FIELD_TYPE = { specialty: 'enum', city: 'enum', modes: 'set_enum' } as const;
 
 /** Full-text match on the product name in the given language; every word must match. */
 export function buildTextQuery(text: string, locale: string): Query {
   return { fullText: { field: 'name', language: locale, value: text.trim(), mustMatch: 'all' } };
+}
+
+/**
+ * Typo-tolerant name match: every word must match as full text, or the name matches fuzzily (the API
+ * adjusts the fuzziness to the term length). Extra expressions (for example a specialty match) are OR-ed in.
+ */
+export function buildNameMatch(text: string, locale: string, extra: Query[] = []): Query {
+  const value = text.trim();
+  return {
+    or: [
+      { fullText: { field: 'name', language: locale, value, mustMatch: 'all', boost: 3 } },
+      { fuzzy: { field: 'name', language: locale, value, level: 2, mustMatch: 'all' } },
+      ...extra,
+    ],
+  } as Query;
 }
 
 /** Exact-match expressions for the facet selections (one per attribute, `values` for multi-select). */
@@ -56,7 +75,8 @@ export function buildFacetFilters(filters: SearchFilters = {}): FilterExpression
   for (const name of ENUM_FILTERS) {
     const values = (filters[name] ?? []).filter((v) => v.length > 0);
     if (values.length > 0) {
-      out.push({ exact: { field: `variants.attributes.${name}`, fieldType: 'enum', values } });
+      // Enum attributes are searched on `.key` (docs: Product Search > Filter by Attribute values).
+      out.push({ exact: { field: `variants.attributes.${name}.key`, fieldType: FIELD_TYPE[name], values } });
     }
   }
   if (typeof filters.rxOnly === 'boolean') {
@@ -68,8 +88,9 @@ export function buildFacetFilters(filters: SearchFilters = {}): FilterExpression
 }
 
 /** Category plus facet filters plus text, combined with `and`. Undefined when nothing restricts. */
-export function buildQuery(params: Pick<SearchParams, 'text' | 'categoryId' | 'filters' | 'locale'>): Query | undefined {
+export function buildQuery(params: Pick<SearchParams, 'text' | 'categoryId' | 'filters' | 'locale' | 'extraQuery'>): Query | undefined {
   const parts: Query[] = [];
+  if (params.extraQuery) parts.push(params.extraQuery);
   if (params.text && params.text.trim().length > 0) parts.push(buildTextQuery(params.text, params.locale));
   const filters: FilterExpression[] = [];
   if (params.categoryId) filters.push({ exact: { field: 'categoriesSubTree', value: params.categoryId } });
@@ -111,7 +132,7 @@ export function buildPaging(page = 1, pageSize = SEARCH_DEFAULT_PAGE_SIZE): { li
 /** Distinct-value facets for the listing filters; counts are per product. */
 export function buildFacets(): ProductSearchFacetExpression[] {
   return ENUM_FILTERS.map((name) => ({
-    distinct: { name, field: `variants.attributes.${name}`, fieldType: 'enum', level: 'products' },
+    distinct: { name, field: `variants.attributes.${name}.key`, fieldType: FIELD_TYPE[name], level: 'products' },
   }));
 }
 
