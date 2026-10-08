@@ -30,17 +30,18 @@ export async function fetchActiveCart(customerId: string, cartId: string | undef
     try {
       const { body } = await apiRoot.carts().withId({ ID: cartId }).get().execute();
       // Never act on a cart that is not the signed-in customer's own, that is no longer Active, or priced in another currency.
-      if (body.cartState === 'Active' && body.customerId === customerId && (!currency || body.totalPrice.currencyCode === currency)) return body;
+      if (body.cartState === 'Active' && body.origin !== 'RecurringOrder' && body.customerId === customerId && (!currency || body.totalPrice.currencyCode === currency)) return body;
     } catch (error) {
       if (!isNotFound(error)) throw error;
     }
   }
-  // No usable cartId (stale, cleared by sign-out): the customer's newest Active cart, if any.
+  // No usable cartId (stale, cleared by sign-out): the customer's newest Active cart, if any. Recurring carts (auto-refill,
+  // origin RecurringOrder, workstream T) are never the shopping cart.
   const { body } = await apiRoot
     .carts()
     .get({
       queryArgs: {
-        where: currency ? 'customerId=:id and cartState="Active" and totalPrice(currencyCode=:currency)' : 'customerId=:id and cartState="Active"',
+        where: currency ? 'customerId=:id and cartState="Active" and origin="Customer" and totalPrice(currencyCode=:currency)' : 'customerId=:id and cartState="Active" and origin="Customer"',
         'var.id': customerId,
         ...(currency ? { 'var.currency': currency } : {}),
         sort: 'lastModifiedAt desc',

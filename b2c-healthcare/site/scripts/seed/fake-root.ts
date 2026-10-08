@@ -26,7 +26,7 @@ const ref = (r: unknown) => (r as { key?: string; id?: string } | undefined)?.ke
 export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey = 'spec-test-b2c-healthcare'): FakeRoot {
   const fake = { store: {} as Record<string, Rec[]>, log: [] as FakeLog[], projectKey, searchTotal: null as number | null, searchCalls: 0, objects: createFakeObjects() } as FakeRoot;
   let counter = 0;
-  const kinds = ['carts', 'orders', 'inventory', 'products', 'categories', 'productTypes', 'shippingMethods', 'taxCategories', 'stores', 'zones', 'states', 'types', 'channels', 'customers', 'reviews'];
+  const kinds = ['carts', 'orders', 'inventory', 'products', 'categories', 'productTypes', 'shippingMethods', 'taxCategories', 'stores', 'zones', 'states', 'types', 'channels', 'customers', 'reviews', 'recurrencePolicies'];
   for (const k of kinds) fake.store[k] = [];
   for (const [k, list] of Object.entries(initial)) fake.store[k] = list.map((r) => materialize(k, { ...r }));
 

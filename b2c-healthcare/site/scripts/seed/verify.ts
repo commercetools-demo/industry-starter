@@ -1,3 +1,4 @@
+import { LIST_LINE_TYPE, RECURRENCE_POLICIES } from './data/recurrence';
 import { CATEGORIES } from './data/categories';
 import { DOCTORS, doctorKey, doctorSku } from './data/doctors';
 import { MEDICATIONS, medKey, medSku } from './data/medications';
@@ -112,7 +113,8 @@ export async function runVerify(root: Root, opts: VerifyOptions = {}): Promise<C
     return !!have && sameSet(transitions, want.transitions);
   });
   check('order states and transitions', statesOk);
-  check('custom types', sameSet((await listAll(root, 'types')).map((t) => t.key as string), CUSTOM_TYPES.map((t) => t.key)));
+  check('custom types', sameSet((await listAll(root, 'types')).map((t) => t.key as string), [...CUSTOM_TYPES, LIST_LINE_TYPE].map((t) => t.key)));
+  check('recurrence policies', sameSet((await listAll(root, 'recurrencePolicies')).map((t) => t.key as string), RECURRENCE_POLICIES.map((t) => t.key)));
   check('product types', sameSet((await listAll(root, 'productTypes')).map((t) => t.key as string), PRODUCT_TYPES.map((t) => t.key)));
   check('price channels', sameSet(channels.map((c) => c.key as string), CHANNELS.map((c) => c.key)));
   check('categories match the data file', sameSet((await listAll(root, 'categories')).map((c) => c.key as string), CATEGORIES.map((c) => c.key)));

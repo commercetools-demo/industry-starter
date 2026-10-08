@@ -1,12 +1,13 @@
 import { loadProductImages } from './data/images';
 import { doctorSteps, foundationSteps, medicationSteps, type ProductOptions } from './steps';
 import { clinicalSteps } from './clinical-steps';
+import { listAndRecurrenceSteps } from './recurrence-steps';
 import { getAdminRoot, readSeedEnv, isMain, makeCtx, parseFlags, runSteps, type Ctx, type RunSummary, type Step } from './lib';
 
 /**
  * Creates or checks everything the storefront needs, in dependency order:
  * channels, tax categories, order states (+ transitions), custom types, product types, categories,
- * shipping zone and methods, doctor products, medication products, inventory, then (not with --only) the clinical stand-in:
+ * shipping zone and methods, the saved-list line type and the Recurrence Policies (mlv-monthly, mlv-quarterly), doctor products, medication products, inventory, then (not with --only) the clinical stand-in:
  * reviews, schedules, prescriptions, labs, credentials, one past booking and the three demo patients.
  *
  *   npx tsx scripts/seed/seed.ts [--dry-run] [--only <product-key>]
@@ -25,6 +26,7 @@ export interface SeedOptions extends ProductOptions {
 export function seedSteps(ctx: Ctx, o: SeedOptions = {}): Step[] {
   return [
     ...foundationSteps(ctx),
+    ...listAndRecurrenceSteps(ctx),
     ...doctorSteps(ctx, o),
     ...medicationSteps(ctx, o),
     ...(o.clinical ? clinicalSteps(ctx, { patientPassword: o.patientPassword }) : []),

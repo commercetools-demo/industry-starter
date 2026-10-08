@@ -171,7 +171,7 @@ export const KINDS = [
   'channels',
 ] as const;
 /** `customers` is listed and counted but never deleted by the cleanup (see E-questions.md). */
-export type Kind = (typeof KINDS)[number] | 'customers' | 'reviews';
+export type Kind = (typeof KINDS)[number] | 'customers' | 'reviews' | 'recurrencePolicies';
 
 export const coll = (root: Root, kind: Kind): Coll => (root as unknown as Record<Kind, () => Coll>)[kind].call(root);
 
