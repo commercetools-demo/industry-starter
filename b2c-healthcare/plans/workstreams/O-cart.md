@@ -15,7 +15,7 @@ Concurrency: 409 → refetch + retry once (G-08).
 - [x] O-03 Replace-not-duplicate rule and "no quantity editing" (API rejects a quantity change); tests [SPEC: design-cart]
 - [x] O-04 Re-validation on load with typed `unavailableReason` and `Price updated` note (`lastSeenUnitPrice`); tests per case [SKILL: commercetools-commerce-patterns] [SPEC: design-cart]
 - [x] O-05 `hooks/use-cart.ts` real implementation (SWR, mutations with optimistic-free revalidation, `addWithToast`), header count binding (lines) [SPEC: cart-management]
-- [ ] O-06 `CartPage` (lines card, summary, FREE badge/fee, Checkout button disabled with reason, empty state, anonymous prompt via `RequireSignIn`), live region "Removed <name>"; tests [SPEC: cart-page]
+- [x] O-06 `CartPage` (lines card, summary, FREE badge/fee, Checkout button disabled with reason, empty state, anonymous prompt via `RequireSignIn`), live region "Removed <name>"; tests [SPEC: cart-page]
 - [ ] O-07 Summary figures strictly from the platform response; a test asserting no `+`/`reduce` over prices exists in cart components (AST lint test) [SPEC: cart-page]
 - [ ] O-08 Mark non-applicable scenarios in the checklist (no discount codes, no minimum order, no quantity change) with reasons; verify the remaining scenarios have tests [SPEC: cart-management]
 
