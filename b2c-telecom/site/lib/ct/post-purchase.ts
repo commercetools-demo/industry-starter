@@ -2,7 +2,16 @@ import 'server-only';
 import type { Order as CtOrder } from '@commercetools/platform-sdk';
 import { mapOrder } from '@/lib/mappers/order';
 import { postPurchaseNow } from '@/lib/orders/now';
-import { buildCancelActions, cancelEligibility, type CancelBlock } from '@/lib/orders/postPurchaseRules';
+import {
+  buildCancelActions,
+  buildReturnActions,
+  cancelEligibility,
+  returnableLines,
+  returnEligibility,
+  validateReturnInput,
+  type CancelBlock,
+  type ReturnInputCode,
+} from '@/lib/orders/postPurchaseRules';
 import type { CancelReason, Locale, Order } from '@/lib/types';
 import { getApiRoot } from './client';
 import { getRecurringOrdersForOrder, setRecurringOrderState } from './recurring';
@@ -94,6 +103,61 @@ export async function cancelOrder(orderNumber: string, customerId: string, input
         'postPurchase.cancel',
       );
       return mapOrder(body, locale);
+    } catch (error) {
+      if (statusOf(error) === 409 && attempt === 0) continue;
+      throw error;
+    }
+  }
+}
+
+/** The return is not possible for this order (the order is cancelled, the 30 days have passed, or it has no device). */
+export class ReturnNotAllowedError extends Error {
+  constructor(readonly code: 'ORDER_CANCELLED' | 'WINDOW_CLOSED' | 'NO_RETURNABLE_LINES') {
+    super(`Return not allowed: ${code}`);
+    this.name = 'ReturnNotAllowedError';
+  }
+}
+
+/** The request body was not valid for this order (`QUANTITY_TOO_HIGH` includes a repeated request for the same units). */
+export class ReturnInputError extends Error {
+  constructor(readonly code: ReturnInputCode) {
+    super(`Invalid return request: ${code}`);
+    this.name = 'ReturnInputError';
+  }
+}
+
+/**
+ * Records the return of devices against the order: one `addReturnInfo` (items in `Advised` state: a request, the goods have not arrived)
+ * and the `returnRequest` custom field, in ONE update. `body` is the raw request body; it is validated against what is still returnable
+ * (quantity ordered minus earlier requests), so a double submit fails with QUANTITY_TOO_HIGH and never creates a second return. A version
+ * conflict re-reads the order and re-checks. Processing the return (labels, goods, refund) is out of scope (D-040).
+ */
+export async function requestReturn(orderNumber: string, customerId: string, body: unknown, locale: Locale): Promise<Order> {
+  for (let attempt = 0; ; attempt += 1) {
+    const order = await getOwnedOrder(orderNumber, customerId);
+    if (!order) throw new OrderNotFoundError();
+    const mapped = mapOrder(order, locale);
+    const now = postPurchaseNow();
+    const eligibility = returnEligibility(mapped, now);
+    const devices = returnableLines(mapped);
+    // Every unit already requested is a quantity problem (a double submit), not "no device"; an order without any device is the latter.
+    if (!eligibility.allowed && (eligibility.block !== 'NO_RETURNABLE_LINES' || devices.length === 0)) throw new ReturnNotAllowedError(eligibility.block);
+    const checked = validateReturnInput(body, devices);
+    if (!checked.ok) throw new ReturnInputError(checked.code);
+
+    try {
+      const { body: updated } = await withTimeout(
+        getApiRoot()
+          .orders()
+          .withId({ ID: order.id })
+          .post({
+            queryArgs: { expand: ['custom.type'] },
+            body: { version: order.version, actions: buildReturnActions({ customTypeKey: customTypeKeyOf(order), returnRequestJson: customFieldText(order, 'returnRequest') }, checked.value, now) },
+          })
+          .execute(),
+        'postPurchase.return',
+      );
+      return mapOrder(updated, locale);
     } catch (error) {
       if (statusOf(error) === 409 && attempt === 0) continue;
       throw error;
