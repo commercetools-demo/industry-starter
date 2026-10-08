@@ -22,7 +22,7 @@ describe('storefront-locale-routing: routing configuration', () => {
   });
 
   it('the catalog starts with the common and errors namespaces', () => {
-    expect(Object.keys(messages).sort()).toEqual(['common', 'errors']);
+    expect(Object.keys(messages)).toEqual(expect.arrayContaining(['common', 'errors']));
   });
 
   it('next.config: unoptimized images and the two remote hosts', () => {

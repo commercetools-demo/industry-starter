@@ -22,7 +22,7 @@ describe('storefront-data-loading: Initial client state from the session', () =>
 
   it('active cart: summary with item count, session untouched', async () => {
     execute.mockResolvedValue(cart('Active'));
-    expect(await getActiveCartSafe('k1')).toEqual({ id: 'k1', version: 3, itemCount: 3, currencyCode: 'USD' });
+    expect(await getActiveCartSafe('k1')).toEqual({ id: 'k1', version: 3, itemCount: 3, lineCount: 2, currencyCode: 'USD' });
     expect(clearCart).not.toHaveBeenCalled();
   });
 

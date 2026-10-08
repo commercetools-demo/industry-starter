@@ -23,6 +23,7 @@ export async function getActiveCartSafe(cartId: string): Promise<CartSummary | n
         id: body.id,
         version: body.version,
         itemCount: body.lineItems.reduce((sum, item) => sum + item.quantity, 0),
+        lineCount: body.lineItems.length,
         currencyCode: body.totalPrice.currencyCode,
       };
     }

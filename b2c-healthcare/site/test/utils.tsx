@@ -2,6 +2,7 @@ import { render, type RenderOptions, type RenderResult } from '@testing-library/
 import type { ReactElement, ReactNode } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import { SWRConfig } from 'swr';
+import { ToastProvider } from '@/components/ui/Toast';
 import messages from '@/messages/en-US.json';
 import { DEFAULT_LOCALE } from '@/lib/utils';
 
@@ -13,7 +14,9 @@ export function Providers({ children }: { children: ReactNode }): ReactElement {
   // A fresh cache per render keeps SWR state from leaking between tests.
   return (
     <NextIntlClientProvider locale={DEFAULT_LOCALE} messages={messages}>
-      <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>{children}</SWRConfig>
+      <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>
+        <ToastProvider>{children}</ToastProvider>
+      </SWRConfig>
     </NextIntlClientProvider>
   );
 }
