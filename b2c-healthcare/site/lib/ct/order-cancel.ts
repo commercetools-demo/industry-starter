@@ -6,12 +6,14 @@ import { apiRoot } from '@/lib/ct/client';
 import { restoreAuthorization } from '@/lib/ct/dispense-ledger';
 import { loadCheckoutFixtures } from '@/lib/ct/fixtures';
 import { restoreAllowance, restoreRestricted } from '@/lib/ct/order-cancel-hooks';
+import { METHOD_ALLOWANCE, METHOD_RESTRICTED } from '@/lib/funding/tender';
 import { getOrderForCustomer, getRawOrderForCustomer } from '@/lib/ct/orders-read';
 import { log } from '@/lib/log';
 import { paymentsOf, statusOfState } from '@/lib/mappers/order';
 import { CANCELLABLE, type OrderView } from '@/lib/order-types';
 
 export const ORDER_STATE_CANCELLED = 'mlv-cancelled';
+const INTERNAL_METHODS: readonly string[] = [METHOD_ALLOWANCE, METHOD_RESTRICTED];
 
 export type CancelOutcome = { kind: 'cancelled'; order: OrderView; alreadyCancelled: boolean } | { kind: 'too-late' } | { kind: 'not-found' };
 
@@ -44,15 +46,23 @@ async function transitionToCancelled(orderId: string): Promise<'done' | 'too-lat
  */
 async function markForRefund(payment: Payment): Promise<void> {
   if (payment.transactions.some((t) => t.type === 'Refund')) return;
+  // Refund routing (workstream U): each Payment refunds its own instrument for the amount IT took. The allowance and the
+  // restricted instrument are internal tenders: the value goes back at once (`Success`; the allowance balance is restored by
+  // `restoreAllowance`), while the card share stays `Initial` for the payment service. A tender that was never charged
+  // (the order was refused before settlement) has nothing to return.
+  const internal = INTERNAL_METHODS.includes(payment.paymentMethodInfo?.method ?? '');
+  const charged = payment.transactions.find((t) => t.type === 'Charge' && t.state === 'Success');
+  if (internal && !charged) return;
   const authorized = payment.transactions.find((t) => t.type === 'Authorization' && t.state === 'Success');
-  const amount = authorized?.amount ?? payment.amountPlanned;
+  const amount = charged?.amount ?? authorized?.amount ?? payment.amountPlanned;
+  const refundState = internal ? 'Success' : 'Initial';
   await withCartRetry(async () => {
     const { body } = await apiRoot.payments().withId({ ID: payment.id }).get().execute();
     if (body.transactions.some((t) => t.type === 'Refund')) return;
     await apiRoot
       .payments()
       .withId({ ID: payment.id })
-      .post({ body: { version: body.version, actions: [{ action: 'addTransaction', transaction: { type: 'Refund', amount: { centAmount: amount.centAmount, currencyCode: amount.currencyCode }, state: 'Initial' } }] } })
+      .post({ body: { version: body.version, actions: [{ action: 'addTransaction', transaction: { type: 'Refund', amount: { centAmount: amount.centAmount, currencyCode: amount.currencyCode }, state: refundState } }] } })
       .execute();
   });
 }

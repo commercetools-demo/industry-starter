@@ -2,6 +2,7 @@ import { useId } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/Badge';
 import { formatIsoDate } from '@/lib/format-date';
+import { controlClassLabel } from '@/lib/funding/credential';
 import { formatMoney } from '@/lib/utils';
 import type { RxLineView } from '@/lib/types';
 
@@ -14,9 +15,12 @@ export interface MedicationRowProps {
 /** Why a row cannot be selected, in words that say what remains. */
 function useReason(line: RxLineView): string | null {
   const t = useTranslations('rx.reason');
+  const tc = useTranslations('credentials.requirement');
   const locale = useLocale();
   if (line.selectable) return null;
   switch (line.status) {
+    case 'CREDENTIAL':
+      return tc(line.credential ?? 'NONE', { class: controlClassLabel(line.controlClass ?? 'controlled') });
     case 'NO_REFILLS':
       return line.remaining && line.remaining > 0 ? t('NO_REFILLS_SOME', { remaining: line.remaining }) : t('NO_REFILLS');
     case 'EXPIRED':

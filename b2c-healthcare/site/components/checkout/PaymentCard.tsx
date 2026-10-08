@@ -22,6 +22,8 @@ export interface PaymentCardProps {
   /** Demo provider only. */
   simulateDecline: boolean;
   onSimulateDeclineChange: (value: boolean) => void;
+  /** Nothing is left for the card (the allowance and the restricted instrument cover the order): no widget, no authorization. */
+  noCard?: boolean;
 }
 
 type Phase = 'idle' | 'loading' | 'ready' | 'failed' | 'unavailable';
@@ -35,21 +37,21 @@ type Phase = 'idle' | 'loading' | 'ready' | 'failed' | 'unavailable';
  * Development path (`MALVA_FIXTURES=1` only): a visible "DEMO payment (no PSP configured)" banner and one checkbox to
  * simulate a decline; no card fields, nothing prefilled.
  */
-export function PaymentCard({ mode, ready, cartKey, message, onEvent, simulateDecline, onSimulateDeclineChange }: PaymentCardProps) {
+export function PaymentCard({ mode, ready, cartKey, message, onEvent, simulateDecline, onSimulateDeclineChange, noCard = false }: PaymentCardProps) {
   const t = useTranslations('checkout.payment');
   const locale = useLocale();
   const [attempt, setAttempt] = useState(0);
   // The outcome belongs to the run that produced it (cart, locale, retry); a newer run starts as `loading`.
   const runKey = `${cartKey}|${locale}|${attempt}`;
   const [outcome, setOutcome] = useState<{ key: string; phase: Phase } | null>(null);
-  const phase: Phase = mode !== 'psp' || !ready ? 'idle' : outcome?.key === runKey ? outcome.phase : 'loading';
+  const phase: Phase = mode !== 'psp' || !ready || noCard ? 'idle' : outcome?.key === runKey ? outcome.phase : 'loading';
   const onEventRef = useRef(onEvent);
   useEffect(() => {
     onEventRef.current = onEvent;
   }, [onEvent]);
 
   useEffect(() => {
-    if (mode !== 'psp' || !ready) return;
+    if (mode !== 'psp' || !ready || noCard) return;
     let cancelled = false;
     const finish = (next: Phase) => {
       if (!cancelled) setOutcome({ key: runKey, phase: next });
@@ -86,7 +88,7 @@ export function PaymentCard({ mode, ready, cartKey, message, onEvent, simulateDe
     return () => {
       cancelled = true;
     };
-  }, [mode, ready, runKey, locale]);
+  }, [mode, ready, noCard, runKey, locale]);
 
   return (
     <Card as="section" aria-labelledby="checkout-payment-title" className="grid gap-4" data-checkout-card="payment" data-payment-mode={mode}>
@@ -100,6 +102,10 @@ export function PaymentCard({ mode, ready, cartKey, message, onEvent, simulateDe
       ) : null}
       {!ready ? (
         <p className="text-sm text-neutral-600">{t('needAddress')}</p>
+      ) : noCard ? (
+        <p className="rounded-md bg-success-50 px-3.5 py-2.5 text-sm font-medium text-success-700" data-no-card>
+          {t('noCardNeeded')}
+        </p>
       ) : mode === 'demo' ? (
         <div className="grid gap-3">
           <p className="rounded-md bg-warning-50 px-3.5 py-2.5 text-sm font-semibold text-navy-900" data-demo-banner>

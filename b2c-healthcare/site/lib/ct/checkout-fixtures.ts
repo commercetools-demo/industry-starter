@@ -1,10 +1,12 @@
 import 'server-only';
 import { isBeforeSameDayCutoff, SAME_DAY_METHOD_KEY, STANDARD_METHOD_KEY } from '@/lib/checkout/config';
 import type { PaymentProvider } from '@/lib/checkout/payment-provider';
-import type { CheckoutContext, MethodOutcome } from '@/lib/ct/checkout';
+import { drawdown } from '@/lib/ct/allowance';
+import { allocateTender } from '@/lib/funding/tender';
+import type { CheckoutContext, MethodOutcome, RestrictedOutcome } from '@/lib/ct/checkout';
 import type { PlaceOrderInput, PlaceOrderOutcome } from '@/lib/ct/orders';
 import * as cartFixtures from '@/lib/ct/cart-fixtures';
-import type { OrderView } from '@/lib/order-types';
+import type { Instrument, OrderView } from '@/lib/order-types';
 import type { AddressInput, CheckoutState, DeliveryOption, Money } from '@/lib/types';
 
 /**
@@ -46,16 +48,18 @@ async function state(ctx: CheckoutContext): Promise<CheckoutState | null> {
   if (!options.some((o) => o.key === h.methodKey)) h.methodKey = STANDARD_METHOD_KEY;
   const chosen = options.find((o) => o.key === h.methodKey) ?? options[0];
   const subtotal = cart.subtotal?.centAmount ?? 0;
+  const funded = {
+    ...cart,
+    shipping: { name: chosen.name, price: chosen.price },
+    total: usd(subtotal + chosen.price.centAmount),
+    ...(cart.youOwe ? { youOwe: usd(subtotal + chosen.price.centAmount) } : {}),
+    shippingAddress: h.address,
+    shippingMethodKey: chosen.key,
+    tax: zero(),
+  };
+  const { fixtureTenderView } = await import('@/lib/ct/funding-fixtures');
   return {
-    cart: {
-      ...cart,
-      shipping: { name: chosen.name, price: chosen.price },
-      total: usd(subtotal + chosen.price.centAmount),
-      ...(cart.youOwe ? { youOwe: usd(subtotal + chosen.price.centAmount) } : {}),
-      shippingAddress: h.address,
-      shippingMethodKey: chosen.key,
-      tax: zero(),
-    },
+    cart: { ...funded, tender: await fixtureTenderView(funded, ctx.customerId, ctx.patient.patientRef, ctx.now) },
     options,
     deliverable: true,
     paymentMode: 'demo',
@@ -76,6 +80,16 @@ export async function setShippingMethod(ctx: CheckoutContext, key: string): Prom
   holdFor(ctx.customerId).methodKey = key;
   const next = await state(ctx);
   return next ? { state: next, accepted: true } : null;
+}
+
+export async function setRestricted(ctx: CheckoutContext, on: boolean): Promise<RestrictedOutcome | null> {
+  const before = await state(ctx);
+  if (!before) return null;
+  const { setFixtureRestrictedChoice } = await import('@/lib/ct/funding-fixtures');
+  if (on && !before.cart.lines.some((l) => l.eligibleForRestricted)) return { ok: false, reason: 'none-eligible', state: before };
+  setFixtureRestrictedChoice(ctx.customerId, on);
+  const next = await state(ctx);
+  return next ? { ok: true, state: next } : null;
 }
 
 // ---------------------------------------------------------------- placing an order (fixtures only)
@@ -105,33 +119,58 @@ export async function placeOrder(input: PlaceOrderInput, provider: PaymentProvid
   const bad = state.cart.lines.filter((l) => l.unavailable).map((l) => l.id);
   if (bad.length > 0) return { ok: false, code: 'LINES_UNAVAILABLE', lineIds: bad };
   const total = state.cart.total;
+  const { fixturePlan } = await import('@/lib/ct/funding-fixtures');
+  const plan = await fixturePlan(state.cart, ctx.customerId, ctx.patient.patientRef, ctx.now);
+  const cardDue = { centAmount: plan.card, currencyCode: total.currencyCode };
   const auth = await provider.getAuthorization(state.cart.id);
   if (!sameTotal(total, expectedTotal)) {
-    if (auth.status === 'authorized' && !sameTotal(total, auth)) await provider.release(auth.paymentId);
+    if (auth.status === 'authorized' && !sameTotal(cardDue, auth)) await provider.release(auth.paymentId);
     return { ok: false, code: 'TOTALS_MOVED' };
   }
-  if (auth.status === 'none') return { ok: false, code: 'PAYMENT_REQUIRED' };
-  if (auth.status === 'declined') return { ok: false, code: 'PAYMENT_DECLINED' };
-  if (!sameTotal(total, auth)) {
+  if (plan.card > 0) {
+    if (auth.status === 'none') return { ok: false, code: 'PAYMENT_REQUIRED' };
+    if (auth.status === 'declined') return { ok: false, code: 'PAYMENT_DECLINED' };
+    if (!sameTotal(cardDue, auth)) {
+      await provider.release(auth.paymentId);
+      return { ok: false, code: 'TOTALS_MOVED' };
+    }
+  } else if (auth.status === 'authorized') {
     await provider.release(auth.paymentId);
-    return { ok: false, code: 'TOTALS_MOVED' };
   }
   orderSeq += 1;
+  const orderId = `fixture-order-${orderSeq}`;
+  // The allowance draw is idempotent on the order id, like production (the in-memory store has the same version rules).
+  let allowanceApplied = 0;
+  if (plan.allowance > 0) {
+    allowanceApplied = (await drawdown(ctx.patient.patientRef, orderId, plan.allowance, ctx.now)).applied;
+    if (allowanceApplied < plan.allowance) {
+      orderSeq -= 1;
+      return { ok: false, code: 'FUNDING_CHANGED' };
+    }
+  }
+  const settlements = allocateTender(state.cart.lines.map((l) => ({ id: l.id, eligible: l.eligibleForRestricted === true, amount: l.totalPrice.centAmount })), { ...plan, allowance: allowanceApplied });
   const a = state.cart.shippingAddress;
   const view: OrderView = {
-    id: `fixture-order-${orderSeq}`,
+    id: orderId,
     orderNumber: `MLV-${String(orderSeq).padStart(6, '0')}`,
     status: 'received',
     shipmentState: null,
     createdAt: ctx.now.toISOString(),
-    lines: state.cart.lines.map((l) => ({ name: l.name['en-US'] ?? Object.values(l.name)[0] ?? '', quantity: l.prescribedQty })),
+    lines: state.cart.lines.map((l, i) => {
+      const settled = settlements[i]!;
+      const settledBy = (['allowance', 'restricted', 'card'] as const).filter((k) => settled[k] > 0).map((k): Instrument => (k === 'restricted' ? 'restricted-health-account' : k));
+      return { name: l.name['en-US'] ?? Object.values(l.name)[0] ?? '', quantity: l.prescribedQty, eligible: l.eligibleForRestricted === true, settledBy };
+    }),
     deliverTo: `${a.street}, ${a.city}, ${a.state} ${a.zip}`,
     sameDay: state.cart.shippingMethodKey === SAME_DAY_METHOD_KEY,
     total,
     refund: 'none',
     cancellable: true,
+    ...(plan.allowance > 0 || plan.restricted > 0 ? { tender: { allowance: usd(allowanceApplied), restricted: usd(plan.restricted), card: usd(plan.card) } } : {}),
   };
   fixtureOrders.set(view.id, { customerId: ctx.customerId, view });
+  const { setFixtureRestrictedChoice } = await import('@/lib/ct/funding-fixtures');
+  setFixtureRestrictedChoice(ctx.customerId, false);
   cartFixtures.clearCart(ctx.customerId);
   held.delete(ctx.customerId);
   const outcome: PlaceOrderOutcome = { ok: true, replay: false, orderId: `fixture-order-${orderSeq}`, orderNumber: `MLV-${String(orderSeq).padStart(6, '0')}` };
@@ -157,11 +196,13 @@ export function setFixtureOrderState(id: string, patch: Partial<Pick<OrderView, 
 }
 
 /** Cancel in fixtures: same rule as the platform path (only before packed-shipped); no ledger or payment to touch. */
-export function cancelFixtureOrder(id: string, customerId: string): { kind: 'not-found' } | { kind: 'too-late' } | { kind: 'cancelled'; order: OrderView; alreadyCancelled: boolean } {
+export async function cancelFixtureOrder(id: string, customerId: string): Promise<{ kind: 'not-found' } | { kind: 'too-late' } | { kind: 'cancelled'; order: OrderView; alreadyCancelled: boolean }> {
   const held = fixtureOrders.get(id);
   if (!held || held.customerId !== customerId) return { kind: 'not-found' };
   if (held.view.status === 'cancelled') return { kind: 'cancelled', order: held.view, alreadyCancelled: true };
   if (!held.view.cancellable) return { kind: 'too-late' };
   held.view = { ...held.view, status: 'cancelled', cancellable: false, refund: 'requested' };
+  const { restoreAllowance } = await import('@/lib/ct/allowance');
+  await restoreAllowance(id);
   return { kind: 'cancelled', order: held.view, alreadyCancelled: false };
 }

@@ -43,3 +43,7 @@ export const API_CHECKOUT_SESSION = '/api/checkout/session';
 export const API_CHECKOUT_PLACE = '/api/checkout/place';
 /** Development only (fake payment provider); answers 404 everywhere else. */
 export const API_CHECKOUT_DEMO_AUTHORIZE = '/api/checkout/demo-authorize';
+
+// Workstream U (funding): the restricted instrument choice and the allowance read. No write endpoint exists for an allowance.
+export const API_CHECKOUT_TENDER = '/api/checkout/tender';
+export const API_ACCOUNT_ALLOWANCE = '/api/account/allowance';

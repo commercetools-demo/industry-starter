@@ -120,7 +120,9 @@ export async function getCartValidated(patient: Patient, customerId: string, ctx
   if (!lines) return null;
   await applyFixtureFunding(customerId, patient);
   const problems = await checkLines(patient, lines.map((l) => ({ id: l.id, rx: { rxNumber: l.rxNumber, rxLineRef: l.rxLineRef } })), ctx);
-  return view(customerId, lines, problems);
+  const cart = view(customerId, lines, problems);
+  const { fixtureTenderView } = await import('@/lib/ct/funding-fixtures');
+  return lines.length > 0 ? { ...cart, tender: await fixtureTenderView(cart, customerId, patient.patientRef, ctx.now) } : cart;
 }
 
 /** After an order is placed (workstream Q): the fixture cart is emptied. */

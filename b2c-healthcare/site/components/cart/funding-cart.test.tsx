@@ -96,3 +96,28 @@ describe('payer-and-patient-cost-share: cart UI (U-04)', () => {
     expect(screen.getByText('Total')).toBeInTheDocument();
   });
 });
+
+describe('eligible-item-tender-restriction and benefit-allowance-drawdown: the cart shows the split before checkout (U-10)', () => {
+  const withTender = (tender: NonNullable<Cart['tender']>) => cartOf([line('1', 'Atorvastatin 20 mg tablets', 1875), line('3', 'Alprazolam 0.5 mg tablets', 1260)], { total: usd(3135), subtotal: usd(3135), tender });
+
+  it('Eligible subtotal shown on the basket: the qualifying subtotal and the amount needing another tender, before checkout', async () => {
+    await show(withTender({ allowance: null, restricted: { available: true, eligibleSubtotal: usd(1875), applies: usd(1875), chosen: false }, card: usd(3135), needsOtherTender: usd(1260) }));
+    const summary = screen.getByRole('complementary', { name: 'Summary' });
+    expect(within(summary).getByText('$18.75', { selector: '[data-eligible-subtotal]' })).toBeInTheDocument();
+    expect(within(summary).getByText('$12.60', { selector: '[data-needs-other-tender]' })).toBeInTheDocument();
+  });
+
+  it('Balance visible before committing: the remaining balance, the amount this order would consume and the forfeit date', async () => {
+    await show(withTender({ allowance: { balance: usd(5000), applies: usd(3135), forfeitsOn: '2026-11-01' }, restricted: { available: true, eligibleSubtotal: usd(1875), applies: usd(0), chosen: false }, card: usd(0), needsOtherTender: usd(1260) }));
+    const summary = screen.getByRole('complementary', { name: 'Summary' });
+    expect(within(summary).getByText('$50.00', { selector: '[data-allowance-balance]' })).toBeInTheDocument();
+    expect(within(summary).getByText('$31.35', { selector: '[data-allowance-applies]' })).toBeInTheDocument();
+    expect(within(summary).getByText(/forfeited on/i)).toBeInTheDocument();
+    expect(within(summary).getByText('No card payment needed')).toBeInTheDocument();
+  });
+
+  it('Wholly ineligible basket: the reason is stated', async () => {
+    await show(withTender({ allowance: null, restricted: { available: false, reason: 'none-eligible', eligibleSubtotal: usd(0), applies: usd(0), chosen: false }, card: usd(3135), needsOtherTender: usd(3135) }));
+    expect(screen.getByText(/none of these items are eligible/)).toBeInTheDocument();
+  });
+});

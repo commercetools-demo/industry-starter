@@ -3,6 +3,8 @@ import { checkoutContext } from '@/lib/checkout-route';
 import { PaymentUnavailableError } from '@/lib/checkout/payment-provider';
 import { getPaymentProvider } from '@/lib/checkout/provider';
 import { readPaymentCart } from '@/lib/ct/checkout';
+import { ensureTenderPayments } from '@/lib/ct/tender';
+import { planTender } from '@/lib/funding/tender';
 import { NO_STORE } from '@/lib/rx-route';
 
 /**
@@ -21,8 +23,15 @@ export async function POST(): Promise<Response> {
       return Response.json({ code: 'ADDRESS_MISSING', error: 'Save your delivery address first.' }, { status: 422, headers: NO_STORE });
     }
     try {
+      // The allowance and restricted-instrument Payments go on the cart first, so the card session is for the remainder only.
+      const tender = cart.tender;
+      if (tender) {
+        const total = cart.total.centAmount;
+        const plan = planTender({ total, allowanceBalance: tender.allowance?.balance.centAmount ?? 0, eligibleSubtotal: tender.restricted.eligibleSubtotal.centAmount, restrictedChosen: tender.restricted.chosen });
+        await ensureTenderPayments(cart.id, plan);
+      }
       const provider = await getPaymentProvider();
-      const session = await provider.createSession({ id: cart.id, total: cart.total });
+      const session = await provider.createSession({ id: cart.id, total: tender?.card ?? cart.total });
       return Response.json({ ...session, paymentMode: provider.kind }, { headers: NO_STORE });
     } catch (error) {
       if (error instanceof PaymentUnavailableError) throw new ApiError(503, error.message);

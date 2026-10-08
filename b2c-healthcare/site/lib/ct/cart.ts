@@ -7,6 +7,7 @@ import type { Patient } from '@/lib/ct/patient';
 import { applyFunding, recalcActions } from '@/lib/ct/cart-funding';
 import { checkLines } from '@/lib/ct/cart-validation';
 import type { RxContext, SelectedLine } from '@/lib/ct/prescriptions';
+import { tenderViewOf } from '@/lib/ct/tender';
 import { mapCart, rxFieldsOf, RX_LINE_TYPE_KEY, unitPriceOf } from '@/lib/mappers/cart';
 import type { Cart } from '@/lib/types';
 
@@ -183,5 +184,7 @@ export async function getCartValidated(patient: Patient, customerId: string, car
   // Payer cost-share: re-resolved at every load, so the figures the patient sees are never older than this read.
   const funded = await applyFunding(final, patient);
   const problems = await checkLines(patient, funded.cart.lineItems.map((i) => ({ id: i.id, rx: rxFieldsOf(i) })), ctx);
-  return mapCart(funded.cart, { problems, priceUpdated, unresolved: funded.unresolved });
+  // The tender split (allowance balance, eligible subtotal, card remainder) is shown on the cart before checkout.
+  const tender = await tenderViewOf(funded.cart, { patientRef: patient.patientRef, now: ctx.now ?? new Date() });
+  return { ...mapCart(funded.cart, { problems, priceUpdated, unresolved: funded.unresolved }), ...(tender ? { tender } : {}) };
 }

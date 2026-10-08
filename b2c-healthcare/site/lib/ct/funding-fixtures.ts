@@ -6,7 +6,10 @@ import type { Credential, CredentialSource } from '@/lib/clinical/types';
 import { allowanceCycle, ALLOWANCE_MEMBERS, allowanceObjectKey, cycleFor } from '@/scripts/seed/data/allowances';
 import { CREDENTIALS } from '@/scripts/seed/data/credentials';
 import { PATIENTS } from '@/scripts/seed/data/patients';
-import type { AllowanceStore } from '@/lib/ct/allowance';
+import { getAllowanceView, type AllowanceStore } from '@/lib/ct/allowance';
+import { buildTenderView, planTender } from '@/lib/funding/tender';
+import { splitBasket } from '@/lib/funding/eligibility';
+import type { Cart, TenderView } from '@/lib/types';
 
 /**
  * Development-only funding data (`MALVA_FIXTURES=1`, see lib/ct/fixtures.ts): an in-memory Custom Object store with
@@ -54,6 +57,15 @@ export const fixtureStore: AllowanceStore = {
   },
 };
 
+const choice = ((globalThis as unknown as { __malvaFixtureRestricted?: Set<string> }).__malvaFixtureRestricted ??= new Set<string>());
+
+/** Whether this fixture customer chose the restricted instrument (the fixture stand-in for a restricted Payment on the cart). */
+export const fixtureRestrictedChoice = (customerId: string): boolean => choice.has(customerId);
+export function setFixtureRestrictedChoice(customerId: string, on: boolean): void {
+  if (on) choice.add(customerId);
+  else choice.delete(customerId);
+}
+
 /** The patient ref behind a fixture customer id (`fixture-<slug>`). */
 export const fixturePatientRef = (customerId: string): string | null => PATIENTS.find((p) => fixtureCustomerId(p.slug) === customerId)?.patientRef ?? null;
 
@@ -71,4 +83,21 @@ export const fixtureCredentialSource: CredentialSource = {
 export function resetFundingFixtures(): void {
   for (const k of [...rows.keys()]) rows.delete(k);
   seedOnce();
+}
+
+/**
+ * The tender view for the in-memory cart (same arithmetic as production: `buildTenderView` over the cart's lines and
+ * the payable total, the allowance balance from the fixture store). `total` is what the patient owes including delivery.
+ */
+export async function fixtureTenderView(cart: Pick<Cart, 'lines' | 'total'>, customerId: string, patientRef: string, now: Date = new Date()): Promise<TenderView> {
+  const allowance = await getAllowanceView(patientRef, now);
+  const lines = cart.lines.map((l) => ({ id: l.id, eligible: l.eligibleForRestricted === true, amount: l.totalPrice.centAmount }));
+  return buildTenderView({ currencyCode: cart.total.currencyCode, fractionDigits: cart.total.fractionDigits, total: cart.total.centAmount, allowance, lines, restrictedChosen: fixtureRestrictedChoice(customerId) });
+}
+
+/** The plan the fixture placement uses (allowance balance now, eligible subtotal, the patient's choice). */
+export async function fixturePlan(cart: Pick<Cart, 'lines' | 'total'>, customerId: string, patientRef: string, now: Date = new Date()) {
+  const allowance = await getAllowanceView(patientRef, now);
+  const eligible = splitBasket(cart.lines.map((l) => ({ id: l.id, eligible: l.eligibleForRestricted === true, amount: l.totalPrice.centAmount }))).eligibleSubtotal;
+  return planTender({ total: cart.total.centAmount, allowanceBalance: allowance?.balance ?? 0, eligibleSubtotal: eligible, restrictedChosen: fixtureRestrictedChoice(customerId) && eligible > 0 });
 }

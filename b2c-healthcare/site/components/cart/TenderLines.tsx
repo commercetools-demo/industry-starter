@@ -12,7 +12,7 @@ export function TenderLines({ tender }: { tender: TenderView }) {
   const locale = useLocale();
   const money = (m: Money) => formatMoney(m.centAmount, m.currencyCode, locale);
   const { allowance, restricted } = tender;
-  const showRestricted = restricted.eligibleSubtotal.centAmount > 0 || !restricted.available;
+  const showRestricted = true;
   return (
     <div className="grid gap-2 border-t border-border pt-3 text-sm" data-tender>
       {allowance ? (

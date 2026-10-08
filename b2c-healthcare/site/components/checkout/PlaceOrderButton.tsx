@@ -10,6 +10,8 @@ export interface PlaceOrderButtonProps {
   /** A payment or placement is in flight: disabled and announced as busy. */
   busy: boolean;
   onActivate: () => void;
+  /** False when nothing is left for the card: the click places the order directly, the SDK is not involved. */
+  needsCard?: boolean;
 }
 
 /**
@@ -17,7 +19,7 @@ export interface PlaceOrderButtonProps {
  * keyboard or the mouse. With the real payment widget this button is the SDK's custom payment button
  * (`data-ctc-selector="paymentButton"`): the SDK listens for its clicks and the widget's own button is hidden.
  */
-export function PlaceOrderButton({ mode, disabled, busy, onActivate }: PlaceOrderButtonProps) {
+export function PlaceOrderButton({ mode, disabled, busy, onActivate, needsCard = true }: PlaceOrderButtonProps) {
   const t = useTranslations('checkout.summary');
   return (
     <Button
@@ -25,7 +27,7 @@ export function PlaceOrderButton({ mode, disabled, busy, onActivate }: PlaceOrde
       busy={busy}
       disabled={disabled}
       onClick={onActivate}
-      {...(mode === 'psp' ? { 'data-ctc-selector': 'paymentButton' } : {})}
+      {...(mode === 'psp' && needsCard ? { 'data-ctc-selector': 'paymentButton' } : {})}
       data-place-order
     >
       {busy ? t('placing') : t('placeOrder')}

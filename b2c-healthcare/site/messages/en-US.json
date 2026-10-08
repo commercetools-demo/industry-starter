@@ -836,7 +836,8 @@
       "loadFailed": "The payment form could not be loaded. Please try again.",
       "unavailable": "Payment is not available right now. Your cart is kept; please try again later.",
       "retry": "Reload payment",
-      "declined": "Your payment was declined. No order was placed and your cart is kept. Try another payment method."
+      "declined": "Your payment was declined. No order was placed and your cart is kept. Try another payment method.",
+      "noCardNeeded": "No card payment is needed: your allowance and health account card cover this order."
     },
     "summary": {
       "title": "Order summary",
@@ -982,10 +983,10 @@
   },
   "credentials": {
     "requirement": {
-      "NONE": "Requires a valid credential for this medicine. You have none on file.",
-      "WRONG_SCOPE": "Your credential does not cover this class of medicine.",
-      "EXPIRED": "Your credential has expired.",
-      "PENDING": "Your credential is awaiting verification."
+      "NONE": "Requires a valid {class} credential. You have none on file.",
+      "WRONG_SCOPE": "Your credential does not cover {class}. A valid {class} credential is required.",
+      "EXPIRED": "Your {class} credential has expired.",
+      "PENDING": "Your {class} credential is awaiting verification. You can buy this once it is verified."
     },
     "requiredLabel": "Credential required"
   }

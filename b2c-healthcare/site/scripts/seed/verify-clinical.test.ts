@@ -39,7 +39,7 @@ describe('seed:verify clinical checks (F-07)', () => {
     (fake.objects.objects.find((o) => o.key === 'LAB-50301')?.value as { orderedByDoctorKey: string }).orderedByDoctorKey = 'mlv-doc-nobody';
     (fake.objects.objects.find((o) => o.key === 'RX-77102')?.value as { lines: { sku: string }[] }).lines[0].sku = 'MED-unknown';
     fake.objects.objects = fake.objects.objects.filter((o) => o.key !== 'RX-31877');
-    expect(await failures(fake)).toEqual(expect.arrayContaining(['every lab orderedByDoctorKey exists as a product', 'every RX line SKU exists as a product variant', 'malva-rx holds 4 prescriptions']));
+    expect(await failures(fake)).toEqual(expect.arrayContaining(['every lab orderedByDoctorKey exists as a product', 'every RX line SKU exists as a product variant', 'malva-rx holds 7 prescriptions']));
   });
 
   it('fails when Sam\'s prescription differs from the prototype or RX-48213 has refills', async () => {

@@ -15,11 +15,11 @@ describe('development fixtures for /prescriptions', () => {
     expect(await loadRxFixtures()).not.toBeNull();
   });
 
-  it('serve Sam Rivera prescriptions from the seed: RX-48213 without refills, RX-77102 with 3', async () => {
+  it('serve Sam Rivera prescriptions from the seed: RX-48213 without refills, RX-77102 with 3, and the controlled RX-61044 (workstream U)', async () => {
     const patient = fixturePatient(fixtureCustomerId('sam-rivera'));
     expect(patient).toMatchObject({ name: 'Sam Rivera' });
     const own = await fixturePrescriptionSource.listForPatient(patient!.patientRef);
-    expect(own.map((r) => [r.number, r.refillsLeft])).toEqual([['RX-48213', 0], ['RX-77102', 3]]);
+    expect(own.map((r) => [r.number, r.refillsLeft])).toEqual([['RX-61044', 2], ['RX-48213', 0], ['RX-77102', 3]]);
     expect(fixturePatient('someone-else')).toBeNull();
   });
 

@@ -13,6 +13,7 @@ import { DeliverySpeedCard } from './DeliverySpeedCard';
 import { OrderSummary } from './OrderSummary';
 import { PaymentCard } from './PaymentCard';
 import { PlaceOrderButton } from './PlaceOrderButton';
+import { RestrictedCard } from './RestrictedCard';
 
 const EMPTY_CART_FOR_FLOW = { version: 0, total: { centAmount: 0, currencyCode: '', fractionDigits: 2 } };
 
@@ -24,13 +25,14 @@ const EMPTY_CART_FOR_FLOW = { version: 0, total: { centAmount: 0, currencyCode: 
  */
 export function CheckoutPage() {
   const t = useTranslations('checkout');
-  const { data: state, error, isLoading, mutate, saveAddress, chooseMethod } = useCheckout();
+  const { data: state, error, isLoading, mutate, saveAddress, chooseMethod, chooseRestricted } = useCheckout();
   const [simulateDecline, setSimulateDecline] = useState(false);
 
   const flow = usePlaceFlow({
     cart: state?.cart ?? EMPTY_CART_FOR_FLOW,
     mode: state?.paymentMode ?? 'psp',
     simulateDecline,
+    cardDue: state?.cart.tender?.card.centAmount,
     refresh: () => void mutate(),
   });
 
@@ -62,6 +64,7 @@ export function CheckoutPage() {
               flow={flow}
               saveAddress={saveAddress}
               chooseMethod={chooseMethod}
+              chooseRestricted={chooseRestricted}
               simulateDecline={simulateDecline}
               onSimulateDeclineChange={setSimulateDecline}
             />
@@ -77,11 +80,12 @@ interface BodyProps {
   flow: ReturnType<typeof usePlaceFlow>;
   saveAddress: ReturnType<typeof useCheckout>['saveAddress'];
   chooseMethod: ReturnType<typeof useCheckout>['chooseMethod'];
+  chooseRestricted: ReturnType<typeof useCheckout>['chooseRestricted'];
   simulateDecline: boolean;
   onSimulateDeclineChange: (value: boolean) => void;
 }
 
-function CheckoutBody({ state, flow, saveAddress, chooseMethod, simulateDecline, onSimulateDeclineChange }: BodyProps) {
+function CheckoutBody({ state, flow, saveAddress, chooseMethod, chooseRestricted, simulateDecline, onSimulateDeclineChange }: BodyProps) {
   const t = useTranslations('checkout');
   const { cart, options, deliverable, paymentMode } = state;
   const hasAddress = cart.shippingAddress !== null;
@@ -107,10 +111,12 @@ function CheckoutBody({ state, flow, saveAddress, chooseMethod, simulateDecline,
       <div className="grid gap-6">
         <AddressCard cartAddress={cart.shippingAddress} onSave={saveAddress} undeliverable={hasAddress && !deliverable} />
         <DeliverySpeedCard options={options} selectedKey={cart.shippingMethodKey} hasAddress={hasAddress} onChoose={chooseMethod} />
+        {cart.tender ? <RestrictedCard tender={cart.tender} onChoose={chooseRestricted} /> : null}
         <PaymentCard
           mode={paymentMode}
           ready={ready}
-          cartKey={`${cart.id}|${cart.total.centAmount}|${cart.shippingMethodKey ?? ''}`}
+          noCard={cart.tender?.card.centAmount === 0}
+          cartKey={`${cart.id}|${cart.total.centAmount}|${cart.tender?.card.centAmount ?? ''}|${cart.shippingMethodKey ?? ''}`}
           message={paymentProblem}
           onEvent={flow.onPaymentEvent}
           simulateDecline={simulateDecline}
@@ -128,7 +134,7 @@ function CheckoutBody({ state, flow, saveAddress, chooseMethod, simulateDecline,
             {blockedReason}
           </p>
         ) : null}
-        <PlaceOrderButton mode={paymentMode} disabled={Boolean(blockedReason)} busy={flow.busy} onActivate={() => void flow.activate()} />
+        <PlaceOrderButton mode={paymentMode} needsCard={cart.tender?.card.centAmount !== 0} disabled={Boolean(blockedReason)} busy={flow.busy} onActivate={() => void flow.activate()} />
         {cart.unavailableCount > 0 ? (
           <ButtonLink href="/cart" variant="outline" full>
             {t('summary.backToCart')}

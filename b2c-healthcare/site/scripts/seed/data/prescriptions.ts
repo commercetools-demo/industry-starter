@@ -1,6 +1,6 @@
 import type { Prescription } from '../../../lib/clinical/types';
 import { MEDICATIONS, medSku } from './medications';
-import { JORDAN, SAM } from './patients';
+import { ALEX, JORDAN, SAM } from './patients';
 
 const sku = (slug: string) => {
   const m = MEDICATIONS.find((x) => x.slug === slug);
@@ -33,5 +33,19 @@ export const PRESCRIPTIONS: Prescription[] = [
   {
     number: 'RX-31877', patientRef: JORDAN.patientRef, prescriber: 'Dr. Priya Nair', issuedAt: '2025-09-01', expiresAt: '2026-03-01', refillsLeft: 1,
     lines: [{ lineRef: 'RX-31877-1', sku: sku('sertraline-50-mg'), name: 'Sertraline 50 mg tablets', sig: '1 tablet each morning', qty: 30 }],
+  },
+  // Credentialed purchase scope demo (workstream U): the same controlled class (schedule IV) for three patients. Sam holds
+  // a valid credential (purchasable), Jordan's is awaiting verification (pending), Alex has none (credential required).
+  {
+    number: 'RX-61044', patientRef: SAM.patientRef, prescriber: 'Dr. Sofia Marchetti', issuedAt: '2026-10-05', expiresAt: '2027-10-05', refillsLeft: 2,
+    lines: [{ lineRef: 'RX-61044-1', sku: sku('tramadol-50-mg'), name: 'Tramadol 50 mg tablets', sig: '1 tablet every 12 h as needed for pain', qty: 30 }],
+  },
+  {
+    number: 'RX-42017', patientRef: ALEX.patientRef, prescriber: 'Dr. Priya Nair', issuedAt: '2026-10-03', expiresAt: '2027-10-03', refillsLeft: 2,
+    lines: [{ lineRef: 'RX-42017-1', sku: sku('alprazolam-0-5-mg'), name: 'Alprazolam 0.5 mg tablets', sig: '1 tablet at night as needed', qty: 30 }],
+  },
+  {
+    number: 'RX-58833', patientRef: JORDAN.patientRef, prescriber: 'Dr. Tomás Alvarez', issuedAt: '2026-10-04', expiresAt: '2027-10-04', refillsLeft: 1,
+    lines: [{ lineRef: 'RX-58833-1', sku: sku('tramadol-50-mg'), name: 'Tramadol 50 mg tablets', sig: '1 tablet every 12 h as needed for pain', qty: 30 }],
   },
 ];

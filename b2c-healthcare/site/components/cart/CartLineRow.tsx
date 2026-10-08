@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { cx } from '@/components/ui/cx';
 import { formatIsoDate } from '@/lib/format-date';
+import { controlClassLabel } from '@/lib/funding/credential';
 import { getLocalizedString } from '@/lib/utils';
 import type { CartLine, CartLineProblem } from '@/lib/types';
 import { CoverBadge, LinePrice } from './CoverFigures';
@@ -19,7 +20,7 @@ function useReason(problem: CartLineProblem): string {
   const locale = useLocale();
   switch (problem.reason) {
     case 'CREDENTIAL':
-      return tc(problem.credential ?? 'NONE');
+      return tc(problem.credential ?? 'NONE', { class: controlClassLabel(problem.credentialClass ?? 'controlled') });
     case 'CEILING':
       return t(problem.scope === 'period' ? 'CEILING_PERIOD' : 'CEILING_ORDER', { ceiling: problem.ceiling ?? 0 });
     case 'SHELF_LIFE':

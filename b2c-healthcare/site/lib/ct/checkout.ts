@@ -11,6 +11,7 @@ import { loadCheckoutFixtures } from '@/lib/ct/fixtures';
 import type { Patient } from '@/lib/ct/patient';
 import type { RxContext } from '@/lib/ct/prescriptions';
 import { getOptionsForCart } from '@/lib/ct/shipping-options';
+import { setRestrictedChoice, tenderViewOf } from '@/lib/ct/tender';
 import { toCtAddress } from '@/lib/mappers/address';
 import { rxFieldsOf } from '@/lib/mappers/cart';
 import { mapCheckoutCart } from '@/lib/mappers/checkout';
@@ -48,8 +49,9 @@ async function update(cart: Pick<CtCart, 'id' | 'version'>, actions: CartUpdateA
 async function stateOf(cartId: string, ctx: CheckoutContext, problems?: ReadonlyMap<string, CartLineProblem>, unresolved = false): Promise<CheckoutState> {
   const cart = await readCart(cartId);
   const options: DeliveryOption[] = hasLines(cart) ? await getOptionsForCart(cart.id, ctx.now) : [];
+  const tender = await tenderViewOf(cart, { patientRef: ctx.patient.patientRef, now: ctx.now });
   return {
-    cart: mapCheckoutCart(cart, { ...(problems ? { problems } : {}), ...(unresolved ? { unresolved } : {}) }),
+    cart: { ...mapCheckoutCart(cart, { ...(problems ? { problems } : {}), ...(unresolved ? { unresolved } : {}) }), ...(tender ? { tender } : {}) },
     options,
     deliverable: options.length > 0,
     paymentMode: paymentModeNow(),
@@ -126,5 +128,25 @@ export async function readPaymentCart(ctx: CheckoutContext): Promise<CheckoutCar
   const fixtures = await loadCheckoutFixtures();
   if (fixtures) return (await fixtures.readCheckout(ctx))?.cart ?? null;
   const cart = await fetchActiveCart(ctx.customerId, ctx.cartId);
-  return cart ? mapCheckoutCart(await readCart(cart.id)) : null;
+  if (!cart) return null;
+  const fresh = await readCart(cart.id);
+  const tender = await tenderViewOf(fresh, { patientRef: ctx.patient.patientRef, now: ctx.now });
+  return { ...mapCheckoutCart(fresh), ...(tender ? { tender } : {}) };
+}
+
+export type RestrictedOutcome = { ok: true; state: CheckoutState } | { ok: false; reason: 'none-eligible'; state: CheckoutState };
+
+/**
+ * The patient chooses (or drops) the restricted instrument ("Health account card (demo)"). It is refused when nothing
+ * in the basket qualifies (the state says why). The answer is the checkout state re-read after the change, so the card
+ * amount in the summary is the server's.
+ */
+export async function setCheckoutRestricted(ctx: CheckoutContext, on: boolean): Promise<RestrictedOutcome | null> {
+  const fixtures = await loadCheckoutFixtures();
+  if (fixtures) return fixtures.setRestricted(ctx, on);
+  const cart = await fetchActiveCart(ctx.customerId, ctx.cartId);
+  if (!cart || !hasLines(cart)) return null;
+  const outcome = await setRestrictedChoice(await readCart(cart.id), on, { patientRef: ctx.patient.patientRef, now: ctx.now });
+  const state = await stateOf(cart.id, ctx);
+  return outcome.ok ? { ok: true, state } : { ok: false, reason: outcome.reason, state };
 }

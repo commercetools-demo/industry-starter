@@ -40,9 +40,21 @@ export interface ShopCart {
   paymentInfo?: { payments: { typeId: 'payment'; id: string }[] };
 }
 
+export interface ShopPayment {
+  id: string;
+  version: number;
+  createdAt: string;
+  amountPlanned: Money;
+  paymentMethodInfo: { paymentInterface?: string; method?: string };
+  customer?: { typeId: 'customer'; id: string };
+  transactions: { id: string; type: string; state: string; amount: Money }[];
+}
+
 export interface ShopOrder {
   id: string;
   version: number;
+  paymentInfo?: { payments: { typeId: 'payment'; id: string }[] };
+  custom?: { type: { key: string }; fields: Record<string, unknown> };
   orderNumber?: string;
   customerId: string;
   state?: { typeId: 'state'; key: string; obj: { key: string } };
@@ -64,6 +76,8 @@ interface MethodDef {
 export interface FakeShop {
   carts: Map<string, ShopCart>;
   orders: ShopOrder[];
+  /** Payments created through the API (tender payments of workstream U). */
+  payments: Map<string, ShopPayment>;
   methods: MethodDef[];
   /** Sales tax in percent by state code (default 0, D-033). */
   taxPercent: Record<string, number>;
@@ -77,7 +91,7 @@ export interface FakeShop {
   updates: { id: string; version: number; actions: { action: string; [k: string]: unknown }[] }[];
   orderCreates: unknown[];
   matchingCalls: string[];
-  seedCart: (over?: Partial<ShopCart> & { lines?: { sku: string; cents: number; rxNumber?: string; lineRef?: string; /** external price (what the patient owes) */ owed?: number; covered?: number }[]; methodKey?: string }) => ShopCart;
+  seedCart: (over?: Partial<ShopCart> & { lines?: { sku: string; cents: number; rxNumber?: string; lineRef?: string; /** copied hsaEligible (workstream U) */ eligible?: boolean; /** external price (what the patient owes) */ owed?: number; covered?: number }[]; methodKey?: string }) => ShopCart;
   apiRoot: unknown;
 }
 
@@ -88,6 +102,7 @@ export function createFakeShop(): FakeShop {
   const shop = {
     carts: new Map<string, ShopCart>(),
     orders: [] as ShopOrder[],
+    payments: new Map<string, ShopPayment>(),
     methods: [
       { key: 'mlv-standard', name: 'Standard delivery', cents: 0, states: null },
       { key: 'mlv-same-day', name: 'Same-day delivery', cents: 500, states: ['NY', 'TX', 'IL'] },
@@ -145,7 +160,7 @@ export function createFakeShop(): FakeShop {
         totalPrice: usd(l.owed ?? l.cents),
         custom: {
           type: { typeId: 'type', id: 't', key: 'mlv-rx-line' },
-          fields: { rxNumber: l.rxNumber ?? 'RX-77102', rxLineRef: l.lineRef ?? `RX-77102-${i + 1}`, prescribedQty: 30, ...(l.covered !== undefined ? { coveredAmount: { currencyCode: 'USD', centAmount: l.covered } } : {}) },
+          fields: { rxNumber: l.rxNumber ?? 'RX-77102', rxLineRef: l.lineRef ?? `RX-77102-${i + 1}`, prescribedQty: 30, ...(l.eligible !== undefined ? { eligibleForRestricted: l.eligible } : {}), ...(l.covered !== undefined ? { coveredAmount: { currencyCode: 'USD', centAmount: l.covered } } : {}) },
         },
       })),
       totalPrice: usd(0),
@@ -174,6 +189,12 @@ export function createFakeShop(): FakeShop {
       const item = cart.lineItems.find((i) => i.id === a.lineItemId);
       if (!item?.custom) throw err(400, 'InvalidOperation');
       item.custom.fields[String(a.name)] = a.value;
+    } else if (a.action === 'addPayment') {
+      const ref = a.payment as { id: string };
+      cart.paymentInfo = { payments: [...(cart.paymentInfo?.payments ?? []), { typeId: 'payment', id: ref.id }] };
+    } else if (a.action === 'removePayment') {
+      const ref = a.payment as { id: string };
+      cart.paymentInfo = { payments: (cart.paymentInfo?.payments ?? []).filter((p) => p.id !== ref.id) };
     } else if (a.action === 'setLineItemPrice') {
       const item = cart.lineItems.find((i) => i.id === a.lineItemId);
       if (!item) throw err(400, 'InvalidOperation');
@@ -243,6 +264,7 @@ export function createFakeShop(): FakeShop {
           customerId: cart.customerId,
           ...(body.state ? { state: { typeId: 'state', key: body.state.key, obj: { key: body.state.key } } } : {}),
           cart: { typeId: 'cart', id: cart.id },
+          ...(cart.paymentInfo ? { paymentInfo: structuredClone(cart.paymentInfo) } : {}),
           lineItems: structuredClone(cart.lineItems),
           totalPrice: cart.totalPrice,
           ...(cart.taxedPrice ? { taxedPrice: cart.taxedPrice } : {}),
@@ -260,9 +282,16 @@ export function createFakeShop(): FakeShop {
     }),
     get: ({ queryArgs }: { queryArgs?: { where?: string } } = {}) => ({
       execute: async () => {
-        const m = /^cart\(id="([^"]+)"\)$/.exec(queryArgs?.where ?? '');
-        const results = shop.orders.filter((o) => !m || o.cart.id === m[1]);
-        return { body: { results: structuredClone(results) } };
+        const where = queryArgs?.where ?? '';
+        const m = /^cart\(id="([^"]+)"\)$/.exec(where);
+        const own = /^id="([^"]+)" and customerId="([^"]+)"$/.exec(where);
+        const results = shop.orders.filter((o) => (own ? o.id === own[1] && o.customerId === own[2] : !m || o.cart.id === m[1])).map((o) => {
+          const copy = structuredClone(o) as ShopOrder & { paymentInfo?: { payments: { typeId: 'payment'; id: string; obj?: ShopPayment }[] } };
+          // The cancel and order reads expand the payments and the state.
+          for (const ref of copy.paymentInfo?.payments ?? []) ref.obj = structuredClone(shop.payments.get(ref.id));
+          return copy;
+        });
+        return { body: { results } };
       },
     }),
     withId: ({ ID }: { ID: string }) => ({
@@ -273,14 +302,63 @@ export function createFakeShop(): FakeShop {
           return { body: structuredClone(order) };
         },
       }),
-      post: ({ body }: { body: { version: number; actions: { action: string; state?: { key: string } }[] } }) => ({
+      post: ({ body }: { body: { version: number; actions: { action: string; [k: string]: unknown }[] } }) => ({
         execute: async () => {
           const order = shop.orders.find((o) => o.id === ID);
           if (!order) throw { statusCode: 404 };
           if (body.version !== order.version) throw { statusCode: 409 };
-          for (const a of body.actions) if (a.action === 'transitionState' && a.state) order.state = { typeId: 'state', key: a.state.key, obj: { key: a.state.key } };
+          for (const a of body.actions as { action: string; [k: string]: unknown }[]) {
+            if (a.action === 'transitionState' && a.state) order.state = { typeId: 'state', key: (a.state as { key: string }).key, obj: { key: (a.state as { key: string }).key } };
+            else if (a.action === 'setCustomType') order.custom = { type: { key: (a.type as { key: string }).key }, fields: structuredClone(a.fields as Record<string, unknown>) };
+            else if (a.action === 'setLineItemCustomField') {
+              const line = order.lineItems.find((l) => l.id === a.lineItemId);
+              if (line?.custom) line.custom.fields[String(a.name)] = a.value;
+            }
+          }
           order.version += 1;
           return { body: structuredClone(order) };
+        },
+      }),
+    }),
+  };
+
+  const paymentApi = {
+    post: ({ body }: { body: { amountPlanned: Money; paymentMethodInfo: ShopPayment['paymentMethodInfo']; customer?: ShopPayment['customer'] } }) => ({
+      execute: async () => {
+        seq += 1;
+        const payment: ShopPayment = { id: `pay-${seq}`, version: 1, createdAt: new Date(Date.UTC(2026, 9, 8, 12, 0, seq)).toISOString(), transactions: [], ...structuredClone(body) };
+        shop.payments.set(payment.id, payment);
+        return { body: structuredClone(payment) };
+      },
+    }),
+    get: ({ queryArgs }: { queryArgs?: { where?: string } } = {}) => ({
+      execute: async () => {
+        const ids = [...(queryArgs?.where ?? '').matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+        return { body: { results: [...shop.payments.values()].filter((p) => ids.includes(p.id)).map((p) => structuredClone(p)) } };
+      },
+    }),
+    withId: ({ ID }: { ID: string }) => ({
+      get: () => ({
+        execute: async () => {
+          const p = shop.payments.get(ID);
+          if (!p) throw { statusCode: 404 };
+          return { body: structuredClone(p) };
+        },
+      }),
+      post: ({ body }: { body: { version: number; actions: { action: string; [k: string]: unknown }[] } }) => ({
+        execute: async () => {
+          const p = shop.payments.get(ID);
+          if (!p) throw { statusCode: 404 };
+          if (body.version !== p.version) throw { statusCode: 409 };
+          for (const a of body.actions) {
+            if (a.action === 'changeAmountPlanned') p.amountPlanned = usd((a.amount as { centAmount: number }).centAmount);
+            else if (a.action === 'addTransaction') {
+              const t = a.transaction as { type: string; state: string; amount: { centAmount: number } };
+              p.transactions.push({ id: `tx-${p.transactions.length + 1}`, type: t.type, state: t.state, amount: usd(t.amount.centAmount) });
+            } else throw err(400, 'InvalidOperation');
+          }
+          p.version += 1;
+          return { body: structuredClone(p) };
         },
       }),
     }),
@@ -289,6 +367,7 @@ export function createFakeShop(): FakeShop {
   shop.apiRoot = {
     carts: () => cartApi,
     orders: () => orderApi,
+    payments: () => paymentApi,
     shippingMethods: () => ({
       matchingCart: () => ({
         get: ({ queryArgs }: { queryArgs: { cartId: string } }) => ({

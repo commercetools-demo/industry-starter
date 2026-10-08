@@ -53,7 +53,8 @@ export interface LabOrder {
   results: LabResult[];
 }
 
-export type CredentialStatus = 'active' | 'expired' | 'revoked';
+/** `pending`: submitted and awaiting verification (workstream U); the patient is told verification is outstanding, not that they are ineligible. */
+export type CredentialStatus = 'active' | 'pending' | 'expired' | 'revoked';
 
 export interface Credential {
   patientRef: PatientRef;

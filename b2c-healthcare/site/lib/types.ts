@@ -297,8 +297,9 @@ export interface CartLineProblem {
   ceiling?: number;
   scope?: 'order' | 'period';
   expiryDate?: string;
-  /** `CREDENTIAL` only: why the credential does not hold (workstream U). */
+  /** `CREDENTIAL` only: why the credential does not hold (workstream U), and the control class it must cover. */
   credential?: CredentialProblem;
+  credentialClass?: string;
 }
 
 /** One medication line. Quantity is the prescribed quantity and is never editable. */
