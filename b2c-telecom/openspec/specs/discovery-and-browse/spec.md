@@ -7,6 +7,10 @@
 
 A buyer who arrives without a specific product in mind is the largest share of storefront traffic. If the only path to a product is knowing its SKU, every discovery-led visit is lost, and in B2B the catalog a buyer may see is narrower than the full catalog, so discovery has to be scoped as well as fast.
 
+## Plan notes
+
+**As built by workstreams N and O (D-052).** Detail links are replaced by `offerHref` (no product detail page). Category and header data come from the live category tree.
+
 ## Requirements
 
 ### Requirement: Discovery and browse

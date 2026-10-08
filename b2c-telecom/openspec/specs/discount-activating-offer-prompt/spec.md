@@ -7,6 +7,10 @@
 
 Cross-service discounting only pays off if customers find it, and most do not: the discount for holding broadband alongside mobile is invisible to someone who came to buy mobile. The prompt worth making is a specific one — this offer, added to what you have, reduces your bill by this amount — because it is checkable, and a customer who checks it and finds it true adds the line. A generic recommendation is not the same thing and does not convert. The risk sits in the eligibility half: prompting someone toward a discount they cannot actually have is worse than staying quiet, because they will add the offer, watch the saving not appear, and lose confidence in every price on the page.
 
+## Plan notes
+
+**As built by workstream M (D-027).** Pairings are curated in config and seed data; prompts are never cached and only suggest adding a line. The logic lives in `lib/ct/prompts.ts` (the SDK may not be used under `lib/pricing`).
+
 ## Requirements
 
 ### Requirement: The offer that would unlock a discount already within reach
