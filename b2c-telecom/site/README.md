@@ -57,6 +57,38 @@ When validation runs: `next start` (production, Node runtime) stops at boot nami
 
 The sign-in rate limiter keeps its counters in memory per server instance (accepted risk on serverless).
 
+## Deploying to Netlify
+
+Hosting is Netlify (no Vercel config). Prerequisites: OA-06 (the Netlify site and its environment variables) and OA-05 (the Netlify origin in the Checkout application's allowed origins, no trailing slash).
+
+**Netlify UI settings.** Create the site from this repository. The git repository is a monorepo, so set "Package directory" to `b2c-telecom` and leave the base directory empty. Build command, publish directory (`.next`), `base = "site"`, Node 22, the Next.js plugin and the security headers all come from `../netlify.toml`. If the first build cannot find `site/` or `package.json`, do not improvise: record the log (no values) in `../plan/QUESTIONS.md`. When the project is extracted to its own repository, no UI directories are needed.
+
+**Environment variables** (names only; set them in Site configuration, Environment variables, scopes Builds, Functions and Runtime; changing one needs "Clear cache and deploy site"):
+
+| Variable | Required | Note |
+| --- | --- | --- |
+| `CTP_PROJECT_KEY`, `CTP_AUTH_URL`, `CTP_API_URL` | yes | `spec-test-b2c-telecom` and the `us-central1.gcp` endpoints |
+| `CTP_CLIENT_ID` | yes | the storefront API client, never the seed client |
+| `CTP_CLIENT_SECRET` | yes | tick "Contains secret values" |
+| `CTP_SCOPES` | yes | scopes of the storefront client |
+| `CTP_CHECKOUT_APP_KEY` | yes | Checkout application key (OA-05); builds with `NETLIFY=true` fail by name without it |
+| `SESSION_SECRET` | yes | 32+ random characters, different from local; tick "Contains secret values" |
+| `DEMO_SHOW_RESET_LINK` | optional | `true` on the demo site (no email is sent); unset shows only the generic message |
+| `SERVICEABILITY_STUB` | optional | leave unset |
+| `CHECKOUT_DEMO_PAYMENT` | optional | `true` simulates the payment before OA-05 is done; unset in production without a key answers `CHECKOUT_UNAVAILABLE` |
+| `SITE_URL` | optional | forces the canonical origin; unset uses Netlify's `URL` |
+
+Never set `CTP_SEED_*` or `PEXELS_API_KEY` on Netlify, and never prefix a variable with `NEXT_PUBLIC_`. `SECRETS_SCAN_OMIT_KEYS` in `netlify.toml` lists only non-secret names; never add a secret to it.
+
+**Release procedure.**
+
+1. `npm run verify:release` (verify plus `check:release`) must pass. If `tsc` complains about missing generated types, run `rm -rf .next` first.
+2. Push the release branch; Netlify runs `npm run build:netlify` (lockfile check, secrets check, build, bundle scan).
+3. Run the smoke checks on the deploy URL.
+4. Rollback: Netlify, Deploys, pick the previous successful deploy, "Publish deploy". No code change is needed.
+
+Staging: not yet deployed (waits for OA-06).
+
 ## More
 
 The implementation plan, decisions and workstreams are in `../plan/README.md`.
