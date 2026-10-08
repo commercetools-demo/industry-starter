@@ -51,3 +51,11 @@ export async function loadFakePaymentProvider(): Promise<FakePaymentModule | nul
   if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
   return import('@/lib/checkout/fake-provider');
 }
+
+export type AccountFixtures = typeof import('./account-fixtures');
+
+/** In-memory saved lists, auto-refill and saved payment methods for browser checks with `MALVA_FIXTURES=1` (workstream T); same guard. */
+export async function loadAccountFixtures(): Promise<AccountFixtures | null> {
+  if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
+  return import('./account-fixtures');
+}

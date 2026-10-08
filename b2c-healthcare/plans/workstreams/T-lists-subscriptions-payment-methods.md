@@ -10,7 +10,7 @@
 - **Payment methods** (Q-068): saved methods are **tokens held by the PSP** through Checkout's stored payment methods, listed only by descriptor (brand, last4, expiry) and default flag, in `/account/payment-methods`; set default (Checkout stored-payment API; clear the previous default explicitly — the spec's open question: verify live and record in PROJECT-FINDINGS), remove (default removal promotes/clears default, warns if an active auto-refill depends on it), "No methods saved" state. "Net terms / credit line" is B2C-excluded. Needs OA-04 stored-method support; if the sandbox cannot save methods, mark scenarios needing it as blocked in QUESTIONS (Q-T-n) rather than faking.
 
 ## Tasks
-- [ ] T-01 `lib/ct/shopping-lists.ts` (create, list, rename, add/remove line, delete) + mapper; tests [SKILL: commercetools-storefront] [SPEC: saved-lists]
+- [x] T-01 `lib/ct/shopping-lists.ts` (create, list, rename, add/remove line, delete) + mapper; tests [SKILL: commercetools-storefront] [SPEC: saved-lists]
 - [ ] T-02 `POST /api/lists/[id]/add-all-to-cart` using N validation; result `{ added[], notAdded[{name,reason}] }` with the cart updated for the added ones; tests for all-added, partial, none, empty list [SKILL: commercetools-commerce-patterns] [SPEC: saved-lists]
 - [ ] T-03 Lists UI (`/account/lists`, detail, "Save to My medicines" on `RxResultCard`, empty state, price-delta note); tests [SPEC: saved-lists]
 - [ ] T-04 Seed `mlv-monthly` and `mlv-quarterly` Recurrence Policies in `seed.ts`; `lib/ct/recurring.ts` (create from order, pause, resume, skip, change schedule, cancel) with tests mapping each scenario [SKILL: commercetools-commerce-patterns] [SPEC: subscriptions-and-recurring-orders]
