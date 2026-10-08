@@ -5,16 +5,17 @@ import { SAME_DAY_ZONE, SHIPPING_METHODS } from './data/shipping';
 import { STATES } from './data/states';
 import { TAX_CATEGORIES } from './data/tax';
 import { CHANNELS, CUSTOM_TYPES, PRODUCT_TYPES } from './data/types';
+import { verifyClinical } from './verify-clinical';
 import { assertProject, getAdminRoot, hasPrefix, inventoryKey, isMain, listAll, PREFIX, type Rec, type Root } from './lib';
 
 /**
  * Read-only assertions on the seeded project (SEED-PLAN "Verification"). Exit 1 when any fails.
  *
- *   npx tsx scripts/seed/verify.ts [--skip-search] [--no-images]
+ *   npx tsx scripts/seed/verify.ts [--skip-search] [--no-images] [--no-clinical]
  */
 export interface Check { name: string; ok: boolean; detail?: string }
 
-export interface VerifyOptions { search?: boolean; images?: boolean }
+export interface VerifyOptions { search?: boolean; images?: boolean; /** Also check the clinical stand-in (workstream F); the CLI turns it on, `--no-clinical` off. */ clinical?: boolean }
 
 interface Variant { sku?: string; images?: { url: string }[]; prices?: { value: { currencyCode: string; centAmount: number }; channel?: { id?: string; key?: string } }[]; attributes?: { name: string; value: unknown }[] }
 interface ProductView { key: string; published: boolean; master: Variant; variants: Variant[] }
@@ -116,6 +117,9 @@ export async function runVerify(root: Root, opts: VerifyOptions = {}): Promise<C
   check('price channels', sameSet(channels.map((c) => c.key as string), CHANNELS.map((c) => c.key)));
   check('categories match the data file', sameSet((await listAll(root, 'categories')).map((c) => c.key as string), CATEGORIES.map((c) => c.key)));
 
+  // ---- clinical stand-in (F-07)
+  if (opts.clinical) await verifyClinical(root, check);
+
   // ---- search
   if (search) {
     const res = await root.products().search().post({ body: { query: { fullText: { field: 'name', language: 'en-US', value: 'Okafor' } }, limit: 1 } as never }).execute();
@@ -129,7 +133,7 @@ export const formatChecks = (checks: Check[]): string => checks.map((c) => `${c.
 async function main() {
   const argv = process.argv.slice(2);
   const { root } = await getAdminRoot();
-  const checks = await runVerify(root, { search: !argv.includes('--skip-search'), images: !argv.includes('--no-images') });
+  const checks = await runVerify(root, { search: !argv.includes('--skip-search'), images: !argv.includes('--no-images'), clinical: !argv.includes('--no-clinical') });
   console.log(formatChecks(checks));
   const failed = checks.filter((c) => !c.ok).length;
   console.log(failed === 0 ? `all ${checks.length} checks passed` : `${failed} of ${checks.length} checks failed`);
