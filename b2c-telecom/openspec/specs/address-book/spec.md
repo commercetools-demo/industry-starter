@@ -7,6 +7,10 @@
 
 Deliveries repeat to the same handful of places - a head office, two warehouses, a site that runs for six months - so re-typing an address per order is both the slowest part of ordering and the largest single source of failed deliveries. The default is the part that carries the value: a book the buyer has to search through every time is only a slower form of re-entry.
 
+## Plan notes
+
+**B2B-only parts excluded (D-005).** Business Unit addresses, associate permissions per address and shared company sites are not built; the book is `customer.addresses`. "Default preselected for a new order", "Validation cannot resolve the address" and "Default address removed" are built (T). Address verification uses a built-in table resolver instead of Loqate, Google or UPS (D-059).
+
 ## Requirements
 
 ### Requirement: Address book with a default delivery location
