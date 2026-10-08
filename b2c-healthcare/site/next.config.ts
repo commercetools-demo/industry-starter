@@ -4,6 +4,8 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
+  // Static content (workstream V) is read from disk at runtime, so it must ship with the deployment.
+  outputFileTracingIncludes: { "/**": ["./content/**/*"] },
   images: {
     // The commercetools CDN rejects the optimizer's query params.
     unoptimized: true,

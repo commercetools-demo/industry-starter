@@ -10,6 +10,7 @@ import { IntlProvider } from '@/i18n/IntlProvider';
 import { routing } from '@/i18n/routing';
 import { KEY_ACCOUNT } from '@/lib/cache-keys';
 import { getHeaderUser } from '@/lib/header-user';
+import { showJournal } from '@/lib/routes';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -41,7 +42,7 @@ export default async function LocaleLayout({
           >
             {t('skipToContent')}
           </a>
-          <Header />
+          <Header hasArticles={showJournal(locale)} />
           <main id="main" className="min-h-[60vh] pb-20">
             {children}
           </main>

@@ -37,16 +37,34 @@ describe('design-storefront-shell › Footer', () => {
     expect(within(footer).getByText('Not for emergencies — call your local emergency number.')).toBeInTheDocument();
   });
 
-  it('Home footer: links to pages that do not exist yet are omitted, and so is an empty column', () => {
+  it('Home footer: a link to a page that does not exist yet is omitted, and so is an empty column', () => {
     setPathname('/en-US');
-    renderWithProviders(<Footer />);
+    const pending = FOOTER_COLUMNS.map((column) => ({
+      ...column,
+      links: column.links.map((link) => ({ ...link, live: link.labelKey !== 'about' && link.labelKey !== 'contact' && column.headingKey !== 'company' })),
+    }));
+    renderWithProviders(<Footer columns={pending} />);
     const footer = screen.getByRole('contentinfo');
     expect(within(footer).getAllByRole('heading').map((h) => h.textContent)).toEqual(['Care', 'Pharmacy']);
     expect(within(footer).queryByRole('link', { name: 'About' })).toBeNull();
     expect(within(footer).queryByRole('link', { name: 'Contact' })).toBeNull();
     expect(within(footer).queryByRole('link', { name: /careers|delivery/i })).toBeNull();
-    for (const link of within(footer).getAllByRole('link')) {
-      expect(link.getAttribute('href')).toMatch(/^\/en-US(\/(doctors\/(remote|office)|prescriptions|account\/labs))?$/); // the logo links home
+  });
+
+  it('Home footer (default manifest): the Company column links the content pages that now exist', () => {
+    setPathname('/en-US');
+    renderWithProviders(<Footer />);
+    const footer = screen.getByRole('contentinfo');
+    expect(within(footer).getAllByRole('heading').map((h) => h.textContent)).toEqual(['Care', 'Pharmacy', 'Company']);
+    for (const [name, href] of [
+      ['About', '/en-US/about'],
+      ['Contact', '/en-US/contact'],
+      ['FAQ', '/en-US/faq'],
+      ['Shipping and returns', '/en-US/policies/shipping-and-returns'],
+      ['Terms and conditions', '/en-US/policies/terms'],
+      ['Privacy policy', '/en-US/policies/privacy'],
+    ] as const) {
+      expect(within(footer).getByRole('link', { name })).toHaveAttribute('href', href);
     }
   });
 

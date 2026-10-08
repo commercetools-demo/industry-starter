@@ -100,7 +100,11 @@
       "orderMedicine": "Order medicine",
       "prescriptions": "Prescriptions",
       "about": "About",
-      "contact": "Contact"
+      "contact": "Contact",
+      "faq": "FAQ",
+      "shipping": "Shipping and returns",
+      "terms": "Terms and conditions",
+      "privacy": "Privacy policy"
     },
     "signInRequired": {
       "title": "Sign in to Malva",
@@ -118,6 +122,66 @@
       "projectKey": "Connected project: {key}",
       "projectUnavailable": "Project connection is not available in this environment.",
       "tokenSheet": "Design token reference"
+    }
+  },
+  "content": {
+    "draft": "Draft",
+    "draftNotice": "Draft text for review. It is not final.",
+    "fallbackNotice": "This page is shown in English because it is not available in your language yet.",
+    "effective": "Effective {date}",
+    "supersededNotice": "This is an earlier version, in effect from {date}. A newer version is now in force.",
+    "viewCurrent": "View the current version",
+    "earlierVersions": "Earlier versions",
+    "versionOption": "Version effective {date}",
+    "emergency": "Not for emergencies. In an emergency, call your local emergency number.",
+    "policyLinkNote": "opens in a new tab"
+  },
+  "static": {
+    "faq": {
+      "title": "Frequently asked questions",
+      "sub": "Answers to common questions, all on one page.",
+      "topicsNav": "Topics",
+      "topics": {
+        "booking": "Booking",
+        "prescriptions-delivery": "Prescriptions and delivery",
+        "lab-results": "Lab results",
+        "account-privacy": "Account and privacy"
+      },
+      "empty": "No questions are published yet."
+    },
+    "contact": {
+      "title": "Contact us",
+      "sub": "Reach our support team by email or phone.",
+      "offices": "Offices",
+      "emergencyTitle": "In an emergency"
+    },
+    "about": {
+      "title": "About us",
+      "contactCta": "Contact us"
+    },
+    "policies": {
+      "shipping-and-returns": "Shipping and returns",
+      "terms": "Terms and conditions",
+      "privacy": "Privacy policy"
+    },
+    "journal": {
+      "title": "Health journal",
+      "sub": "Articles on staying well.",
+      "filterLabel": "Filter by category",
+      "all": "All",
+      "minutes": "{count} min read",
+      "publishedOn": "Published {date}",
+      "noMatch": "No articles match",
+      "noMatchHint": "Nothing is published under this filter. Remove it to see more.",
+      "appliedFilter": "Category: {category}",
+      "clearFilter": "Show all articles",
+      "empty": "There are no articles yet.",
+      "related": "Related articles",
+      "withdrawnTitle": "This article is no longer available",
+      "withdrawnBody": "It has been withdrawn.",
+      "moreIn": "More articles in {category}",
+      "backToJournal": "Back to the health journal",
+      "readArticle": "Read: {title}"
     }
   }
 }

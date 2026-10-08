@@ -87,8 +87,12 @@ export const FOOTER_COLUMNS: readonly FooterColumn[] = [
   {
     headingKey: 'company',
     links: [
-      { labelKey: 'about', href: '/about', live: false },
-      { labelKey: 'contact', href: '/contact', live: false },
+      { labelKey: 'about', href: '/about', live: true },
+      { labelKey: 'contact', href: '/contact', live: true },
+      { labelKey: 'faq', href: '/faq', live: true },
+      { labelKey: 'shipping', href: '/policies/shipping-and-returns', live: true },
+      { labelKey: 'terms', href: '/policies/terms', live: true },
+      { labelKey: 'privacy', href: '/policies/privacy', live: true },
     ],
   },
 ];
