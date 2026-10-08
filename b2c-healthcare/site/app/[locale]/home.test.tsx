@@ -13,9 +13,18 @@ vi.mock('next-intl/server', () => ({
 vi.mock('@/i18n/routing', async (importOriginal) => ({ ...(await importOriginal<object>()), usePathname: () => '/' }));
 
 const getHomeSnapshot = vi.fn();
-vi.mock('@/lib/ct/home', () => ({ getHomeSnapshot: (...a: unknown[]) => getHomeSnapshot(...a) }));
+const hasSameDayMethod = vi.fn();
+vi.mock('@/lib/ct/home', () => ({
+  getHomeSnapshot: (...a: unknown[]) => getHomeSnapshot(...a),
+  hasSameDayMethod: () => hasSameDayMethod(),
+}));
+const showJournal = vi.fn();
+const getPublishedArticles = vi.fn();
+vi.mock('@/lib/routes', () => ({ showJournal: (...a: unknown[]) => showJournal(...a) }));
+vi.mock('@/lib/content', () => ({ getPublishedArticles: (...a: unknown[]) => getPublishedArticles(...a) }));
 
 import { Footer } from '@/components/layout/Footer';
+import type { Article } from '@/lib/content';
 import type { HomeDoctor, HomeSnapshot } from '@/lib/ct/home';
 import type { DoctorListItem } from '@/lib/types';
 import LocaleHome from './page';
@@ -47,10 +56,23 @@ function snapshot(partial: Partial<HomeSnapshot> = {}): HomeSnapshot {
   };
 }
 
+function article(n: number): Article {
+  return {
+    slug: `article-${n}`, title: `Article title ${n}`, description: '', category: n % 2 ? 'Sleep' : 'Medication', minutes: n + 3,
+    published: '2026-09-01', tags: [], cover: `journal-${n}`, withdrawn: false, body: 'x', draft: false, fellBack: false,
+  };
+}
+
 beforeEach(() => {
   vi.unstubAllEnvs();
   getHomeSnapshot.mockReset();
   getHomeSnapshot.mockResolvedValue(null);
+  hasSameDayMethod.mockReset();
+  hasSameDayMethod.mockResolvedValue(false);
+  showJournal.mockReset();
+  showJournal.mockReturnValue(false);
+  getPublishedArticles.mockReset();
+  getPublishedArticles.mockReturnValue([]);
 });
 
 describe('design-home-page › Home page sections in design order', () => {
@@ -229,6 +251,85 @@ describe('design-home-page › Statistics and live claims are sourced', () => {
     withStats({ ...FULL, availableToday: null });
     await renderHome();
     expect(screen.queryByTestId('hero-available-chip')).toBeNull();
+  });
+});
+
+describe('design-home-page › Prescription delivery and journal blocks', () => {
+  const rxBlock = () => screen.getByRole('region', { name: 'Your prescription, delivered' });
+
+  it('Prescription block: heading, truthful checklist and both calls to action to /prescriptions', async () => {
+    await renderHome();
+    const block = rxBlock();
+    expect(within(block).getByRole('link', { name: 'Order medicine' })).toHaveAttribute('href', '/en-US/prescriptions');
+    expect(within(block).getByRole('link', { name: 'Find by RX number' })).toHaveAttribute('href', '/en-US/prescriptions');
+    const items = within(within(block).getByRole('list')).getAllByRole('listitem').map((li) => li.textContent);
+    expect(items).toEqual([expect.stringContaining(h.rx.lookup), expect.stringContaining(h.rx.standard)]);
+    // The prototype's pharmacist chat does not exist as a feature: never claimed.
+    expect(block.textContent).not.toMatch(/pharmacist|chat/i);
+  });
+
+  it('Prescription block: same-day delivery is claimed only while a same-day shipping method exists', async () => {
+    hasSameDayMethod.mockResolvedValue(true);
+    const on = await renderHome();
+    expect(rxBlock()).toHaveTextContent(h.rx.sameDay);
+    on.unmount();
+    hasSameDayMethod.mockResolvedValue(false);
+    await renderHome();
+    expect(rxBlock()).not.toHaveTextContent(/same-day/i);
+  });
+
+  it('Prescription block: the auto-refill claim defaults to off and shows only when the flag is set', async () => {
+    const off = await renderHome();
+    expect(rxBlock()).not.toHaveTextContent(/auto-refill/i);
+    off.unmount();
+    vi.stubEnv('AUTO_REFILL_ENABLED', 'true');
+    await renderHome();
+    expect(rxBlock()).toHaveTextContent(h.rx.autoRefill);
+  });
+
+  it('Journal: three cards with category, reading time and a link to the article', async () => {
+    showJournal.mockReturnValue(true);
+    getPublishedArticles.mockReturnValue([article(1), article(2), article(3), article(4)]);
+    const { container } = await renderHome();
+    const row = screen.getByRole('region', { name: h.journal.title });
+    const cards = within(row).getAllByRole('listitem');
+    expect(cards).toHaveLength(3);
+    expect(within(cards[0] as HTMLElement).getByText('Sleep · 4 min read')).toBeInTheDocument();
+    expect(within(cards[1] as HTMLElement).getByRole('link', { name: 'Article title 2' })).toHaveAttribute('href', '/en-US/journal/article-2');
+    expect(within(row).getByRole('link', { name: /All articles/ })).toHaveAttribute('href', '/en-US/journal');
+    expect(row.querySelectorAll('.h-45')).toHaveLength(3);
+    // Covers fall back to gradients while site-images.json is empty.
+    expect(container.querySelector('#journal [data-image="placeholder"]')).not.toBeNull();
+  });
+
+  it('Journal: the block is omitted while there are no articles to show', async () => {
+    showJournal.mockReturnValue(false);
+    getPublishedArticles.mockReturnValue([article(1)]);
+    await renderHome();
+    expect(screen.queryByRole('region', { name: h.journal.title })).toBeNull();
+    expect(getPublishedArticles).not.toHaveBeenCalled();
+  });
+});
+
+describe('design-home-page › Home page sections in order', () => {
+  it('renders hero, services, steps, doctors, prescription, statistics, journal and closing CTA in design order', async () => {
+    getHomeSnapshot.mockResolvedValue(
+      snapshot({ available: { state: 'today', items: [entry(1)] }, stats: { doctorCount: 8, averageRating: 4.8, availableToday: 5 } }),
+    );
+    showJournal.mockReturnValue(true);
+    getPublishedArticles.mockReturnValue([article(1), article(2), article(3)]);
+    const { container } = await renderHome();
+    const titles = [...container.querySelectorAll('section')].map((s) => s.getAttribute('aria-labelledby') ?? s.getAttribute('aria-label'));
+    expect(titles).toEqual([
+      'home-hero-title',
+      'home-services-title',
+      'home-steps-title',
+      'home-available-title',
+      'home-rx-title',
+      h.stats.label,
+      'home-journal-title',
+      'home-cta-title',
+    ]);
   });
 });
 

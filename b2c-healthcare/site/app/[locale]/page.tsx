@@ -4,11 +4,19 @@ import { AvailableToday } from '@/components/home/AvailableToday';
 import { ClosingCta } from '@/components/home/ClosingCta';
 import { Hero } from '@/components/home/Hero';
 import { HowItWorks } from '@/components/home/HowItWorks';
+import { JournalRow } from '@/components/home/JournalRow';
+import { RxDelivery } from '@/components/home/RxDelivery';
 import { ServicesGrid } from '@/components/home/ServicesGrid';
 import { StatsBand } from '@/components/home/StatsBand';
 import { siteImage } from '@/content/images';
-import { getHomeSnapshot } from '@/lib/ct/home';
+import { getPublishedArticles } from '@/lib/content';
+import { getHomeSnapshot, hasSameDayMethod } from '@/lib/ct/home';
+import { autoRefillEnabled } from '@/lib/features';
+import { showJournal } from '@/lib/routes';
 import { COUNTRY_CONFIG, DEFAULT_LOCALE, isSupportedLocale } from '@/lib/utils';
+
+/** Journal cards on the home page. */
+const JOURNAL_CARDS = 3;
 
 /**
  * Home page (design-home-page, home-landing-page). The body is shared markup: nothing here depends on the
@@ -20,14 +28,20 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
   const region = COUNTRY_CONFIG[isSupportedLocale(locale) ? locale : DEFAULT_LOCALE];
-  const snapshot = await getHomeSnapshot({ locale, currency: region.currency, country: region.country });
+  const [snapshot, sameDay] = await Promise.all([
+    getHomeSnapshot({ locale, currency: region.currency, country: region.country }),
+    hasSameDayMethod(),
+  ]);
+  const articles = showJournal(locale) ? getPublishedArticles(locale).slice(0, JOURNAL_CARDS) : [];
   return (
     <>
       <Hero image={siteImage('home-hero')} availableToday={snapshot?.stats.availableToday ?? null} />
       <ServicesGrid />
       <HowItWorks />
       <AvailableToday data={snapshot?.available ?? null} />
+      <RxDelivery image={siteImage('home-rx-delivery')} sameDay={sameDay} autoRefill={autoRefillEnabled()} />
       <StatsBand stats={snapshot?.stats ?? null} />
+      <JournalRow articles={articles} />
       <ClosingCta />
     </>
   );
