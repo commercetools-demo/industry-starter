@@ -149,3 +149,25 @@ export interface DoctorAvailability {
 export interface DoctorListItem extends DoctorCard {
   next: DoctorAvailability | null;
 }
+
+/** One saved delivery address of the signed-in patient (a commercetools Customer address; country is always US). */
+export interface Address {
+  id: string;
+  firstName: string;
+  lastName: string;
+  street: string;
+  /** Apartment, suite, unit; empty when absent. */
+  street2: string;
+  city: string;
+  /** US state or DC, two letters. */
+  state: string;
+  zip: string;
+  /** E.164, `+1XXXXXXXXXX`. */
+  phone: string;
+  country: 'US';
+  /** At most one address is the default shipping address. */
+  isDefault: boolean;
+}
+
+/** The editable part of an address, as the form submits it and the validators return it. */
+export type AddressInput = Omit<Address, 'id' | 'isDefault' | 'country'>;
