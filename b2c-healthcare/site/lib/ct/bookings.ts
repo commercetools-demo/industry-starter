@@ -3,29 +3,11 @@ import { createHash } from 'node:crypto';
 import { CONTAINERS, createOnly, getObject, putObject, queryObjects } from '@/lib/ct/custom-objects';
 import { claimSlot, getClaim, listFreeSlots, releaseSlot, SlotTakenError } from '@/lib/ct/scheduling';
 import { MIN_LEAD_MS, MODES, type Mode } from '@/lib/clinical/slots';
+import type { Booking, GuestContact } from '@/lib/clinical/types';
 
 /** Bookings are Custom Objects, not Orders, and are not paid online (D-011). Health data rule: never log or put a booking in a URL. */
 
-export type BookingStatus = 'booked' | 'cancelled' | 'completed';
-
-export interface GuestContact { name: string; email: string; phone: string }
-
-export interface Booking {
-  /** `BK-<base32>`; also the Custom Object key. Derived from the client `requestId`, so a retry finds the same booking. */
-  reference: string;
-  requestId: string;
-  doctorKey: string;
-  mode: Mode;
-  /** UTC instant of the slot start. */
-  startsAt: string;
-  patientRef?: string;
-  guest?: GuestContact;
-  reason: string;
-  createdAt: string;
-  status: BookingStatus;
-  /** Guest bookings only: after this instant the booking is no longer readable (and may be purged). */
-  expiresAt?: string;
-}
+export type { Booking, BookingStatus, GuestContact } from '@/lib/clinical/types';
 
 export interface BookingInput {
   requestId: string;

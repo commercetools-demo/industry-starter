@@ -3,6 +3,8 @@
  * so components may import them. `patientRef` is an opaque per-project id (`pt_<random>`); records never carry name or email.
  */
 
+import type { Mode } from './slots';
+
 export type PatientRef = string;
 
 export interface PrescriptionLine {
@@ -59,6 +61,28 @@ export interface Credential {
   validFrom: string;
   validTo: string;
   status: CredentialStatus;
+}
+
+export type BookingStatus = 'booked' | 'cancelled' | 'completed';
+
+export interface GuestContact { name: string; email: string; phone: string }
+
+/** `malva-booking` value (see lib/ct/bookings.ts). Bookings are Custom Objects, not Orders. */
+export interface Booking {
+  /** `BK-<base32>`; also the Custom Object key. Derived from the client `requestId`, so a retry finds the same booking. */
+  reference: string;
+  requestId: string;
+  doctorKey: string;
+  mode: Mode;
+  /** UTC instant of the slot start. */
+  startsAt: string;
+  patientRef?: PatientRef;
+  guest?: GuestContact;
+  reason: string;
+  createdAt: string;
+  status: BookingStatus;
+  /** Guest bookings only: after this instant the booking is no longer readable (and may be purged). */
+  expiresAt?: string;
 }
 
 /** A real EHR would replace each source; callers depend only on these interfaces. */

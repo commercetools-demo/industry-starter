@@ -1,3 +1,4 @@
+import { createFakeObjects, type FakeObjects } from '../../test/fake-custom-objects';
 import type { Rec, Root } from './lib';
 
 /**
@@ -15,15 +16,17 @@ export interface FakeRoot {
   projectKey: string;
   searchTotal: number | null;
   searchCalls: number;
+  /** Custom Objects (containers such as malva-schedule). */
+  objects: FakeObjects;
 }
 
 const err = (statusCode: number, message: string) => Object.assign(new Error(message), { statusCode });
 const ref = (r: unknown) => (r as { key?: string; id?: string } | undefined)?.key ?? (r as { id?: string } | undefined)?.id;
 
 export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey = 'spec-test-b2c-healthcare'): FakeRoot {
-  const fake = { store: {} as Record<string, Rec[]>, log: [] as FakeLog[], projectKey, searchTotal: null as number | null, searchCalls: 0 } as FakeRoot;
+  const fake = { store: {} as Record<string, Rec[]>, log: [] as FakeLog[], projectKey, searchTotal: null as number | null, searchCalls: 0, objects: createFakeObjects() } as FakeRoot;
   let counter = 0;
-  const kinds = ['carts', 'orders', 'inventory', 'products', 'categories', 'productTypes', 'shippingMethods', 'taxCategories', 'stores', 'zones', 'states', 'types', 'channels', 'customers'];
+  const kinds = ['carts', 'orders', 'inventory', 'products', 'categories', 'productTypes', 'shippingMethods', 'taxCategories', 'stores', 'zones', 'states', 'types', 'channels', 'customers', 'reviews'];
   for (const k of kinds) fake.store[k] = [];
   for (const [k, list] of Object.entries(initial)) fake.store[k] = list.map((r) => materialize(k, { ...r }));
 
@@ -67,6 +70,7 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
       case 'unpublish': if (md) md.published = false; break;
       case 'publish': if (md) md.published = true; break;
       case 'setTransitions': r.transitions = a.transitions; break;
+      case 'transitionState': r.state = { typeId: 'state', id: fake.store.states.find((s) => s.key === (a.state as { key?: string }).key)?.id }; break;
       case 'setInventoryLimits': r.maxCartQuantity = a.maxCartQuantity; r.minCartQuantity = a.minCartQuantity; break;
       case 'removeImage':
         if (md) for (const v of [md.staged.masterVariant, ...md.staged.variants]) if (v.id === a.variantId) v.images = ((v.images as { url: string }[]) ?? []).filter((i) => i.url !== a.imageUrl);
@@ -143,6 +147,7 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
     get: () => ({ execute: async () => ({ body: { key: fake.projectKey, searchIndexing: { productsSearch: { status: 'Activated' } } } }) }),
   };
   for (const k of kinds) root[k] = () => collection(k);
+  root.customObjects = fake.objects.customObjects;
   // Product Search: no real query language; a fullText value matches against product names, otherwise everything.
   root.products = () => ({
     ...collection('products'),
