@@ -10,7 +10,7 @@ Sign-in card per `design-account-area` (centered 440 px, "Sign in to Malva"/"Cre
 Routes: `POST /api/auth/login`, `/register`, `/logout`, `GET /api/auth/me` (minimal user: first name, initials, email), `POST /api/account/password`. Session write via D-03 helpers.
 
 ## Tasks
-- [ ] J-01 `lib/ct/identity.ts`: `login`, `register` (+auto-verify, `patientRef`), `logout` (session only), `getCustomerById`, `changePassword`, `issueEmailToken`/`confirmEmail` (for the unit-tested scenarios) [SKILL: commercetools-storefront] [SPEC: authentication-and-identity]
+- [x] J-01 `lib/ct/identity.ts`: `login`, `register` (+auto-verify, `patientRef`), `logout` (session only), `getCustomerById`, `changePassword`, `issueEmailToken`/`confirmEmail` (for the unit-tested scenarios) [SKILL: commercetools-storefront] [SPEC: authentication-and-identity]
 - [ ] J-02 Route handlers `/api/auth/login|register|logout|me` + `/api/account/password` using `handle()`; messages: generic failure, no existence oracle; tests per spec scenario with mocked `lib/ct/identity` [SKILL: commercetools-storefront] [SPEC: account-sign-in]
 - [ ] J-03 Anonymous-cart merge: login passes `anonymousCart: { id, typeId }` from the session cart; clears/replaces `cartId` from the response; test with and without cart [SKILL: commercetools-storefront] [SPEC: authentication-and-identity]
 - [ ] J-04 Attempt rate limit via `lib/ct/ratelimit.ts` (F-05) on login/register; test lockout message does not reveal existence [SKILL: commercetools-commerce-patterns] [SPEC: account-sign-in]
