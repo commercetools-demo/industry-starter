@@ -10,7 +10,7 @@ Three named conditions, each with at least one route back (design not provided â
 ## Tasks
 - [x] I-01 `app/[locale]/not-found.tsx` (+ catch-all `app/[locale]/[...rest]/page.tsx` calling `notFound()`), copy in messages, route-back links; test status 404 and links [SPEC: error-pages]
 - [x] I-02 `app/[locale]/error.tsx` and `app/global-error.tsx` with `reset` button, correlation id, no error text rendered; test that thrown message and stack never appear in output [SPEC: error-pages]
-- [ ] I-03 `lib/log.ts` redacting logger + tests (health-like keys, query strings, request bodies) and use it in `lib/api.ts handle()` [SPEC: error-pages]
+- [x] I-03 `lib/log.ts` redacting logger + tests (health-like keys, query strings, request bodies) and use it in `lib/api.ts handle()` [SPEC: error-pages]
 - [ ] I-04 Expired/absent session handling: `app/[locale]/(protected)/layout` helper `requireSessionOrPrompt(reasonKey)` rendering `RequireSignIn`; API 401 â†’ client hook triggers the same prompt; test the "expired session is not a refusal" scenario [SPEC: error-pages]
 - [ ] I-05 Env guard: `app/layout` imports `lib/env` so a missing variable renders a plain dev-only error page naming it; never in production responses; test [SPEC: error-pages]
 

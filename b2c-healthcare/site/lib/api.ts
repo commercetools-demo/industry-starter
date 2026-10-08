@@ -1,4 +1,5 @@
 import 'server-only';
+import { log } from '@/lib/log';
 import { getSession, type SessionData } from '@/lib/session';
 
 /** An error whose message is safe to show to the visitor. */
@@ -36,8 +37,8 @@ export function toErrorResponse(error: unknown): Response {
   if (status && status < 500) {
     return Response.json({ error: SAFE_MESSAGES[status] ?? SAFE_MESSAGES[400] }, { status });
   }
-  // Log the class and status only: the message may echo a request body (health-data-minimization).
-  console.error('[api] unhandled error', error instanceof Error ? error.name : typeof error, status ?? '');
+  // The redactor keeps the class and status only: the message may echo a request body (health-data-minimization).
+  log.error('api', 'unhandled error', error instanceof Error ? error : { name: typeof error, status });
   return Response.json({ error: GENERIC }, { status: status ?? 500 });
 }
 

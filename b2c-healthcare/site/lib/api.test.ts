@@ -51,6 +51,18 @@ describe('storefront-bff-and-session: Route Handler boundary', () => {
     await expectSanitizedError(GET, ['abc123', 'pat@example.test', 'tok-999', 'invalid_client']);
   });
 
+  it('Failure shape: the server log line has the class and status but no message or body (redactor)', async () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    getSession.mockResolvedValue({ customerId: 'c1' });
+    getOrders.mockRejectedValue(Object.assign(new Error('boom reason=asthma pat@example.test'), { statusCode: 503 }));
+    await GET();
+    const printed = JSON.stringify(spy.mock.calls);
+    spy.mockRestore();
+    expect(printed).toContain('"status":503');
+    expect(printed).not.toContain('asthma');
+    expect(printed).not.toContain('pat@example.test');
+  });
+
   it('Failure shape: 404 and 409 keep their status with a safe message; unknown errors are 500', async () => {
     getSession.mockResolvedValue({ customerId: 'c1' });
     getOrders.mockRejectedValueOnce({ statusCode: 404, message: 'raw' });
