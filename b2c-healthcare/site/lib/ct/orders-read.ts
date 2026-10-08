@@ -1,6 +1,7 @@
 import 'server-only';
 import { apiRoot } from '@/lib/ct/client';
 import { loadCheckoutFixtures } from '@/lib/ct/fixtures';
+import type { Order } from '@commercetools/platform-sdk';
 import { mapOrder } from '@/lib/mappers/order';
 import type { OrderView } from '@/lib/order-types';
 
@@ -33,4 +34,18 @@ export async function listOrdersForCustomer(customerId: string, locale: string):
     .get({ queryArgs: { where: `customerId="${customerId.replace(UNSAFE, '')}"`, sort: 'createdAt desc', limit: ORDER_LIST_LIMIT, expand: ORDER_EXPAND } })
     .execute();
   return body.results.map((o) => mapOrder(o, locale));
+}
+
+/**
+ * The platform order itself (line custom fields included), for server work such as reorder and cancel. Same rule as
+ * `getOrderForCustomer`: another customer's order and an unknown id are both null. Not available in fixtures mode.
+ */
+export async function getRawOrderForCustomer(id: string, customerId: string): Promise<Order | null> {
+  if (!/^[\w-]{1,64}$/.test(id)) return null;
+  if (await loadCheckoutFixtures()) return null;
+  const { body } = await apiRoot
+    .orders()
+    .get({ queryArgs: { where: `id="${id}" and customerId="${customerId.replace(UNSAFE, '')}"`, limit: 1, expand: ORDER_EXPAND } })
+    .execute();
+  return body.results[0] ?? null;
 }
