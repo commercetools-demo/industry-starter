@@ -7,6 +7,10 @@
 
 The cart is the last place a buyer can still change their mind cheaply. A total the storefront computed itself will eventually disagree with the total charged, and that disagreement is the single most damaging trust failure in commerce.
 
+## Plan notes
+
+**As built by workstream M.** The cart is "My bundle" (D-050); rules from J and K run before every write and on every cart read; a cart of another currency is ignored rather than converted.
+
 ## Requirements
 
 ### Requirement: Cart management

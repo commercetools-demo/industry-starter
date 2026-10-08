@@ -7,6 +7,10 @@
 
 Discounts are re-evaluated on every cart mutation, and a code that matched a moment ago can stop matching when a line is removed. Any total the storefront computes itself will therefore disagree with the total the order is created from, and the disagreement surfaces at the worst possible moment. Reading the engine's own numbers back after each write is the only way the cart page and the placed order can agree.
 
+## Plan notes
+
+**B2B-only parts excluded (D-005).** Not built: "Cost center or budget code selector per line" and "Convert cart to quote request". The UI term is "My bundle" and the route `/<locale>/bundle` (D-050). The "Save cart action" is the saved-lists button of workstream T. Minimum order value is a per-currency constant (USD 30, EUR 28, D-063), not per store or account. "Discount stops applying", "Empty cart" and "Below minimum order value" are built (M). "Check out" is shown to every visitor; anonymous visitors are offered sign-in or guest checkout (D-063).
+
 ## Requirements
 
 ### Requirement: Cart with engine-calculated totals after every change

@@ -7,6 +7,10 @@
 
 Setting a shipping address or a shipping method makes the platform recalculate shipping cost, tax and the set of available delivery options. A checkout that keeps its own copy of the summary after such a change shows a total the order will not be created with, and the buyer discovers the difference on the confirmation page or the invoice. Re-reading is cheap; reconciling a disputed invoice is not.
 
+## Plan notes
+
+**B2B-only parts excluded (D-005).** Not built: purchase order number field, cost center or budget code field, approval routing notice, net terms and credit line, multiple shipping addresses (`shippingMode` stays `Single`). Checkout is the hosted commercetools Checkout in Payment Only mode (D-041, D-061) behind our own contact, address, delivery and review steps (U, route `/<locale>/bundle/checkout`). Guests can check out only without monthly items (Q-007, Q-021: a recurring line needs a customer). A demo-mode payment (`CHECKOUT_DEMO_PAYMENT`) exists as an addition for the period before OA-05. "Address change moves tax" and "No delivery method for address" are built (U).
+
 ## Requirements
 
 ### Requirement: Checkout re-reading totals after each shipping change
