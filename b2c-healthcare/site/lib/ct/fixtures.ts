@@ -16,3 +16,11 @@ export async function loadFixtures(): Promise<Fixtures | null> {
   if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
   return import('./doctors-fixtures');
 }
+
+export type RxFixtures = typeof import('./rx-fixtures');
+
+/** Sam Rivera's (and the other seed patients') prescriptions for `/prescriptions` (workstream N); same switch and guard. */
+export async function loadRxFixtures(): Promise<RxFixtures | null> {
+  if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
+  return import('./rx-fixtures');
+}
