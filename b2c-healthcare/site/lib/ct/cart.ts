@@ -21,7 +21,7 @@ export const STANDARD_SHIPPING_KEY = 'mlv-standard';
 
 const isNotFound = (error: unknown): boolean => (error as { statusCode?: number } | null)?.statusCode === 404;
 
-async function fetchActiveCart(customerId: string, cartId: string | undefined): Promise<CtCart | null> {
+export async function fetchActiveCart(customerId: string, cartId: string | undefined): Promise<CtCart | null> {
   if (cartId) {
     try {
       const { body } = await apiRoot.carts().withId({ ID: cartId }).get().execute();

@@ -32,3 +32,11 @@ export async function loadCartFixtures(): Promise<CartFixtures | null> {
   if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
   return import('./cart-fixtures');
 }
+
+export type CheckoutFixtures = typeof import('./checkout-fixtures');
+
+/** In-memory checkout state (address, delivery method, orders) for browser checks with `MALVA_FIXTURES=1` (workstream Q); same guard. */
+export async function loadCheckoutFixtures(): Promise<CheckoutFixtures | null> {
+  if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
+  return import('./checkout-fixtures');
+}
