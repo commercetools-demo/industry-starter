@@ -78,3 +78,13 @@ Rules:
 - Sign-out calls `useClearPatientState()` (`hooks/sign-out.ts`), which writes `null` to both keys (SWR would otherwise fall back to the layout fallback).
 - Region switching is atomic: `POST /api/locale { locale }` writes locale, country and currency from `COUNTRY_CONFIG` and clears `cartId` on a currency change.
 - Search uses `searchProducts` (`lib/ct/search.ts`, Product Search API).
+
+## Identity: sign-in, create account, session
+
+- Pages and routes: `/login` (`SignInCard`, `?next=` sanitized by `lib/next-path.ts`, default `/account`; signed-in visitors are redirected away), `POST /api/auth/login|register|logout`, `GET /api/auth/me` (`null` when signed out), `POST /api/account/password` (signed in: current + new password). All logic is in `lib/ct/identity.ts`; the session cookie keeps `customerId` and `cartId` only.
+- Sign-in sends the session cart as `anonymousCart` (merge mode `MergeWithExistingCustomerCart`), so nothing in the anonymous cart is dropped; the `cartId` that comes back replaces the one in the session.
+- Failures never reveal whether an email is registered: unknown email and wrong password give the same 401 text; a duplicate registration gets one generic refusal that points to sign-in; lockout (5 failures per 10 minutes, kept in `malva-ratelimit`, bucket = hash of email + client address for sign-in, client address for registration) answers the same for every address.
+- **Email verification is automatic.** There is no email provider (D-029): registration creates the customer and immediately runs the email-token flow server-side (`emailToken` then `emailConfirm`), so `isEmailVerified` is true on return and the card shows an on-screen confirmation. The resend, expired-token and link-opened-twice paths exist as server functions (`requestFreshVerification`, `confirmEmail`) with unit tests but have no page or route (demo-hidden).
+- **Password reset is intentionally absent** (D-032): no page, route, link or function. Signed-in patients can change their password.
+- Customers are active immediately (no seller activation step, so the "request held until activated" part of `account-registration-request` does not apply). Each new customer gets `custom.patientRef` (`pt_` + 8 characters) on the `mlv-patient` type; no funding scheme is assigned.
+- Password rule: at least 10 characters (`lib/password-policy.ts`, used by the form and the server). Pages that need a patient go under `app/[locale]/(protected)/`, whose layout shows `RequireSignIn` instead of the page when signed out.
