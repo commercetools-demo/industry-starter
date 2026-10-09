@@ -1,0 +1,55 @@
+import { loadProductImages } from './data/images';
+import { doctorSteps, foundationSteps, medicationSteps, type ProductOptions } from './steps';
+import { clinicalSteps } from './clinical-steps';
+import { assertSynthetic } from './synthetic';
+import { listAndRecurrenceSteps } from './recurrence-steps';
+import { getAdminRoot, readSeedEnv, isMain, makeCtx, parseFlags, runSteps, type Ctx, type RunSummary, type Step } from './lib';
+
+/**
+ * Creates or checks everything the storefront needs, in dependency order:
+ * channels, tax categories, order states (+ transitions), custom types, product types, categories,
+ * shipping zone and methods, the saved-list line type and the Recurrence Policies (mlv-monthly, mlv-quarterly), doctor products, medication products, inventory, then (not with --only) the clinical stand-in:
+ * reviews, schedules, prescriptions, labs, credentials, one past booking and the three demo patients.
+ *
+ *   npx tsx scripts/seed/seed.ts [--dry-run] [--only <product-key>]
+ *
+ * Idempotent: a second run reports 0 changes. A resource that exists but differs from the seed is UPDATED in place where
+ * commercetools allows it (update-plans.ts: prices, attributes, isSearchable, new type fields, rates, limits...); where it does not
+ * (an attribute type change, a SKU change...) the run stops with exit 1 and says which reset is needed (`npm run seed:full`). Images come from data/product-images.json .
+ * Run cleanup-sample.ts first on a project that still holds the sample furniture data.
+ */
+export interface SeedOptions extends ProductOptions {
+  /** Also seed the clinical stand-in: reviews, schedules, prescriptions, labs, credentials, a past booking and the three demo patients. */
+  clinical?: boolean;
+  /** `SEED_PATIENT_PASSWORD`; without it the demo customers are skipped. */
+  patientPassword?: string;
+}
+
+export function seedSteps(ctx: Ctx, o: SeedOptions = {}): Step[] {
+  return [
+    ...foundationSteps(ctx),
+    ...listAndRecurrenceSteps(ctx),
+    ...doctorSteps(ctx, o),
+    ...medicationSteps(ctx, o),
+    ...(o.clinical ? clinicalSteps(ctx, { patientPassword: o.patientPassword }) : []),
+  ];
+}
+
+export async function runSeed(ctx: Ctx, o: SeedOptions = {}): Promise<RunSummary> {
+  // test-environment guard (health-data-minimization): nothing is written unless every patient and booking in data/ is synthetic
+  assertSynthetic();
+  const summary = await runSteps(seedSteps(ctx, o), ctx.log);
+  ctx.log(summary.ok ? `${ctx.dryRun ? 'dry run: ' : ''}${summary.changed} change(s) in ${summary.total} step(s)` : `stopped after ${summary.total} step(s), ${summary.changed} change(s): fix the difference above`);
+  return summary;
+}
+
+async function main() {
+  const flags = parseFlags(process.argv.slice(2));
+  const { root } = await getAdminRoot();
+  const patientPassword = readSeedEnv().SEED_PATIENT_PASSWORD ?? process.env.SEED_PATIENT_PASSWORD;
+  if (!patientPassword) console.log('SEED_PATIENT_PASSWORD is not set: the three demo patients will not be created.');
+  const summary = await runSeed(makeCtx(root, flags), { images: loadProductImages(), only: flags.only, clinical: !flags.only, patientPassword });
+  if (!summary.ok) process.exit(1);
+}
+
+if (isMain(__filename)) main().catch((e) => { console.error(e instanceof Error ? e.message : e); process.exit(1); });

@@ -1,0 +1,35 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+
+# env files: nothing is committed except the two value-less examples
+.env*
+!.env.example
+!.env.seed.example
+.env.seed.local
+
+# typescript
+*.tsbuildinfo
+
+# playwright
+/test-results/
+/playwright-report/

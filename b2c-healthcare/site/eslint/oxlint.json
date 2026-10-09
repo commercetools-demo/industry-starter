@@ -1,0 +1,5 @@
+{
+  "plugins": ["react", "import"],
+  "rules": {},
+  "overrides": [{ "files": ["**/index.js"], "rules": { "no-restricted-imports": "off" } }]
+}

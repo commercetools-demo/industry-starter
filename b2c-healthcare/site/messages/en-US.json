@@ -1,0 +1,1246 @@
+{
+  "common": {
+    "brand": "Malva Healthcare",
+    "skipToContent": "Skip to main content",
+    "loading": "Loading",
+    "retry": "Try again",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "continue": "Continue",
+    "back": "Back"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "notFound": "We could not find that page.",
+    "network": "We could not reach the server. Check your connection and try again.",
+    "unauthorized": "Please sign in to continue.",
+    "notFoundPage": {
+      "title": "We could not find that page",
+      "body": "The address may be mistyped, or the page may have moved. Pick up where you left off:",
+      "home": "Go to the home page",
+      "doctors": "Find a doctor",
+      "prescriptions": "Prescriptions"
+    },
+    "doctorNotFound": "Doctor not found.",
+    "medicineNotFound": "Medicine not found.",
+    "backToSearch": "Back to search",
+    "orderNotFound": "Order not found.",
+    "notFoundShort": "Not found.",
+    "fault": {
+      "title": "Something went wrong on our side",
+      "body": "This is not caused by anything you did. Your account and cart are unchanged. Please try again.",
+      "retry": "Try again",
+      "home": "Go to the home page",
+      "reference": "Reference: {id}"
+    },
+    "expiredSession": "Your session has ended. Sign in to continue."
+  },
+  "ui": {
+    "busy": "Working",
+    "optional": "optional",
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page}"
+    },
+    "modal": {
+      "close": "Close dialog"
+    },
+    "toast": {
+      "dismiss": "Dismiss notification"
+    },
+    "timeline": {
+      "done": "completed",
+      "pending": "not yet"
+    },
+    "status": {
+      "available": "Available",
+      "free": "Free",
+      "ready": "Ready",
+      "processing": "Processing",
+      "outOfRange": "Out of range"
+    },
+    "avatar": {
+      "photo": "Photo of {name}"
+    }
+  },
+  "auth": {
+    "signInTitle": "Sign in to Malva",
+    "demo": { "label": "Demo patients:" },
+    "registerTitle": "Create your account",
+    "reason": {
+      "cart": "Sign in to view your cart.",
+      "prescriptions": "Sign in to look up your prescriptions.",
+      "checkout": "Sign in to check out.",
+      "order": "Sign in to view your order.",
+      "labs": "Sign in to see your lab tests.",
+      "account": "Sign in to open your account."
+    },
+    "fields": {
+      "name": "Full name",
+      "email": "Email",
+      "password": "Password"
+    },
+    "passwordHint": "Use at least {min} characters.",
+    "submitSignIn": "Sign in",
+    "submitRegister": "Create account",
+    "toRegisterPrompt": "New to Malva?",
+    "toRegister": "Create an account",
+    "toSignInPrompt": "Have an account?",
+    "toSignIn": "Sign in",
+    "problems": {
+      "nameRequired": "Enter your full name.",
+      "nameInvalid": "That name is too long.",
+      "emailRequired": "Enter your email address.",
+      "emailInvalid": "Enter a valid email address.",
+      "passwordRequired": "Enter your password.",
+      "passwordTooShort": "Use at least {min} characters.",
+      "passwordTooLong": "Use at most {max} characters."
+    },
+    "failed": "The email or password is not correct.",
+    "refused": "We could not create an account with those details. If you already have one, sign in instead.",
+    "tooManyAttempts": "Too many attempts. Please try again in a few minutes.",
+    "signedIn": "You are signed in.",
+    "created": "Your account is ready and your email address is confirmed."
+  },
+  "shell": {
+    "logoLabel": "Malva home",
+    "goHome": "Go to the home page",
+    "mainNav": "Main",
+    "nav": {
+      "home": "Home",
+      "remote": "Remote sessions",
+      "office": "Office visits",
+      "prescriptions": "Prescriptions",
+      "labs": "Lab tests",
+      "journal": "Health journal"
+    },
+    "cart": "Cart",
+    "cartCount": "{count, plural, one {# item} other {# items}} in cart",
+    "signIn": "Sign in",
+    "bookVisit": "Book a visit",
+    "account": "Your account",
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu",
+      "label": "Menu"
+    },
+    "footer": {
+      "copyright": "© 2026 Malva Healthcare",
+      "emergency": "Not for emergencies — call your local emergency number.",
+      "blurb": "Healthcare that fits around your life — remote, in person and at your door.",
+      "care": "Care",
+      "pharmacy": "Pharmacy",
+      "company": "Company",
+      "videoSessions": "Video sessions",
+      "officeVisits": "Office visits",
+      "labTests": "Lab tests",
+      "orderMedicine": "Order medicine",
+      "prescriptions": "Prescriptions",
+      "about": "About",
+      "contact": "Contact",
+      "faq": "FAQ",
+      "shipping": "Shipping and returns",
+      "terms": "Terms and conditions",
+      "privacy": "Privacy policy"
+    },
+    "signInRequired": {
+      "title": "Sign in to Malva",
+      "action": "Sign in",
+      "cart": "Sign in to view your cart.",
+      "prescriptions": "Sign in to look up your prescriptions.",
+      "checkout": "Sign in to check out.",
+      "order": "Sign in to view your order.",
+      "labs": "Sign in to see your lab tests.",
+      "account": "Sign in to open your account."
+    },
+    "smoke": {
+      "title": "Welcome to Malva Healthcare",
+      "lead": "The storefront foundation is running.",
+      "projectKey": "Connected project: {key}",
+      "projectUnavailable": "Project connection is not available in this environment.",
+      "tokenSheet": "Design token reference"
+    }
+  },
+  "content": {
+    "draft": "Draft",
+    "draftNotice": "Draft text for review. It is not final.",
+    "fallbackNotice": "This page is shown in English because it is not available in your language yet.",
+    "effective": "Effective {date}",
+    "supersededNotice": "This is an earlier version, in effect from {date}. A newer version is now in force.",
+    "viewCurrent": "View the current version",
+    "earlierVersions": "Earlier versions",
+    "versionOption": "Version effective {date}",
+    "emergency": "Not for emergencies. In an emergency, call your local emergency number.",
+    "policyLinkNote": "opens in a new tab"
+  },
+  "static": {
+    "faq": {
+      "title": "Frequently asked questions",
+      "sub": "Answers to common questions, all on one page.",
+      "topicsNav": "Topics",
+      "topics": {
+        "booking": "Booking",
+        "prescriptions-delivery": "Prescriptions and delivery",
+        "lab-results": "Lab results",
+        "account-privacy": "Account and privacy"
+      },
+      "empty": "No questions are published yet."
+    },
+    "contact": {
+      "title": "Contact us",
+      "sub": "Reach our support team by email or phone.",
+      "offices": "Offices",
+      "emergencyTitle": "In an emergency"
+    },
+    "about": {
+      "title": "About us",
+      "contactCta": "Contact us"
+    },
+    "policies": {
+      "shipping-and-returns": "Shipping and returns",
+      "terms": "Terms and conditions",
+      "privacy": "Privacy policy"
+    },
+    "journal": {
+      "title": "Health journal",
+      "sub": "Articles on staying well.",
+      "filterLabel": "Filter by category",
+      "all": "All",
+      "minutes": "{count} min read",
+      "publishedOn": "Published {date}",
+      "noMatch": "No articles match",
+      "noMatchHint": "Nothing is published under this filter. Remove it to see more.",
+      "appliedFilter": "Category: {category}",
+      "clearFilter": "Show all articles",
+      "empty": "There are no articles yet.",
+      "related": "Related articles",
+      "withdrawnTitle": "This article is no longer available",
+      "withdrawnBody": "It has been withdrawn.",
+      "moreIn": "More articles in {category}",
+      "backToJournal": "Back to the health journal",
+      "readArticle": "Read: {title}"
+    }
+  },
+  "doctors": {
+    "remote": {
+      "title": "Remote sessions",
+      "sub": "See a licensed doctor by video from wherever you are. No account needed to book.",
+      "metaTitle": "Remote sessions with a doctor"
+    },
+    "office": {
+      "title": "Office visits",
+      "sub": "Book an in-person appointment at a clinic near you. No account needed to book.",
+      "metaTitle": "Office visits with a doctor"
+    },
+    "mode": {
+      "label": "Consultation type",
+      "remote": "Remote session",
+      "office": "Office visit"
+    },
+    "count": "{count, plural, one {# doctor} other {# doctors}}",
+    "filters": {
+      "label": "Filter doctors",
+      "search": "Search by name or specialty",
+      "searchPlaceholder": "Search by name or specialty",
+      "specialty": "Specialty",
+      "allSpecialties": "All specialties",
+      "city": "City",
+      "allCities": "All cities",
+      "today": "Available today",
+      "clear": "Clear filters"
+    },
+    "card": {
+      "experience": "{years} yrs experience",
+      "rating": "★ {rating} ({count, plural, one {# review} other {# reviews}})",
+      "noReviews": "No reviews yet",
+      "viewProfile": "View profile",
+      "noPrice": "Price not available",
+      "availableToday": "Available today",
+      "next": "Next: {date}"
+    },
+    "empty": {
+      "title": "No doctors match. Try clearing a filter.",
+      "clear": "Clear filters",
+      "browse": "Or browse by specialty"
+    },
+    "error": {
+      "title": "We could not load the doctors",
+      "description": "The doctor search is not responding. Please try again in a moment.",
+      "retry": "Try again"
+    },
+    "browse": {
+      "label": "Browse by specialty",
+      "all": "All specialties"
+    },
+    "activeFilters": "Active filters",
+    "removeFilter": "Remove filter: {name}"
+  },
+  "search": {
+    "title": "Search",
+    "metaTitle": "Search",
+    "label": "Search doctors and medicines",
+    "placeholder": "Doctor, specialty or medicine",
+    "submit": "Search",
+    "resultsFor": "Results for “{query}”",
+    "promptTitle": "What are you looking for?",
+    "promptDescription": "Search by doctor name, specialty or medicine, or paste a medicine part number.",
+    "doctors": "Doctors",
+    "medicines": "Medicines",
+    "doctorCount": "{count, plural, one {# doctor} other {# doctors}}",
+    "medicineCount": "{count, plural, one {# medicine} other {# medicines}}",
+    "exactTitle": "Part number match",
+    "matchedSku": "Matched part number {sku}",
+    "rxOnly": "Prescription only",
+    "otc": "Over the counter",
+    "pack": "per pack",
+    "noPrice": "Price not available",
+    "seeAllDoctors": "See all matching doctors",
+    "findRx": "Find your prescription",
+    "emptyTitle": "Nothing matches “{query}”",
+    "emptyDescription": "Check the spelling or try a shorter search. You can also browse by specialty.",
+    "unsupportedTitle": "That language is not supported yet",
+    "unsupportedDescription": "Search in English. We do not have results in that language, which is different from there being no matches.",
+    "errorTitle": "Search is not available right now",
+    "errorDescription": "We could not run your search. Please try again in a moment."
+  },
+  "account": {
+    "addresses": {
+      "title": "Addresses",
+      "sub": "Saved delivery addresses. The default is selected for you at checkout.",
+      "add": "Add address",
+      "listLabel": "Saved addresses",
+      "emptyTitle": "No addresses yet",
+      "emptyBody": "Add a delivery address and it will be ready the next time you order.",
+      "defaultBadge": "Default",
+      "makeDefault": "Make default",
+      "edit": "Edit",
+      "remove": "Remove",
+      "noDefault": "You have no default address. You will be asked to choose one at checkout.",
+      "loadFailed": "We could not load your addresses. Please try again.",
+      "removeTitle": "Remove this address?",
+      "removeBody": "{address} will be removed from your saved addresses.",
+      "removeBodyDefault": "{address} is your default address. If you remove it, you will choose an address at your next order.",
+      "removeConfirm": "Remove address",
+      "toast": {
+        "saved": "Address saved.",
+        "removed": "Address removed.",
+        "defaultSet": "Default address updated."
+      },
+      "form": {
+        "addTitle": "Add an address",
+        "editTitle": "Edit address",
+        "save": "Save address",
+        "saveAnyway": "Save anyway",
+        "cancel": "Cancel",
+        "makeDefault": "Use as my default address",
+        "country": "Country",
+        "countryValue": "United States",
+        "fields": {
+          "firstName": "First name",
+          "lastName": "Last name",
+          "street": "Street address",
+          "street2": "Apartment, suite, unit",
+          "city": "City",
+          "state": "State",
+          "stateChoose": "Select a state",
+          "zip": "ZIP code",
+          "phone": "Phone"
+        },
+        "hints": {
+          "zip": "5 digits, or 9 with a dash (12345-6789).",
+          "phone": "A US number, for example (512) 555-0100."
+        },
+        "problems": {
+          "firstNameRequired": "Enter a first name.",
+          "firstNameInvalid": "That first name is too long.",
+          "lastNameRequired": "Enter a last name.",
+          "lastNameInvalid": "That last name is too long.",
+          "streetRequired": "Enter a street address.",
+          "streetInvalid": "That street address is too long.",
+          "street2Invalid": "That line is too long.",
+          "cityRequired": "Enter a city.",
+          "cityInvalid": "That city name is too long.",
+          "stateRequired": "Select a state.",
+          "stateInvalid": "Select a state from the list.",
+          "zipRequired": "Enter a ZIP code.",
+          "zipInvalid": "Enter a 5-digit ZIP code, or 9 digits with a dash.",
+          "phoneRequired": "Enter a phone number.",
+          "phoneInvalid": "Enter a 10-digit US phone number."
+        },
+        "warningTitle": "Check this address",
+        "warning": "We could not match the {fields} for this address. ZIP code {zip} is usually in {nearest}. Correct it, or save it as it is.",
+        "warningFields": {
+          "state": "state",
+          "zip": "ZIP code",
+          "both": "state and ZIP code"
+        },
+        "saveFailed": "We could not save this address. Please try again."
+      }
+    },
+    "profile": {
+      "title": "Profile",
+      "sub": "Your name and password.",
+      "email": "Email",
+      "name": {
+        "title": "Your name",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "save": "Save name",
+        "saved": "Your name is updated.",
+        "problems": {
+          "firstNameRequired": "Enter your first name.",
+          "firstNameInvalid": "That first name is too long.",
+          "lastNameRequired": "Enter your last name.",
+          "lastNameInvalid": "That last name is too long."
+        }
+      },
+      "password": {
+        "title": "Change password",
+        "current": "Current password",
+        "new": "New password",
+        "confirm": "Repeat new password",
+        "hint": "Use at least {min} characters.",
+        "save": "Change password",
+        "saved": "Your password is changed.",
+        "problems": {
+          "currentRequired": "Enter your current password.",
+          "newRequired": "Enter a new password.",
+          "newTooShort": "Use at least {min} characters.",
+          "newTooLong": "Use at most {max} characters.",
+          "confirmMismatch": "The two passwords do not match."
+        },
+        "wrongCurrent": "Your current password is not correct.",
+        "tooManyAttempts": "Too many attempts. Please try again in a few minutes."
+      },
+      "saveFailed": "We could not save your changes. Please try again."
+    },
+    "nav": {
+      "label": "Account navigation",
+      "overview": "Overview",
+      "labs": "Lab tests",
+      "appointments": "Appointments",
+      "orders": "Orders",
+      "addresses": "Addresses",
+      "profile": "Profile",
+      "signOut": "Sign out",
+      "signOutFailed": "We could not sign you out. Please try again.",
+      "lists": "My medicines",
+      "autoRefill": "Auto-refill",
+      "paymentMethods": "Payment methods",
+      "allowance": "Allowance"
+    },
+    "overview": {
+      "title": "Overview",
+      "greeting": "Hello, {name}",
+      "greetingNoName": "Hello",
+      "unavailable": "Couldn't load",
+      "tileLabs": "Lab results ready",
+      "tileAppointments": "Appointments",
+      "tileOrders": "Orders",
+      "latestTitle": "Latest lab results",
+      "latestEmpty": "No lab results yet.",
+      "latestUnavailable": "We couldn't load your lab results. Please try again.",
+      "userUnavailable": "We couldn't load your details."
+    },
+    "labs": {
+      "title": "Lab tests",
+      "sub": "Select a test to see the full results.",
+      "empty": "No lab results yet.",
+      "loadFailed": "We couldn't load your lab results. Please try again.",
+      "statusReady": "Results ready",
+      "statusProcessing": "Processing",
+      "rowMeta": "{date} · {laboratory}",
+      "back": "← All lab tests",
+      "collected": "Collected",
+      "orderedBy": "Ordered by",
+      "laboratory": "Laboratory",
+      "resultsRegion": "Lab results (scrolls sideways on small screens)",
+      "colTest": "Test",
+      "colResult": "Result",
+      "colRange": "Reference range",
+      "colFlag": "Flag",
+      "flagNormal": "Normal",
+      "flagHigh": "High",
+      "flagLow": "Low",
+      "downloadPdf": "Download PDF",
+      "discuss": "Discuss with a doctor",
+      "notFound": "Not found.",
+      "rangeLabel": "{name}: {value} {unit}, reference range {range}, {flag}",
+      "pdf": {
+        "heading": "Lab results",
+        "collected": "Collected",
+        "orderedBy": "Ordered by",
+        "laboratory": "Laboratory",
+        "note": "Clinician's note",
+        "colTest": "Test",
+        "colResult": "Result",
+        "colRange": "Reference range",
+        "colFlag": "Flag",
+        "footer": "Malva Healthcare. For the signed-in patient only."
+      }
+    },
+    "appointments": {
+      "title": "Appointments",
+      "upcoming": "Upcoming",
+      "past": "Past",
+      "empty": "No appointments yet.",
+      "book": "Book one",
+      "video": "Video session",
+      "dateAt": "{date} at {time}",
+      "cancelled": "Cancelled",
+      "completed": "Completed",
+      "cancel": "Cancel appointment",
+      "cancelTitle": "Cancel this appointment?",
+      "cancelBody": "{doctor} on {when}. The time will be available to other patients again.",
+      "cancelConfirm": "Cancel appointment",
+      "keep": "Keep appointment",
+      "cancelPolicy": "You can cancel up to 2 hours before the start.",
+      "cancelToast": "Appointment cancelled.",
+      "cancelTooLate": "This appointment can no longer be cancelled online: it starts in less than 2 hours.",
+      "cancelFailed": "We couldn't cancel this appointment. Please try again.",
+      "doctorUnknown": "Your doctor",
+      "loadFailed": "We couldn't load your appointments. Please try again."
+    },
+    "orders": {
+      "title": "Orders",
+      "empty": "No orders yet.",
+      "orderFromRx": "Order from a prescription"
+    }
+  },
+  "home": {
+    "metaTitle": "Malva Healthcare: see a doctor by video or in person",
+    "metaDescription": "Book a video or office visit, look up a prescription and have your medicine delivered, and read your lab results, all in one place.",
+    "hero": {
+      "title": "Care that comes to you, or the other way round.",
+      "lead": "See a doctor by video, book an office visit, and get prescriptions delivered to your door, all in one place.",
+      "chipsLabel": "Browse by specialty",
+      "chips": {
+        "general-practice": "General practice",
+        "dermatology": "Dermatology",
+        "pediatrics": "Pediatrics"
+      },
+      "availableChip": "{count, plural, one {# doctor} other {# doctors}} available today"
+    },
+    "services": {
+      "title": "Everything you need, under one roof",
+      "sub": "From a video visit to a prescription at your door, Malva keeps your care connected.",
+      "remote": {
+        "icon": "Video",
+        "title": "Remote sessions",
+        "text": "Talk to a licensed doctor by video from any device.",
+        "cta": "Start a session"
+      },
+      "office": {
+        "icon": "Visit",
+        "title": "Office visits",
+        "text": "Book in-person appointments at partner clinics near you.",
+        "cta": "Find a clinic"
+      },
+      "prescriptions": {
+        "icon": "Rx",
+        "title": "Prescriptions",
+        "text": "Look up a prescription by its RX number and order it.",
+        "cta": "Manage prescriptions"
+      },
+      "delivery": {
+        "icon": "Meds",
+        "title": "Medicine delivery",
+        "text": "Order your medication and receive it at home.",
+        "cta": "Order medicine"
+      },
+      "labs": {
+        "icon": "Lab",
+        "title": "Lab tests",
+        "text": "Read your lab results in your account.",
+        "cta": "View lab tests"
+      },
+      "records": {
+        "icon": "Rec",
+        "title": "Health records",
+        "text": "Your visits, lab results and orders in one place.",
+        "cta": "View account"
+      }
+    },
+    "steps": {
+      "title": "How Malva works",
+      "one": {
+        "title": "Tell us what's wrong",
+        "text": "Search by symptom, doctor or pick a specialty."
+      },
+      "two": {
+        "title": "Choose your doctor",
+        "text": "See availability, fees and reviews up front."
+      },
+      "three": {
+        "title": "Meet by video or in person",
+        "text": "Join from any device, or visit the clinic."
+      },
+      "four": {
+        "title": "Get your care plan",
+        "text": "Prescriptions and follow-ups land in your account."
+      }
+    },
+    "available": {
+      "title": "Doctors available today",
+      "sub": "Rated by verified patients.",
+      "subNext": "Nobody has a free slot left today. These doctors are available next.",
+      "viewAll": "View all doctors",
+      "mode": {
+        "remote": "Video",
+        "office": "In office"
+      },
+      "book": "Book",
+      "bookWith": "Book with {name}"
+    },
+    "rx": {
+      "title": "Your prescription, delivered",
+      "lead": "Look up your prescription by its RX number, order it and have it delivered.",
+      "listLabel": "What you get",
+      "lookup": "Look up your prescription by RX number",
+      "standard": "Delivery to your door",
+      "sameDay": "Same-day delivery in selected states",
+      "autoRefill": "Auto-refills you can pause anytime",
+      "order": "Order medicine",
+      "find": "Find by RX number"
+    },
+    "stats": {
+      "label": "Malva in numbers",
+      "doctors": "Doctors on Malva",
+      "rating": "Average patient rating",
+      "ratingValue": "{rating} / 5",
+      "availableToday": "Doctors available today"
+    },
+    "journal": {
+      "title": "From the health journal",
+      "all": "All articles",
+      "meta": "{category} · {minutes} min read"
+    },
+    "cta": {
+      "title": "Feeling unwell? See a doctor today.",
+      "button": "Book a visit"
+    }
+  },
+  "doctor": {
+    "back": "← All doctors",
+    "metaTitle": "{name}, {specialty}",
+    "metaDescription": "Book {name} for a video session or an office visit. {specialty}, {years} yrs experience.",
+    "rating": "★ {rating} · {count, plural, one {# review} other {# reviews}}",
+    "experience": "{years} yrs experience",
+    "about": "About",
+    "education": "Education",
+    "languages": "Languages",
+    "clinic": "Clinic",
+    "reviews": "Patient reviews",
+    "verified": "Verified patient · {date}"
+  },
+  "booking": {
+    "panel": {
+      "title": "Book a time",
+      "mode": "Consultation type",
+      "remote": "Video",
+      "office": "In office",
+      "modeUnavailable": "Not offered by this doctor",
+      "feeUnavailable": "Fee unavailable",
+      "feeUnavailableNote": "The fee for this type of visit is not available right now, so it cannot be booked.",
+      "days": "Choose a day",
+      "times": "Available times",
+      "noTimes": "No times left on this day. Try another date.",
+      "loading": "Loading times…",
+      "loadError": "We could not load the times.",
+      "retry": "Try again",
+      "zone": "Times are shown in {zone}.",
+      "asPatient": "Booking as {name}",
+      "asGuest": "No account needed. You can book as a guest."
+    },
+    "modal": {
+      "title": "Confirm your booking",
+      "summary": "{doctor} · {type}",
+      "when": "{date} at {time} · {fee}",
+      "typeRemote": "Video session",
+      "typeOffice": "Office visit",
+      "asGuest": "Booking as a guest.",
+      "signIn": "Sign in instead",
+      "asPatient": "Booking as {name} ({email})",
+      "name": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "phonePlaceholder": "(555) 010-2030",
+      "reason": "Reason for visit",
+      "reasonPlaceholder": "Briefly describe your symptoms or question",
+      "consent": "We use your reason for visit only to prepare your appointment. Bookings made as a guest are deleted 90 days after the visit unless you create an account.",
+      "consentPatient": "We use your reason for visit only to prepare your appointment.",
+      "confirm": "Confirm booking",
+      "confirming": "Booking…",
+      "taken": "That time is no longer available. Pick another time.",
+      "unavailable": "That time can no longer be booked. Pick another time.",
+      "failed": "We could not complete your booking. Please try again.",
+      "tooMany": "Too many requests. Please try again shortly.",
+      "problems": {
+        "nameRequired": "Enter your full name.",
+        "emailRequired": "Enter your email address.",
+        "emailInvalid": "Enter a valid email address.",
+        "phoneRequired": "Enter a phone number.",
+        "phoneInvalid": "Enter a valid phone number.",
+        "reasonRequired": "Tell us briefly why you are booking.",
+        "reasonTooLong": "Please keep it to 500 characters."
+      }
+    },
+    "confirmed": {
+      "metaTitle": "Booking confirmed",
+      "badge": "Booking confirmed",
+      "title": "You're booked, {name}.",
+      "titleNoName": "You're booked.",
+      "keepReference": "Keep your reference {reference}.",
+      "keepReferencePatient": "Keep your reference {reference}. It is also under My appointments.",
+      "reference": "Reference",
+      "doctor": "Doctor",
+      "doctorValue": "{name} · {specialty}",
+      "when": "When",
+      "whenValueZone": "{date} at {time} ({zone})",
+      "type": "Type",
+      "typeRemote": "Video session",
+      "typeOffice": "Office visit",
+      "join": "Join",
+      "joinPatient": "Joining details for your video session will appear under My appointments before it starts.",
+      "joinGuest": "Joining details are not sent by email. Create an account to see them under My appointments.",
+      "where": "Where",
+      "fee": "Fee",
+      "feeValue": "{amount} · pay at the visit",
+      "feeValueUnknown": "Pay at the visit",
+      "guestNudge": "Booked as a guest.",
+      "createAccount": "Create an account",
+      "guestNudgeTail": "to manage appointments and see prescriptions and lab results.",
+      "myAppointments": "My appointments",
+      "bookAnother": "Book another",
+      "home": "Back to home"
+    }
+  },
+  "rx": {
+    "metaTitle": "Prescriptions",
+    "title": "Prescriptions",
+    "sub": "Enter the RX number from your doctor to review your medications and order delivery.",
+    "inputLabel": "RX number",
+    "inputPlaceholder": "e.g. RX-48213",
+    "search": "Search",
+    "searching": "Searching",
+    "yours": "Your prescriptions",
+    "empty": "Your medications will appear here after you search.",
+    "notFound": "We couldn’t find “{input}”. Check the number printed on your prescription.",
+    "rateLimited": "Too many lookups. Please try again in a few minutes.",
+    "error": "We could not look up your prescription. Please try again.",
+    "prescribedBy": "Prescribed by {doctor} · {date}",
+    "patient": "Patient: {name}",
+    "refillsLeft": "{count, plural, one {# refill left} other {# refills left}}",
+    "selectAll": "Select all medications",
+    "qty": "Qty {count}",
+    "selected": "{count} selected",
+    "total": "Informational total. Your cart shows the final price.",
+    "addToCart": "Add to cart",
+    "adding": "Adding",
+    "addFailed": "We could not add these medications to your cart. Please try again.",
+    "added": "Added to cart",
+    "viewCart": "View cart →",
+    "shelfLife": "{months, plural, one {Minimum # month} other {Minimum # months}} of shelf life on delivery",
+    "shortDated": "Short-dated · expires {date}",
+    "monthlyNote": "Limits count calendar months.",
+    "reason": {
+      "NO_REFILLS": "No refills left",
+      "NO_REFILLS_SOME": "Only {remaining} left on this prescription",
+      "EXPIRED": "This prescription has expired",
+      "OUT_OF_STOCK": "Out of stock",
+      "CEILING_ORDER": "Limit of {ceiling} per order · {remaining} available",
+      "CEILING_PERIOD": "Monthly limit of {ceiling} reached · {remaining} available this calendar month",
+      "SHELF_LIFE": "Stock expires {date}, too soon to meet the minimum shelf life"
+    },
+    "saveToList": "Save to My medicines",
+    "saving": "Saving",
+    "saved": "Saved to My medicines",
+    "savedAlready": "Already in My medicines",
+    "saveFailed": "We could not save these medications. Please try again.",
+    "viewList": "View My medicines"
+  },
+  "cart": {
+    "metaTitle": "Your cart",
+    "title": "Your cart",
+    "loading": "Loading your cart",
+    "loadFailed": "We could not load your cart. Please try again.",
+    "retry": "Try again",
+    "empty": "Your cart is empty.",
+    "findPrescription": "Find a prescription",
+    "added": "Added to cart",
+    "viewCart": "View cart →",
+    "lines": "Medications in your cart",
+    "qty": "Qty {count}",
+    "rxQty": "{rx} · Qty {count}",
+    "remove": "Remove",
+    "removeLabel": "Remove {name} from your cart",
+    "removed": "Removed {name}",
+    "removeFailed": "We could not remove that item. Please try again.",
+    "priceUpdated": "Price updated",
+    "unavailable": "Not available",
+    "summary": "Summary",
+    "subtotal": "Subtotal",
+    "delivery": "Standard delivery",
+    "free": "FREE",
+    "total": "Total",
+    "notIncluded": "{count, plural, one {# unavailable item} other {# unavailable items}} not included. Remove {count, plural, one {it} other {them}} to continue.",
+    "checkout": "Checkout",
+    "fixItems": "Fix {count, plural, one {# item} other {# items}} to continue",
+    "reason": {
+      "NO_REFILLS": "No refills left",
+      "EXPIRED": "This prescription has expired",
+      "OUT_OF_STOCK": "Out of stock",
+      "CEILING_ORDER": "Limit of {ceiling} per order",
+      "CEILING_PERIOD": "Monthly limit of {ceiling} reached",
+      "SHELF_LIFE": "Stock expires {date}, too soon to meet the minimum shelf life",
+      "UNAVAILABLE": "This prescription can no longer be filled",
+      "CREDENTIAL": "Requires a valid credential"
+    }
+  },
+  "region": {
+    "label": "Region and language",
+    "switching": "Switching region",
+    "cartEmptied": "Your cart was emptied because prices are in a different currency. You can add your prescription lines again.",
+    "failed": "We could not switch region. Try again.",
+    "notAvailableTitle": "Not available in this region",
+    "notAvailableBody": "This is not offered in the region you selected, so there is no price to show. Switch region to see it."
+  },
+  "checkout": {
+    "metaTitle": "Checkout",
+    "title": "Checkout",
+    "loading": "Loading checkout",
+    "loadFailed": "We could not load checkout. Please try again.",
+    "retry": "Try again",
+    "empty": "Your cart is empty.",
+    "findPrescription": "Find a prescription",
+    "address": {
+      "title": "Delivery address",
+      "saved": "Saved addresses",
+      "savedChoose": "Choose a saved address",
+      "noDefault": "You have no default address. Choose a saved one or enter a new one.",
+      "use": "Use this address",
+      "using": "Delivering to {name}, {city}, {state} {zip}.",
+      "saveFailed": "We could not save this address. Please try again.",
+      "undeliverable": "We cannot deliver to this address with any delivery option. Check the state and ZIP code, or use a different address."
+    },
+    "delivery": {
+      "title": "Delivery speed",
+      "needAddress": "Save your delivery address to see the delivery options.",
+      "none": "No delivery option is available for this address. Check the state and ZIP code, or use a different address.",
+      "sameDayUnavailable": "Same-day delivery is not available for this order. It needs a New York, Texas or Illinois address and an order placed before 2 pm Eastern.",
+      "free": "FREE",
+      "changeFailed": "We could not change the delivery option. Please try again.",
+      "unavailable": "That delivery option is no longer available. The summary shows what applies now.",
+      "methods": {
+        "mlv-standard": "Standard · 1–2 days",
+        "mlv-same-day": "Same-day · by 8 pm"
+      }
+    },
+    "payment": {
+      "title": "Payment",
+      "demoBanner": "DEMO payment (no PSP configured)",
+      "demoNote": "This build has no payment service connected. No card is used and no money moves. It exists to check the page.",
+      "demoDecline": "Simulate a declined payment",
+      "loading": "Loading the payment form",
+      "continueHint": "Choose \"Continue to payment\" in the summary. We check your order first, then the secure payment form opens here.",
+      "needAddress": "Save your delivery address to continue to payment.",
+      "loadFailed": "The payment form could not be loaded. Please try again.",
+      "unavailable": "Payment is not available right now. Your cart is kept; please try again later.",
+      "retry": "Reload payment",
+      "declined": "Your payment was declined. No order was placed and your cart is kept. Try another payment method.",
+      "savedHint": "Cards you saved before appear first. Tick \"Save this card\" in the payment form to use it next time. Card details are handled by our payment provider and never reach Malva.",
+      "manageSaved": "Manage saved cards",
+      "noCardNeeded": "No card payment is needed: your allowance and health account card cover this order."
+    },
+    "summary": {
+      "title": "Order summary",
+      "lines": "Medications in this order",
+      "qty": "Qty {count}",
+      "tax": "Tax",
+      "delivery": "Delivery",
+      "free": "FREE",
+      "total": "Total",
+      "placeOrder": "Place order",
+      "continueToPayment": "Continue to payment",
+      "placing": "Placing your order",
+      "needAddress": "Save your delivery address to place your order.",
+      "notDeliverable": "No delivery option is available for this address.",
+      "notIncluded": "{count, plural, one {# item cannot be filled} other {# items cannot be filled}}. Go back to your cart to remove {count, plural, one {it} other {them}}.",
+      "backToCart": "Back to cart",
+      "coverUnresolved": "We could not confirm what your plan covers. Placing the order is unavailable until we can."
+    },
+    "place": {
+      "TOTALS_MOVED": "The total changed, so payment was not started. Review the summary and continue.",
+      "PAYMENT_REQUIRED": "Authorize your payment before placing the order.",
+      "PAYMENT_DECLINED": "Your payment was declined. No order was placed and your cart is kept.",
+      "LINES_UNAVAILABLE": "An item in your cart can no longer be filled. Go back to your cart to review it. No order was placed.",
+      "ADDRESS_MISSING": "Save your delivery address before placing the order.",
+      "NO_DELIVERY_METHOD": "No delivery option is available for this address. No order was placed.",
+      "DISPENSE_REFUSED": "A prescription can no longer be filled, so the order was not placed. Your payment was released.",
+      "PLACEMENT_FAILED": "We could not start your payment just now. Nothing was charged and your cart is kept. Please try again.",
+      "IN_PROGRESS": "Your order is already being placed. Please wait a moment.",
+      "EMPTY_CART": "Your cart is empty.",
+      "generic": "We could not place your order. Your cart is kept. Please try again.",
+      "COVER_UNRESOLVED": "We could not confirm what your plan covers, so your order was not placed. Please try again in a moment.",
+      "FUNDING_CHANGED": "Your allowance or covered amount changed while we were placing your order, so it was not placed. Review the new amounts and try again."
+    }
+  },
+  "orders": {
+    "metaTitle": "Your order",
+    "placed": "Order placed",
+    "cancelledBadge": "Order cancelled",
+    "title": "Your medication is on its way.",
+    "cancelledTitle": "This order was cancelled.",
+    "rows": {
+      "order": "Order",
+      "items": "Items",
+      "deliverTo": "Deliver to",
+      "estimate": "Estimate",
+      "total": "Total",
+      "shipment": "Shipment"
+    },
+    "estimate": {
+      "sameDay": "Today by 8 pm",
+      "standard": "1–2 business days"
+    },
+    "progress": "Order progress",
+    "steps": {
+      "received": "Order received",
+      "pharmacist-review": "Pharmacist review",
+      "packed-shipped": "Packed and shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    },
+    "myOrders": "My orders",
+    "searchRx": "Search another RX",
+    "unknown": {
+      "title": "We could not confirm your order",
+      "body": "We do not know yet whether your order was placed. Check your orders before you try again, so you are not charged twice.",
+      "check": "Check your orders"
+    },
+    "shipment": {
+      "Pending": "Not shipped yet",
+      "Ready": "Ready to ship",
+      "Shipped": "Shipped",
+      "Delivered": "Delivered",
+      "Partial": "Partly shipped: part of your order is on its way and the rest follows",
+      "Backorder": "Waiting for stock",
+      "Delayed": "Delayed"
+    },
+    "refund": {
+      "released": "Payment released. Your card was not charged; the hold on it is lifted and can take a few business days to disappear.",
+      "requested": "Refund requested. It can take a few business days to show on your statement.",
+      "refunded": "Refunded"
+    },
+    "cancel": {
+      "action": "Cancel order",
+      "confirm": "Cancel this order? Your prescription refill is given back and your payment is released.",
+      "yes": "Yes, cancel the order",
+      "keep": "Keep my order",
+      "failed": "We could not cancel this order. It may already be on its way.",
+      "tooLate": "This order is already packed and can no longer be cancelled."
+    },
+    "returns": "Medicines that have been dispensed cannot be returned.",
+    "list": {
+      "track": "Track",
+      "reorder": "Reorder",
+      "loadFailed": "We could not load your orders. Please try again.",
+      "placedOn": "Placed {date}",
+      "status": {
+        "received": "Received",
+        "pharmacist-review": "Pharmacist review",
+        "packed-shipped": "Packed and shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled"
+      },
+      "autoRefill": "Auto-refill"
+    },
+    "reorder": {
+      "added": "Added to your cart: {names}.",
+      "notAdded": "Not added: {names}.",
+      "reason": {
+        "NO_REFILLS": "no refills left",
+        "EXPIRED": "prescription expired",
+        "OUT_OF_STOCK": "out of stock",
+        "UNAVAILABLE": "no longer available"
+      },
+      "viewCart": "View cart",
+      "failed": "We could not reorder. Please try again.",
+      "nothing": "None of these medications can be added right now."
+    },
+    "tender": {
+      "title": "How this order was paid",
+      "allowance": "Benefit allowance",
+      "restricted": "Health account card (demo)",
+      "card": "Card",
+      "noCard": "No card payment",
+      "balance": "Allowance balance now",
+      "qualifying": "Qualifying for the health account card",
+      "notQualifying": "Not qualifying for the health account card",
+      "settledBy": "Paid with {instruments}",
+      "instrument": {
+        "allowance": "allowance",
+        "restricted-health-account": "Health account card (demo)",
+        "card": "card"
+      }
+    }
+  },
+  "lists": {
+    "metaTitle": "My medicines",
+    "title": "My medicines",
+    "sub": "Lists of the medicines you order again and again. Add a whole list to your cart in one step.",
+    "empty": "You have no saved lists yet.",
+    "emptyHint": "Save medicines from a prescription, or turn what is in your cart into a list.",
+    "fromRx": "Find a prescription",
+    "nameLabel": "List name",
+    "namePlaceholder": "e.g. Monthly medicines",
+    "create": "Create list",
+    "fromCart": "Save my cart as a list",
+    "creating": "Creating",
+    "createFailed": "We could not create the list. Please try again.",
+    "cartEmpty": "Your cart is empty, so there is nothing to save yet.",
+    "loadFailed": "We could not load your lists. Please try again.",
+    "lineCount": "{count, plural, =0 {No medicines} one {# medicine} other {# medicines}}",
+    "updated": "Updated {date}",
+    "open": "Open",
+    "back": "← All lists",
+    "notFound": "We could not find that list.",
+    "noLines": "This list has no medicines yet. Save them from a prescription.",
+    "addAll": "Add all to cart",
+    "adding": "Adding",
+    "remove": "Remove",
+    "removeLabel": "Remove {name} from the list",
+    "removeFailed": "We could not remove that medicine. Please try again.",
+    "rename": "Rename",
+    "renameLabel": "New name",
+    "renameSave": "Save name",
+    "renameFailed": "We could not rename the list. Please try again.",
+    "delete": "Delete list",
+    "deleteConfirm": "Delete this list for good?",
+    "deleteYes": "Yes, delete",
+    "deleteFailed": "We could not delete the list. Please try again.",
+    "price": "Price now: {price}",
+    "priceUp": "Up {amount} since you saved it.",
+    "priceDown": "Down {amount} since you saved it.",
+    "unavailable": "No longer available to order",
+    "priceNote": "Prices are today's catalog prices. Your cart shows the final price.",
+    "addAllResult": {
+      "added": "Added to your cart: {names}.",
+      "notAdded": "Not added: {names}.",
+      "nothing": "None of these medicines can be added right now.",
+      "viewCart": "View cart",
+      "failed": "We could not add this list to your cart. Please try again.",
+      "reason": {
+        "NO_REFILLS": "no refills left",
+        "EXPIRED": "prescription expired",
+        "OUT_OF_STOCK": "out of stock",
+        "UNAVAILABLE": "no longer available"
+      }
+    },
+    "cancel": "Cancel"
+  },
+  "autoRefill": {
+    "lastRun": {
+      "label": "Last check",
+      "allowed": "Last check {date}: your refill was cleared to go ahead.",
+      "skipped": "Last run: skipped ({date}), {reason}.",
+      "stopped": "Auto-refill stopped ({date}), {reason}.",
+      "reason": {
+        "authorization-expired": "your prescription has expired",
+        "authorization-exhausted": "your prescription has no refills left",
+        "ceiling": "a dispensing limit was reached",
+        "prescription-missing": "we could not find the prescription",
+        "payment-method-missing": "there is no saved payment method"
+      }
+    },
+    "metaTitle": "Auto-refill",
+    "title": "Auto-refill",
+    "sub": "Have your regular medicines refilled on a schedule. Every refill is checked against your prescription first, and you can pause, skip or stop at any time.",
+    "empty": "You have no auto-refills yet.",
+    "emptyHint": "Choose medicines below to set one up.",
+    "loadFailed": "We could not load your auto-refills. Please try again.",
+    "state": {
+      "Active": "Active",
+      "Paused": "Paused",
+      "Expired": "Ended",
+      "Canceled": "Canceled",
+      "Failed": "Needs attention"
+    },
+    "cadence": {
+      "monthly": "Every month",
+      "quarterly": "Every 3 months",
+      "other": "Custom schedule"
+    },
+    "next": "Next refill: {date}",
+    "nextSkipping": "The refill due {date} will be skipped.",
+    "pausedNote": "Paused: no further refills until you resume.",
+    "canceledNote": "Canceled: no further refills.",
+    "failedNote": "The last refill could not be created (for example a payment that did not go through). No further refills until this is resolved. Resume to try again.",
+    "last": "Last refill: {date}",
+    "noLast": "No refill has been created yet.",
+    "lastWas": "The last refill was on {date}.",
+    "priceDynamic": "Priced at the catalog price on the day each refill is created, so the amount can change.",
+    "priceFixed": "Priced at the amount set when you started, whatever the catalog price does.",
+    "pause": "Pause",
+    "resume": "Resume",
+    "skip": "Skip next refill",
+    "cancel": "Cancel auto-refill",
+    "cancelConfirm": "Stop this auto-refill for good?",
+    "cancelYes": "Yes, cancel it",
+    "keep": "Keep it",
+    "scheduleLabel": "Schedule",
+    "scheduleSave": "Change schedule",
+    "scheduleNote": "A new schedule applies from the next refill.",
+    "failed": "We could not do that. Please try again.",
+    "busy": "A refill is being prepared right now. Try again in a moment.",
+    "resumeBlocked": {
+      "authorization-expired": "Your prescription has expired, so this cannot be resumed.",
+      "authorization-exhausted": "Your prescription has no refills left, so this cannot be resumed.",
+      "prescription-missing": "We could not find the prescription, so this cannot be resumed.",
+      "payment-method-missing": "Save a payment method first, then resume.",
+      "ceiling": "A dispensing limit applies right now."
+    },
+    "setup": {
+      "title": "Set up auto-refill",
+      "intro": "Choose the medicines and how often. The first refill comes one schedule after today.",
+      "needMethod": "Auto-refill charges a saved payment method.",
+      "addMethod": "Save a payment method",
+      "noRx": "Medicines that can be refilled will appear here once you have a prescription with refills left.",
+      "rxHeading": "Prescription {number}",
+      "howOften": "How often",
+      "start": "Set up auto-refill",
+      "starting": "Setting up",
+      "done": "Auto-refill is set up: {names}.",
+      "notIncluded": "Not included: {names}.",
+      "failed": "We could not set up auto-refill. Please try again.",
+      "reason": {
+        "NO_REFILLS": "no refills left",
+        "EXPIRED": "prescription expired",
+        "OUT_OF_STOCK": "out of stock",
+        "UNAVAILABLE": "no longer available"
+      }
+    },
+    "orderCard": {
+      "button": "Auto-refill this order",
+      "busy": "Setting up",
+      "done": "Auto-refill is set up.",
+      "view": "See your auto-refills",
+      "failed": "We could not set up auto-refill. Please try again."
+    }
+  },
+  "paymentMethods": {
+    "metaTitle": "Payment methods",
+    "title": "Payment methods",
+    "sub": "Cards you saved while paying. Malva never sees your card number: only the card brand and the last four digits are shown here.",
+    "empty": "No payment methods saved.",
+    "emptyHint": "You can save a card while you pay at checkout. Tick \"Save this card\" in the payment form.",
+    "addAtCheckout": "Go to your cart",
+    "loadFailed": "We could not load your payment methods. Please try again.",
+    "unavailable": "Payment methods are not available right now.",
+    "card": "{brand} ending {last4}",
+    "cardNoDigits": "{brand}",
+    "expires": "Expires {month}/{year}",
+    "default": "Default",
+    "makeDefault": "Make default",
+    "remove": "Remove",
+    "removeLabel": "Remove {card}",
+    "makeDefaultLabel": "Make {card} the default",
+    "failed": "We could not do that. Please try again.",
+    "defaultRemoved": "The default card was removed. No card is the default now: you will choose one at your next checkout.",
+    "removed": "Card removed.",
+    "refillsPaused": "{count, plural, one {# auto-refill was} other {# auto-refills were}} paused because it was charged to this card. Choose another card and resume it.",
+    "dependsWarning": "{count, plural, one {An auto-refill is} other {# auto-refills are}} charged to this card. If you remove it, {count, plural, one {it} other {they}} will be paused.",
+    "removeAnyway": "Remove and pause",
+    "keep": "Keep this card",
+    "note": "Refunds to a saved card cannot be reversed automatically. If you need one, contact us."
+  },
+  "funding": {
+    "youOwe": "You owe",
+    "planCovers": "Plan covers",
+    "lineYouOwe": "You owe {amount}",
+    "linePlanCovers": "Plan covers {amount}",
+    "notCovered": "Not covered",
+    "fullyCovered": "Fully covered",
+    "partlyCovered": "Partly covered",
+    "unresolved": "Cover unresolved",
+    "unresolvedLine": "Cover unresolved: we cannot show a price for this item yet.",
+    "unresolvedNote": "We could not confirm what your plan covers right now. Checkout is unavailable until we can. Please try again in a moment.",
+    "unresolvedButton": "Cover unresolved",
+    "retry": "Check again",
+    "tender": {
+      "allowanceBalance": "Allowance balance",
+      "allowanceWouldUse": "This order would use",
+      "forfeits": "Unused allowance is forfeited on {date}. It is not cash and cannot be withdrawn.",
+      "eligibleSubtotal": "Eligible for health account",
+      "restrictedUnavailable": "Health account card (demo) is not available: none of these items are eligible.",
+      "needsOther": "Needs another payment method",
+      "cardPays": "Card pays",
+      "noCard": "No card payment needed",
+      "restrictedTitle": "Health account card (demo)",
+      "restrictedUse": "Pay eligible items with the Health account card (demo)",
+      "restrictedWouldPay": "It would pay {amount} of eligible items.",
+      "restrictedFailed": "We could not change that. Please try again."
+    }
+  },
+  "medicine": {
+    "metaTitle": "{name}",
+    "metaDescription": "{name}: {strength} {form}. {rx}. Delivered by Malva.",
+    "back": "Back to search",
+    "rxOnly": "Prescription only",
+    "otc": "Over the counter",
+    "hsa": "HSA/FSA eligible",
+    "strength": "Strength",
+    "form": "Dosage form",
+    "pack": "Pack",
+    "perPack": "per {unit}",
+    "details": "Details",
+    "gallery": "Product images",
+    "imageAlt": "{name}, image {n} of {total}",
+    "price": "Price",
+    "noPrice": "No price available",
+    "limit": "Limit {count, plural, one {# pack} other {# packs}} per order.",
+    "shelfLife": "{months, plural, one {Minimum # month} other {Minimum # months}} of shelf life on delivery.",
+    "stock": {
+      "title": "Availability",
+      "in-stock": "In stock",
+      "out-of-stock": "Out of stock",
+      "short-dated": "Short-dated",
+      "shelf-life": "Unavailable for now",
+      "note-short-dated": "This stock expires on {date}, sooner than our usual shelf-life promise. It is offered at its own price of {price}.",
+      "note-shelf-life": "The stock we hold expires on {date}, which is too soon to meet our minimum shelf-life promise.",
+      "note-shelf-life-undated": "The stock we hold cannot meet our minimum shelf-life promise."
+    },
+    "controlled": "This is a controlled medicine and requires a valid {class} credential. You can view it here; ordering is checked against the credential on your account.",
+    "rxNotice": "Order this medicine from your prescription. Enter the RX number from your doctor, and the prescribed quantity is added for you.",
+    "findOnRx": "Find it on your prescription",
+    "orderFromRx": "Order from your prescription",
+    "otcNotice": "This medicine does not need a prescription, but it is ordered from your prescription page for now.",
+    "noImage": "No image available"
+  },
+  "credentials": {
+    "requirement": {
+      "NONE": "Requires a valid {class} credential. You have none on file.",
+      "WRONG_SCOPE": "Your credential does not cover {class}. A valid {class} credential is required.",
+      "EXPIRED": "Your {class} credential has expired.",
+      "PENDING": "Your {class} credential is awaiting verification. You can buy this once it is verified."
+    },
+    "requiredLabel": "Credential required"
+  },
+  "allowance": {
+    "title": "Allowance",
+    "sub": "Your sponsor's allowance is spent on orders in this store, and it is used before any other payment.",
+    "balance": "Remaining balance",
+    "granted": "Granted for {cycle}",
+    "used": "Used this cycle",
+    "forfeitBadge": "Lapses",
+    "forfeit": "{amount} will be forfeited on {date}. Unused allowance is not carried over to the next cycle.",
+    "nothingLapsing": "Nothing is left to lapse. The next cycle starts on {date}.",
+    "lastLapsed": "{amount} of your {cycle} allowance was forfeited at the end of that cycle.",
+    "notCash": "An allowance is not cash. It cannot be withdrawn or transferred to another member.",
+    "none": "You do not have a benefit allowance.",
+    "loadFailed": "We could not load your allowance. Please try again."
+  }
+}

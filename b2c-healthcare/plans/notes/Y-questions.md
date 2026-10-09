@@ -1,0 +1,12 @@
+# Workstream Y: questions and defaults chosen
+
+| # | Question | Default chosen |
+|---|----------|----------------|
+| 1 | Y-04 says the health route must be absent, but D-06 left `app/api/health` in the repo (guarded by a 404). | `scripts/prune-dev-routes.mjs` runs inside `npm run verify:build` and deletes `app/api/health`, `_tokens`, `_boom` only when `NETLIFY=true` (or `MALVA_RELEASE_BUILD=1`); otherwise it is a no-op. Release builds set `typescript.ignoreBuildErrors` in `next.config.ts` because tests import the deleted pages; `npm run check` has type-checked everything just before. `check-bundle.mjs` then fails if the compiled routes exist in a release build. Verified in the worktree with `NETLIFY=true` (build compiled, routes absent, checks green, tree restored with git checkout). |
+| 2 | `base` in `netlify.toml`? | Omitted (house style, sibling `b2c-grocery`): the UI Base directory is `b2c-healthcare/site`, and the toml lives there. |
+| 3 | Schedules are already in each function's `config.schedule`; also in toml? | Yes, in both, with `netlify.test.ts` failing on drift. If Netlify reports a conflict at first deploy, delete the toml `[functions."..."]` blocks (the in-code config is authoritative) and the drift test. |
+| 4 | Secret strength for `reload-allowances` / `retention`. | Under 16 characters counts as not configured (503), like `AUTO_REFILL_RUN_SECRET`. Existing U tests changed from a 6-char to a 16+ char test secret. |
+| 5 | CSP `'unsafe-inline'` for scripts/styles. | Kept (no nonce infrastructure; Next inlines bootstrap scripts). No `unsafe-eval`. Stripe and `*.commercetools.com` for script/frame/connect; Pexels and `storage.googleapis.com` for images. Tighten after a real-browser check of the Checkout widget (Y-todos). |
+| 6 | Source maps. | Browser source maps are off by default; the check fails on any `.map` in `.next/static`. Server `.map` files in `.next/server` are not served and are allowed; secret VALUES are scanned in both trees. |
+| 7 | New dev dependency. | `smol-toml` (TOML parser, zero dependencies) for `netlify.test.ts`. |
+| 8 | Shared files touched. | `package.json` (+`smol-toml`, `verify:build` gains the prune step), lock, `.env.example` (+`RETENTION_SECRET`, missing since X), `next.config.ts` (`poweredByHeader: false`, release flag), `scripts/scaffold.test.ts` (verify:build regex allows the prune step), `lib/funding/reload-handler.ts` + test and `scripts/privacy/retention-handler.ts` (16-char minimum). |

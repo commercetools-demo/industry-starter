@@ -1,0 +1,15 @@
+# Workstream A: questions and the defaults chosen
+
+| # | Question | Default chosen |
+| --- | --- | --- |
+| 1 | The agent worktree branch started at an older commit without `b2c-healthcare/`. | Fast-forwarded the agent branch to `50a078d` (the planning commit of `worktree-b2c-healthcare`); no other branch touched. |
+| 2 | `create-next-app@16 --tailwind=false` still generated a Tailwind v4 template (`@tailwindcss/postcss`, `@import "tailwindcss"`), not v3. | Kept v4; removed Geist fonts, demo page, public SVGs, `CLAUDE.md`/`AGENTS.md`. `app/globals.css` is exactly `@import 'tailwindcss';`. |
+| 3 | Version pins: plan says `next@^16`, platform-sdk `^8`, ts-client `^4`. | Installed next 16.4.0, next-intl 4.14.9, react 19.3.0, platform-sdk 8.27.0, ts-client 4.10.0, swr 2.5.1, jose 6.2.12, vitest 5.0.3, TypeScript 5.9.3 (the scaffold's; design.md lists TS 7 as latest, not required). No conflicts. |
+| 4 | Extra dev deps not on the list. | `@testing-library/dom` (peer of RTL 16), `typescript-eslint` (explicit; used by the restriction config for `allowTypeImports`). |
+| 5 | `.env.example` must hold "no values" but A-09 says build "with the placeholders of `.env.example`". | Values left empty; nothing in the scaffold reads them, so the build needs none. Later workstreams must keep `npm run build` working with empty env or A-09 text needs changing. |
+| 6 | Which `CTP_SCOPES` to document? | Least privilege guess listed in `.env.example` with one justification each (view_products, view_published_products, view_categories, view_stores, view_shipping_methods, view_tax_categories, view_cart_discounts, view_discount_codes, view_types, manage_customers, manage_orders, manage_payments, manage_shopping_lists, manage_key_value_documents). Owner/D/E should confirm against the real API client. |
+| 7 | Session cookie name for `test/request.ts`. | `session` as a parameter default; workstream D owns the real name. |
+| 8 | Rule (d) "literal `fetch('/api/…')` in components": hooks are the sanctioned fetch place per the guide. | Applied to `components/**`, `hooks/**`, `context/**` as written in the junior guide's client-code boundary ("hooks (fetch)" is a mock target). If hooks should be allowed to fetch literal `/api` URLs, remove `hooks/**` from `CLIENT_DIRS` for the `SEL_API` rule in `eslint/restrictions.mjs` (`CLIENT_DIRS` is shared; split it). NOTE: this will block hooks that call `fetch('/api/...')` literally. Recommend D/H confirm and split the constant. |
+| 9 | Where does lint's "design rules" oxlint config go? | `npm run lint` = `eslint && oxlint` with oxlint defaults; B adds `.oxlintrc.json` design rules. |
+| 10 | ESLint rule (a) for `'use client'` files has no core equivalent. | Small local plugin rule `local/no-server-import-in-client` in `eslint/restrictions.mjs` plus path-based `no-restricted-imports` for `components/`, `hooks/`, `context/`. |
+| 11 | Vitest `server-only` handling. | Aliased to `test/server-only-stub.ts` in `vitest.config.mts` so server modules can be unit-tested. |

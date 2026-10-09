@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Malva Healthcare</title>
+<link rel="stylesheet" href="_ds/healthcare-8f4e291a-5553-4159-8816-b4c3f0f7742c/tokens.css"><link rel="stylesheet" href="app.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="_ds/healthcare-8f4e291a-5553-4159-8816-b4c3f0f7742c/_ds_bundle.js"></script></head><body><div id="root"></div>
+<script type="text/babel" src="app-core.jsx"></script><script type="text/babel" src="app-doctors.jsx"></script><script type="text/babel" src="app-rx.jsx"></script><script type="text/babel" src="app-account.jsx"></script>
+<script type="text/babel">
+function App(){const hash=useHash();const[user,setUser]=useStore('malva_user',null);const[cart,setCart]=useStore('malva_cart',[]);const[bookings,setBookings]=useStore('malva_bookings',[]);const[orders,setOrders]=useStore('malva_orders',[]);
+const addToCart=its=>setCart(c=>[...c.filter(x=>!its.some(i=>i.key===x.key)),...its]);
+const addBooking=b=>setBookings(x=>[...x,b]);const addOrder=o=>{setOrders(x=>[o,...x]);setCart([])};
+const [path,qs]=hash.split('?');const m=new URLSearchParams(qs||'').get('m')||'remote';const p=path.split('/').filter(Boolean);const route='/'+p.join('/');
+const need=(reason,el)=><Protected user={user} reason={reason} route={route}>{el}</Protected>;
+let page;
+if(p[0]==='doctors')page=<Doctors mode={p[1]==='office'?'office':'remote'}/>;
+else if(p[0]==='doctor')page=<DoctorDetail id={p[1]} mode={m} key={p[1]}/>;
+else if(p[0]==='booked')page=<Booked id={p[1]}/>;
+else if(p[0]==='prescriptions')page=need('Sign in to look up your prescriptions.',<Prescriptions/>);
+else if(p[0]==='cart')page=need('Sign in to view your cart.',<Cart/>);
+else if(p[0]==='checkout')page=need('Sign in to check out.',user&&<Checkout/>);
+else if(p[0]==='order')page=need('Sign in to view your order.',<Order id={p[1]}/>);
+else if(p[0]==='labs')page=need('Sign in to see your lab tests.',<><Redirect to="/account/labs"/></>);
+else if(p[0]==='account')page=need('Sign in to open your account.',user&&<Account sub={p[1]} id={p[2]}/>);
+else if(p[0]==='login')page=user?<Redirect to="/account"/>:<Login next={new URLSearchParams(qs||'').get('next')||'/account'}/>;
+else page=<Redirect to="/doctors/remote"/>;
+return <Ctx.Provider value={{user,setUser,cart,setCart,bookings,addBooking,orders,addOrder,addToCart}}><Nav route={route}/>{page}<Foot/></Ctx.Provider>}
+function Redirect({to}){useEffect(()=>{go(to)},[]);return null}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script></body></html>

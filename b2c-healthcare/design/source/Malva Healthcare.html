@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Malva Healthcare</title>
+<link rel="stylesheet" href="_ds/healthcare-8f4e291a-5553-4159-8816-b4c3f0f7742c/tokens.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script><script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script><script src="_ds/healthcare-8f4e291a-5553-4159-8816-b4c3f0f7742c/_ds_bundle.js"></script>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#2aa7ff"/><text x="50" y="66" font-size="48" font-family="Poppins,sans-serif" font-weight="600" text-anchor="middle" fill="#fff">M</text></svg></template>
+<style>
+*{box-sizing:border-box;margin:0}body{font-family:var(--font-display);color:var(--color-text-body);background:#fff;line-height:1.55}
+a{color:var(--color-brand-600);text-decoration:none}a:hover{color:var(--color-brand-800)}
+.w{max-width:1200px;margin:0 auto;padding:0 32px}
+h1,h2,h3{color:var(--color-text-heading);font-weight:600;line-height:1.2}
+h1{font-size:clamp(34px,5vw,52px);color:var(--color-navy-900)}h2{font-size:clamp(26px,3.4vw,36px)}h3{font-size:18px}
+.btn{white-space:nowrap;display:inline-flex;align-items:center;gap:8px;font:500 14px var(--font-display);padding:13px 24px;border-radius:var(--radius-md);border:1.5px solid var(--color-brand-500);background:var(--color-brand-500);color:#fff;cursor:pointer}
+.btn:hover{background:var(--color-brand-600);color:#fff}.btn.o{background:#fff;color:var(--color-brand-700)}.btn.o:hover{background:var(--color-brand-50);color:var(--color-brand-800)}
+.btn.sm{padding:9px 16px;border-radius:var(--radius-sm)}
+nav{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--color-border)}
+nav .w{display:flex;align-items:center;gap:16px;height:72px}
+.logo{font-weight:700;font-size:22px;color:var(--color-navy-900);display:flex;align-items:center;gap:8px}.logo i{width:28px;height:28px;border-radius:8px;background:var(--color-brand-500);display:grid;place-items:center;color:#fff;font-style:normal;font-size:16px}
+nav .l a{white-space:nowrap}nav .l{display:flex;gap:24px;margin-left:auto;font-size:14px;font-weight:500}nav .l a{color:var(--color-navy-900)}nav .l a:hover,nav .l a.on{color:var(--color-brand-600)}
+.hero{background:var(--gradient-sky);padding:72px 0 0;overflow:hidden}
+.hero .w{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:end}
+.hero p.lead{font-size:18px;margin:20px 0 28px;max-width:520px;color:var(--color-neutral-600)}
+.hero .ph{height:460px;border-radius:var(--radius-xl) var(--radius-xl) 0 0;background:var(--gradient-brand);position:relative;display:grid;place-items:center;color:#fff;font:500 13px var(--font-meta);letter-spacing:.04em}
+.search{display:flex;gap:8px;background:#fff;padding:8px;border-radius:var(--radius-md);box-shadow:var(--shadow-md);max-width:560px}
+.search input{flex:1;border:0;background:var(--color-neutral-25);border-radius:var(--radius-md);padding:0 16px;font:14px var(--font-display);height:46px;outline:0;min-width:0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;font:13px var(--font-meta)}.chips span{padding:5px 12px;border-radius:var(--radius-sm);background:#fff;color:var(--color-navy-700)}
+.float{position:absolute;background:#fff;color:var(--color-navy-900);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:12px 16px;font:500 13px var(--font-display);display:flex;gap:10px;align-items:center;letter-spacing:0}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--color-success-500)}
+section{padding:88px 0}.sub{background:var(--color-surface-subtle)}
+.hd{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:40px;flex-wrap:wrap}.hd p{max-width:480px;margin-top:8px;color:var(--color-neutral-600)}
+.grid{display:grid;gap:24px}.g4{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}.g3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.svc{background:#fff;border-radius:var(--radius-md);padding:28px;border:1px solid var(--color-border);display:flex;flex-direction:column;gap:12px;transition:.2s}.svc:hover{box-shadow:var(--shadow-md);border-color:var(--color-brand-200)}
+.ic{width:52px;height:52px;border-radius:var(--radius-md);background:var(--color-brand-50);color:var(--color-brand-700);display:grid;place-items:center;font-weight:600;font-size:15px}
+.svc p{font-size:14px;color:var(--color-neutral-600)}.svc a{margin-top:auto;font-size:14px;font-weight:500}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px}
+.step{counter-increment:s}.step:before{content:counter(s);display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--color-navy-700);color:#fff;font-weight:600;margin-bottom:16px}.step p{font-size:14px;margin-top:6px}
+.doc{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:24px;display:flex;flex-direction:column;gap:16px}
+.doc .top{display:flex;gap:16px;align-items:center}.av{width:72px;height:72px;border-radius:50%;background:var(--gradient-peach);flex:none}
+.doc h3{color:var(--color-brand-700);font-size:17px}.meta{font:14px var(--font-meta);color:var(--color-neutral-600)}
+.badge{font:700 12px var(--font-meta);padding:4px 10px;border-radius:var(--radius-sm);background:var(--color-success-50);color:var(--color-success-500);align-self:flex-start}
+.doc .ft{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--color-border);padding-top:16px;font-size:14px}.doc .ft b{color:var(--color-navy-700)}
+.rx{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.rx .ph{aspect-ratio:1.1;border-radius:var(--radius-xl);background:var(--gradient-sky);border:1px solid var(--color-neutral-200);display:grid;place-items:center;font:500 13px var(--font-meta);color:var(--color-navy-400);position:relative}
+.list{list-style:none;padding:0;display:grid;gap:14px;margin:24px 0 32px}.list li{display:flex;gap:12px;font-size:15px}.list li:before{content:"✓";flex:none;width:22px;height:22px;border-radius:50%;background:var(--color-brand-100);color:var(--color-brand-800);font-size:12px;display:grid;place-items:center;margin-top:2px}
+.band{background:var(--color-navy-700);color:#fff;padding:64px 0}.band .w{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:32px;text-align:center}.band b{display:block;font-size:40px;font-weight:600}.band span{font:15px var(--font-meta);color:var(--color-navy-100)}
+.blog{background:#fff;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}.blog .ph{height:180px;background:var(--gradient-brand)}.blog div.b{padding:20px;display:grid;gap:8px}.blog small{font:12px var(--font-meta);color:var(--color-neutral-500)}
+.cta{background:var(--gradient-brand);border-radius:var(--radius-xl);padding:56px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}.cta h2{color:var(--color-navy-900)}.cta .btn{background:var(--color-navy-700);border-color:var(--color-navy-700)}
+footer{background:var(--color-navy-700);color:var(--color-navy-100);font-family:var(--font-body);padding:64px 0 32px}footer .w{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:40px}footer h4{color:#fff;font:500 15px var(--font-display);margin-bottom:14px}footer a{display:block;color:var(--color-navy-100);font-size:14px;margin-bottom:8px}footer a:hover{color:#fff}footer p{font-size:14px;max-width:280px;margin-top:12px}.logo.in{color:#fff}
+.copy{grid-column:1/-1;border-top:1px solid var(--color-navy-500);padding-top:24px;font-size:13px}
+@media(max-width:1000px){nav .l{display:none}nav .logo{margin-right:auto}}@media(max-width:860px){.hero .w,.rx{grid-template-columns:1fr}.hero .ph{height:300px}footer .w{grid-template-columns:1fr 1fr}.cta{padding:32px}}
+</style></head><body>
+<nav><div class="w"><a class="logo" href="#"><i>M</i>Malva</a><div class="l"><a class="on" href="#">Home</a><a href="Malva App.html#/doctors/remote">Remote sessions</a><a href="Malva App.html#/doctors/office">Office visits</a><a href="Malva App.html#/prescriptions">Prescriptions</a><a href="Malva App.html#/labs">Lab tests</a><a href="#journal">Health journal</a></div><a class="btn o sm" href="Malva App.html#/login">Sign in</a><a class="btn sm" href="Malva App.html#/doctors/remote">Book a visit</a></div></nav>
+<header class="hero"><div class="w"><div style="padding-bottom:72px"><h1>Care that comes to you, or the other way round.</h1><p class="lead">See a doctor by video in minutes, book an office visit, and get prescriptions delivered to your door — all in one place.</p>
+<form class="search" onsubmit="return false"><input placeholder="Doctor, specialty or medicine"><button class="btn">Search</button></form>
+<div class="chips"><span>General practice</span><span>Dermatology</span><span>Mental health</span><span>Pediatrics</span></div></div>
+<div class="ph">Photo: doctor on a video consult<div class="float" style="left:-24px;top:80px"><span class="dot"></span>12 doctors available now</div><div class="float" style="right:24px;bottom:56px">Rx #4821 out for delivery · 25 min</div></div></div></header>
+<section id="services"><div class="w"><div class="hd"><div><h2>Everything you need, under one roof</h2><p>From a quick video consult to a monthly refill, Malva keeps your care connected.</p></div></div>
+<div class="grid g4">
+<div class="svc"><div class="ic">Video</div><h3>Remote sessions</h3><p>Talk to a licensed doctor by video or chat, usually within 15 minutes.</p><a href="Malva App.html#/doctors/remote">Start a session →</a></div>
+<div class="svc"><div class="ic">Visit</div><h3>Office visits</h3><p>Book in-person appointments at partner clinics near you.</p><a href="Malva App.html#/doctors/office">Find a clinic →</a></div>
+<div class="svc"><div class="ic">Rx</div><h3>Prescriptions</h3><p>Renewals and new prescriptions, sent straight to your pharmacy.</p><a href="Malva App.html#/prescriptions">Manage prescriptions →</a></div>
+<div class="svc"><div class="ic">Meds</div><h3>Medicine delivery</h3><p>Order medication and receive it at home, with refill reminders.</p><a href="Malva App.html#/prescriptions">Order medicine →</a></div>
+<div class="svc"><div class="ic">Lab</div><h3>Lab tests</h3><p>Book tests at home or at a lab, and read results in the app.</p><a href="Malva App.html#/labs">View lab tests →</a></div>
+<div class="svc"><div class="ic">Mind</div><h3>Mental health</h3><p>Therapy and psychiatry sessions with the same clinicians over time.</p><a href="#">Meet a therapist →</a></div>
+<div class="svc"><div class="ic">Rec</div><h3>Health records</h3><p>Visits, results and prescriptions in one secure timeline you control.</p><a href="Malva App.html#/account">View account →</a></div>
+<div class="svc"><div class="ic">2nd</div><h3>Second opinion</h3><p>Have a specialist review your diagnosis and treatment plan.</p><a href="#">Request review →</a></div></div></div></section>
+<section class="sub"><div class="w"><div class="hd"><h2>How Malva works</h2></div><div class="steps">
+<div class="step"><h3>Tell us what's wrong</h3><p>Answer a few questions or pick a specialty.</p></div>
+<div class="step"><h3>Choose your doctor</h3><p>See availability, fees and reviews up front.</p></div>
+<div class="step"><h3>Meet by video or in person</h3><p>Join from any device, or visit the clinic.</p></div>
+<div class="step"><h3>Get your care plan</h3><p>Prescriptions and follow-ups land in your account.</p></div></div></div></section>
+<section id="doctors"><div class="w"><div class="hd"><div><h2>Doctors available today</h2><p>Verified, licensed and rated by patients.</p></div><a class="btn o" href="Malva App.html#/doctors/remote">View all doctors</a></div>
+<div class="grid g3">
+<div class="doc"><div class="top"><div class="av"></div><div><h3>Dr. Amara Okafor</h3><div class="meta">General Practitioner · 12 yrs</div><div class="meta">★ 4.9 (312 reviews)</div></div></div><span class="badge">Available today</span><div class="ft"><span>Video · <b>$35</b></span><a class="btn sm" href="Malva App.html#/doctor/d1">Book</a></div></div>
+<div class="doc"><div class="top"><div class="av"></div><div><h3>Dr. Daniel Reyes</h3><div class="meta">Dermatologist · 9 yrs</div><div class="meta">★ 4.8 (204 reviews)</div></div></div><span class="badge">Available today</span><div class="ft"><span>Office · <b>$60</b></span><a class="btn sm" href="Malva App.html#/doctor/d2">Book</a></div></div>
+<div class="doc"><div class="top"><div class="av"></div><div><h3>Dr. Priya Nair</h3><div class="meta">Psychiatrist · 15 yrs</div><div class="meta">★ 5.0 (158 reviews)</div></div></div><span class="badge">Available today</span><div class="ft"><span>Video · <b>$70</b></span><a class="btn sm" href="Malva App.html#/doctor/d3">Book</a></div></div></div></div></section>
+<section id="pharmacy" class="sub"><div class="w rx"><div class="ph">Photo: medication package at the door</div><div><h2>Your prescription, delivered</h2><p style="margin-top:12px;color:var(--color-neutral-600)">Doctors send prescriptions to Malva Pharmacy in one tap. We pack, ship and remind you when it's time to refill.</p>
+<ul class="list"><li>Same-day delivery in most cities</li><li>Auto-refills you can pause anytime</li><li>Pharmacists on chat for questions and interactions</li></ul><div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="Malva App.html#/prescriptions">Order medicine</a><a class="btn o" href="Malva App.html#/prescriptions">Find by RX number</a></div></div></div></section>
+<div class="band"><div class="w"><div><b>2M+</b><span>Consultations completed</span></div><div><b>8,000</b><span>Verified doctors</span></div><div><b>15 min</b><span>Median wait for video</span></div><div><b>4.8 / 5</b><span>Patient rating</span></div></div></div>
+<section id="journal"><div class="w"><div class="hd"><h2>From the health journal</h2><a href="#">All articles →</a></div><div class="grid g3">
+<article class="blog"><div class="ph"></div><div class="b"><small>Sleep · 5 min read</small><h3>Why you wake at 3 a.m., and what helps</h3></div></article>
+<article class="blog"><div class="ph"></div><div class="b"><small>Medication · 4 min read</small><h3>A simple guide to taking medicines on time</h3></div></article>
+<article class="blog"><div class="ph"></div><div class="b"><small>Prevention · 6 min read</small><h3>Which checkups are worth booking each year</h3></div></article></div></div></section>
+<section style="padding-top:0"><div class="w"><div class="cta"><h2>Feeling unwell? See a doctor today.</h2><a class="btn" href="Malva App.html#/doctors/remote">Book a visit</a></div></div></section>
+<footer><div class="w"><div><a class="logo in" href="#"><i>M</i>Malva</a><p>Healthcare that fits around your life — remote, in person and at your door.</p></div>
+<div><h4>Care</h4><a href="Malva App.html#/doctors/remote">Video sessions</a><a href="Malva App.html#/doctors/office">Office visits</a><a href="Malva App.html#/labs">Lab tests</a></div><div><h4>Pharmacy</h4><a href="Malva App.html#/prescriptions">Order medicine</a><a href="Malva App.html#/prescriptions">Prescriptions</a><a href="#">Delivery</a></div><div><h4>Company</h4><a href="#">About</a><a href="#">Careers</a><a href="#">Contact</a></div><div class="copy">© 2026 Malva Healthcare. Not for emergencies — call your local emergency number.</div></div></footer>
+</body></html>

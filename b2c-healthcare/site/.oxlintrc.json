@@ -1,0 +1,154 @@
+{
+  "plugins": [
+    "react",
+    "import"
+  ],
+  "rules": {
+    "react/forbid-elements": [
+      "warn",
+      {
+        "forbid": []
+      }
+    ],
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": []
+      }
+    ],
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "Literal[value=/#[0-9a-fA-F]{3,8}\\b/]",
+        "message": "Raw hex color — use a design-system color token via var()."
+      },
+      {
+        "selector": "Literal[value=/\\b\\d+px\\b/]",
+        "message": "Raw px value — use a design-system spacing token via var()."
+      },
+      {
+        "selector": "Literal[value=/font-family\\s*:\\s*(?!['\\\"]?(?:Lato|Poppins|Roboto))/i]",
+        "message": "Font not provided by the design system. Available: Lato, Poppins, Roboto."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/index.js"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ],
+  "x-omelette": {
+    "components": {},
+    "tokens": [
+      "--color-action",
+      "--color-action-hover",
+      "--color-action-label",
+      "--color-action-label-hover",
+      "--color-border",
+      "--color-border-brand",
+      "--color-brand-100",
+      "--color-brand-200",
+      "--color-brand-300",
+      "--color-brand-400",
+      "--color-brand-50",
+      "--color-brand-500",
+      "--color-brand-600",
+      "--color-brand-700",
+      "--color-brand-800",
+      "--color-brand-900",
+      "--color-brand-950",
+      "--color-danger-50",
+      "--color-danger-500",
+      "--color-danger-700",
+      "--color-info-50",
+      "--color-info-500",
+      "--color-info-700",
+      "--color-navy-100",
+      "--color-navy-200",
+      "--color-navy-300",
+      "--color-navy-400",
+      "--color-navy-50",
+      "--color-navy-500",
+      "--color-navy-600",
+      "--color-navy-700",
+      "--color-navy-800",
+      "--color-navy-900",
+      "--color-navy-950",
+      "--color-neutral-0",
+      "--color-neutral-100",
+      "--color-neutral-200",
+      "--color-neutral-25",
+      "--color-neutral-300",
+      "--color-neutral-400",
+      "--color-neutral-50",
+      "--color-neutral-500",
+      "--color-neutral-600",
+      "--color-neutral-700",
+      "--color-neutral-900",
+      "--color-success",
+      "--color-success-50",
+      "--color-success-500",
+      "--color-success-700",
+      "--color-surface",
+      "--color-surface-brand",
+      "--color-surface-brand-subtle",
+      "--color-surface-inverse",
+      "--color-surface-subtle",
+      "--color-text",
+      "--color-text-body",
+      "--color-text-heading",
+      "--color-text-link",
+      "--color-text-muted",
+      "--color-text-on-brand",
+      "--color-text-placeholder",
+      "--color-warning-50",
+      "--color-warning-500",
+      "--color-warning-700",
+      "--container-content",
+      "--container-width",
+      "--focus-ring",
+      "--font-body",
+      "--font-display",
+      "--font-meta",
+      "--gradient-brand",
+      "--gradient-peach",
+      "--gradient-sky",
+      "--radius-2xl",
+      "--radius-lg",
+      "--radius-md",
+      "--radius-pill",
+      "--radius-sm",
+      "--radius-xl",
+      "--shadow-lg",
+      "--shadow-md",
+      "--shadow-sm",
+      "--space-1",
+      "--space-2",
+      "--space-3",
+      "--space-4",
+      "--space-5",
+      "--space-6",
+      "--space-7",
+      "--space-8",
+      "--text-2xl",
+      "--text-3xl",
+      "--text-4xl",
+      "--text-lg",
+      "--text-md",
+      "--text-sm",
+      "--text-xl",
+      "--text-xs"
+    ],
+    "tokenKinds": "TRIMMED — derivable from tokens.css",
+    "fontFamilies": [
+      "Lato",
+      "Poppins",
+      "Roboto"
+    ]
+  }
+}
