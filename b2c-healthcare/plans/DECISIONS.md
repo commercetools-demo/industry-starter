@@ -55,3 +55,15 @@ Binding for juniors. `Confirmed` = fixed by an existing artifact or an owner ans
 
 D-009 status text on the `-50` background: success `#067a05` 4.93, warning `#8a5d00` 4.98, info `#0a6f8c` 5.18, danger `#b3402a` 4.93 (all pass); the 500 status colors on `-50` all fail.
 For SO-01: navy label vs white on a brand-700 fill. `--color-action-label-hover` is a storefront extension added by B because navy-900 does not pass on the hover fill.
+
+## Owner answers of 2026-10-09 (to QUESTIONS-RAISED.md)
+| ID | Decision | Status |
+| --- | --- | --- |
+| D-034 | **QR-001**: checkout is the **full commercetools Checkout** (checkout flow connected to the PSP/Stripe connector), not payment-only; Checkout creates the order. Workstream Q/S/T/U integration is reworked in follow-up AA (our order logic — `MLV-` number, prescription consumption, line records, funding payments — runs when the order exists, idempotently). | Confirmed |
+| D-035 | **QR-002** (message was cut off: "commercetools checkout handles …"): read as — **Checkout/the PSP connector handles the payment lifecycle** (authorize/capture/refund/cancel through Checkout's payment-intents API); the storefront requests refunds/cancels, it does not model capture itself. Re-confirm if you meant something else. | Confirmed (interpretation) |
+| D-036 | **QR-004**: the API client scopes = the **B2C storefront template** + recurrence policies and recurring-order prices + **`manage_key_value_documents`** (custom objects); this must all work. `.env.example`, `LIVE-TODOS.md` and the seed scope list follow it (follow-up AC). | Confirmed |
+| D-037 | **QR-013**: a **medicine product page (PDP)** is built (follow-up AB). | Confirmed |
+| D-038 | **QR-014**: a full seeding does a **full cleanup** first (reviews, custom objects, seeded customers, products, everything `mlv-`/`malva-`); `seed:full` = reset + cleanup-sample + seed + images + verify (follow-up AC). | Confirmed |
+| D-039 | **QR-017**: seed product type change — `clinicName` becomes searchable **before the first live seed** (follow-up AC). | Confirmed |
+| D-040 | **QR-027**: **all images come from Pexels** (royalty-free; no photographer credits shown); every slot incl. `home-cta`, journal covers, doctors and medicines uses Pexels URLs stored clean (follow-up AC). | Confirmed |
+| D-041 | Every other open QR item: the default stands. | Confirmed |

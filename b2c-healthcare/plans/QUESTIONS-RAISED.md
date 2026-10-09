@@ -470,3 +470,6 @@ Every entry here has `Needs owner: no`. "Live" means the only open part is a ver
 | W | 013, 036, 120 |
 | X | 005-007, 021, 114-118 |
 | Y, Z | no notes yet |
+
+## Owner answers (2026-10-09)
+QR-001: full commercetools Checkout connected to the PSP (D-034). QR-002: Checkout handles the payment lifecycle (D-035; the message was cut off, interpretation recorded). QR-004: B2C storefront scopes + recurring policies and prices + key_value_documents (D-036). QR-013: build the medicine PDP (D-037). QR-014: full cleanup with a full seeding (D-038). QR-017: make `clinicName` searchable (D-039). QR-027: all images from Pexels, no credits (D-040). All unanswered items: the default (D-041).
