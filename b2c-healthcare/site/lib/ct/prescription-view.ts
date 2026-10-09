@@ -72,6 +72,6 @@ export function buildRxView(rx: Prescription, patientName: string, contexts: Map
     issuedAt: rx.issuedAt,
     refillsLeft: rx.refillsLeft,
     patientName,
-    lines: rx.lines.map((line) => evaluateLine(rx, line, contexts.get(line.sku), today)),
+    lines: rx.lines.map((line) => ({ ...evaluateLine(rx, line, contexts.get(line.sku), today), sku: line.sku })),
   };
 }

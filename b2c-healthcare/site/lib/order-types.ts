@@ -17,6 +17,8 @@ export type RefundStatus = 'none' | 'requested' | 'refunded';
 export type Instrument = 'allowance' | 'restricted-health-account' | 'card';
 
 export interface OrderLineView {
+  /** Catalog SKU as ordered, so the name can link to the medicine page (AB). */
+  sku?: string;
   name: string;
   quantity: number;
   /** Treated as qualifying for the restricted instrument when the order was placed (copied then, not live). Absent on orders from before it was recorded. */

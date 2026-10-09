@@ -52,8 +52,8 @@ describe('disclosure through the goods (X-08)', () => {
     expect(text).toContain('SO-04');
   });
 
-  it('Disclosure through the goods is handled: what the order pages carry is exactly name and quantity per line, with no sig, RX content, diagnosis or reason', () => {
-    expect(members('lib/order-types.ts', 'OrderLineView').sort()).toEqual(['eligible', 'name', 'quantity', 'settledBy']);
+  it('Disclosure through the goods is handled: what the order pages carry is name, quantity and the catalog SKU (the link to the medicine page, AB) per line, with no sig, RX content, diagnosis or reason', () => {
+    expect(members('lib/order-types.ts', 'OrderLineView').sort()).toEqual(['eligible', 'name', 'quantity', 'settledBy', 'sku']);
     const orderFields = members('lib/order-types.ts', 'OrderView');
     expect(orderFields.length).toBeGreaterThan(8);
     expect(orderFields.filter((f) => /^(sig|diagnos\w*|conditions?|results?|reason|rx\w*|notes?|labs?|prescription\w*)$/i.test(f))).toEqual([]);

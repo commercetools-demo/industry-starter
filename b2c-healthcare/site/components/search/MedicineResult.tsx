@@ -1,4 +1,5 @@
 import { useLocale, useTranslations } from 'next-intl';
+import { MedicineLink } from '@/components/medicine/MedicineLink';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { formatMoney } from '@/lib/utils';
@@ -11,7 +12,11 @@ export function MedicineResult({ medicine, matchedSku }: { medicine: Medication;
   return (
     <Card as="article" data-testid="medicine-result" className="grid gap-1.5 p-5">
       <div className="flex flex-wrap items-center gap-2">
-        <h3 className="font-display text-lg font-semibold text-navy-900">{medicine.name}</h3>
+        <h3 className="font-display text-lg font-semibold text-navy-900">
+          <MedicineLink productKey={medicine.key} className="text-navy-900 underline-offset-2 hover:underline">
+            {medicine.name}
+          </MedicineLink>
+        </h3>
         <Badge variant={medicine.rxOnly ? 'wait' : 'neutral'}>{medicine.rxOnly ? t('rxOnly') : t('otc')}</Badge>
       </div>
       <p className="text-sm text-neutral-600">

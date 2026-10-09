@@ -1,4 +1,5 @@
 import { useLocale, useTranslations } from 'next-intl';
+import { MedicineLink } from '@/components/medicine/MedicineLink';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { cx } from '@/components/ui/cx';
@@ -56,7 +57,11 @@ export function CartLineRow({ line, busy, onRemove }: CartLineRowProps) {
       data-unavailable-line={line.unavailable ? 'true' : undefined}
     >
       <div>
-        <b className={cx('font-medium text-text-heading', line.unavailable && 'text-neutral-600 line-through')}>{name}</b>
+        <b className={cx('font-medium text-text-heading', line.unavailable && 'text-neutral-600 line-through')}>
+          <MedicineLink sku={line.sku} className="text-text-heading underline-offset-2 hover:underline">
+            {name}
+          </MedicineLink>
+        </b>
         <div className="font-meta text-sm text-neutral-600">{t('rxQty', { rx: line.rxNumber, count: line.prescribedQty })}</div>
         {line.unavailable ? <Reason problem={line.unavailable} id={noteId} /> : null}
         <CoverBadge line={line} />

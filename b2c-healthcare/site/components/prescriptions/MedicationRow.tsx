@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { MedicineLink } from '@/components/medicine/MedicineLink';
 import { Badge } from '@/components/ui/Badge';
 import { formatIsoDate } from '@/lib/format-date';
 import { controlClassLabel } from '@/lib/funding/credential';
@@ -67,7 +68,11 @@ export function MedicationRow({ line, checked, onChange }: MedicationRowProps) {
         className="size-5 accent-brand-500 disabled:cursor-not-allowed"
       />
       <label htmlFor={id} className={line.selectable ? 'cursor-pointer' : 'cursor-not-allowed text-neutral-600'}>
-        <b className="block text-navy-900">{line.name}</b>
+        <b className="block text-navy-900">
+          <MedicineLink sku={line.sku} className="text-navy-900 underline underline-offset-2 hover:text-brand-800">
+            {line.name}
+          </MedicineLink>
+        </b>
         <span className="block text-sm text-neutral-600">{line.sig}</span>
       </label>
       <span className="text-sm text-neutral-600">{t('qty', { count: line.qty })}</span>

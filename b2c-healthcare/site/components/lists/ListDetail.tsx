@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { MedicineLink } from '@/components/medicine/MedicineLink';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -34,7 +35,11 @@ function LineRow({ line, onRemove, busy }: { line: ListLineView; onRemove: () =>
   return (
     <li className="flex flex-wrap items-center justify-between gap-3 border-b border-border py-3 last:border-b-0" data-list-line>
       <div className="grid gap-0.5">
-        <span className="font-medium text-navy-900">{line.name}</span>
+        <span className="font-medium text-navy-900">
+          <MedicineLink sku={line.sku} className="text-navy-900 underline-offset-2 hover:underline">
+            {line.name}
+          </MedicineLink>
+        </span>
         {line.unavailable ? (
           <Badge variant="no" className="justify-self-start">
             {t('unavailable')}

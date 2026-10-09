@@ -71,7 +71,7 @@ export function mapOrder(order: Order, locale: string): OrderView {
     status,
     shipmentState: shipment && SHIPMENT.includes(shipment) ? shipment : null,
     createdAt: order.createdAt,
-    lines: order.lineItems.map((l) => ({ name: localized(l.name, locale), quantity: l.quantity, ...lineRecord(l) })),
+    lines: order.lineItems.map((l) => ({ name: localized(l.name, locale), quantity: l.quantity, ...(l.variant?.sku ? { sku: l.variant.sku } : {}), ...lineRecord(l) })),
     deliverTo,
     sameDay: order.shippingInfo?.shippingMethod?.obj?.key === 'mlv-same-day',
     total: mapMoney(total),

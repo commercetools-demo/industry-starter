@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { MedicineLink } from '@/components/medicine/MedicineLink';
 import { Badge, type BadgeVariant } from '@/components/ui/Badge';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { OrderAutoRefill } from '@/components/auto-refill/OrderAutoRefill';
@@ -61,7 +62,16 @@ function OrderCard({ order, autoRefill }: { order: OrderView; autoRefill: boolea
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="font-meta text-base font-bold text-navy-900">{order.orderNumber}</h2>
-          <p className="text-sm text-neutral-600">{order.lines.map((l) => l.name).join(', ')}</p>
+          <p className="text-sm text-neutral-600">
+            {order.lines.map((l, i) => (
+              <span key={`${l.sku ?? l.name}-${i}`}>
+                {i > 0 ? ', ' : ''}
+                <MedicineLink sku={l.sku} className="text-neutral-600 underline underline-offset-2 hover:text-navy-900">
+                  {l.name}
+                </MedicineLink>
+              </span>
+            ))}
+          </p>
         </div>
         <Badge variant={STATUS_VARIANT[order.status]}>{t(`list.status.${order.status}`)}</Badge>
       </div>
