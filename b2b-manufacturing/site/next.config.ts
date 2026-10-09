@@ -7,6 +7,8 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 const NO_STORE = [{ key: 'Cache-Control', value: 'no-store' }];
 
 const nextConfig: NextConfig = {
+  // The build type-checks the app only; tests (which read the seed package) are checked by `npm run check`.
+  typescript: { tsconfigPath: "tsconfig.build.json" },
   // Portal pages and every API response are per-visitor and never cached.
   async headers() {
     return [
