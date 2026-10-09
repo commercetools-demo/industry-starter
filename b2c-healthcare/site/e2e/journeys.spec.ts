@@ -10,7 +10,7 @@ test.describe('journey 1: a guest books a doctor', () => {
     await page.goto('/en-US/doctors/remote');
     await page.getByRole('link', { name: /Dr\. Priya Nair/ }).first().click();
     await expect(page.getByRole('heading', { name: 'Dr. Priya Nair' })).toBeVisible();
-    await page.getByRole('button').filter({ hasText: /^\d{2}:\d{2}$/ }).first().click();
+    await page.getByRole('button').filter({ hasText: /^\d{2}:\d{2}$/ }).last().click();
     const dialog = page.getByRole('dialog');
     await expect(dialog.getByText('Booking as a guest')).toBeVisible();
     await dialog.getByLabel('Full name').fill('Gita Guest');

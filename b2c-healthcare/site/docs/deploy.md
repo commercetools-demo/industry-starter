@@ -45,6 +45,7 @@ secret ones "Contains secret values" (Netlify then hides them and, with the secr
 | `RELOAD_ALLOWANCES_SECRET` | yes | **yes** | 16+ characters |
 | `RETENTION_SECRET` | yes | **yes** | 16+ characters |
 | `DOCTOR_PAGE_SIZE` | no | no | testing only; leave unset (default 9) |
+| `E2E_PORT` | no | no | e2e only: port of the Playwright dev server (default 3120); leave unset |
 | `URL` | provided | no | set by Netlify (the site's primary URL); the scheduled functions use it |
 | `NETLIFY` | provided | no | set by Netlify to `true`; makes the build a release build (section 4) |
 | `NEXT_RUNTIME` | provided | no | set by Next (`nodejs` or `edge`); read by `instrumentation.ts`; never set by hand |

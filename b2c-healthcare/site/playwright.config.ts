@@ -2,9 +2,9 @@ import { defineConfig } from '@playwright/test';
 
 /**
  * End-to-end sweep (workstream Z). Runs against `next dev` with MALVA_FIXTURES=1 (no commercetools needed).
- * Not part of `npm run check`: use `npm run e2e`. Port 3120.
+ * Not part of `npm run check`: use `npm run e2e`. Port 3120 (E2E_PORT overrides it).
  */
-const port = 3120;
+const port = Number(process.env.E2E_PORT ?? 3120);
 
 export default defineConfig({
   testDir: './e2e',

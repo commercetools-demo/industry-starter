@@ -5,7 +5,7 @@ export type Patient = 'sam-rivera' | 'alex-chen' | 'jordan-lee';
 
 /** Must equal SESSION_SECRET in playwright.config.ts (the dev server verifies the cookie with it). */
 export const E2E_SESSION_SECRET = 'e2e-session-secret-e2e-session-secret-0000';
-export const BASE = `http://localhost:3120`;
+export const BASE = `http://localhost:${process.env.E2E_PORT ?? 3120}`;
 
 /** Signs in as a fixture patient by setting the signed session cookie (same value scripts/dev-session.ts prints). */
 export async function signInAs(context: BrowserContext, slug: Patient): Promise<void> {
