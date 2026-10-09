@@ -1,12 +1,13 @@
 'use client';
 
-import { type FormEvent, type ReactElement } from 'react';
+import { useState, type FormEvent, type ReactElement } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
-import { Field, Input } from '@/components/ui/Field';
+import { Field, Input, Select } from '@/components/ui/Field';
 import { Link, useRouter } from '@/i18n/routing';
 import { AuthError, useAuthMutations } from '@/hooks/useAuthMutations';
 import { stripLocalePrefix, withReturnTo } from '@/lib/auth/return-target';
+import type { DemoLoginCustomer } from '@/lib/config/demo-login';
 import { AUTH_LINK } from './AuthCard';
 import { submitErrorKey } from './errors';
 import { PasswordField } from './PasswordField';
@@ -19,11 +20,21 @@ const ERROR_ID = 'login-error';
  * Email + password. Every failure shows the same sentence in one alert region (never says which part was wrong). The fields start
  * empty: nothing is prefilled. `returnTo` is a server-validated hint; the server validates it again and answers `redirectTo`.
  */
-export function LoginForm({ returnTo, resetDone = false }: { returnTo?: string | undefined; resetDone?: boolean }): ReactElement {
+export function LoginForm({
+  returnTo,
+  resetDone = false,
+  demoCustomers = [],
+}: {
+  returnTo?: string | undefined;
+  resetDone?: boolean;
+  /** Demo sign-in: sample customers for the dropdown below the form. Empty = no dropdown. */
+  demoCustomers?: readonly DemoLoginCustomer[];
+}): ReactElement {
   const t = useTranslations('auth');
   const locale = useLocale();
   const router = useRouter();
-  const { login } = useAuthMutations();
+  const { login, demoLogin } = useAuthMutations();
+  const [demoEmail, setDemoEmail] = useState(demoCustomers[0]?.email ?? '');
   const form = useAuthForm(FIELDS);
   const { values, formError, pending } = form;
 
@@ -49,10 +60,25 @@ export function LoginForm({ returnTo, resetDone = false }: { returnTo?: string |
     }
   }
 
+  async function onDemoLogin(): Promise<void> {
+    if (pending || demoEmail === '') return;
+    form.setFormError(null);
+    form.setPending(true);
+    try {
+      const result = await demoLogin({ email: demoEmail, returnTo, locale });
+      router.replace(stripLocalePrefix(result.redirectTo));
+      router.refresh();
+    } catch (error) {
+      form.setFormError(t(submitErrorKey(error)));
+      form.setPending(false);
+    }
+  }
+
   const invalid = formError ? { 'aria-invalid': true as const, 'aria-describedby': ERROR_ID } : {};
 
   return (
-    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6">
+    <>
+      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6">
       {resetDone ? (
         <p role="status" className="m-0 rounded-lg bg-surface-brand-subtle px-5 py-3 text-sm text-text">
           {t('login.resetDone')}
@@ -78,6 +104,23 @@ export function LoginForm({ returnTo, resetDone = false }: { returnTo?: string |
           {t('login.create')}
         </Link>
       </div>
-    </form>
+      </form>
+      {demoCustomers.length > 0 ? (
+        <div className="mt-8 flex flex-col gap-4 border-t border-neutral-400 pt-8">
+          <Field label={t('login.demo.label')}>
+            <Select name="demo-customer" value={demoEmail} onChange={(event) => setDemoEmail(event.target.value)}>
+              {demoCustomers.map((customer) => (
+                <option key={customer.email} value={customer.email}>
+                  {customer.name} ({customer.group})
+                </option>
+              ))}
+            </Select>
+          </Field>
+          <Button type="button" variant="secondary" block loading={pending} onClick={() => void onDemoLogin()}>
+            {t('login.demo.submit')}
+          </Button>
+        </div>
+      ) : null}
+    </>
   );
 }

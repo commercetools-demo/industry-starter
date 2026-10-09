@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { AuthCard } from '@/components/auth/AuthCard';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { firstParam, returnTargetOf, type RawSearchParams } from '@/lib/auth/search-params';
+import { DEMO_LOGIN_CUSTOMERS, demoLoginEnabled } from '@/lib/config/demo-login';
 import { isSupportedLocale } from '@/lib/utils';
 
 // Session-specific and never indexed: rendered on every request (the page reads `searchParams`).
@@ -25,7 +26,11 @@ export default async function LoginPage({ params, searchParams }: Props) {
   const query = await searchParams;
   return (
     <AuthCard title={t('login.title')} subtitle={t('login.subtitle')}>
-      <LoginForm returnTo={returnTargetOf(query, locale)} resetDone={firstParam(query.reset) === '1'} />
+      <LoginForm
+        returnTo={returnTargetOf(query, locale)}
+        resetDone={firstParam(query.reset) === '1'}
+        demoCustomers={demoLoginEnabled() ? DEMO_LOGIN_CUSTOMERS : []}
+      />
     </AuthCard>
   );
 }
