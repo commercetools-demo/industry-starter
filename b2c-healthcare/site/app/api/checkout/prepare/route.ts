@@ -3,7 +3,7 @@ import { checkoutContext } from '@/lib/checkout-route';
 import { PaymentUnavailableError } from '@/lib/checkout/payment-provider';
 import { getPaymentProvider } from '@/lib/checkout/provider';
 import { readPaymentCart } from '@/lib/ct/checkout';
-import { placeOrder } from '@/lib/ct/orders';
+import { prepareCheckout } from '@/lib/ct/orders';
 import { NO_STORE } from '@/lib/rx-route';
 import { clearCart } from '@/lib/session';
 import type { PlaceOrderFailure } from '@/lib/types';
@@ -14,11 +14,11 @@ const MESSAGES: Record<PlaceOrderFailure, string> = {
   ADDRESS_MISSING: 'Save your delivery address first.',
   NO_DELIVERY_METHOD: 'No delivery option is available for this address.',
   LINES_UNAVAILABLE: 'An item in your cart can no longer be filled.',
-  TOTALS_MOVED: 'The total changed after your payment was authorized. Please review it and pay again.',
+  TOTALS_MOVED: 'The total changed. Please review it and continue.',
   PAYMENT_REQUIRED: 'Authorize your payment before placing the order.',
   PAYMENT_DECLINED: 'Your payment was declined.',
   DISPENSE_REFUSED: 'A prescription can no longer be filled.',
-  PLACEMENT_FAILED: 'We could not place your order. Your cart is kept.',
+  PLACEMENT_FAILED: 'We could not start your payment. Your cart is kept.',
   COVER_UNRESOLVED: 'We could not confirm what your plan covers. Please try again shortly.',
   FUNDING_CHANGED: 'Your allowance or covered amount changed. Please review the new amounts.',
   IN_PROGRESS: 'Your order is already being placed.',
@@ -41,16 +41,16 @@ const STATUS: Record<PlaceOrderFailure, number> = {
 
 interface Body {
   expectedTotal?: { centAmount?: unknown; currencyCode?: unknown };
-  cartVersion?: unknown;
 }
 
 /**
- * POST /api/checkout/place `{ expectedTotal: { centAmount, currencyCode }, cartVersion }`: places the order from the
- * server-held cart, once. The idempotency key is the cart id (from the session) plus the cart version the page
- * showed, so a second activation (double click, a retry after a lost response) answers with the first order
- * instead of creating another. `expectedTotal` is the amount the buyer saw: it is only compared with the cart and
- * with the authorized amount, never charged. Success clears the session's cart and answers `{ orderId,
- * orderNumber }`; the page redirects to `/order/<id>`. Failures answer `{ code, error }` with the cart kept.
+ * POST /api/checkout/prepare `{ expectedTotal: { centAmount, currencyCode } }`: the gate before the commercetools Checkout
+ * flow (D-034). Re-validates the server-held cart (prescription rules, credentials, cost-share, delivery, the total the
+ * buyer saw), writes the line records and the allowance / restricted-instrument Payments onto the cart, and answers what the
+ * page does next: `{ kind: 'checkout', session, cardDue }` to mount Checkout, `{ kind: 'demo', cardDue }` for the
+ * dev-only demo provider, or `{ kind: 'order', orderId, orderNumber }` when nothing is left for the card (the order is made
+ * and finalized here and the session cart is cleared). `expectedTotal` is only compared with the cart, never charged.
+ * Failures answer `{ code, error }` with the cart kept. 503 when payment is not configured.
  */
 export async function POST(request: Request): Promise<Response> {
   return handle(async () => {
@@ -58,26 +58,22 @@ export async function POST(request: Request): Promise<Response> {
     const body = (await request.json().catch(() => null)) as Body | null;
     const cents = body?.expectedTotal?.centAmount;
     const currency = body?.expectedTotal?.currencyCode;
-    const version = body?.cartVersion;
-    if (!Number.isSafeInteger(cents) || typeof currency !== 'string' || !/^[A-Z]{3}$/.test(currency) || !Number.isSafeInteger(version) || (version as number) < 0) {
-      throw new ApiError(400, 'The request could not be processed.');
-    }
+    if (!Number.isSafeInteger(cents) || typeof currency !== 'string' || !/^[A-Z]{3}$/.test(currency)) throw new ApiError(400, 'The request could not be processed.');
     const cartId = ctx.cartId ?? (await readPaymentCart(ctx))?.id;
     if (!cartId) return Response.json({ code: 'EMPTY_CART', error: MESSAGES.EMPTY_CART }, { status: 422, headers: NO_STORE });
 
     let outcome;
     try {
-      const provider = await getPaymentProvider();
-      outcome = await placeOrder({ ctx, cartId, expectedTotal: { centAmount: cents as number, currencyCode: currency }, idempotencyKey: `${cartId}_${version as number}` }, provider);
+      outcome = await prepareCheckout({ ctx, cartId, expectedTotal: { centAmount: cents as number, currencyCode: currency } }, await getPaymentProvider());
     } catch (error) {
       if (error instanceof PaymentUnavailableError) throw new ApiError(503, error.message);
       throw error;
     }
-
     if (!outcome.ok) {
       return Response.json({ code: outcome.code, error: MESSAGES[outcome.code], ...(outcome.lineIds ? { lineIds: outcome.lineIds } : {}) }, { status: STATUS[outcome.code], headers: NO_STORE });
     }
-    await clearCart();
-    return Response.json({ orderId: outcome.orderId, orderNumber: outcome.orderNumber }, { headers: NO_STORE });
+    const { ok: _ok, ...result } = outcome;
+    if (result.kind === 'order') await clearCart();
+    return Response.json(result, { headers: NO_STORE });
   });
 }

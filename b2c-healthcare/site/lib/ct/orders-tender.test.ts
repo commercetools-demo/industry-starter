@@ -14,6 +14,8 @@ vi.mock('@/lib/ct/client', () => ({
 }));
 const rxMocks = vi.hoisted(() => ({ validateRxSelection: vi.fn(), findOwnPrescription: vi.fn(), RxNotFoundError: class extends Error {} }));
 vi.mock('@/lib/ct/prescriptions', () => rxMocks);
+vi.mock('@/lib/ct/rx-catalog', () => ({ getCatalogBySku: async () => new Map() }));
+vi.mock('@/lib/ct/patient', () => ({ getPatient: async () => ({ patientRef: 'pt_sam', name: 'Sam Rivera' }) }));
 // The draw can be forced short, as when another order takes the balance between the plan and the draw.
 const drawOverride = vi.hoisted(() => ({ short: 0 }));
 vi.mock('@/lib/ct/allowance', async (importOriginal) => {
@@ -28,7 +30,12 @@ import { CONTAINERS } from '@/lib/ct/custom-objects';
 import type { CheckoutContext } from '@/lib/ct/checkout';
 import { getBalance, grantCycle } from '@/lib/ct/allowance';
 import { setRestrictedChoice } from '@/lib/ct/tender';
-import { placeOrder, type PlaceOrderInput } from './orders';
+import * as ordersModule from './orders';
+import { prepareCheckout } from './orders';
+import { makePlaceOrder, type FlowInput } from '@/test/checkout-flow';
+
+type PlaceOrderInput = FlowInput & { idempotencyKey?: string };
+const placeOrder = (flow: PlaceOrderInput, provider: Parameters<ReturnType<typeof makePlaceOrder>>[1], options?: { cardCents?: number }) => makePlaceOrder(shop, ordersModule)(flow, provider, options);
 import type { Cart as CtCart } from '@commercetools/platform-sdk';
 
 const provider = createFakePaymentProvider();
@@ -96,14 +103,15 @@ describe('benefit-allowance-drawdown: allowance as its own Payment before the ca
     expect(await getBalance('pt_sam', NOW)).toBe(0);
   });
 
-  it('partly covered: the card authorization must be the shortfall, not the whole total', async () => {
+  it('partly covered: the allowance Payment is on the cart BEFORE Checkout runs and Checkout is started for the shortfall only', async () => {
     const { drawdown } = await import('@/lib/ct/allowance');
     await drawdown('pt_sam', 'earlier-order', 4125, NOW);
     const cart = cartOf([{ sku: ATOR, cents: 1875 }]);
-    expect(await placeOrder(input(cart.id), provider)).toEqual({ ok: false, code: 'PAYMENT_REQUIRED' });
-    authorize(cart.id, 1875);
-    expect(await placeOrder(input(cart.id), provider)).toEqual({ ok: false, code: 'TOTALS_MOVED' });
-    expect(provider.released).toHaveLength(1);
+    const gate = await prepareCheckout(input(cart.id), provider);
+    expect(gate).toMatchObject({ ok: true, kind: 'demo', cardDue: 1000 });
+    const onCart = (shop.carts.get(cart.id)?.paymentInfo?.payments ?? []).map((ref) => shop.payments.get(ref.id)!);
+    expect(onCart.map((p) => [p.paymentMethodInfo.method, p.amountPlanned.centAmount])).toEqual([['allowance', 875]]);
+    // Nothing is drawn until the order exists.
     expect(shop.orders).toHaveLength(0);
     expect(await getBalance('pt_sam', NOW)).toBe(875);
   });
@@ -118,11 +126,25 @@ describe('benefit-allowance-drawdown: allowance as its own Payment before the ca
     expect(shop.orders).toHaveLength(1);
   });
 
-  it('a stale card authorization is voided when the allowance now covers everything', async () => {
+  it('Checkout ignored the tender Payments and charged the whole total: the order is refused, the card is given back and the allowance is NOT drawn (no double charge)', async () => {
+    const { drawdown } = await import('@/lib/ct/allowance');
+    await drawdown('pt_sam', 'earlier-order', 4125, NOW);
     const cart = cartOf([{ sku: ATOR, cents: 1875 }]);
-    authorize(cart.id, 1875);
-    expect(await placeOrder(input(cart.id), provider)).toMatchObject({ ok: true });
+    const outcome = await placeOrder(input(cart.id), provider, { cardCents: 1875 });
+    expect(outcome).toEqual({ ok: false, code: 'FUNDING_CHANGED' });
+    expect(shop.orders[0].state?.key).toBe('mlv-cancelled');
     expect(provider.released).toHaveLength(1);
+    expect(await getBalance('pt_sam', NOW)).toBe(875);
+    expect((objects.objects.find((o) => o.container === CONTAINERS.rx)!.value as Prescription).refillsLeft).toBe(3);
+  });
+
+  it('the allowance covers everything: Checkout is not started, the storefront creates and finalizes the order itself', async () => {
+    const cart = cartOf([{ sku: ATOR, cents: 1875 }]);
+    const gate = await prepareCheckout(input(cart.id), provider);
+    expect(gate).toMatchObject({ ok: true, kind: 'order', orderNumber: 'MLV-000001' });
+    expect(shop.orders).toHaveLength(1);
+    expect(payments().map((p) => p.paymentMethodInfo.method)).toEqual(['allowance']);
+    expect(await getBalance('pt_sam', NOW)).toBe(3125);
   });
 
   it('the balance fell between plan and draw: the order is cancelled, the refill and the part draw are given back, the card is released', async () => {
@@ -142,7 +164,7 @@ describe('benefit-allowance-drawdown: allowance as its own Payment before the ca
     const cart = cartOf([{ sku: ATOR, cents: 1875 }]);
     authorize(cart.id, 1875);
     expect(await placeOrder(input(cart.id), provider)).toMatchObject({ ok: true });
-    expect(payments()).toHaveLength(0);
+    expect(payments().filter((p) => p.paymentMethodInfo.method !== 'card')).toHaveLength(0);
     expect(shop.orders[0].custom).toBeUndefined();
   });
 });
@@ -164,13 +186,12 @@ describe('eligible-item-tender-restriction: restricted instrument Payment (U-09)
   it('Mixed basket splits: the instrument is charged the eligible subtotal only and the card the rest', async () => {
     const cart = cartOf([{ sku: ATOR, cents: 1875, eligible: true }, { sku: ALP, cents: 1260, eligible: false }]);
     await setRestrictedChoice(asCt(cart.id), true, { patientRef: 'pt_sam', now: NOW });
-    expect(await placeOrder(input(cart.id), provider)).toEqual({ ok: false, code: 'PAYMENT_REQUIRED' });
-    authorize(cart.id, 3135);
-    expect(await placeOrder(input(cart.id), provider)).toEqual({ ok: false, code: 'TOTALS_MOVED' });
-    authorize(cart.id, 1260);
+    expect(await prepareCheckout(input(cart.id), provider)).toMatchObject({ ok: true, kind: 'demo', cardDue: 1260 });
     const outcome = await placeOrder(input(cart.id), provider);
     expect(outcome).toMatchObject({ ok: true });
     expect(byMethod('restricted-health-account')?.amountPlanned.centAmount).toBe(1875);
+    // Checkout collected the card remainder only.
+    expect(byMethod('card')?.amountPlanned.centAmount).toBe(1260);
   });
 
   it('Eligibility visible on the order: each line records whether it was eligible and which instrument settled it', async () => {
@@ -198,6 +219,7 @@ describe('eligible-item-tender-restriction: restricted instrument Payment (U-09)
     // Another eligible line arrives (the basket changed since the choice was made).
     const stored = shop.carts.get(cart.id)!;
     stored.lineItems.push({ ...structuredClone(stored.lineItems[0]), id: 'li-extra', price: { id: 'p2', value: { ...stored.lineItems[0].price.value, centAmount: 1000 } }, listCents: 1000, totalPrice: { ...stored.totalPrice, centAmount: 1000 } });
+    stored.lineItems[1].variant = { id: 1, sku: ALP };
     stored.lineItems[1].custom = { type: { typeId: 'type', id: 't', key: 'mlv-rx-line' }, fields: { rxNumber: 'RX-77102', rxLineRef: 'RX-77102-2', prescribedQty: 30, eligibleForRestricted: true } };
     stored.totalPrice = { ...stored.totalPrice, centAmount: 2875 };
     stored.taxedPrice = { totalNet: stored.totalPrice, totalGross: stored.totalPrice, totalTax: { ...stored.totalPrice, centAmount: 0 } };
@@ -223,7 +245,7 @@ describe('eligible-item-tender-restriction: restricted instrument Payment (U-09)
     authorize(cart.id, 260);
     const outcome = await placeOrder(input(cart.id), provider);
     expect(outcome).toMatchObject({ ok: true });
-    expect(payments().map((p) => [p.paymentMethodInfo.method, p.amountPlanned.centAmount]).sort()).toEqual([['allowance', 1000], ['restricted-health-account', 1875]]);
+    expect(payments().map((p) => [p.paymentMethodInfo.method, p.amountPlanned.centAmount]).sort()).toEqual([['allowance', 1000], ['card', 260], ['restricted-health-account', 1875]]);
     expect(await getBalance('pt_sam', NOW)).toBe(0);
   });
 });

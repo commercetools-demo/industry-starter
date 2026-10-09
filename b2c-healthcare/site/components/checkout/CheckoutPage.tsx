@@ -15,7 +15,11 @@ import { PaymentCard } from './PaymentCard';
 import { PlaceOrderButton } from './PlaceOrderButton';
 import { RestrictedCard } from './RestrictedCard';
 
-const EMPTY_CART_FOR_FLOW = { version: 0, total: { centAmount: 0, currencyCode: '', fractionDigits: 2 } };
+const EMPTY_CART_FOR_FLOW = { id: '', total: { centAmount: 0, currencyCode: '', fractionDigits: 2 }, shippingMethodKey: null as string | null, tender: undefined as undefined | { card: { centAmount: number } } };
+
+/** Changes when the amount or the delivery changes: a prepared Checkout session is dropped and the gate runs again. */
+const cartKeyOf = (cart: { id: string; total: { centAmount: number }; tender?: { card: { centAmount: number } }; shippingMethodKey: string | null }) =>
+  `${cart.id}|${cart.total.centAmount}|${cart.tender?.card.centAmount ?? ''}|${cart.shippingMethodKey ?? ''}`;
 
 /**
  * The checkout page body (the signed-in check is the (protected) layout's, which shows "Sign in to check out.").
@@ -30,9 +34,9 @@ export function CheckoutPage() {
 
   const flow = usePlaceFlow({
     cart: state?.cart ?? EMPTY_CART_FOR_FLOW,
+    cartKey: cartKeyOf(state?.cart ?? EMPTY_CART_FOR_FLOW),
     mode: state?.paymentMode ?? 'psp',
     simulateDecline,
-    cardDue: state?.cart.tender?.card.centAmount,
     refresh: () => void mutate(),
   });
 
@@ -116,7 +120,7 @@ function CheckoutBody({ state, flow, saveAddress, chooseMethod, chooseRestricted
           mode={paymentMode}
           ready={ready}
           noCard={cart.tender?.card.centAmount === 0}
-          cartKey={`${cart.id}|${cart.total.centAmount}|${cart.tender?.card.centAmount ?? ''}|${cart.shippingMethodKey ?? ''}`}
+          session={flow.session}
           message={paymentProblem}
           onEvent={flow.onPaymentEvent}
           simulateDecline={simulateDecline}
@@ -134,7 +138,9 @@ function CheckoutBody({ state, flow, saveAddress, chooseMethod, chooseRestricted
             {blockedReason}
           </p>
         ) : null}
-        <PlaceOrderButton mode={paymentMode} needsCard={cart.tender?.card.centAmount !== 0} disabled={Boolean(blockedReason)} busy={flow.busy} onActivate={() => void flow.activate()} />
+        {paymentMode === 'psp' && flow.session ? null : (
+          <PlaceOrderButton mode={paymentMode} needsCard={cart.tender?.card.centAmount !== 0} disabled={Boolean(blockedReason)} busy={flow.busy} onActivate={() => void flow.activate()} />
+        )}
         {cart.unavailableCount > 0 ? (
           <ButtonLink href="/cart" variant="outline" full>
             {t('summary.backToCart')}

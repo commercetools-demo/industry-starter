@@ -12,13 +12,22 @@ export function statusOfState(key: string | undefined): OrderStatus {
   return STATUSES.find((s) => s === bare) ?? 'received';
 }
 
-/** Refund state from the Payments' `Refund` transactions: Success is refunded, anything else open is requested. */
-export function refundOf(payments: Pick<Payment, 'transactions'>[]): RefundStatus {
-  const refunds = payments.flatMap((p) => p.transactions).filter((t) => t.type === 'Refund');
-  // An order paid with several tenders is refunded only when every share is: an open card refund keeps it "requested".
+const INTERNAL_METHODS = ['allowance', 'restricted-health-account'];
+
+/**
+ * What happened to the buyer's CARD money, from the card Payments' transactions (Checkout owns them, D-035):
+ * an open `Refund` is "requested", a finished one "refunded"; a cancelled order whose card payment was only authorized
+ * (nothing captured) is "released": the hold was cancelled and no refund exists. The allowance and the restricted
+ * instrument are internal tenders and are shown by the tender rows instead.
+ */
+export function refundOf(payments: Pick<Payment, 'transactions' | 'paymentMethodInfo'>[], cancelled = false): RefundStatus {
+  const card = payments.filter((p) => !INTERNAL_METHODS.includes(p.paymentMethodInfo?.method ?? ''));
+  const refunds = card.flatMap((p) => p.transactions).filter((t) => t.type === 'Refund');
   if (refunds.some((t) => t.state === 'Initial' || t.state === 'Pending')) return 'requested';
   if (refunds.some((t) => t.state === 'Success')) return 'refunded';
-  return 'none';
+  const captured = card.some((p) => p.transactions.some((t) => t.type === 'Charge' && t.state === 'Success'));
+  const authorized = card.some((p) => p.transactions.some((t) => t.type === 'Authorization' && t.state === 'Success'));
+  return cancelled && authorized && !captured ? 'released' : 'none';
 }
 
 export const paymentsOf = (order: Pick<Order, 'paymentInfo'>): Payment[] =>
@@ -75,7 +84,7 @@ export function mapOrder(order: Order, locale: string): OrderView {
     deliverTo,
     sameDay: order.shippingInfo?.shippingMethod?.obj?.key === 'mlv-same-day',
     total: mapMoney(total),
-    refund: refundOf(paymentsOf(order)),
+    refund: refundOf(paymentsOf(order), status === 'cancelled'),
     cancellable: CANCELLABLE.includes(status),
     ...(tenderOf(order, mapMoney(total)) ? { tender: tenderOf(order, mapMoney(total)) } : {}),
   };

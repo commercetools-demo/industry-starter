@@ -2,6 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createFakeObjects, type FakeObjects } from '@/test/fake-custom-objects';
 import { createFakeShop, type FakeShop } from '@/test/fake-shop';
+import { checkoutCreatesOrder, makePlaceOrder } from '@/test/checkout-flow';
 import { createFakePaymentProvider } from '@/lib/checkout/fake-provider';
 import type { Prescription } from '@/lib/clinical/types';
 
@@ -15,12 +16,16 @@ vi.mock('@/lib/ct/client', () => ({
 
 const rxMocks = vi.hoisted(() => ({ validateRxSelection: vi.fn(), findOwnPrescription: vi.fn(), RxNotFoundError: class extends Error {} }));
 vi.mock('@/lib/ct/prescriptions', () => rxMocks);
+vi.mock('@/lib/ct/rx-catalog', () => ({ getCatalogBySku: async () => new Map() }));
+vi.mock('@/lib/ct/patient', () => ({ getPatient: async () => ({ patientRef: 'pt_sam', name: 'Sam Rivera' }) }));
 
 import { CONTAINERS } from '@/lib/ct/custom-objects';
 import type { CheckoutContext } from '@/lib/ct/checkout';
-import { placeOrder, type PlaceOrderInput } from './orders';
+import * as orders from './orders';
+import { finalizeOrder, needsFinalize, prepareCheckout } from './orders';
 
 const provider = createFakePaymentProvider();
+const placeOrder = (input: Parameters<ReturnType<typeof makePlaceOrder>>[0], options?: { cardCents?: number }) => makePlaceOrder(shop, orders)(input, provider, options);
 const MORNING = new Date('2026-10-08T09:00:00-04:00');
 const AFTERNOON = new Date('2026-10-08T15:00:00-04:00');
 const ctx = (now = MORNING, customerId = 'c-sam'): CheckoutContext => ({ patient: { patientRef: 'pt_sam', name: 'Sam Rivera' }, customerId, cartId: undefined, rx: { locale: 'en-US', currency: 'USD', country: 'US' }, now });
@@ -43,10 +48,7 @@ const totalOf = (cartId: string) => {
   const t = c.taxedPrice?.totalGross ?? c.totalPrice;
   return { centAmount: t.centAmount, currencyCode: t.currencyCode };
 };
-const input = (cartId: string, over: Partial<PlaceOrderInput> = {}): PlaceOrderInput => ({
-  ctx: ctx(), cartId, expectedTotal: totalOf(cartId), idempotencyKey: `${cartId}_${shop.carts.get(cartId)?.version}`, ...over,
-});
-const authorize = (cartId: string, options?: { decline?: boolean }) => provider.authorize({ id: cartId, total: totalOf(cartId) }, options);
+const input = (cartId: string, over: { ctx?: CheckoutContext; expectedTotal?: { centAmount: number; currencyCode: string } } = {}) => ({ ctx: ctx(), cartId, expectedTotal: totalOf(cartId), ...over });
 
 beforeEach(() => {
   shop = createFakeShop();
@@ -58,237 +60,191 @@ beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
 });
 
-describe('checkout: Checkout: placeOrder (Q-05)', () => {
-  it('Success: creates the order from the cart with an MLV- number and state mlv-received, records the line, consumes once, and the cart is Ordered', async () => {
+describe('checkout: prepareCheckout, the gate before Checkout (AA)', () => {
+  it('a cart that passes every check gets a Checkout session and NO order: Checkout creates it later', async () => {
     const cart = readyCart();
-    authorize(cart.id);
-    const outcome = await placeOrder(input(cart.id), provider);
+    const gate = await prepareCheckout(input(cart.id), provider);
+    // The demo provider stands in for Checkout in tests; the real adapter answers kind "checkout" with the same session.
+    expect(gate).toMatchObject({ ok: true, kind: 'demo', cardDue: 1875 });
+    expect(shop.orders).toHaveLength(0);
+    expect(shop.orderCreates).toHaveLength(0);
+    expect(shop.carts.get(cart.id)?.cartState).toBe('Active');
+    expect(storedRx().refillsLeft).toBe(3);
+  });
+
+  it('writes the N-09 line records on the cart lines before Checkout runs (the platform copies them to the order)', async () => {
+    const cart = readyCart();
+    await prepareCheckout(input(cart.id), provider);
+    const fields = shop.carts.get(cart.id)!.lineItems[0].custom?.fields as Record<string, unknown>;
+    expect(fields).toMatchObject({ rxNumber: 'RX-77102', rxLineRef: 'RX-77102-1', dispensedQty: 30 });
+    expect(JSON.parse(String(fields.authorizationParams))).toMatchObject({ issuedAt: '2026-09-24', refillsBefore: 3 });
+    expect(JSON.parse(String(fields.suppliedLots))).toEqual([]);
+  });
+
+  it('is safe to run again: the same cart, the same records, still no order', async () => {
+    const cart = readyCart();
+    await prepareCheckout(input(cart.id), provider);
+    const again = await prepareCheckout(input(cart.id), provider);
+    expect(again).toMatchObject({ ok: true, kind: 'demo' });
+    expect(shop.orders).toHaveLength(0);
+  });
+
+  it('Totals moved: the cart no longer says the amount the buyer saw, so no session is created', async () => {
+    const cart = readyCart();
+    const outcome = await prepareCheckout(input(cart.id, { expectedTotal: { centAmount: 1500, currencyCode: 'USD' } }), provider);
+    expect(outcome).toEqual({ ok: false, code: 'TOTALS_MOVED' });
+    expect(shop.orders).toHaveLength(0);
+    expect(shop.carts.get(cart.id)!.lineItems[0].custom?.fields).not.toHaveProperty('dispensedQty');
+  });
+
+  it('re-validates the lines: a line that can no longer be filled blocks Checkout and names the line', async () => {
+    const cart = readyCart();
+    rxMocks.validateRxSelection.mockResolvedValue({
+      rxNumber: 'RX-77102', accepted: [],
+      refused: [{ lineRef: 'RX-77102-1', name: '', sig: '', qty: 30, price: null, status: 'NO_REFILLS', selectable: false, remaining: 0, minShelfLifeMonths: null }],
+    });
+    expect(await prepareCheckout(input(cart.id), provider)).toEqual({ ok: false, code: 'LINES_UNAVAILABLE', lineIds: [shop.carts.get(cart.id)!.lineItems[0].id] });
+  });
+
+  it('a prescription that can no longer be found blocks Checkout too', async () => {
+    const cart = readyCart();
+    rxMocks.validateRxSelection.mockRejectedValue(new rxMocks.RxNotFoundError());
+    expect((await prepareCheckout(input(cart.id), provider)).ok).toBe(false);
+  });
+
+  it('same-day chosen before 14:00 but continued after the cut-off is refused (D-033)', async () => {
+    const cart = readyCart({ methodKey: 'mlv-same-day' });
+    expect(await prepareCheckout(input(cart.id, { ctx: ctx(AFTERNOON) }), provider)).toEqual({ ok: false, code: 'NO_DELIVERY_METHOD' });
+    expect(await prepareCheckout(input(cart.id, { ctx: ctx(MORNING) }), provider)).toMatchObject({ ok: true });
+  });
+
+  it('refuses without an address, and never prepares another customer\'s cart', async () => {
+    const bare = shop.seedCart();
+    expect(await prepareCheckout(input(bare.id), provider)).toEqual({ ok: false, code: 'ADDRESS_MISSING' });
+    const other = readyCart({ customerId: 'c-other' });
+    expect(await prepareCheckout(input(other.id), provider)).toEqual({ ok: false, code: 'EMPTY_CART' });
+  });
+
+  it('an empty or missing cart is EMPTY_CART', async () => {
+    const empty = readyCart({ lines: [] });
+    expect(await prepareCheckout(input(empty.id), provider)).toEqual({ ok: false, code: 'EMPTY_CART' });
+    expect(await prepareCheckout({ ctx: ctx(), cartId: 'cart-nope', expectedTotal: { centAmount: 1, currencyCode: 'USD' } }, provider)).toEqual({ ok: false, code: 'EMPTY_CART' });
+  });
+
+  it('a cart Checkout already turned into an order answers with that order, finalized', async () => {
+    const cart = readyCart();
+    const order = await checkoutCreatesOrder(shop, cart.id);
+    const gate = await prepareCheckout(input(cart.id), provider);
+    expect(gate).toMatchObject({ ok: true, kind: 'order', orderId: order.id, orderNumber: 'MLV-000001' });
+    expect(storedRx().refillsLeft).toBe(2);
+  });
+});
+
+describe('checkout: finalizeOrder, the domain logic once per order (AA)', () => {
+  it('Success: the number MLV-000001 and state mlv-received are set, the prescription is consumed once, the totals are the order\'s own', async () => {
+    const cart = readyCart();
+    const outcome = await placeOrder(input(cart.id));
     expect(outcome).toMatchObject({ ok: true, replay: false, orderNumber: 'MLV-000001' });
     expect(shop.orders).toHaveLength(1);
     const order = shop.orders[0];
     expect(order).toMatchObject({ orderNumber: 'MLV-000001', customerId: 'c-sam', cart: { id: cart.id } });
     expect(order.state?.key).toBe('mlv-received');
-    expect(shop.orderCreates[0]).toMatchObject({ cart: { typeId: 'cart', id: cart.id }, orderNumber: 'MLV-000001', state: { typeId: 'state', key: 'mlv-received' } });
-    // Totals are the cart's own.
     expect(order.totalPrice.centAmount).toBe(1875);
-    // Line custom fields from N-09 are on the cart line, and so on the order line.
     const fields = order.lineItems[0].custom?.fields as Record<string, unknown>;
-    expect(fields).toMatchObject({ rxNumber: 'RX-77102', rxLineRef: 'RX-77102-1', dispensedQty: 30 });
-    expect(JSON.parse(String(fields.authorizationParams))).toMatchObject({ issuedAt: '2026-09-24', refillsBefore: 3 });
-    expect(JSON.parse(String(fields.suppliedLots))).toEqual([]);
-    // The prescription was consumed once for this order id.
+    expect(fields).toMatchObject({ rxNumber: 'RX-77102', dispensedQty: 30 });
     expect(storedRx().refillsLeft).toBe(2);
     expect(storedRx().consumedBy).toEqual([order.id]);
     expect(shop.carts.get(cart.id)?.cartState).toBe('Ordered');
   });
 
-  it('Totals moved after authorization: the cart total changed after the payment was authorized, so no order is placed and the stale authorization is released', async () => {
-    shop.taxPercent = { NY: 8 };
-    const cart = readyCart({ shippingAddress: { ...ADDRESS, state: 'CA' } });
-    authorize(cart.id);
-    // The address changes (tax moves the total) after the authorization; the buyer saw the new total.
-    const stored = shop.carts.get(cart.id)!;
-    stored.shippingAddress = { ...ADDRESS };
-    stored.taxedPrice = { totalNet: { ...stored.totalPrice }, totalGross: { ...stored.totalPrice, centAmount: 2025 }, totalTax: { ...stored.totalPrice, centAmount: 150 } };
-    const outcome = await placeOrder(input(cart.id, { expectedTotal: { centAmount: 2025, currencyCode: 'USD' } }), provider);
-    expect(outcome).toEqual({ ok: false, code: 'TOTALS_MOVED' });
-    expect(shop.orders).toHaveLength(0);
-    expect(shop.carts.get(cart.id)?.cartState).toBe('Active');
-    expect(provider.released).toHaveLength(1);
-    expect(storedRx().refillsLeft).toBe(3);
-  });
-
-  it('mismatch refusal: the cart no longer says the amount the buyer saw, so nothing is created', async () => {
+  it('is idempotent on the order id: a second run answers with the same order and consumes nothing twice', async () => {
     const cart = readyCart();
-    authorize(cart.id);
-    const outcome = await placeOrder(input(cart.id, { expectedTotal: { centAmount: 1500, currencyCode: 'USD' } }), provider);
-    expect(outcome).toEqual({ ok: false, code: 'TOTALS_MOVED' });
-    expect(shop.orders).toHaveLength(0);
-    expect(shop.orderCreates).toHaveLength(0);
-  });
-
-  it('the total compared is the cart\'s, never anything the browser sends as the amount to charge', async () => {
-    const cart = readyCart();
-    authorize(cart.id);
-    const outcome = await placeOrder(input(cart.id), provider);
-    expect(outcome.ok).toBe(true);
-    expect(shop.orders[0].totalPrice.centAmount).toBe(shop.carts.get(cart.id)?.totalPrice.centAmount);
-  });
-
-  it('Placement fails at the last moment: the cart is kept, the payment released, nothing consumed and the lock freed', async () => {
-    const cart = readyCart();
-    authorize(cart.id);
-    shop.failNextOrder = { statusCode: 400, body: { errors: [{ code: 'InvalidOperation' }] } };
-    const outcome = await placeOrder(input(cart.id), provider);
-    expect(outcome).toEqual({ ok: false, code: 'PLACEMENT_FAILED' });
-    expect(shop.orders).toHaveLength(0);
-    const kept = shop.carts.get(cart.id)!;
-    expect(kept.cartState).toBe('Active');
-    expect(kept.lineItems).toHaveLength(1);
-    expect(provider.released).toHaveLength(1);
-    expect(storedRx().refillsLeft).toBe(3);
-    expect(objects.objects.filter((o) => o.container === CONTAINERS.orderAttempt)).toHaveLength(0);
-  });
-
-  it('Placement fails at the last moment: retry creates exactly one order (after paying again)', async () => {
-    const cart = readyCart();
-    authorize(cart.id);
-    shop.failNextOrder = { statusCode: 400, body: { errors: [{ code: 'InvalidOperation' }] } };
-    await placeOrder(input(cart.id), provider);
-    expect(await placeOrder(input(cart.id), provider)).toEqual({ ok: false, code: 'PAYMENT_REQUIRED' });
-    authorize(cart.id);
-    const retried = await placeOrder(input(cart.id), provider);
-    expect(retried.ok).toBe(true);
-    expect(shop.orders).toHaveLength(1);
+    const first = await placeOrder(input(cart.id));
+    expect(first.ok).toBe(true);
+    if (!first.ok) return;
+    const second = await finalizeOrder(first.orderId, { provider });
+    expect(second).toMatchObject({ ok: true, replay: true, orderId: first.orderId, orderNumber: first.orderNumber });
     expect(storedRx().refillsLeft).toBe(2);
   });
 
-  it('a lost answer is not a failed order: the order that exists is returned and the payment is not released', async () => {
+  it('two simultaneous runs (callback and lazy read) finish one order with one number and one consumption', async () => {
     const cart = readyCart();
-    authorize(cart.id);
-    shop.loseNextOrderAnswer = true;
-    const outcome = await placeOrder(input(cart.id), provider);
-    expect(outcome).toMatchObject({ ok: true, replay: true });
-    expect(shop.orders).toHaveLength(1);
-    expect(provider.released).toHaveLength(0);
-  });
-
-  it('retry with the same key returns the same order and consumes nothing twice', async () => {
-    const cart = readyCart();
-    authorize(cart.id);
-    const key = `${cart.id}_1`;
-    const first = await placeOrder(input(cart.id, { idempotencyKey: key }), provider);
-    const second = await placeOrder(input(cart.id, { idempotencyKey: key }), provider);
-    expect(first.ok && second.ok).toBe(true);
-    if (first.ok && second.ok) {
-      expect(second.orderId).toBe(first.orderId);
-      expect(second.orderNumber).toBe(first.orderNumber);
-      expect(second.replay).toBe(true);
-    }
-    expect(shop.orders).toHaveLength(1);
-    expect(storedRx().refillsLeft).toBe(2);
-  });
-
-  it('Double submit: two simultaneous attempts with one key create one order', async () => {
-    const cart = readyCart();
-    authorize(cart.id);
-    const key = `${cart.id}_1`;
-    const [a, b] = await Promise.all([placeOrder(input(cart.id, { idempotencyKey: key }), provider), placeOrder(input(cart.id, { idempotencyKey: key }), provider)]);
-    expect(shop.orders).toHaveLength(1);
+    await prepareCheckout(input(cart.id), provider);
+    const order = await checkoutCreatesOrder(shop, cart.id);
+    const [a, b] = await Promise.all([finalizeOrder(order.id, { provider, now: MORNING }), finalizeOrder(order.id, { provider, now: MORNING })]);
     expect([a, b].filter((o) => o.ok && !o.replay)).toHaveLength(1);
     expect([a, b].filter((o) => !o.ok).every((o) => !o.ok && o.code === 'IN_PROGRESS')).toBe(true);
+    expect(shop.orders[0].orderNumber).toBe('MLV-000001');
     expect(storedRx().refillsLeft).toBe(2);
   });
 
-  it('a different key for the same, already ordered cart still returns the existing order', async () => {
+  it('sets the number only if unset: an order that already has one keeps it and no counter value is used', async () => {
     const cart = readyCart();
-    authorize(cart.id);
-    const first = await placeOrder(input(cart.id, { idempotencyKey: 'key-one' }), provider);
-    const again = await placeOrder(input(cart.id, { idempotencyKey: 'key-two' }), provider);
-    expect(first.ok && again.ok).toBe(true);
-    if (first.ok && again.ok) expect(again.orderId).toBe(first.orderId);
-    expect(shop.orders).toHaveLength(1);
+    await prepareCheckout(input(cart.id), provider);
+    const order = await checkoutCreatesOrder(shop, cart.id);
+    shop.orders[0].orderNumber = 'MLV-000777';
+    expect(await finalizeOrder(order.id, { provider, now: MORNING })).toMatchObject({ ok: true, orderNumber: 'MLV-000777' });
+    expect(objects.objects.some((o) => o.container === CONTAINERS.counter)).toBe(false);
   });
 
-  it('payment: no authorization -> PAYMENT_REQUIRED, declined -> PAYMENT_DECLINED, and no order either way', async () => {
+  it('needsFinalize: an order Checkout just created has no number and no state; a finalized one has both', async () => {
     const cart = readyCart();
-    expect(await placeOrder(input(cart.id), provider)).toEqual({ ok: false, code: 'PAYMENT_REQUIRED' });
-    authorize(cart.id, { decline: true });
-    expect(await placeOrder(input(cart.id), provider)).toEqual({ ok: false, code: 'PAYMENT_DECLINED' });
-    expect(shop.orders).toHaveLength(0);
-    expect(shop.carts.get(cart.id)?.cartState).toBe('Active');
+    const order = await checkoutCreatesOrder(shop, cart.id);
+    expect(needsFinalize(shop.orders[0] as unknown as Parameters<typeof needsFinalize>[0])).toBe(true);
+    await finalizeOrder(order.id, { provider, now: MORNING });
+    expect(needsFinalize(shop.orders[0] as unknown as Parameters<typeof needsFinalize>[0])).toBe(false);
   });
 
-  it('re-validates the lines: a line that can no longer be filled blocks the order and names the line', async () => {
+  it('an interrupted consumption leaves the order alone and the next caller finishes it, once', async () => {
     const cart = readyCart();
-    authorize(cart.id);
-    rxMocks.validateRxSelection.mockResolvedValue({
-      rxNumber: 'RX-77102', accepted: [],
-      refused: [{ lineRef: 'RX-77102-1', name: '', sig: '', qty: 30, price: null, status: 'NO_REFILLS', selectable: false, remaining: 0, minShelfLifeMonths: null }],
-    });
-    const outcome = await placeOrder(input(cart.id), provider);
-    expect(outcome).toEqual({ ok: false, code: 'LINES_UNAVAILABLE', lineIds: [shop.carts.get(cart.id)!.lineItems[0].id] });
-    expect(shop.orders).toHaveLength(0);
-  });
-
-  it('a prescription that can no longer be found blocks the order too', async () => {
-    const cart = readyCart();
-    authorize(cart.id);
-    rxMocks.validateRxSelection.mockRejectedValue(new rxMocks.RxNotFoundError());
-    expect((await placeOrder(input(cart.id), provider)).ok).toBe(false);
-    expect(shop.orders).toHaveLength(0);
-  });
-
-  it('same-day chosen before 14:00 but placed after the cut-off is refused (D-033)', async () => {
-    const cart = readyCart({ methodKey: 'mlv-same-day' });
-    authorize(cart.id);
-    expect(await placeOrder(input(cart.id, { ctx: ctx(AFTERNOON) }), provider)).toEqual({ ok: false, code: 'NO_DELIVERY_METHOD' });
-    const morning = await placeOrder(input(cart.id, { ctx: ctx(MORNING) }), provider);
-    expect(morning).toMatchObject({ ok: true });
-  });
-
-  it('refuses without an address, and never places another customer\'s cart', async () => {
-    const bare = shop.seedCart();
-    authorize(bare.id);
-    expect(await placeOrder(input(bare.id), provider)).toEqual({ ok: false, code: 'ADDRESS_MISSING' });
-    const other = readyCart({ customerId: 'c-other' });
-    authorize(other.id);
-    expect(await placeOrder(input(other.id), provider)).toEqual({ ok: false, code: 'EMPTY_CART' });
-    expect(shop.orders).toHaveLength(0);
-  });
-
-  it('an empty or missing cart is EMPTY_CART', async () => {
-    const empty = readyCart({ lines: [] });
-    expect(await placeOrder(input(empty.id), provider)).toEqual({ ok: false, code: 'EMPTY_CART' });
-    expect(await placeOrder({ ctx: ctx(), cartId: 'cart-nope', expectedTotal: { centAmount: 1, currencyCode: 'USD' }, idempotencyKey: 'k-nope' }, provider)).toEqual({ ok: false, code: 'EMPTY_CART' });
-  });
-
-  it('a malformed idempotency key is refused before anything is read', async () => {
-    const cart = readyCart();
-    authorize(cart.id);
-    expect(await placeOrder(input(cart.id, { idempotencyKey: 'a b/c' }), provider)).toEqual({ ok: false, code: 'PLACEMENT_FAILED' });
-    expect(shop.matchingCalls).toHaveLength(0);
-  });
-
-  it('the prescription refusing at the last moment cancels the order, releases the payment and stays refused on retry', async () => {
-    const cart = readyCart();
-    authorize(cart.id);
-    objects.objects.length = 0;
-    storeRx(rx({ refillsLeft: 0 }));
-    const key = `${cart.id}_1`;
-    const outcome = await placeOrder(input(cart.id, { idempotencyKey: key }), provider);
-    expect(outcome).toEqual({ ok: false, code: 'DISPENSE_REFUSED' });
-    expect(shop.orders).toHaveLength(1);
-    expect(shop.orders[0].state?.key).toBe('mlv-cancelled');
-    expect(provider.released).toHaveLength(1);
-    expect(await placeOrder(input(cart.id, { idempotencyKey: key }), provider)).toEqual({ ok: false, code: 'DISPENSE_REFUSED' });
-    expect(shop.orders).toHaveLength(1);
-  });
-
-  it('an interrupted consumption leaves the order in place and the same key finishes it without a second order', async () => {
-    const cart = readyCart();
-    authorize(cart.id);
-    const key = `${cart.id}_1`;
+    await prepareCheckout(input(cart.id), provider);
+    const order = await checkoutCreatesOrder(shop, cart.id);
     objects.failOn = (op, container) => (op === 'post' && container === CONTAINERS.rx ? new Error('network') : undefined);
-    expect(await placeOrder(input(cart.id, { idempotencyKey: key }), provider)).toEqual({ ok: false, code: 'IN_PROGRESS' });
+    expect(await finalizeOrder(order.id, { provider, now: MORNING })).toEqual({ ok: false, code: 'PLACEMENT_FAILED' });
     expect(shop.orders).toHaveLength(1);
+    expect(shop.orders[0].orderNumber).toBeUndefined();
     expect(storedRx().refillsLeft).toBe(3);
 
     objects.failOn = undefined;
-    const resumed = await placeOrder(input(cart.id, { idempotencyKey: key }), provider);
-    expect(resumed).toMatchObject({ ok: true, orderId: shop.orders[0].id });
+    expect(await finalizeOrder(order.id, { provider, now: MORNING })).toMatchObject({ ok: true, orderId: order.id });
     expect(shop.orders).toHaveLength(1);
     expect(storedRx().refillsLeft).toBe(2);
+  });
+
+  it('the prescription refusing at the last moment cancels the order, gives the card payment back through Checkout and stays refused', async () => {
+    const cart = readyCart();
+    await prepareCheckout(input(cart.id), provider);
+    objects.objects.length = 0;
+    storeRx(rx({ refillsLeft: 0 }));
+    const order = await checkoutCreatesOrder(shop, cart.id);
+    expect(await finalizeOrder(order.id, { provider, now: MORNING })).toEqual({ ok: false, code: 'DISPENSE_REFUSED' });
+    expect(shop.orders[0].state?.key).toBe('mlv-cancelled');
+    // Authorized, never captured: the authorization is cancelled, nothing is refunded.
+    expect(provider.released).toHaveLength(1);
+    expect(provider.refunded).toHaveLength(0);
+    expect(await finalizeOrder(order.id, { provider, now: MORNING })).toEqual({ ok: false, code: 'DISPENSE_REFUSED' });
+    expect(provider.released).toHaveLength(1);
+  });
+
+  it('an order that does not exist is NOT_FOUND and leaves no lock behind', async () => {
+    expect(await finalizeOrder('order-nope', { provider })).toEqual({ ok: false, code: 'NOT_FOUND' });
+    expect(await finalizeOrder('a b/c', { provider })).toEqual({ ok: false, code: 'NOT_FOUND' });
+    expect(objects.objects.filter((o) => o.container === CONTAINERS.orderAttempt)).toHaveLength(0);
+  });
+
+  it('an order the buyer already cancelled is not consumed', async () => {
+    const cart = readyCart();
+    const order = await checkoutCreatesOrder(shop, cart.id);
+    shop.orders[0].state = { typeId: 'state', key: 'mlv-cancelled', obj: { key: 'mlv-cancelled' } };
+    expect(await finalizeOrder(order.id, { provider, now: MORNING })).toMatchObject({ ok: true });
+    expect(storedRx().refillsLeft).toBe(3);
   });
 
   it('two different orders get different numbers from the counter', async () => {
     const a = readyCart();
-    authorize(a.id);
     const b = readyCart();
-    authorize(b.id);
-    const [first, second] = await Promise.all([placeOrder(input(a.id), provider), placeOrder(input(b.id), provider)]);
+    const [first, second] = await Promise.all([placeOrder(input(a.id)), placeOrder(input(b.id))]);
     expect(first.ok && second.ok).toBe(true);
-    const numbers = shop.orders.map((o) => o.orderNumber).sort();
-    expect(numbers).toEqual(['MLV-000001', 'MLV-000002']);
+    expect(shop.orders.map((o) => o.orderNumber).sort()).toEqual(['MLV-000001', 'MLV-000002']);
   });
 });

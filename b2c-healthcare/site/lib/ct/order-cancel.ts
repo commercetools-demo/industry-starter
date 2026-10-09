@@ -6,14 +6,12 @@ import { apiRoot } from '@/lib/ct/client';
 import { restoreAuthorization } from '@/lib/ct/dispense-ledger';
 import { loadCheckoutFixtures } from '@/lib/ct/fixtures';
 import { restoreAllowance, restoreRestricted } from '@/lib/ct/order-cancel-hooks';
-import { METHOD_ALLOWANCE, METHOD_RESTRICTED } from '@/lib/funding/tender';
+import { isInternalTender, returnCardPayments } from '@/lib/ct/payment-lifecycle';
 import { getOrderForCustomer, getRawOrderForCustomer } from '@/lib/ct/orders-read';
-import { log } from '@/lib/log';
 import { paymentsOf, statusOfState } from '@/lib/mappers/order';
 import { CANCELLABLE, type OrderView } from '@/lib/order-types';
 
 export const ORDER_STATE_CANCELLED = 'mlv-cancelled';
-const INTERNAL_METHODS: readonly string[] = [METHOD_ALLOWANCE, METHOD_RESTRICTED];
 
 export type CancelOutcome = { kind: 'cancelled'; order: OrderView; alreadyCancelled: boolean } | { kind: 'too-late' } | { kind: 'not-found' };
 
@@ -39,43 +37,25 @@ async function transitionToCancelled(orderId: string): Promise<'done' | 'too-lat
 }
 
 /**
- * Marks the payment for refund: one `Refund` transaction in state `Initial` for the authorized amount (Stripe's
- * sandbox refund is manual, so the Merchant Center / PSP dashboard moves it on; the order page shows "Refund
- * requested" while it is `Initial` or `Pending` and "Refunded" at `Success`). Idempotent: a payment that already has
- * a Refund transaction is left alone.
+ * Internal tenders only (the allowance and the restricted instrument): the value goes back at once, so a `Success`
+ * Refund transaction records the routing (the allowance balance itself is restored by `restoreAllowance`). A tender
+ * that was never charged (the order was refused before settlement) has nothing to return. The CARD payment is not
+ * modelled here at all: Checkout owns it and the refund or cancel goes through the PaymentProvider seam
+ * (`payment-lifecycle.ts`, D-035). Idempotent.
  */
-async function markForRefund(payment: Payment): Promise<void> {
+async function recordInternalReturn(payment: Payment): Promise<void> {
   if (payment.transactions.some((t) => t.type === 'Refund')) return;
-  // Refund routing (workstream U): each Payment refunds its own instrument for the amount IT took. The allowance and the
-  // restricted instrument are internal tenders: the value goes back at once (`Success`; the allowance balance is restored by
-  // `restoreAllowance`), while the card share stays `Initial` for the payment service. A tender that was never charged
-  // (the order was refused before settlement) has nothing to return.
-  const internal = INTERNAL_METHODS.includes(payment.paymentMethodInfo?.method ?? '');
   const charged = payment.transactions.find((t) => t.type === 'Charge' && t.state === 'Success');
-  if (internal && !charged) return;
-  const authorized = payment.transactions.find((t) => t.type === 'Authorization' && t.state === 'Success');
-  const amount = charged?.amount ?? authorized?.amount ?? payment.amountPlanned;
-  const refundState = internal ? 'Success' : 'Initial';
+  if (!charged) return;
   await withCartRetry(async () => {
     const { body } = await apiRoot.payments().withId({ ID: payment.id }).get().execute();
     if (body.transactions.some((t) => t.type === 'Refund')) return;
     await apiRoot
       .payments()
       .withId({ ID: payment.id })
-      .post({ body: { version: body.version, actions: [{ action: 'addTransaction', transaction: { type: 'Refund', amount: { centAmount: amount.centAmount, currencyCode: amount.currencyCode }, state: refundState } }] } })
+      .post({ body: { version: body.version, actions: [{ action: 'addTransaction', transaction: { type: 'Refund', amount: { centAmount: charged.amount.centAmount, currencyCode: charged.amount.currencyCode }, state: 'Success' } }] } })
       .execute();
   });
-}
-
-/** Voids the authorization at the payment service (nothing was captured), when the service is configured. */
-async function releasePayment(payment: Payment, provider: PaymentProvider | null): Promise<void> {
-  if (!provider || !payment.transactions.some((t) => t.type === 'Authorization' && t.state === 'Success')) return;
-  try {
-    await provider.release(payment.id);
-  } catch (error) {
-    // The refund marker is already on the payment; an authorization that cannot be voided expires at the PSP.
-    log.error('orders', 'could not release authorization', error instanceof Error ? error : { name: typeof error });
-  }
 }
 
 /** Everything a cancelled order gives back. Every step is idempotent: a retried cancel finishes what a failed one left. */
@@ -83,17 +63,15 @@ async function giveBack(order: Order, provider: PaymentProvider | null): Promise
   await restoreAuthorization(order.id);
   await restoreAllowance(order.id);
   await restoreRestricted(order.id);
-  for (const payment of paymentsOf(order)) {
-    await markForRefund(payment);
-    await releasePayment(payment, provider);
-  }
+  const payments = paymentsOf(order);
+  for (const payment of payments) if (isInternalTender(payment)) await recordInternalReturn(payment);
+  await returnCardPayments(payments, provider);
 }
 
 /**
  * Cancels one of the customer's orders (`post-purchase-order-management`): allowed until `mlv-packed-shipped`
  * (Q-043). Sets the State `mlv-cancelled`, gives the prescription refill back once (`restoreAuthorization` is
- * idempotent on the order id), calls the allowance and restricted-fund hooks (U), marks the payment for refund and
- * voids the authorization. A foreign or unknown id is `not-found` (the same answer as for a read). Cancelling an
+ * idempotent on the order id), calls the allowance and restricted-fund hooks (U), asks the payment service (through Checkout) to cancel the authorization or refund the capture. A foreign or unknown id is `not-found` (the same answer as for a read). Cancelling an
  * order that is already cancelled succeeds and re-runs the give-back steps, so a cancel that stopped half way is
  * completed by pressing the button again, and nothing is restored twice.
  */

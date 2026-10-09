@@ -1,9 +1,11 @@
 import type { PaymentMode, PaymentSessionInfo } from '@/lib/types';
 
 /**
- * Seam between checkout and the payment service (D-026: commercetools Checkout in payment-only mode with a Stripe
- * connector). The storefront never sees card data: the browser SDK talks to Checkout directly; the server only
- * creates the session, reads whether the cart's Payment is authorized, and releases an authorization.
+ * Seam between the storefront and the payment service (D-034/D-035: the FULL commercetools Checkout, connected to the
+ * Stripe connector). Checkout creates the order and owns the payment lifecycle (authorize, capture, cancel, refund,
+ * through its Payment Intents API); the storefront never sees card data and never models capture itself. The server
+ * only creates the session for a prepared cart, asks for a cancel (release) or a refund when an order is cancelled, and
+ * manages stored methods.
  *
  * Two implementations: `checkout-provider.ts` (the real Checkout adapter) and `fake-provider.ts` (dev/test only,
  * `MALVA_FIXTURES=1`, never in production). Everything else depends on this interface.
@@ -14,6 +16,7 @@ export interface PaymentCartRef {
   total: { centAmount: number; currencyCode: string };
 }
 
+/** What the demo provider holds for a cart (the real provider keeps this on the commercetools Payment, never here). */
 export type AuthorizationState =
   | { status: 'none' }
   | { status: 'declined'; paymentId: string }
@@ -37,12 +40,16 @@ export interface StoredMethodDescriptor {
 
 export interface PaymentProvider {
   readonly kind: PaymentMode;
-  /** A Checkout session for the cart (amount = the cart's total; the SDK reads it from the cart). */
+  /** A Checkout session for a cart that `prepareCheckout` has gated (the SDK reads the amount from the cart). */
   createSession(cart: PaymentCartRef): Promise<PaymentSessionInfo>;
-  /** The state of the payment attached to the cart, read from the platform (never trusted from the browser). */
-  getAuthorization(cartId: string): Promise<AuthorizationState>;
-  /** Voids an authorization that must not be captured (stale amount, failed order). Idempotent. */
+  /**
+   * Cancels an authorization that was never captured (Payment Intents `cancelPayment`): the order is cancelled or
+   * refused. The buyer's money was only held, so the page says "Payment released". Idempotent for the caller (it skips
+   * a payment that already carries a cancellation).
+   */
   release(paymentId: string): Promise<void>;
+  /** Refunds a captured amount (Payment Intents `refundPayment`). The connector moves the Refund transaction on. */
+  refund(paymentId: string, amount: { centAmount: number; currencyCode: string }): Promise<void>;
   /** The customer's saved methods (Checkout Stored Payment Methods, cards only), descriptors only. */
   listStoredMethods(customerId: string): Promise<StoredMethodDescriptor[]>;
   /**

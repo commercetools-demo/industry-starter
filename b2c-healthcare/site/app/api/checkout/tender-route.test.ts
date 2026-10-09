@@ -16,7 +16,7 @@ vi.mock('@/lib/session', () => session);
 const getPatient = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/ct/patient', () => ({ getPatient: (id: string) => getPatient(id) }));
 const validateRxSelection = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/ct/prescriptions', () => ({ RxNotFoundError: class extends Error {}, validateRxSelection: (...a: unknown[]) => validateRxSelection(...a) }));
+vi.mock('@/lib/ct/prescriptions', () => ({ RxNotFoundError: class extends Error {}, validateRxSelection: (...a: unknown[]) => validateRxSelection(...a), findOwnPrescription: async () => null }));
 const providerMock = vi.hoisted(() => ({ getPaymentProvider: vi.fn() }));
 vi.mock('@/lib/checkout/provider', () => providerMock);
 
@@ -25,7 +25,7 @@ import { grantCycle } from '@/lib/ct/allowance';
 import { cycleOf } from '@/lib/funding/allowance-types';
 import { GET } from './route';
 import { PUT } from './tender/route';
-import { POST as createSession } from './session/route';
+import { POST as prepare } from './prepare/route';
 import { POST as demoAuthorize } from './demo-authorize/route';
 
 const demo = createFakePaymentProvider();
@@ -93,7 +93,7 @@ describe('eligible-item-tender-restriction: PUT /api/checkout/tender (U-10)', ()
   });
 });
 
-describe('the checkout read, the session and the demo authorization use the card remainder (U-06, U-10)', () => {
+describe('the checkout read, the prepare gate and the demo authorization use the card remainder (U-06, U-10)', () => {
   it('GET /api/checkout carries the tender view with the allowance balance and what this order would use', async () => {
     await grantCycle('pt_sam', cycleOf(new Date()), 5000);
     const cart = cartOf([{ sku: 'MED-ator', cents: 1875, eligible: true }]);
@@ -104,14 +104,15 @@ describe('the checkout read, the session and the demo authorization use the card
     expect(objects.objects.some((o) => o.container === CONTAINERS.allowance)).toBe(true);
   });
 
-  it('the payment session is created for the remainder after the allowance, and the allowance Payment is on the cart first', async () => {
+  it('the prepare gate starts Checkout for the remainder after the allowance, and the allowance Payment is on the cart first', async () => {
     await grantCycle('pt_sam', cycleOf(new Date()), 1000);
     const cart = cartOf([{ sku: 'MED-ator', cents: 1875, eligible: true }]);
     signedIn(cart.id);
     const create = vi.spyOn(demo, 'createSession');
-    const response = await createSession();
+    const response = await prepare(makeJsonRequest('/api/checkout/prepare', { expectedTotal: { centAmount: 1875, currencyCode: 'USD' } }));
     expect(response.status).toBe(200);
-    expect(create).toHaveBeenCalledWith({ id: cart.id, total: { centAmount: 875, currencyCode: 'USD', fractionDigits: 2 } });
+    expect(await response.json()).toMatchObject({ kind: 'demo', cardDue: 875 });
+    expect(create).toHaveBeenCalledWith({ id: cart.id, total: { centAmount: 875, currencyCode: 'USD' } });
     expect([...shop.payments.values()].map((p) => [p.paymentMethodInfo.method, p.amountPlanned.centAmount])).toEqual([['allowance', 1000]]);
   });
 
@@ -123,7 +124,6 @@ describe('the checkout read, the session and the demo authorization use the card
     const response = await demoAuthorize(makeJsonRequest('/api/checkout/demo-authorize', {}));
     vi.unstubAllEnvs();
     // Outside fixtures the demo endpoint is a 404; with the fake provider loaded it would answer authorized without recording a card amount.
-    expect([200, 404]).toContain(response.status);
-    expect((await demo.getAuthorization(cart.id)).status).toBe('none');
+    expect([200, 404, 409]).toContain(response.status);
   });
 });

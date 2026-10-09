@@ -1,118 +1,111 @@
 import 'server-only';
-import type { Cart as CtCart, CartUpdateAction, Order } from '@commercetools/platform-sdk';
+import type { Cart as CtCart, CartUpdateAction, Order, OrderUpdateAction } from '@commercetools/platform-sdk';
 import { withCartRetry } from '@/lib/api-retry';
 import { ORDER_STATE_RECEIVED } from '@/lib/checkout/config';
-import type { AuthorizationState, PaymentProvider } from '@/lib/checkout/payment-provider';
+import { PaymentUnavailableError, type PaymentProvider } from '@/lib/checkout/payment-provider';
 import { apiRoot } from '@/lib/ct/client';
 import { loadCheckoutFixtures } from '@/lib/ct/fixtures';
 import type { CheckoutContext } from '@/lib/ct/checkout';
 import { refreshFunding } from '@/lib/ct/cart-funding';
+import { consumeLinesOf } from '@/lib/ct/auto-refill-run';
 import { CONTAINERS, createOnly, deleteObject, getObject, putObject, statusOf } from '@/lib/ct/custom-objects';
 import { restoreAllowance } from '@/lib/ct/allowance';
-import { consumeAuthorization, DispenseRefusedError, restoreAuthorization, type ConsumeLine } from '@/lib/ct/dispense-ledger';
+import { consumeAuthorization, DispenseRefusedError, restoreAuthorization } from '@/lib/ct/dispense-ledger';
 import { nextOrderNumber } from '@/lib/ct/order-number';
+import { isInternalTender, returnCardPayments } from '@/lib/ct/payment-lifecycle';
+import { getPatient } from '@/lib/ct/patient';
 import { findOwnPrescription, RxNotFoundError, validateRxSelection } from '@/lib/ct/prescriptions';
 import { getOptionsForCart } from '@/lib/ct/shipping-options';
 import { ensureTenderPayments, planFor, planFromOrder, settleTender } from '@/lib/ct/tender';
-import type { TenderPlan } from '@/lib/funding/tender';
 import { buildLineRecord, toLineCustomFields } from '@/lib/dispense/line-record';
 import { log } from '@/lib/log';
 import { mapCartAddress, mapCheckoutCart } from '@/lib/mappers/checkout';
 import { rxFieldsOf } from '@/lib/mappers/cart';
-import type { PlaceOrderFailure, PlacedOrder } from '@/lib/types';
+import { paymentsOf } from '@/lib/mappers/order';
+import type { PlaceOrderFailure, PlacedOrder, PrepareResult } from '@/lib/types';
 
 /**
- * Placing the order (workstream Q). The one irreversible step, done once, from the cart the server holds:
+ * Orders in the full-Checkout design (D-034, follow-up AA). Two halves, because commercetools Checkout - not the
+ * storefront - creates the order from the cart once the payment is authorized:
  *
- *  1. a lock per attempt (idempotency key = cart id + version, created create-only): a double submit is refused
- *     while the first runs and answered with the same order afterwards;
- *  2. the cart is read again and everything is re-checked: lines against the prescription rules (N), the delivery
- *     method against the platform (and the same-day cut-off), the cart total against the amount the buyer saw and
- *     against the amount the payment authorized (a mismatch refuses and releases the stale authorization);
- *  3. the prescription record is written to the cart lines (copied onto the order lines), an order number is
- *     taken from the counter, the order is created from the cart in state `mlv-received`;
- *  4. the prescription is consumed (`consumeAuthorization`, idempotent on the order id).
+ *  1. `prepareCheckout` (the gate, before Checkout runs): re-validates every line (N prescription rules, U credentials),
+ *     re-resolves the payer cost-share (U), compares the cart total with what the buyer saw, writes the N-09 line
+ *     records onto the cart lines (the platform copies them to the order lines), puts the allowance / restricted
+ *     instrument Payments on the cart (U) and then creates the Checkout session for the card remainder. When nothing is
+ *     left for the card the storefront creates the order itself and finalizes it.
+ *  2. `finalizeOrder(orderId)` (after the order exists, however it came to exist): the domain logic that must happen
+ *     exactly once per order - prescription consumption, allowance draw, the `MLV-` number (only if unset) and the
+ *     `mlv-received` state. Idempotent on the order id: a lock/record per order, every step idempotent. It runs from the
+ *     browser's `checkout_completed` callback, lazily when the order is read (S), and from a secret-guarded route for a
+ *     commercetools subscription (OrderCreated). Whoever gets there first does the work; the others get the same answer.
  *
- * A failure before the order exists keeps the cart, releases the authorization and says so. Totals are the cart's;
- * nothing here adds a price. Health-data rule: no RX number, medication or address reaches a log line.
+ * The storefront never models capture: Checkout and the connector own the payment lifecycle (D-035). Totals are the
+ * cart's; nothing here adds a price. Health-data rule: no RX number, medication or address reaches a log line.
  */
 
-export interface PlaceOrderInput {
+export interface PrepareInput {
   ctx: CheckoutContext;
   /** The cart the session holds. */
   cartId: string;
-  /** The total the buyer was shown (cents + currency): the order is created only if the cart still says this. */
+  /** The total the buyer was shown (cents + currency): Checkout is started only if the cart still says this. */
   expectedTotal: { centAmount: number; currencyCode: string };
-  /** `cart id + version` as `[A-Za-z0-9_-]`; the same key always means the same attempt. */
-  idempotencyKey: string;
 }
 
-export type PlaceOrderOutcome =
+export type PrepareOutcome = ({ ok: true } & PrepareResult) | { ok: false; code: PlaceOrderFailure; lineIds?: string[] };
+
+export type FinalizeOutcome =
   | ({ ok: true; replay: boolean } & PlacedOrder)
-  | { ok: false; code: PlaceOrderFailure; lineIds?: string[] };
+  | { ok: false; code: 'NOT_FOUND' | 'IN_PROGRESS' | 'DISPENSE_REFUSED' | 'FUNDING_CHANGED' | 'PLACEMENT_FAILED' };
 
-interface AttemptValue {
-  state: 'pending' | 'created' | 'done' | 'refused';
+interface FinalizeRecord {
+  state: 'pending' | 'done' | 'refused';
   at: string;
-  orderId?: string;
   orderNumber?: string;
-  code?: PlaceOrderFailure;
+  code?: 'DISPENSE_REFUSED' | 'FUNDING_CHANGED';
 }
 
-/** A pending attempt older than this is treated as crashed and may be taken over. */
+/** A pending finalize older than this is treated as crashed and may be taken over. */
 const STALE_PENDING_MS = 2 * 60 * 1000;
-export const IDEMPOTENCY_KEY = /^[A-Za-z0-9_-]{3,200}$/;
+const ORDER_ID = /^[\w-]{1,64}$/;
+const ORDER_EXPAND = ['state', 'paymentInfo.payments[*]'];
+const finalizeKey = (orderId: string) => `fin-${orderId}`;
 
-const fail = (code: PlaceOrderFailure, lineIds?: string[]): PlaceOrderOutcome => ({ ok: false, code, ...(lineIds ? { lineIds } : {}) });
+const fail = (code: PlaceOrderFailure, lineIds?: string[]): PrepareOutcome => ({ ok: false, code, ...(lineIds ? { lineIds } : {}) });
 const sameTotal = (a: { centAmount: number; currencyCode: string }, b: { centAmount: number; currencyCode: string }) => a.centAmount === b.centAmount && a.currencyCode === b.currencyCode;
 
-async function findOrderForCart(cartId: string): Promise<Order | null> {
-  const { body } = await apiRoot.orders().get({ queryArgs: { where: `cart(id="${cartId}")`, limit: 1, expand: ['state'] } }).execute();
-  return body.results[0] ?? null;
-}
-
-type Acquired = { kind: 'go' } | { kind: 'resume'; orderId: string; orderNumber: string } | { kind: 'answer'; outcome: PlaceOrderOutcome };
-
-/** Takes the attempt lock. */
-async function acquire(key: string, now: Date): Promise<Acquired> {
-  const fresh: AttemptValue = { state: 'pending', at: now.toISOString() };
-  if (await createOnly(CONTAINERS.orderAttempt, key, fresh)) return { kind: 'go' };
-  const existing = await getObject<AttemptValue>(CONTAINERS.orderAttempt, key);
-  if (!existing) return acquire(key, now);
-  const v = existing.value;
-  if (v.state === 'done' && v.orderId && v.orderNumber) return { kind: 'answer', outcome: { ok: true, replay: true, orderId: v.orderId, orderNumber: v.orderNumber } };
-  if (v.state === 'refused') return { kind: 'answer', outcome: fail(v.code ?? 'PLACEMENT_FAILED') };
-  if (v.state === 'created' && v.orderId && v.orderNumber) return { kind: 'resume', orderId: v.orderId, orderNumber: v.orderNumber };
-  if (now.getTime() - new Date(v.at).getTime() < STALE_PENDING_MS) return { kind: 'answer', outcome: fail('IN_PROGRESS') };
+async function readCart(cartId: string): Promise<CtCart | null> {
   try {
-    await putObject<AttemptValue>(CONTAINERS.orderAttempt, key, fresh, existing.version);
-    return { kind: 'go' };
+    const { body } = await apiRoot.carts().withId({ ID: cartId }).get({ queryArgs: { expand: ['shippingInfo.shippingMethod'] } }).execute();
+    return body;
   } catch (error) {
-    if (statusOf(error) === 409) return { kind: 'answer', outcome: fail('IN_PROGRESS') };
+    if (statusOf(error) === 404) return null;
     throw error;
   }
 }
 
-const setAttempt = (key: string, value: AttemptValue) => putObject<AttemptValue>(CONTAINERS.orderAttempt, key, value);
-
-async function releaseQuietly(provider: PaymentProvider, auth: AuthorizationState): Promise<void> {
-  if (auth.status !== 'authorized') return;
+async function readOrder(orderId: string): Promise<Order | null> {
   try {
-    await provider.release(auth.paymentId);
+    const { body } = await apiRoot.orders().withId({ ID: orderId }).get({ queryArgs: { expand: ORDER_EXPAND } }).execute();
+    return body;
   } catch (error) {
-    // The order is not placed either way; an authorization that cannot be voided expires at the PSP.
-    log.error('checkout', 'could not release authorization', error instanceof Error ? error : { name: typeof error });
+    if (statusOf(error) === 404) return null;
+    throw error;
   }
 }
 
+async function findOrderForCart(cartId: string): Promise<Order | null> {
+  const { body } = await apiRoot.orders().get({ queryArgs: { where: `cart(id="${cartId}")`, limit: 1, expand: ORDER_EXPAND } }).execute();
+  return body.results[0] ?? null;
+}
+
+// ---------------------------------------------------------------- 1. the gate
+
 interface Prepared {
-  cart: CtCart;
-  consume: ConsumeLine[];
   actions: CartUpdateAction[];
 }
 
-/** Re-runs the prescription rules for every line and builds what the order needs (the line records, the ledger input). */
-async function prepareLines(ctx: CheckoutContext, cart: CtCart): Promise<Prepared | { failed: PlaceOrderOutcome }> {
+/** Re-runs the prescription rules for every line and builds the line records the order needs (N-09, U credentials). */
+async function prepareLines(ctx: CheckoutContext, cart: CtCart): Promise<Prepared | { failed: PrepareOutcome }> {
   const byRx = new Map<string, { id: string; lineRef: string }[]>();
   const unavailable: string[] = [];
   for (const item of cart.lineItems) {
@@ -120,7 +113,6 @@ async function prepareLines(ctx: CheckoutContext, cart: CtCart): Promise<Prepare
     if (!f) unavailable.push(item.id);
     else byRx.set(f.rxNumber, [...(byRx.get(f.rxNumber) ?? []), { id: item.id, lineRef: f.rxLineRef }]);
   }
-  const consume: ConsumeLine[] = [];
   const actions: CartUpdateAction[] = [];
   for (const [rxNumber, group] of byRx) {
     try {
@@ -134,17 +126,7 @@ async function prepareLines(ctx: CheckoutContext, cart: CtCart): Promise<Prepare
           if (lineId) unavailable.push(lineId);
           continue;
         }
-        consume.push({
-          patientRef: ctx.patient.patientRef,
-          rxNumber,
-          lineRef: accepted.lineRef,
-          sku: accepted.sku,
-          qty: accepted.qty,
-          packs: accepted.packs,
-          perOrderMax: accepted.perOrderMax,
-          periodCeiling: accepted.periodCeiling,
-        });
-        // The authorization as it stands NOW, before the consumption below: it is copied onto the order line (N-09).
+        // The authorization as it stands NOW, before the consumption in `finalizeOrder`: copied onto the order line (N-09).
         const fields = toLineCustomFields(buildLineRecord(rx, prescribed, accepted.qty));
         for (const name of ['dispensedQty', 'authorizationParams', 'suppliedLots'] as const) {
           actions.push({ action: 'setLineItemCustomField', lineItemId: lineId, name, value: fields[name] });
@@ -161,232 +143,260 @@ async function prepareLines(ctx: CheckoutContext, cart: CtCart): Promise<Prepare
     }
   }
   if (unavailable.length > 0) return { failed: fail('LINES_UNAVAILABLE', [...new Set(unavailable)]) };
-  return { cart, consume, actions };
+  return { actions };
 }
 
-/** The order the cart already became (a retry after success, or after a lost response), if it is not cancelled. */
-async function existingOrder(cartId: string): Promise<PlacedOrder | null> {
+/** The non-cancelled order the cart already became (a retry after success, or after a lost response). */
+async function existingOrder(cartId: string): Promise<Order | null> {
   const order = await findOrderForCart(cartId);
-  if (!order?.orderNumber || order.state?.obj?.key === 'mlv-cancelled') return null;
-  return { orderId: order.id, orderNumber: order.orderNumber };
+  return order && order.state?.obj?.key !== 'mlv-cancelled' ? order : null;
 }
 
 /**
- * Places the order for the customer's cart. See the module comment for the sequence. Returns an outcome; only
- * unexpected errors throw (the Route Handler sanitizes them).
+ * The pre-checkout gate. Returns what the page does next (`PrepareResult`) or the reason nothing may start. Safe to call
+ * again (every step is idempotent: same line records, same tender Payments, a new session for the same cart). No order
+ * exists after a refusal and the cart is kept.
  */
-export async function placeOrder(input: PlaceOrderInput, provider: PaymentProvider): Promise<PlaceOrderOutcome> {
+export async function prepareCheckout(input: PrepareInput, provider: PaymentProvider): Promise<PrepareOutcome> {
   const fixtures = await loadCheckoutFixtures();
-  if (fixtures) return fixtures.placeOrder(input, provider);
-  const { ctx, cartId, expectedTotal, idempotencyKey } = input;
-  if (!IDEMPOTENCY_KEY.test(idempotencyKey)) return fail('PLACEMENT_FAILED');
+  if (fixtures) return fixtures.prepareFixture(input);
+  const { ctx, cartId, expectedTotal } = input;
 
-  const acquired = await acquire(idempotencyKey, ctx.now);
-  if (acquired.kind === 'answer') return acquired.outcome;
+  let cart = await readCart(cartId);
+  if (!cart || cart.customerId !== ctx.customerId) return fail('EMPTY_CART');
+  if (cart.cartState === 'Ordered') {
+    // Checkout (or an earlier call) already made the order: make sure it is finalized and hand it back.
+    const order = await existingOrder(cart.id);
+    if (!order) return fail('EMPTY_CART');
+    const done = await finalizeOrder(order.id, { provider });
+    return done.ok ? { ok: true, kind: 'order', orderId: done.orderId, orderNumber: done.orderNumber } : fail(done.code === 'IN_PROGRESS' ? 'IN_PROGRESS' : 'PLACEMENT_FAILED');
+  }
+  if (cart.cartState !== 'Active' || cart.lineItems.length === 0) return fail('EMPTY_CART');
+  // Payer cost-share again, now (U-03): the split the buyer saw may be stale. Unresolved never defaults to the list
+  // price; a changed split changes the total, which the comparison below refuses with the new figures on the cart.
+  const funding = await refreshFunding(cart, ctx.patient);
+  if (funding.unresolved) return fail('COVER_UNRESOLVED');
+  if (funding.changed) cart = (await readCart(cart.id)) ?? cart;
+  if (!mapCartAddress(cart.shippingAddress)) return fail('ADDRESS_MISSING');
+  const methodKey = cart.shippingInfo?.shippingMethod?.obj?.key;
+  if (!cart.shippingInfo || !methodKey) return fail('NO_DELIVERY_METHOD');
+  // The method must still be one the platform offers for this cart now (same-day closes at 14:00 New York).
+  if (!(await getOptionsForCart(cart.id, ctx.now)).some((o) => o.key === methodKey)) return fail('NO_DELIVERY_METHOD');
 
-  const retryable = async (code: PlaceOrderFailure): Promise<PlaceOrderOutcome> => {
-    await deleteObject(CONTAINERS.orderAttempt, idempotencyKey);
-    return fail(code);
-  };
+  // Totals: only from the cart. What the card must pay is the tender plan's remainder (allowance, then restricted instrument, then card).
+  const cartTotal = mapCheckoutCart(cart).total;
+  if (!sameTotal(cartTotal, expectedTotal)) return fail('TOTALS_MOVED');
+  const { plan } = await planFor(cart, { patientRef: ctx.patient.patientRef, now: ctx.now });
 
+  const prepared = await prepareLines(ctx, cart);
+  if ('failed' in prepared) return prepared.failed;
+
+  let updated: CtCart;
   try {
-    if (acquired.kind === 'resume') {
-      // The order exists; only the prescription consumption (or the final write) was interrupted. Finish it.
-      const order = await findOrderForCart(cartId);
-      if (!order) return fail('PLACEMENT_FAILED');
-      return finalize({ key: idempotencyKey, ctx, provider, order, orderNumber: acquired.orderNumber, consume: consumeInputFromOrder(ctx, order), auth: await provider.getAuthorization(cartId), plan: await planFromOrder(order) });
-    }
+    updated = await withCartRetry(async () => {
+      const current = (await readCart(cart.id)) ?? cart;
+      if (prepared.actions.length === 0) return current;
+      const { body } = await apiRoot.carts().withId({ ID: current.id }).post({ body: { version: current.version, actions: prepared.actions } }).execute();
+      return body;
+    });
+    if (!sameTotal(mapCheckoutCart(updated).total, expectedTotal)) return fail('TOTALS_MOVED');
+    // The tender Payments go on the cart BEFORE Checkout runs: Checkout then only has the card remainder to collect.
+    await ensureTenderPayments(cart.id, plan);
+  } catch (error) {
+    log.error('checkout', 'could not prepare the cart', error instanceof Error ? error : { name: typeof error });
+    return fail('PLACEMENT_FAILED');
+  }
 
-    let cart = await readCart(cartId);
-    if (!cart || cart.customerId !== ctx.customerId) return retryable('EMPTY_CART');
-    if (cart.cartState === 'Ordered') {
-      const placed = await existingOrder(cart.id);
-      if (placed) {
-        await setAttempt(idempotencyKey, { state: 'done', at: ctx.now.toISOString(), ...placed });
-        return { ok: true, replay: true, ...placed };
-      }
-      return retryable('EMPTY_CART');
-    }
-    if (cart.cartState !== 'Active' || cart.lineItems.length === 0) return retryable('EMPTY_CART');
-    // Payer cost-share again, now (U-03): the split the buyer saw may be stale. Unresolved never defaults to the list
-    // price; a changed split changes the total, which the comparison below refuses with the new figures on the cart.
-    const funding = await refreshFunding(cart, ctx.patient);
-    if (funding.unresolved) return retryable('COVER_UNRESOLVED');
-    if (funding.changed) cart = (await readCart(cart.id)) ?? cart;
-    if (!mapCartAddress(cart.shippingAddress)) return retryable('ADDRESS_MISSING');
-    const methodKey = cart.shippingInfo?.shippingMethod?.obj?.key;
-    if (!cart.shippingInfo || !methodKey) return retryable('NO_DELIVERY_METHOD');
-    // The method must still be one the platform offers for this cart now (same-day closes at 14:00 New York).
-    if (!(await getOptionsForCart(cart.id, ctx.now)).some((o) => o.key === methodKey)) return retryable('NO_DELIVERY_METHOD');
+  const cardDue = plan.card;
+  if (cardDue === 0) {
+    // Nothing for the card: Checkout has nothing to authorize, so the storefront creates the order itself (the one
+    // order the storefront still creates) and finalizes it like any other.
+    const placed = await createOrderFromCart(cart.id, ctx.now, provider);
+    return placed.ok ? { ok: true, kind: 'order', orderId: placed.orderId, orderNumber: placed.orderNumber } : fail(placed.code);
+  }
+  try {
+    const session = await provider.createSession({ id: cart.id, total: { centAmount: cardDue, currencyCode: cartTotal.currencyCode } });
+    return provider.kind === 'demo' ? { ok: true, kind: 'demo', cardDue } : { ok: true, kind: 'checkout', session, cardDue };
+  } catch (error) {
+    if (error instanceof PaymentUnavailableError) throw error;
+    log.error('checkout', 'could not create the checkout session', error instanceof Error ? error : { name: typeof error });
+    return fail('PLACEMENT_FAILED');
+  }
+}
 
-    // Totals: only from the cart. The tender plan (allowance, then restricted instrument, then card) is computed from the
-    // cart as it is now and the live balance; what the card must have authorized is the plan's remainder, not the total.
-    const cartTotal = mapCheckoutCart(cart).total;
-    const { plan } = await planFor(cart, { patientRef: ctx.patient.patientRef, now: ctx.now });
-    const cardDue = { centAmount: plan.card, currencyCode: cartTotal.currencyCode };
-    const auth = await provider.getAuthorization(cart.id);
-    if (!sameTotal(cartTotal, expectedTotal)) {
-      if (auth.status === 'authorized' && !sameTotal(cardDue, auth)) await releaseQuietly(provider, auth);
-      return retryable('TOTALS_MOVED');
-    }
-    if (plan.card > 0) {
-      if (auth.status === 'none') return retryable('PAYMENT_REQUIRED');
-      if (auth.status === 'declined') return retryable('PAYMENT_DECLINED');
-      if (!sameTotal(cardDue, auth)) {
-        await releaseQuietly(provider, auth);
-        return retryable('TOTALS_MOVED');
-      }
-    } else if (auth.status === 'authorized') {
-      // The allowance and the restricted instrument cover everything: no card amount is taken, a stale authorization is voided.
-      await releaseQuietly(provider, auth);
-    }
-
-    // Prescription rules, once more, and the line records.
-    const prepared = await prepareLines(ctx, cart);
-    if ('failed' in prepared) {
-      await deleteObject(CONTAINERS.orderAttempt, idempotencyKey);
-      return prepared.failed;
-    }
-
-    try {
-      await ensureTenderPayments(cart.id, plan);
-    } catch (error) {
-      await releaseQuietly(provider, auth);
-      log.error('checkout', 'could not set the tender payments', error instanceof Error ? error : { name: typeof error });
-      return retryable('PLACEMENT_FAILED');
-    }
-
-    let updated: CtCart;
-    try {
-      updated = await withCartRetry(async () => {
-        const current = (await readCart(cart.id)) ?? cart;
-        const { body } = await apiRoot.carts().withId({ ID: current.id }).post({ body: { version: current.version, actions: prepared.actions } }).execute();
-        return body;
-      });
-    } catch (error) {
-      await releaseQuietly(provider, auth);
-      log.error('checkout', 'could not record the prescription on the cart', error instanceof Error ? error : { name: typeof error });
-      return retryable('PLACEMENT_FAILED');
-    }
-    if (!sameTotal(mapCheckoutCart(updated).total, expectedTotal)) {
-      await releaseQuietly(provider, auth);
-      return retryable('TOTALS_MOVED');
-    }
-
-    // The order.
-    let orderNumber: string;
-    try {
-      orderNumber = await nextOrderNumber();
-    } catch (error) {
-      await releaseQuietly(provider, auth);
-      log.error('checkout', 'could not take an order number', error instanceof Error ? error : { name: typeof error });
-      return retryable('PLACEMENT_FAILED');
-    }
-    let order: Order;
-    try {
-      const { body } = await apiRoot
-        .orders()
-        .post({ body: { cart: { typeId: 'cart', id: updated.id }, version: updated.version, orderNumber, state: { typeId: 'state', key: ORDER_STATE_RECEIVED } } })
-        .execute();
-      order = body;
-    } catch (error) {
-      // A lost answer is not a failed order: if the cart did become an order, that is the result.
-      const placed = await existingOrder(updated.id).catch(() => null);
-      if (placed) {
-        await setAttempt(idempotencyKey, { state: 'done', at: ctx.now.toISOString(), ...placed });
-        return { ok: true, replay: true, ...placed };
-      }
-      await releaseQuietly(provider, auth);
+/** Creates the order for a cart whose tender Payments cover it completely, then finalizes it. */
+async function createOrderFromCart(cartId: string, now: Date, provider: PaymentProvider): Promise<({ ok: true } & PlacedOrder) | { ok: false; code: PlaceOrderFailure }> {
+  let order: Order | null;
+  try {
+    const cart = await readCart(cartId);
+    if (!cart) return { ok: false, code: 'EMPTY_CART' };
+    const { body } = await apiRoot.orders().post({ body: { cart: { typeId: 'cart', id: cart.id }, version: cart.version } }).execute();
+    order = body;
+  } catch (error) {
+    // A lost answer is not a failed order: if the cart did become an order, that is the result.
+    order = await existingOrder(cartId).catch(() => null);
+    if (!order) {
       log.error('checkout', 'order creation failed', error instanceof Error ? error : { name: typeof error });
-      return retryable('PLACEMENT_FAILED');
+      return { ok: false, code: 'PLACEMENT_FAILED' };
     }
-    await setAttempt(idempotencyKey, { state: 'created', at: ctx.now.toISOString(), orderId: order.id, orderNumber });
-    return finalize({ key: idempotencyKey, ctx, provider, order, orderNumber, consume: prepared.consume, auth, plan });
+  }
+  const done = await finalizeOrder(order.id, { provider, now });
+  if (done.ok) return { ok: true, orderId: done.orderId, orderNumber: done.orderNumber };
+  return { ok: false, code: done.code === 'IN_PROGRESS' || done.code === 'DISPENSE_REFUSED' || done.code === 'FUNDING_CHANGED' ? done.code : 'PLACEMENT_FAILED' };
+}
+
+// ---------------------------------------------------------------- 2. finalize
+
+export interface FinalizeOptions {
+  /** For cancelling the card payment when the order is refused; resolved lazily when absent. */
+  provider?: PaymentProvider | null;
+  now?: Date;
+}
+
+/** True while an order still lacks what `finalizeOrder` adds (its `MLV-` number or its state): the signal to finalize lazily. */
+export const needsFinalize = (order: Pick<Order, 'orderNumber' | 'state'>): boolean => !order.orderNumber || !order.state;
+
+async function resolveProvider(): Promise<PaymentProvider | null> {
+  try {
+    const { getPaymentProvider } = await import('@/lib/checkout/provider');
+    return await getPaymentProvider();
   } catch (error) {
-    // Unexpected: free the lock unless the order already exists, so the buyer can try again.
-    const current = await getObject<AttemptValue>(CONTAINERS.orderAttempt, idempotencyKey).catch(() => null);
-    if (current?.value.state === 'pending') await deleteObject(CONTAINERS.orderAttempt, idempotencyKey).catch(() => undefined);
+    if (error instanceof PaymentUnavailableError) return null;
     throw error;
   }
 }
 
-async function readCart(cartId: string): Promise<CtCart | null> {
+type Acquired = { kind: 'go' } | { kind: 'answer'; outcome: FinalizeOutcome };
+
+async function acquire(orderId: string, now: Date): Promise<Acquired> {
+  const key = finalizeKey(orderId);
+  const fresh: FinalizeRecord = { state: 'pending', at: now.toISOString() };
+  if (await createOnly(CONTAINERS.orderAttempt, key, fresh)) return { kind: 'go' };
+  const existing = await getObject<FinalizeRecord>(CONTAINERS.orderAttempt, key);
+  if (!existing) return acquire(orderId, now);
+  const v = existing.value;
+  if (v.state === 'done') return { kind: 'answer', outcome: { ok: true, replay: true, orderId, orderNumber: v.orderNumber ?? '' } };
+  if (v.state === 'refused') return { kind: 'answer', outcome: { ok: false, code: v.code ?? 'DISPENSE_REFUSED' } };
+  if (now.getTime() - new Date(v.at).getTime() < STALE_PENDING_MS) return { kind: 'answer', outcome: { ok: false, code: 'IN_PROGRESS' } };
   try {
-    const { body } = await apiRoot.carts().withId({ ID: cartId }).get({ queryArgs: { expand: ['shippingInfo.shippingMethod'] } }).execute();
-    return body;
+    await putObject<FinalizeRecord>(CONTAINERS.orderAttempt, key, fresh, existing.version);
+    return { kind: 'go' };
   } catch (error) {
-    if (statusOf(error) === 404) return null;
+    if (statusOf(error) === 409) return { kind: 'answer', outcome: { ok: false, code: 'IN_PROGRESS' } };
     throw error;
   }
 }
 
-/** The ledger input for an order that already exists (a resumed attempt), from what the order lines recorded. */
-function consumeInputFromOrder(ctx: CheckoutContext, order: Order): ConsumeLine[] {
-  const lines: ConsumeLine[] = [];
-  for (const item of order.lineItems) {
-    const f = item.custom?.fields as Record<string, unknown> | undefined;
-    if (!f || typeof f.rxNumber !== 'string' || typeof f.rxLineRef !== 'string') continue;
-    // Limits were checked when the order was prepared; a resumed run only has to finish the consumption.
-    lines.push({ patientRef: ctx.patient.patientRef, rxNumber: f.rxNumber, lineRef: f.rxLineRef, sku: item.variant.sku ?? '', qty: Number(f.dispensedQty ?? f.prescribedQty ?? 0), packs: item.quantity, perOrderMax: null, periodCeiling: null });
-  }
-  return lines;
-}
-
-interface Finalize {
-  key: string;
-  ctx: CheckoutContext;
-  provider: PaymentProvider;
-  order: Order;
-  orderNumber: string;
-  consume: ConsumeLine[];
-  auth: AuthorizationState;
-  plan: TenderPlan;
-}
-
-/** Consumes the prescription once for the order id and closes the attempt. A refusal cancels the order and releases the payment. */
-async function finalize({ key, ctx, provider, order, orderNumber, consume, auth, plan }: Finalize): Promise<PlaceOrderOutcome> {
-  try {
-    await consumeAuthorization(order.id, consume);
-  } catch (error) {
-    if (error instanceof DispenseRefusedError) {
-      await cancelOrder(order.id);
-      await releaseQuietly(provider, auth);
-      await setAttempt(key, { state: 'refused', at: ctx.now.toISOString(), orderId: order.id, code: 'DISPENSE_REFUSED' });
-      return fail('DISPENSE_REFUSED');
-    }
-    // The order exists and the consumption is idempotent on the order id: the same key resumes here.
-    log.error('checkout', 'consumption interrupted', error instanceof Error ? error : { name: typeof error });
-    return fail('IN_PROGRESS');
-  }
-  // The allowance and restricted-instrument share (idempotent on the order id, so a resumed run repeats it safely).
-  try {
-    const settled = await settleTender(order, plan, { patientRef: ctx.patient.patientRef, now: ctx.now });
-    if (!settled.ok) {
-      // The balance fell between the plan and the draw (another order took it): nothing may be left half done.
-      await cancelOrder(order.id);
-      await restoreAuthorization(order.id).catch(() => undefined);
-      await restoreAllowance(order.id).catch(() => undefined);
-      await releaseQuietly(provider, auth);
-      await setAttempt(key, { state: 'refused', at: ctx.now.toISOString(), orderId: order.id, code: 'FUNDING_CHANGED' });
-      return fail('FUNDING_CHANGED');
-    }
-  } catch (error) {
-    log.error('checkout', 'tender settlement interrupted', error instanceof Error ? error : { name: typeof error });
-    return fail('IN_PROGRESS');
-  }
-  await setAttempt(key, { state: 'done', at: ctx.now.toISOString(), orderId: order.id, orderNumber });
-  return { ok: true, replay: false, orderId: order.id, orderNumber };
-}
-
-async function cancelOrder(orderId: string): Promise<void> {
+async function cancelRefusedOrder(orderId: string): Promise<void> {
   try {
     const { body } = await apiRoot.orders().withId({ ID: orderId }).get().execute();
     await apiRoot
       .orders()
       .withId({ ID: orderId })
-      .post({ body: { version: body.version, actions: [{ action: 'transitionState', state: { typeId: 'state', key: 'mlv-cancelled' } }] } })
+      .post({ body: { version: body.version, actions: [{ action: 'transitionState', state: { typeId: 'state', key: 'mlv-cancelled' }, force: true }] } })
       .execute();
   } catch (error) {
     log.error('checkout', 'could not cancel the refused order', error instanceof Error ? error : { name: typeof error });
+  }
+}
+
+/** Sets the `MLV-` number only when the order has none, and the received state only when it has no storefront state. Safe to repeat. */
+async function numberAndState(orderId: string): Promise<string> {
+  let number = '';
+  await withCartRetry(async () => {
+    const { body: current } = await apiRoot.orders().withId({ ID: orderId }).get().execute();
+    const all: OrderUpdateAction[] = [];
+    if (current.orderNumber) number = current.orderNumber;
+    else {
+      number = await nextOrderNumber();
+      all.push({ action: 'setOrderNumber', orderNumber: number });
+    }
+    if (!current.state) all.push({ action: 'transitionState', state: { typeId: 'state', key: ORDER_STATE_RECEIVED }, force: true });
+    if (all.length === 0) return;
+    await apiRoot.orders().withId({ ID: orderId }).post({ body: { version: current.version, actions: all } }).execute();
+  });
+  return number;
+}
+
+/**
+ * The domain logic of a placed order, exactly once per order id, however the order came to exist (Checkout, or the
+ * storefront for a fully covered cart). Idempotent: a record per order (`fin-<orderId>`) answers a repeat with the same
+ * order, a concurrent run gets `IN_PROGRESS`, and each step is itself idempotent, so a crashed run is simply finished
+ * by the next caller. Order of work: consume the prescription (a refusal cancels the order and gives the card payment
+ * back through Checkout) -> draw the allowance / record the restricted instrument -> the `MLV-` number and state, last,
+ * because a missing number or state is what tells a later reader that the order is not finalized yet.
+ */
+export async function finalizeOrder(orderId: string, options: FinalizeOptions = {}): Promise<FinalizeOutcome> {
+  const fixtures = await loadCheckoutFixtures();
+  if (fixtures) return fixtures.finalizeFixtureOrder(orderId);
+  if (!ORDER_ID.test(orderId)) return { ok: false, code: 'NOT_FOUND' };
+  const now = options.now ?? new Date();
+  const acquired = await acquire(orderId, now);
+  if (acquired.kind === 'answer') return acquired.outcome;
+  const key = finalizeKey(orderId);
+  const record = (value: FinalizeRecord) => putObject<FinalizeRecord>(CONTAINERS.orderAttempt, key, value);
+
+  try {
+    const order = await readOrder(orderId);
+    if (!order) {
+      await deleteObject(CONTAINERS.orderAttempt, key);
+      return { ok: false, code: 'NOT_FOUND' };
+    }
+    if (order.state?.obj?.key === 'mlv-cancelled') {
+      await record({ state: 'done', at: now.toISOString(), orderNumber: order.orderNumber ?? '' });
+      return { ok: true, replay: true, orderId, orderNumber: order.orderNumber ?? '' };
+    }
+    const provider = options.provider === undefined ? await resolveProvider() : options.provider;
+
+    // 1. the prescription, once for this order id (the ledger is idempotent on it).
+    try {
+      const lines = await consumeLinesOf(order);
+      if (lines && lines.length > 0) await consumeAuthorization(order.id, lines, now);
+    } catch (error) {
+      if (!(error instanceof DispenseRefusedError)) throw error;
+      // The prescription changed between the gate and the order: the order exists, so it is cancelled and the card is given back.
+      await cancelRefusedOrder(order.id);
+      await returnCardPayments(paymentsOf(order), provider);
+      await record({ state: 'refused', at: now.toISOString(), code: 'DISPENSE_REFUSED' });
+      return { ok: false, code: 'DISPENSE_REFUSED' };
+    }
+
+    // 2. allowance and restricted instrument (idempotent on the order id).
+    const plan = await planFromOrder(order);
+    if (plan.allowance > 0 || plan.restricted > 0) {
+      // Checkout must have collected only the card remainder. If it authorized or charged another amount (it ignored the tender
+      // Payments on the cart), drawing the allowance too would charge the buyer twice: refuse, give the card back, draw nothing.
+      const cardTaken = paymentsOf(order).filter((p) => !isInternalTender(p)).flatMap((p) => p.transactions).filter((t) => (t.type === 'Authorization' || t.type === 'Charge') && t.state === 'Success');
+      if (cardTaken.length > 0 && cardTaken.some((t) => t.amount.centAmount !== plan.card)) {
+        log.error('checkout', 'card amount differs from the tender plan', { status: 0 });
+        await cancelRefusedOrder(order.id);
+        await restoreAuthorization(order.id).catch(() => undefined);
+        await returnCardPayments(paymentsOf(order), provider);
+        await record({ state: 'refused', at: now.toISOString(), code: 'FUNDING_CHANGED' });
+        return { ok: false, code: 'FUNDING_CHANGED' };
+      }
+      const patient = order.customerId ? await getPatient(order.customerId) : null;
+      if (!patient) throw new Error('no patient for a funded order');
+      const settled = await settleTender(order, plan, { patientRef: patient.patientRef, now });
+      if (!settled.ok) {
+        // The balance fell between the gate and the draw (another order took it): nothing may be left half done.
+        await cancelRefusedOrder(order.id);
+        await restoreAuthorization(order.id).catch(() => undefined);
+        await restoreAllowance(order.id).catch(() => undefined);
+        await returnCardPayments(paymentsOf(order), provider);
+        await record({ state: 'refused', at: now.toISOString(), code: 'FUNDING_CHANGED' });
+        return { ok: false, code: 'FUNDING_CHANGED' };
+      }
+    }
+
+    // 3. the number and the state, only if unset.
+    const orderNumber = await numberAndState(order.id);
+    await record({ state: 'done', at: now.toISOString(), orderNumber });
+    return { ok: true, replay: false, orderId, orderNumber };
+  } catch (error) {
+    // Unexpected: free the lock so the next caller can finish (every step above is idempotent).
+    log.error('checkout', 'finalize interrupted', error instanceof Error ? error : { name: typeof error });
+    await deleteObject(CONTAINERS.orderAttempt, key).catch(() => undefined);
+    return { ok: false, code: 'PLACEMENT_FAILED' };
   }
 }
