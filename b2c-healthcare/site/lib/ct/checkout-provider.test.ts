@@ -20,9 +20,6 @@ const config = {
 
 const reply = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
 const usd = (centAmount: number) => ({ centAmount, currencyCode: 'USD', fractionDigits: 2 });
-const payment = (id: string, createdAt: string, transactions: { type: string; state: string; amount: ReturnType<typeof usd> }[]) =>
-  ({ id, createdAt, amountPlanned: usd(2025), transactions }) as never;
-
 beforeEach(() => {
   shop = createFakeShop();
 });

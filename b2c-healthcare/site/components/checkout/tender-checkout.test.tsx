@@ -58,7 +58,7 @@ beforeEach(() => {
       if (path === '/api/checkout' && method === 'GET') return json(current);
       if (path === '/api/checkout/tender') return onTender(body.restricted);
       if (path === '/api/checkout/demo-authorize') return json({ status: 'authorized' });
-      if (path === '/api/checkout/place') return json({ orderId: 'ord-9', orderNumber: 'MLV-000009' });
+      if (path === '/api/checkout/prepare') return json({ kind: 'order', orderId: 'ord-9', orderNumber: 'MLV-000009' });
       return json({}, 404);
     }),
   );
@@ -98,7 +98,7 @@ describe('eligible-item-tender-restriction: checkout offers the instrument only 
     expect(within(card).getByText(/none of these items are eligible/)).toBeInTheDocument();
   });
 
-  it('Wholly eligible basket: the instrument settles everything, no card payment is shown or asked for, and Place order places directly', async () => {
+  it('Wholly eligible basket: the instrument settles everything, no card payment is shown or asked for, and Place order creates the order directly', async () => {
     const user = userEvent.setup();
     current = state(tender({ restricted: { available: true, eligibleSubtotal: usd(3135), applies: usd(3135), chosen: true }, card: usd(0), needsOtherTender: usd(0) }));
     renderWithProviders(<CheckoutPage />);
@@ -109,7 +109,7 @@ describe('eligible-item-tender-restriction: checkout offers the instrument only 
     await user.click(screen.getByRole('button', { name: 'Place order' }));
     await waitFor(() => expect(router.push).toHaveBeenCalledWith('/order/ord-9'));
     expect(calls.some((c) => c.path === '/api/checkout/demo-authorize')).toBe(false);
-    expect(calls.find((c) => c.path === '/api/checkout/place')).toBeDefined();
+    expect(calls.find((c) => c.path === '/api/checkout/prepare')).toBeDefined();
   });
 
   it('Balance visible before committing: the allowance balance, what this order would use and the forfeit date', async () => {

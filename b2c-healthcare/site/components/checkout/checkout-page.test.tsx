@@ -190,29 +190,31 @@ describe('checkout-page: Checkout re-reading totals after each shipping change (
 });
 
 describe('design-checkout: Place order: success and demo banner (Q-07)', () => {
-  it('Success: Place order in the demo build authorizes, places and goes to /order/<id>; the DEMO banner is visible', async () => {
+  it('Success: Place order in the demo build runs the gate, the demo Checkout and the completion callback, then goes to /order/<id>; the DEMO banner is visible', async () => {
     const user = userEvent.setup();
     server.put = (path) => {
-      if (path === '/api/checkout/demo-authorize') return json({ status: 'authorized' });
-      if (path === '/api/checkout/place') return json({ orderId: 'ord-7', orderNumber: 'MLV-000007' });
+      if (path === '/api/checkout/prepare') return json({ kind: 'demo', cardDue: 3015 });
+      if (path === '/api/checkout/demo-authorize') return json({ status: 'authorized', orderId: 'ord-7' });
+      if (path === '/api/checkout/complete') return json({ orderId: 'ord-7', orderNumber: 'MLV-000007' });
       return json({}, 404);
     };
     renderWithProviders(<CheckoutPage />);
     expect(await screen.findByText('DEMO payment (no PSP configured)')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Place order' }));
     await waitFor(() => expect(router.push).toHaveBeenCalledWith('/order/ord-7'));
-    expect(calls.find((c) => c.path === '/api/checkout/place')?.body).toEqual({ expectedTotal: { centAmount: 3015, currencyCode: 'USD' }, cartVersion: 3 });
+    expect(calls.find((c) => c.path === '/api/checkout/prepare')?.body).toEqual({ expectedTotal: { centAmount: 3015, currencyCode: 'USD' } });
+    expect(calls.find((c) => c.path === '/api/checkout/complete')?.body).toEqual({ orderId: 'ord-7' });
   });
 
   it('Declined payment: the message is inline in the payment card, the cart is kept and nothing is placed', async () => {
     const user = userEvent.setup();
-    server.put = (path) => (path === '/api/checkout/demo-authorize' ? json({ status: 'declined' }) : json({}, 404));
+    server.put = (path) => (path === '/api/checkout/prepare' ? json({ kind: 'demo', cardDue: 3015 }) : path === '/api/checkout/demo-authorize' ? json({ status: 'declined' }) : json({}, 404));
     renderWithProviders(<CheckoutPage />);
     await user.click(await screen.findByRole('checkbox', { name: 'Simulate a declined payment' }));
     await user.click(screen.getByRole('button', { name: 'Place order' }));
     const card = document.querySelector('[data-checkout-card="payment"]') as HTMLElement;
     expect(await within(card).findByText(/Your payment was declined/)).toBeInTheDocument();
-    expect(calls.some((c) => c.path === '/api/checkout/place')).toBe(false);
+    expect(calls.some((c) => c.path === '/api/checkout/complete')).toBe(false);
     expect(calls.find((c) => c.path === '/api/checkout/demo-authorize')?.body).toEqual({ decline: true });
     expect(router.push).not.toHaveBeenCalled();
   });

@@ -39,6 +39,7 @@ secret ones "Contains secret values" (Netlify then hides them and, with the secr
 | `CTP_SCOPES` | yes | no | space-separated `scope:<project-key>`, least privilege (`.env.example` lists each with its reason); never `manage_project`, never `manage_my_*` |
 | `SESSION_SECRET` | yes | **yes** | 32+ random characters (`openssl rand -base64 48`) |
 | `CTP_CHECKOUT_APP_KEY` | yes | no | key of the commercetools Checkout Application (OA-04); without it no order can be placed |
+| `ORDER_FINALIZE_SECRET` | optional | **yes** | 16+ characters; guards `POST /api/internal/order-created` (finalizes an order Checkout created when the browser never called back); without it the order page finalizes lazily |
 | `SITE_URL` | yes | no | public origin (canonical URLs, sitemap, robots), e.g. the production URL |
 | `AUTO_REFILL_ENABLED` | optional | no | `true` shows the auto-refill claims; only where the recurring-order scopes and the daily check exist |
 | `AUTO_REFILL_RUN_SECRET` | yes | **yes** | 16+ characters; the same value for the app and the function |
