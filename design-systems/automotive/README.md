@@ -5,7 +5,7 @@ Extracted from the Figma Community file **Auto Parts Website** — a Canadian re
 ## Files
 - `tokens.css` / `tokens.json` — colors, type, spacing, radius, elevation (source of truth; the JSON is generated from the CSS)
 - `foundations/` — preview cards for colors, typography, spacing/radius/shadow
-- `components/` — button, form fields, badge/rating/fitment, product card, cart, navigation + footer
+- `components/` — button, form fields, badge/rating/fitment, product card, cart, cart selector (header icon + mini-cart), car lookup (year/make/model/engine panel, fitment bar, saved vehicle), navigation + footer
 
 ## Principles
 - **Garage Maroon carries action.** `brand-700` (`#821810`) is the one action color: primary buttons, prices, links, active nav, card outlines. `brand-deep` (`#810000`) is only for the search header band and the category tiles. Hover goes to `brand-600`, pressed to `brand-900`.
