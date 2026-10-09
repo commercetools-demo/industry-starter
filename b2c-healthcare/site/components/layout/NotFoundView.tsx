@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl';
 import { ButtonLink } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 
-export type NotFoundKind = 'page' | 'doctor' | 'order' | 'generic';
+export type NotFoundKind = 'page' | 'doctor' | 'medicine' | 'order' | 'generic';
 
 /**
  * "Address resolves to nothing" card (error-pages). The default is the page-level 404 with routes
@@ -35,10 +35,10 @@ export function NotFoundView({ kind = 'page' }: { kind?: NotFoundKind }) {
         ) : (
           <>
             <h1 className="font-display text-2xl font-semibold text-text-heading">
-              {t(kind === 'doctor' ? 'doctorNotFound' : kind === 'order' ? 'orderNotFound' : 'notFoundShort')}
+              {t(kind === 'doctor' ? 'doctorNotFound' : kind === 'medicine' ? 'medicineNotFound' : kind === 'order' ? 'orderNotFound' : 'notFoundShort')}
             </h1>
-            <ButtonLink href={kind === 'doctor' ? '/doctors/remote' : '/'} full>
-              {kind === 'doctor' ? t('backToSearch') : t('notFoundPage.home')}
+            <ButtonLink href={kind === 'doctor' ? '/doctors/remote' : kind === 'medicine' ? '/search' : '/'} full>
+              {kind === 'doctor' || kind === 'medicine' ? t('backToSearch') : t('notFoundPage.home')}
             </ButtonLink>
           </>
         )}

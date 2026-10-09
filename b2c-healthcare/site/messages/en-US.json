@@ -23,6 +23,7 @@
       "prescriptions": "Prescriptions"
     },
     "doctorNotFound": "Doctor not found.",
+    "medicineNotFound": "Medicine not found.",
     "backToSearch": "Back to search",
     "orderNotFound": "Order not found.",
     "notFoundShort": "Not found.",
@@ -1179,6 +1180,41 @@
       "restrictedWouldPay": "It would pay {amount} of eligible items.",
       "restrictedFailed": "We could not change that. Please try again."
     }
+  },
+  "medicine": {
+    "metaTitle": "{name}",
+    "metaDescription": "{name}: {strength} {form}. {rx}. Delivered by Malva.",
+    "back": "Back to search",
+    "rxOnly": "Prescription only",
+    "otc": "Over the counter",
+    "hsa": "HSA/FSA eligible",
+    "strength": "Strength",
+    "form": "Dosage form",
+    "pack": "Pack",
+    "perPack": "per {unit}",
+    "details": "Details",
+    "gallery": "Product images",
+    "imageAlt": "{name}, image {n} of {total}",
+    "price": "Price",
+    "noPrice": "No price available",
+    "limit": "Limit {count, plural, one {# pack} other {# packs}} per order.",
+    "shelfLife": "{months, plural, one {Minimum # month} other {Minimum # months}} of shelf life on delivery.",
+    "stock": {
+      "title": "Availability",
+      "in-stock": "In stock",
+      "out-of-stock": "Out of stock",
+      "short-dated": "Short-dated",
+      "shelf-life": "Unavailable for now",
+      "note-short-dated": "This stock expires on {date}, sooner than our usual shelf-life promise. It is offered at its own price of {price}.",
+      "note-shelf-life": "The stock we hold expires on {date}, which is too soon to meet our minimum shelf-life promise.",
+      "note-shelf-life-undated": "The stock we hold cannot meet our minimum shelf-life promise."
+    },
+    "controlled": "This is a controlled medicine and requires a valid {class} credential. You can view it here; ordering is checked against the credential on your account.",
+    "rxNotice": "Order this medicine from your prescription. Enter the RX number from your doctor, and the prescribed quantity is added for you.",
+    "findOnRx": "Find it on your prescription",
+    "orderFromRx": "Order from your prescription",
+    "otcNotice": "This medicine does not need a prescription, but it is ordered from your prescription page for now.",
+    "noImage": "No image available"
   },
   "credentials": {
     "requirement": {

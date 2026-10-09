@@ -76,6 +76,22 @@ export interface Medication {
   categoryIds: string[];
 }
 
+/** Public stock state of a medicine for its detail page (no patient data; derived from inventory and the shelf-life promise). */
+export interface MedicineAvailability {
+  /** `short-dated` is offered on its own terms (actual expiry, own price); `shelf-life` cannot meet the promise and is not offered. */
+  status: 'in-stock' | 'out-of-stock' | 'short-dated' | 'shelf-life';
+  /** ISO date of the stock's actual expiry, when dated. */
+  expiryDate?: string;
+  shortDatedPrice?: Money;
+}
+
+/** Medicine detail page (workstream AB): the list shape plus the gallery and availability. */
+export interface MedicineDetail extends Medication {
+  imageUrls: string[];
+  /** Null when stock could not be read: the page then states nothing about stock. */
+  availability: MedicineAvailability | null;
+}
+
 /** Minimal cart for first paint (header count); the cart workstream extends it. */
 export interface CartSummary {
   id: string;
@@ -246,6 +262,8 @@ export type CredentialProblem = 'NONE' | 'WRONG_SCOPE' | 'EXPIRED' | 'PENDING';
 
 /** One medication row of a prescription card; shown to the owner of the prescription only. */
 export interface RxLineView {
+  /** Catalog SKU, so the name can link to the medicine page (AB). */
+  sku?: string;
   lineRef: string;
   name: string;
   sig: string;

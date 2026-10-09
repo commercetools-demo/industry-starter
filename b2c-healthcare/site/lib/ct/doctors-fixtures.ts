@@ -3,7 +3,8 @@ import { candidateSlots, type Schedule, type Slot } from '@/lib/clinical/slots';
 import { initialsOf } from '@/lib/mappers/doctor';
 import { matchSpecialtyKeys, SPECIALTIES } from '@/lib/specialties';
 import type { FacetResult } from '@/lib/ct/search';
-import type { ConsultationMode, DoctorCard, DoctorProfile, Medication } from '@/lib/types';
+import type { ConsultationMode, DoctorCard, DoctorProfile, Medication, MedicineDetail } from '@/lib/types';
+import { assessAvailability } from '@/lib/medicine-availability';
 import { MEDICATIONS, medKey, medSku } from '@/scripts/seed/data/medications';
 import { DOCTORS, doctorKey } from '@/scripts/seed/data/doctors';
 import { REVIEWS } from '@/scripts/seed/data/reviews';
@@ -109,4 +110,23 @@ export function fixtureMedicinesByText(q: string): Medication[] {
 
 export function fixtureMedicineBySku(sku: string): Medication | null {
   return medicines.find((m) => m.sku?.toLowerCase() === sku.toLowerCase()) ?? null;
+}
+
+const FIXTURE_STOCK = 40;
+
+/** Medicine detail page data for fixtures mode: stock is full; the dated demo product (famotidine) carries its expiry. */
+export function fixtureMedicineDetail(key: string, now: Date): MedicineDetail | null {
+  const base = medicines.find((m) => m.key === key);
+  const def = MEDICATIONS.find((d) => medKey(d) === key);
+  if (!base || !def) return null;
+  return {
+    ...base,
+    imageUrls: [],
+    availability: assessAvailability({
+      supply: { available: FIXTURE_STOCK, ...(def.expiryDate ? { expiryDate: def.expiryDate } : {}) },
+      minRemainingShelfLifeDays: base.minRemainingShelfLifeDays,
+      shortDatedPrice: null,
+      today: now.toISOString().slice(0, 10),
+    }),
+  };
 }

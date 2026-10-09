@@ -49,6 +49,8 @@ describe('faq › footer and content routes', () => {
     expect(routeExists('/nope')).toBe(false);
     expect(routeExists('/journal/anything')).toBe(true);
     expect(routeExists('/policies/terms')).toBe(true);
+    expect(routeExists('/medicine/mlv-med-ibuprofen-400-mg')).toBe(true);
+    expect(routeExists('/medicine')).toBe(false);
   });
 
   it('every static content path and the journal have a page', () => {
