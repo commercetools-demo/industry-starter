@@ -38,6 +38,9 @@ export async function runVerify(root: Root, opts: VerifyOptions = {}): Promise<C
 
   await assertProject(root);
   check('project is spec-test-b2c-healthcare', true);
+  // Messages copy every changed field value into a log that only dataErasure reaches (health-data-minimization): keep them off
+  const project = (await root.get().execute()).body as { messages?: { enabled?: boolean } };
+  check('Messages are disabled in the project (health-data-minimization)', project.messages?.enabled === false, `messages.enabled is ${String(project.messages?.enabled)}; change it in Settings, Project, or via changeMessagesConfiguration`);
 
   // ---- products
   const products = (await listAll(root, 'products')).map(viewOf);

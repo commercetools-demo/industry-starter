@@ -1,6 +1,7 @@
 import { loadProductImages } from './data/images';
 import { doctorSteps, foundationSteps, medicationSteps, type ProductOptions } from './steps';
 import { clinicalSteps } from './clinical-steps';
+import { assertSynthetic } from './synthetic';
 import { listAndRecurrenceSteps } from './recurrence-steps';
 import { getAdminRoot, readSeedEnv, isMain, makeCtx, parseFlags, runSteps, type Ctx, type RunSummary, type Step } from './lib';
 
@@ -34,6 +35,8 @@ export function seedSteps(ctx: Ctx, o: SeedOptions = {}): Step[] {
 }
 
 export async function runSeed(ctx: Ctx, o: SeedOptions = {}): Promise<RunSummary> {
+  // test-environment guard (health-data-minimization): nothing is written unless every patient and booking in data/ is synthetic
+  assertSynthetic();
   const summary = await runSteps(seedSteps(ctx, o), ctx.log);
   ctx.log(summary.ok ? `${ctx.dryRun ? 'dry run: ' : ''}${summary.changed} change(s) in ${summary.total} step(s)` : `stopped after ${summary.total} step(s), ${summary.changed} change(s): fix the difference above`);
   return summary;
