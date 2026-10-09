@@ -844,7 +844,9 @@
       "loadFailed": "The payment form could not be loaded. Please try again.",
       "unavailable": "Payment is not available right now. Your cart is kept; please try again later.",
       "retry": "Reload payment",
-      "declined": "Your payment was declined. No order was placed and your cart is kept. Try another payment method."
+      "declined": "Your payment was declined. No order was placed and your cart is kept. Try another payment method.",
+      "savedHint": "Cards you saved before appear first. Tick \"Save this card\" in the payment form to use it next time. Card details are handled by our payment provider and never reach Malva.",
+      "manageSaved": "Manage saved cards"
     },
     "summary": {
       "title": "Order summary",

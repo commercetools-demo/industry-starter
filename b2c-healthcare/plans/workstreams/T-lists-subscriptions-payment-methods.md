@@ -19,7 +19,7 @@
 - [x] T-07 Auto-refill UI (`/account/auto-refill`, enable from an order/RX line, pause/resume/skip/cancel/schedule change); `autoRefillEnabled` config flag turned on; tests [SPEC: subscriptions-and-recurring-orders]
 - [x] T-08 `lib/ct/payment-methods.ts` over Checkout stored methods (list descriptors only, set default with explicit clearing, remove); live-verify the default semantics and record in PROJECT-FINDINGS [SKILL: commercetools-checkout] [SPEC: payment-methods]
 - [x] T-09 Payment methods UI + "No methods saved", "Default method removed" warnings; test no PAN/token ever rendered or logged [SPEC: payment-methods]
-- [ ] T-10 Checkout integration: allow saving a method during payment (checkbox) and paying with a saved one; manual test M-T-1 pre-registered [SKILL: commercetools-checkout] [SPEC: payment-methods]
+- [x] T-10 Checkout integration: allow saving a method during payment (checkbox) and paying with a saved one; manual test M-T-1 pre-registered [SKILL: commercetools-checkout] [SPEC: payment-methods]
 
 ## Scenarios
 Every scenario is a unit test (or a scripted check) named after it.

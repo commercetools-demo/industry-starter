@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Checkbox } from '@/components/ui/Inputs';
+import { Link } from '@/i18n/routing';
 import { API_CHECKOUT_SESSION } from '@/lib/api-paths';
 import type { PaymentMode, PaymentSessionInfo } from '@/lib/types';
 
@@ -125,6 +126,14 @@ export function PaymentCard({ mode, ready, cartKey, message, onEvent, simulateDe
           ) : null}
           {/* Mount point of the Checkout payment component (inline, not the full-screen overlay). */}
           <div data-ctc />
+          {/* Stored Payment Methods (workstream T): the widget lists the customer's saved cards first and offers "Save this card"
+              itself, because the cart carries the customer id. Nothing here touches a card. */}
+          <p className="text-sm text-neutral-600" data-saved-hint>
+            {t('savedHint')}{' '}
+            <Link href="/account/payment-methods" className="text-text-link">
+              {t('manageSaved')}
+            </Link>
+          </p>
         </div>
       )}
     </Card>
