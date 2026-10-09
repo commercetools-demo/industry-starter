@@ -64,7 +64,6 @@ function article(n: number): Article {
 }
 
 beforeEach(() => {
-  vi.unstubAllEnvs();
   getHomeSnapshot.mockReset();
   getHomeSnapshot.mockResolvedValue(null);
   hasSameDayMethod.mockReset();
