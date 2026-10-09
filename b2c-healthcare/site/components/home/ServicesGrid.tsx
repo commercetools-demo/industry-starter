@@ -29,7 +29,7 @@ export function ServicesGrid() {
         <ul className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,15.625rem),1fr))] gap-6 p-0">
           {SERVICES.map(({ key, href }) => (
             <li key={key} className="flex flex-col gap-3 rounded-md border border-border bg-surface p-7 transition-shadow hover:border-brand-200 hover:shadow-md">
-              <div aria-hidden="true" className="grid size-13 place-items-center rounded-md bg-brand-50 font-display text-md font-semibold text-brand-700">
+              <div aria-hidden="true" className="grid size-13 place-items-center rounded-md bg-brand-50 font-display text-md font-semibold text-brand-800">
                 {t(`${key}.icon`)}
               </div>
               <h3 className="font-display text-lg font-semibold text-text-heading">{t(`${key}.title`)}</h3>

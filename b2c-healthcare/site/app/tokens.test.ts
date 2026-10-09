@@ -27,6 +27,8 @@ describe('app/tokens.css and globals.css', () => {
       '--color-danger-700: #b3402a',
       '--container-content: 1200px',
       '--color-action-label: var(--color-navy-900)',
+      '--color-text-link: var(--color-brand-800)',
+      '--color-text-muted: var(--color-neutral-600)',
       '--focus-ring:',
     ]) {
       expect(ext).toContain(name);
@@ -44,5 +46,20 @@ describe('app/tokens.css and globals.css', () => {
     for (const n of new Set(names)) {
       expect(theme, n).toContain(`${n}: var(${n});`);
     }
+  });
+
+  it('Z: the effective link color reaches 4.5:1 on white and on brand-50 (axe color-contrast)', () => {
+    const lum = (hex: string) => {
+      const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+      return 0.2126 * (c[0] as number) + 0.7152 * (c[1] as number) + 0.0722 * (c[2] as number);
+    };
+    const ratio = (a: string, b: string) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05);
+    const hex = (name: string) => new RegExp(`${name}: (#[0-9a-f]{6})`).exec(tokensCss)?.[1] as string;
+    const link = /--color-text-link: var\(--color-(brand-\d+)\)/.exec(tokensCss.split(MARKER)[1] ?? '')?.[1] as string;
+    const linkHex = hex(`--color-${link}`);
+    expect(ratio(linkHex, '#ffffff')).toBeGreaterThanOrEqual(4.5);
+    expect(ratio(linkHex, hex('--color-brand-50'))).toBeGreaterThanOrEqual(4.5);
+    const muted = /--color-text-muted: var\(--color-(neutral-\d+)\)/.exec(tokensCss.split(MARKER)[1] ?? '')?.[1] as string;
+    expect(ratio(hex(`--color-${muted}`), '#ffffff')).toBeGreaterThanOrEqual(4.5);
   });
 });

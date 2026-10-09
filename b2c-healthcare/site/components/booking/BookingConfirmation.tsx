@@ -63,7 +63,7 @@ export function BookingConfirmation({ booking, signedIn }: BookingConfirmationPr
         {booking.guest && !signedIn ? (
           <p className="rounded-md bg-brand-50 p-3.5 text-sm text-navy-900" data-testid="guest-nudge">
             {t('guestNudge')}{' '}
-            <Link href={{ pathname: '/login', query: { mode: 'register' } }} className="font-medium text-brand-700 hover:text-brand-800">
+            <Link href={{ pathname: '/login', query: { mode: 'register' } }} className="font-medium text-brand-800 hover:text-brand-900">
               {t('createAccount')}
             </Link>{' '}
             {t('guestNudgeTail')}

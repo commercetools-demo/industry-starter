@@ -35,7 +35,7 @@ export function Field({ label, hint, error, optional, id, className, children }:
     <div className={cx('grid gap-1.5 text-[length:var(--text-sm)]', className)}>
       <label htmlFor={controlId} className="font-medium text-navy-700">
         {label}
-        {optional ? <span className="ml-1 font-normal text-neutral-500">({t('optional')})</span> : null}
+        {optional ? <span className="ml-1 font-normal text-neutral-600">({t('optional')})</span> : null}
       </label>
       {children({ id: controlId, 'aria-describedby': describedBy, 'aria-invalid': error ? true : undefined })}
       {hint ? (

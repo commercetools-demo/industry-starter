@@ -115,6 +115,12 @@
   /* navy-900 on --color-action-hover (brand-600) is only 4.38:1; navy-950 reaches 5.54:1 */
   --color-action-label-hover: var(--color-navy-950);
 
+  /* Z (axe color-contrast): the design's link color (brand-500) is 2.6:1 on white; brand-800 reaches 6.5:1 on white
+     and 5.8:1 on brand-50 */
+  --color-text-link: var(--color-brand-800);
+  /* Same sweep: muted text (neutral-500) is 4.3:1 on white; neutral-600 reaches 6.3:1 */
+  --color-text-muted: var(--color-neutral-600);
+
   /* Focus ring (B-06) */
   --focus-ring: 2px solid var(--color-brand-700);
 

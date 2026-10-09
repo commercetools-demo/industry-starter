@@ -30,7 +30,7 @@ export function useNavItems(variant: HeaderVariant, section: NavSection | null, 
 }
 
 const DESKTOP_LINK =
-  'whitespace-nowrap border-b-2 border-transparent py-1.5 font-display text-sm font-medium text-navy-900 hover:text-brand-600 aria-[current=page]:border-brand-500 aria-[current=page]:text-brand-600';
+  'whitespace-nowrap border-b-2 border-transparent py-1.5 font-display text-sm font-medium text-navy-900 hover:text-brand-700 aria-[current=page]:border-brand-500 aria-[current=page]:text-brand-700';
 
 /** The inline link row; hidden below the nav breakpoint (the menu takes over). */
 export function DesktopLinks({ items, className }: { items: NavItem[]; className?: string }) {

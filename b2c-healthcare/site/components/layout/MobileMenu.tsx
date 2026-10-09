@@ -9,7 +9,7 @@ import { SIGN_IN_HREF } from './AccountSlot';
 import type { NavItem } from './NavLinks';
 
 const ROW =
-  'block rounded-md px-4 py-3 font-display text-sm font-medium text-navy-900 hover:bg-brand-50 aria-[current=page]:bg-brand-50 aria-[current=page]:text-brand-600';
+  'block rounded-md px-4 py-3 font-display text-sm font-medium text-navy-900 hover:bg-brand-50 aria-[current=page]:bg-brand-50 aria-[current=page]:text-brand-800';
 
 export interface MobileMenuProps {
   items: NavItem[];

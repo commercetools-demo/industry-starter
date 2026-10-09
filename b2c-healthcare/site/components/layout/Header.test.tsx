@@ -94,7 +94,7 @@ describe('design-storefront-shell › Header navigation', () => {
     const nav = screen.getByRole('navigation', { name: 'Main' });
     const current = within(nav).getAllByRole('link').filter((link) => link.getAttribute('aria-current') === 'page');
     expect(current.map((l) => l.textContent)).toEqual([label]);
-    expect(current[0]).toHaveClass('aria-[current=page]:border-brand-500', 'aria-[current=page]:text-brand-600');
+    expect(current[0]).toHaveClass('aria-[current=page]:border-brand-500', 'aria-[current=page]:text-brand-700');
   });
 
   it('Active section: no link is active on the account overview', () => {
