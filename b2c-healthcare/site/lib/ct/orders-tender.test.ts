@@ -126,6 +126,18 @@ describe('benefit-allowance-drawdown: allowance as its own Payment before the ca
     expect(shop.orders).toHaveLength(1);
   });
 
+  it('Checkout ignored the tender Payments and charged the whole total: the order is refused, the card is given back and the allowance is NOT drawn (no double charge)', async () => {
+    const { drawdown } = await import('@/lib/ct/allowance');
+    await drawdown('pt_sam', 'earlier-order', 4125, NOW);
+    const cart = cartOf([{ sku: ATOR, cents: 1875 }]);
+    const outcome = await placeOrder(input(cart.id), provider, { cardCents: 1875 });
+    expect(outcome).toEqual({ ok: false, code: 'FUNDING_CHANGED' });
+    expect(shop.orders[0].state?.key).toBe('mlv-cancelled');
+    expect(provider.released).toHaveLength(1);
+    expect(await getBalance('pt_sam', NOW)).toBe(875);
+    expect((objects.objects.find((o) => o.container === CONTAINERS.rx)!.value as Prescription).refillsLeft).toBe(3);
+  });
+
   it('the allowance covers everything: Checkout is not started, the storefront creates and finalizes the order itself', async () => {
     const cart = cartOf([{ sku: ATOR, cents: 1875 }]);
     const gate = await prepareCheckout(input(cart.id), provider);

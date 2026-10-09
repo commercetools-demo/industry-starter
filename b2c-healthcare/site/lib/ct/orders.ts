@@ -12,7 +12,7 @@ import { CONTAINERS, createOnly, deleteObject, getObject, putObject, statusOf } 
 import { restoreAllowance } from '@/lib/ct/allowance';
 import { consumeAuthorization, DispenseRefusedError, restoreAuthorization } from '@/lib/ct/dispense-ledger';
 import { nextOrderNumber } from '@/lib/ct/order-number';
-import { returnCardPayments } from '@/lib/ct/payment-lifecycle';
+import { isInternalTender, returnCardPayments } from '@/lib/ct/payment-lifecycle';
 import { getPatient } from '@/lib/ct/patient';
 import { findOwnPrescription, RxNotFoundError, validateRxSelection } from '@/lib/ct/prescriptions';
 import { getOptionsForCart } from '@/lib/ct/shipping-options';
@@ -364,6 +364,17 @@ export async function finalizeOrder(orderId: string, options: FinalizeOptions = 
     // 2. allowance and restricted instrument (idempotent on the order id).
     const plan = await planFromOrder(order);
     if (plan.allowance > 0 || plan.restricted > 0) {
+      // Checkout must have collected only the card remainder. If it authorized or charged another amount (it ignored the tender
+      // Payments on the cart), drawing the allowance too would charge the buyer twice: refuse, give the card back, draw nothing.
+      const cardTaken = paymentsOf(order).filter((p) => !isInternalTender(p)).flatMap((p) => p.transactions).filter((t) => (t.type === 'Authorization' || t.type === 'Charge') && t.state === 'Success');
+      if (cardTaken.length > 0 && cardTaken.some((t) => t.amount.centAmount !== plan.card)) {
+        log.error('checkout', 'card amount differs from the tender plan', { status: 0 });
+        await cancelRefusedOrder(order.id);
+        await restoreAuthorization(order.id).catch(() => undefined);
+        await returnCardPayments(paymentsOf(order), provider);
+        await record({ state: 'refused', at: now.toISOString(), code: 'FUNDING_CHANGED' });
+        return { ok: false, code: 'FUNDING_CHANGED' };
+      }
       const patient = order.customerId ? await getPatient(order.customerId) : null;
       if (!patient) throw new Error('no patient for a funded order');
       const settled = await settleTender(order, plan, { patientRef: patient.patientRef, now });
