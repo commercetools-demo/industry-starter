@@ -16,13 +16,13 @@ describe('design-home-page: site image slots', () => {
     }
   });
 
-  it('a stored URL with a query string is rejected, a clean one is returned with its photographer', () => {
+  it('a stored URL with a query string is rejected, a clean one is returned without any credit (D-040)', () => {
     const images = {
       'home-hero': { url: 'https://images.example/a.jpg?w=800', photographer: 'P' },
       'home-cta': { url: 'https://images.example/b.jpg', photographer: 'Q' },
     };
     expect(siteImage('home-hero', images)).toBeNull();
-    expect(siteImage('home-cta', images)).toEqual({ url: 'https://images.example/b.jpg', photographer: 'Q' });
+    expect(siteImage('home-cta', images)).toEqual({ url: 'https://images.example/b.jpg' });
   });
 
   it('an empty file gives null for every slot (placeholders, never an invented URL)', () => {

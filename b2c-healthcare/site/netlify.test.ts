@@ -29,6 +29,17 @@ describe('netlify.toml', () => {
     expect(fn['retention-scheduled']?.schedule).toBe(retentionConfig.schedule);
   });
 
+  it('every host of the committed seed photos is allowed by img-src (a blocked photo would show nothing in production)', () => {
+    const hosts = new Set<string>();
+    for (const file of ['product-images.json', 'site-images.json']) {
+      const data = JSON.parse(readFileSync(resolve(import.meta.dirname, 'scripts/seed/data', file), 'utf8')) as Record<string, { url: string } | { url: string }[]>;
+      for (const entry of Object.values(data)) for (const image of Array.isArray(entry) ? entry : [entry]) hosts.add(new URL(image.url).hostname);
+    }
+    expect(hosts.size).toBeGreaterThan(0);
+    const imgSrc = /img-src([^;]*)/.exec(csp)?.[1] ?? '';
+    for (const host of hosts) expect(imgSrc, host).toContain(`https://${host}`);
+  });
+
   it('sets the baseline security headers for every path', () => {
     const values = headersFor('/*');
     expect(values['X-Content-Type-Options']).toBe('nosniff');
@@ -42,6 +53,8 @@ describe('netlify.toml', () => {
     expect(csp).toMatch(/frame-src[^;]*https:\/\/\*\.commercetools\.com/);
     expect(csp).toMatch(/connect-src[^;]*https:\/\/\*\.commercetools\.com/);
     expect(csp).toMatch(/img-src[^;]*https:\/\/images\.pexels\.com/);
+    // the committed seed photos (data/*-images.json) come from these hosts: every one must be allowed or the browser blocks it (D-040)
+    expect(csp).toMatch(/img-src[^;]*https:\/\/media\.istockphoto\.com/);
     expect(csp).toContain("object-src 'none'");
     expect(csp).toContain("frame-ancestors 'none'");
     expect(csp).not.toMatch(/(^|[ ;])\*([ ;]|$)/);
