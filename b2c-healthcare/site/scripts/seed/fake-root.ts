@@ -1,4 +1,5 @@
 import { createFakeObjects, type FakeObjects } from '../../test/fake-custom-objects';
+import { evalPredicate } from '../../test/fake-predicate';
 import type { Rec, Root } from './lib';
 
 /**
@@ -7,7 +8,7 @@ import type { Rec, Root } from './lib';
  * a published product, a category with children, a product type still used, a zone still used by a shipping method
  * and a tax category still used cannot be deleted.
  */
-export interface FakeLog { op: 'create' | 'update' | 'delete'; kind: string; key?: string; id: string; actions?: string[] }
+export interface FakeLog { op: 'create' | 'update' | 'delete'; kind: string; key?: string; id: string; actions?: string[]; /** The `dataErasure` query argument of a DELETE (workstream X). */ dataErasure?: boolean }
 
 export interface FakeRoot {
   root: Root;
@@ -26,7 +27,9 @@ const ref = (r: unknown) => (r as { key?: string; id?: string } | undefined)?.ke
 export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey = 'spec-test-b2c-healthcare'): FakeRoot {
   const fake = { store: {} as Record<string, Rec[]>, log: [] as FakeLog[], projectKey, searchTotal: null as number | null, searchCalls: 0, objects: createFakeObjects() } as FakeRoot;
   let counter = 0;
-  const kinds = ['carts', 'orders', 'inventory', 'products', 'categories', 'productTypes', 'shippingMethods', 'taxCategories', 'stores', 'zones', 'states', 'types', 'channels', 'customers', 'reviews', 'recurrencePolicies'];
+  const kinds = ['carts', 'orders', 'inventory', 'products', 'categories', 'productTypes', 'shippingMethods', 'taxCategories', 'stores', 'zones', 'states', 'types', 'channels', 'customers', 'reviews', 'recurrencePolicies',
+    // workstream X (privacy scripts): the other GDPR resource kinds
+    'payments', 'shoppingLists', 'discountCodes', 'businessUnits', 'quotes', 'quoteRequests', 'stagedQuotes', 'messages', 'recurringOrders', 'cartDiscounts'];
   for (const k of kinds) fake.store[k] = [];
   for (const [k, list] of Object.entries(initial)) fake.store[k] = list.map((r) => materialize(k, { ...r }));
 
@@ -72,6 +75,8 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
       case 'setTransitions': r.transitions = a.transitions; break;
       case 'transitionState': r.state = { typeId: 'state', id: fake.store.states.find((s) => s.key === (a.state as { key?: string }).key)?.id }; break;
       case 'changeShipmentState': r.shipmentState = a.shipmentState; break;
+      case 'setRecurringOrderState': r.recurringOrderState = a.recurringOrderState; break;
+      case 'removeAssociate': r.associates = ((r.associates as { customer?: { id?: string } }[]) ?? []).filter((x) => x.customer?.id !== (a.customer as { id?: string }).id); break;
       case 'setInventoryLimits': r.maxCartQuantity = a.maxCartQuantity; r.minCartQuantity = a.minCartQuantity; break;
       case 'removeImage':
         if (md) for (const v of [md.staged.masterVariant, ...md.staged.variants]) if (v.id === a.variantId) v.images = ((v.images as { url: string }[]) ?? []).filter((i) => i.url !== a.imageUrl);
@@ -85,9 +90,8 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
   }
 
   function matchWhere(r: Rec, where?: string): boolean {
-    if (!where) return true;
-    const m = /^(\w+)="([^"]*)"$/.exec(where);
-    return m ? r[m[1]] === m[2] : true;
+    // unsupported predicates match everything, as before; supported ones (equality, in, nesting, and, is defined) are evaluated
+    return evalPredicate(r, where, true);
   }
 
   const collection = (kind: string) => ({
@@ -130,14 +134,14 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
           return { body: r };
         },
       }),
-      delete: (a: { queryArgs: { version: number } }) => ({
+      delete: (a: { queryArgs: { version: number; dataErasure?: boolean } }) => ({
         execute: async () => {
           const r = need();
           if (a.queryArgs.version !== r.version) throw err(409, 'version conflict');
           const reason = usedBy(kind, r);
           if (reason) throw err(400, `${kind} ${String(r.key)}: ${reason}`);
           fake.store[kind] = fake.store[kind].filter((x) => x !== r);
-          fake.log.push({ op: 'delete', kind, key: r.key as string | undefined, id: r.id as string });
+          fake.log.push({ op: 'delete', kind, key: r.key as string | undefined, id: r.id as string, dataErasure: a.queryArgs.dataErasure });
           return { body: r };
         },
       }),
@@ -145,7 +149,7 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
   }
 
   const root: Record<string, unknown> = {
-    get: () => ({ execute: async () => ({ body: { key: fake.projectKey, searchIndexing: { productsSearch: { status: 'Activated' } } } }) }),
+    get: () => ({ execute: async () => ({ body: { key: fake.projectKey, messages: { enabled: false }, searchIndexing: { productsSearch: { status: 'Activated' } } } }) }),
   };
   for (const k of kinds) root[k] = () => collection(k);
   root.customObjects = fake.objects.customObjects;

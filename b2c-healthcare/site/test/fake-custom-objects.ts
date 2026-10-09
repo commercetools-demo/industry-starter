@@ -1,3 +1,5 @@
+import { evalPredicate } from './fake-predicate';
+
 /**
  * In-memory Custom Objects for unit tests; never the network.
  * Models the parts the code relies on: create-only `version: 0` (409 when the object exists), optimistic
@@ -9,25 +11,18 @@ export interface FakeObjects {
   objects: FakeObject[];
   /** Return an error to make the matching write fail. */
   failOn?: (op: 'post' | 'delete', container: string, key: string) => Error | undefined;
-  calls: { op: string; container: string; key?: string }[];
+  calls: { op: string; container: string; key?: string; dataErasure?: boolean }[];
   customObjects: () => unknown;
 }
 
 const err = (statusCode: number, message: string) => Object.assign(new Error(message), { statusCode, code: statusCode });
 
-/** Supports `value(a="x" and b=true and c in ("p", "q"))`; any other predicate matches everything. */
+/** `value(<predicate>)` evaluated with `evalPredicate` (equality, `in`, `is defined`, comparisons, nesting, `and`); any other predicate matches everything. */
 export function matchPredicate(o: FakeObject, where?: string): boolean {
   if (!where) return true;
   const inner = /^value\((.*)\)$/.exec(where.trim());
   if (!inner) return true;
-  return inner[1].split(/\s+and\s+/).every((term) => {
-    const inList = /^(\w+)\s+in\s+\((.*)\)$/.exec(term.trim());
-    if (inList) return [...inList[2].matchAll(/"([^"]*)"/g)].some((v) => v[1] === String((o.value as Record<string, unknown>)[inList[1]]));
-    const m = /^(\w+)\s*=\s*(?:"([^"]*)"|(true|false|\d+))$/.exec(term.trim());
-    if (!m) return false;
-    const have = (o.value as Record<string, unknown>)[m[1]];
-    return m[2] !== undefined ? have === m[2] : String(have) === m[3];
-  });
+  return evalPredicate(o.value, inner[1], false);
 }
 
 export function createFakeObjects(): FakeObjects {
@@ -65,9 +60,9 @@ export function createFakeObjects(): FakeObjects {
           return { body: structuredClone(o) };
         },
       }),
-      delete: (a: { queryArgs?: { version?: number } } = {}) => ({
+      delete: (a: { queryArgs?: { version?: number; dataErasure?: boolean } } = {}) => ({
         execute: async () => {
-          self.calls.push({ op: 'delete', container: s.container, key: s.key });
+          self.calls.push({ op: 'delete', container: s.container, key: s.key, dataErasure: a.queryArgs?.dataErasure });
           const injected = self.failOn?.('delete', s.container, s.key);
           if (injected) throw injected;
           const o = find(s.container, s.key);
