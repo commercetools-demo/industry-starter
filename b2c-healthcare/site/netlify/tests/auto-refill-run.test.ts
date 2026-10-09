@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from 'vitest';
-import { config, runScheduled } from './auto-refill-run';
+import { config, runScheduled } from '../functions/auto-refill-run';
 
 const SECRET = 'a-secret-of-16-chars-or-more';
 const env = { AUTO_REFILL_RUN_SECRET: SECRET, URL: 'https://shop.example' };

@@ -1,12 +1,13 @@
 import { readdirSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { resolve } from 'node:path';
 import { RETENTION_SECRET_HEADER } from '../../scripts/privacy/retention-handler';
 
 // Y-03: every function that is publicly routable (/.netlify/functions/<name>) refuses a caller without the shared secret,
 // and the scheduled wrappers do nothing without their configuration. This test walks the directory so a new function
 // cannot be added without a guard.
 
-const FUNCTIONS = readdirSync(import.meta.dirname).filter((f) => f.endsWith('.ts') && !f.endsWith('.test.ts')).map((f) => f.replace(/\.ts$/, ''));
+const FUNCTIONS = readdirSync(resolve(import.meta.dirname, '../functions')).filter((f) => f.endsWith('.ts') && !f.endsWith('.test.ts')).map((f) => f.replace(/\.ts$/, ''));
 const SECRET = 'a-long-enough-test-secret-0123456789';
 
 const GUARDED: Record<string, { env: string; header: string }> = {
@@ -35,7 +36,7 @@ describe('netlify functions: secret-header guards (Y-03)', () => {
         vi.stubEnv('URL', 'https://malva.example');
         const fetchMock = vi.fn();
         vi.stubGlobal('fetch', fetchMock);
-        const { default: handler } = await import(`./${name}`);
+        const { default: handler } = await import(`../functions/${name}`);
         expect((await handler(call({ [header]: 'anything' }))).status).toBe(503);
         expect(fetchMock).not.toHaveBeenCalled();
       });
@@ -43,7 +44,7 @@ describe('netlify functions: secret-header guards (Y-03)', () => {
       it('a secret under 16 characters counts as not configured', async () => {
         vi.stubEnv(env, 'short');
         vi.stubEnv('URL', 'https://malva.example');
-        const { default: handler } = await import(`./${name}`);
+        const { default: handler } = await import(`../functions/${name}`);
         expect((await handler(call({ [header]: 'short' }))).status).toBe(503);
       });
 
@@ -52,7 +53,7 @@ describe('netlify functions: secret-header guards (Y-03)', () => {
         vi.stubEnv('URL', 'https://malva.example');
         const fetchMock = vi.fn();
         vi.stubGlobal('fetch', fetchMock);
-        const { default: handler } = await import(`./${name}`);
+        const { default: handler } = await import(`../functions/${name}`);
         expect((await handler(call())).status).toBe(401);
         expect((await handler(call({ [header]: `${SECRET}x` }))).status).toBe(401);
         expect(fetchMock).not.toHaveBeenCalled();
@@ -67,7 +68,7 @@ describe('netlify functions: secret-header guards (Y-03)', () => {
       vi.stubEnv('URL', '');
       const fetchMock = vi.fn();
       vi.stubGlobal('fetch', fetchMock);
-      const mod = await import(`./${name}`);
+      const mod = await import(`../functions/${name}`);
       expect(mod.config.schedule).toMatch(/^\S+ \S+ \S+ \S+ \S+$/);
       expect((await mod.default()).status).toBe(503);
       expect(fetchMock).not.toHaveBeenCalled();
@@ -79,7 +80,7 @@ describe('netlify functions: secret-header guards (Y-03)', () => {
     vi.stubEnv('URL', 'https://malva.example/');
     const fetchMock = vi.fn(async () => new Response('{}', { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);
-    const mod = await import('./retention-scheduled');
+    const mod = await import('../functions/retention-scheduled');
     expect((await mod.default()).status).toBe(204);
     expect(fetchMock).toHaveBeenCalledWith('https://malva.example/.netlify/functions/retention', { method: 'POST', headers: { [RETENTION_SECRET_HEADER]: SECRET } });
     fetchMock.mockResolvedValueOnce(new Response('{}', { status: 500 }));
