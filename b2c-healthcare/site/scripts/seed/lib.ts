@@ -313,7 +313,14 @@ export interface RunSummary { ok: boolean; changed: number; total: number }
 export async function runSteps(steps: Step[], log: (line: string) => void = console.log): Promise<RunSummary> {
   let changed = 0;
   for (let i = 0; i < steps.length; i += 1) {
-    const result = await steps[i].run();
+    let result: Awaited<ReturnType<Step['run']>>;
+    try {
+      result = await steps[i].run();
+    } catch (e) {
+      // name the step: the platform's message alone ("Request body does not contain valid JSON.") does not say which resource it was
+      const status = (e as { statusCode?: number }).statusCode;
+      throw new Error(`step "${steps[i].name}" failed${status ? ` (HTTP ${status})` : ''}: ${e instanceof Error ? e.message : String(e)}`, { cause: e });
+    }
     if (typeof result === 'object') {
       log(`STOP     ${steps[i].name}: ${result.diff}`);
       return { ok: false, changed, total: i };
