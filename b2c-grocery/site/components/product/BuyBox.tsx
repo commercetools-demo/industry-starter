@@ -26,7 +26,7 @@ export function BuyBox({
   variant: Variant;
   selectors: Selector[];
   categoryName?: string;
-  /** Offered cadences (workstream W); empty or missing when the product is not eligible or subscriptions are off. */
+  /** Offered cadences; empty or missing when the product is not eligible or subscriptions are off. */
   recurrencePolicies?: RecurrenceOption[];
   className?: string;
 }) {

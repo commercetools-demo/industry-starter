@@ -185,7 +185,7 @@ export interface ProposalsResponse {
   removalRequested: string[];
 }
 
-/** A recurring order (subscription) of the signed-in customer (workstream W). `Other` covers Expired and Failed (`stateRaw` has the real value). */
+/** A recurring order (subscription) of the signed-in customer. `Other` covers Expired and Failed (`stateRaw` has the real value). */
 export interface RecurringOrderSummary {
   id: string;
   state: 'Active' | 'Paused' | 'Canceled' | 'Other';

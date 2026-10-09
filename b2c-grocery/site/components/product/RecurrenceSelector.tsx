@@ -11,7 +11,7 @@ export const ONE_TIME = '';
 export type RecurrenceOption = { key: string; name: string };
 
 /**
- * "Repeat" selector of the buy box (workstream W). `policies` come from the server page: it passes an empty list when
+ * "Repeat" selector of the buy box. `policies` come from the server page: it passes an empty list when
  * `FEATURE_SUBSCRIPTIONS` is off, so the flag never reaches the client as an env var. Nothing is shown for a product
  * that is not recurring-eligible. A cadence other than "One-time" shows the plain-words price notice.
  */

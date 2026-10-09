@@ -1,5 +1,5 @@
 /**
- * Stock photography for the homepage (clean URLs, picked by hand from the pexels.com search; M-M-3: replace with brand photography).
+ * Stock photography for the homepage.
  * Category images are keyed by the category `key` (the same in every locale), not the localized slug.
  */
 export const CATEGORY_IMAGES: Record<string, string> = {

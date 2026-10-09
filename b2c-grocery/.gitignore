@@ -64,5 +64,3 @@ test/.auth/
 # decor catalog backup (D-048)
 plan/backup/
 
-# Captured browser request for the image search (contains live session cookies); never commit
-site/scripts/pexels/
