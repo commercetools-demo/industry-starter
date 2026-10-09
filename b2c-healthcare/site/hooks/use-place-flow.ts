@@ -9,12 +9,14 @@ import type { Money, PaymentMode, PlaceOrderFailure } from '@/lib/types';
 export type PlaceProblem = PlaceOrderFailure | 'DECLINED' | 'UNAVAILABLE' | 'FAILED';
 
 /** Problems after which the page re-reads the cart (the summary may no longer be what the buyer saw). */
-const REFRESH_AFTER: ReadonlySet<PlaceProblem> = new Set(['TOTALS_MOVED', 'LINES_UNAVAILABLE', 'NO_DELIVERY_METHOD', 'ADDRESS_MISSING', 'EMPTY_CART', 'DISPENSE_REFUSED']);
+const REFRESH_AFTER: ReadonlySet<PlaceProblem> = new Set(['TOTALS_MOVED', 'LINES_UNAVAILABLE', 'NO_DELIVERY_METHOD', 'ADDRESS_MISSING', 'EMPTY_CART', 'DISPENSE_REFUSED', 'COVER_UNRESOLVED', 'FUNDING_CHANGED']);
 
 export interface PlaceFlowInput {
   cart: { version: number; total: Money };
   mode: PaymentMode;
   simulateDecline: boolean;
+  /** Cents the card must pay after the allowance and the restricted instrument; 0 means no card payment is taken (workstream U). */
+  cardDue?: number;
   /** Re-read the checkout state from the server. */
   refresh: () => void;
 }
@@ -28,7 +30,7 @@ export interface PlaceFlowInput {
  * server answers a repeated key with the first order. A declined payment places nothing and keeps the cart. Success
  * navigates to `/order/<id>` and leaves the button busy until the page changes.
  */
-export function usePlaceFlow({ cart, mode, simulateDecline, refresh }: PlaceFlowInput) {
+export function usePlaceFlow({ cart, mode, simulateDecline, cardDue, refresh }: PlaceFlowInput) {
   const router = useRouter();
   const { placeOrder, demoAuthorize } = usePaymentActions();
   const flying = useRef(false);
@@ -60,14 +62,20 @@ export function usePlaceFlow({ cart, mode, simulateDecline, refresh }: PlaceFlow
 
   /** Click on Place order. Only the demo path acts here; with the real widget the SDK owns the click. */
   const activate = useCallback(async () => {
-    if (mode !== 'demo' || flying.current) return;
+    const noCard = cardDue === 0;
+    if ((mode !== 'demo' && !noCard) || flying.current) return;
     flying.current = true;
     setBusy(true);
     setProblem(null);
+    // Nothing for the card to pay (the allowance and the restricted instrument cover it): no authorization is asked for.
+    if (noCard) {
+      await place();
+      return;
+    }
     const authorization = await demoAuthorize(simulateDecline);
     if (authorization === 'authorized') await place();
     else fail(authorization === 'declined' ? 'DECLINED' : 'FAILED');
-  }, [mode, simulateDecline, demoAuthorize, place, fail]);
+  }, [mode, simulateDecline, cardDue, demoAuthorize, place, fail]);
 
   const onPaymentEvent = useCallback(
     (event: PaymentEvent) => {

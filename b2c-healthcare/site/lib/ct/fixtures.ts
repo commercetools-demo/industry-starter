@@ -41,6 +41,14 @@ export async function loadCheckoutFixtures(): Promise<CheckoutFixtures | null> {
   return import('./checkout-fixtures');
 }
 
+export type FundingFixtures = typeof import('./funding-fixtures');
+
+/** In-memory allowance store and the seed's credentials for browser checks with `MALVA_FIXTURES=1` (workstream U); same guard. */
+export async function loadFundingFixtures(): Promise<FundingFixtures | null> {
+  if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
+  return import('./funding-fixtures');
+}
+
 export type FakePaymentModule = typeof import('@/lib/checkout/fake-provider');
 
 /**

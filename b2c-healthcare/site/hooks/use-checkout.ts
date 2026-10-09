@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import useSWR, { useSWRConfig, type SWRResponse } from 'swr';
 import type { AddressProblems } from '@/lib/address';
-import { API_CHECKOUT, API_CHECKOUT_ADDRESS, API_CHECKOUT_DEMO_AUTHORIZE, API_CHECKOUT_PLACE, API_CHECKOUT_SHIPPING_METHOD } from '@/lib/api-paths';
+import { API_CHECKOUT, API_CHECKOUT_ADDRESS, API_CHECKOUT_DEMO_AUTHORIZE, API_CHECKOUT_PLACE, API_CHECKOUT_SHIPPING_METHOD, API_CHECKOUT_TENDER } from '@/lib/api-paths';
 import { KEY_CART, KEY_CART_DETAILS, KEY_CHECKOUT } from '@/lib/cache-keys';
 import { fetchJson, isUnauthorized } from '@/lib/http';
 import type { AddressInput, CheckoutState, Money, PlaceOrderFailure } from '@/lib/types';
@@ -25,6 +25,8 @@ export type AddressSaveResult =
   | { ok: false; reason: 'failed' };
 
 export type MethodChangeResult = { ok: true } | { ok: false; reason: 'unavailable' | 'failed' };
+
+export type RestrictedChangeResult = { ok: true } | { ok: false; reason: 'none-eligible' | 'failed' };
 
 interface Answer {
   code?: string;
@@ -51,6 +53,8 @@ async function send(path: string, body: unknown): Promise<{ status: number; data
 export function useCheckout(): SWRResponse<CheckoutState | null> & {
   saveAddress: (input: AddressInput) => Promise<AddressSaveResult>;
   chooseMethod: (key: string) => Promise<MethodChangeResult>;
+  /** Use (or drop) the restricted instrument; the answer replaces the cached state (workstream U). */
+  chooseRestricted: (on: boolean) => Promise<RestrictedChangeResult>;
 } {
   const swr = useSWR<CheckoutState | null>(KEY_CHECKOUT, fetchCheckout, { revalidateOnFocus: false, shouldRetryOnError: false });
   const { mutate } = swr;
@@ -88,7 +92,23 @@ export function useCheckout(): SWRResponse<CheckoutState | null> & {
     [mutate],
   );
 
-  return Object.assign(swr, { saveAddress, chooseMethod });
+  const chooseRestricted = useCallback(
+    async (on: boolean): Promise<RestrictedChangeResult> => {
+      const { status, data } = await send(API_CHECKOUT_TENDER, { restricted: on });
+      if (status === 200 && data?.cart) {
+        await mutate(data as CheckoutState, { revalidate: false });
+        return { ok: true };
+      }
+      if (status === 422 && data?.state) {
+        await mutate(data.state, { revalidate: false });
+        return { ok: false, reason: 'none-eligible' };
+      }
+      return { ok: false, reason: 'failed' };
+    },
+    [mutate],
+  );
+
+  return Object.assign(swr, { saveAddress, chooseMethod, chooseRestricted });
 }
 
 export type PlaceResult =

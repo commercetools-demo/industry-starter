@@ -13,6 +13,18 @@ export interface RxLineFields {
   lastSeenCents?: number;
 }
 
+/** What the plan covers per unit (cents), from the line's `coveredAmount`; undefined when no cost-share was ever resolved for the line. */
+export function coveredCentsOf(item: Pick<LineItem, 'custom'>): number | undefined {
+  const f = item.custom?.fields as Record<string, unknown> | undefined;
+  const covered = f?.coveredAmount as { centAmount?: unknown } | undefined;
+  return typeof covered?.centAmount === 'number' ? covered.centAmount : undefined;
+}
+
+/** `eligibleForRestricted`, copied from the product's `hsaEligible` when the line was added. */
+export function eligibleOf(item: Pick<LineItem, 'custom'>): boolean {
+  return (item.custom?.fields as Record<string, unknown> | undefined)?.eligibleForRestricted === true;
+}
+
 /** The prescription fields of a line item, or null for a line that does not carry them. */
 export function rxFieldsOf(item: Pick<LineItem, 'custom'>): RxLineFields | null {
   const f = item.custom?.fields as Record<string, unknown> | undefined;
@@ -36,11 +48,24 @@ export interface CartMapOptions {
   problems?: ReadonlyMap<string, CartLineProblem>;
   /** Lines whose unit price differs from the previous read. */
   priceUpdated?: ReadonlySet<string>;
+  /** The cost-share resolver could not answer (workstream U): no cover is shown and the cart cannot be checked out. */
+  unresolved?: boolean;
 }
 
 export function mapCartLine(item: LineItem, options: CartMapOptions = {}): CartLine {
   const fields = rxFieldsOf(item);
   const problem = options.problems?.get(item.id);
+  const coveredUnit = coveredCentsOf(item);
+  const total = mapMoney(item.totalPrice);
+  const coverFields: Partial<CartLine> = options.unresolved
+    ? { cover: 'unresolved' }
+    : coveredUnit === undefined
+      ? {}
+      : {
+          cover: total.centAmount === 0 ? 'covered' : coveredUnit === 0 ? 'not-covered' : 'partly',
+          coveredAmount: { ...total, centAmount: coveredUnit * item.quantity },
+          youOwe: total,
+        };
   return {
     id: item.id,
     sku: item.variant.sku ?? '',
@@ -52,6 +77,8 @@ export function mapCartLine(item: LineItem, options: CartMapOptions = {}): CartL
     totalPrice: mapMoney(item.totalPrice),
     priceUpdated: options.priceUpdated?.has(item.id) ?? false,
     ...(problem ? { unavailable: problem } : {}),
+    ...coverFields,
+    ...(eligibleOf(item) ? { eligibleForRestricted: true } : {}),
   };
 }
 
@@ -67,6 +94,13 @@ export function mapCart(cart: CtCart, options: CartMapOptions = {}): Cart {
     ? { centAmount: cart.lineItems.reduce((sum, item) => sum + item.totalPrice.centAmount, 0), currencyCode: first.totalPrice.currencyCode, fractionDigits: first.totalPrice.fractionDigits }
     : null;
   const info = cart.shippingInfo;
+  const total = mapMoney(cart.totalPrice);
+  const withCover = lines.some((l) => l.coveredAmount !== undefined);
+  const funding: Partial<Cart> = options.unresolved
+    ? { unresolved: true }
+    : withCover
+      ? { youOwe: total, planCovers: { ...total, centAmount: lines.reduce((sum, l) => sum + (l.coveredAmount?.centAmount ?? 0), 0) } }
+      : {};
   return {
     id: cart.id,
     version: cart.version,
@@ -76,7 +110,8 @@ export function mapCart(cart: CtCart, options: CartMapOptions = {}): Cart {
     lines,
     subtotal,
     shipping: info ? { name: info.shippingMethodName, price: mapMoney(info.discountedPrice?.value ?? info.price) } : null,
-    total: mapMoney(cart.totalPrice),
+    total,
     unavailableCount: lines.filter((l) => l.unavailable).length,
+    ...funding,
   };
 }

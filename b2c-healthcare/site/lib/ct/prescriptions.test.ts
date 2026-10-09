@@ -33,7 +33,7 @@ describe('prescription-bound-supply: validateRxSelection (used by the cart, work
     expect(result.rxNumber).toBe('RX-77102');
     expect(result.refused).toEqual([]);
     expect(result.accepted).toEqual([
-      { lineRef: 'RX-77102-1', sku: 'MED-ator', qty: 30, packs: 1, price: { centAmount: 1875, currencyCode: 'USD', fractionDigits: 2 }, perOrderMax: 3, periodCeiling: 3 },
+      { lineRef: 'RX-77102-1', sku: 'MED-ator', qty: 30, packs: 1, price: { centAmount: 1875, currencyCode: 'USD', fractionDigits: 2 }, perOrderMax: 3, periodCeiling: 3, hsaEligible: true },
       expect.objectContaining({ lineRef: 'RX-77102-2', sku: 'MED-lis' }),
     ]);
     expect(fake.objects).toHaveLength(0);

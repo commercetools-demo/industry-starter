@@ -40,14 +40,14 @@ describe('seed data files (F-06)', () => {
     expect(SAM.fundingScheme).toBe('Demo Health Plan');
   });
 
-  it('Sam\'s prescriptions match the prototype; Alex has none; Jordan has one valid and one expired', () => {
+  it('Sam\'s prototype prescriptions match; the controlled-class demo adds one each for Sam, Alex and Jordan (workstream U)', () => {
     const sam = PRESCRIPTIONS.filter((r) => r.patientRef === SAM.patientRef);
-    expect(sam.map((r) => [r.number, r.refillsLeft, r.lines.map((l) => l.qty)])).toEqual([['RX-48213', 0, [21, 20, 30]], ['RX-77102', 3, [30, 30]]]);
+    expect(sam.map((r) => [r.number, r.refillsLeft, r.lines.map((l) => l.qty)])).toEqual([['RX-48213', 0, [21, 20, 30]], ['RX-77102', 3, [30, 30]], ['RX-61044', 2, [30]]]);
     expect(sam[0].lines.map((l) => l.name)).toEqual(['Amoxicillin 500 mg capsules', 'Ibuprofen 400 mg tablets', 'Cetirizine 10 mg tablets']);
-    expect(PRESCRIPTIONS.filter((r) => r.patientRef === ALEX.patientRef)).toEqual([]);
+    expect(PRESCRIPTIONS.filter((r) => r.patientRef === ALEX.patientRef).map((r) => r.number)).toEqual(['RX-42017']);
     const jordan = PRESCRIPTIONS.filter((r) => r.patientRef === JORDAN.patientRef);
     const now = Date.parse('2026-10-08');
-    expect(jordan.map((r) => Date.parse(r.expiresAt as string) > now)).toEqual([true, false]);
+    expect(jordan.map((r) => Date.parse(r.expiresAt as string) > now)).toEqual([true, false, true]);
   });
 
   it('every RX line SKU is a seeded medication and every lab is ordered by a seeded doctor', () => {
@@ -59,11 +59,11 @@ describe('seed data files (F-06)', () => {
     expect(PRESCRIPTIONS.every((r) => names.has(r.prescriber))).toBe(true);
   });
 
-  it('Sam has five labs (one processing), one credential and one past booking', () => {
+  it('Sam has five labs (one processing), a credential (Jordan\'s is pending, Alex has none) and one past booking', () => {
     expect(LABS).toHaveLength(5);
     expect(LABS.map((l) => l.status).filter((s) => s === 'processing')).toHaveLength(1);
     expect(LABS.find((l) => l.status === 'processing')?.results).toEqual([]);
-    expect(CREDENTIALS).toHaveLength(1);
+    expect(CREDENTIALS.map((c) => [c.patientRef, c.status])).toEqual([[SAM.patientRef, 'active'], [JORDAN.patientRef, 'pending']]);
     expect(BOOKINGS).toHaveLength(1);
     expect(Date.parse(BOOKINGS[0].startsAt)).toBeLessThan(Date.parse('2026-10-08'));
   });
@@ -97,9 +97,9 @@ describe('seeding the clinical stand-in against a fake project', () => {
     expect(r.ok).toBe(true);
     const count = (container: string) => fake.objects.objects.filter((o) => o.container === container).length;
     expect(count('malva-schedule')).toBe(8);
-    expect(count('malva-rx')).toBe(4);
+    expect(count('malva-rx')).toBe(7);
     expect(count('malva-lab')).toBe(5);
-    expect(count('malva-credential')).toBe(1);
+    expect(count('malva-credential')).toBe(2);
     expect(count('malva-booking')).toBe(1);
     expect(fake.store.reviews).toHaveLength(REVIEWS.length);
     expect(fake.store.customers).toHaveLength(3);

@@ -18,7 +18,10 @@ export async function POST(request: Request): Promise<Response> {
     const body = (await request.json().catch(() => null)) as { decline?: unknown } | null;
     const cart = await readPaymentCart(ctx);
     if (!cart || cart.lineCount === 0) throw new ApiError(404, 'Not found.');
-    const state = fake.fakePaymentProvider.authorize({ id: cart.id, total: cart.total }, { decline: body?.decline === true });
+    // The card is authorized for what is left after the allowance and the restricted instrument; nothing when that is zero.
+    const due = cart.tender?.card ?? cart.total;
+    if (due.centAmount === 0) return Response.json({ status: 'authorized' }, { headers: NO_STORE });
+    const state = fake.fakePaymentProvider.authorize({ id: cart.id, total: due }, { decline: body?.decline === true });
     return Response.json({ status: state.status }, { headers: NO_STORE });
   });
 }

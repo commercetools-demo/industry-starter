@@ -16,6 +16,8 @@ interface FakeLine {
   name: Record<string, string>;
   variant: { id: number; sku?: string };
   price: { id: string; value: FakeMoney };
+  /** `ExternalPrice` after `setLineItemPrice` with an external price: `recalculate` does not re-price such a line. */
+  priceMode?: 'Platform' | 'ExternalPrice';
   quantity: number;
   totalPrice: FakeMoney;
   custom?: { type: { typeId: string; id: string; key?: string }; fields: Record<string, unknown> };
@@ -78,7 +80,7 @@ export function createFakeCarts(prices: Record<string, number> = {}): FakeCarts 
   };
 
   const reprice = (cart: MutableCart, refresh: boolean): MutableCart => {
-    for (const item of refresh ? cart.lineItems : []) {
+    for (const item of refresh ? cart.lineItems.filter((i) => i.priceMode !== 'ExternalPrice') : []) {
       const sku = item.variant.sku ?? '';
       const cents = priceOf(sku);
       item.price = { ...item.price, value: money(cents) };
@@ -103,6 +105,17 @@ export function createFakeCarts(prices: Record<string, number> = {}): FakeCarts 
       const item = cart.lineItems.find((i) => i.id === a.lineItemId);
       if (!item?.custom) throw { statusCode: 400, body: { errors: [{ code: 'InvalidOperation' }] } };
       (item.custom.fields as Record<string, unknown>)[String(a.name)] = a.value;
+    } else if (a.action === 'setLineItemPrice') {
+      const item = cart.lineItems.find((i) => i.id === a.lineItemId);
+      if (!item) throw { statusCode: 400, body: { errors: [{ code: 'InvalidOperation' }] } };
+      const external = a.externalPrice as { centAmount: number; currencyCode: string } | undefined;
+      if (external) {
+        item.priceMode = 'ExternalPrice';
+        item.price = { ...item.price, value: money(external.centAmount, external.currencyCode) };
+      } else {
+        item.priceMode = 'Platform';
+        item.price = { ...item.price, value: money(priceOf(item.variant.sku ?? '')) };
+      }
     } else if (a.action !== 'recalculate') {
       throw { statusCode: 400, body: { errors: [{ code: 'InvalidOperation' }] } };
     }

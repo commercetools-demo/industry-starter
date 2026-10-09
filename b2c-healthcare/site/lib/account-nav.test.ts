@@ -13,7 +13,7 @@ describe('design-account-area: account nav registry', () => {
   });
 
   it('starts with the four designed items; addresses and profile follow', () => {
-    expect(ACCOUNT_NAV.map((i) => i.key)).toEqual(['overview', 'labs', 'appointments', 'orders', 'lists', 'auto-refill', 'payment-methods', 'addresses', 'profile']);
+    expect(ACCOUNT_NAV.map((i) => i.key)).toEqual(['overview', 'labs', 'appointments', 'orders', 'lists', 'auto-refill', 'payment-methods', 'allowance', 'addresses', 'profile']);
   });
 
   it.each([

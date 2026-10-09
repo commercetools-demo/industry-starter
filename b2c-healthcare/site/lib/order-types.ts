@@ -13,9 +13,24 @@ export type ShipmentState = 'Pending' | 'Ready' | 'Shipped' | 'Delivered' | 'Par
 /** Refund as the buyer sees it, from the Payment's `Refund` transactions. Only cancelled orders can have one. */
 export type RefundStatus = 'none' | 'requested' | 'refunded';
 
+/** The instruments an order line can be settled with (workstream U). */
+export type Instrument = 'allowance' | 'restricted-health-account' | 'card';
+
 export interface OrderLineView {
   name: string;
   quantity: number;
+  /** Treated as qualifying for the restricted instrument when the order was placed (copied then, not live). Absent on orders from before it was recorded. */
+  eligible?: boolean;
+  /** The instruments that settled this line, as recorded at placement. */
+  settledBy?: Instrument[];
+}
+
+/** How an order was paid, when more than the card was used (workstream U). */
+export interface OrderTender {
+  allowance: Money;
+  restricted: Money;
+  /** What the card was charged: the total less the other two. */
+  card: Money;
 }
 
 export interface OrderView {
@@ -34,6 +49,8 @@ export interface OrderView {
   refund: RefundStatus;
   /** Cancellation is offered until the order is packed and shipped. */
   cancellable: boolean;
+  /** Present when the allowance or the restricted instrument paid part of the order. */
+  tender?: OrderTender;
 }
 
 export type NotAddedReason = 'NO_REFILLS' | 'EXPIRED' | 'OUT_OF_STOCK' | 'UNAVAILABLE';

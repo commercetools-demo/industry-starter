@@ -38,7 +38,7 @@ npm run seed:verify
 
 ## Clinical stand-in (workstream F)
 
-`seed.ts` also seeds (not with `--only`): 3 to 6 verified reviews per doctor, Custom Objects `malva-schedule` (8), `malva-rx` (4), `malva-lab` (5), `malva-credential` (1), `malva-booking` (1 past booking), and three synthetic patients (`sam.rivera@`, `alex.chen@`, `jordan.lee@example.com`; verified email, one default address, `mlv-patient.patientRef`). The customers need `SEED_PATIENT_PASSWORD` (without it they are skipped). Prescriptions and the past booking are never overwritten (refills change when an order dispenses); schedules, labs and credentials are compared and a difference stops the run.
+`seed.ts` also seeds (not with `--only`): 3 to 6 verified reviews per doctor, Custom Objects `malva-schedule` (8), `malva-rx` (7: four from the prototype and Jordan, plus one controlled-class prescription each for Sam, Alex and Jordan), `malva-lab` (5), `malva-credential` (2: Sam active, Jordan pending, Alex none), `malva-allowance` (Sam's $50.00 for the current monthly cycle; create-only, never reset by a re-seed), `malva-booking` (1 past booking), and three synthetic patients (`sam.rivera@`, `alex.chen@`, `jordan.lee@example.com`; verified email, one default address, `mlv-patient.patientRef`). The customers need `SEED_PATIENT_PASSWORD` (without it they are skipped). Prescriptions and the past booking are never overwritten (refills change when an order dispenses); schedules, labs and credentials are compared and a difference stops the run.
 
 | Script | What it does |
 | --- | --- |

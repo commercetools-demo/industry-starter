@@ -5,10 +5,12 @@ import { prescriptionSource } from '@/lib/ct/clinical-store';
 import { loadRxFixtures } from '@/lib/ct/fixtures';
 import type { Patient } from '@/lib/ct/patient';
 import { buildRxView, PACKS_PER_LINE, type LineContext } from '@/lib/ct/prescription-view';
+import { checkCredentialDetailed } from '@/lib/ct/credentials';
 import { getCatalogBySku, type CatalogOptions } from '@/lib/ct/rx-catalog';
 import { getSupplyBySku } from '@/lib/ct/shelf-life';
 import { normalizeRx } from '@/lib/dispense/rx-number';
 import { todayIso } from '@/lib/dispense/rules';
+import { recordOf, type CredentialRecord } from '@/lib/funding/credential';
 import type { Money, RxLineView, RxQuickPick, RxView } from '@/lib/types';
 
 /**
@@ -70,15 +72,44 @@ async function contextsFor(rx: Prescription, ctx: RxContext, today: string): Pro
       shortDatedPrice: entry.shortDatedPrice,
       supply: supply.get(sku),
       usedInPeriod: used.get(sku) ?? 0,
+      hsaEligible: entry.medication.hsaEligible,
+      controlClass: entry.medication.controlClass,
     });
   }
   return out;
 }
 
-/** The card for a prescription the patient owns: every row evaluated against authorization, stock, ceilings and shelf life. */
+/**
+ * Credentialed purchase scope (workstream U): a controlled row that could otherwise be bought needs a credential that is
+ * valid today and covers its class. A row that cannot be bought for another reason keeps that reason. The row stays
+ * visible with the requirement stated (`status: 'CREDENTIAL'`, `credential` says why); the credential that allowed a
+ * row is returned per line ref so it can be copied onto the cart and order line.
+ */
+async function applyCredentials(patient: Patient, view: RxView, rx: Prescription, contexts: Map<string, LineContext>, now: Date): Promise<{ view: RxView; allowedBy: Map<string, CredentialRecord> }> {
+  const allowedBy = new Map<string, CredentialRecord>();
+  const byClass = new Map<string, Awaited<ReturnType<typeof checkCredentialDetailed>>>();
+  const lines = await Promise.all(
+    view.lines.map(async (row) => {
+      const sku = rx.lines.find((l) => l.lineRef === row.lineRef)?.sku;
+      const controlClass = sku ? contexts.get(sku)?.controlClass : null;
+      if (!controlClass) return row;
+      if (!byClass.has(controlClass)) byClass.set(controlClass, await checkCredentialDetailed(patient.patientRef, controlClass, now));
+      const result = byClass.get(controlClass)!;
+      if (result.code === 'OK') {
+        if (result.credential) allowedBy.set(row.lineRef, recordOf(result.credential));
+        return { ...row, controlClass };
+      }
+      return row.selectable ? { ...row, controlClass, status: 'CREDENTIAL' as const, selectable: false, credential: result.code } : { ...row, controlClass };
+    }),
+  );
+  return { view: { ...view, lines }, allowedBy };
+}
+
+/** The card for a prescription the patient owns: every row evaluated against authorization, stock, ceilings, shelf life and credentials. */
 export async function getRxView(patient: Patient, rx: Prescription, ctx: RxContext): Promise<RxView> {
   const today = todayIso(ctx.now);
-  return buildRxView(rx, patient.name, await contextsFor(rx, ctx, today), today);
+  const contexts = await contextsFor(rx, ctx, today);
+  return (await applyCredentials(patient, buildRxView(rx, patient.name, contexts, today), rx, contexts, ctx.now ?? new Date())).view;
 }
 
 /** Lookup by typed input. Null for malformed, unknown and foreign numbers alike. */
@@ -100,6 +131,10 @@ export interface SelectedLine {
   /** Limits to carry into the cart check (O) and into `consumeAuthorization` (Q). */
   perOrderMax: number | null;
   periodCeiling: number | null;
+  /** The product's `hsaEligible` (workstream U): copied to the cart line as `eligibleForRestricted` when added. */
+  hsaEligible?: boolean;
+  /** The credential that allowed a controlled product (id and expiry), copied to the cart line; absent for uncontrolled goods. */
+  credential?: { id: string; validTo: string };
 }
 
 export interface RxSelectionResult {
@@ -122,7 +157,7 @@ export async function validateRxSelection(patient: Patient, rxNumber: string, li
   if (!rx) throw new RxNotFoundError();
   const today = todayIso(ctx.now);
   const contexts = await contextsFor(rx, ctx, today);
-  const view = buildRxView(rx, patient.name, contexts, today);
+  const { view, allowedBy } = await applyCredentials(patient, buildRxView(rx, patient.name, contexts, today), rx, contexts, ctx.now ?? new Date());
   const accepted: SelectedLine[] = [];
   const refused: RxLineView[] = [];
   for (const ref of new Set(lineRefs)) {
@@ -137,7 +172,12 @@ export async function validateRxSelection(patient: Patient, rxNumber: string, li
       continue;
     }
     const c = contexts.get(prescribed.sku);
-    accepted.push({ lineRef: ref, sku: prescribed.sku, qty: prescribed.qty, packs: PACKS_PER_LINE, price: row.price, perOrderMax: c?.perOrderMax ?? null, periodCeiling: c?.periodCeiling ?? null });
+    const credential = allowedBy.get(ref);
+    accepted.push({
+      lineRef: ref, sku: prescribed.sku, qty: prescribed.qty, packs: PACKS_PER_LINE, price: row.price, perOrderMax: c?.perOrderMax ?? null, periodCeiling: c?.periodCeiling ?? null,
+      ...(c?.hsaEligible !== undefined ? { hsaEligible: c.hsaEligible } : {}),
+      ...(credential ? { credential } : {}),
+    });
   }
   return { rxNumber: rx.number, accepted, refused };
 }

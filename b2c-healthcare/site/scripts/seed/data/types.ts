@@ -32,6 +32,10 @@ export const CUSTOM_TYPES = [
       field('dispensedQty', 'Dispensed quantity', 'Number'),
       field('authorizationParams', 'Authorization parameters at placement (JSON)', 'String'),
       field('suppliedLots', 'Supplied lots (JSON, filled at packing)', 'String'),
+      // Written when the line is added and again at order placement (workstream U): the credential id is `credentialRef`.
+      field('credentialValidTo', 'Credential expiry, copied when the line was checked', 'String'),
+      // Written at order placement (workstream U): which instrument settled how much of the line (JSON).
+      field('settlement', 'Settlement by instrument (JSON)', 'String'),
     ],
   },
   {

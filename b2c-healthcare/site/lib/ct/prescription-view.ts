@@ -17,6 +17,10 @@ export interface LineContext {
   supply: Supply | undefined;
   /** Packs the patient already received this calendar month. */
   usedInPeriod: number;
+  /** The product's `hsaEligible` (copied to the cart line as `eligibleForRestricted`, workstream U). */
+  hsaEligible?: boolean;
+  /** The product's controlled-substance class, when it has one (workstream U). */
+  controlClass?: string | null;
 }
 
 /** Packs per prescription line in v1: the prescribed quantity is one pack (qty equals the pack size in the catalog). */

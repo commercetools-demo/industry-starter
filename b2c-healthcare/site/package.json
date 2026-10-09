@@ -14,6 +14,7 @@
     "seed:inventory": "tsx scripts/seed/inventory-project.ts",
     "seed:wait": "tsx scripts/seed/wait-for-search.ts",
     "seed:advance": "tsx scripts/seed/advance-order.ts",
+    "allowances:reload": "tsx scripts/reload-allowances.ts",
     "lint": "eslint && oxlint -c eslint/oxlint.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

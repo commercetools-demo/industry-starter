@@ -3,7 +3,7 @@ import type { Patient } from '@/lib/ct/patient';
 import { RxNotFoundError, validateRxSelection, type RxContext } from '@/lib/ct/prescriptions';
 import type { CartLineIssue, CartLineProblem, RxLineView } from '@/lib/types';
 
-const REFUSAL_REASONS: ReadonlySet<string> = new Set<CartLineIssue>(['NO_REFILLS', 'EXPIRED', 'OUT_OF_STOCK', 'CEILING', 'SHELF_LIFE']);
+const REFUSAL_REASONS: ReadonlySet<string> = new Set<CartLineIssue>(['NO_REFILLS', 'EXPIRED', 'OUT_OF_STOCK', 'CEILING', 'SHELF_LIFE', 'CREDENTIAL']);
 
 /** Row of the prescription card that cannot be dispensed -> the cart line's problem. */
 export function problemOf(row: RxLineView): CartLineProblem {
@@ -14,6 +14,7 @@ export function problemOf(row: RxLineView): CartLineProblem {
     ...(row.ceiling !== undefined ? { ceiling: row.ceiling } : {}),
     ...(row.scope ? { scope: row.scope } : {}),
     ...(row.expiryDate ? { expiryDate: row.expiryDate } : {}),
+    ...(row.status === 'CREDENTIAL' && row.credential ? { credential: row.credential, ...(row.controlClass ? { credentialClass: row.controlClass } : {}) } : {}),
   };
 }
 

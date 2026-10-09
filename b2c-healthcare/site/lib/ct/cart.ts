@@ -4,8 +4,10 @@ import { withCartRetry } from '@/lib/api-retry';
 import { apiRoot } from '@/lib/ct/client';
 import { loadCartFixtures } from '@/lib/ct/fixtures';
 import type { Patient } from '@/lib/ct/patient';
+import { applyFunding, recalcActions } from '@/lib/ct/cart-funding';
 import { checkLines } from '@/lib/ct/cart-validation';
 import type { RxContext, SelectedLine } from '@/lib/ct/prescriptions';
+import { tenderViewOf } from '@/lib/ct/tender';
 import { mapCart, rxFieldsOf, RX_LINE_TYPE_KEY, unitPriceOf } from '@/lib/mappers/cart';
 import type { Cart } from '@/lib/types';
 
@@ -91,9 +93,9 @@ export interface CartOutcome {
  * the same update, so adding twice never duplicates. Creates the cart on the first add. A platform quantity-limit
  * error propagates for the Route Handler to map. The caller has already run `validateRxSelection`.
  */
-export async function addRxLines(customerId: string, cartId: string | undefined, rxNumber: string, accepted: SelectedLine[], ctx: RxContext): Promise<CartOutcome> {
+export async function addRxLines(customerId: string, cartId: string | undefined, rxNumber: string, accepted: SelectedLine[], ctx: RxContext, patient?: Patient): Promise<CartOutcome> {
   const fixtures = await loadCartFixtures();
-  if (fixtures) return fixtures.addRxLines(customerId, rxNumber, accepted);
+  if (fixtures) return fixtures.addRxLines(customerId, rxNumber, accepted, patient);
   const updated = await withCartRetry(async () => {
     const cart = await getOrCreateCart(customerId, cartId, ctx);
     const refs = new Set(accepted.map((a) => a.lineRef));
@@ -109,26 +111,37 @@ export async function addRxLines(customerId: string, cartId: string | undefined,
         quantity: a.packs,
         custom: {
           type: { typeId: 'type', key: RX_LINE_TYPE_KEY },
-          fields: { rxNumber, rxLineRef: a.lineRef, prescribedQty: a.qty },
+          fields: {
+            rxNumber,
+            rxLineRef: a.lineRef,
+            prescribedQty: a.qty,
+            // Copied now, not read live later (workstream U): the product's `hsaEligible` and the credential that allowed a controlled line.
+            ...(a.hsaEligible !== undefined ? { eligibleForRestricted: a.hsaEligible } : {}),
+            ...(a.credential ? { credentialRef: a.credential.id, credentialValidTo: a.credential.validTo } : {}),
+          },
         },
       });
     }
     return update(cart, actions);
   });
-  return { cart: mapCart(updated) };
+  // The covered share is re-resolved on every cart change (adding a line can change the cover of the others).
+  const funded = patient ? await applyFunding(updated, patient) : { cart: updated, unresolved: false };
+  return { cart: mapCart(funded.cart, { unresolved: funded.unresolved }) };
 }
 
 /** Removes one line. A line that is not in the cart (already removed in another tab) is not an error. */
-export async function removeLine(customerId: string, cartId: string | undefined, lineId: string, currency?: string): Promise<CartOutcome | null> {
+export async function removeLine(customerId: string, cartId: string | undefined, lineId: string, currency?: string, patient?: Patient): Promise<CartOutcome | null> {
   const fixtures = await loadCartFixtures();
-  if (fixtures) return fixtures.removeLine(customerId, lineId);
+  if (fixtures) return fixtures.removeLine(customerId, lineId, patient);
   const updated = await withCartRetry(async () => {
     const cart = await fetchActiveCart(customerId, cartId, currency);
     if (!cart) return null;
     if (!cart.lineItems.some((i) => i.id === lineId)) return cart;
     return update(cart, [{ action: 'removeLineItem', lineItemId: lineId }]);
   });
-  return updated ? { cart: mapCart(updated) } : null;
+  if (!updated) return null;
+  const funded = patient ? await applyFunding(updated, patient) : { cart: updated, unresolved: false };
+  return { cart: mapCart(funded.cart, { unresolved: funded.unresolved }) };
 }
 
 /** Cheap read for the header count: no re-validation, no write. */
@@ -154,7 +167,7 @@ export async function getCartValidated(patient: Patient, customerId: string, car
 
   const recalculated = await withCartRetry(async () => {
     const cart = (await fetchActiveCart(customerId, before.id, ctx.currency)) ?? before;
-    return update(cart, [{ action: 'recalculate', updateProductData: true }]);
+    return update(cart, recalcActions(cart));
   });
 
   const seenBefore = new Map(before.lineItems.map((i) => [i.id, rxFieldsOf(i)?.lastSeenCents]));
@@ -169,6 +182,10 @@ export async function getCartValidated(patient: Patient, customerId: string, car
     }
   }
   const final = stale.length ? await withCartRetry(async () => update((await fetchActiveCart(customerId, before.id, ctx.currency)) ?? recalculated, stale)) : recalculated;
-  const problems = await checkLines(patient, final.lineItems.map((i) => ({ id: i.id, rx: rxFieldsOf(i) })), ctx);
-  return mapCart(final, { problems, priceUpdated });
+  // Payer cost-share: re-resolved at every load, so the figures the patient sees are never older than this read.
+  const funded = await applyFunding(final, patient);
+  const problems = await checkLines(patient, funded.cart.lineItems.map((i) => ({ id: i.id, rx: rxFieldsOf(i) })), ctx);
+  // The tender split (allowance balance, eligible subtotal, card remainder) is shown on the cart before checkout.
+  const tender = await tenderViewOf(funded.cart, { patientRef: patient.patientRef, now: ctx.now ?? new Date() });
+  return { ...mapCart(funded.cart, { problems, priceUpdated, unresolved: funded.unresolved }), ...(tender ? { tender } : {}) };
 }

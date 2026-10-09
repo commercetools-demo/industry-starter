@@ -1,14 +1,16 @@
+import { ALLOWANCE_MEMBERS } from './data/allowances';
 import { BOOKINGS } from './data/bookings';
 import { CREDENTIALS } from './data/credentials';
 import { DOCTORS, doctorKey } from './data/doctors';
 import { LABS } from './data/labs';
-import { PATIENTS, SAM, patientKey } from './data/patients';
+import { ALEX, JORDAN, PATIENTS, SAM, patientKey } from './data/patients';
 import { PRESCRIPTIONS } from './data/prescriptions';
 import { REVIEWS } from './data/reviews';
 import { SCHEDULES } from './data/schedules';
 import { listObjects, stable } from './custom-objects';
 import { listAll, type Rec, type Root } from './lib';
 import type { Credential, LabOrder, Prescription } from '../../lib/clinical/types';
+import type { AllowanceCycle } from '../../lib/funding/allowance-types';
 
 type Check = (name: string, ok: boolean, detail?: string) => void;
 
@@ -54,6 +56,17 @@ export async function verifyClinical(root: Root, check: Check): Promise<void> {
   check('RX-48213 has 0 refills left; RX-77102 has at most 3 (fewer once an order has dispensed it)', left('RX-48213') === 0 && left('RX-77102') !== undefined && (left('RX-77102') as number) >= 0 && (left('RX-77102') as number) <= 3);
   check('Sam has five labs and the controlled-class credential', (labs.map((o) => o.value) as LabOrder[]).filter((l) => l.patientRef === SAM.patientRef).length === 5 && (credentials.map((o) => o.value) as Credential[]).some((c) => c.patientRef === SAM.patientRef && c.status === 'active'));
 
+  // funding (workstream U): allowance cycle, credentials and controlled prescriptions for the demo patients
+  const allowances = (await listObjects(root, 'malva-allowance')).map((o) => o.value as AllowanceCycle);
+  const missingAllowance = ALLOWANCE_MEMBERS.filter((m) => !allowances.some((a) => a.patientRef === m.patientRef && a.monthly === m.monthly));
+  check('malva-allowance holds a monthly grant for every allowance member (Sam: $50.00)', missingAllowance.length === 0, missingAllowance.map((m) => m.patientRef).join(', '));
+  const creds = credentials.map((o) => o.value as Credential);
+  const statusFor = (ref: string) => creds.find((c) => c.patientRef === ref && c.class === 'schedule-iv')?.status ?? 'none';
+  check('credentials: Sam has a valid schedule-iv credential, Jordan a pending one, Alex none', statusFor(SAM.patientRef) === 'active' && statusFor(JORDAN.patientRef) === 'pending' && statusFor(ALEX.patientRef) === 'none', `Sam ${statusFor(SAM.patientRef)}, Jordan ${statusFor(JORDAN.patientRef)}, Alex ${statusFor(ALEX.patientRef)}`);
+  const controlled = new Set(['MED-tramadol-50-mg', 'MED-alprazolam-0-5-mg']);
+  const withControlled = (ref: string) => (rx.map((o) => o.value) as Prescription[]).some((r) => r.patientRef === ref && r.lines.some((l) => controlled.has(l.sku)));
+  check('each demo patient has a prescription with a controlled medication', [SAM, ALEX, JORDAN].every((p) => withControlled(p.patientRef)));
+
   // patients: exactly three example.com customers with verified email, an address and a patientRef
   const customers = (await listAll(root, 'customers')).filter((c) => typeof c.key === 'string' && (c.key as string).startsWith('mlv-patient-'));
   const emails = customers.map((c) => c.email as string);
@@ -64,6 +77,11 @@ export async function verifyClinical(root: Root, check: Check): Promise<void> {
     return !c || c.isEmailVerified !== true || ((c.addresses as unknown[]) ?? []).length < 1 || fields?.patientRef !== p.patientRef;
   });
   check('patients have verified email, an address and the seeded patientRef', badPatients.length === 0, badPatients.map((p) => p.slug).join(', '));
+  const badScheme = PATIENTS.filter((p) => {
+    const fields = ((customers.find((x) => x.key === patientKey(p)) as Rec | undefined)?.custom as { fields?: Rec } | undefined)?.fields;
+    return (fields?.fundingScheme ?? undefined) !== p.fundingScheme;
+  });
+  check('funding scheme: Sam is on Demo Health Plan, the others have none', badScheme.length === 0, badScheme.map((p) => p.slug).join(', '));
 
   // reviews
   const reviews = await listAll(root, 'reviews');

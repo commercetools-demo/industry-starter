@@ -55,3 +55,7 @@ export const apiAutoRefill = (id: string): string => `${API_AUTO_REFILL}/${encod
 export const API_PAYMENT_METHODS = '/api/payment-methods';
 export const apiPaymentMethod = (id: string, confirm = false): string => `${API_PAYMENT_METHODS}/${encodeURIComponent(id)}${confirm ? '?confirm=1' : ''}`;
 export const apiPaymentMethodDefault = (id: string): string => `${API_PAYMENT_METHODS}/${encodeURIComponent(id)}/default`;
+
+// Workstream U (funding): the restricted instrument choice and the allowance read. No write endpoint exists for an allowance.
+export const API_CHECKOUT_TENDER = '/api/checkout/tender';
+export const API_ACCOUNT_ALLOWANCE = '/api/account/allowance';

@@ -15,9 +15,9 @@ import { PRESCRIPTIONS } from '@/scripts/seed/data/prescriptions';
 
 export const fixtureCustomerId = (slug: string) => `fixture-${slug}`;
 
-export function fixturePatient(customerId: string): { patientRef: string; name: string } | null {
+export function fixturePatient(customerId: string): { patientRef: string; name: string; fundingScheme?: string } | null {
   const p = PATIENTS.find((x) => fixtureCustomerId(x.slug) === customerId);
-  return p ? { patientRef: p.patientRef, name: `${p.firstName} ${p.lastName}` } : null;
+  return p ? { patientRef: p.patientRef, name: `${p.firstName} ${p.lastName}`, ...(p.fundingScheme ? { fundingScheme: p.fundingScheme } : {}) } : null;
 }
 
 const all = (): Prescription[] => structuredClone(PRESCRIPTIONS);

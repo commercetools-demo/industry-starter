@@ -134,3 +134,14 @@ Quantity ceilings and prescription limits are enforced in the storefront BFF onl
 - **Payment methods** (`/account/payment-methods`): Checkout Stored Payment Methods through the `PaymentMethod` API, behind `PaymentProvider.listStoredMethods / setDefaultStoredMethod / removeStoredMethod`. The page, the routes and the logs see only the descriptor (brand, last four, expiry, default flag); the provider token never leaves `lib/ct/stored-methods.ts` (a guard test checks it). Setting a default clears the previous one explicitly; removing the default promotes nothing; removing a card an active refill is charged to asks first and pauses those refills. A card is saved by the Checkout widget at payment time (cart `customerId` ties it to the customer), not by a storefront form.
 - Scopes added to the API client: `manage_shopping_lists`, `manage_recurring_orders`, `view_recurrence_policies`, `manage_payment_methods` (see `.env.example`). Seed: `npm run seed` creates the `mlv-list-line` type and the two policies.
 - Browser check without commercetools: `MALVA_FIXTURES=1` (plus dummy `CTP_*` values and `AUTO_REFILL_ENABLED=true`), a cookie from `scripts/dev-session.ts`, `POST /api/payment-methods/demo-add` for a demo card, then save, enable, pause and remove through the pages or `curl`. Development only; the fake provider and fixtures never load in production.
+
+## Funding model is a demo
+
+Payer cost-share, the monthly benefit allowance and the health-account card are a **demo**, not a real payer or card-network integration.
+
+- Cover comes from a mock `FundingResolver` (`lib/funding/resolver.ts`) with fixed percentages per scheme and a per-order cap. It never falls back to the list price: if the resolver fails the cart says "Cover unresolved" and Checkout is disabled. `RESOLVER_FORCE_FAIL=1` (development only, ignored in production) shows that state.
+- Tender order is fixed: allowance, then the restricted health-account card (eligible items only, opt-in), then the card provider for the remainder. Allowance and restricted tender are separate commercetools Payments with methods `allowance` and `restricted-health-account`.
+- The allowance balance is a Custom Object per patient and month. `npm run allowances:reload` (idempotent, `--dry-run`, `--at`) grants the monthly cycle; `netlify/functions/reload-allowances-scheduled.ts` calls the guarded `reload-allowances` function with the `x-malva-reload-secret` header (`RELOAD_ALLOWANCES_SECRET`).
+- Controlled products are shown but unavailable until the patient has a valid credential for that class.
+- Seed additions are in `scripts/seed/data/allowances.ts` and `credentials.ts`; re-seed after pulling (custom types gained fields).
+- Browser check without commercetools: `MALVA_FIXTURES=1` as above; Sam has an allowance.

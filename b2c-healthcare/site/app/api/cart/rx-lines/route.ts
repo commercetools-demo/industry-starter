@@ -47,7 +47,7 @@ export async function POST(request: Request): Promise<Response> {
       return Response.json({ code: 'NOTHING_ADDED', error: NOTHING_ADDED, refused }, { status: 422, headers: NO_STORE });
     }
     try {
-      const { cart } = await addRxLines(session.customerId, session.cartId, selection.rxNumber, selection.accepted, ctx);
+      const { cart } = await addRxLines(session.customerId, session.cartId, selection.rxNumber, selection.accepted, ctx, patient);
       await syncCartSession(cart);
       return Response.json({ cart, refused }, { headers: NO_STORE });
     } catch (error) {

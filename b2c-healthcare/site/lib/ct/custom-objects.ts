@@ -17,6 +17,11 @@ export const CONTAINERS = {
   orderAttempt: 'malva-order-attempt',
   /** One entry per scheduled auto-refill check: what the gate decided and why (workstream T). */
   refillLog: 'malva-refill-log',
+
+  /** One entry per member per monthly cycle: `{granted, consumed, lapsed, ...}` under optimistic concurrency (workstream U). */
+  allowance: 'malva-allowance',
+  /** One entry per order that drew from an allowance (key = order id): finds the cycle again on cancel (workstream U). */
+  allowanceLedger: 'malva-allowance-ledger',
 } as const;
 
 export interface StoredObject<T> { key: string; version: number; value: T }
