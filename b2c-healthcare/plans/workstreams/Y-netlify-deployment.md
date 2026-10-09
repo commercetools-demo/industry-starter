@@ -8,10 +8,10 @@
 Deploy `site/` to Netlify with the Next.js runtime (`netlify.toml` in `site/`, `base` = site directory, as the sibling projects did). Use the `/commercetools:nextjs-deploy-netlify` skill for the hand-off. Environment variables are set in the Netlify UI (owner, OA-06) — secrets never in the repo. Scheduled functions: `auto-refill-run` (T), `reload-allowances` (U), `retention` (X). `/api/health` and `app/[locale]/_tokens` must not exist in the production build (checks from D-06/H-10). Deploy previews use a **separate** commercetools project or the same project with read-only data? → same dev project is acceptable (synthetic data only); never point previews at real data.
 
 ## Tasks
-- [ ] Y-01 `site/netlify.toml` (build command `npm run verify:build`, publish, functions dir, scheduled function crons, security headers: CSP allowing Stripe/Checkout + Pexels images, `X-Content-Type-Options`, `Referrer-Policy: same-origin`, `Cache-Control: no-store` for `/api/account/*`), test that headers file parses [SKILL: commercetools-platform]
-- [ ] Y-02 `docs/deploy.md`: variable list (names only), steps, how to rotate secrets, how to run seeds against the project (never from CI by default) [SKILL: commercetools-platform]
-- [ ] Y-03 Move scheduled work into `netlify/functions/*` thin wrappers with shared pure code; tests for each wrapper's auth guard (`x-nf-...` or secret header) so the endpoints are not publicly triggerable [SKILL: commercetools-platform]
-- [ ] Y-04 Production-build checks: health route absent, `_tokens` absent, no source maps with secrets, `grep` bundle for `CTP_CLIENT_SECRET` returns nothing (script `scripts/check-bundle.mjs`) [SKILL: commercetools-platform]
+- [x] Y-01 `site/netlify.toml` (build command `npm run verify:build`, publish, functions dir, scheduled function crons, security headers: CSP allowing Stripe/Checkout + Pexels images, `X-Content-Type-Options`, `Referrer-Policy: same-origin`, `Cache-Control: no-store` for `/api/account/*`), test that headers file parses [SKILL: commercetools-platform]
+- [x] Y-02 `docs/deploy.md`: variable list (names only), steps, how to rotate secrets, how to run seeds against the project (never from CI by default) [SKILL: commercetools-platform]
+- [x] Y-03 Move scheduled work into `netlify/functions/*` thin wrappers with shared pure code; tests for each wrapper's auth guard (`x-nf-...` or secret header) so the endpoints are not publicly triggerable [SKILL: commercetools-platform]
+- [x] Y-04 Production-build checks: health route absent, `_tokens` absent, no source maps with secrets, `grep` bundle for `CTP_CLIENT_SECRET` returns nothing (script `scripts/check-bundle.mjs`) [SKILL: commercetools-platform]
 - [ ] Y-05 Deploy (needs OA-06) via the deploy skill, record the URL in `plans/STATUS.md`; smoke test with the Z checklist subset [SKILL: commercetools-platform]
 
 ## Scenarios
