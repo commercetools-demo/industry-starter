@@ -455,6 +455,7 @@
       "collected": "Collected",
       "orderedBy": "Ordered by",
       "laboratory": "Laboratory",
+      "resultsRegion": "Lab results (scrolls sideways on small screens)",
       "colTest": "Test",
       "colResult": "Result",
       "colRange": "Reference range",

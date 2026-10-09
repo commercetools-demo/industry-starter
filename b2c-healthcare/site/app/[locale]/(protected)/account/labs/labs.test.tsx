@@ -147,3 +147,12 @@ describe('design-account-area: Lab tests', () => {
     expect(labs.list).not.toHaveBeenCalled();
   });
 });
+
+describe('accessibility (Z sweep)', () => {
+  it('the results table can scroll sideways with the keyboard: a labelled, focusable region (axe scrollable-region-focusable)', async () => {
+    await renderDetail();
+    const region = screen.getByRole('region', { name: /Lab results/ });
+    expect(region).toHaveAttribute('tabindex', '0');
+    expect(within(region).getByRole('table')).toBeInTheDocument();
+  });
+});

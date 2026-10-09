@@ -45,7 +45,7 @@ export function LabDetail({ lab }: { lab: LabDetailView }) {
       </Card>
       {hasResults ? (
         <>
-          <div className="overflow-x-auto rounded-lg bg-surface p-2 shadow-sm">
+          <div role="region" aria-label={t('resultsRegion')} tabIndex={0} className="overflow-x-auto rounded-lg bg-surface p-2 shadow-sm">
             <table className="w-full border-collapse text-left text-sm">
               <thead>
                 <tr className="text-text-muted">
