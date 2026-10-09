@@ -6,7 +6,7 @@ import { createFakeRoot } from './fake-root';
 import { makeCtx, runSteps } from './lib';
 import { foundationSteps, doctorSteps } from './steps';
 import { loadProductImages, loadSiteImages } from './data/images';
-import { cleanUrl, jpegSize, missingStoredImages, parseArgs, pickPexelsApi, pickPhotos, pickUrls, productTargets, queryLadder, searchTerm, updateImages, type Photo } from './update-images';
+import { cleanUrl, jpegSize, missingStoredImages, parseArgs, pickPexelsApi, pickPexelsWeb, pickPhotos, pickUrls, productTargets, queryLadder, searchTerm, updateImages, type Photo } from './update-images';
 
 beforeEach(() => {
   // no test in this file may reach the network
@@ -184,5 +184,22 @@ describe('updateImages (mocked search, fake root)', () => {
     const d = doctorDraft(DOCTORS[0], [{ url: 'https://h/a.jpg', dimensions: { w: 1, h: 1 } }]);
     expect(d.masterVariant.images[0].url).toBe('https://h/a.jpg');
     expect(doctorKey(DOCTORS[0])).toBe(d.key);
+  });
+});
+
+describe('pickPexelsWeb (pexels.com search data)', () => {
+  const item = (id: number, slug: string, license = 'Pexels') => ({
+    attributes: { slug, title: slug, license, image: { large: `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=1440` } },
+  });
+  it('stores clean URLs, keeps the slug as the filter name, skips duplicates and non-Pexels licences', () => {
+    const data = { data: [item(1, 'smiling-doctor'), item(1, 'smiling-doctor'), item(2, 'partner', 'Other'), item(3, 'nurse-portrait')] };
+    expect(pickPexelsWeb(data, 5)).toEqual([
+      { url: 'https://images.pexels.com/photos/1/pexels-photo-1.jpeg', name: 'smiling-doctor-smiling-doctor' },
+      { url: 'https://images.pexels.com/photos/3/pexels-photo-3.jpeg', name: 'nurse-portrait-nurse-portrait' },
+    ]);
+  });
+  it('returns nothing for an empty or malformed response', () => {
+    expect(pickPexelsWeb(null, 2)).toEqual([]);
+    expect(pickPexelsWeb({ data: [{}] }, 2)).toEqual([]);
   });
 });

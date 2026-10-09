@@ -20,16 +20,19 @@ import { getAdminRoot, isMain, type Root } from './lib';
  * - Stored URLs are CLEAN: no query string, no fragment (the host answers a clean URL with a redirect to the sized image).
  * - Doctors use portrait queries (Q-035); medicines use the generic `imageQuery` (brand names return noise).
  *
- * The search is the public JSON endpoint behind pexels.com/search; no cookie or login is needed, so nothing secret is sent.
- * It is undocumented and may change: fall back to the official Pexels API with a key (see README).
+ * Without a key the search is the Next.js data route behind pexels.com/search (owner decision 2026-10-09: fine for the one-off seeding run):
+ *   GET https://www.pexels.com/_next/data/<buildId>/en-US/search/<query>.json?query=<query>   (<buildId> is read from the search page)
+ * Multi-word queries have no data route (404), so those read the same JSON embedded in the search page (`__NEXT_DATA__`).
+ * Every photo it returns has `license: "Pexels"`. No cookie or login is needed, a browser-like user agent is. It is undocumented and
+ * may change: set `PEXELS_API_KEY` to use the official Pexels API instead.
  */
-const ENDPOINT = 'https://www.pexels.com/en-us/api/v3/getty-media/photos';
-/** Public client id the pexels.com web app itself sends; without it the endpoint answers 401. */
-const CLIENT_ID = process.env.PEXELS_CLIENT_ID ?? '4faffa81915014bbd90c420f22898950';
+const WEB = 'https://www.pexels.com';
+const WEB_HEADERS = { 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36' };
 const FALLBACK_SIZE = { w: 612, h: 612 };
 
 export interface PickedImage { url: string; dimensions: { w: number; h: number } }
-export interface Photo { url: string; photographer?: string }
+/** `name` is the photo's descriptive slug/title, which the avoid/require filters read (the clean URL itself only carries the numeric id). */
+export interface Photo { url: string; photographer?: string; name?: string }
 
 /** `https://host/a/b.jpg?s=612&k=20#x` becomes `https://host/a/b.jpg`. */
 export function cleanUrl(raw: string): string {
@@ -92,6 +95,28 @@ export function jpegSize(bytes: Uint8Array): { w: number; h: number } | null {
   return null;
 }
 
+/** Photos of a pexels.com search data (`initialData.data[].attributes`): `image.large` without its query string, distinct, Pexels licence only. */
+export function pickPexelsWeb(data: unknown, count: number): Photo[] {
+  type Item = { attributes?: { image?: { large?: unknown }; slug?: unknown; title?: unknown; license?: unknown } };
+  const items = (data as { data?: Item[] } | null)?.data ?? [];
+  const out: Photo[] = [];
+  for (const item of items) {
+    const a = item.attributes;
+    if (typeof a?.image?.large !== 'string' || (a.license !== undefined && a.license !== 'Pexels')) continue;
+    let url: string;
+    try {
+      url = cleanUrl(a.image.large);
+    } catch {
+      continue;
+    }
+    if (out.some((o) => o.url === url)) continue;
+    const name = [a.slug, a.title].filter((x): x is string => typeof x === 'string').join(' ').toLowerCase().replace(/\s+/g, '-');
+    out.push({ url, ...(name ? { name } : {}) });
+    if (out.length === count) break;
+  }
+  return out;
+}
+
 export function parseArgs(argv: string[]): { dryRun: boolean; jsonOnly: boolean; only?: string; count: number } {
   const get = (name: string) => (argv.includes(name) ? argv[argv.indexOf(name) + 1] : undefined);
   const count = Number(get('--count') ?? 2);
@@ -122,7 +147,7 @@ export function pickPexelsApi(response: unknown, count: number): Photo[] {
 
 /**
  * With `PEXELS_API_KEY` in the shell the OFFICIAL Pexels API is used (free key from pexels.com/api; every photo is under the Pexels licence).
- * Without it the public JSON endpoint behind pexels.com's search box is used (no key, but it serves partner stock thumbnails, see README).
+ * Without it the pexels.com search data route is used (see the header comment).
  */
 export const searchPexels: SearchFn = async (term, count) => {
   const key = process.env.PEXELS_API_KEY;
@@ -134,13 +159,45 @@ export const searchPexels: SearchFn = async (term, count) => {
   return searchPublicEndpoint(term, count);
 };
 
+let buildId: string | undefined;
+
+async function pexelsGet(url: string, headers: Record<string, string> = {}): Promise<Response> {
+  return fetch(url, { headers: { ...WEB_HEADERS, ...headers } });
+}
+
+/** The page's embedded JSON (`<script id="__NEXT_DATA__">`) holds the build id and, on a search page, the first results. */
+function nextData(html: string): { buildId?: string; props?: { pageProps?: { initialData?: unknown } } } | null {
+  const m = /<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/.exec(html);
+  return m ? (JSON.parse(m[1]) as ReturnType<typeof nextData>) : null;
+}
+
 const searchPublicEndpoint: SearchFn = async (term, count) => {
-  // Ask for a few more than needed so duplicates after cleaning do not leave us short.
-  const res = await fetch(`${ENDPOINT}/${encodeURIComponent(term)}?number=${Math.min(count + 2, 100)}&page=1`, {
-    headers: { accept: '*/*', 'content-type': 'application/json', 'x-client-type': 'react', 'pexels-client-id': CLIENT_ID, 'user-agent': 'malva-seed' },
-  });
-  if (!res.ok) throw new Error(`pexels search "${term}" failed: ${res.status}`);
-  return pickPhotos(await res.json(), count);
+  const photos: Photo[] = [];
+  const seen = new Set<string>();
+  for (let page = 1; page <= 6 && photos.length < count; page += 1) {
+    const slug = encodeURIComponent(term);
+    const pageQuery = page > 1 ? `&page=${page}` : '';
+    let initialData: unknown;
+    if (/^[A-Za-z0-9]+$/.test(term)) {
+      // single word: the data route the owner pointed at
+      for (let attempt = 0; attempt < 2 && initialData === undefined; attempt += 1) {
+        if (!buildId) buildId = nextData(await (await pexelsGet(`${WEB}/search/${slug}/`)).text())?.buildId;
+        if (!buildId) break;
+        const res = await pexelsGet(`${WEB}/_next/data/${buildId}/en-US/search/${slug}.json?query=${slug}${pageQuery}`, { 'x-nextjs-data': '1' });
+        if (res.ok) initialData = ((await res.json()) as { pageProps?: { initialData?: unknown } }).pageProps?.initialData;
+        else buildId = undefined; // stale build id after a Pexels deploy: read it again
+      }
+    }
+    if (initialData === undefined) {
+      const res = await pexelsGet(`${WEB}/search/${slug}/${page > 1 ? `?page=${page}` : ''}`);
+      if (!res.ok) throw new Error(`pexels search "${term}" failed: ${res.status}`);
+      initialData = nextData(await res.text())?.props?.pageProps?.initialData;
+    }
+    const batch = pickPexelsWeb(initialData, 100);
+    if (batch.length === 0) break;
+    for (const p of batch) if (!seen.has(p.url)) { seen.add(p.url); photos.push(p); }
+  }
+  return photos.slice(0, count);
 };
 
 export const measureImage: MeasureFn = async (url) => {
@@ -253,7 +310,8 @@ export async function updateImages(o: UpdateOptions): Promise<UpdateResult> {
     const tried: string[] = [];
     for (const query of queryLadder(term, ...fallbacks)) {
       const all = await o.search(query, count + used.size + (avoid ? 40 : 0));
-      const candidates = all.filter((p) => !used.has(p.url) && !(avoid && avoid.test(p.url.split('/').pop() ?? '')) && (!require || require.test(p.url.split('/').pop() ?? '')));
+      const label = (p: Photo) => p.name ?? p.url.split('/').pop() ?? '';
+      const candidates = all.filter((p) => !used.has(p.url) && !(avoid && avoid.test(label(p))) && (!require || require.test(label(p))));
       const photos: PickedImage[] = [];
       for (const p of candidates) {
         if (photos.length === count) break;
