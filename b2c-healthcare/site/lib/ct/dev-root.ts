@@ -47,7 +47,7 @@ function customerOf(s: Store, id: string): Cust {
   return c;
 }
 
-type Action = { action: string; address?: Record<string, unknown>; addressKey?: string; addressId?: string };
+type Action = { action: string; firstName?: string; lastName?: string; address?: Record<string, unknown>; addressKey?: string; addressId?: string };
 
 function apply(s: Store, c: Cust, actions: Action[]): void {
   for (const a of actions) {
@@ -64,7 +64,8 @@ function apply(s: Store, c: Cust, actions: Action[]): void {
       const id = idOf();
       if (id) c.defaultShippingAddressId = id;
       else delete c.defaultShippingAddressId;
-    }
+    } else if (a.action === 'setFirstName') c.firstName = a.firstName ?? '';
+    else if (a.action === 'setLastName') c.lastName = a.lastName ?? '';
     // addShippingAddressId and the rest are accepted and ignored.
   }
   c.version += 1;

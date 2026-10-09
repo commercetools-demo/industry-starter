@@ -3,6 +3,7 @@ import { createHash, randomInt } from 'node:crypto';
 import type { Customer } from '@commercetools/platform-sdk';
 import { normalizeEmail, splitFullName, validateRegistration, type RegisterProblems } from '@/lib/auth-validation';
 import { apiRoot } from '@/lib/ct/client';
+import { loadDevRoot } from '@/lib/ct/fixtures';
 import { getRateLimitStatus, recordFailedLookup } from '@/lib/ct/ratelimit';
 import { checkPassword } from '@/lib/password-policy';
 import { clearCustomer } from '@/lib/session';
@@ -312,7 +313,7 @@ export async function requestFreshVerification(customerId: string | undefined): 
 /** One customer by id (never cached: per patient); null when it no longer exists. */
 export async function getCustomerById(customerId: string): Promise<IdentityUser | null> {
   try {
-    const { body } = await apiRoot.customers().withId({ ID: customerId }).get().execute();
+    const { body } = await ((await loadDevRoot()) ?? apiRoot).customers().withId({ ID: customerId }).get().execute();
     return toUser(body);
   } catch (error) {
     if (statusOf(error) === 404) return null;

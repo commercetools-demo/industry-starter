@@ -23,7 +23,7 @@ export function OrderConfirmation({ order, allowanceBalance }: { order: OrderVie
   const money = (m: Money) => formatMoney(m.centAmount, m.currencyCode, locale);
   const recorded = order.lines.some((l) => l.eligible !== undefined);
   return (
-    <main>
+    <div>
       <div className="mx-auto max-w-160 px-5 py-12 nav:px-8">
         <Card className="grid gap-4" data-order-status={order.status}>
           <Badge variant={cancelled ? 'no' : 'ok'} className="justify-self-start">
@@ -115,6 +115,6 @@ export function OrderConfirmation({ order, allowanceBalance }: { order: OrderVie
           </div>
         </Card>
       </div>
-    </main>
+    </div>
   );
 }

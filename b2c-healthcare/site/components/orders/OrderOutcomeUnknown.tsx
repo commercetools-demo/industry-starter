@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/Card';
 export function OrderOutcomeUnknown() {
   const t = useTranslations('orders.unknown');
   return (
-    <main>
+    <div>
       <div className="mx-auto max-w-160 px-5 py-12 nav:px-8">
         <Card className="grid gap-4" data-order-outcome="unknown">
           <h1 className="font-display text-3xl font-semibold text-navy-900">{t('title')}</h1>
@@ -16,6 +16,6 @@ export function OrderOutcomeUnknown() {
           </ButtonLink>
         </Card>
       </div>
-    </main>
+    </div>
   );
 }
