@@ -1,0 +1,63 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../tokens.css"><style>
+body{margin:0;padding:24px;font:600 15px/24px var(--font-sans);letter-spacing:-.01em;color:var(--color-text);background:var(--color-gray-1)}
+.panel{padding:24px;background:var(--color-bg-page);color:var(--color-text);border-radius:var(--radius-300);margin-bottom:16px}
+h3{font:600 13px/16px var(--font-sans);color:var(--color-text-subdued);margin:20px 0 12px}h3:first-child{margin-top:0}
+.row{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}.c{display:flex;flex-direction:column;gap:8px;align-items:flex-start}.c small{font:500 12px/16px var(--font-sans);color:var(--color-text-subdued)}
+button{font:inherit;letter-spacing:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:10px 18px;border-radius:var(--radius-300);border:1px solid var(--color-border-on);background:var(--color-bg-brand);color:var(--color-text-on);font:700 15px/24px var(--font-sans);box-shadow:var(--shadow-button);box-sizing:border-box}
+.btn:hover{background:var(--color-bg-brand-hover)}.btn.sec{background:var(--color-bg-surface);color:var(--color-text);border-color:var(--color-border)}.btn.sec:hover{background:var(--color-bg-surface-hover);border-color:var(--color-border-hover)}.btn.f{flex:1}
+.ib{width:36px;height:36px;border-radius:var(--radius-full);display:grid;place-items:center}.ib:hover{background:var(--color-bg-surface-hover)}
+.fld{width:360px;height:44px;border:1px solid var(--color-border);border-radius:var(--radius-300);background:var(--color-bg-surface);display:flex;align-items:center;justify-content:space-between;padding:10px 12px;box-sizing:border-box;color:var(--color-text-disabled)}.fld.on{border-color:var(--color-border-hover);color:var(--color-text)}
+.cal{width:392px;padding:24px;box-sizing:border-box;background:var(--color-bg-surface);border-radius:var(--radius-400);box-shadow:var(--shadow-modal);display:flex;flex-direction:column;gap:16px}
+.ch{display:flex;align-items:center;justify-content:space-between}.ch b{font:600 17px/24px var(--font-sans);letter-spacing:-.02em}
+.g{display:grid;grid-template-columns:repeat(7,1fr);gap:8px 0;justify-items:center}
+.d{width:32px;height:32px;border-radius:var(--radius-full);display:grid;place-items:center;font:600 15px/24px var(--font-sans);box-sizing:border-box}
+.wd{color:var(--color-text-subdued);font-weight:500;font-size:13px;width:32px;height:32px;display:grid;place-items:center}
+button.d:hover,.d.h{background:var(--color-bg-surface-hover)}.d.sel,button.d.sel:hover{background:var(--color-bg-active);color:var(--color-text-on-active);font-weight:500}.d.o{color:var(--color-text-disabled)}
+.foot{display:flex;gap:8px}
+.tm{width:284px;padding:24px;box-sizing:border-box;background:var(--color-bg-surface);border-radius:var(--radius-400);box-shadow:var(--shadow-modal);display:flex;flex-direction:column;gap:12px;height:100%}
+.tl{display:flex;flex-direction:column;gap:2px;max-height:300px;overflow:auto}.tr{display:flex;gap:10px;height:40px;align-items:center;padding:8px 12px;border-radius:var(--radius-100);box-sizing:border-box;cursor:pointer}.tr:hover{background:var(--color-bg-surface-hover)}.tr.sel{background:var(--color-bg-surface-hover)}
+.combo{display:flex;gap:16px;align-items:stretch}.combo.m{flex-direction:column}.combo.m .cal,.combo.m .tm{width:343px}.combo.m .tm{height:auto}
+.dm{background:var(--color-bg-surface);border-radius:var(--radius-400);box-shadow:var(--shadow-modal);padding:24px;display:flex;flex-direction:column;gap:20px;box-sizing:border-box}
+.dm .ttl{display:flex;justify-content:space-between;align-items:center;font:600 20px/32px var(--font-sans);letter-spacing:-.02em}
+[data-theme="dark"]{--color-bg-surface-hover:var(--color-bg-surface-subdued)}
+</style>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="l" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol><symbol id="r" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+<symbol id="cal" viewBox="0 0 24 24"><rect x="4" y="5.500" width="16" height="14.500" rx="2.500"/><path d="M4 10h16M8.500 3.500v4M15.500 3.500v4"/></symbol>
+<symbol id="clk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500"/><path d="M12 7.500V12l3 2"/></symbol>
+<symbol id="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+</defs></svg>
+<div class="panel" id="src">
+<h3>Input trigger — default · open</h3>
+<div class="row"><div class="c"><div class="fld"><span>Select date</span><svg class="i"><use href="#cal"/></svg></div><small>placeholder</small></div>
+<div class="c"><div class="fld on"><span>Apr 11, 2023</span><svg class="i"><use href="#cal"/></svg></div><small>filled</small></div>
+<div class="c"><div class="fld on"><span>12:30 PM</span><svg class="i"><use href="#clk"/></svg></div><small>time</small></div></div>
+<h3>Calendar — 392×510 · items/calendar (title · default · hovered · selected)</h3>
+<div class="row"><div class="c"><div class="cal">
+<div class="ch"><button class="ib" aria-label="Previous"><svg class="i"><use href="#l"/></svg></button><b>April 2023</b><button class="ib" aria-label="Next"><svg class="i"><use href="#r"/></svg></button></div>
+<div class="g"><span class="wd">Su</span><span class="wd">Mo</span><span class="wd">Tu</span><span class="wd">We</span><span class="wd">Th</span><span class="wd">Fr</span><span class="wd">Sa</span>
+<span class="d o">26</span><span class="d o">27</span><span class="d o">28</span><span class="d o">29</span><span class="d o">30</span><span class="d o">31</span><button class="d">1</button>
+<button class="d">2</button><button class="d">3</button><button class="d">4</button><button class="d">5</button><button class="d">6</button><button class="d">7</button><button class="d">8</button>
+<button class="d">9</button><button class="d">10</button><button class="d sel">11</button><button class="d h">12</button><button class="d">13</button><button class="d">14</button><button class="d">15</button>
+<button class="d">16</button><button class="d">17</button><button class="d">18</button><button class="d">19</button><button class="d">20</button><button class="d">21</button><button class="d">22</button>
+<button class="d">23</button><button class="d">24</button><button class="d">25</button><button class="d">26</button><button class="d">27</button><button class="d">28</button><button class="d">29</button>
+<button class="d">30</button><span class="d o">1</span><span class="d o">2</span><span class="d o">3</span><span class="d o">4</span><span class="d o">5</span><span class="d o">6</span></div>
+<div class="foot"><button class="btn sec f">Cancel</button><button class="btn f">Apply</button></div>
+</div><small>selected 11 · hovered 12 · hover any day</small></div>
+<div class="c"><div class="tm"><div class="ch"><b>Time</b><svg class="i"><use href="#clk"/></svg></div>
+<div class="tl"><div class="tr">11:30 AM</div><div class="tr sel">12:00 PM</div><div class="tr">12:30 PM</div><div class="tr">1:00 PM</div><div class="tr">1:30 PM</div><div class="tr">2:00 PM</div><div class="tr">2:30 PM</div><div class="tr">3:00 PM</div></div>
+<div class="foot"><button class="btn sec f">Cancel</button><button class="btn f">Apply</button></div></div><small>time list · selected row</small></div></div>
+<h3>modal/date picker — desktop &amp; tablet · mobile</h3>
+<div class="row"><div class="c"><div class="dm" style="width:440px"><div class="ttl">Schedule<button class="ib"><svg class="i"><use href="#x"/></svg></button></div>
+<div class="combo" style="gap:12px"><div class="fld" style="width:auto;flex:1"><span>Apr 11, 2023</span><svg class="i"><use href="#cal"/></svg></div><div class="fld on" style="width:auto;flex:1"><span>12:30 PM</span><svg class="i"><use href="#clk"/></svg></div></div>
+<div class="foot"><button class="btn sec f">Cancel</button><button class="btn f">Schedule</button></div></div><small>type=default · desktop &amp; tablet</small></div>
+<div class="c"><div class="dm" style="width:343px;padding:16px"><div class="ttl">Schedule<button class="ib"><svg class="i"><use href="#x"/></svg></button></div>
+<div class="fld" style="width:auto"><span>Apr 11, 2023</span><svg class="i"><use href="#cal"/></svg></div><div class="fld on" style="width:auto"><span>12:30 PM</span><svg class="i"><use href="#clk"/></svg></div>
+<div class="foot"><button class="btn sec f">Cancel</button><button class="btn f">Schedule</button></div></div><small>type=default · mobile</small></div></div>
+</div>
+<div class="panel" data-theme="dark" id="dst"></div>
+<script>document.getElementById('dst').innerHTML=document.getElementById('src').innerHTML</script>

@@ -1,0 +1,103 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../tokens.css"><style>
+body{margin:0;padding:24px;font:600 15px/24px var(--font-sans);letter-spacing:-.01em;color:var(--color-text);background:var(--color-gray-1)}
+.panel{padding:24px;background:var(--color-bg-page);color:var(--color-text);border-radius:var(--radius-300);margin-bottom:16px}
+h3{font:600 13px/16px var(--font-sans);color:var(--color-text-subdued);margin:20px 0 12px}h3:first-child{margin-top:0}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}.c{display:flex;flex-direction:column;gap:8px;align-items:flex-start}.c small{font:500 12px/16px var(--font-sans);color:var(--color-text-subdued)}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+/* avatar */
+.av{position:relative;display:inline-grid;place-items:center;border-radius:var(--radius-full);color:var(--color-text-on-info);font:600 15px/1 var(--font-sans);flex:none}
+.av.m{width:64px;height:64px;font-size:20px}.av.s{width:44px;height:44px}
+.a1{background:var(--color-chart-1)}.a2{background:var(--color-chart-2)}.a3{background:var(--color-chart-3)}.a4{background:var(--color-chart-4)}.a5{background:var(--color-chart-5)}.a6{background:var(--color-chart-6)}
+.av .d{position:absolute;right:0;bottom:0;width:10px;height:10px;border-radius:var(--radius-full);border:1px solid var(--color-border-exclude);box-sizing:border-box}
+.d.on{background:var(--color-bg-success)}.d.off{background:var(--color-bg-surface-disabled)}
+.av .mini{position:absolute;right:-4px;bottom:-4px;width:16px;height:16px;border-radius:var(--radius-full);box-shadow:0 0 0 2px var(--color-border-exclude);display:grid;place-items:center;color:var(--color-text-on);padding:2px;box-sizing:border-box}
+.mini svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mini.purchase{background:var(--color-bg-success)}.mini.comment{background:var(--color-bg-active)}.mini.like{background:var(--color-bg-critical)}.mini.star{background:var(--color-bg-warning);color:var(--color-text-on-warning)}
+.soc{background:var(--color-bg-surface-hover);color:var(--color-text-subdued);border:1px solid var(--color-border)}.soc.on{background:var(--color-bg-active);color:var(--color-text-on-active);border-color:var(--color-bg-active)}
+/* customer card */
+.cust{width:156px;height:156px;box-sizing:border-box;padding:32px 24px;border-radius:var(--radius-300);display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;font:600 13px/16px var(--font-sans);cursor:pointer}
+.cust:hover,.cust.hov{background:var(--color-bg-surface-subdued)}.cust:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+/* thumbnails */
+.th{position:relative;display:inline-block;border-radius:var(--radius-200);background:linear-gradient(135deg,var(--color-chart-3),var(--color-chart-5));flex:none;overflow:hidden}
+.th.e{background:var(--color-bg-surface-disabled);display:inline-grid;place-items:center;color:var(--color-text-subdued)}
+.th .ic{position:absolute;right:4px;bottom:4px;width:12px;height:12px;border-radius:var(--radius-050);background:var(--color-bg-surface);opacity:.8;display:grid;place-items:center;color:var(--color-text)}
+.th .ic svg{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.ti{width:36px;height:36px;border-radius:var(--radius-full);display:grid;place-items:center;color:var(--color-text-on);box-sizing:border-box;padding:8px}
+.ti svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.ti.info{background:var(--color-bg-info);color:var(--color-text-on-info)}.ti.warning{background:var(--color-bg-warning);color:var(--color-text-on-warning)}.ti.success{background:var(--color-bg-success)}.ti.critical{background:var(--color-bg-critical)}.ti.def{background:var(--color-bg-surface-subdued)}
+[data-theme="dark"]{--color-bg-surface-hover:var(--color-bg-surface-subdued)}
+</style>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="img" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.5"/><path d="M4 17l5-4 4 3 3-2 4 3"/></symbol>
+<symbol id="bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></symbol>
+<symbol id="heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+<symbol id="chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+<symbol id="star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9z"/></symbol>
+</defs></svg>
+<div class="panel" id="src">
+<h3>avatar — medium 64 / small 44</h3>
+<div class="row">
+<div class="c"><span class="av m a1">AB</span><small>medium</small></div>
+<div class="c"><span class="av s a2">JC</span><small>small</small></div>
+</div>
+<h3>avatar/new — presence</h3>
+<div class="row">
+<div class="c"><span class="av s a3">KM<i class="d on"></i></span><small>online</small></div>
+<div class="c"><span class="av s a3">KM<i class="d off"></i></span><small>offline</small></div>
+</div>
+<h3>avatar/social network</h3>
+<div class="row">
+<div class="c"><span class="av s soc">f</span><small>facebook · deactive</small></div>
+<div class="c"><span class="av s soc on">f</span><small>facebook · active</small></div>
+<div class="c"><span class="av s soc">t</span><small>twitter · deactive</small></div>
+<div class="c"><span class="av s soc on">t</span><small>twitter · active</small></div>
+</div>
+<h3>avatar/stacking</h3>
+<div class="row">
+<div class="c"><span class="av s a4">BS<i class="mini purchase"><svg><use href="#bag"/></svg></i></span><small>purchase</small></div>
+<div class="c"><span class="av s a5">BS<i class="mini comment"><svg><use href="#chat"/></svg></i></span><small>comment</small></div>
+<div class="c"><span class="av s a6">BS<i class="mini like"><svg><use href="#heart"/></svg></i></span><small>like</small></div>
+<div class="c"><span class="av s a2">BS<i class="mini star"><svg><use href="#star"/></svg></i></span><small>star</small></div>
+</div>
+<h3>customer card — 156×156</h3>
+<div class="row">
+<div class="c"><div class="cust" tabindex="0"><span class="av m a1">AB</span>Annette Black</div><small>default (hover me)</small></div>
+<div class="c"><div class="cust hov" tabindex="0"><span class="av m a1">AB</span>Annette Black</div><small>hovered</small></div>
+</div>
+<h3>thumbnail/image — square: slim 48 · small 64 · medium 80 · large 96</h3>
+<div class="row">
+<div class="c"><span class="th" style="width:48px;height:48px"></span><small>slim</small></div>
+<div class="c"><span class="th" style="width:64px;height:64px"></span><small>small</small></div>
+<div class="c"><span class="th" style="width:80px;height:80px"></span><small>medium</small></div>
+<div class="c"><span class="th" style="width:96px;height:96px"></span><small>large</small></div>
+</div>
+<h3>thumbnail/image — rectangle: 64×48 · 86×64 · 108×80 · 128×96 · xl 172×128 · 2xl 226×168 · 3xl 270×200</h3>
+<div class="row">
+<div class="c"><span class="th" style="width:64px;height:48px"></span><small>slim</small></div>
+<div class="c"><span class="th" style="width:86px;height:64px"></span><small>small</small></div>
+<div class="c"><span class="th" style="width:108px;height:80px"></span><small>medium</small></div>
+<div class="c"><span class="th" style="width:128px;height:96px"></span><small>large</small></div>
+<div class="c"><span class="th" style="width:172px;height:128px"></span><small>xl</small></div>
+<div class="c"><span class="th" style="width:226px;height:168px"></span><small>2xl</small></div>
+<div class="c"><span class="th" style="width:270px;height:200px"></span><small>3xl</small></div>
+</div>
+<h3>thumbnail — empty &amp; with icon</h3>
+<div class="row">
+<div class="c"><span class="th e" style="width:48px;height:48px"><svg class="i"><use href="#img"/></svg></span><small>empty slim</small></div>
+<div class="c"><span class="th e" style="width:64px;height:64px"><svg class="i"><use href="#img"/></svg></span><small>empty small</small></div>
+<div class="c"><span class="th e" style="width:80px;height:80px"><svg class="i"><use href="#img"/></svg></span><small>empty medium</small></div>
+<div class="c"><span class="th e" style="width:96px;height:96px"><svg class="i"><use href="#img"/></svg></span><small>empty large</small></div>
+<div class="c"><span class="th" style="width:80px;height:80px"><i class="ic"><svg><use href="#img"/></svg></i></span><small>icon=true</small></div>
+</div>
+<h3>thumbnail/icon — 36px</h3>
+<div class="row">
+<div class="c"><span class="ti info"><svg><use href="#bag"/></svg></span><small>info</small></div>
+<div class="c"><span class="ti warning"><svg><use href="#bag"/></svg></span><small>warning</small></div>
+<div class="c"><span class="ti success"><svg><use href="#bag"/></svg></span><small>success</small></div>
+<div class="c"><span class="ti critical"><svg><use href="#bag"/></svg></span><small>critical</small></div>
+<div class="c"><span class="ti def"><svg><use href="#bag"/></svg></span><small>default</small></div>
+</div>
+</div>
+<div class="panel" data-theme="dark" id="dst"></div>
+<script>document.getElementById('dst').innerHTML=document.getElementById('src').innerHTML</script>

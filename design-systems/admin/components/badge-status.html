@@ -1,0 +1,125 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../tokens.css"><style>
+body{margin:0;padding:24px;font:600 15px/24px var(--font-sans);letter-spacing:-.01em;color:var(--color-text);background:var(--color-gray-1)}
+.panel{padding:24px;background:var(--color-bg-page);color:var(--color-text);border-radius:var(--radius-300);margin-bottom:16px}
+h3{font:600 13px/16px var(--font-sans);color:var(--color-text-subdued);margin:20px 0 12px}h3:first-child{margin-top:0}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}.c{display:flex;flex-direction:column;gap:8px;align-items:flex-start}.c small{font:500 12px/16px var(--font-sans);color:var(--color-text-subdued)}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+/* badge/status */
+.bs{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:4px 8px;border-radius:var(--radius-150);background:var(--color-bg-surface-disabled);color:var(--color-text);font:600 15px/24px var(--font-sans);box-sizing:border-box}
+.bs.sm{height:24px;padding:0 6px}.bs.success{background:var(--color-bg-success-subdued)}.bs.warning{background:var(--color-bg-warning-subdued)}.bs.info{background:var(--color-bg-info-subdued)}.bs.error{background:var(--color-bg-critical-subdued)}
+[data-theme="dark"] .bs.success{color:var(--color-bg-success)}[data-theme="dark"] .bs.warning{color:var(--color-bg-warning)}[data-theme="dark"] .bs.info{color:var(--color-bg-info)}[data-theme="dark"] .bs.error{color:var(--color-bg-critical)}
+.price{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+/* dots */
+.dot{width:10px;height:10px;border-radius:var(--radius-full);box-sizing:border-box;display:inline-block}
+.dot.noti{background:var(--color-bg-critical);border:1px solid var(--color-border-exclude)}.dot.online{background:var(--color-bg-success);border:1px solid var(--color-border-exclude)}.dot.new{background:var(--color-bg-active)}.dot.viewed{background:var(--color-bg-surface-disabled)}
+/* stacking */
+.st{display:inline-grid;place-items:center;border-radius:var(--radius-full);color:var(--color-text-on);box-sizing:border-box}
+.st.m{width:24px;height:24px;padding:4px}.st.s{width:16px;height:16px;padding:2px;font:700 10px/12px var(--font-sans)}.st svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.st.bag{background:var(--color-bg-success)}.st.like{background:var(--color-bg-critical)}.st.rate{background:var(--color-bg-warning);color:var(--color-text-on-warning)}.st.comment{background:var(--color-bg-active)}.st.add{background:var(--color-bg-surface-subdued)}.st.close{background:var(--color-bg-critical)}.st.num{background:var(--color-bg-active)}
+/* status chip */
+.chip{display:inline-flex;align-items:center;height:20px;padding:2px 8px;border-radius:var(--radius-100);background:var(--color-bg-surface-disabled);color:var(--color-text);font:600 12px/16px var(--font-sans);box-sizing:border-box}
+.chip.success{background:var(--color-bg-success-subdued);color:var(--color-text-success)}.chip.error{background:var(--color-bg-critical-subdued);color:var(--color-text-critical)}.chip.warning{background:var(--color-bg-warning-subdued);color:var(--color-text-warning)}
+.delta{display:inline-flex;align-items:center;gap:4px;height:20px;padding:2px 4px;border-radius:var(--radius-200);font:700 12px/16px var(--font-sans);box-sizing:border-box}
+.delta svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.delta.down{color:var(--color-text-critical)}.delta.up{color:var(--color-text-success)}
+.rating{display:inline-flex;align-items:center;gap:8px;color:var(--color-text-subdued)}.rating svg{color:var(--color-bg-warning);fill:var(--color-bg-warning);stroke:var(--color-bg-warning)}.rating.off svg{fill:none;stroke:var(--color-text-disabled);color:var(--color-text-disabled)}
+/* number bar */
+.nb{display:flex;align-items:center;gap:8px;width:96px;height:24px}.nb i{height:12px;border-radius:var(--radius-050);display:block}
+.nb.blue i{background:var(--color-bg-active)}.nb.red i{background:var(--color-bg-critical)}.nb.orange i{background:var(--color-bg-warning)}.nb.green i{background:var(--color-bg-success)}
+.seg{display:flex;gap:2px;width:337px;height:8px}.seg i{display:block;border-radius:var(--radius-050)}
+.prog{width:165px;height:2px;border-radius:var(--radius-100);background:var(--color-bg-surface-disabled)}.prog i{display:block;height:100%;border-radius:inherit}
+.ch{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:var(--radius-full);font:700 11px/1 var(--font-sans);color:var(--color-text-on)}
+[data-theme="dark"]{--color-bg-surface-hover:var(--color-bg-surface-subdued)}
+</style>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9z"/></symbol>
+<symbol id="bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></symbol>
+<symbol id="heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.600-7 10-7 10z"/></symbol>
+<symbol id="chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+<symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="up" viewBox="0 0 24 24"><path d="M7 14l5-5 5 5"/></symbol>
+<symbol id="down" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></symbol>
+</defs></svg>
+<div class="panel" id="src">
+<h3>badge/status — Default 32px</h3>
+<div class="row">
+<div class="c"><span class="bs">1,368</span><small>default</small></div>
+<div class="c"><span class="bs success">1,368</span><small>success</small></div>
+<div class="c"><span class="bs warning">1,368</span><small>warning</small></div>
+<div class="c"><span class="bs info">1,368</span><small>info</small></div>
+<div class="c"><span class="bs error">1,368</span><small>error</small></div>
+</div>
+<h3>badge/status — Small 24px</h3>
+<div class="row">
+<div class="c"><span class="bs sm">1,368</span><small>default</small></div>
+<div class="c"><span class="bs sm success">1,368</span><small>success</small></div>
+<div class="c"><span class="bs sm warning">1,368</span><small>warning</small></div>
+<div class="c"><span class="bs sm info">1,368</span><small>info</small></div>
+<div class="c"><span class="bs sm error">1,368</span><small>error</small></div>
+</div>
+<h3>Price &amp; discount</h3>
+<div class="row">
+<div class="price"><span class="bs sm info">$24.00</span><small style="font:500 12px var(--font-sans);color:var(--color-text-subdued)">discount=false</small></div>
+<div class="price"><span class="bs sm info">$24.00</span><span class="bs sm">-20%</span><small style="font:500 12px var(--font-sans);color:var(--color-text-subdued)">discount=true</small></div>
+</div>
+<h3>Notification dots</h3>
+<div class="row">
+<div class="c"><span class="dot noti"></span><small>has noti</small></div>
+<div class="c"><span class="dot online"></span><small>online avatar</small></div>
+<div class="c"><span class="dot new"></span><small>new item</small></div>
+<div class="c"><span class="dot viewed"></span><small>viewed</small></div>
+</div>
+<h3>Stacking icon badges — medium 24 / small 16</h3>
+<div class="row">
+<div class="c"><span class="st m bag"><svg><use href="#bag"/></svg></span><span class="st s bag"><svg><use href="#bag"/></svg></span><small>bag</small></div>
+<div class="c"><span class="st m like"><svg><use href="#heart"/></svg></span><span class="st s like"><svg><use href="#heart"/></svg></span><small>like</small></div>
+<div class="c"><span class="st m rate"><svg><use href="#star"/></svg></span><span class="st s rate"><svg><use href="#star"/></svg></span><small>rate</small></div>
+<div class="c"><span class="st m comment"><svg><use href="#chat"/></svg></span><span class="st s comment"><svg><use href="#chat"/></svg></span><small>comment</small></div>
+<div class="c"><span class="st m add"><svg><use href="#plus"/></svg></span><span class="st s add"><svg><use href="#plus"/></svg></span><small>add</small></div>
+<div class="c"><span class="st m close"><svg><use href="#x"/></svg></span><span class="st s close"><svg><use href="#x"/></svg></span><small>close</small></div>
+<div class="c"><span class="st m num">3</span><span class="st s num">3</span><small>number</small></div>
+</div>
+<h3>Status chips (status/active · status/method)</h3>
+<div class="row">
+<div class="c"><span class="chip success">Active</span><small>success</small></div>
+<div class="c"><span class="chip error">Error</span><small>error</small></div>
+<div class="c"><span class="chip warning">Pending</span><small>warning</small></div>
+<div class="c"><span class="chip">Draft</span><small>default</small></div>
+<div class="c"><span class="chip">Card</span><small>method</small></div>
+<div class="c"><span class="chip success">Paid</span><small>method success</small></div>
+</div>
+<h3>Compare % delta &amp; rating</h3>
+<div class="row">
+<div class="c"><span class="delta up">37.8%<svg><use href="#up"/></svg></span><small>up</small></div>
+<div class="c"><span class="delta down">37.8%<svg><use href="#down"/></svg></span><small>down</small></div>
+<div class="c"><span class="rating"><svg class="i"><use href="#star"/></svg>4.8 (87)</span><small>star=on</small></div>
+<div class="c"><span class="rating off"><svg class="i"><use href="#star"/></svg>No ratings</span><small>star=off</small></div>
+</div>
+<h3>Number bar — length 1–5</h3>
+<div class="row">
+<div class="c"><div class="nb blue"><span class="bs sm">31</span><i style="width:20px"></i></div><small>blue</small></div>
+<div class="c"><div class="nb red"><span class="bs sm">31</span><i style="width:36px"></i></div><small>red</small></div>
+<div class="c"><div class="nb orange"><span class="bs sm">31</span><i style="width:52px"></i></div><small>orange</small></div>
+<div class="c"><div class="nb green"><span class="bs sm">31</span><i style="width:68px"></i></div><small>green</small></div>
+</div>
+<h3>Source / viewer segmented bars</h3>
+<div class="row">
+<div class="c"><div class="seg"><i style="flex:132;background:var(--color-chart-3)"></i><i style="flex:31;background:var(--color-chart-4)"></i><i style="flex:170;background:var(--color-chart-5)"></i></div><small>source (bar) · length 3</small></div>
+<div class="c"><div class="seg"><i style="flex:90;background:var(--color-chart-1)"></i><i style="flex:60;background:var(--color-chart-2)"></i><i style="flex:120;background:var(--color-chart-6)"></i><i style="flex:40;background:var(--color-chart-4)"></i></div><small>viewer (bar) · length 4</small></div>
+</div>
+<h3>Progress bar — slim</h3>
+<div class="row">
+<div class="c"><div class="prog"><i style="width:70%;background:var(--color-bg-success)"></i></div><small>success</small></div>
+<div class="c"><div class="prog"><i style="width:40%;background:var(--color-bg-critical)"></i></div><small>danger</small></div>
+</div>
+<h3>Channel chips</h3>
+<div class="row">
+<div class="c"><span class="ch" style="background:var(--color-bg-active)">f</span><small>facebook</small></div>
+<div class="c"><span class="ch" style="background:var(--color-bg-info)">t</span><small>twitter</small></div>
+<div class="c"><span class="ch" style="background:var(--color-bg-surface-subdued)">T</span><small>tiktok</small></div>
+<div class="c"><span class="ch" style="background:var(--color-bg-warning);color:var(--color-text-on-warning)">a</span><small>amazon</small></div>
+</div>
+</div>
+<div class="panel" data-theme="dark" id="dst"></div>
+<script>document.getElementById('dst').innerHTML=document.getElementById('src').innerHTML</script>

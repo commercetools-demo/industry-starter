@@ -1,0 +1,80 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../tokens.css"><style>
+*{box-sizing:border-box}body{margin:0;padding:24px;font-family:var(--font-sans);color:var(--color-text);background:var(--color-bg-surface);display:flex;flex-direction:column;gap:16px}
+.panel{background:var(--color-bg-page);color:var(--color-text);padding:24px;border-radius:var(--radius-300);border:1px solid var(--color-border-subdued)}
+h3{font:600 15px/24px var(--font-sans);letter-spacing:var(--tracking-body-1);margin:0 0 12px}h3:not(:first-child){margin-top:24px}
+.grid{display:grid;grid-template-columns:repeat(3,360px);gap:16px 24px}.c{font:500 12px/16px var(--font-sans);color:var(--color-text-subdued);display:flex;flex-direction:column;gap:8px}
+svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.in{height:44px;display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--color-border);border-radius:var(--radius-300);background:var(--color-bg-surface);font:600 15px/24px var(--font-sans);letter-spacing:var(--tracking-body-1);color:var(--color-text)}
+.in input{all:unset;flex:1;min-width:0;font:inherit;color:inherit;caret-color:var(--color-bg-active)}.in input::placeholder{color:var(--color-text-disabled)}
+.in:hover{border-color:var(--color-border-hover)}.in:focus-within,.in.filled{border-color:var(--color-border-hover)}.in.err{border-color:var(--color-border-critical)}
+.in.dis{background:var(--color-bg-surface-disabled);border-color:transparent;color:var(--color-text-disabled)}
+.in .ph{color:var(--color-text-disabled);flex:1}.caret{width:2px;height:24px;background:var(--color-bg-active);border-radius:var(--radius-050)}
+.in svg{color:var(--color-text-subdued)}
+.act{height:36px;margin:-6px -8px -6px 0;padding:8px 12px;border-radius:var(--radius-200);border:1px solid var(--color-border-on);background:var(--color-bg-brand);color:var(--color-text-on);font:700 13px/20px var(--font-sans);cursor:pointer}
+.tag{display:inline-flex;align-items:center;gap:8px;height:36px;padding:8px 12px;border-radius:var(--radius-200);background:var(--color-bg-brand);border:1px solid var(--color-border-on);color:var(--color-text-on);font:700 13px/20px var(--font-sans)}.tag svg{width:16px;height:16px}
+.in.tags{padding:4px;gap:8px}.in.tags .ph{font-size:14px}
+.stepper{display:flex;gap:4px;margin-left:auto}.stepper button{width:28px;height:28px;border:0;border-radius:var(--radius-200);background:var(--color-bg-surface-hover);color:var(--color-text);cursor:pointer;padding:0;display:grid;place-items:center}.stepper svg{width:16px;height:16px}
+.area{width:360px;border:1px solid var(--color-border);border-radius:var(--radius-300);background:var(--color-bg-surface);overflow:hidden}
+.area .tb{display:flex;justify-content:space-between;align-items:center;padding:12px;color:var(--color-text-subdued)}.area .tb div{display:flex;gap:12px}.area svg{width:20px;height:20px}
+.area .body{height:112px;margin:0;padding:12px;background:var(--color-bg-surface-disabled);position:relative;font:600 15px/24px var(--font-sans);color:var(--color-text-disabled)}
+.grip{position:absolute;right:8px;bottom:8px;display:flex;flex-direction:column;align-items:flex-end;gap:2px}.grip i{height:2px;border-radius:2px;background:var(--color-text-subdued)}
+.drop{width:360px;height:160px;display:grid;place-items:center;background:var(--color-bg-surface-disabled);border:1px dashed var(--color-border);border-radius:var(--radius-300)}
+.drop .btn{display:inline-flex;gap:8px;align-items:center;height:44px;padding:10px 18px;border-radius:var(--radius-300);border:1px solid var(--color-border);background:var(--color-bg-surface);color:var(--color-text);font:700 15px/24px var(--font-sans);box-shadow:var(--shadow-button);cursor:pointer}
+.lbl{display:flex;align-items:center;gap:8px;margin-bottom:8px}.lbl b{font:600 14px/24px var(--font-sans);letter-spacing:var(--tracking-body-2)}.lbl svg{width:20px;height:20px;color:var(--color-text-subdued)}
+.chip{margin-left:auto;font:600 12px/16px var(--font-sans);padding:2px 8px;border-radius:var(--radius-100);background:var(--color-bg-surface-disabled);color:var(--color-text)}
+.msg{font:500 12px/16px var(--font-sans);color:var(--color-text-critical);margin-top:8px}
+.otp{display:flex;gap:16px}.otp .c{align-items:center}.otp .c>div{width:56px;height:72px;border-radius:var(--radius-300);display:grid;place-items:center;font:600 48px/48px var(--font-sans);background:var(--color-bg-surface);border:1px solid var(--color-border);color:var(--color-text)}
+.otp .w{border-color:var(--color-border-hover)}.otp .p{color:var(--color-text-disabled)}.otp .ok{background:var(--color-bg-surface-subdued);border-color:transparent}.otp .bad{background:var(--color-bg-critical-subdued);border-color:transparent;color:var(--color-text-critical)}
+.sbox{position:relative;width:384px;height:520px}.sdrop{position:absolute;top:0;left:0;width:384px;background:var(--color-bg-surface);border-radius:var(--radius-400);padding:12px;box-shadow:var(--shadow-dropdown);display:flex;flex-direction:column;gap:12px}
+.sdrop small{font:600 13px/16px var(--font-sans);color:var(--color-text-subdued);padding:0 12px;display:block;margin:8px 0 4px}
+.sdrop hr{border:0;height:1px;background:var(--color-border-subdued);margin:0}
+.row72{height:72px;border-radius:var(--radius-300);display:flex;align-items:center;gap:16px;padding:12px;cursor:pointer}.row72:hover{background:var(--color-bg-surface-hover)}
+.row72 .ic{width:48px;height:48px;border-radius:var(--radius-200);background:var(--color-bg-surface-subdued);display:grid;place-items:center;flex:none}
+.row72 b{font:700 15px/24px var(--font-sans);display:block}.row72 span{font:500 13px/16px var(--font-sans);color:var(--color-text-subdued)}
+.dark-top{background:var(--color-bg-topbar);padding:20px;border-radius:var(--radius-300);margin-bottom:12px;width:424px}.dark-top .in{background:var(--color-bg-brand);color:var(--color-text-on)}
+</style>
+<body><template id="t">
+<h3>Input — states</h3>
+<div class="grid">
+ <div class="c"><label class="in"><span class="ph">Placeholder</span></label>placeholder</div>
+ <div class="c"><label class="in filled"><input value="bredar@ui8.net"></label>filled / focus (caret)</div>
+ <div class="c"><div class="in filled"><span>bredar@ui8.net</span><i class="caret"></i></div>filled + caret</div>
+ <div class="c"><label class="in err"><span class="ph" style="color:var(--color-text)">name@</span></label>error</div>
+ <div class="c"><label class="in dis"><span>Disabled</span></label>disabled</div>
+ <div class="c"><label class="in"><span class="ph">Hover me</span></label>hover (live)</div>
+ <div class="c"><label class="in"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/></svg><input placeholder="Your email"></label>prefix icon</div>
+ <div class="c"><label class="in"><input placeholder="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.500-4.500"/></svg></label>suffix icon</div>
+ <div class="c"><label class="in"><svg viewBox="0 0 24 24"><path d="M12 3v18M16 7H10a3 3 0 000 6h4a3 3 0 010 6H8"/></svg><input placeholder="0.00"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></label>prefix + suffix</div>
+ <div class="c"><label class="in"><input placeholder="Promo code"><button class="act">Apply</button></label>action</div>
+ <div class="c"><label class="in"><input value="24" inputmode="numeric"><span class="stepper"><button><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button><button><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></span></label>number</div>
+ <div class="c"><div class="in tags filled"><span class="tag">Gadgets<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span class="ph">Enter tags to describe your item</span></div>tag input</div>
+</div>
+<h3>Textarea · upload</h3>
+<div class="grid" style="grid-template-columns:repeat(2,360px)">
+ <div class="c"><div class="area"><div class="tb"><div><svg viewBox="0 0 24 24"><path d="M7 5h6a3.500 3.500 0 010 7H7zM7 12h7a3.500 3.500 0 010 7H7z"/></svg><svg viewBox="0 0 24 24"><path d="M10 5h8M6 19h8M14 5l-4 14"/></svg><svg viewBox="0 0 24 24"><path d="M7 4v8a5 5 0 0010 0V4M5 20h14"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M9 14c1 1.500 5 1.500 6 0"/></svg><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 005.500 0l3-3a4 4 0 00-5.500-5.500l-1 1M14 10a4 4 0 00-5.500 0l-3 3a4 4 0 005.500 5.500l1-1"/></svg><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4.500 6h.01M4.500 12h.01M4.500 18h.01"/></svg></div><div><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div><div class="body">Write a description…<span class="grip"><i style="width:6px"></i><i style="width:12px"></i></span></div></div>textarea + toolbar</div>
+ <div class="c"><div class="drop"><button class="btn"><svg viewBox="0 0 24 24"><path d="M12 16V5M7 9l5-5 5 5M5 19h14"/></svg>Upload image</button></div>upload dropzone</div>
+</div>
+<h3>Labeled field</h3>
+<div class="grid" style="grid-template-columns:repeat(2,360px)">
+ <div class="c"><div><div class="lbl"><b>Product title</b><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 11v5M12 8h.01"/></svg><span class="chip">Optional</span></div><label class="in"><input placeholder="Enter title"></label></div>default</div>
+ <div class="c"><div><div class="lbl"><b>Product title</b><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 11v5M12 8h.01"/></svg></div><label class="in err"><input value="<b>Title</b>"></label><div class="msg">Maximum 100 characters. No HTML or emoji allowed</div></div>error</div>
+</div>
+<h3>Verify code</h3>
+<div class="otp"><div class="c"><div class="p">0</div>placeholder</div><div class="c"><div class="w">8</div>waiting</div><div class="c"><div class="ok">8</div>correct</div><div class="c"><div class="bad">8</div>wrong</div></div>
+<h3>Search box</h3>
+<div class="grid" style="grid-template-columns:424px 424px;align-items:start">
+ <div><div class="dark-top"><label class="in" style="width:360px"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.500-4.500"/></svg><input placeholder="Search" style="color:var(--color-text-on)"></label></div><div class="c">search box · top bar (default)</div></div>
+ <div class="sbox"><div class="sdrop">
+  <label class="in filled"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.500-4.500"/></svg><input value="wallpaper"></label>
+  <div><small>Recent search</small>
+   <div class="row72"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span><div><b>3D dark mode wallpaper</b><span>Product</span></div></div>
+   <div class="row72"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span><div><b>Gradient pack</b><span>Product</span></div></div></div>
+  <hr>
+  <div><small>Suggestions</small>
+   <div class="row72"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.500-4.500"/></svg></span><div><b>wallpaper abstract</b><span>Suggestion</span></div></div>
+   <div class="row72"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.500-4.500"/></svg></span><div><b>wallpaper 4k</b><span>Suggestion</span></div></div></div>
+ </div></div>
+</div>
+</template>
+<script>const t=document.getElementById('t');['light','dark'].forEach(m=>{const d=document.createElement('div');d.className='panel';if(m=='dark')d.dataset.theme='dark';d.appendChild(t.content.cloneNode(true));document.body.appendChild(d)})</script>

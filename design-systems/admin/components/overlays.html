@@ -1,0 +1,109 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../tokens.css"><style>
+body{margin:0;padding:24px;font:600 15px/24px var(--font-sans);letter-spacing:-.01em;color:var(--color-text);background:var(--color-gray-1)}
+.panel{padding:24px;background:var(--color-bg-page);color:var(--color-text);border-radius:var(--radius-300);margin-bottom:16px}
+h3{font:600 13px/16px var(--font-sans);color:var(--color-text-subdued);margin:20px 0 12px}h3:first-child{margin-top:0}
+.row{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}.c{display:flex;flex-direction:column;gap:8px;align-items:flex-start}.c small{font:500 12px/16px var(--font-sans);color:var(--color-text-subdued)}
+button{font:inherit;letter-spacing:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}svg.s{width:20px;height:20px}svg.xs{width:16px;height:16px}
+:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:10px 18px;border-radius:var(--radius-300);border:1px solid var(--color-border-on);background:var(--color-bg-brand);color:var(--color-text-on);font:700 15px/24px var(--font-sans);box-shadow:var(--shadow-button);box-sizing:border-box;white-space:nowrap}
+.btn:hover{background:var(--color-bg-brand-hover)}.btn.sec{background:var(--color-bg-surface);color:var(--color-text);border-color:var(--color-border)}.btn.sec:hover{background:var(--color-bg-surface-hover);border-color:var(--color-border-hover)}.btn.f{flex:1}
+.ib{width:32px;height:32px;border-radius:var(--radius-full);display:grid;place-items:center}.ib:hover{background:var(--color-bg-surface-hover)}
+.hr{height:1px;background:var(--color-border-subdued);border-radius:1px}
+/* tooltip + toast */
+.tip{display:inline-block;background:var(--color-bg-surface);color:var(--color-text);padding:2px 8px;border-radius:var(--radius-100);font:600 12px/16px var(--font-sans);box-shadow:var(--shadow-tooltip);white-space:nowrap}
+.toast{display:inline-flex;align-items:center;gap:16px;padding:8px;background:var(--color-bg-topbar);color:var(--color-text-on);border-radius:var(--radius-200);font:600 12px/24px var(--font-sans);box-shadow:var(--shadow-tooltip)}
+.toast .ib{width:24px;height:24px;color:inherit}.toast .ib:hover{background:var(--color-border-on-subdued)}.toast .ok{display:flex;gap:8px;align-items:center}.toast .ok svg{color:var(--color-bg-success)}
+.scrim{width:280px;height:140px;border-radius:var(--radius-200);background:linear-gradient(135deg,var(--color-chart-3),var(--color-chart-5));position:relative;overflow:hidden}.scrim i{position:absolute;inset:0;background:var(--color-overlay)}.scrim span{position:absolute;inset:0;display:grid;place-items:center;color:var(--color-text-on);font:600 13px var(--font-sans)}
+/* modal */
+.modal{background:var(--color-bg-surface);border-radius:var(--radius-400);box-shadow:var(--shadow-modal);padding:24px;display:flex;flex-direction:column;gap:24px;box-sizing:border-box}
+.mh{display:flex;align-items:center;gap:8px}.mh h4{flex:1;margin:0;font:600 20px/32px var(--font-sans);letter-spacing:-.02em}
+.two{display:flex;gap:24px;align-items:stretch}.two>*{flex:1;min-width:0}
+.well{background:var(--color-bg-surface-subdued);border-radius:var(--radius-300);padding:24px;display:flex;flex-direction:column;gap:20px}
+.kv{display:flex;justify-content:space-between;gap:12px;font-size:14px}.kv span:first-child{color:var(--color-text-subdued);font-weight:500}
+.form{display:flex;flex-direction:column;gap:20px;padding:24px 0}.lbl{font:600 14px/24px var(--font-sans);display:block;margin-bottom:8px}
+.fld{height:44px;border:1px solid var(--color-border);border-radius:var(--radius-300);background:var(--color-bg-surface);display:flex;align-items:center;padding:10px 12px;box-sizing:border-box;color:var(--color-text-disabled);gap:10px}.fld.t{height:96px;align-items:flex-start}
+.rad{display:flex;align-items:center;gap:12px;font-size:14px}.rad i{width:24px;height:24px;border-radius:var(--radius-150);border:2px solid var(--color-border);box-sizing:border-box;background:var(--color-bg-surface)}.rad i.on{background:var(--color-bg-active);border-color:var(--color-bg-active);position:relative}.rad i.on:after{content:"";position:absolute;inset:6px;border-radius:var(--radius-full);background:var(--color-text-on)}
+.post{display:flex;gap:12px;align-items:center}.av{width:44px;height:44px;border-radius:var(--radius-full);background:var(--color-chart-1);display:grid;place-items:center;font:600 14px var(--font-sans);color:var(--color-text-on-info);flex:none;position:relative}.av.a2{background:var(--color-chart-2)}.av.a3{background:var(--color-chart-4)}.av.a4{background:var(--color-chart-5)}
+.img{height:200px;border-radius:var(--radius-200);background:linear-gradient(135deg,var(--color-chart-3),var(--color-chart-5))}
+/* popover */
+.pop{width:384px;background:var(--color-bg-surface);border-radius:var(--radius-400);box-shadow:var(--shadow-popover);backdrop-filter:blur(var(--blur-surface));padding:12px;display:flex;flex-direction:column;gap:12px;box-sizing:border-box}
+.menu{width:240px;padding:0}.menu .mi{display:flex;align-items:center;gap:8px;height:40px;padding:8px 12px;border-radius:var(--radius-300);font-size:14px;color:var(--color-text-subdued);width:100%;text-align:left;box-sizing:border-box}.menu .mi:hover,.menu .mi.hov{background:var(--color-bg-surface-hover);color:var(--color-text)}.menu .mi.on{color:var(--color-text-active)}.menu{padding:8px}
+.sec-l{font:600 13px/16px var(--font-sans);color:var(--color-text-subdued);padding:0 12px}
+/* list items */
+.li{display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--radius-300);box-sizing:border-box;cursor:pointer}.li:hover,.li.hov{background:var(--color-bg-surface-hover)}
+.li .t{flex:1;min-width:0;display:flex;flex-direction:column}.li .t .n{display:flex;gap:4px;align-items:center;font-weight:700;font-size:15px;line-height:24px;white-space:nowrap}.li .t .n em{font-style:normal;color:var(--color-text-disabled);font-weight:500}
+.li .t .m{font-weight:500;font-size:15px;line-height:24px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.li .t .m b{font-weight:700}.li .t .m em{font-style:normal;color:var(--color-text-disabled)}
+.li .time{display:flex;gap:12px;align-items:center;font-size:13px;color:var(--color-text-disabled);flex:none}.nd{width:10px;height:10px;border-radius:var(--radius-full);background:var(--color-bg-active);display:inline-block}.nd.v{background:none}
+.li.n3{width:368px}.li.m3{width:340px}.li.u{width:327px;height:72px}
+.dot{position:absolute;right:0;bottom:0;width:10px;height:10px;border-radius:var(--radius-full);background:var(--color-bg-success);border:1px solid var(--color-border-exclude);box-sizing:border-box}
+.mini{position:absolute;right:-4px;bottom:-4px;width:16px;height:16px;border-radius:var(--radius-full);box-shadow:0 0 0 2px var(--color-border-exclude);display:grid;place-items:center;color:var(--color-text-on);padding:2px;box-sizing:border-box}.mini svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mini.comment{background:var(--color-bg-active)}.mini.like{background:var(--color-bg-critical)}.mini.purchase{background:var(--color-bg-success)}.mini.rate{background:var(--color-bg-warning);color:var(--color-text-on-warning)}
+.u .t .n{font-size:15px}.u .t .m{font-size:13px;color:var(--color-text-subdued)}
+[data-theme="dark"]{--color-bg-surface-hover:var(--color-bg-surface-subdued)}
+</style>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="more" viewBox="0 0 24 24"><circle cx="5.500" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18.500" cy="12" r="1"/></symbol>
+<symbol id="cc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500"/><path d="M8.500 12.500l2.500 2.500 4.500-5"/></symbol>
+<symbol id="bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></symbol>
+<symbol id="heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.600-7 10-7 10z"/></symbol>
+<symbol id="chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+<symbol id="star" viewBox="0 0 24 24"><path d="M12 3.5l2.600 5.300 5.900.9-4.300 4.100 1 5.800L12 16.900 6.800 19.600l1-5.800L3.500 9.700l5.900-.9z"/></symbol>
+<symbol id="caret" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></symbol>
+<symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8.500" r="3.500"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></symbol>
+<symbol id="gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.600 5.600l2.100 2.100M16.300 16.300l2.100 2.100M5.600 18.400l2.100-2.100M16.300 7.700l2.100-2.100"/></symbol>
+<symbol id="out" viewBox="0 0 24 24"><path d="M10 5H5v14h5M14 8l4 4-4 4M18 12H9"/></symbol>
+<symbol id="img" viewBox="0 0 24 24"><rect x="3.500" y="4.500" width="17" height="15" rx="2.500"/><circle cx="9" cy="10" r="1.500"/><path d="M4 17l5-4 4 3 3-2 4 3"/></symbol>
+</defs></svg>
+<div class="panel" id="src">
+<h3>Tooltip · toast alert · overlay scrim</h3>
+<div class="row">
+<div class="c"><span class="tip">Tool-tip goes here</span><small>tooltip</small></div>
+<div class="c"><div class="toast"><button class="ib" aria-label="Close"><svg class="i xs"><use href="#x"/></svg></button><span class="ok">Products deleted<svg class="i"><use href="#cc"/></svg></span></div><small>toast alert</small></div>
+<div class="c"><div class="scrim"><i></i><span>overlay · --color-overlay</span></div><small>overlay scrim</small></div>
+</div>
+<h3>Popover / dropdown menu</h3>
+<div class="row">
+<div class="c"><div class="pop menu"><button class="mi">Menu item</button><button class="mi hov">Menu item</button><button class="mi on">Menu item</button><div class="hr"></div><button class="mi">Menu item</button></div><small>shadow-popover · blur · hover · active</small></div>
+<div class="c"><div class="pop"><div class="sec-l">Recent search</div><div class="li"><div class="t"><span class="n">Wallpaper bundle</span></div></div><div class="li"><div class="t"><span class="n">Dark UI kit</span></div></div><div class="hr"></div><div class="sec-l">Suggestions</div><div class="li hov"><div class="t"><span class="n">Icon pack</span></div></div></div><small>search dropdown panel</small></div>
+</div>
+<h3>Modal — promote post</h3>
+<div class="row"><div class="c"><div class="modal" style="width:560px">
+<div class="mh"><h4>Promote post</h4><button class="ib" aria-label="Close"><svg class="i s"><use href="#x"/></svg></button></div>
+<div class="post"><span class="av">AB</span><span class="av a2">JC</span></div>
+<div style="font:600 20px/32px var(--font-sans);letter-spacing:-.02em">Fleet coded version has been released 🔥</div>
+<div class="hr"></div><div class="img"></div>
+<div class="row" style="gap:24px;justify-content:space-between;flex-wrap:nowrap"><button class="btn sec f">Save draft</button><button class="btn f">Post now</button></div>
+</div><small>Breakpoint=all · State=Posting</small></div></div>
+<h3>Modal — refund (two column)</h3>
+<div class="row"><div class="c"><div class="modal" style="width:896px">
+<div class="mh"><h4>Refund request</h4><button class="ib" aria-label="Close"><svg class="i s"><use href="#x"/></svg></button></div>
+<div class="two">
+<div class="well"><div class="post"><span class="av a3">KM</span><div><div style="font-weight:700">Kristin Watson</div><div style="font:500 13px var(--font-sans);color:var(--color-text-subdued)">Order #4821</div></div></div><div class="hr"></div>
+<div class="kv"><span>Product</span><span>3D dark mode wallpaper</span></div><div class="kv"><span>Requested</span><span>Apr 11, 2023</span></div><div class="kv"><span>Amount</span><span>$128.00</span></div></div>
+<div class="form" style="padding:24px 0 0"><div><span class="lbl">Refund reason</span><div class="rad"><i class="on"></i>Not as described</div></div><div class="rad"><i></i>Duplicate purchase</div><div class="hr"></div><div><span class="lbl">Message to customer</span><div class="fld t">Write a short note…</div></div></div>
+</div>
+<div class="row" style="justify-content:flex-end;gap:8px"><button class="btn sec">Decline</button><button class="btn">Approve refund</button></div>
+</div><small>Breakpoint=Desktop &amp; Tablet</small></div></div>
+<h3>Notification items — default · hovered</h3>
+<div class="row" style="gap:8px">
+<div class="c"><div class="li n3"><span class="av a4" style="width:44px">BS<i class="mini comment"><svg><use href="#chat"/></svg></i></span><div class="t"><span class="n">Brooklyn Simmons <em>cooper</em></span><span class="m"><b>3D dark mode wallpaper</b> <em>Commented</em></span></div><span class="time"><span class="nd"></span></span></div><small>comment</small></div>
+<div class="c"><div class="li n3"><span class="av">BS<i class="mini like"><svg><use href="#heart"/></svg></i></span><div class="t"><span class="n">Brooklyn Simmons</span><span class="m"><b>3D dark mode wallpaper</b> <em>Liked</em></span></div><span class="time"><span class="nd v"></span></span></div><small>like</small></div>
+<div class="c"><div class="li n3 hov"><span class="av a3">BS<i class="dot"></i><i class="mini purchase"><svg><use href="#bag"/></svg></i></span><div class="t"><span class="n">Brooklyn Simmons <em>cooper</em></span><span class="m"><b>3D dark mode wallpaper</b> <em>Purchased</em></span></div><span class="time"><span class="nd"></span></span></div><small>purchase · hovered</small></div>
+<div class="c"><div class="li n3 hov"><span class="av a2">BS<i class="mini rate"><svg><use href="#star"/></svg></i></span><div class="t"><span class="n">Brooklyn Simmons</span><span class="m"><b>3D dark mode wallpaper</b> <em>Rated 5.0</em></span></div><span class="time"><span class="nd v"></span></span></div><small>rate · hovered</small></div>
+</div>
+<h3>Message items — viewed/online × default/hovered</h3>
+<div class="row" style="gap:8px">
+<div class="c"><div class="li m3"><span class="av">AB<i class="dot"></i></span><div class="t"><span class="n">Annette Black</span><span class="m">When do you release the coded…</span></div><span class="time">Apr 11<span class="nd"></span></span></div><small>unread · online</small></div>
+<div class="c"><div class="li m3"><span class="av a2">JC</span><div class="t"><span class="n" style="font-weight:600">Jacob Jones</span><span class="m" style="color:var(--color-text-subdued)">Thanks, that worked!</span></div><span class="time">Apr 10<span class="nd v"></span></span></div><small>viewed · offline</small></div>
+<div class="c"><div class="li m3 hov"><span class="av">AB<i class="dot"></i></span><div class="t"><span class="n">Annette Black</span><span class="m">When do you release the coded…</span></div><span class="time">Apr 11<span class="nd"></span></span></div><small>unread · online · hovered</small></div>
+<div class="c"><div class="li m3 hov"><span class="av a2">JC</span><div class="t"><span class="n" style="font-weight:600">Jacob Jones</span><span class="m" style="color:var(--color-text-subdued)">Thanks, that worked!</span></div><span class="time">Apr 10<span class="nd v"></span></span></div><small>viewed · hovered</small></div>
+</div>
+<h3>User-menu item</h3>
+<div class="row" style="gap:8px"><div class="c"><div class="li u"><span class="av a3">AB</span><div class="t"><span class="n">Annette Black</span><span class="m">annette@bredar.com</span></div><svg class="i s"><use href="#caret"/></svg></div><small>default (hover me)</small></div>
+<div class="c"><div class="li u hov"><span class="av a3">AB</span><div class="t"><span class="n">Annette Black</span><span class="m">annette@bredar.com</span></div><svg class="i s"><use href="#caret"/></svg></div><small>active</small></div></div>
+</div>
+<div class="panel" data-theme="dark" id="dst"></div>
+<script>document.getElementById('dst').innerHTML=document.getElementById('src').innerHTML</script>

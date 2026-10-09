@@ -1,0 +1,57 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../tokens.css"><style>
+*{box-sizing:border-box}body{margin:0;padding:24px;font-family:var(--font-sans);color:var(--color-text);background:var(--color-bg-surface);display:flex;flex-direction:column;gap:16px}
+.panel{background:var(--color-bg-page);color:var(--color-text);padding:24px;border-radius:var(--radius-300);border:1px solid var(--color-border-subdued)}
+h3{font:600 15px/24px var(--font-sans);letter-spacing:var(--tracking-body-1);margin:0 0 12px}h3:not(:first-child){margin-top:24px}
+.row{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}.c{font:500 12px/16px var(--font-sans);color:var(--color-text-subdued);display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ad{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:8px 12px;border-radius:var(--radius-200);border:1px solid var(--color-border);background:var(--color-bg-surface);color:var(--color-text);font:700 13px/20px var(--font-sans);box-shadow:var(--shadow-button);cursor:pointer}
+.ad:hover,.ad.hov{background:var(--color-bg-surface-hover);border-color:var(--color-border-hover)}.ad.on{border-color:var(--color-border-hover)}.ad:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.ad.full{width:185px;justify-content:space-between}
+.menu{background:var(--color-bg-surface);border-radius:var(--radius-400);box-shadow:var(--shadow-dropdown);padding:8px;display:flex;flex-direction:column;width:240px;backdrop-filter:blur(var(--blur-surface))}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:8px;height:40px;padding:8px 12px;border-radius:var(--radius-300);font:600 14px/24px var(--font-sans);letter-spacing:var(--tracking-body-2);color:var(--color-text-subdued);cursor:pointer}
+.opt:hover,.opt.hov{background:var(--color-bg-surface-hover);color:var(--color-text)}.opt.act{color:var(--color-text-active);font-size:15px}
+.opt svg{color:currentColor}.menu.wide{width:624px}
+.lbl{font:600 14px/24px var(--font-sans);letter-spacing:var(--tracking-body-2);margin-bottom:8px}
+.sel{display:flex;align-items:center;justify-content:space-between;height:40px;padding:8px 12px;border:1px solid var(--color-border);border-radius:var(--radius-300);background:var(--color-bg-surface);font:600 14px/24px var(--font-sans);color:var(--color-text);cursor:pointer;width:100%}
+.sel:hover,.sel.drop{border-color:var(--color-border-hover)}.sel.ph{color:var(--color-text-disabled)}
+.form{width:624px;position:relative}.form .menu{margin-bottom:8px}.form.dropup{display:flex;flex-direction:column}
+.stars{display:flex;gap:2px;color:var(--color-bg-warning)}.stars svg{fill:currentColor;width:16px;height:16px}.stars svg.off{fill:none;color:var(--color-text-disabled)}
+</style>
+<body><template id="t">
+<h3>Action dropdown</h3>
+<div class="row" style="align-items:center">
+ <div class="c"><button class="ad">All time<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>default</div>
+ <div class="c"><button class="ad hov">All time<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>hovered</div>
+ <div class="c"><button class="ad on">All time<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>active</div>
+ <div class="c"><button class="ad full">Recent<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>full width</div>
+</div>
+<h3>Option list item · action list item</h3>
+<div class="row">
+ <div class="c"><div class="menu">
+  <div class="opt">Menu item</div><div class="opt hov">Menu item</div><div class="opt act">Menu item</div></div>icons off: default · hovered · active</div>
+ <div class="c"><div class="menu">
+  <div class="opt">Menu item<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="opt hov">Menu item<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="opt act">Menu item<svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></div></div>icons on: default · hovered · active</div>
+ <div class="c"><div class="menu">
+  <div class="opt"><span style="display:flex;gap:8px;align-items:center"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Edit</span></div>
+  <div class="opt hov"><span style="display:flex;gap:8px;align-items:center"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 011-1h9"/></svg>Duplicate</span></div>
+  <div class="opt"><span style="display:flex;gap:8px;align-items:center;color:var(--color-text-critical)"><svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg>Delete</span></div></div>action list</div>
+</div>
+<h3>Select form</h3>
+<div class="row">
+ <div class="c"><div class="form" style="width:300px"><div class="lbl">Sort by</div><div class="sel ph">Select<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div></div>default</div>
+ <div class="c"><div class="form" style="width:300px"><div class="lbl">Sort by</div><div class="sel">Newest<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div></div>selected</div>
+</div>
+<div class="row" style="margin-top:16px">
+ <div class="c"><div class="form"><div class="lbl">Sort by</div><div class="sel drop">Newest<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></div>
+  <div class="menu wide" style="margin-top:8px"><div class="opt act">Newest<svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></div><div class="opt hov">Oldest</div><div class="opt">Most popular</div><div class="opt">Price: low to high</div></div></div>drop state · sort by</div>
+</div>
+<div class="row" style="margin-top:16px">
+ <div class="c"><div class="form" style="width:360px"><div class="lbl">Rating</div><div class="sel drop">4 stars &amp; up<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></div>
+  <div class="menu" style="margin-top:8px;width:360px">
+   <div class="opt"><span class="stars"><svg viewBox="0 0 24 24"><path d="M12 4l2.500 5 5.500.800-4 3.900.900 5.500L12 16.500 7.100 19.200 8 13.700 4 9.800l5.500-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 4l2.500 5 5.500.800-4 3.900.900 5.500L12 16.500 7.100 19.200 8 13.700 4 9.800l5.500-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 4l2.500 5 5.500.800-4 3.900.900 5.500L12 16.500 7.100 19.200 8 13.700 4 9.800l5.500-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 4l2.500 5 5.500.800-4 3.900.900 5.500L12 16.500 7.100 19.200 8 13.700 4 9.800l5.500-.8z"/></svg><svg class="off" viewBox="0 0 24 24"><path d="M12 4l2.500 5 5.500.800-4 3.900.900 5.500L12 16.500 7.100 19.200 8 13.700 4 9.800l5.500-.8z"/></svg></span>&amp; up</div>
+   <div class="opt hov"><span class="stars"><svg viewBox="0 0 24 24"><path d="M12 4l2.500 5 5.500.800-4 3.900.900 5.500L12 16.500 7.100 19.200 8 13.700 4 9.800l5.500-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 4l2.500 5 5.500.800-4 3.900.900 5.500L12 16.500 7.100 19.200 8 13.700 4 9.800l5.500-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 4l2.500 5 5.500.800-4 3.900.900 5.500L12 16.500 7.100 19.200 8 13.700 4 9.800l5.500-.8z"/></svg><svg class="off" viewBox="0 0 24 24"><path d="M12 4l2.500 5 5.500.800-4 3.900.900 5.500L12 16.500 7.100 19.200 8 13.700 4 9.800l5.500-.8z"/></svg><svg class="off" viewBox="0 0 24 24"><path d="M12 4l2.500 5 5.500.800-4 3.900.900 5.500L12 16.500 7.100 19.200 8 13.700 4 9.800l5.500-.8z"/></svg></span>&amp; up</div>
+   <div class="opt act">All ratings<svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></div></div></div>drop state · rating</div>
+</div>
+</template>
+<script>const t=document.getElementById('t');['light','dark'].forEach(m=>{const d=document.createElement('div');d.className='panel';if(m=='dark')d.dataset.theme='dark';d.appendChild(t.content.cloneNode(true));document.body.appendChild(d)})</script>

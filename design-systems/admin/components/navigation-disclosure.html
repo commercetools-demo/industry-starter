@@ -1,0 +1,98 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../tokens.css"><style>
+body{margin:0;padding:24px;font:600 15px/24px var(--font-sans);letter-spacing:-.01em;color:var(--color-text);background:var(--color-gray-1)}
+.panel{padding:24px;background:var(--color-bg-page);color:var(--color-text);border-radius:var(--radius-300);margin-bottom:16px}
+h3{font:600 13px/16px var(--font-sans);color:var(--color-text-subdued);margin:20px 0 12px}h3:first-child{margin-top:0}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}.c{display:flex;flex-direction:column;gap:8px;align-items:flex-start}.c small{font:500 12px/16px var(--font-sans);color:var(--color-text-subdued)}
+button{font:inherit;letter-spacing:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}svg.s{width:20px;height:20px}
+:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+/* buttons (local copies) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:10px 18px;border-radius:var(--radius-300);border:1px solid var(--color-border-on);background:var(--color-bg-brand);color:var(--color-text-on);font:700 15px/24px var(--font-sans);box-shadow:var(--shadow-button);box-sizing:border-box;white-space:nowrap}
+.btn:hover{background:var(--color-bg-brand-hover)}.btn.sm{height:36px;padding:8px 12px;border-radius:var(--radius-200);font-size:13px}
+.btn.sec{background:var(--color-bg-surface);color:var(--color-text);border-color:var(--color-border)}.btn.sec:hover{background:var(--color-bg-surface-hover);border-color:var(--color-border-hover)}
+.ib{width:36px;height:36px;border-radius:var(--radius-full);display:grid;place-items:center}.ib:hover{background:var(--color-bg-surface-hover)}.ib.l{width:44px;height:44px}.ib.on{background:var(--color-bg-surface-hover)}
+/* tabs */
+.tab{height:40px;padding:8px 16px;border-radius:var(--radius-200);color:var(--color-text-subdued);box-sizing:border-box;display:inline-flex;align-items:center;white-space:nowrap}
+.tab:hover{background:var(--color-bg-surface-hover);color:var(--color-text)}.tab.on{background:var(--color-bg-surface-hover);color:var(--color-text)}
+.tabs{display:flex;gap:8px}.tabs.v{flex-direction:column;width:240px}.tabs.v .tab{justify-content:flex-start}
+.seg2{display:flex;gap:12px}.seg2 .sw{width:40px;height:36px;padding:8px;border-radius:var(--radius-200);display:grid;place-items:center;box-sizing:border-box;color:var(--color-text-subdued)}.seg2 .sw.on{background:var(--color-bg-surface);box-shadow:var(--shadow-button);color:var(--color-text)}
+/* pagination */
+.pg{display:flex;gap:8px;justify-content:center;align-items:center;padding:8px 0;width:420px}
+.pg .ib.l{font:600 15px}.pg .ib.l.on{background:var(--color-bg-surface-hover)}
+/* accordion */
+.acc{width:420px}.acc .h{display:flex;gap:16px;align-items:center;justify-content:space-between;width:100%;text-align:left;padding:0}.acc .rule{height:1px;background:var(--color-border-subdued);margin-top:12px;border-radius:1px}
+.acc .b{margin-top:12px;font-weight:500;color:var(--color-text-subdued);font-size:14px;line-height:22px}.acc+.acc{margin-top:12px}
+/* scroll */
+.scr{width:10px;height:160px;display:flex;justify-content:center;border-radius:var(--radius-full)}.scr i{width:6px;height:64px;margin-top:20px;border-radius:var(--radius-full);background:var(--color-border)}.scr:hover i{background:var(--color-border-hover)}
+/* divider */
+.hd{width:160px;background:var(--color-border);border-radius:1px}.vd{height:60px;background:var(--color-border);border-radius:1px}.sub{background:var(--color-border-subdued)}
+.onbg{background:var(--color-bg-brand);padding:12px;border-radius:var(--radius-200);display:flex;gap:16px;align-items:center}.onbg .hd,.onbg .vd{background:var(--color-border-on)}.onbg .sub{background:var(--color-border-on-subdued)}
+/* titles */
+.title{display:flex;align-items:center;gap:12px;width:560px}.title h4{margin:0;font:600 20px/32px var(--font-sans);letter-spacing:-.02em;flex:1}
+.title.pg1 h4{font-size:32px;line-height:40px;letter-spacing:-.03em}.title.md{width:368px}
+.ttl-badge{display:inline-flex;align-items:center;height:24px;padding:0 6px;border-radius:var(--radius-150);background:var(--color-bg-success-subdued);font:600 15px/24px var(--font-sans);margin-left:12px;vertical-align:middle}
+.dd{display:inline-flex;align-items:center;gap:4px;height:36px;padding:8px 12px;border:1px solid var(--color-border);border-radius:var(--radius-200);background:var(--color-bg-surface);box-shadow:var(--shadow-button);font-size:13px;box-sizing:border-box}.dd:hover{background:var(--color-bg-surface-hover);border-color:var(--color-border-hover)}
+.ft{display:flex;align-items:center;gap:8px;font:600 14px/24px var(--font-sans)}.ft svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;color:var(--color-text-subdued)}.ft .hint{font-weight:500;font-size:12px;line-height:16px;color:var(--color-text-critical)}.ft .st{height:20px;padding:2px 8px;border-radius:var(--radius-100);background:var(--color-bg-surface-disabled);font-size:12px;line-height:16px;box-sizing:border-box}
+/* sticky bar */
+.sticky{display:flex;align-items:center;gap:16px;padding:20px 40px;height:84px;box-sizing:border-box;background:var(--color-bg-surface);border-radius:var(--radius-300);width:760px}.sticky .sel{flex:1;display:flex;align-items:center;gap:8px;font:600 14px/16px var(--font-sans);color:var(--color-text-subdued)}.sticky .acts{display:flex;gap:8px}
+.sticky.m{width:375px;height:124px;flex-direction:column;align-items:stretch;gap:24px;padding:16px;border-radius:0}.sticky.m .acts .btn{flex:1}.sticky.m .sel{font-size:13px;flex:none}
+[data-theme="dark"]{--color-bg-surface-hover:var(--color-bg-surface-subdued)}
+</style>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+<symbol id="next" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+<symbol id="caret" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></symbol>
+<symbol id="xc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9 9l6 6M15 9l-6 6"/></symbol>
+<symbol id="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="more" viewBox="0 0 24 24"><circle cx="5.500" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18.500" cy="12" r="1"/></symbol>
+<symbol id="list" viewBox="0 0 24 24"><path d="M9 7h10M9 12h10M9 17h10M5 7h.01M5 12h.01M5 17h.01"/></symbol>
+<symbol id="theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.600 5.600l1.400 1.400M17 17l1.400 1.400M5.600 18.400L7 17M17 7l1.400-1.400"/></symbol>
+<symbol id="check" viewBox="0 0 24 24"><path d="M5 12.500l4.500 4.500L19 7.500"/></symbol>
+<symbol id="info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500"/><path d="M12 11v5M12 8h.01"/></symbol>
+<symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+</defs></svg>
+<div class="panel" id="src">
+<h3>tab item — default · hover · active</h3>
+<div class="row"><div class="c"><button class="tab">Tab</button><small>default (hover me)</small></div><div class="c"><button class="tab" style="background:var(--color-bg-surface-hover);color:var(--color-text)">Tab</button><small>hovered</small></div><div class="c"><button class="tab on">Tab</button><small>active</small></div></div>
+<h3>tabs group — horizontal / vertical</h3>
+<div class="row"><div class="c"><div class="tabs"><button class="tab on">Overview</button><button class="tab">Products</button><button class="tab">Orders</button><button class="tab">Customers</button><button class="tab">Reports</button></div><small>align=horizontal</small></div>
+<div class="c"><div class="tabs v"><button class="tab on">Overview</button><button class="tab">Products</button><button class="tab">Orders</button><button class="tab">Customers</button></div><small>align=vertical</small></div></div>
+<h3>tab icon — list on / off</h3>
+<div class="row"><div class="c"><div class="seg2"><span class="sw on"><svg class="i s"><use href="#list"/></svg></span><span class="sw"><svg class="i s"><use href="#theme"/></svg></span></div><small>list=on</small></div>
+<div class="c"><div class="seg2"><span class="sw"><svg class="i s"><use href="#list"/></svg></span><span class="sw on"><svg class="i s"><use href="#theme"/></svg></span></div><small>list=off</small></div></div>
+<h3>pagination — numbered · load more</h3>
+<div class="row"><div class="c"><div class="pg"><button class="ib l"><svg class="i"><use href="#back"/></svg></button><button class="ib l">1</button><button class="ib l on">2</button><button class="ib l">3</button><button class="ib l">…</button><button class="ib l">9</button><button class="ib l"><svg class="i"><use href="#next"/></svg></button></div><small>state=default · 44px round</small></div>
+<div class="c"><div class="pg"><button class="btn sec"><svg class="i s"><use href="#plus"/></svg>Load more</button></div><small>state=load more</small></div></div>
+<h3>accordion</h3>
+<div class="row"><div class="c"><div class="acc"><button class="h"><span>I can’t log in</span><svg class="i"><use href="#caret"/></svg></button><div class="rule"></div></div><small>state=close</small></div>
+<div class="c"><div class="acc"><button class="h"><span>How to upgrade to Pro account?</span><svg class="i"><use href="#xc"/></svg></button><div class="rule"></div><div class="b">Enjoy instant access to our vast library of premium products and all upcoming releases with super-fast downloads.</div></div><small>state=expanded</small></div></div>
+<h3>scrollbar &amp; divider</h3>
+<div class="row"><div class="c"><div class="scr"><i></i></div><small>6px thumb</small></div>
+<div class="c"><div class="hd" style="height:1px"></div><div class="hd" style="height:2px"></div><div class="hd sub" style="height:1px"></div><div class="hd sub" style="height:2px"></div><small>horizontal 1/2px · default / subdued</small></div>
+<div class="c"><div class="row" style="gap:12px"><div class="vd" style="width:1px"></div><div class="vd" style="width:2px"></div><div class="vd sub" style="width:1px"></div><div class="vd sub" style="width:2px"></div></div><small>vertical</small></div>
+<div class="c"><div class="onbg"><div class="hd" style="height:1px;width:80px"></div><div class="hd sub" style="height:2px;width:80px"></div><div class="vd" style="width:1px;height:32px"></div></div><small>on bg=true</small></div></div>
+<h3>title/page — desktop</h3>
+<div class="row"><div class="c"><div class="title pg1"><button class="ib l"><svg class="i"><use href="#back"/></svg></button><h4>Products</h4></div><small>action=back</small></div>
+<div class="c"><div class="title pg1"><h4>Products</h4></div><small>action=default</small></div>
+<div class="c"><div class="title pg1"><h4>Products</h4><button class="btn">Add product</button></div><small>action=button</small></div>
+<div class="c"><div class="title pg1"><h4>Products<span class="ttl-badge">New</span></h4><button class="ib l"><svg class="i"><use href="#more"/></svg></button></div><small>action=more action · badge=true</small></div></div>
+<h3>title/widget</h3>
+<div class="row"><div class="c"><div class="title"><h4>Overview</h4><button class="ib"><svg class="i s"><use href="#x"/></svg></button></div><small>action=close</small></div>
+<div class="c"><div class="title"><div class="tabs"><button class="tab on">Customer</button><button class="tab">Income</button></div><span style="flex:1"></span><button class="dd">All time<svg class="i s"><use href="#caret"/></svg></button></div><small>action=tab &amp; select filter</small></div>
+<div class="c"><div class="title"><h4>Earning</h4><button class="dd">Recent<svg class="i s"><use href="#caret"/></svg></button><button class="ib"><svg class="i s"><use href="#more"/></svg></button></div><small>action=select filter &amp; more</small></div>
+<div class="c"><div class="title"><h4>Comments</h4><button class="btn sm sec">View all</button></div><small>action=button</small></div></div>
+<h3>title/modal &amp; title/form</h3>
+<div class="row"><div class="c"><div class="title md"><h4>Notification<span class="ttl-badge">12</span></h4><button class="ib"><svg class="i s"><use href="#more"/></svg></button></div><small>badge=true · suffix=more</small></div>
+<div class="c"><div class="title md"><h4>Refund request</h4><button class="ib"><svg class="i s"><use href="#more"/></svg></button><button class="ib"><svg class="i s"><use href="#x"/></svg></button></div><small>suffix=more &amp; close</small></div>
+<div class="c"><div class="ft">Product title<svg><use href="#info"/></svg></div><small>form · badge=off</small></div>
+<div class="c"><div class="ft">Product title<svg><use href="#info"/></svg><span class="st">Required</span></div><small>form · badge=on</small></div>
+<div class="c"><div class="ft">Product title<svg><use href="#info"/></svg><span class="hint">Maximum 100 characters. No HTML or emoji allowed</span></div><small>form · state=error</small></div></div>
+<h3>sticky bottom bar — desktop 84px · scheduled · comments · mobile 124px</h3>
+<div class="row"><div class="c"><div class="sticky"><div class="sel"><svg class="i s"><use href="#check"/></svg>2 products selected</div><div class="acts"><button class="btn">Publish</button></div></div><small>style=default · desktop</small></div>
+<div class="c"><div class="sticky"><div class="sel"><svg class="i s"><use href="#check"/></svg>2 products selected</div><div class="acts"><button class="btn sec">Reschedule</button><button class="btn">Publish now</button></div></div><small>style=scheduled</small></div>
+<div class="c"><div class="sticky"><div class="sel"><svg class="i s"><use href="#check"/></svg>2 comments selected</div><div class="acts"><button class="btn sec">Hide</button><button class="btn">Reply</button></div></div><small>style=comments</small></div>
+<div class="c"><div class="sticky m"><div class="sel"><svg class="i s"><use href="#check"/></svg>2 products selected</div><div class="acts"><button class="btn">Publish</button></div></div><small>breakpoint=mobile</small></div></div>
+</div>
+<div class="panel" data-theme="dark" id="dst"></div>
+<script>document.getElementById('dst').innerHTML=document.getElementById('src').innerHTML</script>
