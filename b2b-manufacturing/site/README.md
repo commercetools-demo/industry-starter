@@ -1,4 +1,4 @@
-# Malva storefront (`site/`)
+# Malva B2B Plumbing and Waste management storefront (`site/`)
 
 Next.js 16 (App Router) + commercetools. Specs: `../openspec/changes/{bootstrap-malva-storefront,malva-website}`; plan: `../plans/` (start with `JUNIOR-GUIDE.md`).
 
