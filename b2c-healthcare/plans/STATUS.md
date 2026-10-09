@@ -29,7 +29,7 @@ Planning complete (all defaults accepted by the owner 2026-10-08). Counts below 
 | V | Static content: FAQ, contact, about, policies, health journal | 8/8 | 12/16 | Not started |
 | W | Region and language switching (v1: single region, structure only) | 4/4 | 3/3 | Not started |
 | X | Health-data minimization hardening and privacy operations | 8/8 | 7/7 | Not started |
-| Y | Deployment | 0/5 | 0/0 | Not started |
+| Y | Deployment | 4/5 | 0/0 | Not started |
 | Z | Release readiness: browser sweep, Lighthouse, accessibility, security review, final verification | 0/6 | 0/0 | Not started |
 <!-- STATUS:END -->
 
