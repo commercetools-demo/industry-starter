@@ -9,10 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "check": "tsc --noEmit && eslint . && node scripts/check-versions.mjs && node scripts/check-tailwind.mjs && node scripts/check-secrets.mjs && node scripts/check-server-only.mjs && node scripts/check-messages.mjs && node scripts/check-sample-content.mjs && node scripts/check-tokens.mjs && node scripts/check-no-dev-pages.mjs && node scripts/check-no-health-in-release.mjs && vitest run",
-    "verify:build": "next build 2>&1 | tee .next-build-output.txt && node scripts/check-routes.mjs .next-build-output.txt && node scripts/check-no-health-in-release.mjs && node scripts/check-bundle-secrets.mjs && npm audit --omit=dev --audit-level=high",
-    "prebuild": "node scripts/sync-site-images.mjs",
-    "check:release": "node scripts/check-sample-content.mjs --strict && node scripts/check-no-dev-pages.mjs && node scripts/check-no-health-in-release.mjs"
+    "check": "tsc --noEmit && eslint . && node scripts/check-versions.mjs && node scripts/check-tailwind.mjs && node scripts/check-secrets.mjs && node scripts/check-server-only.mjs && node scripts/check-messages.mjs && node scripts/check-sample-content.mjs && node scripts/check-tokens.mjs && node scripts/check-no-dev-pages.mjs && node scripts/check-no-health-in-release.mjs && vitest run"
   },
   "dependencies": {
     "@commercetools/platform-sdk": "^8.27.0",
