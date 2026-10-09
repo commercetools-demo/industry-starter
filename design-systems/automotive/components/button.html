@@ -1,0 +1,16 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../tokens.css"><style>body{margin:0;padding:24px;font-family:var(--font-body);color:var(--color-text);background:var(--color-surface)}h3{font:600 16px/1 var(--font-display);margin:0 0 12px}.row{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:24px}
+.btn{font:500 16px/1 var(--font-display);height:56px;padding:0 32px;border-radius:var(--radius-sm);border:2px solid var(--color-action);background:var(--color-action);color:var(--color-text-on-brand);cursor:pointer}
+.btn:hover{background:var(--color-action-hover);border-color:var(--color-action-hover)}.btn:active{background:var(--color-action-active)}.btn:focus-visible{outline:3px solid var(--color-brand-200);outline-offset:2px}
+.btn.outline{background:transparent;color:var(--color-action)}.btn.outline:hover{background:var(--color-action-subtle)}
+.btn.dark{background:var(--color-neutral-800);border-color:var(--color-neutral-800)}.btn.dark:hover{background:var(--color-neutral-1000)}
+.btn.sm{height:48px;padding:0 24px;border-radius:var(--radius-xs)}
+.btn.pill{border-radius:var(--radius-pill);font-weight:600;font-size:24px;height:47px;padding:0 48px;background:var(--color-neutral-1000);border-color:var(--color-neutral-1000)}
+.btn.watch{border-radius:var(--radius-pill);font:400 17px var(--font-button-alt);background:var(--color-brand-deep);border-color:var(--color-brand-deep);width:240px}
+.btn[disabled]{background:var(--color-neutral-100);border-color:var(--color-neutral-100);color:var(--color-neutral-400);cursor:not-allowed}
+.link{font:700 17px var(--font-utility);color:var(--color-text-link);text-decoration:none}.link:hover{text-decoration:underline}
+.chip{font:400 14px var(--font-ui);padding:14px 20px;border-radius:var(--radius-xs);border:1px solid var(--color-neutral-75);background:var(--color-neutral-75);color:var(--color-text-body);cursor:pointer}.chip.on{background:var(--color-brand-700);border-color:#000;color:#fff}</style>
+<h3>Primary / outline / dark (56px, radius-sm)</h3><div class="row"><button class="btn">Add to Cart</button><button class="btn outline">Buy Now</button><button class="btn dark">Apply Coupon</button><button class="btn" disabled>Sold Out</button></div>
+<h3>Compact (48px, radius-xs) — cart actions</h3><div class="row"><button class="btn sm outline">Return to Shop</button><button class="btn sm outline">Update Cart</button><button class="btn sm">Proceed to Checkout</button></div>
+<h3>Pill — hero and media CTAs</h3><div class="row"><button class="btn pill">Verify</button><button class="btn watch">Watch now</button></div>
+<h3>Text link and filter chips</h3><div class="row"><a class="link" href="#">show more &gt;</a><a class="link" href="#">View All</a><span class="chip on">Brakes</span><span class="chip">Filters</span><span class="chip">Lighting</span></div>
