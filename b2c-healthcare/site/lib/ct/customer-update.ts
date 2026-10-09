@@ -1,6 +1,7 @@
 import 'server-only';
 import type { Customer, CustomerUpdateAction } from '@commercetools/platform-sdk';
 import { apiRoot } from '@/lib/ct/client';
+import { loadDevRoot } from '@/lib/ct/fixtures';
 
 const statusOf = (e: unknown): number | undefined => {
   const x = e as { statusCode?: unknown } | undefined;
@@ -18,7 +19,7 @@ export class CustomerNotFoundError extends Error {
 /** Reads the customer. */
 export async function readCustomer(customerId: string): Promise<Customer> {
   try {
-    const { body } = await apiRoot.customers().withId({ ID: customerId }).get().execute();
+    const { body } = await ((await loadDevRoot()) ?? apiRoot).customers().withId({ ID: customerId }).get().execute();
     return body;
   } catch (error) {
     if (statusOf(error) === 404) throw new CustomerNotFoundError();
@@ -36,7 +37,7 @@ export async function updateCustomer(customerId: string, plan: (customer: Custom
     const actions = plan(customer);
     if (actions.length === 0) return customer;
     try {
-      const { body } = await apiRoot.customers().withId({ ID: customerId }).post({ body: { version: customer.version, actions } }).execute();
+      const { body } = await ((await loadDevRoot()) ?? apiRoot).customers().withId({ ID: customerId }).post({ body: { version: customer.version, actions } }).execute();
       return body;
     } catch (error) {
       if (statusOf(error) === 409 && attempt === 0) continue;

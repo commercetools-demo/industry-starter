@@ -67,3 +67,12 @@ export async function loadAccountFixtures(): Promise<AccountFixtures | null> {
   if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
   return import('./account-fixtures');
 }
+
+/**
+ * In-memory Custom Objects and Customers (schedules, labs, bookings, address book) for browser checks with
+ * `MALVA_FIXTURES=1` (workstream Z); same guard. Callers use `(await loadDevRoot()) ?? apiRoot`.
+ */
+export async function loadDevRoot(): Promise<import('@commercetools/platform-sdk').ByProjectKeyRequestBuilder | null> {
+  if (process.env.NODE_ENV === 'production' || process.env.MALVA_FIXTURES !== '1') return null;
+  return (await import('./dev-root')).createDevRoot();
+}

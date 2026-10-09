@@ -1,5 +1,6 @@
 import 'server-only';
 import { apiRoot } from '@/lib/ct/client';
+import { loadDevRoot } from '@/lib/ct/fixtures';
 
 /** Custom Object containers used by the storefront (workstream F). Keys and containers allow only `[-_~.a-zA-Z0-9]`. */
 export const CONTAINERS = {
@@ -34,7 +35,7 @@ export const statusOf = (e: unknown): number | undefined => {
 /** Reads one object; `null` when it does not exist. */
 export async function getObject<T>(container: string, key: string): Promise<StoredObject<T> | null> {
   try {
-    const { body } = await apiRoot.customObjects().withContainerAndKey({ container, key }).get().execute();
+    const { body } = await ((await loadDevRoot()) ?? apiRoot).customObjects().withContainerAndKey({ container, key }).get().execute();
     return { key: body.key, version: body.version, value: body.value as T };
   } catch (e) {
     if (statusOf(e) === 404) return null;
@@ -44,7 +45,7 @@ export async function getObject<T>(container: string, key: string): Promise<Stor
 
 /** Create or replace. With `version`, the write succeeds only if the stored version matches (409 otherwise). */
 export async function putObject<T>(container: string, key: string, value: T, version?: number): Promise<StoredObject<T>> {
-  const { body } = await apiRoot.customObjects().post({ body: { container, key, value: value as never, ...(version !== undefined ? { version } : {}) } }).execute();
+  const { body } = await ((await loadDevRoot()) ?? apiRoot).customObjects().post({ body: { container, key, value: value as never, ...(version !== undefined ? { version } : {}) } }).execute();
   return { key: body.key, version: body.version, value: body.value as T };
 }
 
@@ -65,7 +66,7 @@ export async function createOnly<T>(container: string, key: string, value: T): P
 /** Deletes an object; a missing object is not an error. */
 export async function deleteObject(container: string, key: string): Promise<void> {
   try {
-    await apiRoot.customObjects().withContainerAndKey({ container, key }).delete({}).execute();
+    await ((await loadDevRoot()) ?? apiRoot).customObjects().withContainerAndKey({ container, key }).delete({}).execute();
   } catch (e) {
     if (statusOf(e) !== 404) throw e;
   }
@@ -75,7 +76,7 @@ export async function deleteObject(container: string, key: string): Promise<void
 export async function queryObjects<T>(container: string, where?: string): Promise<StoredObject<T>[]> {
   const out: StoredObject<T>[] = [];
   for (let offset = 0; ; offset += 200) {
-    const { body } = await apiRoot.customObjects().withContainer({ container }).get({ queryArgs: { limit: 200, offset, ...(where ? { where } : {}) } }).execute();
+    const { body } = await ((await loadDevRoot()) ?? apiRoot).customObjects().withContainer({ container }).get({ queryArgs: { limit: 200, offset, ...(where ? { where } : {}) } }).execute();
     out.push(...body.results.map((o) => ({ key: o.key, version: o.version, value: o.value as T })));
     if (body.results.length < 200) return out;
   }

@@ -1,5 +1,6 @@
 import 'server-only';
 import { apiRoot } from '@/lib/ct/client';
+import { loadDevRoot } from '@/lib/ct/fixtures';
 
 /** What booking needs from the signed-in customer: the opaque patient reference, and name and email for the greeting. */
 export interface BookingPatient {
@@ -13,7 +14,7 @@ export interface BookingPatient {
 /** One customer for a booking; null when it no longer exists. Per patient, so never cached. */
 export async function getBookingPatient(customerId: string): Promise<BookingPatient | null> {
   try {
-    const { body } = await apiRoot.customers().withId({ ID: customerId }).get().execute();
+    const { body } = await ((await loadDevRoot()) ?? apiRoot).customers().withId({ ID: customerId }).get().execute();
     const ref = (body.custom?.fields as { patientRef?: unknown } | undefined)?.patientRef;
     return {
       ...(typeof ref === 'string' && ref ? { patientRef: ref } : {}),

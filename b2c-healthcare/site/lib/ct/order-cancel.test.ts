@@ -60,7 +60,7 @@ vi.mock('@/lib/ct/client', () => ({
     }),
   },
 }));
-vi.mock('@/lib/ct/fixtures', () => ({ loadCheckoutFixtures: async () => null, loadFundingFixtures: async () => null }));
+vi.mock('@/lib/ct/fixtures', () => ({ loadCheckoutFixtures: async () => null, loadFundingFixtures: async () => null, loadDevRoot: async () => null }));
 
 import type { Prescription } from '@/lib/clinical/types';
 import { CONTAINERS } from '@/lib/ct/custom-objects';

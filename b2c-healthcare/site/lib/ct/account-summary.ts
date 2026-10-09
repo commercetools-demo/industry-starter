@@ -5,6 +5,7 @@ import { getBookingPatient } from '@/lib/ct/booking-patient';
 import { listBookingsForPatient } from '@/lib/ct/bookings';
 import { apiRoot } from '@/lib/ct/client';
 import { labSource } from '@/lib/ct/clinical-store';
+import { loadCheckoutFixtures } from '@/lib/ct/fixtures';
 
 /** The signed-in customer no longer exists (deleted while the cookie lives on): treated as a signed-out session. */
 export class AccountGoneError extends Error {
@@ -18,6 +19,8 @@ const UNSAFE_ID = /[^\w-]/g;
 
 /** Number of the customer's orders (the overview tile; the list itself is workstream S). */
 export async function countOrders(customerId: string): Promise<number> {
+  const fixtures = await loadCheckoutFixtures();
+  if (fixtures) return fixtures.fixtureOrderList(customerId).length;
   const { body } = await apiRoot
     .orders()
     .get({ queryArgs: { where: `customerId="${customerId.replace(UNSAFE_ID, '')}"`, limit: 1, withTotal: true } })
