@@ -78,7 +78,7 @@ Storefront variables go in `site/.env.local` (local) and in Netlify site setting
 | `SEED_CTP_PROJECT_KEY` | yes | all `scripts/seed/*`, `allowances:reload`, `privacy:*` | scripts refuse unless exactly `spec-test-b2c-healthcare` and the API reports the same key (`notes/E-todos.md`) |
 | `SEED_CTP_AUTH_URL`, `SEED_CTP_API_URL`, `SEED_CTP_CLIENT_ID`, `SEED_CTP_CLIENT_SECRET`, `SEED_CTP_SCOPES` | yes | same | scopes in section 3.2 |
 | `SEED_PATIENT_PASSWORD` | yes for F | `seed` (3 synthetic customers), sign-in tests | missing: seed skips customers and `seed:verify` fails "exactly three example.com patients" (`notes/F-questions.md#17`) |
-| `PEXELS_CLIENT_ID` | for images | `seed:images` | shell only; endpoint is undocumented (`notes/E-missed.md#b9`, `notes/E-todos.md`) |
+| `PEXELS_CLIENT_ID`, `PEXELS_API_KEY` | optional | `seed:images`, `seed:images:json` | shell only; `PEXELS_API_KEY` (free, pexels.com/api) selects the official Pexels API, else the undocumented public endpoint (`notes/E-missed.md#b9`, `notes/AC-questions.md`) |
 
 ---
 
@@ -86,32 +86,36 @@ Storefront variables go in `site/.env.local` (local) and in Netlify site setting
 
 ### 3.1 Storefront (Frontend) client: `CTP_SCOPES`
 
-Starting list is `site/.env.example` (A, widened by D, Q, T). Confirmation list for OA-02 / QR-004. Each scope as `scope:spec-test-b2c-healthcare`.
+Final list (D-036, follow-up AC): the commercetools **B2C storefront template** + what recurring orders, recurrence policies and recurring prices need + **`manage_key_value_documents`** (Custom Objects) + what the code in `lib/ct/**` actually calls. It is the comment block of `site/.env.example` (a reason per scope) and the exact paste text is in `notes/AC-todos.md`. `site/lib/ct/scopes.test.ts` fails on a duplicate, a scope without a reason, or a resource the code calls that no listed scope covers. Each scope is written `scope:spec-test-b2c-healthcare` in `CTP_SCOPES` (space separated).
 
-| Scope | Needed by | Source |
-| --- | --- | --- |
-| `view_products`, `view_published_products` | catalog, doctors, medications, reviews read, inventory reads (N) | `.env.example`, `notes/F-todos.md#8`, `notes/N-todos.md#1`, `notes/K-todos.md#7` |
-| `view_categories` | navigation, filters | `.env.example`, `notes/G-missed.md#b7` |
-| `view_stores`, `view_shipping_methods` | shipping options, same-day claim on home | `.env.example`, `notes/M-todos.md#3`, `notes/G-missed.md#b7` |
-| `view_tax_categories` | tax on Rx and consultations | `.env.example` |
-| `view_cart_discounts`, `view_discount_codes` | promotions | `.env.example` |
-| `view_types` | custom type lookups | `.env.example` |
-| `view_project_settings` | `getProjectSettings` (regions, `/api/locale`, region switcher); not in A's list; without it `getValidCountryConfig` throws and `/api/locale` returns 500, switcher absent | `notes/G-missed.md#b7`, `notes/W-todos.md#6` |
-| `view_states` | not added (D); needed only if the storefront reads order states (S reads `state.obj.key` via expand) | `notes/D-questions.md#2`, `notes/S-todos.md#3` |
-| `view_inventory_entries` (or `view_products`) | `getSupplyBySku` | `notes/D-questions.md#2`, `notes/N-todos.md#1` (confirm on 403) |
-| `view_orders` or `manage_orders` | `countOrders` (R) | `notes/R-todos.md#8` |
-| `manage_customers` | register, sign-in, profile, addresses | `.env.example` |
-| `manage_orders` | carts and orders, recurring cart | `.env.example`, `notes/O-todos.md#2`, `notes/Q-todos.md#L9` |
-| `manage_payments` | Payment reads, tender payments (U) | `.env.example`, `notes/U-todos.md` |
-| `manage_sessions` | Checkout / cart sessions (spec requirement) | `.env.example` |
-| `manage_checkout_payment_intents` | release (cancel) an authorization | `.env.example`, `notes/Q-questions.md#17` |
-| `manage_shopping_lists` | saved lists | `.env.example` |
-| `manage_recurring_orders`, `view_recurrence_policies`, `manage_payment_methods` | auto-refill, saved cards | `.env.example`, `notes/T-todos.md#L2` |
-| `manage_key_value_documents` (Custom Objects) | availability, bookings, clinical stand-in, rate limits, counter, order attempts, ledger, refill log, retention | `.env.example`, `notes/F-todos.md#8`, `notes/J-todos.md` header, `notes/X-todos.md#5` (X calls it `manage_custom_objects`; same permission, confirm the exact scope name in the API client UI) |
+| Scope | Needed by |
+| --- | --- |
+| `view_published_products` | published product projections: doctor and medicine pages, home, listings (template) |
+| `view_products` | Product Search, inventory reads (shelf life), review reads, product types and channels (template) |
+| `view_categories` | navigation and listing filters (template) |
+| `view_stores` | store scoping of carts and prices (template) |
+| `view_shipping_methods` | shipping options at checkout, same-day claim on the home page (template) |
+| `view_tax_categories` | tax on Rx medicine and consultations (template) |
+| `view_cart_discounts`, `view_discount_codes` | promotions in the cart (template) |
+| `view_types` | custom type lookups (template) |
+| `manage_customers` | register, sign-in, password reset, email verification, profile, addresses (template) |
+| `manage_orders` | carts and orders; also Zones (template) |
+| `manage_payments` | payment objects for Checkout and tender payments (template) |
+| `manage_sessions` | Checkout and cart sessions (Frontend client scope; spec requirement) |
+| `manage_shopping_lists` | saved shopping lists (template) |
+| `manage_checkout_payment_intents` | release (cancel) an authorized payment when an order cannot be placed |
+| `manage_recurring_orders` | auto-refill: read, create, pause, resume, skip, change, cancel (covers viewing recurring orders) |
+| `view_recurrence_policies` | the cadences a refill line references; recurring prices are Embedded Prices, read with `view_products` |
+| `manage_payment_methods` | saved cards: list descriptors, set default, remove |
+| `manage_key_value_documents` | Custom Objects (`malva-*` containers): availability, bookings, clinical stand-in, rate limits, counter, order attempts, ledgers, refill log, retention. This is the only name; `manage_custom_objects` is not a scope (D-036) |
+| `view_project_settings` | `getProjectSettings` (region switcher, `/api/locale`); without it `getValidCountryConfig` throws |
+| `view_states` | order state keys read through `expand` (the order timeline) |
+
+Not needed, on purpose: `view_standalone_prices` (prices are Embedded Prices; add it only if recurring prices are ever modelled as Standalone Prices), `view_orders` and `view_payment_methods` and `view_recurring_orders` (covered by the manage scopes), `view_inventory_entries` (inventory reads are covered by `view_products`), any `manage_my_*` (the BFF uses the client credentials flow, no password-flow tokens).
 
 ### 3.2 Seed (admin) client: `SEED_CTP_SCOPES`
 
-Best guess (OA-01 to confirm): `manage_project` or the narrower set `manage_products`, `manage_categories`, `manage_types`, `manage_states`, `manage_shipping_methods`, `manage_tax_categories`, `manage_stores`, `manage_orders` (cart and order cleanup), `manage_customers`, `manage_key_value_documents`, `manage_reviews`, `manage_inventory`, `manage_shopping_lists`, `manage_payments`, `manage_recurring_orders`, `manage_recurrence_policies` (needed by the T and U seed additions, inferred from the resources they create). Sources: `.env.seed.example`, `notes/E-todos.md` Preconditions, `notes/E-questions.md#18`, `notes/T-todos.md#L1`, `notes/X-todos.md` header (privacy scripts use the seed client).
+Simplest: **`manage_project:spec-test-b2c-healthcare`** (one scope, everything). Narrow alternative, one scope per line with the script that needs it in `site/.env.seed.example`: `manage_products`, `manage_categories`, `manage_types`, `manage_states`, `manage_shipping_methods`, `manage_tax_categories`, `manage_stores`, `manage_zones`, `manage_orders`, `manage_customers`, `manage_key_value_documents`, `manage_shopping_lists`, `manage_payments`, `manage_recurring_orders`, `manage_recurrence_policies`, `manage_quotes`, `manage_quote_requests`, `manage_staged_quotes`, `manage_business_units`, `manage_discount_codes`, `view_messages`, `view_project_settings`. The last six exist because `seed:full` erases the example.com customers with the privacy collector, which queries every GDPR resource kind (a missing scope would be a 403 half way through).
 
 ---
 
@@ -127,13 +131,13 @@ Dependency order: seed, verify, wait for the search index, then storefront check
 | LT-02 | `npm run seed:inventory` | prints counts of what the project holds (customers/orders/carts were "not checked yet"); paste into `PROJECT-FINDINGS.md` empty rows | E: `notes/E-todos.md` Run instructions |
 | LT-03 | `npm run seed:cleanup -- --dry-run` | lists only unprefixed (non `mlv-`) resources; zones `usa` and `europe` stay | E: `notes/E-todos.md`, `notes/E-questions.md#2` |
 | LT-04 | `npm run seed:cleanup -- --confirm spec-test-b2c-healthcare` | sample furniture products, categories, product types, shipping methods, tax category removed | E: `notes/E-todos.md` |
-| LT-05 | If the project was ever seeded with an earlier version (L changed Alvarez/Haddad fees, O/Q/T/U added type fields): `npm run seed:reset` first (reviews, customers, Custom Objects are NOT removed: delete reviews and `malva-*` objects manually or extend reset, QR-014) | clean `mlv-` set | L: `notes/L-todos.md#1`, F: `notes/F-todos.md#9` |
+| LT-05 | If the project was ever seeded with an earlier version (L changed Alvarez/Haddad fees, O/Q/T/U added type fields): the seed now UPDATES existing resources in place (prices, attributes, `isSearchable`, new type fields); for a clean slate run `npm run seed:full` (D-038: reviews, `mlv-` resources, all `malva-*` Custom Objects, recurrence policies, example.com customers and their data, then cleanup-sample, seed, images, verify, wait). `npm run seed:full -- --dry-run` first | clean `mlv-` set | L: `notes/L-todos.md#1`, F: `notes/F-todos.md#9` |
 | LT-06 | `npm run seed -- --dry-run` | review plan; check zone key `usa` exists (else set it with `update_zones` setKey or change `ZONE_USA` in `scripts/seed/data/shipping.ts`) | E: `notes/E-todos.md`, `notes/E-questions.md#4` |
 | LT-07 | `npm run seed` | finishes without STOP; creates types (`mlv-rx-line` with `lastSeenUnitPrice`, `dispensedQty`, `authorizationParams`, `suppliedLots`; `mlv-list-line`; `mlv-inventory-meta`; order-meta fields), states `mlv-received`, `mlv-pharmacist-review`, `mlv-packed-shipped`, `mlv-delivered`, `mlv-cancelled`, price channels `mlv-remote`/`mlv-office`, 28 products (8 doctors + 20 medications), shipping `mlv-standard` and `mlv-same-day`, recurrence policies `mlv-monthly` (Months 1) and `mlv-quarterly` (Months 3), reviews `mlv-rev-*`, `malva-*` objects, three example.com customers | E, F, O, Q, T, U: `notes/E-todos.md`, `notes/F-todos.md#1`, `notes/T-todos.md#L1`, `notes/O-todos.md#1`, `notes/Q-todos.md#L8`, `notes/U-todos.md` |
 | LT-08 | Check the seed UPDATES an existing type (adds field definitions) rather than skipping it: with a project that already has `mlv-rx-line`, confirm the three Q fields and `lastSeenUnitPrice` appear; otherwise add them in the Merchant Center | fields present in `read_types` | O: `notes/O-todos.md#1`, Q: `notes/Q-todos.md#L8` |
 | LT-09 | `npm run seed` again | prints `0 change(s) in N step(s)` | E, F: `notes/E-todos.md`, `notes/F-todos.md#1` |
 | LT-10 | `npm run seed:wait` | polls Product Search until 28 products indexed (5 min timeout). If `prefix` on `key` is rejected, switch to `exists` on `key`; if `fullText` language `en-US` returns 0 for "Okafor", try `en` | E: `notes/E-todos.md`, `notes/E-questions.md#7`, `#7b` |
-| LT-11 | `npm run seed:images -- --dry-run` then `npm run seed:images` (needs `PEXELS_CLIENT_ID` and internet; undocumented endpoint may have changed) | picks reviewed; images replaced and products republished; `scripts/seed/data/product-images.json` and `site-images.json` written; confirm URLs have no `?` | E: `notes/E-todos.md`, M: `notes/M-todos.md#2` |
+| LT-11 | the photos are committed (`data/product-images.json`, `site-images.json`, D-040) and `seed:full` / `seed` apply them; re-pick only if wanted: `npm run seed:images:json` (no credentials, writes the JSON) or `npm run seed:images` (live). `PEXELS_API_KEY` in the shell switches to the official Pexels API | picks reviewed; images replaced and products republished; `scripts/seed/data/product-images.json` and `site-images.json` written; confirm URLs have no `?` | E: `notes/E-todos.md`, M: `notes/M-todos.md#2` |
 | LT-12 | `git diff scripts/seed/data/*.json` and commit the generated JSON | both files no longer `{}` | E: `notes/E-todos.md` |
 | LT-13 | `npm run seed` | still 0 changes (images are not compared) | E: `notes/E-todos.md` |
 | LT-14 | `npm run seed:verify` | all checks PASS, including clinical block, "every product has images", and the Messages-disabled check (`project.messages.enabled` false). If only "product rating statistics are non-zero" fails, wait a few seconds and re-run (async roll-up) | E, F, X: `notes/E-todos.md`, `notes/F-todos.md#2`, `notes/X-todos.md#6` |

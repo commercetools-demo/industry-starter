@@ -7,9 +7,18 @@ Replace the sample furniture data in the commercetools project `spec-test-b2c-he
 - Credentials come only from `site/.env.seed.local` (copy `.env.seed.example`) or `SEED_CTP_*` variables in the shell. Never commit them, never paste them in chat.
 - `lib.ts: getAdminRoot()` refuses to run unless `SEED_CTP_PROJECT_KEY` is exactly `spec-test-b2c-healthcare` (checked before any network call) and the project the API reports has the same key. A missing variable is named in the error.
 - Everything the seed creates has a key starting with `mlv-` (inventory entries `mlv-inv-<sku>`). `cleanup-sample.ts` deletes only what is NOT prefixed; `reset-seed.ts` deletes only what IS prefixed. Both need `--confirm spec-test-b2c-healthcare` (or `--dry-run`).
-- Seeding is create-if-missing and idempotent; an existing resource that differs is reported (exit 1), never overwritten.
+- Seeding is idempotent (a second run prints `0 change(s)`). An existing resource that differs from the seed is UPDATED in place where commercetools allows it (`update-plans.ts`: prices, attributes, `isSearchable`, new type fields and enum values, shipping rates, tax rates, limits). Where it does not (an attribute type change, a changed SKU, a removed attribute), the run stops with exit 1 and says exactly which reset is needed (`npm run seed:full`).
 
-## Order of a full run
+## One command: `npm run seed:full` (D-038)
+
+```
+npm run seed:full -- --dry-run     # lists everything it would delete and create; verify and the search wait are skipped
+npm run seed:full                  # passes --confirm spec-test-b2c-healthcare itself
+```
+
+reset (`--include-customers`: reviews, `mlv-` resources, every `malva-*` Custom Object container, recurrence policies, the example.com customers with their carts, orders, payments, shopping lists and recurring orders, all deleted with `dataErasure`) → cleanup-sample → seed (photos from `data/product-images.json`) → images (every doctor, medicine and banner slot must have a stored photo) → verify (looks again for up to 25 s while rating statistics catch up) → wait-for-search. One process, one client, the project-key guard before any network call. Run `seed:reset` alone (without `--include-customers`) to keep customers; a custom type that a customer's cart still uses then cannot be deleted and the error says so.
+
+## Order of a manual run
 
 ```
 npm run seed:inventory                                   # read-only: counts per resource kind
@@ -17,7 +26,8 @@ npm run seed:cleanup -- --dry-run                        # lists what would go
 npm run seed:cleanup -- --confirm spec-test-b2c-healthcare
 npm run seed                                             # second run must print "0 change(s)"
 npm run seed:wait                                        # wait until Product Search holds the 28 products
-npm run seed:images                                      # picks photos, updates products, writes data/*.json
+npm run seed:images                                      # live: searches Pexels, replaces product images, writes data/*.json
+npm run seed:images:json                                 # no credentials: only writes data/*.json (commit them)
 npm run seed:verify
 ```
 
@@ -30,9 +40,11 @@ npm run seed:verify
 | `wait-for-search.ts` (`seed:wait`) | checks `searchIndexing.productsSearch.status` is `Activated`, polls Product Search (prefix on `key`) until the seeded count is reached (timeout 5 min, `--expected N`, `--timeout-min M`) |
 | `cleanup-sample.ts` (`seed:cleanup`) | deletes non-`mlv-` carts, orders, inventory, products (unpublish first), categories (leaves first), product types, shipping methods, tax categories, stores, zones. Keeps zones `usa` and `europe`; never deletes customers |
 | `seed.ts` (`seed`) | channels, tax categories, order states and transitions, custom types, product types, categories, same-day zone, shipping methods, 8 doctors, 20 medications, inventory with cart limits. `--only <product-key>` limits the product steps |
-| `update-images.ts` (`seed:images`) | searches pexels.com for every doctor (portrait), medication (generic `imageQuery`) and banner slot; replaces product images and republishes; writes `data/product-images.json` and `data/site-images.json`. `--count 1..6`, `--only <key\|slot>` |
+| `update-images.ts` (`seed:images`, `seed:images:json`) | searches Pexels for every doctor (portrait), medication (generic `imageQuery`) and banner slot; every product and slot gets its own photos, a photo whose URL does not load is skipped, too few results widen the query (logged as `WIDENED`). `--json-only` writes `data/product-images.json` and `data/site-images.json` WITHOUT touching commercetools (no credentials); without it the products are updated and republished. `--count 1..6`, `--only <key\|slot>`, `--dry-run` |
+| `seed-full.ts` (`seed:full`) | the whole sequence above in one process; `--dry-run` supported |
+| `update-plans.ts` | what a changed seed updates in place, and the reset hint for what cannot be updated |
 | `verify.ts` (`seed:verify`) | read-back assertions: counts, prefixes, published, USD, clean image URLs, doctor fees and modes vs price channels, shipping cents, inventory limits, states, types, categories, Product Search finds "Okafor" (`--skip-search`, `--no-images`) |
-| `reset-seed.ts` (`seed:reset`) | deletes only `mlv-` resources so the seed can be rebuilt |
+| `reset-seed.ts` (`seed:reset`) | deletes reviews, then only `mlv-` resources, and every `malva-*` Custom Object so the seed can be rebuilt; `--include-customers` also erases the example.com customers and their data |
 | `fake-root.ts` | in-memory project used by the unit tests; refuses the same deletions the real API refuses (published product, category with children, ...) |
 | `data/` | `types.ts`, `states.ts`, `categories.ts`, `tax.ts`, `shipping.ts`, `doctors.ts`, `medications.ts`, `site-slots.ts`, generated `product-images.json` / `site-images.json` |
 
@@ -45,11 +57,15 @@ npm run seed:verify
 | `smoke-slots.ts` | `npx tsx scripts/seed/smoke-slots.ts [doctor-key] [remote\|office]`: prints free slots and claims one twice (`version: 0`); the second claim must fail with 409; the test claim is deleted |
 | `advance-order.ts` (`seed:advance`) | `npm run seed:advance -- <orderNumber> <state> [--shipment <ShipmentState>] [--dry-run]`: QA tool, moves an order through the `mlv-*` states (refuses unknown transitions); `--shipment Partial` (or Pending, Ready, Shipped, Delivered, Backorder, Delayed) sets the order's `shipmentState` for the order page |
 
-`reset-seed.ts` does not delete reviews, customers or Custom Objects; see `plans/notes/F-todos.md`.
+`reset-seed.ts` deletes the reviews and every `malva-*` container (`containers.ts` lists the 13 of `lib/ct/custom-objects.ts`; a test keeps them in step); customers only with `--include-customers`.
 
 ## Images
 
-`update-images.ts` uses the public JSON endpoint behind pexels.com/search (undocumented, public web client id). It may break; the fallback is the official Pexels API with a key (needs a small change in `searchPexels`). Pexels licence: free to use, attribution not required; the photographer is stored in `site-images.json` when the response provides it. Stored URLs are clean (no query, no fragment): `cleanUrl()`.
+`update-images.ts` has two sources. With `PEXELS_API_KEY` in the shell (free key from pexels.com/api) it uses the OFFICIAL Pexels API: every photo is under the Pexels licence (free to use, no attribution needed). Without it, it uses the public JSON endpoint behind pexels.com/search (undocumented, public web client id, `PEXELS_CLIENT_ID` overrides it). **Warning (found by workstream AC):** that endpoint answers with partner stock thumbnails hosted on `media.istockphoto.com` (response type `ad_medium`), not Pexels-licensed photos. The committed JSON was generated that way. If royalty-free is a hard requirement, run `PEXELS_API_KEY=... npm run seed:images:json` and commit the result (the `img-src` host list in `netlify.toml` and `next.config.ts` already allows `images.pexels.com`). Stored URLs are clean (no query, no fragment): `cleanUrl()`; no photographer credit is stored or shown.
+
+## API client scopes
+
+The storefront client's scopes are the comments of `site/.env.example` (a reason per scope; `lib/ct/scopes.test.ts` fails on a duplicate, a missing reason or a resource the code calls without a scope). The seed admin client's scopes are the comments of `site/.env.seed.example`: simplest is `manage_project`, the narrow list is there with the script that needs each one. The exact text for the owner is in `plans/notes/AC-todos.md`.
 
 ## Data model notes
 
