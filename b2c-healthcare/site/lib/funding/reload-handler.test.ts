@@ -8,15 +8,15 @@ const post = (headers: Record<string, string> = {}, method = 'POST') => new Requ
 describe('benefit-allowance-drawdown: the scheduled reload endpoint is guarded by a secret header (U-07)', () => {
   it('without the secret header: 401 and nothing runs', async () => {
     const run = vi.fn(async () => result);
-    const response = await handleReload(post(), { run, secret: 's3cret' });
+    const response = await handleReload(post(), { run, secret: 's3cret-0123456789' });
     expect(response.status).toBe(401);
     expect(run).not.toHaveBeenCalled();
   });
 
   it('with the wrong secret: 401 and nothing runs', async () => {
     const run = vi.fn(async () => result);
-    expect((await handleReload(post({ [RELOAD_SECRET_HEADER]: 'nope' }), { run, secret: 's3cret' })).status).toBe(401);
-    expect((await handleReload(post({ [RELOAD_SECRET_HEADER]: 's3cret-but-longer' }), { run, secret: 's3cret' })).status).toBe(401);
+    expect((await handleReload(post({ [RELOAD_SECRET_HEADER]: 'nope' }), { run, secret: 's3cret-0123456789' })).status).toBe(401);
+    expect((await handleReload(post({ [RELOAD_SECRET_HEADER]: 's3cret-0123456789-longer' }), { run, secret: 's3cret-0123456789' })).status).toBe(401);
     expect(run).not.toHaveBeenCalled();
   });
 
@@ -29,14 +29,14 @@ describe('benefit-allowance-drawdown: the scheduled reload endpoint is guarded b
 
   it('only POST: a GET is 405 and nothing runs', async () => {
     const run = vi.fn(async () => result);
-    expect((await handleReload(post({ [RELOAD_SECRET_HEADER]: 's3cret' }, 'GET'), { run, secret: 's3cret' })).status).toBe(405);
+    expect((await handleReload(post({ [RELOAD_SECRET_HEADER]: 's3cret-0123456789' }, 'GET'), { run, secret: 's3cret-0123456789' })).status).toBe(405);
     expect(run).not.toHaveBeenCalled();
   });
 
   it('with the secret: runs once with the clock and answers counts only', async () => {
     const run = vi.fn(async () => result);
     const now = new Date('2026-11-01T00:10:00Z');
-    const response = await handleReload(post({ [RELOAD_SECRET_HEADER]: 's3cret' }), { run, secret: 's3cret', now: () => now });
+    const response = await handleReload(post({ [RELOAD_SECRET_HEADER]: 's3cret-0123456789' }), { run, secret: 's3cret-0123456789', now: () => now });
     expect(response.status).toBe(200);
     expect(run).toHaveBeenCalledTimes(1);
     expect(run).toHaveBeenCalledWith(now);
@@ -45,7 +45,7 @@ describe('benefit-allowance-drawdown: the scheduled reload endpoint is guarded b
   });
 
   it('a failing reload is a 502 without the error text, and is safe to run again', async () => {
-    const response = await handleReload(post({ [RELOAD_SECRET_HEADER]: 's3cret' }), { run: async () => { throw new Error('pt_8k2m4q7x exploded'); }, secret: 's3cret' });
+    const response = await handleReload(post({ [RELOAD_SECRET_HEADER]: 's3cret-0123456789' }), { run: async () => { throw new Error('pt_8k2m4q7x exploded'); }, secret: 's3cret-0123456789' });
     expect(response.status).toBe(502);
     expect(await response.text()).not.toContain('pt_8k2m4q7x');
   });
@@ -64,20 +64,20 @@ describe('the Netlify functions', () => {
   });
 
   it('the guarded function refuses a caller without the header', async () => {
-    vi.stubEnv('RELOAD_ALLOWANCES_SECRET', 's3cret');
+    vi.stubEnv('RELOAD_ALLOWANCES_SECRET', 's3cret-0123456789');
     const { default: handler } = await import('../../netlify/functions/reload-allowances');
     expect((await handler(post())).status).toBe(401);
   });
 
   it('the schedule is monthly and calls the guarded function with the secret header', async () => {
-    vi.stubEnv('RELOAD_ALLOWANCES_SECRET', 's3cret');
+    vi.stubEnv('RELOAD_ALLOWANCES_SECRET', 's3cret-0123456789');
     vi.stubEnv('URL', 'https://malva.example');
     const fetchMock = vi.fn(async () => new Response('{}', { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);
     const mod = await import('../../netlify/functions/reload-allowances-scheduled');
     expect(mod.config.schedule).toBe('10 0 1 * *');
     expect((await mod.default()).status).toBe(204);
-    expect(fetchMock).toHaveBeenCalledWith('https://malva.example/.netlify/functions/reload-allowances', { method: 'POST', headers: { [RELOAD_SECRET_HEADER]: 's3cret' } });
+    expect(fetchMock).toHaveBeenCalledWith('https://malva.example/.netlify/functions/reload-allowances', { method: 'POST', headers: { [RELOAD_SECRET_HEADER]: 's3cret-0123456789' } });
   });
 
   it('the schedule does nothing when the secret or site URL is missing', async () => {

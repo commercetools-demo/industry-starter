@@ -24,7 +24,8 @@ export interface RetentionDeps {
 const json = (status: number, body: unknown): Response => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
 
 export async function handleRetention(request: Request, deps: RetentionDeps): Promise<Response> {
-  if (!deps.secret) return json(503, { error: 'Retention is not configured.' });
+  // A secret shorter than 16 characters counts as not configured (docs/deploy.md: generate with openssl rand -base64 32).
+  if (!deps.secret || deps.secret.length < 16) return json(503, { error: 'Retention is not configured.' });
   if (request.method !== 'POST') return json(405, { error: 'Use POST.' });
   const given = request.headers.get(RETENTION_SECRET_HEADER) ?? '';
   if (!given || !sameSecret(given, deps.secret)) return json(401, { error: 'Not allowed.' });
