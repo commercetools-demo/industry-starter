@@ -1,0 +1,7 @@
+{
+  "emergency": { "display": "0800 555 0142", "href": "tel:+448005550142" },
+  "commercial": { "display": "0800 555 0100", "href": "tel:+448005550100" },
+  "email": "quotes@malva.example",
+  "hours": { "en-US": "Mon–Fri 7:30–18:00", "de-DE": "Mo–Fr 7:30–18:00" },
+  "sample": true
+}

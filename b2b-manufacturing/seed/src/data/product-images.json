@@ -1,0 +1,194 @@
+{
+  "mpw-svc-pipe-installation-repair": [
+    {
+      "url": "https://images.pexels.com/photos/29248902/pexels-photo-29248902.jpeg",
+      "dimensions": {
+        "w": 4340,
+        "h": 3255
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/27354192/pexels-photo-27354192.jpeg",
+      "dimensions": {
+        "w": 5472,
+        "h": 3648
+      }
+    }
+  ],
+  "mpw-svc-drain-cleaning-cctv-survey": [
+    {
+      "url": "https://images.pexels.com/photos/36842620/pexels-photo-36842620.jpeg",
+      "dimensions": {
+        "w": 5488,
+        "h": 3728
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/34295401/pexels-photo-34295401.jpeg",
+      "dimensions": {
+        "w": 6000,
+        "h": 4000
+      }
+    }
+  ],
+  "mpw-svc-backflow-water-testing": [
+    {
+      "url": "https://images.pexels.com/photos/3735700/pexels-photo-3735700.jpeg",
+      "dimensions": {
+        "w": 3500,
+        "h": 2333
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/8442376/pexels-photo-8442376.jpeg",
+      "dimensions": {
+        "w": 5192,
+        "h": 3466
+      }
+    }
+  ],
+  "mpw-svc-boiler-hot-water": [
+    {
+      "url": "https://images.pexels.com/photos/7937300/pexels-photo-7937300.jpeg",
+      "dimensions": {
+        "w": 6016,
+        "h": 4016
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/34938442/pexels-photo-34938442.jpeg",
+      "dimensions": {
+        "w": 5712,
+        "h": 4284
+      }
+    }
+  ],
+  "mpw-svc-commercial-fit-outs": [
+    {
+      "url": "https://images.pexels.com/photos/37352142/pexels-photo-37352142.jpeg",
+      "dimensions": {
+        "w": 4000,
+        "h": 3000
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/29318090/pexels-photo-29318090.jpeg",
+      "dimensions": {
+        "w": 6000,
+        "h": 4000
+      }
+    }
+  ],
+  "mpw-svc-general-waste-collection": [
+    {
+      "url": "https://images.pexels.com/photos/32679841/pexels-photo-32679841.jpeg",
+      "dimensions": {
+        "w": 2700,
+        "h": 1800
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/11077610/pexels-photo-11077610.jpeg",
+      "dimensions": {
+        "w": 6240,
+        "h": 4160
+      }
+    }
+  ],
+  "mpw-svc-recycling": [
+    {
+      "url": "https://images.pexels.com/photos/11286099/pexels-photo-11286099.jpeg",
+      "dimensions": {
+        "w": 6240,
+        "h": 4160
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/7512773/pexels-photo-7512773.jpeg",
+      "dimensions": {
+        "w": 6240,
+        "h": 4160
+      }
+    }
+  ],
+  "mpw-svc-hazardous-waste": [
+    {
+      "url": "https://images.pexels.com/photos/2786527/pexels-photo-2786527.jpeg",
+      "dimensions": {
+        "w": 5839,
+        "h": 3893
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/6546299/pexels-photo-6546299.jpeg",
+      "dimensions": {
+        "w": 3072,
+        "h": 2048
+      }
+    }
+  ],
+  "mpw-svc-grease-trap-servicing": [
+    {
+      "url": "https://images.pexels.com/photos/3774209/pexels-photo-3774209.jpeg",
+      "dimensions": {
+        "w": 5000,
+        "h": 4000
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/5779835/pexels-photo-5779835.jpeg",
+      "dimensions": {
+        "w": 6594,
+        "h": 4396
+      }
+    }
+  ],
+  "mpw-svc-medical-clinical-waste": [
+    {
+      "url": "https://images.pexels.com/photos/10058483/pexels-photo-10058483.jpeg",
+      "dimensions": {
+        "w": 5184,
+        "h": 3888
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/10058479/pexels-photo-10058479.jpeg",
+      "dimensions": {
+        "w": 5184,
+        "h": 3888
+      }
+    }
+  ],
+  "mpw-svc-liquid-waste-tankering": [
+    {
+      "url": "https://images.pexels.com/photos/12191394/pexels-photo-12191394.jpeg",
+      "dimensions": {
+        "w": 6000,
+        "h": 4000
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/28757525/pexels-photo-28757525.jpeg",
+      "dimensions": {
+        "w": 4000,
+        "h": 3000
+      }
+    }
+  ],
+  "mpw-svc-compliance-reporting": [
+    {
+      "url": "https://images.pexels.com/photos/8296977/pexels-photo-8296977.jpeg",
+      "dimensions": {
+        "w": 6000,
+        "h": 4000
+      }
+    },
+    {
+      "url": "https://images.pexels.com/photos/7821674/pexels-photo-7821674.jpeg",
+      "dimensions": {
+        "w": 6720,
+        "h": 4480
+      }
+    }
+  ]
+}

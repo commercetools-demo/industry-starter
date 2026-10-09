@@ -1,0 +1,36 @@
+/* Quote list and request form additions to the design CSS. Tokens only. */
+.ql-grid{display:grid;grid-template-columns:2fr 1fr;gap:48px;align-items:start}
+.ql-table{overflow-x:auto}
+.ql-table td,.ql-table th{vertical-align:top}
+.ql-table select,.ql-table input{height:40px;font-size:15px}
+.ql-name{font-weight:600}
+.ql-flag{display:inline-block;margin-left:8px;color:var(--sl-danger-fg);font-size:13px;font-weight:600}
+.ql-label{display:none}
+.ql-card{background:var(--sl-white);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-card);padding:24px;display:grid;gap:16px}
+.ql-card h2{font:600 20px/1.3 var(--font-display)}
+.ql-card .btn{width:100%}
+.ql-skeleton{height:56px;background:var(--sl-gray-100);margin-bottom:8px}
+.ql-empty{display:grid;gap:16px;justify-items:start;max-width:560px}
+.ql-empty .row{display:flex;gap:16px;flex-wrap:wrap}
+.ql-actions{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+.rq-form{display:grid;gap:20px}
+.rq-form h2{font:600 24px/1.2 var(--font-display)}
+.rq-form h2:focus{outline:none}
+.rq-opts{display:grid;gap:12px;border:0;padding:0;margin:0}
+.rq-opts legend{font-weight:500;font-size:14px;margin-bottom:8px}
+.rq-lines{display:grid;gap:12px}
+.rq-line{border:1px solid var(--border);padding:16px;display:grid;gap:12px;background:var(--sl-white)}
+.rq-line .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rq-trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+.rq-done{display:grid;gap:16px}
+.rq-ref{font:600 20px var(--font-display)}
+@media(max-width:900px){.ql-grid{grid-template-columns:1fr;gap:32px}}
+@media(max-width:700px){
+  .ql-table table,.ql-table tbody,.ql-table tr,.ql-table td{display:block}
+  .ql-table thead{display:none}
+  .ql-table tr{border-bottom:1px solid var(--border);padding:12px 0}
+  .ql-table td{border:0;padding:6px 0}
+  .ql-label{display:block;font-weight:500;font-size:14px;margin-bottom:4px}
+  .rq-line .row{grid-template-columns:1fr}
+}
+.rq-skeleton{min-height:660px}

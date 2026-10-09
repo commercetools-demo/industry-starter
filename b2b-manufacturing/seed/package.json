@@ -1,0 +1,28 @@
+{
+  "name": "malva-seed",
+  "private": true,
+  "type": "module",
+  "description": "Idempotent seed scripts for the Malva commercetools project (services, roles, store, demo companies, images).",
+  "scripts": {
+    "check": "tsc --noEmit && vitest run",
+    "test": "vitest run",
+    "configure": "tsx src/configure-project.ts",
+    "inventory": "tsx src/inventory-sample.ts",
+    "cleanup": "tsx src/cleanup-sample.ts",
+    "seed": "tsx src/seed.ts",
+    "verify": "tsx src/verify.ts",
+    "reset": "tsx src/reset-seed.ts",
+    "delete-test-company": "tsx src/delete-test-company.ts"
+  },
+  "dependencies": {
+    "@commercetools/platform-sdk": "^8.0.0",
+    "@commercetools/ts-client": "^4.0.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

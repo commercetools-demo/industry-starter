@@ -1,0 +1,47 @@
+{
+  "home-hero": [
+    {
+      "url": "https://images.pexels.com/photos/37668426/pexels-photo-37668426.jpeg",
+      "dimensions": {
+        "w": 7008,
+        "h": 4672
+      }
+    }
+  ],
+  "pillar-plumbing": [
+    {
+      "url": "https://images.pexels.com/photos/14845870/pexels-photo-14845870.jpeg",
+      "dimensions": {
+        "w": 2816,
+        "h": 2112
+      }
+    }
+  ],
+  "pillar-waste": [
+    {
+      "url": "https://images.pexels.com/photos/39121167/pexels-photo-39121167.jpeg",
+      "dimensions": {
+        "w": 3248,
+        "h": 2432
+      }
+    }
+  ],
+  "cctv-survey": [
+    {
+      "url": "https://images.pexels.com/photos/13961561/pexels-photo-13961561.jpeg",
+      "dimensions": {
+        "w": 5345,
+        "h": 3563
+      }
+    }
+  ],
+  "team-fleet": [
+    {
+      "url": "https://images.pexels.com/photos/12700835/pexels-photo-12700835.jpeg",
+      "dimensions": {
+        "w": 5472,
+        "h": 3648
+      }
+    }
+  ]
+}

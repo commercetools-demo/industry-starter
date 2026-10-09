@@ -1,0 +1,6 @@
+[
+  { "id": "iso-9001", "title": { "en-US": "ISO 9001", "de-DE": "ISO 9001" }, "caption": { "en-US": "Quality management", "de-DE": "Qualitätsmanagement" }, "sample": true },
+  { "id": "iso-14001", "title": { "en-US": "ISO 14001", "de-DE": "ISO 14001" }, "caption": { "en-US": "Environmental management", "de-DE": "Umweltmanagement" }, "sample": true },
+  { "id": "waste-carrier", "title": { "en-US": "Licensed waste carrier", "de-DE": "Zugelassener Abfalltransporteur" }, "caption": { "en-US": "Reg. no. CBDU000000", "de-DE": "Reg.-Nr. CBDU000000" }, "sample": true },
+  { "id": "gas-safe-wras", "title": { "en-US": "Gas Safe & WRAS approved", "de-DE": "Gas Safe & WRAS zugelassen" }, "caption": { "en-US": "Plumbing & water", "de-DE": "Sanitär & Wasser" }, "sample": true }
+]
