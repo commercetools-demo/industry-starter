@@ -1,4 +1,5 @@
 import 'server-only';
+import { fixtureMedicineBySku } from '@/lib/ct/doctors-fixtures';
 
 /**
  * Development-only state for the account pages of workstream T (`MALVA_FIXTURES=1`, see lib/ct/fixtures.ts): saved
@@ -27,7 +28,7 @@ const now = () => new Date().toISOString();
 const SKU_NAMES: Record<string, string> = {};
 
 function nameOfSku(sku: string): Record<string, string> {
-  return { 'en-US': SKU_NAMES[sku] ?? sku };
+  return { 'en-US': SKU_NAMES[sku] ?? fixtureMedicineBySku(sku)?.name ?? sku };
 }
 
 /** Lets the fixture list know a product's display name (set by the caller that resolved it from the seed data). */

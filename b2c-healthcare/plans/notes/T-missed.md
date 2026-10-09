@@ -1,0 +1,15 @@
+# Workstream T: gaps and things other workstreams must pick up
+
+- **A run cannot be intercepted, only pre-checked.** With no API Extension (D-028) the platform creates the order on its own schedule. The daily check looks at runs due within 36 hours; a prescription changed after the check but before the run (or a run created within hours of enabling) is only caught afterwards, when the generated order is reconciled: the order exists and was charged, `consumeAuthorization` refuses, the function logs it and leaves it for ops (no automatic cancel or refund of a generated order). A per-run hook needs an API Extension on order creation from a recurring order.
+- **Generated orders skip the storefront's order path.** They get an `MLV-` number, the state `mlv-received` and the consumed prescription from the reconcile step, but not Q's line records (`dispensedQty`, `authorizationParams`, `suppliedLots`) nor a ledger-based `restore` hook beyond what S's cancel already does (S cancel works on any order id with a ledger entry). If the line record is wanted, extend `reconcileGenerated` with `buildLineRecord`.
+- **`decideRun` ignores stock and shelf life.** An out-of-stock refill makes the platform put the recurring order in `Failed`; the page shows "Needs attention" with Resume, but nothing explains it beyond that. A stock/shelf-life check ahead of the run (N's `getSupplyBySku`) would turn it into a recorded skip.
+- **Monthly ceiling race** (N-missed) applies to the check too: the used count is read at check time.
+- **Standalone card tokenization.** There is no "add a card" form on `/account/payment-methods`: a card is saved by the Checkout widget while paying. The empty state links to the cart.
+- **Stored-method payments and automated reversals** (docs): refunds to a saved card are manual. S's cancel marks the Refund transaction and voids the authorization; whether voiding works for stored-method payments is a live check.
+- **Business-unit features** are B2C-excluded: net terms / credit line, list sharing, company payment methods.
+- **A quantity change on an auto-refill** is not offered (one prescription line is one pack).
+- **Recurring orders of a deleted customer or an expired list** are not cleaned up here; commercetools deletes a list 360 days after its last change, recurring carts are not auto-deleted.
+- **Fixture mode does not run the scheduled check or write the refill log** (Custom Objects); the unit tests cover them.
+- **The refill list shows lines by the recurring Cart's line names** (platform data); in a project where a product was renamed the cart keeps the name at creation.
+- **Chrome DevTools MCP was unavailable:** browser verification was `curl` against `MALVA_FIXTURES=1` (HTML and API assertions), not a rendered check of layout, focus and the confirm/warning blocks; the component tests cover the behaviour, a visual check is still open.
+- **`plans/STATUS.md` counts are stale** after ticking T (not edited, per instructions): run `node plans/verify-plan.mjs --sync`.
