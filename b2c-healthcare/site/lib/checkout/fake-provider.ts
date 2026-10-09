@@ -60,11 +60,10 @@ export function createFakePaymentProvider(): FakePaymentProvider {
     },
     async release(paymentId) {
       for (const h of held.values()) {
-        if (h.paymentId === paymentId && h.status !== 'released') {
-          h.status = 'released';
-          released.push(paymentId);
-        }
+        if (h.paymentId === paymentId) h.status = 'released';
       }
+      // Idempotent: a payment is released once, whether the demo held it or a test payment stands for it.
+      if (!released.includes(paymentId)) released.push(paymentId);
     },
     async listStoredMethods(customerId) {
       const all = mine(customerId).map(strip);

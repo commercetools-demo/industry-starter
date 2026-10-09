@@ -5,7 +5,7 @@ import { createFakeShop, type FakeShop } from '@/test/fake-shop';
 let shop: FakeShop;
 vi.mock('@/lib/ct/client', () => ({ apiRoot: new Proxy({}, { get: (_t, p) => (shop.apiRoot as Record<string, unknown>)[p as string] }) }));
 
-import { authorizationOf, createCheckoutProvider, readCheckoutProviderConfig, regionFromApiUrl } from './checkout-provider';
+import { createCheckoutProvider, readCheckoutProviderConfig, regionFromApiUrl } from './checkout-provider';
 import { PaymentUnavailableError, paymentModeNow } from '@/lib/checkout/payment-provider';
 import { loadFakePaymentProvider } from '@/lib/ct/fixtures';
 
@@ -91,29 +91,35 @@ describe('design-checkout: Payment through the payment widget: Checkout adapter 
     expect(JSON.parse(String(calls[1].init.body))).toEqual({ actions: [{ action: 'cancelPayment' }] });
   });
 
-  it('authorization is read from the cart payments: Authorization/Success is authorized with the amount that was authorized', () => {
-    expect(authorizationOf([])).toEqual({ status: 'none' });
-    expect(authorizationOf([payment('p1', '2026-10-08T10:00:00Z', [{ type: 'Authorization', state: 'Success', amount: usd(1875) }])])).toEqual({
-      status: 'authorized', paymentId: 'p1', centAmount: 1875, currencyCode: 'USD',
+  it('refund asks the Payment Intents API for refundPayment with the amount (Checkout owns the lifecycle, D-035)', async () => {
+    const calls: { url: string; init: RequestInit }[] = [];
+    const fetchImpl = vi.fn(async (url: string, init: RequestInit) => {
+      calls.push({ url, init });
+      return url.includes('/oauth/token') ? reply({ access_token: 'tok-3' }) : reply({}, 200);
     });
-    expect(authorizationOf([payment('p1', '2026-10-08T10:00:00Z', [{ type: 'Authorization', state: 'Failure', amount: usd(1875) }])])).toEqual({ status: 'declined', paymentId: 'p1' });
-    expect(authorizationOf([payment('p1', '2026-10-08T10:00:00Z', [{ type: 'Authorization', state: 'Pending', amount: usd(1875) }])])).toEqual({ status: 'none' });
+    await createCheckoutProvider(config, fetchImpl as never).refund('pay-1', usd(1875));
+    expect(calls[1].url).toBe('https://checkout.us-central1.gcp.commercetools.com/proj/payment-intents/pay-1');
+    expect(JSON.parse(String(calls[1].init.body))).toEqual({ actions: [{ action: 'refundPayment', amount: { centAmount: 1875, currencyCode: 'USD' } }] });
   });
 
-  it('the newest payment decides: a failed attempt followed by a successful one is authorized', () => {
-    const state = authorizationOf([
-      payment('old', '2026-10-08T10:00:00Z', [{ type: 'Authorization', state: 'Failure', amount: usd(1875) }]),
-      payment('new', '2026-10-08T10:05:00Z', [{ type: 'Authorization', state: 'Success', amount: usd(1875) }]),
-    ]);
-    expect(state).toMatchObject({ status: 'authorized', paymentId: 'new' });
+  it('a failing refund or release is "payment not available" and never claims success', async () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const fetchImpl = vi.fn(async (url: string) => (url.includes('/oauth/token') ? reply({ access_token: 't' }) : reply({ message: 'nope' }, 400)));
+    const provider = createCheckoutProvider(config, fetchImpl as never);
+    await expect(provider.refund('p', usd(1))).rejects.toBeInstanceOf(PaymentUnavailableError);
+    await expect(provider.release('p')).rejects.toBeInstanceOf(PaymentUnavailableError);
+    spy.mockRestore();
   });
 
-  it('getAuthorization reads the cart with its payments expanded', async () => {
-    const cart = shop.seedCart();
-    const stored = shop.carts.get(cart.id)!;
-    (stored as unknown as { paymentInfo: unknown }).paymentInfo = { payments: [{ typeId: 'payment', id: 'p9', obj: payment('p9', '2026-10-08T10:00:00Z', [{ type: 'Authorization', state: 'Success', amount: usd(1875) }]) }] };
-    const provider = createCheckoutProvider(config, (async () => reply({})) as never);
-    expect(await provider.getAuthorization(cart.id)).toMatchObject({ status: 'authorized', paymentId: 'p9', centAmount: 1875 });
+  it('the session is for the full flow: the cart and the Application key, no card data', async () => {
+    const calls: { url: string; init: RequestInit }[] = [];
+    const fetchImpl = vi.fn(async (url: string, init: RequestInit) => {
+      calls.push({ url, init });
+      return url.includes('/oauth/token') ? reply({ access_token: 'tok' }) : reply({ id: 'sess-1' });
+    });
+    const session = await createCheckoutProvider(config, fetchImpl as never).createSession({ id: 'cart-1', total: usd(1875) });
+    expect(session).toMatchObject({ sessionId: 'sess-1' });
+    expect(JSON.parse(String(calls[1].init.body))).toEqual({ cart: { cartRef: { id: 'cart-1' } }, metadata: { applicationKey: config.applicationKey } });
   });
 });
 

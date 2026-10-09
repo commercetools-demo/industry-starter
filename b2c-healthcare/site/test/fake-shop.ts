@@ -285,7 +285,8 @@ export function createFakeShop(): FakeShop {
         const where = queryArgs?.where ?? '';
         const m = /^cart\(id="([^"]+)"\)$/.exec(where);
         const own = /^id="([^"]+)" and customerId="([^"]+)"$/.exec(where);
-        const results = shop.orders.filter((o) => (own ? o.id === own[1] && o.customerId === own[2] : !m || o.cart.id === m[1])).map((o) => {
+        const byId = /^id="([^"]+)"$/.exec(where);
+        const results = shop.orders.filter((o) => (own ? o.id === own[1] && o.customerId === own[2] : byId ? o.id === byId[1] : !m || o.cart.id === m[1])).map((o) => {
           const copy = structuredClone(o) as ShopOrder & { paymentInfo?: { payments: { typeId: 'payment'; id: string; obj?: ShopPayment }[] } };
           // The cancel and order reads expand the payments and the state.
           for (const ref of copy.paymentInfo?.payments ?? []) ref.obj = structuredClone(shop.payments.get(ref.id));
@@ -295,11 +296,13 @@ export function createFakeShop(): FakeShop {
       },
     }),
     withId: ({ ID }: { ID: string }) => ({
-      get: () => ({
+      get: ({ queryArgs }: { queryArgs?: { expand?: string[] } } = {}) => ({
         execute: async () => {
           const order = shop.orders.find((o) => o.id === ID);
           if (!order) throw { statusCode: 404 };
-          return { body: structuredClone(order) };
+          const copy = structuredClone(order) as ShopOrder & { paymentInfo?: { payments: { typeId: 'payment'; id: string; obj?: ShopPayment }[] } };
+          if (queryArgs?.expand?.some((e) => e.startsWith('paymentInfo'))) for (const ref of copy.paymentInfo?.payments ?? []) ref.obj = structuredClone(shop.payments.get(ref.id));
+          return { body: copy };
         },
       }),
       post: ({ body }: { body: { version: number; actions: { action: string; [k: string]: unknown }[] } }) => ({
@@ -309,6 +312,7 @@ export function createFakeShop(): FakeShop {
           if (body.version !== order.version) throw { statusCode: 409 };
           for (const a of body.actions as { action: string; [k: string]: unknown }[]) {
             if (a.action === 'transitionState' && a.state) order.state = { typeId: 'state', key: (a.state as { key: string }).key, obj: { key: (a.state as { key: string }).key } };
+            else if (a.action === 'setOrderNumber') order.orderNumber = String(a.orderNumber);
             else if (a.action === 'setCustomType') order.custom = { type: { key: (a.type as { key: string }).key }, fields: structuredClone(a.fields as Record<string, unknown>) };
             else if (a.action === 'setLineItemCustomField') {
               const line = order.lineItems.find((l) => l.id === a.lineItemId);

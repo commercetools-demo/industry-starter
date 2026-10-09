@@ -1,7 +1,7 @@
 import 'server-only';
 import { isBeforeSameDayCutoff, SAME_DAY_METHOD_KEY, STANDARD_METHOD_KEY } from '@/lib/checkout/config';
 import { drawdown } from '@/lib/ct/allowance';
-import { allocateTender } from '@/lib/funding/tender';
+import { allocateTender, type TenderPlan } from '@/lib/funding/tender';
 import type { CheckoutContext, MethodOutcome, RestrictedOutcome } from '@/lib/ct/checkout';
 import type { FinalizeOutcome, PrepareInput, PrepareOutcome } from '@/lib/ct/orders';
 import * as cartFixtures from '@/lib/ct/cart-fixtures';
@@ -98,11 +98,11 @@ interface FixtureOrder {
   customerId: string;
   patientRef: string;
   view: OrderView;
-  plan: { allowance: number; restricted: number; card: number };
+  plan: TenderPlan;
   settlements: { id: string; eligible: boolean; amount: number }[];
   finalized: boolean;
 }
-const orderStore = globalThis as unknown as { __malvaFixtureOrders?: Map<string, FixtureOrder>; __malvaFixturePrepared?: Map<string, { state: CheckoutState; plan: FixtureOrder['plan']; now: Date; patientRef: string }>; __malvaFixtureSeq?: { n: number } };
+const orderStore = globalThis as unknown as { __malvaFixtureOrders?: Map<string, FixtureOrder>; __malvaFixturePrepared?: Map<string, { state: CheckoutState; plan: TenderPlan; now: Date; patientRef: string }>; __malvaFixtureSeq?: { n: number } };
 const fixtureOrders: Map<string, FixtureOrder> = (orderStore.__malvaFixtureOrders ??= new Map());
 const prepared: NonNullable<typeof orderStore.__malvaFixturePrepared> = (orderStore.__malvaFixturePrepared ??= new Map());
 const seq = (orderStore.__malvaFixtureSeq ??= { n: 0 });

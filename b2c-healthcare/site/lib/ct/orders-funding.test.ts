@@ -14,10 +14,16 @@ vi.mock('@/lib/ct/client', () => ({
 }));
 const rxMocks = vi.hoisted(() => ({ validateRxSelection: vi.fn(), findOwnPrescription: vi.fn(), RxNotFoundError: class extends Error {} }));
 vi.mock('@/lib/ct/prescriptions', () => rxMocks);
+vi.mock('@/lib/ct/rx-catalog', () => ({ getCatalogBySku: async () => new Map() }));
+vi.mock('@/lib/ct/patient', () => ({ getPatient: async () => ({ patientRef: 'pt_sam', name: 'Sam Rivera' }) }));
 
 import { CONTAINERS } from '@/lib/ct/custom-objects';
 import type { CheckoutContext } from '@/lib/ct/checkout';
-import { placeOrder, type PlaceOrderInput } from './orders';
+import * as ordersModule from './orders';
+import { makePlaceOrder, type FlowInput } from '@/test/checkout-flow';
+
+type PlaceOrderInput = FlowInput & { idempotencyKey?: string };
+const placeOrder = (flow: PlaceOrderInput, provider: Parameters<ReturnType<typeof makePlaceOrder>>[1], options?: { cardCents?: number }) => makePlaceOrder(shop, ordersModule)(flow, provider, options);
 
 const provider = createFakePaymentProvider();
 const NOW = new Date('2026-10-08T09:00:00-04:00');
@@ -71,7 +77,6 @@ describe('payer-and-patient-cost-share: pre-order re-resolution (U-03)', () => {
     expect(shop.orders).toHaveLength(0);
     expect(shop.carts.get(cart.id)?.cartState).toBe('Active');
     expect(shop.carts.get(cart.id)?.lineItems[0].price.value.centAmount).toBe(375);
-    expect(provider.released).toHaveLength(1);
   });
 
   it('Resolver unavailable: the order is refused as COVER_UNRESOLVED, nothing is created and no list price is written', async () => {

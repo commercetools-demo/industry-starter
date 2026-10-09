@@ -34,6 +34,7 @@ vi.mock('@/lib/ct/clinical-store', () => ({
     get: async (ref: string, cls: string) => state.credentials.find((c) => c.patientRef === ref && c.class === cls) ?? null,
   },
 }));
+vi.mock('@/lib/ct/patient', () => ({ getPatient: async () => ({ patientRef: 'pt_sam', name: 'Sam Rivera' }) }));
 vi.mock('@/lib/ct/shelf-life', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/ct/shelf-life')>()),
   getSupplyBySku: async (skus: string[]) => new Map(skus.map((sku) => [sku, { sku, available: 600 }])),
@@ -46,7 +47,11 @@ import { checkLines } from '@/lib/ct/cart-validation';
 import { CONTAINERS } from '@/lib/ct/custom-objects';
 import type { CheckoutContext } from '@/lib/ct/checkout';
 import { getRxView, validateRxSelection } from '@/lib/ct/prescriptions';
-import { placeOrder } from '@/lib/ct/orders';
+import * as ordersModule from '@/lib/ct/orders';
+import { makePlaceOrder, type FlowInput } from '@/test/checkout-flow';
+
+type PlaceOrderInput = FlowInput & { idempotencyKey?: string };
+const placeOrder = (flow: PlaceOrderInput, provider: Parameters<ReturnType<typeof makePlaceOrder>>[1], options?: { cardCents?: number }) => makePlaceOrder(shop, ordersModule)(flow, provider, options);
 
 const NOW = new Date('2026-10-08T12:00:00Z');
 const ctxRx = { locale: 'en-US', currency: 'USD', country: 'US', now: NOW };

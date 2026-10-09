@@ -15,11 +15,14 @@ vi.mock('@/lib/ct/client', () => ({
 }));
 const rxMocks = vi.hoisted(() => ({ validateRxSelection: vi.fn(), findOwnPrescription: vi.fn(), RxNotFoundError: class extends Error {} }));
 vi.mock('@/lib/ct/prescriptions', () => rxMocks);
+vi.mock('@/lib/ct/rx-catalog', () => ({ getCatalogBySku: async () => new Map() }));
+vi.mock('@/lib/ct/patient', () => ({ getPatient: async () => ({ patientRef: 'pt_sam', name: 'Sam Rivera' }) }));
 
 import { CONTAINERS } from '@/lib/ct/custom-objects';
 import { getBalance, grantCycle } from '@/lib/ct/allowance';
 import { cancelOrderForCustomer } from '@/lib/ct/order-cancel';
-import { placeOrder } from '@/lib/ct/orders';
+import * as ordersModule from '@/lib/ct/orders';
+import { makePlaceOrder } from '@/test/checkout-flow';
 import { setRestrictedChoice } from '@/lib/ct/tender';
 
 const provider = createFakePaymentProvider();
@@ -56,22 +59,31 @@ async function placeMixedOrder() {
     ],
   });
   await setRestrictedChoice(structuredClone(cart) as unknown as CtCart, true, { patientRef: 'pt_sam', now: NOW });
-  // The card Payment Checkout would have created for the remainder.
-  shop.payments.set('pay-card', { id: 'pay-card', version: 1, createdAt: '2026-10-08T12:00:00Z', amountPlanned: usd(260), paymentMethodInfo: { paymentInterface: 'stripe', method: 'card' }, transactions: [{ id: 't1', type: 'Authorization', state: 'Success', amount: usd(260) }] });
-  const stored = shop.carts.get(cart.id)!;
-  stored.paymentInfo = { payments: [...(stored.paymentInfo?.payments ?? []), { typeId: 'payment', id: 'pay-card' }] };
-  stored.version += 1;
-  provider.authorize({ id: cart.id, total: { centAmount: 260, currencyCode: 'USD' } });
-  const outcome = await placeOrder({ ctx: { patient: { patientRef: 'pt_sam', name: 'Sam Rivera' }, customerId: 'c-sam', cartId: undefined, rx: { locale: 'en-US', currency: 'USD', country: 'US' }, now: NOW }, cartId: cart.id, expectedTotal: { centAmount: 3135, currencyCode: 'USD' }, idempotencyKey: `${cart.id}_x` }, provider);
+  // Checkout collects the card remainder (260) and creates the order; the storefront then finalizes it.
+  const outcome = await makePlaceOrder(shop, ordersModule)({ ctx: { patient: { patientRef: 'pt_sam', name: 'Sam Rivera' }, customerId: 'c-sam', cartId: undefined, rx: { locale: 'en-US', currency: 'USD', country: 'US' }, now: NOW }, cartId: cart.id, expectedTotal: { centAmount: 3135, currencyCode: 'USD' } }, provider);
   if (!outcome.ok) throw new Error(`placement failed: ${outcome.code}`);
   return outcome.orderId;
 }
 
+/** Plays the connector: Checkout's Payment Intents API records the cancel on the card Payment. */
+const connector = () => ({
+  kind: 'demo' as const,
+  createSession: vi.fn(),
+  release: vi.fn(async (id: string) => {
+    shop.payments.get(id)!.transactions.push({ id: `c-${id}`, type: 'CancelAuthorization', state: 'Success', amount: usd(260) });
+  }),
+  refund: vi.fn(async () => undefined),
+  listStoredMethods: vi.fn(async () => []),
+  setDefaultStoredMethod: vi.fn(async () => undefined),
+  removeStoredMethod: vi.fn(async () => undefined),
+});
+const cardPayment = () => [...shop.payments.values()].find((x) => x.paymentMethodInfo.method === 'card')!;
+
 describe('eligible-item-tender-restriction: Refund returns to its own instrument (U-09)', () => {
-  it('cancelling a mixed order: each Payment refunds the amount it took, the card share for the payment service, the balance restored', async () => {
+  it('cancelling a mixed order: the allowance and the instrument return their own share at once, the card is cancelled through Checkout, the balance restored', async () => {
     const orderId = await placeMixedOrder();
     expect(await getBalance('pt_sam', NOW)).toBe(0);
-    const p = { kind: 'demo' as const, createSession: vi.fn(), getAuthorization: vi.fn(), release: vi.fn(async () => undefined), listStoredMethods: vi.fn(async () => []), setDefaultStoredMethod: vi.fn(async () => undefined), removeStoredMethod: vi.fn(async () => undefined) };
+    const p = connector();
     const outcome = await cancelOrderForCustomer(orderId, 'c-sam', p, 'en-US');
     expect(outcome.kind).toBe('cancelled');
     const refund = (id: string) => shop.payments.get(id)!.transactions.filter((t) => t.type === 'Refund');
@@ -80,18 +92,21 @@ describe('eligible-item-tender-restriction: Refund returns to its own instrument
     expect(refund(allowance.id)).toEqual([expect.objectContaining({ state: 'Success', amount: expect.objectContaining({ centAmount: 1000 }) })]);
     expect(restricted.paymentMethodInfo.method).toBe('restricted-health-account');
     expect(refund(restricted.id)).toEqual([expect.objectContaining({ state: 'Success', amount: expect.objectContaining({ centAmount: 1875 }) })]);
-    expect(refund('pay-card')).toEqual([expect.objectContaining({ state: 'Initial', amount: expect.objectContaining({ centAmount: 260 }) })]);
+    // The card share is Checkout's: no marker of ours, a cancel request through the seam.
+    expect(refund(cardPayment().id)).toHaveLength(0);
+    expect(p.release).toHaveBeenCalledWith(cardPayment().id);
     expect(await getBalance('pt_sam', NOW)).toBe(1000);
-    // Only the card share is open: the order page says refund requested, not refunded.
-    if (outcome.kind === 'cancelled') expect(outcome.order.refund).toBe('requested');
+    // Nothing was captured on the card: "Payment released".
+    if (outcome.kind === 'cancelled') expect(outcome.order.refund).toBe('released');
   });
 
-  it('a second cancel adds no second refund and restores nothing twice', async () => {
+  it('a second cancel adds no second refund, no second request to Checkout and restores nothing twice', async () => {
     const orderId = await placeMixedOrder();
-    const p = { kind: 'demo' as const, createSession: vi.fn(), getAuthorization: vi.fn(), release: vi.fn(async () => undefined), listStoredMethods: vi.fn(async () => []), setDefaultStoredMethod: vi.fn(async () => undefined), removeStoredMethod: vi.fn(async () => undefined) };
+    const p = connector();
     await cancelOrderForCustomer(orderId, 'c-sam', p, 'en-US');
     await cancelOrderForCustomer(orderId, 'c-sam', p, 'en-US');
-    for (const payment of shop.payments.values()) expect(payment.transactions.filter((t) => t.type === 'Refund')).toHaveLength(1);
+    for (const payment of shop.payments.values()) expect(payment.transactions.filter((t) => t.type === 'Refund')).toHaveLength(payment.paymentMethodInfo.method === 'card' ? 0 : 1);
+    expect(p.release).toHaveBeenCalledTimes(1);
     expect(await getBalance('pt_sam', NOW)).toBe(1000);
   });
 });

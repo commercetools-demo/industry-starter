@@ -69,7 +69,20 @@ import { cancelOrderForCustomer } from './order-cancel';
 import * as hooks from './order-cancel-hooks';
 
 const NOW = new Date('2026-10-08T12:00:00Z');
-const provider = () => ({ kind: 'demo' as const, createSession: vi.fn(), getAuthorization: vi.fn(), release: vi.fn(async () => undefined), listStoredMethods: vi.fn(), setDefaultStoredMethod: vi.fn(), removeStoredMethod: vi.fn() });
+// Plays the connector: Checkout's Payment Intents API records the result on the Payment (CancelAuthorization / Refund).
+const provider = () => ({
+  kind: 'demo' as const,
+  createSession: vi.fn(),
+  release: vi.fn(async () => {
+    order.payment.transactions.push({ type: 'CancelAuthorization', state: 'Success', amount: { centAmount: 1875, currencyCode: 'USD' } });
+  }),
+  refund: vi.fn(async (_id: string, amount: { centAmount: number; currencyCode: string }) => {
+    order.payment.transactions.push({ type: 'Refund', state: 'Pending', amount });
+  }),
+  listStoredMethods: vi.fn(),
+  setDefaultStoredMethod: vi.fn(),
+  removeStoredMethod: vi.fn(),
+});
 const refills = () => (objects.objects.find((o) => o.container === CONTAINERS.rx && o.key === 'RX-77102')!.value as Prescription).refillsLeft;
 
 beforeEach(async () => {
@@ -90,15 +103,34 @@ beforeEach(async () => {
 });
 
 describe('post-purchase-order-management: cancel before packing', () => {
-  it('sets the state to cancelled, restores the refill, marks the payment for refund and releases the authorization', async () => {
+  it('authorized, never captured: sets the state to cancelled, restores the refill and asks Checkout to cancel the authorization ("Payment released")', async () => {
     expect(refills()).toBe(2);
     const p = provider();
     const outcome = await cancelOrderForCustomer('ord-1', 'c-sam', p, 'en-US');
-    expect(outcome).toMatchObject({ kind: 'cancelled', alreadyCancelled: false, order: { status: 'cancelled', refund: 'requested', cancellable: false } });
+    expect(outcome).toMatchObject({ kind: 'cancelled', alreadyCancelled: false, order: { status: 'cancelled', refund: 'released', cancellable: false } });
     expect(order.stateKey).toBe('mlv-cancelled');
     expect(refills()).toBe(3);
-    expect(order.payment.transactions.filter((t) => t.type === 'Refund')).toEqual([{ type: 'Refund', state: 'Initial', amount: { centAmount: 1875, currencyCode: 'USD' } }]);
     expect(p.release).toHaveBeenCalledWith('pay-1');
+    expect(p.refund).not.toHaveBeenCalled();
+    // The storefront writes no Refund transaction of its own on a card payment: Checkout owns it.
+    expect(order.payment.transactions.filter((t) => t.type === 'Refund')).toHaveLength(0);
+  });
+
+  it('captured: asks Checkout for a refund of the charged amount ("Refund requested"), and never cancels an authorization', async () => {
+    order.payment.transactions.push({ type: 'Charge', state: 'Success', amount: { centAmount: 1875, currencyCode: 'USD' } });
+    const p = provider();
+    const outcome = await cancelOrderForCustomer('ord-1', 'c-sam', p, 'en-US');
+    expect(outcome).toMatchObject({ kind: 'cancelled', order: { refund: 'requested' } });
+    expect(p.refund).toHaveBeenCalledWith('pay-1', { centAmount: 1875, currencyCode: 'USD' });
+    expect(p.release).not.toHaveBeenCalled();
+  });
+
+  it('a refund that the connector finished reads "Refunded"', async () => {
+    order.payment.transactions.push({ type: 'Charge', state: 'Success', amount: { centAmount: 1875, currencyCode: 'USD' } }, { type: 'Refund', state: 'Success', amount: { centAmount: 1875, currencyCode: 'USD' } });
+    order.stateKey = 'mlv-cancelled';
+    const p = provider();
+    expect(await cancelOrderForCustomer('ord-1', 'c-sam', p, 'en-US')).toMatchObject({ kind: 'cancelled', order: { refund: 'refunded' } });
+    expect(p.refund).not.toHaveBeenCalled();
   });
 
   it('also allowed during pharmacist review, calls the allowance and restricted hooks', async () => {
@@ -110,12 +142,14 @@ describe('post-purchase-order-management: cancel before packing', () => {
     expect(restricted).toHaveBeenCalledWith('ord-1');
   });
 
-  it('refill restored once and not twice: cancelling again changes nothing (no second refill, no second refund marker)', async () => {
+  it('refill restored once and not twice: cancelling again changes nothing (no second refill, no second request to Checkout)', async () => {
     await cancelOrderForCustomer('ord-1', 'c-sam', provider(), 'en-US');
-    const second = await cancelOrderForCustomer('ord-1', 'c-sam', provider(), 'en-US');
+    const again = provider();
+    const second = await cancelOrderForCustomer('ord-1', 'c-sam', again, 'en-US');
     expect(second).toMatchObject({ kind: 'cancelled', alreadyCancelled: true });
     expect(refills()).toBe(3);
-    expect(order.payment.transactions.filter((t) => t.type === 'Refund')).toHaveLength(1);
+    expect(order.payment.transactions.filter((t) => t.type === 'CancelAuthorization')).toHaveLength(1);
+    expect(again.release).not.toHaveBeenCalled();
     expect(calls.filter((c) => c === 'transition')).toHaveLength(1);
   });
 
@@ -130,9 +164,10 @@ describe('post-purchase-order-management: cancel before packing', () => {
     expect(refills()).toBe(3);
   });
 
-  it('works without a payment service (not configured): the refund marker is still written', async () => {
+  it('works without a payment service (not configured): the order is cancelled and the refill restored; the release waits for the retry', async () => {
     expect((await cancelOrderForCustomer('ord-1', 'c-sam', null, 'en-US')).kind).toBe('cancelled');
-    expect(order.payment.transactions.some((t) => t.type === 'Refund')).toBe(true);
+    expect(refills()).toBe(3);
+    expect(order.payment.transactions.some((t) => t.type === 'Refund' || t.type === 'CancelAuthorization')).toBe(false);
   });
 });
 
