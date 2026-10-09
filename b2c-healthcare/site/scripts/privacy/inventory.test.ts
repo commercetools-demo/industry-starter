@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 import { CONTAINER_INVENTORY, PRIVACY_CONTAINERS } from './inventory';
 
@@ -28,5 +29,33 @@ describe('privacy inventory', () => {
   it('every resource kind of the GDPR list is documented', () => {
     const doc = read('docs/privacy-inventory.md');
     for (const kind of ['Customer', 'Cart', 'Order', 'Payment', 'Review', 'ShoppingList', 'DiscountCode', 'BusinessUnit', 'Quote', 'QuoteRequest', 'StagedQuote', 'Message']) expect(doc, kind).toContain(kind);
+  });
+});
+
+describe('disclosure through the goods (X-08)', () => {
+  const doc = () => read('docs/privacy-inventory.md');
+  const members = (file: string, name: string): string[] => {
+    const sf = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, true);
+    const out: string[] = [];
+    sf.forEachChild((n) => {
+      if (ts.isInterfaceDeclaration(n) && n.name.text === name) for (const m of n.members) if (ts.isPropertySignature(m)) out.push(m.name.getText());
+    });
+    return out;
+  };
+
+  it('Disclosure through the goods is handled: the decision record says what a confirmation, order list and any future packing slip show, and who signs it off', () => {
+    const text = doc();
+    expect(text).toContain('## 6. Disclosure through the goods');
+    expect(text).toMatch(/medication name/);
+    expect(text).toMatch(/no emails, SMS messages or shipping labels in v1/);
+    expect(text).toMatch(/packing slip/);
+    expect(text).toContain('SO-04');
+  });
+
+  it('Disclosure through the goods is handled: what the order pages carry is exactly name and quantity per line, with no sig, RX content, diagnosis or reason', () => {
+    expect(members('lib/order-types.ts', 'OrderLineView').sort()).toEqual(['eligible', 'name', 'quantity', 'settledBy']);
+    const orderFields = members('lib/order-types.ts', 'OrderView');
+    expect(orderFields.length).toBeGreaterThan(8);
+    expect(orderFields.filter((f) => /^(sig|diagnos\w*|conditions?|results?|reason|rx\w*|notes?|labs?|prescription\w*)$/i.test(f))).toEqual([]);
   });
 });

@@ -56,3 +56,7 @@ npm run seed:verify
 - Doctors: one variant (`DOC-<slug>`), `modes` attribute, USD fee per mode as a price on channel `mlv-remote` / `mlv-office` (D-031). Prices are tax-exclusive; tax is 0% US (D-033).
 - Medications: price per pack, `maxQtyPerOrder` mirrored as the native inventory `maxCartQuantity`, one demo SKU (`MED-famotidine-20-mg`) has a fixed `expiryDate` custom field on its inventory entry (type `mlv-inventory-meta`).
 - Tests never use the network or real credentials: `npx vitest run scripts/seed`.
+
+## Synthetic-only guard and Messages check (workstream X)
+
+`seed.ts` refuses to run (before any write) unless every patient and booking in `data/` is synthetic: emails on `example.com`, phone numbers in the 555-01xx range (`synthetic.ts`). `seed:verify` fails when Messages are enabled in the project (they copy changed field values into a log that only `dataErasure` reaches). Privacy operations live in `scripts/privacy/` (see `docs/privacy-inventory.md`).
