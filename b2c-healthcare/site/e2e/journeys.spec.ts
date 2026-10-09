@@ -1,31 +1,8 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+import { emptyCart, lookup, useSavedAddress } from './flows';
 import { signInAs, watchConsole, type Patient } from './helpers';
 
 /** Z-04 journeys against `next dev` with MALVA_FIXTURES=1 (no commercetools, DEMO payment). */
-
-async function lookup(page: Page, rx: string): Promise<void> {
-  await page.goto('/en-US/prescriptions');
-  await page.getByRole('textbox', { name: 'RX number' }).fill(rx);
-  await page.getByRole('button', { name: 'Search' }).click();
-  await expect(page.getByText(`Patient:`)).toBeVisible();
-}
-
-async function emptyCart(page: Page): Promise<void> {
-  await page.goto('/en-US/cart');
-  for (;;) {
-    const remove = page.getByRole('button', { name: /^Remove/ }).first();
-    if (!(await remove.isVisible({ timeout: 1500 }).catch(() => false))) return;
-    await remove.click();
-    await page.waitForTimeout(400);
-  }
-}
-
-async function useSavedAddress(page: Page): Promise<void> {
-  await page.goto('/en-US/checkout');
-  await page.locator('select[name=saved-address]').selectOption({ index: 1 });
-  await page.getByRole('button', { name: 'Use this address' }).click();
-  await expect(page.getByText(/Delivering to /)).toBeVisible();
-}
 
 test.describe('journey 1: a guest books a doctor', () => {
   test('pick a slot, confirm as a guest, see the confirmation; nothing health-related in the URL', async ({ page }) => {
