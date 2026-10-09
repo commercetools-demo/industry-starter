@@ -1,0 +1,2 @@
+- No React package: the sync is a staging copy of tokens.css, tokens.json, README.md, foundations/, components/, layouts/ plus a styles.css that @imports tokens.css. No _ds_sync.json (no anchor), so the next sync re-uploads everything.
+- Cards link ../tokens.css, so keep the folder-relative layout in the project.

@@ -9,3 +9,6 @@ node_modules/
 .env.*
 !.env.example
 .envrc
+
+# Figma source files for design-systems (large; keep locally to re-extract)
+design-systems/**/*.fig

@@ -1,0 +1,5 @@
+{
+  "projectId": "be98600f-5068-4fcd-97ce-9c53539fbca2",
+  "shape": "package",
+  "note": "Static tokens + HTML cards; no compiled package. Upload is assembled by hand into a staging dir (see NOTES.md)."
+}

@@ -1,0 +1,73 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../tokens.css"><style>
+*{box-sizing:border-box}body{margin:0;padding:24px;font-family:var(--font-sans);color:var(--color-text);background:var(--color-bg-surface);display:flex;flex-direction:column;gap:16px}
+.panel{background:var(--color-bg-page);color:var(--color-text);padding:24px;border-radius:var(--radius-300);border:1px solid var(--color-border-subdued)}
+h3{font:600 15px/24px var(--font-sans);letter-spacing:var(--tracking-body-1);margin:0 0 12px}h3:not(:first-child){margin-top:24px}
+.row{display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start}.c{font:500 12px/16px var(--font-sans);color:var(--color-text-subdued);display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.box{appearance:none;margin:0;width:24px;height:24px;border-radius:var(--radius-150);border:2px solid var(--color-border);background:var(--color-bg-surface);display:inline-grid;place-items:center;cursor:pointer;color:var(--color-text-on-active);flex:none}
+.box:hover{border-color:var(--color-border-hover)}.box:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.box:checked,.box:indeterminate{background:var(--color-bg-active);border-color:var(--color-bg-active)}
+.box:checked::after{content:"";width:6px;height:11px;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.box:indeterminate::after{content:"";width:12px;height:2px;background:currentColor;border-radius:2px}
+.rad{appearance:none;margin:0;width:24px;height:24px;border-radius:var(--radius-full);border:2px solid var(--color-border);background:var(--color-bg-surface);display:inline-grid;place-items:center;cursor:pointer;flex:none}
+.rad:hover{border-color:var(--color-border-hover)}.rad:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.rad:checked{background:var(--color-bg-active);border-color:var(--color-bg-active)}.rad:checked::after{content:"";width:12px;height:12px;border-radius:50%;background:var(--color-text-on)}
+.item{display:flex;align-items:center;gap:12px;font:600 15px/24px var(--font-sans);letter-spacing:var(--tracking-body-1);cursor:pointer;color:var(--color-text)}
+.item.r{justify-content:space-between;width:360px}.item.chk{width:236px;gap:12px;padding:0}
+.item.list{justify-content:space-between;width:186px}.item.list.on span{color:var(--color-text)}.item.list span{color:var(--color-text-subdued)}
+.tg{appearance:none;margin:0;width:48px;height:24px;border-radius:var(--radius-full);background:var(--color-bg-surface-disabled);position:relative;cursor:pointer;transition:background .15s;flex:none}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:var(--shadow-button);transition:transform .15s}
+.tg:checked{background:var(--color-bg-brand)}.tg:checked::after{transform:translateX(24px)}.tg:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+[data-theme=dark] .tg:checked{background:var(--color-bg-active)}
+.set{width:360px;display:flex;flex-direction:column;gap:12px;padding:0}
+.set hr{border:0;height:1px;background:var(--color-border-subdued);margin:0;width:100%}
+.trow{display:flex;justify-content:space-between;align-items:center;gap:16px;font:600 15px/24px var(--font-sans);letter-spacing:var(--tracking-body-1)}
+.trow small{display:block;font:500 13px/16px var(--font-sans);color:var(--color-text-subdued);margin-top:4px}
+.opts{display:flex;gap:16px;padding-top:4px}.opts.v{flex-direction:column;gap:12px}
+.leg{display:inline-flex;align-items:center;gap:12px;height:32px;padding:8px 12px;border-radius:var(--radius-050);font:600 14px/24px var(--font-chart);color:var(--color-text)}
+.leg .sw{width:16px;height:16px;border-radius:var(--radius-100)}.leg.off{color:var(--color-text-disabled)}.leg.off .sw{opacity:.4}
+</style>
+<body><template id="t">
+<h3>Checkbox</h3>
+<div class="row">
+ <div class="c"><input type="checkbox" class="box">unchecked</div>
+ <div class="c"><input type="checkbox" class="box" checked>checked</div>
+ <div class="c"><input type="checkbox" class="box" id="ind">indeterminate</div>
+ <div class="c"><input type="checkbox" class="box" disabled style="opacity:.4">disabled</div>
+</div>
+<h3>Checkbox item · check list</h3>
+<div class="row">
+ <div class="c"><label class="item r"><input type="checkbox" class="box" checked style="order:2">Notify me by email</label>align right · checked</div>
+ <div class="c"><label class="item r"><input type="checkbox" class="box" style="order:2">Notify me by email</label>align right</div>
+ <div class="c"><label class="item"><input type="checkbox" class="box" checked>All products</label>align left · checked</div>
+ <div class="c"><label class="item"><input type="checkbox" class="box">All products</label>align left</div>
+ <div class="c"><label class="item list on"><span>Pending refunds</span><input type="checkbox" class="box" checked></label>check list · on</div>
+ <div class="c"><label class="item list"><span>Pending refunds</span><input type="checkbox" class="box"></label>check list · off</div>
+</div>
+<h3>Radio</h3>
+<div class="row">
+ <div class="c"><input type="radio" class="rad" name="a">unchecked</div>
+ <div class="c"><input type="radio" class="rad" name="b" checked>checked</div>
+ <div class="c"><label class="item r"><input type="radio" class="rad" name="c" checked style="order:2">Standard shipping</label>item · right</div>
+ <div class="c"><label class="item"><input type="radio" class="rad" name="d">Express shipping</label>item · left</div>
+</div>
+<h3>Toggle</h3>
+<div class="row">
+ <div class="c"><input type="checkbox" class="tg" checked>on</div>
+ <div class="c"><input type="checkbox" class="tg">off</div>
+</div>
+<h3>Toggle setting</h3>
+<div class="row">
+ <div class="c"><div class="set"><div class="trow"><span>Show in store</span><input type="checkbox" class="tg"></div><hr>
+ </div>collapse · off</div>
+ <div class="c"><div class="set"><div class="trow"><span>Allow comments<small>Customers can reply to your posts</small></span><input type="checkbox" class="tg" checked></div><hr><div class="opts"><label class="item"><input type="radio" class="rad" name="e" checked>Everyone</label><label class="item"><input type="radio" class="rad" name="e">Followers</label></div></div>expand · horizontal</div>
+ <div class="c"><div class="set"><div class="trow"><span>Email alerts</span><input type="checkbox" class="tg" checked></div><hr><div class="opts v"><label class="item"><input type="checkbox" class="box" checked>Orders</label><label class="item"><input type="checkbox" class="box">Refunds</label><label class="item"><input type="checkbox" class="box" checked>Reviews</label></div></div>expand · vertical</div>
+</div>
+<h3>Legend checkbox (charts)</h3>
+<div class="row">
+ <div class="c"><label class="leg"><input type="checkbox" class="box" checked><span class="sw" style="background:var(--color-chart-1)"></span>COGS</label>checked</div>
+ <div class="c"><label class="leg off"><input type="checkbox" class="box"><span class="sw" style="background:var(--color-chart-2)"></span>Revenue</label>unchecked</div>
+</div>
+</template>
+<script>const t=document.getElementById('t');['light','dark'].forEach(m=>{const d=document.createElement('div');d.className='panel';if(m=='dark')d.dataset.theme='dark';const f=t.content.cloneNode(true);f.querySelectorAll('input[type=radio]').forEach(r=>r.name=m+r.name);d.appendChild(f);document.body.appendChild(d)});document.querySelectorAll('#ind,[id=ind]').forEach(e=>e.indeterminate=true);document.querySelectorAll('input[type=checkbox]').forEach((e,i)=>{if(e.parentElement.textContent.trim()=='indeterminate')e.indeterminate=true});</script>
