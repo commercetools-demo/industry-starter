@@ -424,7 +424,8 @@
       "addresses": "Addresses",
       "profile": "Profile",
       "signOut": "Sign out",
-      "signOutFailed": "We could not sign you out. Please try again."
+      "signOutFailed": "We could not sign you out. Please try again.",
+      "allowance": "Allowance"
     },
     "overview": {
       "title": "Overview",
@@ -951,6 +952,22 @@
       "viewCart": "View cart",
       "failed": "We could not reorder. Please try again.",
       "nothing": "None of these medications can be added right now."
+    },
+    "tender": {
+      "title": "How this order was paid",
+      "allowance": "Benefit allowance",
+      "restricted": "Health account card (demo)",
+      "card": "Card",
+      "noCard": "No card payment",
+      "balance": "Allowance balance now",
+      "qualifying": "Qualifying for the health account card",
+      "notQualifying": "Not qualifying for the health account card",
+      "settledBy": "Paid with {instruments}",
+      "instrument": {
+        "allowance": "allowance",
+        "restricted-health-account": "Health account card (demo)",
+        "card": "card"
+      }
     }
   },
   "funding": {
@@ -989,5 +1006,19 @@
       "PENDING": "Your {class} credential is awaiting verification. You can buy this once it is verified."
     },
     "requiredLabel": "Credential required"
+  },
+  "allowance": {
+    "title": "Allowance",
+    "sub": "Your sponsor's allowance is spent on orders in this store, and it is used before any other payment.",
+    "balance": "Remaining balance",
+    "granted": "Granted for {cycle}",
+    "used": "Used this cycle",
+    "forfeitBadge": "Lapses",
+    "forfeit": "{amount} will be forfeited on {date}. Unused allowance is not carried over to the next cycle.",
+    "nothingLapsing": "Nothing is left to lapse. The next cycle starts on {date}.",
+    "lastLapsed": "{amount} of your {cycle} allowance was forfeited at the end of that cycle.",
+    "notCash": "An allowance is not cash. It cannot be withdrawn or transferred to another member.",
+    "none": "You do not have a benefit allowance.",
+    "loadFailed": "We could not load your allowance. Please try again."
   }
 }

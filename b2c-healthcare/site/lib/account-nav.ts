@@ -18,6 +18,7 @@ export const ACCOUNT_NAV: readonly AccountNavItem[] = [
   { key: 'labs', href: '/account/labs', labelKey: 'labs' },
   { key: 'appointments', href: '/account/appointments', labelKey: 'appointments' },
   { key: 'orders', href: '/account/orders', labelKey: 'orders' },
+  { key: 'allowance', href: '/account/allowance', labelKey: 'allowance' },
   { key: 'addresses', href: '/account/addresses', labelKey: 'addresses' },
   { key: 'profile', href: '/account/profile', labelKey: 'profile' },
 ];

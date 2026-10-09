@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { OrderConfirmation } from '@/components/orders/OrderConfirmation';
+import { getBalance } from '@/lib/ct/allowance';
 import { getOrderForCustomer } from '@/lib/ct/orders-read';
+import { getPatient } from '@/lib/ct/patient';
 import { requireSessionOrPrompt } from '@/lib/require-session';
 
 type Props = { params: Promise<{ locale: string; id: string }> };
@@ -26,5 +28,9 @@ export default async function OrderRoute({ params }: Props) {
   if (!gate.signedIn) return gate.prompt;
   const order = await getOrderForCustomer(id, gate.customerId, locale);
   if (!order) notFound();
-  return <OrderConfirmation order={order} />;
+  // The balance is stated when the order drew from the allowance (benefit-allowance-drawdown: "the new balance is stated").
+  const patient = order.tender && order.tender.allowance.centAmount > 0 ? await getPatient(gate.customerId).catch(() => null) : null;
+  const balance = patient ? await getBalance(patient.patientRef).catch(() => null) : null;
+  const allowanceBalance = balance === null || balance === undefined ? null : { ...order.total, centAmount: balance };
+  return <OrderConfirmation order={order} allowanceBalance={allowanceBalance} />;
 }

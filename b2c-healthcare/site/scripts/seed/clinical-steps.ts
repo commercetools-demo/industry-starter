@@ -1,3 +1,4 @@
+import { ALLOWANCE_MEMBERS, allowanceCycle, allowanceObjectKey, cycleFor } from './data/allowances';
 import { BOOKINGS } from './data/bookings';
 import { CREDENTIALS, credentialObjectKey } from './data/credentials';
 import { LABS } from './data/labs';
@@ -15,6 +16,7 @@ export const CONTAINERS = {
   lab: 'malva-lab',
   credential: 'malva-credential',
   booking: 'malva-booking',
+  allowance: 'malva-allowance',
 } as const;
 
 /** Three demo patients. Needs `SEED_PATIENT_PASSWORD`; the email is created verified, with one default address. */
@@ -39,6 +41,11 @@ export function objectSteps(ctx: Ctx): Step[] {
     ...LABS.map((l) => ({ name: `lab ${l.id}`, run: () => ensureObject(ctx, CONTAINERS.lab, l.id, l) })),
     ...CREDENTIALS.map((c) => ({ name: `credential ${credentialObjectKey(c)}`, run: () => ensureObject(ctx, CONTAINERS.credential, credentialObjectKey(c), c) })),
     ...BOOKINGS.map((b) => ({ name: `booking ${b.reference}`, run: () => ensureObject(ctx, CONTAINERS.booking, b.reference, b, 'exists') })),
+    // Benefit allowance (workstream U): the cycle the seed runs in; balances change with every order, so an existing cycle is never compared.
+    ...ALLOWANCE_MEMBERS.map((m) => {
+      const cycle = cycleFor(new Date());
+      return { name: `allowance ${m.patientRef} ${cycle}`, run: () => ensureObject(ctx, CONTAINERS.allowance, allowanceObjectKey(m.patientRef, cycle), allowanceCycle(m.patientRef, m.monthly, cycle), 'exists') };
+    }),
   ];
 }
 

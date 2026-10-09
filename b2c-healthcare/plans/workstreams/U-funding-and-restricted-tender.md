@@ -19,13 +19,13 @@ Order meta: `custom.mlv-order-meta` records `allowanceApplied` and `restrictedAp
 - [x] U-04 Cart/checkout UI for two figures, "Not covered" vs "unresolved" visuals; tests [SPEC: payer-and-patient-cost-share]
 - [x] U-05 `lib/ct/allowance.ts`: balance, `drawdown(orderId, amount)` idempotent on order id with version-conflict retry, `restoreAllowance`, `grantCycle` idempotent; tests: covers/partly covers/concurrent orders/return to open vs closed cycle [SKILL: commercetools-commerce-patterns] [SPEC: benefit-allowance-drawdown]
 - [x] U-06 Allowance as its own Payment before the card in `placeOrder`; remainder amount to the Checkout payment; tests incl. "allowance covers the order → no other tender taken" [SKILL: commercetools-checkout] [SPEC: benefit-allowance-drawdown]
-- [ ] U-07 `scripts/reload-allowances.ts` + Netlify scheduled function wrapper; tests: run twice = once, forfeit not carried; `/account/allowance` page with lapsing amount/date; "not cash" test [SKILL: commercetools-commerce-patterns] [SPEC: benefit-allowance-drawdown]
+- [x] U-07 `scripts/reload-allowances.ts` + Netlify scheduled function wrapper; tests: run twice = once, forfeit not carried; `/account/allowance` page with lapsing amount/date; "not cash" test [SKILL: commercetools-commerce-patterns] [SPEC: benefit-allowance-drawdown]
 - [x] U-08 `lib/funding/eligibility.ts`: copy flag to line, `splitBasket(lines, discounts)` pro-rata apportionment, shipping excluded; table tests for wholly/mixed/none and re-split [SKILL: commercetools-commerce-patterns] [SPEC: eligible-item-tender-restriction]
 - [x] U-09 Restricted instrument Payment in `placeOrder`, per-line record on order, refund routing by recorded split; tests incl. refund returns to own instrument [SKILL: commercetools-checkout] [SPEC: eligible-item-tender-restriction]
 - [x] U-10 Cart shows eligible subtotal and amount needing another tender before checkout; checkout offers the instrument only when available; tests [SPEC: eligible-item-tender-restriction]
 - [x] U-11 `lib/ct/credentials.ts` `checkCredential(patientRef, controlClass, at)` returning `OK | NONE | WRONG_SCOPE | EXPIRED | PENDING`; tests for all six scenarios [SKILL: commercetools-commerce-patterns] [SPEC: credentialed-purchase-scope]
 - [x] U-12 Enforce at add (rx-lines route), cart load and order placement; copy credential id + expiry to the line; UI states (shown but unavailable with requirement); tests incl. expired between cart and order [SKILL: commercetools-commerce-patterns] [SPEC: credentialed-purchase-scope]
-- [ ] U-13 Seed additions (cycle objects, credentials, `hsaEligible`/`controlClass` demo products, funding schemes) verified by `seed:verify` [SKILL: commercetools-catalog-migration] [SPEC: benefit-allowance-drawdown]
+- [x] U-13 Seed additions (cycle objects, credentials, `hsaEligible`/`controlClass` demo products, funding schemes) verified by `seed:verify` [SKILL: commercetools-catalog-migration] [SPEC: benefit-allowance-drawdown]
 - [ ] U-14 Update README "Funding model is a demo" and PROJECT-FINDINGS with the Payment shape used (methods `allowance`, `restricted-health-account`) [SPEC: payer-and-patient-cost-share]
 
 ## Scenarios
@@ -43,16 +43,16 @@ Every scenario is a unit test (or a scripted check) named after it.
 - [x] Allowance partly covers the order
 - [x] Balance visible before committing
 - [x] Cycle reload
-- [ ] Forfeiture is announced
+- [x] Forfeiture is announced
 - [x] Return restores the balance
-- [ ] Allowance is not cash
+- [x] Allowance is not cash
 #### eligible-item-tender-restriction › A restricted instrument paying only for the lines it may pay for
 - [x] Wholly eligible basket
 - [x] Mixed basket splits
 - [x] Eligible subtotal shown on the basket
 - [x] Wholly ineligible basket
 - [x] Basket change re splits
-- [ ] Eligibility visible on the order
+- [x] Eligibility visible on the order
 - [x] Refund returns to its own instrument
 #### credentialed-purchase-scope › Controlled goods sold only against a credential that still holds
 - [x] Credential in scope permits purchase
