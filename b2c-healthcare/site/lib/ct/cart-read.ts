@@ -1,5 +1,6 @@
 import 'server-only';
 import { apiRoot } from '@/lib/ct/client';
+import { loadCartFixtures } from '@/lib/ct/fixtures';
 import { clearCart } from '@/lib/session';
 import type { CartSummary } from '@/lib/types';
 
@@ -16,6 +17,8 @@ function statusOf(error: unknown): number | undefined {
  * Never cached: it receives a cartId.
  */
 export async function getActiveCartSafe(cartId: string): Promise<CartSummary | null> {
+  // Fixture carts live in memory and are read by the client through /api/cart; there is no platform cart to read.
+  if (await loadCartFixtures()) return null;
   try {
     const { body } = await apiRoot.carts().withId({ ID: cartId }).get().execute();
     if (body.cartState === 'Active') {

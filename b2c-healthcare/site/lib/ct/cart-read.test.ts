@@ -51,3 +51,15 @@ describe('storefront-data-loading: Initial client state from the session', () =>
     expect(clearCart).not.toHaveBeenCalled();
   });
 });
+
+describe('fixture mode (workstream Z)', () => {
+  it('with MALVA_FIXTURES=1 no platform cart is read and nothing is logged', async () => {
+    vi.stubEnv('MALVA_FIXTURES', '1');
+    const log = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    expect(await getActiveCartSafe('fixture-cart-x')).toBeNull();
+    expect(execute).not.toHaveBeenCalled();
+    expect(log).not.toHaveBeenCalled();
+    vi.unstubAllEnvs();
+    log.mockRestore();
+  });
+});

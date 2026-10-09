@@ -58,7 +58,8 @@ function view(customerId: string, lines: CartLine[], problems = new Map<string, 
   const money: Money = { centAmount: cents, currencyCode: 'USD', fractionDigits: 2 };
   return {
     id: `fixture-cart-${customerId}`,
-    version: 1,
+    // Monotonic like a platform cart version: the order idempotency key is cart id + version, so a second order of the same patient must not replay the first.
+    version: counter || 1,
     itemCount: lines.length,
     lineCount: lines.length,
     currencyCode: 'USD',
