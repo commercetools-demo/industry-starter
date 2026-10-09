@@ -15,7 +15,7 @@ Operations (scripts in `site/scripts/privacy/`, run with the admin seed credenti
 - Messages are disabled in the project (PROJECT-FINDINGS); keep it so; a check in `seed:verify` fails if enabled.
 
 ## Tasks
-- [ ] X-01 `docs/privacy-inventory.md`: table of every place personal/health data may be stored (commercetools resources, custom-object containers, cookies, logs, content files), owner, retention, erasure path [SKILL: commercetools-platform] [SPEC: health-data-minimization]
+- [x] X-01 `docs/privacy-inventory.md`: table of every place personal/health data may be stored (commercetools resources, custom-object containers, cookies, logs, content files), owner, retention, erasure path [SKILL: commercetools-platform] [SPEC: health-data-minimization]
 - [ ] X-02 `scripts/privacy/erase-patient.ts` with `dataErasure=true` on every resource kind and unit tests using a fake root asserting the parameter is always present [SKILL: commercetools-platform] [SPEC: health-data-minimization]
 - [ ] X-03 `scripts/privacy/subject-access.ts` covering all 13 resource kinds + `malva-*` custom objects; test that the query list equals the GDPR list [SKILL: commercetools-platform] [SPEC: health-data-minimization]
 - [ ] X-04 `scripts/privacy/retention.ts` + Netlify scheduled wrapper; tests for guest booking expiry and de-identification [SKILL: commercetools-platform] [SPEC: health-data-minimization]
