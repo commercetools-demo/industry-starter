@@ -203,4 +203,10 @@ describe('design-pdp: Doctor profile layout', () => {
     getDoctor.mockResolvedValue(null);
     expect(await generateMetadata({ params: Promise.resolve({ locale: 'en-US', key: 'nope' }) })).toEqual({});
   });
+
+  it('metadata (Z-03): absolute canonical without the mode query, and hreflang alternates', async () => {
+    const meta = await generateMetadata({ params: Promise.resolve({ locale: 'en-US', key: 'mlv-doc-amara-okafor' }) });
+    expect(meta.alternates?.canonical).toMatch(/^https?:\/\/[^/]+\/en-US\/doctor\/mlv-doc-amara-okafor$/);
+    expect(meta.alternates?.languages).toHaveProperty('x-default');
+  });
 });

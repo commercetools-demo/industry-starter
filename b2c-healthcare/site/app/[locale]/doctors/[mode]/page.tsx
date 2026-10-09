@@ -12,6 +12,7 @@ import { SegmentedControl } from '@/components/ui/SegmentedControl';
 import { redirect } from '@/i18n/routing';
 import { searchDoctors, type DoctorSearchResult } from '@/lib/ct/doctors';
 import { listingHref, parseListingState } from '@/lib/listing-url';
+import { pageMetadata } from '@/lib/seo';
 import { getSession } from '@/lib/session';
 import type { ConsultationMode } from '@/lib/types';
 import { COUNTRY_CONFIG, DEFAULT_LOCALE, isSupportedLocale } from '@/lib/utils';
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { locale, mode } = await params;
   if (!isMode(mode)) return {};
   const t = await getTranslations({ locale, namespace: 'doctors' });
-  return { title: t(`${mode}.metaTitle`), description: t(`${mode}.sub`) };
+  return pageMetadata({ locale, path: `/doctors/${mode}`, title: t(`${mode}.metaTitle`), description: t(`${mode}.sub`) });
 }
 
 /**

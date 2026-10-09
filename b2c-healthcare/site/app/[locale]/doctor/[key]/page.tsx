@@ -9,6 +9,7 @@ import { Link } from '@/i18n/routing';
 import { getDoctorByKeyCached } from '@/lib/ct/doctors';
 import { getCustomerById } from '@/lib/ct/identity';
 import { backToList, isConsultationMode } from '@/lib/doctor-back';
+import { pageMetadata } from '@/lib/seo';
 import { getSession } from '@/lib/session';
 import type { ConsultationMode } from '@/lib/types';
 import { COUNTRY_CONFIG, DEFAULT_LOCALE, isSupportedLocale } from '@/lib/utils';
@@ -43,10 +44,12 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const doctor = await getDoctorByKeyCached(key, locale, currency, country).catch(() => null);
   if (!doctor) return {};
   const t = await getTranslations({ locale, namespace: 'doctor' });
-  return {
+  return pageMetadata({
+    locale,
+    path: `/doctor/${key}`,
     title: t('metaTitle', { name: doctor.name, specialty: doctor.specialty }),
     description: t('metaDescription', { name: doctor.name, specialty: doctor.specialty, years: doctor.yearsExperience }),
-  };
+  });
 }
 
 /**

@@ -166,4 +166,10 @@ describe('design-plp: Doctor list by consultation mode (page)', () => {
   it('metadata: titled per mode', async () => {
     expect(await generateMetadata({ params: Promise.resolve({ locale: 'en-US', mode: 'office' }) })).toMatchObject({ title: 'Office visits with a doctor' });
   });
+
+  it('metadata (Z-03): absolute canonical without the filter query, and hreflang alternates', async () => {
+    const meta = await generateMetadata({ params: Promise.resolve({ locale: 'en-US', mode: 'remote' }) });
+    expect(meta.alternates?.canonical).toMatch(/^https?:\/\/[^/]+\/en-US\/doctors\/remote$/);
+    expect(meta.alternates?.languages).toHaveProperty('x-default');
+  });
 });
