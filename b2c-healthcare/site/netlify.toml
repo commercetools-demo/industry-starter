@@ -1,0 +1,57 @@
+# Netlify configuration for the Malva Healthcare storefront (workstream Y, D-030).
+# The Netlify site's "Base directory" is b2c-healthcare/site (set in the UI, as the sibling projects do); this file lives
+# there. Secrets and every variable VALUE are set in the Netlify UI (see docs/deploy.md); nothing secret belongs here.
+
+[build]
+  # Type-check, lint, tests, release build and the production-build checks. Any failure fails the deploy.
+  command = "npm run verify:build"
+  # Skip builds that change nothing in the site or the plan documents it reads.
+  ignore  = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ../design"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Scheduled functions (cron, UTC). The same expressions are exported from each function as `config.schedule`;
+# netlify.test.ts fails if they drift. The schedule carries no secret: the guarded work functions
+# (`reload-allowances`, `retention`, and the /api/internal/auto-refill-run route) answer only a caller that presents
+# the shared secret.
+[functions."auto-refill-run"]
+  schedule = "0 5 * * *"
+
+[functions."reload-allowances-scheduled"]
+  schedule = "10 0 1 * *"
+
+[functions."retention-scheduled"]
+  schedule = "30 3 * * *"
+
+# Security headers on every response. The CSP allows the commercetools Checkout widget (and the Stripe elements it
+# frames) and Pexels images; 'unsafe-inline' is needed for Next's inline bootstrap scripts and styles.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://*.commercetools.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.pexels.com https://storage.googleapis.com https://*.stripe.com; font-src 'self' data:; connect-src 'self' https://*.commercetools.com https://api.stripe.com https://*.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com https://*.commercetools.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "same-origin"
+    X-Frame-Options = "DENY"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Patient data is never cached (design-account-area: Caching).
+[[headers]]
+  for = "/api/account/*"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/*/account/*"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/*/prescriptions"
+  [headers.values]
+    Cache-Control = "private, no-store"

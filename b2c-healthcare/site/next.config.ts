@@ -3,7 +3,13 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
+// A release build (Netlify, or MALVA_RELEASE_BUILD=1) first deletes the dev-only routes (scripts/prune-dev-routes.mjs),
+// which leaves their tests importing nothing. `npm run check` has already type-checked everything by then.
+const releaseBuild = process.env.NETLIFY === "true" || process.env.MALVA_RELEASE_BUILD === "1";
+
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+  ...(releaseBuild ? { typescript: { ignoreBuildErrors: true } } : {}),
   // Static content (workstream V) is read from disk at runtime, so it must ship with the deployment.
   outputFileTracingIncludes: { "/**": ["./content/**/*"] },
   // Patient data is never cached (design-account-area: Caching). Route Handlers also set it themselves.
