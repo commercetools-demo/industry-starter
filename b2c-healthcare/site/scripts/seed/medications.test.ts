@@ -94,11 +94,13 @@ describe('medication seeding', () => {
     expect(await runSteps(medicationSteps(ctx), () => {})).toMatchObject({ ok: true, changed: 0 });
   });
 
-  it('a changed cart limit is reported', async () => {
+  it('a changed cart limit is updated in place', async () => {
     const fake = createFakeRoot();
     const ctx = { ...makeCtx(fake.root, { dryRun: false }, () => {}), pauseMs: 0 };
     await runSteps(medicationSteps(ctx, { only: 'mlv-med-amoxicillin-500-mg' }), () => {});
     fake.store.inventory[0].maxCartQuantity = 99;
-    expect((await runSteps(medicationSteps(ctx, { only: 'mlv-med-amoxicillin-500-mg' }), () => {})).ok).toBe(false);
+    expect(await runSteps(medicationSteps(ctx, { only: 'mlv-med-amoxicillin-500-mg' }), () => {})).toMatchObject({ ok: true, changed: 1 });
+    expect(fake.store.inventory[0].maxCartQuantity).not.toBe(99);
+    expect(await runSteps(medicationSteps(ctx, { only: 'mlv-med-amoxicillin-500-mg' }), () => {})).toMatchObject({ ok: true, changed: 0 });
   });
 });

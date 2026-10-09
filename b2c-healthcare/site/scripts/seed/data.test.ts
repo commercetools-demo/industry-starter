@@ -55,7 +55,7 @@ describe('foundation data (types, states, categories, tax, channels)', () => {
   it('product types: searchable specialty/city/modes, medication flags; custom types target the right resources', () => {
     const doctor = PRODUCT_TYPES.find((t) => t.key === 'mlv-doctor');
     const searchable = doctor?.attributes.filter((a) => a.isSearchable).map((a) => a.name);
-    expect(searchable).toEqual(['specialty', 'city', 'modes']);
+    expect(searchable).toEqual(['specialty', 'clinicName', 'city', 'modes']);
     const med = PRODUCT_TYPES.find((t) => t.key === 'mlv-medication');
     expect(med?.attributes.map((a) => a.name)).toEqual(['strength', 'dosageForm', 'rxOnly', 'dispenseUnit', 'minRemainingShelfLifeDays', 'maxQtyPerOrder', 'hsaEligible', 'controlClass']);
     const byKey = Object.fromEntries(CUSTOM_TYPES.map((t) => [t.key, t]));
@@ -96,9 +96,12 @@ describe('foundation seeding', () => {
     expect(fake.log).toEqual([]);
   });
 
-  it('reports a difference instead of overwriting', async () => {
+  it('updates a differing tax rate in place, and a second run changes nothing', async () => {
     const fake = createFakeRoot({ taxCategories: [{ key: 'mlv-rx-medicine', rates: [{ country: 'US', amount: 0.2 }] }] });
     const r = await run(fake);
-    expect(r.ok).toBe(false);
+    expect(r.ok).toBe(true);
+    expect(fake.log.some((l) => l.op === 'update' && l.kind === 'taxCategories' && l.actions?.includes('replaceTaxRate'))).toBe(true);
+    expect((fake.store.taxCategories.find((t) => t.key === 'mlv-rx-medicine')?.rates as { amount: number }[])[0].amount).toBe(0);
+    expect((await run(fake)).changed).toBe(0);
   });
 });

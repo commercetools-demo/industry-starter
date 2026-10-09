@@ -9,7 +9,7 @@ import { matchSpecialtyKeys } from '@/lib/specialties';
 import { loadFixtures, type Fixtures } from '@/lib/ct/fixtures';
 import { listFreeSlots, type Mode } from '@/lib/ct/scheduling';
 import { searchProducts, type FacetResult } from '@/lib/ct/search';
-import { buildNameMatch } from '@/lib/ct/search-query';
+import { buildClinicMatch, buildNameMatch } from '@/lib/ct/search-query';
 import type { ConsultationMode, DoctorAvailability, DoctorCard, DoctorListItem, DoctorProfile, DoctorReview } from '@/lib/types';
 
 export const DEFAULT_DOCTOR_PAGE_SIZE = 9;
@@ -86,7 +86,7 @@ async function candidates(p: SearchDoctorsParams, q: string, fx: Fixtures | null
       locale: p.locale,
       currency: p.currency,
       country: p.country,
-      extraQuery: q ? buildNameMatch(q, p.locale, specialtyMatch(q)) : undefined,
+      extraQuery: q ? buildNameMatch(q, p.locale, [...specialtyMatch(q), buildClinicMatch(q)]) : undefined,
       filters: {
         modes: [p.mode],
         ...(p.specialty ? { specialty: [p.specialty] } : {}),

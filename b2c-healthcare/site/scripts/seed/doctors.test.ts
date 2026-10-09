@@ -92,13 +92,16 @@ describe('doctor seeding', () => {
     expect(await runSteps(doctorSteps(ctx), () => {})).toMatchObject({ ok: true, changed: 0 });
   });
 
-  it('--only seeds one doctor; a changed fee is reported', async () => {
+  it('--only seeds one doctor; a changed fee is updated (changePrice) and published again', async () => {
     const fake = createFakeRoot();
     const ctx = { ...makeCtx(fake.root, { dryRun: false }, () => {}), pauseMs: 0 };
     expect(await runSteps(doctorSteps(ctx, { only: 'mlv-doc-amara-okafor' }), () => {})).toMatchObject({ changed: 1 });
     expect(fake.store.products).toHaveLength(1);
     const staged = ((fake.store.products[0].masterData as { staged: { masterVariant: { prices: { value: { centAmount: number } }[] } } }).staged);
     staged.masterVariant.prices[0].value.centAmount = 1;
-    expect((await runSteps(doctorSteps(ctx, { only: 'mlv-doc-amara-okafor' }), () => {})).ok).toBe(false);
+    expect(await runSteps(doctorSteps(ctx, { only: 'mlv-doc-amara-okafor' }), () => {})).toMatchObject({ ok: true, changed: 1 });
+    expect(fake.log.at(-1)).toMatchObject({ op: 'update', actions: ['changePrice', 'publish'] });
+    expect(staged.masterVariant.prices[0].value.centAmount).not.toBe(1);
+    expect(await runSteps(doctorSteps(ctx, { only: 'mlv-doc-amara-okafor' }), () => {})).toMatchObject({ ok: true, changed: 0 });
   });
 });

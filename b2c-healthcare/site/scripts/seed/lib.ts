@@ -197,6 +197,24 @@ export async function ensureKeyed(ctx: Ctx, kind: Kind, draft: Rec & { key: stri
   return d ? { diff: `${kind} ${draft.key}: ${d}` } : 'ok';
 }
 
+/** What `ensurePlanned` asks of a plan function: update actions, or `blocked` when the change cannot be made in place. */
+export type Planner = (existing: Rec, draft: Rec, ctx: Ctx) => { actions: Rec[]; blocked?: string } | Promise<{ actions: Rec[]; blocked?: string }>;
+
+/**
+ * Create-if-missing, otherwise UPDATE the existing resource to match the draft (D-038). The plan returns the update actions;
+ * a change commercetools forbids comes back as `blocked` with the exact reset that is needed (reported like a diff).
+ */
+export async function ensurePlanned(ctx: Ctx, kind: Kind, draft: Rec & { key: string }, plan: Planner): Promise<EnsureResult> {
+  const existing = await findByKey(ctx.root, kind, draft.key);
+  if (!existing) return ensureKeyed(ctx, kind, draft);
+  const p = await plan(existing, draft, ctx);
+  if (p.blocked) return { diff: p.blocked };
+  if (p.actions.length === 0) return 'ok';
+  if (ctx.dryRun) return 'would-update';
+  await applyActions(ctx, kind, draft.key, p.actions);
+  return 'updated';
+}
+
 /** Posts update actions to a keyed resource (read fresh for the version). */
 export async function applyActions(ctx: Ctx, kind: Kind, key: string, actions: Rec[]): Promise<void> {
   const current = await findByKey(ctx.root, kind, key);

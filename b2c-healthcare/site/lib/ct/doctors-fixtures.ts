@@ -34,6 +34,9 @@ const doctorCards: DoctorCard[] = DOCTORS.map((d) => {
   };
 });
 
+/** Same rule as the live query: every typed word appears in the clinic name (D-039). */
+const matchesClinic = (c: DoctorCard, words: string[]) => words.length > 0 && words.every((w) => (c.clinicName ?? '').toLowerCase().includes(w));
+
 export function fixtureCandidates(p: { mode: ConsultationMode; q: string; specialty?: string; city?: string }): { cards: DoctorCard[]; facets: FacetResult[] } {
   const words = p.q.toLowerCase().split(' ').filter(Boolean);
   const specialtyKeys = matchSpecialtyKeys(p.q);
@@ -42,7 +45,7 @@ export function fixtureCandidates(p: { mode: ConsultationMode; q: string; specia
     if (p.specialty && c.specialtyKey !== p.specialty) return false;
     if (p.city && c.city !== p.city) return false;
     if (!words.length) return true;
-    return words.every((w) => c.name.toLowerCase().includes(w)) || specialtyKeys.includes(c.specialtyKey);
+    return words.every((w) => c.name.toLowerCase().includes(w)) || specialtyKeys.includes(c.specialtyKey) || matchesClinic(c, words);
   });
   const count = (field: 'specialtyKey' | 'city') => {
     const by = new Map<string, number>();
@@ -99,7 +102,7 @@ const medicines: Medication[] = MEDICATIONS.map((d) => ({
 export function fixtureDoctorsByText(q: string): DoctorCard[] {
   const words = q.toLowerCase().split(' ').filter(Boolean);
   const keys = matchSpecialtyKeys(q);
-  return doctorCards.filter((c) => words.every((w) => c.name.toLowerCase().includes(w)) || keys.includes(c.specialtyKey));
+  return doctorCards.filter((c) => words.every((w) => c.name.toLowerCase().includes(w)) || keys.includes(c.specialtyKey) || matchesClinic(c, words));
 }
 
 export function fixtureMedicinesByText(q: string): Medication[] {

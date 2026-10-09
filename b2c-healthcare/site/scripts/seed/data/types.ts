@@ -110,6 +110,22 @@ export const CONTROL_CLASSES = [
 export const DOCTOR_PRODUCT_TYPE_KEY = `${PREFIX}doctor`;
 export const MEDICATION_PRODUCT_TYPE_KEY = `${PREFIX}medication`;
 
+/**
+ * ATTRIBUTES THE STOREFRONT SEARCHES OR FILTERS ON (lib/ct/search-query.ts, lib/ct/doctors.ts, lib/ct/search-all.ts).
+ * Each must stay `isSearchable: true` in the product types below: Product Search can neither filter nor full-text match
+ * an attribute that is not indexed.
+ *
+ * !!! SEARCHABILITY IS A ONE-WAY DECISION IN PRACTICE (D-039): `changeIsSearchable` exists, but the Product Search index is
+ * rebuilt for every product of the type, and an attribute name must have the SAME `isSearchable` in every product type that
+ * uses it or it leaves search everywhere. Decide BEFORE the first live seed. Changing a value here later makes `seed.ts` send
+ * `changeIsSearchable` (update-plans.ts) and `seed:verify` checks the result; types-searchable.test.ts fails when an attribute
+ * the storefront code searches is not searchable.
+ */
+export const SEARCHED_ATTRIBUTES: Record<string, string[]> = {
+  [`${PREFIX}doctor`]: ['specialty', 'city', 'modes', 'clinicName'],
+  [`${PREFIX}medication`]: ['rxOnly'],
+};
+
 /** One variant per product, so attribute constraints stay `None` (an irreversible choice that is harmless here). */
 export const PRODUCT_TYPES = [
   {
@@ -121,7 +137,7 @@ export const PRODUCT_TYPES = [
       attr('yearsExperience', 'Years of experience', { name: 'number' }),
       attr('languages', 'Languages', { name: 'set', elementType: { name: 'text' } }),
       attr('education', 'Education', { name: 'ltext' }),
-      attr('clinicName', 'Clinic', { name: 'text' }),
+      attr('clinicName', 'Clinic', { name: 'text' }, { searchable: true }),
       attr('city', 'City', enumType(CITIES), { searchable: true, required: true }),
       attr('timezone', 'Time zone (IANA)', { name: 'text' }),
       attr('modes', 'Visit modes', { name: 'set', elementType: enumType(MODES) }, { searchable: true, required: true }),
