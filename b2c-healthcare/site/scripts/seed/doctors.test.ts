@@ -69,14 +69,12 @@ describe('doctor data', () => {
     expect(new Set(DOCTORS.map((d) => d.specialty)).size).toBe(7);
   });
 
-  it('draft: published, en-US slug equals the name slug, bio is the description, health-data free of images by default', () => {
+  it('draft: published, en-US slug equals the name slug, bio is the description, no images', () => {
     const d = doctorDraft(DOCTORS[1]);
     expect(d.publish).toBe(true);
     expect(d.slug['en-US']).toBe('daniel-reyes');
     expect(d.description['en-US']).toContain('acne');
-    expect(d.masterVariant.images).toEqual([]);
-    const withImages = doctorDraft(DOCTORS[1], [{ url: 'https://h/a.jpg', dimensions: { w: 1, h: 1 } }]);
-    expect(withImages.masterVariant.images).toHaveLength(1);
+    expect(d.masterVariant).not.toHaveProperty('images');
   });
 });
 

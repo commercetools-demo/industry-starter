@@ -23,7 +23,7 @@ const projection = {
   masterVariant: {
     id: 1,
     sku: 'MED-ibuprofen-400-mg',
-    images: [{ url: 'https://images.pexels.com/a.jpg' }, { url: 'https://images.pexels.com/b.jpg' }],
+    images: [{ url: 'https://images.example/a.jpg' }, { url: 'https://images.example/b.jpg' }],
     prices: [{ value: { centAmount: 620, currencyCode: 'USD', fractionDigits: 2 } }],
     attributes: [attr('strength', '400 mg'), attr('dosageForm', 'Tablet'), attr('rxOnly', false), attr('dispenseUnit', 'pack'), attr('maxQtyPerOrder', 5), attr('hsaEligible', true), attr('minRemainingShelfLifeDays', 90)],
   },
@@ -43,7 +43,7 @@ describe('product-detail-page: catalog read', () => {
     expect(withKey).toHaveBeenCalledWith({ key: 'mlv-med-ibuprofen-400-mg' });
     expect(get).toHaveBeenCalledWith({ queryArgs: expect.objectContaining({ priceCurrency: 'USD', priceCountry: 'US' }) });
     expect(m).toMatchObject({ name: 'Ibuprofen 400 mg tablets', rxOnly: false, price: { centAmount: 620 }, maxQtyPerOrder: 5, hsaEligible: true });
-    expect(m?.imageUrls).toEqual(['https://images.pexels.com/a.jpg', 'https://images.pexels.com/b.jpg']);
+    expect(m?.imageUrls).toEqual(['https://images.example/a.jpg', 'https://images.example/b.jpg']);
     expect(m?.availability).toEqual({ status: 'in-stock' });
   });
 

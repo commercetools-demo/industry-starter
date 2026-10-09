@@ -1,6 +1,5 @@
 import { CATEGORIES, categoryDrafts } from './data/categories';
 import { DOCTORS, doctorDraft, doctorKey } from './data/doctors';
-import type { ImageEntry } from './data/images';
 import { MEDICATIONS, medicationDraft, medicationInventory, medKey, medSku } from './data/medications';
 import { SAME_DAY_ZONE, SHIPPING_METHODS } from './data/shipping';
 import { STATES, stateDraft, transitionRefs } from './data/states';
@@ -64,12 +63,12 @@ export function shippingSteps(ctx: Ctx): Step[] {
   ];
 }
 
-export interface ProductOptions { images?: Record<string, ImageEntry[]>; only?: string }
+export interface ProductOptions { only?: string }
 
 export function doctorSteps(ctx: Ctx, o: ProductOptions = {}): Step[] {
   return DOCTORS.filter((d) => !o.only || doctorKey(d) === o.only).map((d) => ({
     name: `product ${doctorKey(d)}`,
-    run: () => ensurePlanned(ctx, 'products', doctorDraft(d, o.images?.[doctorKey(d)] ?? []), productPlan),
+    run: () => ensurePlanned(ctx, 'products', doctorDraft(d), productPlan),
   }));
 }
 
@@ -79,7 +78,7 @@ export function medicationSteps(ctx: Ctx, o: ProductOptions = {}): Step[] {
   return [
     ...meds.map((d) => ({
       name: `product ${medKey(d)}`,
-      run: () => ensurePlanned(ctx, 'products', medicationDraft(d, o.images?.[medKey(d)] ?? []), productPlan),
+      run: () => ensurePlanned(ctx, 'products', medicationDraft(d), productPlan),
     })),
     ...meds.map((d) => ({
       name: `inventory ${medSku(d)}`,

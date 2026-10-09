@@ -79,7 +79,7 @@ describe('seed data files (F-06)', () => {
 
   it('no real-looking personal data in data/: no @gmail, emails only on example.com, phone numbers only in the 555 range', () => {
     const dir = path.resolve(__dirname, 'data');
-    for (const f of readdirSync(dir).filter((x) => x.endsWith('.ts') && !x.includes('images'))) {
+    for (const f of readdirSync(dir).filter((x) => x.endsWith('.ts'))) {
       const text = readFileSync(path.join(dir, f), 'utf8');
       expect(text, f).not.toMatch(/@gmail|@yahoo|@hotmail|@outlook/i);
       for (const email of text.match(/[\w.+-]+@[\w-]+\.[\w.]+/g) ?? []) expect(email, f).toMatch(/@example\.com$/);

@@ -19,7 +19,7 @@ const doctor = {
   masterVariant: {
     id: 1,
     sku: 'DOC-okafor',
-    images: [{ url: 'https://images.pexels.com/photos/1/p.jpeg', dimensions: { w: 1, h: 1 } }],
+    images: [{ url: 'https://images.example/photos/1/p.jpeg', dimensions: { w: 1, h: 1 } }],
     prices: [
       { id: 'a', value: usd(3500), channel: channel('mlv-remote') },
       { id: 'b', value: usd(5500), channel: channel('mlv-office') },
@@ -57,7 +57,7 @@ describe('storefront-data-loading: doctor mapper', () => {
       rating: 4.9,
       reviewCount: 312,
       initials: 'AO',
-      portraitUrl: 'https://images.pexels.com/photos/1/p.jpeg',
+      portraitUrl: 'https://images.example/photos/1/p.jpeg',
       bio: 'Family doctor.',
       languages: ['English', 'Igbo'],
       education: 'MD, Johns Hopkins University',
@@ -118,7 +118,7 @@ const medication = {
   masterVariant: {
     id: 1,
     sku: 'MED-amoxicillin-500',
-    images: [{ url: 'https://images.pexels.com/photos/2/m.jpeg', dimensions: { w: 1, h: 1 } }],
+    images: [{ url: 'https://images.example/photos/2/m.jpeg', dimensions: { w: 1, h: 1 } }],
     prices: [{ id: 'p', value: usd(1450) }],
     attributes: [
       { name: 'strength', value: '500 mg' },
@@ -148,7 +148,7 @@ describe('storefront-data-loading: medication mapper', () => {
       maxQtyPerOrder: 2,
       hsaEligible: true,
       controlClass: null,
-      imageUrl: 'https://images.pexels.com/photos/2/m.jpeg',
+      imageUrl: 'https://images.example/photos/2/m.jpeg',
       categoryIds: ['cat-antibiotics'],
     });
     expect(m.price).toEqual({ centAmount: 1450, currencyCode: 'USD', fractionDigits: 2 });

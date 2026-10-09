@@ -16,7 +16,7 @@ npm run seed:full -- --dry-run     # lists everything it would delete and create
 npm run seed:full                  # passes --confirm spec-test-b2c-healthcare itself
 ```
 
-reset (`--include-customers`: reviews, `mlv-` resources, every `malva-*` Custom Object container, recurrence policies, the example.com customers with their carts, orders, payments, shopping lists and recurring orders, all deleted with `dataErasure`) → cleanup-sample → seed (photos from `data/product-images.json`) → images (every doctor, medicine and banner slot must have a stored photo) → verify (looks again for up to 25 s while rating statistics catch up) → wait-for-search. One process, one client, the project-key guard before any network call. Run `seed:reset` alone (without `--include-customers`) to keep customers; a custom type that a customer's cart still uses then cannot be deleted and the error says so.
+reset (`--include-customers`: reviews, `mlv-` resources, every `malva-*` Custom Object container, recurrence policies, the example.com customers with their carts, orders, payments, shopping lists and recurring orders, all deleted with `dataErasure`) → cleanup-sample → seed → verify (looks again for up to 25 s while rating statistics catch up) → wait-for-search. One process, one client, the project-key guard before any network call. Run `seed:reset` alone (without `--include-customers`) to keep customers; a custom type that a customer's cart still uses then cannot be deleted and the error says so.
 
 ## Order of a manual run
 
@@ -26,8 +26,6 @@ npm run seed:cleanup -- --dry-run                        # lists what would go
 npm run seed:cleanup -- --confirm spec-test-b2c-healthcare
 npm run seed                                             # second run must print "0 change(s)"
 npm run seed:wait                                        # wait until Product Search holds the 28 products
-npm run seed:images                                      # live: searches Pexels, replaces product images, writes data/*.json
-npm run seed:images:json                                 # no credentials: only writes data/*.json (commit them)
 npm run seed:verify
 ```
 
@@ -40,13 +38,12 @@ npm run seed:verify
 | `wait-for-search.ts` (`seed:wait`) | checks `searchIndexing.productsSearch.status` is `Activated`, polls Product Search (prefix on `key`) until the seeded count is reached (timeout 5 min, `--expected N`, `--timeout-min M`) |
 | `cleanup-sample.ts` (`seed:cleanup`) | deletes non-`mlv-` carts, orders, inventory, products (unpublish first), categories (leaves first), product types, shipping methods, tax categories, stores, zones. Keeps zones `usa` and `europe`; never deletes customers |
 | `seed.ts` (`seed`) | channels, tax categories, order states and transitions, custom types, product types, categories, same-day zone, shipping methods, 8 doctors, 20 medications, inventory with cart limits. `--only <product-key>` limits the product steps |
-| `update-images.ts` (`seed:images`, `seed:images:json`) | searches Pexels for every doctor (portrait), medication (generic `imageQuery`) and banner slot; every product and slot gets its own photos, a photo whose URL does not load is skipped, too few results widen the query (logged as `WIDENED`). `--json-only` writes `data/product-images.json` and `data/site-images.json` WITHOUT touching commercetools (no credentials); without it the products are updated and republished. `--count 1..6`, `--only <key\|slot>`, `--dry-run` |
 | `seed-full.ts` (`seed:full`) | the whole sequence above in one process; `--dry-run` supported |
 | `update-plans.ts` | what a changed seed updates in place, and the reset hint for what cannot be updated |
-| `verify.ts` (`seed:verify`) | read-back assertions: counts, prefixes, published, USD, clean image URLs, doctor fees and modes vs price channels, shipping cents, inventory limits, states, types, categories, Product Search finds "Okafor" (`--skip-search`, `--no-images`) |
+| `verify.ts` (`seed:verify`) | read-back assertions: counts, prefixes, published, USD, doctor fees and modes vs price channels, shipping cents, inventory limits, states, types, categories, Product Search finds "Okafor" (`--skip-search`) |
 | `reset-seed.ts` (`seed:reset`) | deletes reviews, then only `mlv-` resources, and every `malva-*` Custom Object so the seed can be rebuilt; `--include-customers` also erases the example.com customers and their data |
 | `fake-root.ts` | in-memory project used by the unit tests; refuses the same deletions the real API refuses (published product, category with children, ...) |
-| `data/` | `types.ts`, `states.ts`, `categories.ts`, `tax.ts`, `shipping.ts`, `doctors.ts`, `medications.ts`, `site-slots.ts`, generated `product-images.json` / `site-images.json` |
+| `data/` | `types.ts`, `states.ts`, `categories.ts`, `tax.ts`, `shipping.ts`, `doctors.ts`, `medications.ts` |
 
 ## Clinical stand-in (workstream F)
 
@@ -58,10 +55,6 @@ npm run seed:verify
 | `advance-order.ts` (`seed:advance`) | `npm run seed:advance -- <orderNumber> <state> [--shipment <ShipmentState>] [--dry-run]`: QA tool, moves an order through the `mlv-*` states (refuses unknown transitions); `--shipment Partial` (or Pending, Ready, Shipped, Delivered, Backorder, Delayed) sets the order's `shipmentState` for the order page |
 
 `reset-seed.ts` deletes the reviews and every `malva-*` container (`containers.ts` lists the 13 of `lib/ct/custom-objects.ts`; a test keeps them in step); customers only with `--include-customers`.
-
-## Images
-
-`update-images.ts` has two sources. With `PEXELS_API_KEY` in the shell (free key from pexels.com/api) it uses the OFFICIAL Pexels API: every photo is under the Pexels licence (free to use, no attribution needed). Without it, it uses the public JSON endpoint behind pexels.com/search (undocumented, public web client id, `PEXELS_CLIENT_ID` overrides it). **Warning (found by workstream AC):** that endpoint answers with partner stock thumbnails hosted on `media.istockphoto.com` (response type `ad_medium`), not Pexels-licensed photos. The committed JSON was generated that way. If royalty-free is a hard requirement, run `PEXELS_API_KEY=... npm run seed:images:json` and commit the result (the `img-src` host list in `netlify.toml` and `next.config.ts` already allows `images.pexels.com`). Stored URLs are clean (no query, no fragment): `cleanUrl()`; no photographer credit is stored or shown.
 
 ## API client scopes
 

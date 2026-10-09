@@ -12,13 +12,13 @@ import { assertProject, getAdminRoot, hasPrefix, inventoryKey, isMain, listAll, 
 /**
  * Read-only assertions on the seeded project (SEED-PLAN "Verification"). Exit 1 when any fails.
  *
- *   npx tsx scripts/seed/verify.ts [--skip-search] [--no-images] [--no-clinical]
+ *   npx tsx scripts/seed/verify.ts [--skip-search] [--no-clinical]
  */
 export interface Check { name: string; ok: boolean; detail?: string }
 
-export interface VerifyOptions { search?: boolean; images?: boolean; /** Also check the clinical stand-in (workstream F); the CLI turns it on, `--no-clinical` off. */ clinical?: boolean }
+export interface VerifyOptions { search?: boolean; /** Also check the clinical stand-in (workstream F); the CLI turns it on, `--no-clinical` off. */ clinical?: boolean }
 
-interface Variant { sku?: string; images?: { url: string }[]; prices?: { value: { currencyCode: string; centAmount: number }; channel?: { id?: string; key?: string } }[]; attributes?: { name: string; value: unknown }[] }
+interface Variant { sku?: string; prices?: { value: { currencyCode: string; centAmount: number }; channel?: { id?: string; key?: string } }[]; attributes?: { name: string; value: unknown }[] }
 interface ProductView { key: string; published: boolean; master: Variant; variants: Variant[] }
 
 const viewOf = (p: Rec): ProductView => {
@@ -34,7 +34,6 @@ export async function runVerify(root: Root, opts: VerifyOptions = {}): Promise<C
   const checks: Check[] = [];
   const check = (name: string, ok: boolean, detail?: string) => checks.push({ name, ok, ...(ok || !detail ? {} : { detail }) });
   const search = opts.search ?? true;
-  const images = opts.images ?? true;
 
   await assertProject(root);
   check('project is spec-test-b2c-healthcare', true);
@@ -54,14 +53,6 @@ export async function runVerify(root: Root, opts: VerifyOptions = {}): Promise<C
   check('all products published', unpublished.length === 0, unpublished.map((p) => p.key).join(', '));
   const nonUsd = products.filter((p) => [p.master, ...p.variants].some((v) => (v.prices ?? []).length === 0 || (v.prices ?? []).some((x) => x.value.currencyCode !== 'USD')));
   check('every variant has prices and all are USD', nonUsd.length === 0, nonUsd.map((p) => p.key).join(', '));
-  if (images) {
-    const bad = products.filter((p) => {
-      const urls = [p.master, ...p.variants].flatMap((v) => (v.images ?? []).map((i) => i.url));
-      return urls.length === 0 || urls.some((u) => u.includes('?') || u.includes('#'));
-    });
-    check('every product has images and every image URL is clean (no ? or #)', bad.length === 0, bad.map((p) => p.key).join(', '));
-  }
-
   // ---- doctor fees in cents and modes consistent with price channels
   const channels = await listAll(root, 'channels');
   const channelKeyById = new Map(channels.map((c) => [c.id as string, c.key as string]));
@@ -145,7 +136,7 @@ export const formatChecks = (checks: Check[]): string => checks.map((c) => `${c.
 async function main() {
   const argv = process.argv.slice(2);
   const { root } = await getAdminRoot();
-  const checks = await runVerify(root, { search: !argv.includes('--skip-search'), images: !argv.includes('--no-images'), clinical: !argv.includes('--no-clinical') });
+  const checks = await runVerify(root, { search: !argv.includes('--skip-search'), clinical: !argv.includes('--no-clinical') });
   console.log(formatChecks(checks));
   const failed = checks.filter((c) => !c.ok).length;
   console.log(failed === 0 ? `all ${checks.length} checks passed` : `${failed} of ${checks.length} checks failed`);

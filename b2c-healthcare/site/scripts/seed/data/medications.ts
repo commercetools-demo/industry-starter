@@ -1,6 +1,5 @@
 import { CURRENCY, PREFIX, type InventoryWanted } from '../lib';
 import { classCategoryKey } from './categories';
-import type { ImageEntry } from './images';
 import { TAX_RX_MEDICINE } from './tax';
 import { INVENTORY_TYPE_KEY, L, MEDICATION_PRODUCT_TYPE_KEY } from './types';
 
@@ -24,7 +23,6 @@ export interface MedicationDef {
   /** Short-dated demo supply (expiry-dated-supply): ISO date held on the inventory entry. */
   expiryDate?: string;
   /** Generic photo-search term (brand names return noise). */
-  imageQuery: string;
 }
 
 const m = (
@@ -32,7 +30,7 @@ const m = (
   o: Partial<MedicationDef> = {},
 ): MedicationDef => ({
   slug, name, strength, form, rxOnly, packSize, priceCents, cls,
-  hsaEligible: true, controlClass: 'none', minRemainingShelfLifeDays: 90, imageQuery: form === 'capsule' ? 'capsules pills medicine' : 'pharmacy medicine blister pack',
+  hsaEligible: true, controlClass: 'none', minRemainingShelfLifeDays: 90,
   ...o,
 });
 
@@ -65,7 +63,7 @@ export const medSku = (d: MedicationDef) => `MED-${d.slug}`;
 /** Stock per SKU: at least 500 so demos never run dry. */
 export const STOCK = 600;
 
-export function medicationDraft(d: MedicationDef, images: ImageEntry[] = []) {
+export function medicationDraft(d: MedicationDef) {
   return {
     key: medKey(d),
     productType: { typeId: 'product-type', key: MEDICATION_PRODUCT_TYPE_KEY },
@@ -88,7 +86,6 @@ export function medicationDraft(d: MedicationDef, images: ImageEntry[] = []) {
         { name: 'controlClass', value: d.controlClass },
       ],
       prices: [{ value: { currencyCode: CURRENCY, centAmount: d.priceCents } }],
-      images,
     },
     publish: true,
   };

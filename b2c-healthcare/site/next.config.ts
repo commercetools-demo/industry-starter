@@ -24,8 +24,6 @@ const nextConfig: NextConfig = {
     // The commercetools CDN rejects the optimizer's query params.
     unoptimized: true,
     remotePatterns: [
-      { protocol: "https", hostname: "images.pexels.com" },
-      { protocol: "https", hostname: "media.istockphoto.com" },
       { protocol: "https", hostname: "storage.googleapis.com" },
     ],
   },

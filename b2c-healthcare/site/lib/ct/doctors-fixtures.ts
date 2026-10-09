@@ -9,13 +9,6 @@ import { MEDICATIONS, medKey, medSku } from '@/scripts/seed/data/medications';
 import { DOCTORS, doctorKey } from '@/scripts/seed/data/doctors';
 import { REVIEWS } from '@/scripts/seed/data/reviews';
 import { SCHEDULES } from '@/scripts/seed/data/schedules';
-import storedImages from '@/scripts/seed/data/product-images.json';
-
-/** The photo the seed stores for a product (`scripts/seed/data/product-images.json`), so fixtures mode shows images without credentials. Clean https URLs only. */
-export function storedImageUrl(key: string, images: unknown = storedImages): string | null {
-  const first = (images as Record<string, { url?: unknown }[] | undefined>)[key]?.[0]?.url;
-  return typeof first === 'string' && first.startsWith('https://') && !/[?#]/.test(first) ? first : null;
-}
 
 const USD = (centAmount: number) => ({ centAmount, currencyCode: 'USD', fractionDigits: 2 });
 
@@ -38,7 +31,7 @@ const doctorCards: DoctorCard[] = DOCTORS.map((d) => {
     rating: ratings.length ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) / 10 : null,
     reviewCount: ratings.length,
     initials: initialsOf(d.name),
-    portraitUrl: storedImageUrl(doctorKey(d)),
+    portraitUrl: null,
   };
 });
 
@@ -103,7 +96,7 @@ const medicines: Medication[] = MEDICATIONS.map((d) => ({
   hsaEligible: d.hsaEligible,
   controlClass: d.controlClass === 'none' ? null : d.controlClass,
   price: USD(d.priceCents),
-  imageUrl: storedImageUrl(medKey(d)),
+  imageUrl: null,
   categoryIds: [],
 }));
 

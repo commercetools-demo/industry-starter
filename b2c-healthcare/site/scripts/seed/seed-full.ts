@@ -1,8 +1,6 @@
-import { loadProductImages } from './data/images';
 import { runDeletion } from './deletion';
 import { runReset } from './reset';
 import { runSeed } from './seed';
-import { applyStoredImages, missingStoredImages } from './update-images';
 import { formatChecks, runVerify } from './verify';
 import { DEFAULT_EXPECTED, waitForSearch } from './wait-for-search';
 import { getAdminRoot, isMain, makeCtx, parseFlags, PROJECT_KEY, readSeedEnv, realSleep, type Ctx, type Flags, type Root } from './lib';
@@ -13,10 +11,9 @@ import { getAdminRoot, isMain, makeCtx, parseFlags, PROJECT_KEY, readSeedEnv, re
  *   1. reset           reviews, mlv- resources, every malva-* Custom Object, recurrence policies and (--include-customers, always on here)
  *                      the example.com customers with their carts, orders, payments, lists and recurring orders
  *   2. cleanup-sample  the sample (furniture) data, behind --confirm
- *   3. seed            everything, with the photos from data/product-images.json
- *   4. images          checks every doctor, medication and banner slot has a stored photo and aligns the products with it
- *   5. verify          read-back assertions
- *   6. wait-for-search waits until the Product Search index holds the seeded products
+ *   3. seed            everything
+ *   4. verify          read-back assertions
+ *   5. wait-for-search waits until the Product Search index holds the seeded products
  *
  *   npm run seed:full -- --dry-run          (lists what would happen; writes nothing; verify and the search wait are skipped)
  *   npm run seed:full                       (the script passes --confirm spec-test-b2c-healthcare)
@@ -50,16 +47,8 @@ export async function runFull(root: Root, o: FullOptions, log: (line: string) =>
       return { detail: `${r.planned} sample resource(s)` };
     }],
     ['seed', async () => {
-      const r = await runSeed(ctx, { images: loadProductImages(), clinical: true, patientPassword: o.patientPassword });
+      const r = await runSeed(ctx, { clinical: true, patientPassword: o.patientPassword });
       return { ok: r.ok, detail: `${r.changed} change(s)` };
-    }],
-    ['images', async () => {
-      if (o.dryRun) {
-        const missing = missingStoredImages();
-        return { ok: missing.length === 0, detail: missing.length === 0 ? 'stored photos complete' : `missing ${missing.join(', ')}` };
-      }
-      const r = await applyStoredImages(root, false, log);
-      return { detail: `${r.applied} product(s) aligned` };
     }],
   ];
   if (!o.dryRun) {
