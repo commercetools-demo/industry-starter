@@ -1,0 +1,45 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../tokens.css"><style>body{margin:0;padding:24px;font-family:var(--font-body);color:var(--color-text);background:var(--color-surface-page)}h3{font:600 16px/1 var(--font-display);margin:0 0 12px}.row{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap;margin-bottom:32px}
+/* Panel on maroon (homepage hero) */
+.panel{width:371px;box-sizing:border-box;background:var(--color-brand-deep);border-radius:var(--radius-xs);padding:14px 14px 18px;box-shadow:var(--shadow-hairline)}
+.ph{height:49px;background:#fff;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;gap:10px;font:700 15px var(--font-display);color:#251c27;margin-bottom:16px}.ph svg{width:26px;height:26px;fill:var(--color-brand-700)}
+.sel{position:relative;height:41px;box-sizing:border-box;margin:0 16px 12px;padding:0 12px;border:1px solid rgba(255,255,255,.7);border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:space-between;font:700 14px var(--font-display);color:#fff;cursor:pointer}
+.sel:hover{border-color:#fff}.sel.focus{border-color:var(--color-accent-300);box-shadow:0 0 0 2px rgba(245,203,115,.35)}.sel.done{background:rgba(255,255,255,.12)}.sel.off{opacity:.45;cursor:not-allowed}.sel em{font:400 14px var(--font-display);font-style:normal;color:rgba(255,255,255,.75)}.sel.done em{color:#fff;font-weight:600}
+.sel i{font-style:normal;font-size:12px}
+.go{display:block;width:calc(100% - 32px);margin:16px 16px 0;height:48px;border:0;border-radius:var(--radius-sm);background:#fff;color:var(--color-brand-700);font:600 15px var(--font-display);cursor:pointer}.go:hover{background:var(--color-brand-50)}.go[disabled]{background:rgba(255,255,255,.25);color:rgba(255,255,255,.6);cursor:not-allowed}
+.list{margin:-8px 16px 12px;background:#fff;border-radius:var(--radius-xs);box-shadow:var(--shadow-dropdown);font:400 14px var(--font-display);color:var(--color-neutral-800);overflow:hidden}.list div{padding:10px 12px}.list .h{background:var(--color-neutral-50)}.list .s{color:var(--color-brand-700);font-weight:600}
+/* Inline bar (product page fitment) */
+.bar{width:860px;background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:24px;box-sizing:border-box}.bar h4{margin:0 0 16px;font:700 28px/1.2 var(--font-display);color:var(--color-text-strong)}
+.fields{display:flex;gap:16px;align-items:center}.f{flex:1;height:60px;box-sizing:border-box;padding:0 16px;border:1px solid var(--color-border-strong);border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:space-between;font:400 18px var(--font-display);color:var(--color-text-strong);background:#fff}.f.done{border-color:var(--color-brand-700)}.f.off{background:var(--color-neutral-50);color:var(--color-neutral-400)}.f.ph2{color:var(--color-neutral-500)}
+.verify{height:47px;padding:0 40px;border:0;border-radius:var(--radius-pill);background:var(--color-neutral-1000);color:#fff;font:600 24px var(--font-display);cursor:pointer;white-space:nowrap}.verify:hover{background:var(--color-neutral-800)}
+.ok{margin-top:16px;display:inline-flex;gap:8px;align-items:center;font:500 14px var(--font-display);padding:8px 14px;border-radius:var(--radius-full);background:var(--color-success-50);color:var(--color-success-600);border:1px solid var(--color-success-500)}
+/* Selected vehicle chip + empty garage */
+.chip{display:inline-flex;align-items:center;gap:12px;height:48px;padding:0 8px 0 16px;border:1px solid var(--color-brand-700);border-radius:var(--radius-full);background:var(--color-brand-50);font:600 14px var(--font-display);color:var(--color-brand-700)}.chip a{font:700 14px var(--font-utility);color:var(--color-text-link);text-decoration:underline;padding:0 8px;cursor:pointer}
+.garage{width:371px;box-sizing:border-box;border:1px dashed var(--color-border-strong);border-radius:var(--radius-sm);background:#fff;padding:32px 24px;text-align:center}.garage b{display:block;font:500 18px var(--font-display);margin-bottom:6px}.garage span{display:block;font:400 14px var(--font-display);color:var(--color-neutral-600);margin-bottom:16px}.garage button{height:48px;padding:0 24px;border:2px solid var(--color-action);background:transparent;color:var(--color-action);border-radius:var(--radius-sm);font:500 14px var(--font-display);cursor:pointer}.garage button:hover{background:var(--color-action-subtle)}
+.cap{font:11px/1.4 var(--font-ui);color:var(--color-text-muted);margin-top:8px}</style>
+<svg width="0" height="0" style="position:absolute"><symbol id="car" viewBox="0 0 24 24"><path d="M5.5 11 7 6.8A2 2 0 0 1 8.9 5.5h6.2a2 2 0 0 1 1.9 1.3L18.5 11H20a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-1v1.5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V18H8v1.5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V18H4a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1zm2.1 0h8.8l-1-3H8.6zM6.5 13.2a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4m11 0a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4"/></symbol></svg>
+
+<h3>Lookup panel — steps cascade: Year → Make → Model → Engine</h3>
+<div class="row">
+<div><div class="panel"><div class="ph"><svg><use href="#car"/></svg>Select your vehicle</div>
+<div class="sel"><em>Year</em><i>▾</i></div><div class="sel off"><em>Make</em><i>▾</i></div><div class="sel off"><em>Model</em><i>▾</i></div><div class="sel off"><em>Engine</em><i>▾</i></div>
+<button class="go" disabled>Find parts</button></div><div class="cap">1 · empty (later steps disabled)</div></div>
+
+<div><div class="panel"><div class="ph"><svg><use href="#car"/></svg>Select your vehicle</div>
+<div class="sel done"><em>2021</em><i>▾</i></div><div class="sel focus"><em>Make</em><i>▴</i></div>
+<div class="list"><div>Acura</div><div class="h">Honda</div><div>Hyundai</div><div>Toyota</div></div>
+<div class="sel off"><em>Model</em><i>▾</i></div><div class="sel off"><em>Engine</em><i>▾</i></div>
+<button class="go" disabled>Find parts</button></div><div class="cap">2 · choosing make (open list, hover row)</div></div>
+
+<div><div class="panel"><div class="ph"><svg><use href="#car"/></svg>Select your vehicle</div>
+<div class="sel done"><em>2021</em><i>▾</i></div><div class="sel done"><em>Honda</em><i>▾</i></div><div class="sel done"><em>Civic</em><i>▾</i></div><div class="sel done"><em>2.0L 4-cyl</em><i>▾</i></div>
+<button class="go">Find parts</button></div><div class="cap">3 · complete (CTA enabled)</div></div>
+</div>
+
+<h3>Inline fitment bar — product page</h3>
+<div class="row"><div><div class="bar"><h4>Vehicle Fitment</h4><div class="fields"><div class="f done">2021<span>⌄</span></div><div class="f done">Honda<span>⌄</span></div><div class="f ph2">Model<span>⌄</span></div><div class="f off">Engine<span>⌄</span></div><button class="verify">Verify</button></div></div></div>
+<div><div class="bar"><div class="fields"><div class="f done">2021<span>⌄</span></div><div class="f done">Honda<span>⌄</span></div><div class="f done">Civic<span>⌄</span></div><div class="f done">2.0L 4-cyl<span>⌄</span></div><button class="verify">Verify</button></div><span class="ok">✓ Fits your 2021 Honda Civic</span></div></div></div>
+
+<h3>Saved vehicle and empty garage (My Vehicles)</h3>
+<div class="row"><div><span class="chip"><svg width="20" height="20" fill="currentColor"><use href="#car"/></svg>2021 Honda Civic 2.0L<a>Change vehicle</a></span></div>
+<div class="garage"><b>You have no vehicles added!</b><span>Add your vehicles &amp; find parts easily!</span><button>Add Vehicle</button></div></div>
