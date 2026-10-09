@@ -16,7 +16,7 @@ beforeEach(() => {
   shop = createFakeShop();
 });
 
-describe('checkout-page: delivery options for the cart (Q-01)', () => {
+describe('checkout-page: delivery options for the cart', () => {
   it('asks the platform which methods match the cart and never lists a method the platform did not return', async () => {
     const cart = shop.seedCart({ shippingAddress: { country: 'US', state: 'CA' } });
     expect(await keys(cart.id, at('09:00'))).toEqual(['mlv-standard']);

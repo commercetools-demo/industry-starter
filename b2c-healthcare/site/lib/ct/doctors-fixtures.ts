@@ -42,7 +42,7 @@ const doctorCards: DoctorCard[] = DOCTORS.map((d) => {
   };
 });
 
-/** Same rule as the live query: every typed word appears in the clinic name (D-039). */
+/** Same rule as the live query: every typed word appears in the clinic name. */
 const matchesClinic = (c: DoctorCard, words: string[]) => words.length > 0 && words.every((w) => (c.clinicName ?? '').toLowerCase().includes(w));
 
 export function fixtureCandidates(p: { mode: ConsultationMode; q: string; specialty?: string; city?: string }): { cards: DoctorCard[]; facets: FacetResult[] } {

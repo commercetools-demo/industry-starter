@@ -6,7 +6,7 @@ import { Link } from '@/i18n/routing';
 import { cx } from '@/components/ui/cx';
 
 /**
- * Header cart link with the count of cart LINES (Q-020). The count comes from the session-resolved
+ * Header cart link with the count of cart LINES. The count comes from the session-resolved
  * SWR cart (`useCart`), never from markup: signed out, expired or after sign-out it is absent.
  */
 export function CartButton({ className }: { className?: string }) {

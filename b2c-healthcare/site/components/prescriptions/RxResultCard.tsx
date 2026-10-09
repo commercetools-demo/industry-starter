@@ -16,7 +16,7 @@ export interface RxResultCardProps {
   onAdd: (rxNumber: string, lineRefs: string[]) => Promise<void>;
   /** Called after a successful add (the page shows the toast). */
   onAdded?: () => void;
-  /** "Save to My medicines" (workstream T): saves the selected rows (all rows when none is selected). Absent = no button. */
+  /** "Save to My medicines": saves the selected rows (all rows when none is selected). Absent = no button. */
   onSave?: (rxNumber: string, lineRefs: string[]) => Promise<{ saved: number; alreadySaved: number }>;
 }
 

@@ -1,4 +1,4 @@
-# Netlify configuration for the Malva Healthcare storefront (workstream Y, D-030).
+# Netlify configuration for the Malva Healthcare storefront.
 # The Netlify site's "Base directory" is b2c-healthcare/site (set in the UI, as the sibling projects do); this file lives
 # there. Secrets and every variable VALUE are set in the Netlify UI (see docs/deploy.md); nothing secret belongs here.
 

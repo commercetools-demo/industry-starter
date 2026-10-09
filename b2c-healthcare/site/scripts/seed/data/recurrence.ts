@@ -2,9 +2,9 @@ import { PREFIX } from '../lib';
 import { L } from './types';
 
 /**
- * Auto-refill (workstream T). Two Recurrence Policies, StandardSchedule: every month and every three months.
+ * Auto-refill. Two Recurrence Policies, StandardSchedule: every month and every three months.
  * Price selection (`Dynamic`) is set on the recurring line item at creation, not on the policy: a refill is priced at
- * the catalog price on the day it is generated and the buyer is told so (D-027, T-04).
+ * the catalog price on the day it is generated and the buyer is told so.
  */
 export const POLICY_MONTHLY = `${PREFIX}monthly`;
 export const POLICY_QUARTERLY = `${PREFIX}quarterly`;

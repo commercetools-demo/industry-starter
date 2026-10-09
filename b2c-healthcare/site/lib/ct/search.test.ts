@@ -82,7 +82,7 @@ describe('storefront-data-loading: Product Search query builders', () => {
     expect(buildPaging()).toEqual({ limit: 20, offset: 0 });
   });
 
-  it('Clinic search (D-039): full text on the searchable clinicName attribute, all words must match, and it is OR-ed into the name match', () => {
+  it('Clinic search: full text on the searchable clinicName attribute, all words must match, and it is OR-ed into the name match', () => {
     expect(buildClinicMatch('  Austin Central ')).toEqual({ fullText: { field: 'variants.attributes.clinicName', fieldType: 'text', value: 'Austin Central', mustMatch: 'all' } });
     const q = buildNameMatch('Austin', 'en-US', [buildClinicMatch('Austin')]) as { or: unknown[] };
     expect(q.or).toHaveLength(3);
@@ -101,7 +101,7 @@ describe('storefront-data-loading: Product Search query builders', () => {
       'city',
       'modes',
     ]);
-    // Nothing else restricts: the only restriction is "has a price in the visitor's currency" (workstream W).
+    // Nothing else restricts: the only restriction is "has a price in the visitor's currency".
     expect(buildSearchRequest(base).query).toEqual(buildSellableFilter('USD'));
   });
 });

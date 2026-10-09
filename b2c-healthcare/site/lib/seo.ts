@@ -1,4 +1,4 @@
-// Absolute URLs for canonical links, hreflang alternates, the sitemap and robots (workstream V).
+// Absolute URLs for canonical links, hreflang alternates, the sitemap and robots.
 import type { Metadata } from 'next';
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@/lib/utils';
 

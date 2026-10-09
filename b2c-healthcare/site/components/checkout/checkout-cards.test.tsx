@@ -26,7 +26,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 const save = (result: Awaited<ReturnType<Parameters<typeof AddressCard>[0]['onSave']>> = { ok: true }) => vi.fn(async (): Promise<typeof result> => result);
 
-describe('design-checkout: Delivery address (Q-03)', () => {
+describe('design-checkout: Delivery address', () => {
   it('Prefill: the default address fills the fields and they stay editable', async () => {
     const user = userEvent.setup();
     renderWithProviders(<AddressCard cartAddress={null} onSave={save()} undeliverable={false} />);
@@ -134,7 +134,7 @@ describe('design-checkout: Delivery address (Q-03)', () => {
 const standard: DeliveryOption = { key: 'mlv-standard', name: 'Standard delivery', price: { centAmount: 0, currencyCode: 'USD', fractionDigits: 2 } };
 const sameDay: DeliveryOption = { key: 'mlv-same-day', name: 'Same-day delivery', price: { centAmount: 500, currencyCode: 'USD', fractionDigits: 2 } };
 
-describe('design-checkout: Delivery speed re-pricing (Q-03)', () => {
+describe('design-checkout: Delivery speed re-pricing', () => {
   it('Options: Standard · 1–2 days FREE is selected and Same-day · by 8 pm $5.00 is offered', () => {
     renderWithProviders(<DeliverySpeedCard options={[standard, sameDay]} selectedKey="mlv-standard" hasAddress onChoose={vi.fn()} />);
     const std = screen.getByRole('radio', { name: /Standard · 1–2 days/ });

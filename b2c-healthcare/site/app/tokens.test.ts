@@ -17,7 +17,7 @@ describe('app/tokens.css and globals.css', () => {
     expect(tokensCss).not.toContain(['fonts', 'googleapis', 'com'].join('.'));
   });
 
-  it('flags the storefront extensions block with the D-008/D-009/D-010 tokens', () => {
+  it('flags the storefront extensions block with the extension tokens', () => {
     const ext = tokensCss.split(MARKER)[1];
     expect(ext).toBeDefined();
     for (const name of [

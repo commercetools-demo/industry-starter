@@ -1,4 +1,4 @@
-// Shapes of the order pages (workstream S). Types and pure constants only: safe in client components.
+// Shapes of the order pages. Types and pure constants only: safe in client components.
 import type { Money } from '@/lib/types';
 
 /** Order State keys of the seed without the `mlv-` prefix. */
@@ -16,7 +16,7 @@ export type ShipmentState = 'Pending' | 'Ready' | 'Shipped' | 'Delivered' | 'Par
  */
 export type RefundStatus = 'none' | 'released' | 'requested' | 'refunded';
 
-/** The instruments an order line can be settled with (workstream U). */
+/** The instruments an order line can be settled with. */
 export type Instrument = 'allowance' | 'restricted-health-account' | 'card';
 
 export interface OrderLineView {
@@ -30,7 +30,7 @@ export interface OrderLineView {
   settledBy?: Instrument[];
 }
 
-/** How an order was paid, when more than the card was used (workstream U). */
+/** How an order was paid, when more than the card was used. */
 export interface OrderTender {
   allowance: Money;
   restricted: Money;
@@ -67,5 +67,5 @@ export interface ReorderResult {
   notAdded: { name: string; reason: NotAddedReason }[];
 }
 
-/** States from which an order may still be cancelled (until `mlv-packed-shipped`, Q-043). */
+/** States from which an order may still be cancelled (until `mlv-packed-shipped`). */
 export const CANCELLABLE: readonly OrderStatus[] = ['received', 'pharmacist-review'];

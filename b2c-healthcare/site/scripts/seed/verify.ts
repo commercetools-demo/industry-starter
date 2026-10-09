@@ -16,7 +16,7 @@ import { assertProject, getAdminRoot, hasPrefix, inventoryKey, isMain, listAll, 
  */
 export interface Check { name: string; ok: boolean; detail?: string }
 
-export interface VerifyOptions { search?: boolean; images?: boolean; /** Also check the clinical stand-in (workstream F); the CLI turns it on, `--no-clinical` off. */ clinical?: boolean }
+export interface VerifyOptions { search?: boolean; images?: boolean; /** Also check the clinical stand-in; the CLI turns it on, `--no-clinical` off. */ clinical?: boolean }
 
 interface Variant { sku?: string; images?: { url: string }[]; prices?: { value: { currencyCode: string; centAmount: number }; channel?: { id?: string; key?: string } }[]; attributes?: { name: string; value: unknown }[] }
 interface ProductView { key: string; published: boolean; master: Variant; variants: Variant[] }
@@ -119,7 +119,7 @@ export async function runVerify(root: Root, opts: VerifyOptions = {}): Promise<C
   check('custom types', sameSet((await listAll(root, 'types')).map((t) => t.key as string), [...CUSTOM_TYPES, LIST_LINE_TYPE].map((t) => t.key)));
   check('recurrence policies', sameSet((await listAll(root, 'recurrencePolicies')).map((t) => t.key as string), RECURRENCE_POLICIES.map((t) => t.key)));
   check('product types', sameSet((await listAll(root, 'productTypes')).map((t) => t.key as string), PRODUCT_TYPES.map((t) => t.key)));
-  // D-039: Product Search cannot filter or full-text match an attribute that is not searchable (the clinic search needs clinicName)
+  // Product Search cannot filter or full-text match an attribute that is not searchable (the clinic search needs clinicName)
   const productTypes = await listAll(root, 'productTypes');
   const notSearchable = Object.entries(SEARCHED_ATTRIBUTES).flatMap(([typeKey, names]) => {
     const have = (productTypes.find((t) => t.key === typeKey)?.attributes as { name: string; isSearchable?: boolean }[] | undefined) ?? [];

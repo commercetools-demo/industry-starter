@@ -3,7 +3,7 @@ import type { ProductSearchFacetExpression, ProductSearchRequest, SearchSorting 
 
 /**
  * Pure builders for Product Search request objects (apiRoot.products().search().post({ body })).
- * Attribute names follow the seed data model (plans/SEED-PLAN.md): doctors have `specialty`, `city`,
+ * Attribute names follow the seed data model: doctors have `specialty`, `city`,
  * `modes` (enum, searchable) and `clinicName` (text, searchable, matched by `buildClinicMatch`); medications have
  * `rxOnly` (boolean, searchable). Every attribute named here must be `isSearchable` in scripts/seed/data/types.ts
  * (a unit test reads this file and checks).
@@ -72,7 +72,7 @@ export function buildNameMatch(text: string, locale: string, extra: Query[] = []
 }
 
 /**
- * Clinic match for doctor search (D-039): full text on the searchable `clinicName` text attribute, every word must match.
+ * Clinic match for doctor search: full text on the searchable `clinicName` text attribute, every word must match.
  * Needs `isSearchable: true` on `clinicName` in the `mlv-doctor` product type (scripts/seed/data/types.ts).
  */
 export function buildClinicMatch(text: string): Query {

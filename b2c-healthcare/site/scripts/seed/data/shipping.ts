@@ -5,7 +5,7 @@ import { TAX_RX_MEDICINE } from './tax';
 export const ZONE_USA = 'usa';
 export const ZONE_SAME_DAY = `${PREFIX}same-day-states`;
 
-/** States that get same-day delivery (D-033). The 14:00 America/New_York cut-off is enforced by the BFF, not commercetools. */
+/** States that get same-day delivery. The 14:00 America/New_York cut-off is enforced by the BFF, not commercetools. */
 export const SAME_DAY_STATES = ['NY', 'TX', 'IL'];
 
 export const SAME_DAY_ZONE = {
@@ -18,7 +18,7 @@ export const SAME_DAY_ZONE = {
 export const SHIPPING_STANDARD = `${PREFIX}standard`;
 export const SHIPPING_SAME_DAY = `${PREFIX}same-day`;
 
-/** Rates are in cents: 500 is $5.00. Medicine and shipping share the 0% US category (D-033). */
+/** Rates are in cents: 500 is $5.00. Medicine and shipping share the 0% US category. */
 const method = (key: string, name: string, description: string, zone: string, cents: number, isDefault: boolean) => ({
   key,
   name,

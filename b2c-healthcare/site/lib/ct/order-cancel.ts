@@ -41,7 +41,7 @@ async function transitionToCancelled(orderId: string): Promise<'done' | 'too-lat
  * Refund transaction records the routing (the allowance balance itself is restored by `restoreAllowance`). A tender
  * that was never charged (the order was refused before settlement) has nothing to return. The CARD payment is not
  * modelled here at all: Checkout owns it and the refund or cancel goes through the PaymentProvider seam
- * (`payment-lifecycle.ts`, D-035). Idempotent.
+ * (`payment-lifecycle.ts`). Idempotent.
  */
 async function recordInternalReturn(payment: Payment): Promise<void> {
   if (payment.transactions.some((t) => t.type === 'Refund')) return;
@@ -70,7 +70,7 @@ async function giveBack(order: Order, provider: PaymentProvider | null): Promise
 
 /**
  * Cancels one of the customer's orders (`post-purchase-order-management`): allowed until `mlv-packed-shipped`
- * (Q-043). Sets the State `mlv-cancelled`, gives the prescription refill back once (`restoreAuthorization` is
+ *. Sets the State `mlv-cancelled`, gives the prescription refill back once (`restoreAuthorization` is
  * idempotent on the order id), calls the allowance and restricted-fund hooks (U), asks the payment service (through Checkout) to cancel the authorization or refund the capture. A foreign or unknown id is `not-found` (the same answer as for a read). Cancelling an
  * order that is already cancelled succeeds and re-runs the give-back steps, so a cancel that stopped half way is
  * completed by pressing the button again, and nothing is restored twice.

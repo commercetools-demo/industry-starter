@@ -11,7 +11,7 @@ const PDF_LABELS: LabPdfLabels = {
 };
 
 /**
- * GET /api/account/labs/:id/pdf: the results of one of the signed-in patient's tests as a PDF (Q-045). An
+ * GET /api/account/labs/:id/pdf: the results of one of the signed-in patient's tests as a PDF. An
  * authenticated GET, so no value is ever in the URL; the answer is `no-store` and nothing is logged. An unknown, a
  * foreign and a still-processing test all answer the same 404.
  */

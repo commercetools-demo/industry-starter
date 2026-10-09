@@ -17,7 +17,7 @@ describe('rate limit of failed lookups', () => {
   });
 
   it('a customer with no failures is not limited', async () => {
-    expect(await getRateLimitStatus('c1', T0)).toEqual({ limited: false, remaining: 5, retryAfterSeconds: 0 });
+    expect(await getRateLimitStatus('c1')).toEqual({ limited: false, remaining: 5, retryAfterSeconds: 0 });
   });
 
   it('the 5th failed lookup in 10 minutes limits the customer', async () => {
@@ -37,7 +37,7 @@ describe('rate limit of failed lookups', () => {
   });
 
   it('failures older than the window are dropped when recording', async () => {
-    await recordFailedLookup('c1', T0);
+    await recordFailedLookup('c1');
     const s = await recordFailedLookup('c1', at(11 * MIN));
     expect(s.remaining).toBe(4);
     expect((fake.objects[0].value as { failures: number[] }).failures).toEqual([at(11 * MIN).getTime()]);
@@ -56,16 +56,16 @@ describe('rate limit of failed lookups', () => {
 
   it('gives up with a clear error when a write keeps conflicting', async () => {
     fake.failOn = () => Object.assign(new Error('conflict'), { statusCode: 409 });
-    await expect(recordFailedLookup('c1', T0)).rejects.toThrow('contended');
+    await expect(recordFailedLookup('c1')).rejects.toThrow('contended');
   });
 
   it('other errors are not swallowed', async () => {
     fake.failOn = () => Object.assign(new Error('boom'), { statusCode: 500 });
-    await expect(recordFailedLookup('c1', T0)).rejects.toThrow('boom');
+    await expect(recordFailedLookup('c1')).rejects.toThrow('boom');
   });
 
   it('the customer id is made safe for a Custom Object key', async () => {
-    await recordFailedLookup('a/b c', T0);
+    await recordFailedLookup('a/b c');
     expect(fake.objects[0].key).toMatch(/^[-_~.a-zA-Z0-9]+$/);
   });
 });

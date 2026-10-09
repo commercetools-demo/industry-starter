@@ -2,8 +2,8 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 
 /**
- * Services that exist, in design order. Mental health and Second opinion are omitted until designed (D-018);
- * Lab tests is view-only (D-018, D12), so its card goes to the lab results list.
+ * Services that exist, in design order. Mental health and Second opinion are omitted until designed;
+ * Lab tests is view-only, so its card goes to the lab results list.
  */
 export const SERVICES = [
   { key: 'remote', href: '/doctors/remote' },

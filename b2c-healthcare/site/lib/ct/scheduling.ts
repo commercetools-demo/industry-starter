@@ -26,7 +26,7 @@ export async function getSchedule(doctorKey: string): Promise<Schedule | null> {
 
 /**
  * Free slots = weekly pattern of the next `days` days in the doctor's zone (today = today in that zone)
- * minus claimed slots of this mode minus slots less than 2 h from `now` (Q-003). `fromDate` is "now".
+ * minus claimed slots of this mode minus slots less than 2 h from `now`. `fromDate` is "now".
  */
 export async function listFreeSlots(doctorKey: string, mode: Mode, fromDate: Date = new Date(), days = 7): Promise<Slot[]> {
   const schedule = await getSchedule(doctorKey);

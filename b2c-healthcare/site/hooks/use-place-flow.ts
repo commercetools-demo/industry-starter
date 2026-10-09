@@ -22,7 +22,7 @@ export interface PlaceFlowInput {
 }
 
 /**
- * The pay sequence in the full-Checkout design (D-034). The button runs the gate (`/api/checkout/prepare`); what it answers
+ * The pay sequence in the full-Checkout design. The button runs the gate (`/api/checkout/prepare`); what it answers
  * decides the rest:
  *  - `checkout`: the session is handed to the payment card, which mounts the commercetools Checkout flow. Checkout
  *    authorizes the card and CREATES the order; its `checkout_completed` message carries the order id and

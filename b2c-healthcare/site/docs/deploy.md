@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: MIT -->
 <!-- Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED. -->
 
-# Deploying the storefront to Netlify (workstream Y, D-030)
+# Deploying the storefront to Netlify
 
 Names only: no value is ever written in this file, in git, in a PR or in chat. Values are set in the Netlify UI
-(Site configuration > Environment variables) by the owner (OA-06). `netlify.test.ts` and `docs/deploy.test.ts` fail when this
+(Site configuration > Environment variables) by the owner. `netlify.test.ts` and `docs/deploy.test.ts` fail when this
 file, `netlify.toml` or the code drift apart.
 
 ## 1. What is deployed
@@ -38,7 +38,7 @@ secret ones "Contains secret values" (Netlify then hides them and, with the secr
 | `CTP_CLIENT_SECRET` | yes | **yes** | the Frontend API client secret |
 | `CTP_SCOPES` | yes | no | space-separated `scope:<project-key>`, least privilege (`.env.example` lists each with its reason); never `manage_project`, never `manage_my_*` |
 | `SESSION_SECRET` | yes | **yes** | 32+ random characters (`openssl rand -base64 48`) |
-| `CTP_CHECKOUT_APP_KEY` | yes | no | key of the commercetools Checkout Application (OA-04); without it no order can be placed |
+| `CTP_CHECKOUT_APP_KEY` | yes | no | key of the commercetools Checkout Application; without it no order can be placed |
 | `ORDER_FINALIZE_SECRET` | optional | **yes** | 16+ characters; guards `POST /api/internal/order-created` (finalizes an order Checkout created when the browser never called back); without it the order page finalizes lazily |
 | `DEMO_LOGIN_PASSWORD` | optional | **yes** | demo shops only: 8+ characters, the seeded patients' password (`SEED_PATIENT_PASSWORD`); shows small one-click sign-in buttons for Sam, Alex and Jordan under the login card via `POST /api/auth/demo-login`. Leave unset on a real shop |
 | `SITE_URL` | yes | no | public origin (canonical URLs, sitemap, robots), e.g. the production URL |
@@ -63,14 +63,14 @@ present): `MALVA_FIXTURES`, `SAME_DAY_NOW_OVERRIDE`, `RESOLVER_FORCE_FAIL`, `MAL
 Deploy previews: use the same (development) commercetools project, which holds synthetic data only; never point a preview at real
 data. Set the secrets for the "Deploy Previews" context to their own values (not the production ones).
 
-## 3. Steps (owner, needs OA-06; see also `plans/notes/Y-todos.md`)
+## 3. Steps (owner)
 
 1. Netlify: Add new site > Import from Git; Base directory `b2c-healthcare/site`; build command and Node version come from
    `netlify.toml`.
 2. Add the variables of section 2 (Production context). Generate secrets with `openssl rand -base64 32` (48 for the session).
 3. Deploy. The build runs `npm run verify:build`; read the log for `bundle scan: ok`.
 4. Set `SITE_URL` to the final origin and redeploy if it was unknown at first.
-5. Smoke-check the deployed URL (checklist in `plans/notes/Y-todos.md`), then record the URL in `plans/STATUS.md`.
+5. Smoke-check the deployed URL.
 
 ## 4. Production-build checks (`scripts/check-bundle.mjs`, `scripts/prune-dev-routes.mjs`)
 

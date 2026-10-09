@@ -9,7 +9,7 @@ Replace the sample furniture data in the commercetools project `spec-test-b2c-he
 - Everything the seed creates has a key starting with `mlv-` (inventory entries `mlv-inv-<sku>`). `cleanup-sample.ts` deletes only what is NOT prefixed; `reset-seed.ts` deletes only what IS prefixed. Both need `--confirm spec-test-b2c-healthcare` (or `--dry-run`).
 - Seeding is idempotent (a second run prints `0 change(s)`). An existing resource that differs from the seed is UPDATED in place where commercetools allows it (`update-plans.ts`: prices, attributes, `isSearchable`, new type fields and enum values, shipping rates, tax rates, limits). Where it does not (an attribute type change, a changed SKU, a removed attribute), the run stops with exit 1 and says exactly which reset is needed (`npm run seed:full`).
 
-## One command: `npm run seed:full` (D-038)
+## One command: `npm run seed:full`
 
 ```
 npm run seed:full -- --dry-run     # lists everything it would delete and create; verify and the search wait are skipped
@@ -34,7 +34,7 @@ npm run seed:verify
 | Script | What it does |
 | --- | --- |
 | `lib.ts` | project guard, env loading, upsert-by-key helpers, 429 retry, write pause, `ensureKeyed`, diff functions |
-| `inventory-project.ts` (`seed:inventory`) | read-only table of counts per kind (for `plans/PROJECT-FINDINGS.md`) |
+| `inventory-project.ts` (`seed:inventory`) | read-only table of counts per kind |
 | `wait-for-search.ts` (`seed:wait`) | checks `searchIndexing.productsSearch.status` is `Activated`, polls Product Search (prefix on `key`) until the seeded count is reached (timeout 5 min, `--expected N`, `--timeout-min M`) |
 | `cleanup-sample.ts` (`seed:cleanup`) | deletes non-`mlv-` carts, orders, inventory, products (unpublish first), categories (leaves first), product types, shipping methods, tax categories, stores, zones. Keeps zones `usa` and `europe`; never deletes customers |
 | `seed.ts` (`seed`) | channels, tax categories, order states and transitions, custom types, product types, categories, same-day zone, shipping methods, 8 doctors, 20 medications, inventory with cart limits. `--only <product-key>` limits the product steps |
@@ -45,7 +45,7 @@ npm run seed:verify
 | `fake-root.ts` | in-memory project used by the unit tests; refuses the same deletions the real API refuses (published product, category with children, ...) |
 | `data/` | `types.ts`, `states.ts`, `categories.ts`, `tax.ts`, `shipping.ts`, `doctors.ts`, `medications.ts`, `site-slots.ts`, generated `product-images.json` / `site-images.json` |
 
-## Clinical stand-in (workstream F)
+## Clinical stand-in
 
 `seed.ts` also seeds (not with `--only`): 3 to 6 verified reviews per doctor, Custom Objects `malva-schedule` (8), `malva-rx` (7: four from the prototype and Jordan, plus one controlled-class prescription each for Sam, Alex and Jordan), `malva-lab` (5), `malva-credential` (2: Sam active, Jordan pending, Alex none), `malva-allowance` (Sam's $50.00 for the current monthly cycle; create-only, never reset by a re-seed), `malva-booking` (1 past booking), and three synthetic patients (`sam.rivera@`, `alex.chen@`, `jordan.lee@example.com`; verified email, one default address, `mlv-patient.patientRef`). The customers need `SEED_PATIENT_PASSWORD` (without it they are skipped). Prescriptions and the past booking are never overwritten (refills change when an order dispenses); schedules, labs and credentials are compared and a difference stops the run.
 
@@ -66,10 +66,10 @@ The storefront client's scopes are the comments of `site/.env.example` (a reason
 
 ## Data model notes
 
-- Doctors: one variant (`DOC-<slug>`), `modes` attribute, USD fee per mode as a price on channel `mlv-remote` / `mlv-office` (D-031). Prices are tax-exclusive; tax is 0% US (D-033).
+- Doctors: one variant (`DOC-<slug>`), `modes` attribute, USD fee per mode as a price on channel `mlv-remote` / `mlv-office`. Prices are tax-exclusive; tax is 0% US.
 - Medications: price per pack, `maxQtyPerOrder` mirrored as the native inventory `maxCartQuantity`, one demo SKU (`MED-famotidine-20-mg`) has a fixed `expiryDate` custom field on its inventory entry (type `mlv-inventory-meta`).
 - Tests never use the network or real credentials: `npx vitest run scripts/seed`.
 
-## Synthetic-only guard and Messages check (workstream X)
+## Synthetic-only guard and Messages check
 
 `seed.ts` refuses to run (before any write) unless every patient and booking in `data/` is synthetic: emails on `example.com`, phone numbers in the 555-01xx range (`synthetic.ts`). `seed:verify` fails when Messages are enabled in the project (they copy changed field values into a log that only `dataErasure` reaches). Privacy operations live in `scripts/privacy/` (see `docs/privacy-inventory.md`).

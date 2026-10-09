@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 /**
- * Medicine detail page (follow-up AB, D-037). Public catalog data only: no patient data is read, so nothing here depends on who
+ * Medicine detail page. Public catalog data only: no patient data is read, so nothing here depends on who
  * is looking beyond their region. The read is shared with `generateMetadata`; an unknown key is a real 404 (`not-found.tsx`).
  */
 export default async function MedicinePage({ params }: { params: Params }) {

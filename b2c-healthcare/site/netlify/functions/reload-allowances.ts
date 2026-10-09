@@ -7,7 +7,7 @@ import { customObjectsStore, type CustomObjectsRoot } from '../../lib/funding/ct
 import { handleReload } from '../../lib/funding/reload-handler';
 
 /**
- * `POST /.netlify/functions/reload-allowances` (workstream U): runs the allowance reload against the storefront's
+ * `POST /.netlify/functions/reload-allowances`: runs the allowance reload against the storefront's
  * commercetools project. Guarded: the caller must send the shared secret in `x-malva-reload-secret`
  * (`RELOAD_ALLOWANCES_SECRET`); without a configured secret the function answers 503 and does nothing. The reload is
  * idempotent per member per cycle, so running it twice is harmless. The schedule lives in

@@ -2,7 +2,7 @@ import { LOCALE, PREFIX } from '../lib';
 
 export const L = (en: string) => ({ [LOCALE]: en });
 
-// ---------------------------------------------------------------- channels (price scopes, D-031)
+// ---------------------------------------------------------------- channels (price scopes)
 
 /** `ProductDistribution` is required for a channel to scope prices. */
 export const CHANNELS = [
@@ -28,13 +28,13 @@ export const CUSTOM_TYPES = [
       field('eligibleForRestricted', 'Eligible for restricted funds', 'Boolean'),
       field('coveredAmount', 'Covered amount', 'Money'),
       field('lastSeenUnitPrice', 'Unit price at the previous cart read', 'Money'),
-      // Written at order placement (workstream Q, N-09): what the order line supplied and on what authorization.
+      // Written at order placement: what the order line supplied and on what authorization.
       field('dispensedQty', 'Dispensed quantity', 'Number'),
       field('authorizationParams', 'Authorization parameters at placement (JSON)', 'String'),
       field('suppliedLots', 'Supplied lots (JSON, filled at packing)', 'String'),
-      // Written when the line is added and again at order placement (workstream U): the credential id is `credentialRef`.
+      // Written when the line is added and again at order placement: the credential id is `credentialRef`.
       field('credentialValidTo', 'Credential expiry, copied when the line was checked', 'String'),
-      // Written at order placement (workstream U): which instrument settled how much of the line (JSON).
+      // Written at order placement: which instrument settled how much of the line (JSON).
       field('settlement', 'Settlement by instrument (JSON)', 'String'),
     ],
   },
@@ -115,7 +115,7 @@ export const MEDICATION_PRODUCT_TYPE_KEY = `${PREFIX}medication`;
  * Each must stay `isSearchable: true` in the product types below: Product Search can neither filter nor full-text match
  * an attribute that is not indexed.
  *
- * !!! SEARCHABILITY IS A ONE-WAY DECISION IN PRACTICE (D-039): `changeIsSearchable` exists, but the Product Search index is
+ * !!! SEARCHABILITY IS A ONE-WAY DECISION IN PRACTICE: `changeIsSearchable` exists, but the Product Search index is
  * rebuilt for every product of the type, and an attribute name must have the SAME `isSearchable` in every product type that
  * uses it or it leaves search everywhere. Decide BEFORE the first live seed. Changing a value here later makes `seed.ts` send
  * `changeIsSearchable` (update-plans.ts) and `seed:verify` checks the result; types-searchable.test.ts fails when an attribute

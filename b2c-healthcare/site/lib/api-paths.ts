@@ -40,7 +40,7 @@ export const apiOrderReorder = (id: string): string => `${apiOrder(id)}/reorder`
 export const API_CHECKOUT = '/api/checkout';
 export const API_CHECKOUT_ADDRESS = '/api/checkout/address';
 export const API_CHECKOUT_SHIPPING_METHOD = '/api/checkout/shipping-method';
-/** The pre-checkout gate: validates the cart and answers what to mount (workstream AA). */
+/** The pre-checkout gate: validates the cart and answers what to mount. */
 export const API_CHECKOUT_PREPARE = '/api/checkout/prepare';
 /** The browser's completion callback: finalizes the order Checkout created. */
 export const API_CHECKOUT_COMPLETE = '/api/checkout/complete';

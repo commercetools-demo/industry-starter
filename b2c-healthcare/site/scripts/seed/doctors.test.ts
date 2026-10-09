@@ -41,7 +41,7 @@ describe('doctor data', () => {
     }
   });
 
-  it('one doctor offers only remote and one only office, so a disabled mode can be tested (workstream L)', () => {
+  it('one doctor offers only remote and one only office, so a disabled mode can be tested', () => {
     const only = (mode: 'remote' | 'office') => DOCTORS.filter((d) => Object.keys(d.fees).join() === mode).map((d) => d.slug);
     expect(only('remote')).toEqual(['tomas-alvarez']);
     expect(only('office')).toEqual(['leila-haddad']);

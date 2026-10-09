@@ -7,11 +7,11 @@ import { handleRetention } from '../../scripts/privacy/retention-handler';
 import type { Root } from '../../scripts/seed/lib';
 
 /**
- * `POST /.netlify/functions/retention` (workstream X): runs the retention rules (expired guest bookings, stale counters and
+ * `POST /.netlify/functions/retention`: runs the retention rules (expired guest bookings, stale counters and
  * locks, old refill logs; see `scripts/privacy/retention.ts`) against the storefront's commercetools project. Guarded: the
  * caller must send `RETENTION_SECRET` in `x-malva-retention-secret`; without a configured secret it answers 503 and does nothing.
  * Idempotent. The schedule lives in `retention-scheduled.ts`, which calls this function with the secret. The storefront API
- * client needs `manage_custom_objects` for the project (see plans/notes/X-todos.md).
+ * client needs `manage_custom_objects` for the project.
  */
 
 function rootFromEnv(): Root {

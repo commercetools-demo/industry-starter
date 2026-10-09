@@ -7,7 +7,7 @@ import { mapMedication } from './medication';
 const usd = (centAmount: number) => ({ type: 'centPrecision', centAmount, currencyCode: 'USD', fractionDigits: 2 });
 const channel = (key: string) => ({ typeId: 'channel', id: `id-${key}`, obj: { key } });
 
-// Fixtures follow plans/SEED-PLAN.md (product types mlv-doctor / mlv-medication, price channels).
+// Fixtures follow the seed data model (product types mlv-doctor / mlv-medication, price channels).
 const doctor = {
   id: 'p-okafor',
   key: 'mlv-doc-okafor',

@@ -20,7 +20,7 @@ let counter = 0;
 const FREE: Money = { centAmount: 0, currencyCode: 'USD', fractionDigits: 2 };
 
 /**
- * Cost-share for the fixture cart (workstream U): the same resolver as production, applied to the in-memory lines. A
+ * Cost-share for the fixture cart: the same resolver as production, applied to the in-memory lines. A
  * failing resolver leaves the cart `unresolved` (no cover figures; checkout disabled), never the list price.
  */
 export async function applyFixtureFunding(customerId: string, patient?: Pick<Patient, 'patientRef' | 'fundingScheme'>): Promise<void> {
@@ -126,7 +126,7 @@ export async function getCartValidated(patient: Patient, customerId: string, ctx
   return lines.length > 0 ? { ...cart, tender: await fixtureTenderView(cart, customerId, patient.patientRef, ctx.now) } : cart;
 }
 
-/** After an order is placed (workstream Q): the fixture cart is emptied. */
+/** After an order is placed: the fixture cart is emptied. */
 export function clearCart(customerId: string): void {
   carts.delete(customerId);
   unresolvedFor.delete(customerId);

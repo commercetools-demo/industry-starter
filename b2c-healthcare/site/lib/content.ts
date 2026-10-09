@@ -1,4 +1,4 @@
-// File-based content (workstream V): Markdown with front matter under site/content/, read at build or
+// File-based content: Markdown with front matter under site/content/, read at build or
 // request time on the server. No commercetools import: these pages must survive a degraded commerce tier.
 //
 // Layout: content/<collection>/<name>.md is the default-locale (en-US) text; a translation sits next to
@@ -303,7 +303,7 @@ export function getRelatedArticles(article: Article, locale: string, root?: stri
 export const categoriesOf = (articles: readonly Article[]): string[] =>
   [...new Set(articles.map((a) => a.category))].filter(Boolean).sort();
 
-/** The home journal row (M-07) and the header link need at least this many published articles. */
+/** The home journal row and the header link need at least this many published articles. */
 export const JOURNAL_ROW_MIN = 3;
 export const hasJournalRow = (locale: string, root?: string): boolean =>
   getPublishedArticles(locale, root).length >= JOURNAL_ROW_MIN;

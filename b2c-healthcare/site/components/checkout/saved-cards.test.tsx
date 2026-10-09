@@ -11,7 +11,7 @@ const props = (over: Partial<PaymentCardProps> = {}): PaymentCardProps => ({
 
 beforeEach(() => sdk.checkoutFlow.mockReset());
 
-describe('payment-methods: saving a card while paying, paying with a saved one (T-10)', () => {
+describe('payment-methods: saving a card while paying, paying with a saved one', () => {
   it('the Checkout flow is the only place a card is entered or chosen: the page explains it and links to the saved cards, and adds no card or "save" input of its own', async () => {
     renderWithProviders(<PaymentCard {...props()} />);
     await waitFor(() => expect(sdk.checkoutFlow).toHaveBeenCalled());

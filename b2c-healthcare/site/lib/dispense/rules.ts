@@ -3,7 +3,7 @@
  * No server imports and no commercetools types: the server code reads the data and hands it in, so every
  * scenario is a table test. Dates are ISO `YYYY-MM-DD` strings; "today" is always passed in.
  *
- * Enforcement is in the BFF only (D-028): a request made directly against the commerce API is not checked by these
+ * Enforcement is in the BFF only: a request made directly against the commerce API is not checked by these
  * functions. See README, "Known gap: limits bypassable through the API".
  */
 
@@ -58,7 +58,7 @@ export interface AuthorizationInput {
 }
 
 /**
- * An authorization allows supply only inside its window and with enough remaining quantity (all or nothing, Q-038).
+ * An authorization allows supply only inside its window and with enough remaining quantity (all or nothing).
  * Expiry is checked first: an out-of-window authorization is refused as EXPIRED even when it is also exhausted.
  * Remaining quantity = refills left x the quantity of one fill.
  */
@@ -76,7 +76,7 @@ export type ReplenishmentDecision =
   | { run: false; reason: 'EXPIRED' | 'NO_REFILLS'; recordedAs: string };
 
 /**
- * Gate for a standing replenishment (subscription / recurring order, workstream T): a schedule is not an entitlement.
+ * Gate for a standing replenishment (subscription / recurring order): a schedule is not an entitlement.
  * Checked before each generated order; when the authorization has lapsed or is exhausted the run is skipped and the
  * reason is returned for T to record.
  */

@@ -7,7 +7,7 @@ import { listKeyOf, LIST_DELETE_DAYS, LIST_LINE_TYPE_KEY, listLineFieldsOf, mapL
 import type { Money } from '@/lib/types';
 
 /**
- * Saved lists ("My medicines", workstream T) on commercetools Shopping Lists: one list per `customer`, key
+ * Saved lists ("My medicines") on commercetools Shopping Lists: one list per `customer`, key
  * `mlv-list-<id>`, deleted by the platform 360 days after the last change. A line is a medication SKU plus the
  * prescription reference (`rxNumber`, `rxLineRef`) and the price when it was saved (to show a delta later). The
  * signature (sig) of a prescription is never stored. Every read and write is scoped by the customer id: a list that

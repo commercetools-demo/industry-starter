@@ -233,7 +233,7 @@ describe('authentication-and-identity: change password', () => {
   });
 });
 
-describe('password reset is intentionally absent (D-032)', () => {
+describe('password reset is intentionally absent', () => {
   it('no reset route exists under app/api', async () => {
     const { readdirSync, statSync } = await import('node:fs');
     const { join } = await import('node:path');

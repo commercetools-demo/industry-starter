@@ -1,9 +1,9 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 /**
- * D-036: the API client scopes are documented in `.env.example` (storefront) and `.env.seed.example` (seed admin client), one scope per
+ * the API client scopes are documented in `.env.example` (storefront) and `.env.seed.example` (seed admin client), one scope per
  * line with a reason. This test keeps those lists honest: every scope has a reason, none is listed twice, every resource the code calls
  * is covered by a listed scope, and the old name `manage_custom_objects` is gone.
  */
@@ -30,7 +30,7 @@ const walk = (dir: string): string[] =>
     return statSync(path.join(root, rel)).isDirectory() ? walk(rel) : [rel];
   });
 
-describe('API client scopes (D-036)', () => {
+describe('API client scopes', () => {
   for (const [label, list] of [['.env.example (storefront client)', storefront], ['.env.seed.example (seed admin client)', seed]] as const) {
     it(`${label}: every scope has a reason and none is listed twice`, () => {
       expect(list.length).toBeGreaterThan(10);
@@ -85,18 +85,5 @@ describe('API client scopes (D-036)', () => {
       else if (!needs[resource].some((n) => storefrontNames.has(n))) problems.push(`${resource} (${file}) needs one of ${needs[resource].join(', ')}`);
     }
     expect(problems).toEqual([]);
-  });
-
-  it('plans/LIVE-TODOS.md section 3 and plans/notes/AC-todos.md name the same storefront scopes (skipped when the plans are not in the checkout)', () => {
-    const plans = path.join(root, '..', 'plans');
-    const live = path.join(plans, 'LIVE-TODOS.md');
-    const ac = path.join(plans, 'notes', 'AC-todos.md');
-    if (!existsSync(live) || !existsSync(ac)) return;
-    const section = readFileSync(live, 'utf8').split('### 3.2')[0].split('## 3. API client scopes')[1] ?? '';
-    const acText = readFileSync(ac, 'utf8');
-    for (const name of storefrontNames) {
-      expect(section, `LIVE-TODOS section 3.1 misses ${name}`).toContain(name);
-      expect(acText, `AC-todos misses ${name}`).toContain(name);
-    }
   });
 });

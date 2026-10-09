@@ -27,7 +27,7 @@ beforeEach(() => {
   supply = new Map(Object.keys(CATALOG).map((sku) => [sku, { sku, available: 600 }]));
 });
 
-describe('prescription-bound-supply: validateRxSelection (used by the cart, workstream O)', () => {
+describe('prescription-bound-supply: validateRxSelection (used by the cart)', () => {
   it('accepts the selectable lines with what the cart and the order need, and consumes nothing', async () => {
     const result = await validateRxSelection(sam, 'rx 77102', ['RX-77102-1', 'RX-77102-2'], ctx);
     expect(result.rxNumber).toBe('RX-77102');

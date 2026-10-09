@@ -1,4 +1,4 @@
-// Tiny Markdown subset for the static content files (workstream V): `##`/`###` headings, paragraphs,
+// Tiny Markdown subset for the static content files: `##`/`###` headings, paragraphs,
 // `-` lists, **bold** and [text](href) links. Pure data out, so React escapes everything on render.
 
 export type Inline = { text: string; bold?: boolean; href?: string };

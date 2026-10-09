@@ -3,7 +3,7 @@ import type { ConsultationMode, Doctor, DoctorCard, Money } from '@/lib/types';
 import { attrEnumKey, attrNumber, attrSet, attrText, findAttribute } from '@/lib/mappers/attributes';
 import { getLocalizedString } from '@/lib/utils';
 
-/** Price channel key per consultation mode (decision D-031). */
+/** Price channel key per consultation mode. */
 export const MODE_CHANNEL_KEYS: Record<ConsultationMode, string> = {
   remote: 'mlv-remote',
   office: 'mlv-office',

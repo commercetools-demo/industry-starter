@@ -12,7 +12,7 @@ import { mapCart, rxFieldsOf, RX_LINE_TYPE_KEY, unitPriceOf } from '@/lib/mapper
 import type { Cart } from '@/lib/types';
 
 /**
- * Prescription cart (workstream O). A customer cart (signed-in only, never anonymous): currency and country from
+ * Prescription cart. A customer cart (signed-in only, never anonymous): currency and country from
  * the visitor's region, `shippingMode Single`, tax mode Platform, and the standard delivery method preselected so
  * the delivery row is platform-calculated. Lines are medications only; quantity counts packs and the prescribed
  * quantity lives in the line's custom fields. The BFF never removes a line on its own: re-validation flags it.
@@ -24,7 +24,7 @@ export const STANDARD_SHIPPING_KEY = 'mlv-standard';
 const isNotFound = (error: unknown): boolean => (error as { statusCode?: number } | null)?.statusCode === 404;
 
 /**
- * `currency` is the visitor's region currency (workstream W): a cart's currency is fixed at creation, so after a region
+ * `currency` is the visitor's region currency: a cart's currency is fixed at creation, so after a region
  * switch the old cart (left Active to expire) is ignored, never read, re-priced or added to.
  */
 export async function fetchActiveCart(customerId: string, cartId: string | undefined, currency?: string): Promise<CtCart | null> {
@@ -38,7 +38,7 @@ export async function fetchActiveCart(customerId: string, cartId: string | undef
     }
   }
   // No usable cartId (stale, cleared by sign-out): the customer's newest Active cart, if any. Recurring carts (auto-refill,
-  // origin RecurringOrder, workstream T) are never the shopping cart.
+  // origin RecurringOrder) are never the shopping cart.
   const { body } = await apiRoot
     .carts()
     .get({
@@ -115,7 +115,7 @@ export async function addRxLines(customerId: string, cartId: string | undefined,
             rxNumber,
             rxLineRef: a.lineRef,
             prescribedQty: a.qty,
-            // Copied now, not read live later (workstream U): the product's `hsaEligible` and the credential that allowed a controlled line.
+            // Copied now, not read live later: the product's `hsaEligible` and the credential that allowed a controlled line.
             ...(a.hsaEligible !== undefined ? { eligibleForRestricted: a.hsaEligible } : {}),
             ...(a.credential ? { credentialRef: a.credential.id, credentialValidTo: a.credential.validTo } : {}),
           },

@@ -9,7 +9,7 @@ import { SCHEDULES } from './data/schedules';
 import { ensureObject } from './custom-objects';
 import { ensureKeyed, pickDiff, type Ctx, type Step } from './lib';
 
-/** Containers written by the storefront (workstream F) and seeded here. */
+/** Containers written by the storefront and seeded here. */
 export const CONTAINERS = {
   schedule: 'malva-schedule',
   rx: 'malva-rx',
@@ -41,7 +41,7 @@ export function objectSteps(ctx: Ctx): Step[] {
     ...LABS.map((l) => ({ name: `lab ${l.id}`, run: () => ensureObject(ctx, CONTAINERS.lab, l.id, l) })),
     ...CREDENTIALS.map((c) => ({ name: `credential ${credentialObjectKey(c)}`, run: () => ensureObject(ctx, CONTAINERS.credential, credentialObjectKey(c), c) })),
     ...BOOKINGS.map((b) => ({ name: `booking ${b.reference}`, run: () => ensureObject(ctx, CONTAINERS.booking, b.reference, b, 'exists') })),
-    // Benefit allowance (workstream U): the cycle the seed runs in; balances change with every order, so an existing cycle is never compared.
+    // Benefit allowance: the cycle the seed runs in; balances change with every order, so an existing cycle is never compared.
     ...ALLOWANCE_MEMBERS.map((m) => {
       const cycle = cycleFor(new Date());
       return { name: `allowance ${m.patientRef} ${cycle}`, run: () => ensureObject(ctx, CONTAINERS.allowance, allowanceObjectKey(m.patientRef, cycle), allowanceCycle(m.patientRef, m.monthly, cycle), 'exists') };

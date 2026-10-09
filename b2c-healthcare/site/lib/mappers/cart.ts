@@ -48,7 +48,7 @@ export interface CartMapOptions {
   problems?: ReadonlyMap<string, CartLineProblem>;
   /** Lines whose unit price differs from the previous read. */
   priceUpdated?: ReadonlySet<string>;
-  /** The cost-share resolver could not answer (workstream U): no cover is shown and the cart cannot be checked out. */
+  /** The cost-share resolver could not answer: no cover is shown and the cart cannot be checked out. */
   unresolved?: boolean;
 }
 

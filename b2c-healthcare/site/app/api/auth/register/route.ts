@@ -6,7 +6,7 @@ import { getSession, updateSession } from '@/lib/session';
 
 /**
  * POST /api/auth/register { name, email, password }. Creates the customer, verifies the address automatically
- * (no email provider, D-029) and signs the new patient in. A duplicate address is refused with a text that does
+ * (no email provider) and signs the new patient in. A duplicate address is refused with a text that does
  * not say the address exists; attempts are counted per client.
  */
 export async function POST(request: Request): Promise<Response> {

@@ -5,7 +5,7 @@ import { loadFundingFixtures } from '@/lib/ct/fixtures';
 import { evaluateCredential, type CredentialCheck, type CredentialResult } from '@/lib/funding/credential';
 
 /**
- * Credentialed purchase scope (workstream U): is the patient allowed to buy this control class on this date? The register
+ * Credentialed purchase scope: is the patient allowed to buy this control class on this date? The register
  * is the clinical stand-in's `CredentialSource` (a Custom Object per patient and class, F-01); a real register would
  * replace it behind the same interface. Nothing is cached: the credential is read again at every check, which includes
  * order placement.

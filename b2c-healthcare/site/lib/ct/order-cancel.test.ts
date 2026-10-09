@@ -209,7 +209,7 @@ describe('order-history: Detail of an order not theirs (cancel)', () => {
   });
 });
 
-describe('benefit-allowance-drawdown: Return restores the balance (cancel hook, workstream U)', () => {
+describe('benefit-allowance-drawdown: Return restores the balance (cancel hook)', () => {
   it('cancelling an order that drew from the allowance gives the amount back once, even when the cancel is repeated', async () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);

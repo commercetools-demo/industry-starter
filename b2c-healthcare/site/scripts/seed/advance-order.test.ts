@@ -78,7 +78,7 @@ describe('advance-order.ts (F-08)', () => {
   });
 });
 
-describe('advance-order.ts: shipment state (workstream S)', () => {
+describe('advance-order.ts: shipment state', () => {
   it('Partial shipment: sets shipmentState with changeShipmentState, independent of the order state', async () => {
     const fake = await withOrder('mlv-packed-shipped');
     expect(await setShipmentState(ctxOf(fake), 'MLV-1001', 'partial')).toEqual({ orderNumber: 'MLV-1001', shipmentState: 'Partial', changed: true });

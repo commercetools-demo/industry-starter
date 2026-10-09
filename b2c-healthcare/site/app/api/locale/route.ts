@@ -7,7 +7,7 @@ import { getSession, setLocale } from '@/lib/session';
  * a body with currency or country but no locale is rejected; extra fields must agree with the table.
  * The session is written from COUNTRY_CONFIG only, and cartId is cleared when the currency changes. The answer says so
  * (`cartCleared`): a cart's currency is fixed at creation, so it cannot be re-priced; the UI tells the patient and the
- * old cart is left to expire (the cart module ignores a cart in another currency, workstream W).
+ * old cart is left to expire (the cart module ignores a cart in another currency).
  */
 export async function POST(request: Request): Promise<Response> {
   return handle(async () => {

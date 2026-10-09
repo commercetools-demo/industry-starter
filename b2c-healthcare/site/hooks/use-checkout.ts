@@ -53,7 +53,7 @@ async function send(path: string, body: unknown): Promise<{ status: number; data
 export function useCheckout(): SWRResponse<CheckoutState | null> & {
   saveAddress: (input: AddressInput) => Promise<AddressSaveResult>;
   chooseMethod: (key: string) => Promise<MethodChangeResult>;
-  /** Use (or drop) the restricted instrument; the answer replaces the cached state (workstream U). */
+  /** Use (or drop) the restricted instrument; the answer replaces the cached state. */
   chooseRestricted: (on: boolean) => Promise<RestrictedChangeResult>;
 } {
   const swr = useSWR<CheckoutState | null>(KEY_CHECKOUT, fetchCheckout, { revalidateOnFocus: false, shouldRetryOnError: false });
@@ -121,7 +121,7 @@ export type CompleteClientResult = { ok: true; orderId: string } | { ok: false; 
 export type DemoAuthorizeResult = { status: 'authorized'; orderId: string } | { status: 'declined' | 'failed' };
 
 /**
- * The server calls of the payment step (D-034). `prepare` is the gate before Checkout: it sends the amount the buyer saw
+ * The server calls of the payment step. `prepare` is the gate before Checkout: it sends the amount the buyer saw
  * (compared with the cart, never charged) and answers what to mount. `complete` is the completion callback: Checkout
  * created the order, the server finalizes it. On success the cart caches are cleared: the cart is now an order.
  */

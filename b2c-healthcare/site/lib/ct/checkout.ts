@@ -18,7 +18,7 @@ import { mapCheckoutCart } from '@/lib/mappers/checkout';
 import type { AddressInput, CartLineProblem, CheckoutCart, CheckoutState, DeliveryOption } from '@/lib/types';
 
 /**
- * Checkout reads and writes (workstream Q). The page never keeps its own copy of the summary: after every change to
+ * Checkout reads and writes. The page never keeps its own copy of the summary: after every change to
  * the address or the delivery method the cart is read again and the shipping cost, tax and total come from that
  * response (checkout-page: re-read after each shipping change). Delivery options come from
  * `shipping-methods/matching-cart` for the cart as it now is.
@@ -72,7 +72,7 @@ export async function readCheckout(ctx: CheckoutContext): Promise<CheckoutState 
     const cart = (await fetchActiveCart(ctx.customerId, before.id)) ?? before;
     return update(cart, recalcActions(cart));
   });
-  // Cost-share is resolved again on every checkout read (workstream U); unresolved blocks the page's Place order.
+  // Cost-share is resolved again on every checkout read; unresolved blocks the page's Place order.
   const funded = await applyFunding(recalculated, ctx.patient);
   const problems = await checkLines(ctx.patient, funded.cart.lineItems.map((item) => ({ id: item.id, rx: rxFieldsOf(item) })), ctx.rx);
   return stateOf(funded.cart.id, ctx, problems, funded.unresolved);

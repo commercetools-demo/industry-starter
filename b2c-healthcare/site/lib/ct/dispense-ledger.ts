@@ -25,7 +25,7 @@ export interface ConsumeLine {
   rxNumber: string;
   lineRef: string;
   sku: string;
-  /** Units dispensed; must equal the prescribed quantity of the line (no partial supply, Q-038). */
+  /** Units dispensed; must equal the prescribed quantity of the line (no partial supply). */
   qty: number;
   packs: number;
   /** Calendar-month ceiling re-checked at order creation (a lowered ceiling must not be escaped by an old cart). */
@@ -131,7 +131,7 @@ export interface RestoreResult {
 }
 
 /**
- * Cancellation before `mlv-packed-shipped` (workstream S) restores the refills the order consumed. Idempotent:
+ * Cancellation before `mlv-packed-shipped` restores the refills the order consumed. Idempotent:
  * an unknown order, or one already restored, is a no-op.
  */
 export async function restoreAuthorization(orderId: string, now: Date = new Date()): Promise<RestoreResult> {

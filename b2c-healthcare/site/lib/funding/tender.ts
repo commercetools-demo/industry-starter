@@ -3,7 +3,7 @@ import { splitBasket, type BasketLine } from '@/lib/funding/eligibility';
 import type { Money, TenderView } from '@/lib/types';
 
 /**
- * Tender order (Q-064): allowance, then the restricted instrument, then the card. Pure arithmetic on integer cents
+ * Tender order: allowance, then the restricted instrument, then the card. Pure arithmetic on integer cents
  * over the payable total the platform calculated; used by the server reads that build `TenderView` and by
  * `placeOrder`. The browser never computes any of it.
  */

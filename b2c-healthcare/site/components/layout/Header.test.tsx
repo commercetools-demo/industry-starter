@@ -135,7 +135,7 @@ describe('design-storefront-shell › Header navigation', () => {
     expect(screen.getAllByRole('link', { name: 'Book a visit' }).length).toBeGreaterThan(0);
   });
 
-  it('the logo links to /en-US (Q-021) and is the first tab stop; Cart then Sign in follow the links', async () => {
+  it('the logo links to /en-US and is the first tab stop; Cart then Sign in follow the links', async () => {
     const { default: userEvent } = await import('@testing-library/user-event');
     renderHeader('/en-US/doctors/remote');
     const logo = screen.getByRole('link', { name: 'Malva home' });

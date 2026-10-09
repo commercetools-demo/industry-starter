@@ -8,7 +8,7 @@ export type ButtonSize = 'md' | 'sm';
 const BASE =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap border-thick font-display text-sm font-medium cursor-pointer transition-colors';
 const VARIANTS: Record<ButtonVariant, string> = {
-  // Label is navy-900 on the azure fill (D-010: white is 2.6:1); the hover label has its own token.
+  // Label is navy-900 on the azure fill (white is 2.6:1); the hover label has its own token.
   primary:
     'border-action bg-action text-action-label hover:border-action-hover hover:bg-action-hover hover:text-action-label-hover',
   outline: 'border-action bg-surface text-brand-700 hover:bg-brand-50 hover:text-brand-800',

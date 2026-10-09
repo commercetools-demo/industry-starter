@@ -3,7 +3,7 @@ import type { LabDetailView } from '@/lib/account-types';
 import { rangeLabel } from '@/lib/labs';
 
 /**
- * Simple server-side lab results PDF (Q-045; pdf-lib, no external service). Pure: bytes in, bytes out, nothing logged.
+ * Simple server-side lab results PDF (pdf-lib, no external service). Pure: bytes in, bytes out, nothing logged.
  * The document holds health data, so it is only ever produced for the signed-in patient's own test and sent `no-store`.
  */
 

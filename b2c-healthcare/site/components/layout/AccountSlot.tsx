@@ -6,7 +6,7 @@ import { ButtonLink } from '@/components/ui/Button';
 import { Link } from '@/i18n/routing';
 import { initialsOf } from '@/lib/initials';
 
-/** Path of the sign-in page (workstream J). */
+/** Path of the sign-in page. */
 export const SIGN_IN_HREF = '/login';
 
 /**

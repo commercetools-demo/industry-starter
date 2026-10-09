@@ -36,7 +36,7 @@ beforeEach(() => {
 
 afterEach(() => vi.unstubAllEnvs());
 
-describe('checkout-page: PUT /api/checkout/address (Q-02)', () => {
+describe('checkout-page: PUT /api/checkout/address', () => {
   it('sets the address, answers with the re-read cart and takes the total from it', async () => {
     shop.taxPercent = { NY: 8 };
     const cart = shop.seedCart();
@@ -90,7 +90,7 @@ describe('checkout-page: PUT /api/checkout/address (Q-02)', () => {
   });
 });
 
-describe('checkout-page: PUT /api/checkout/shipping-method (Q-02)', () => {
+describe('checkout-page: PUT /api/checkout/shipping-method', () => {
   it('Change: same-day in a same-day state: the summary comes from the recalculated cart', async () => {
     const cart = shop.seedCart({ shippingAddress: { country: 'US', state: 'TX', city: 'Austin', postalCode: '78701', streetName: 'x', firstName: 'a', lastName: 'b', phone: '+15125550100' } });
     signedIn(cart.id);
@@ -123,7 +123,7 @@ describe('checkout-page: PUT /api/checkout/shipping-method (Q-02)', () => {
   });
 });
 
-describe('checkout-page: GET /api/checkout (Q-02)', () => {
+describe('checkout-page: GET /api/checkout', () => {
   it('returns the checkout state, sets the session cart and is never cached', async () => {
     const cart = shop.seedCart();
     signedIn();

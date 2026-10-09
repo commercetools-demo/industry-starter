@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return pageMetadata({ locale, path: '/account/profile', title: t('title'), noindex: true });
 }
 
-// Name and password only (Q-048: no notification settings, photo or family accounts). The email is shown, not
+// Name and password only (no notification settings, photo or family accounts). The email is shown, not
 // editable here: changing it would de-verify the account. Rendered inside the account shell.
 export default async function ProfilePage({ params }: Props) {
   const { locale } = await params;

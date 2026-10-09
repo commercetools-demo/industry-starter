@@ -127,7 +127,7 @@ export function PaymentCard({ mode, ready, session, message, onEvent, simulateDe
           {phase === 'idle' ? <p className="text-sm text-neutral-600">{t('continueHint')}</p> : null}
           {/* Mount point of the Checkout flow (inline, not the full-screen overlay); it exists only once the gate has passed. */}
           {session ? <div data-ctc /> : null}
-          {/* Stored Payment Methods (workstream T): Checkout lists the customer's saved cards first and offers "Save this card"
+          {/* Stored Payment Methods: Checkout lists the customer's saved cards first and offers "Save this card"
               itself, because the cart carries the customer id. Nothing here touches a card. */}
           <p className="text-sm text-neutral-600" data-saved-hint>
             {t('savedHint')}{' '}

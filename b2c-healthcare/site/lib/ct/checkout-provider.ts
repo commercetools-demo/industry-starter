@@ -4,14 +4,14 @@ import { log } from '@/lib/log';
 import { PaymentUnavailableError, type PaymentCartRef, type PaymentProvider } from '@/lib/checkout/payment-provider';
 
 /**
- * The real adapter: the full commercetools Checkout (`checkoutFlow`, D-034; Stripe sandbox connector, OA-04).
+ * The real adapter: the full commercetools Checkout (`checkoutFlow`; Stripe sandbox connector).
  *
  *  - session: `POST https://session.{region}.commercetools.com/{projectKey}/sessions` (scope `manage_sessions`)
  *    with the cart and the Checkout Application key; the browser SDK (`checkoutFlow`) takes the session id. Checkout
  *    authorizes the payment AND creates the order;
  *  - release / refund: the Checkout Payment Intents API (`cancelPayment`, `refundPayment`)
  *    (`POST https://checkout.{region}.commercetools.com/{projectKey}/payment-intents/{paymentId}`, scope
- *    `manage_checkout_payment_intents`). Capture is not modelled here: it is Checkout's lifecycle (D-035).
+ *    `manage_checkout_payment_intents`). Capture is not modelled here: it is Checkout's lifecycle.
  *
  * Needs `CTP_CHECKOUT_APP_KEY` (the Application's key; not a secret). Credentials come from the same API client as
  * the rest of the BFF and are never logged. Without the Application key every call throws `PaymentUnavailableError`.
@@ -117,7 +117,7 @@ export function createCheckoutProvider(config: CheckoutProviderConfig = readChec
       await intent(paymentId, { action: 'refundPayment', amount: { centAmount: amount.centAmount, currencyCode: amount.currencyCode } }, 'refund');
     },
 
-    // Saved methods live on the PaymentMethod API (Checkout Stored Payment Methods, OA-04), see lib/ct/stored-methods.ts.
+    // Saved methods live on the PaymentMethod API (Checkout Stored Payment Methods), see lib/ct/stored-methods.ts.
     listStoredMethods: (customerId: string) => listStored(customerId),
     setDefaultStoredMethod: (customerId: string, methodId: string) => setDefaultStored(customerId, methodId),
     removeStoredMethod: (customerId: string, methodId: string) => removeStored(customerId, methodId),

@@ -1,5 +1,5 @@
 /**
- * Eligible-item tender restriction (workstream U, eligible-item-tender-restriction; Q-063). Pure rules, no server
+ * Eligible-item tender restriction (eligible-item-tender-restriction). Pure rules, no server
  * imports.
  *
  * The product attribute `hsaEligible` is copied to the cart line as `custom.eligibleForRestricted` when the line is

@@ -13,7 +13,7 @@ import type { NotAddedReason } from '@/lib/order-types';
 import type { Cadence, RefillView } from '@/lib/refill-types';
 
 /**
- * Setting up auto-refill (workstream T). The source is either a past order of the customer or lines of one of the
+ * Setting up auto-refill. The source is either a past order of the customer or lines of one of the
  * patient's own prescriptions. Whatever the source, every line is re-validated NOW through N (`validateRxSelection`:
  * own prescription, refills, expiry, stock, ceilings, shelf life): only dispensable lines enter the standing order and
  * each other line is named with a reason. A saved payment method is required (the refill is charged to it).

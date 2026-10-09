@@ -62,7 +62,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 const total = () => document.querySelector('[data-total]');
 
-describe('design-checkout: Single-page checkout layout (Q-07)', () => {
+describe('design-checkout: Single-page checkout layout', () => {
   it('Empty cart: says so and links to /prescriptions', async () => {
     server.checkout = null;
     renderWithProviders(<CheckoutPage />);
@@ -99,7 +99,7 @@ describe('design-checkout: Single-page checkout layout (Q-07)', () => {
   });
 });
 
-describe('design-checkout: Place order: summary (Q-07)', () => {
+describe('design-checkout: Place order: summary', () => {
   it('Summary: lists each line, the delivery row, the total in navy 20px bold and a full-width Place order button, all from the cart', async () => {
     renderWithProviders(<CheckoutPage />);
     await screen.findByText('Order summary');
@@ -143,7 +143,7 @@ describe('design-checkout: Place order: summary (Q-07)', () => {
   });
 });
 
-describe('checkout-page: Checkout re-reading totals after each shipping change (Q-07)', () => {
+describe('checkout-page: Checkout re-reading totals after each shipping change', () => {
   it('Address change moves tax: the summary shows the tax, shipping and total from the answer of the address change', async () => {
     const user = userEvent.setup();
     server.put = (path) => (path === '/api/checkout/address' ? json(state({ tax: usd(150), total: usd(3165) })) : json({}, 404));
@@ -189,7 +189,7 @@ describe('checkout-page: Checkout re-reading totals after each shipping change (
   });
 });
 
-describe('design-checkout: Place order: success and demo banner (Q-07)', () => {
+describe('design-checkout: Place order: success and demo banner', () => {
   it('Success: Place order in the demo build runs the gate, the demo Checkout and the completion callback, then goes to /order/<id>; the DEMO banner is visible', async () => {
     const user = userEvent.setup();
     server.put = (path) => {

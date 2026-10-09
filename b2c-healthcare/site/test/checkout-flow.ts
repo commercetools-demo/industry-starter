@@ -4,7 +4,7 @@ import type { PaymentProvider } from '@/lib/checkout/payment-provider';
 import type { FakeShop } from '@/test/fake-shop';
 
 /**
- * The full-Checkout flow as the unit tests drive it (D-034): the gate (`prepareCheckout`), then "Checkout" - which the test
+ * The full-Checkout flow as the unit tests drive it: the gate (`prepareCheckout`), then "Checkout" - which the test
  * plays by creating the order from the cart in the fake shop, without an order number or a state, with the card Payment
  * authorized - then `finalizeOrder`, the browser callback. Takes the functions as arguments so each test file keeps its
  * own module mocks.

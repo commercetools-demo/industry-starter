@@ -12,7 +12,7 @@ function authorized(request: Request, secret: string): boolean {
 }
 
 /**
- * POST /api/internal/auto-refill-run: the work behind the Netlify scheduled function `auto-refill-run` (workstream T).
+ * POST /api/internal/auto-refill-run: the work behind the Netlify scheduled function `auto-refill-run`.
  * It lives in the Next app because it uses the same modules as the storefront (prescription rules, ledger, recurring
  * orders). Never public: without `AUTO_REFILL_RUN_SECRET` configured it answers 503 (disabled), without the matching
  * header 401 with no detail. It answers counts only, never an id, a name or an RX number. Not cached.

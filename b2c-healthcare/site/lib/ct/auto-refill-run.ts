@@ -19,8 +19,8 @@ import { isSkipping, expandedCart } from '@/lib/mappers/recurring';
 import { rxFieldsOf } from '@/lib/mappers/cart';
 
 /**
- * The scheduled check behind auto-refill (workstream T). The platform generates the orders of a Recurring Order on its
- * own schedule and the storefront has no API Extension to intercept one (D-028), so the gate runs AHEAD of the run:
+ * The scheduled check behind auto-refill. The platform generates the orders of a Recurring Order on its
+ * own schedule and the storefront has no API Extension to intercept one, so the gate runs AHEAD of the run:
  *
  *  1. `checkRuns`: for every Active recurring order whose next order is due within the look-ahead window, read the
  *     prescription as it will be on the day of the run (`decideRun`, N rules) and either let the run go ahead or

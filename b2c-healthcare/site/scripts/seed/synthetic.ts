@@ -2,7 +2,7 @@ import { BOOKINGS } from './data/bookings';
 import { PATIENTS } from './data/patients';
 
 /**
- * Test-environment guard (workstream X-07, spec "Test environment holds nobody real"): the seed imports only synthetic people.
+ * Test-environment guard (spec "Test environment holds nobody real"): the seed imports only synthetic people.
  * Allow-list: emails on `example.com` and phone numbers in the fictional 555-01xx range. Anything else stops the seed before
  * the first write, so a production export pasted into `data/` can never reach the project.
  */

@@ -19,7 +19,7 @@ import { getAdminRoot, readSeedEnv, isMain, makeCtx, parseFlags, runSteps, type 
  * Run cleanup-sample.ts first on a project that still holds the sample furniture data.
  */
 export interface SeedOptions extends ProductOptions {
-  /** Also seed the clinical stand-in (workstream F): reviews, schedules, prescriptions, labs, credentials, a past booking and the three demo patients. */
+  /** Also seed the clinical stand-in: reviews, schedules, prescriptions, labs, credentials, a past booking and the three demo patients. */
   clinical?: boolean;
   /** `SEED_PATIENT_PASSWORD`; without it the demo customers are skipped. */
   patientPassword?: string;

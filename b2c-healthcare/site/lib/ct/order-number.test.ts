@@ -12,7 +12,7 @@ beforeEach(() => {
   fake = createFakeObjects();
 });
 
-describe('checkout: order numbers from the counter (Q-08)', () => {
+describe('checkout: order numbers from the counter', () => {
   it('formats MLV- plus a zero-padded counter', () => {
     expect(formatOrderNumber(1)).toBe('MLV-000001');
     expect(formatOrderNumber(42)).toBe('MLV-000042');

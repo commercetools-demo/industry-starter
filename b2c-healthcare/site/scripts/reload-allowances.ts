@@ -3,7 +3,7 @@ import { customObjectsStore, type CustomObjectsRoot } from '../lib/funding/ct-st
 import { getAdminRoot, isMain, parseFlags, type Root } from './seed/lib';
 
 /**
- * Monthly allowance reload (workstream U): grants the current cycle to every member once and forfeits what is left of
+ * Monthly allowance reload: grants the current cycle to every member once and forfeits what is left of
  * every earlier cycle once (no carry-over). Idempotent per member per cycle: running it twice changes nothing the second
  * time, so a retried or doubled schedule is harmless.
  *

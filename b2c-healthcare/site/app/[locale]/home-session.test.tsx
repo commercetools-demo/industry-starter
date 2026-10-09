@@ -87,7 +87,7 @@ describe('home-landing-page › Landing page with session-resolved buyer context
     expect(screen.queryByRole('link', { name: 'Sign in' })).toBeNull();
   });
 
-  it('the header search entry (D-017) links to the search page and is keyboard reachable', async () => {
+  it('the header search entry links to the search page and is keyboard reachable', async () => {
     getSession.mockResolvedValue({});
     await renderLayout();
     const header = screen.getByRole('banner');

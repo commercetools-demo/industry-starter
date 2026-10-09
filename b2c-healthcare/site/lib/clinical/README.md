@@ -1,4 +1,4 @@
-DEMO STAND-IN: this folder and `lib/ct/clinical-store.ts` imitate an electronic health record with commercetools Custom Objects; all data is synthetic and nothing here is a real clinical system (D-025, Q-004).
+DEMO STAND-IN: this folder and `lib/ct/clinical-store.ts` imitate an electronic health record with commercetools Custom Objects; all data is synthetic and nothing here is a real clinical system.
 
 # lib/clinical
 

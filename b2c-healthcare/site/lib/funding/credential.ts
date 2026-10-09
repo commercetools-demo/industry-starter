@@ -1,7 +1,7 @@
 import { credentialKey, type Credential } from '@/lib/clinical/types';
 
 /**
- * Credentialed purchase scope (workstream U, Q-065). Pure rules over the credentials a patient holds; the server
+ * Credentialed purchase scope. Pure rules over the credentials a patient holds; the server
  * wrapper (`lib/ct/credentials.ts`) reads them from the `CredentialSource` (F-01). A credential is a scope and a
  * period, not a flag: it must cover the product's control class and be valid on the date of purchase.
  */

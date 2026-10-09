@@ -2,7 +2,7 @@ import type { AllowanceCycle } from '../../../lib/funding/allowance-types';
 import { SAM } from './patients';
 
 /**
- * Benefit allowance seed (workstream U, demo): Sam's sponsor grants $50.00 each month. The seed creates the cycle
+ * Benefit allowance seed (demo): Sam's sponsor grants $50.00 each month. The seed creates the cycle
  * the seed run falls in (create-only, so a re-seed never resets a balance that has been drawn); the scheduled
  * `reload-allowances` creates the following ones. Cycle objects are Custom Objects in `malva-allowance`.
  */

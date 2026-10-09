@@ -25,7 +25,7 @@ export interface Prescription {
   refillsLeft: number;
   /** ISO date after which the prescription cannot be dispensed; absent means no expiry. */
   expiresAt?: string;
-  /** Order ids that consumed a refill (dispense ledger, workstream N); makes the decrement idempotent in one versioned write. */
+  /** Order ids that consumed a refill (dispense ledger); makes the decrement idempotent in one versioned write. */
   consumedBy?: string[];
   lines: PrescriptionLine[];
 }
@@ -53,7 +53,7 @@ export interface LabOrder {
   results: LabResult[];
 }
 
-/** `pending`: submitted and awaiting verification (workstream U); the patient is told verification is outstanding, not that they are ineligible. */
+/** `pending`: submitted and awaiting verification; the patient is told verification is outstanding, not that they are ineligible. */
 export type CredentialStatus = 'active' | 'pending' | 'expired' | 'revoked';
 
 export interface Credential {

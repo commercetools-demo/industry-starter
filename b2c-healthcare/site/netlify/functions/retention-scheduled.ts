@@ -1,7 +1,7 @@
 import { RETENTION_SECRET_HEADER } from '../../scripts/privacy/retention-handler';
 
 /**
- * Netlify scheduled function (workstream X): every day at 03:30 UTC it asks the guarded `retention` function to run the
+ * Netlify scheduled function: every day at 03:30 UTC it asks the guarded `retention` function to run the
  * retention rules. The schedule carries no secret and does no work of its own; it presents `RETENTION_SECRET` to the guarded
  * endpoint, which is also what a manual or retried run uses. A doubled run is harmless: every rule is idempotent.
  */

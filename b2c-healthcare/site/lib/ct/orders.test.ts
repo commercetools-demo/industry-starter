@@ -112,7 +112,7 @@ describe('checkout: prepareCheckout, the gate before Checkout (AA)', () => {
     expect((await prepareCheckout(input(cart.id), provider)).ok).toBe(false);
   });
 
-  it('same-day chosen before 14:00 but continued after the cut-off is refused (D-033)', async () => {
+  it('same-day chosen before 14:00 but continued after the cut-off is refused', async () => {
     const cart = readyCart({ methodKey: 'mlv-same-day' });
     expect(await prepareCheckout(input(cart.id, { ctx: ctx(AFTERNOON) }), provider)).toEqual({ ok: false, code: 'NO_DELIVERY_METHOD' });
     expect(await prepareCheckout(input(cart.id, { ctx: ctx(MORNING) }), provider)).toMatchObject({ ok: true });

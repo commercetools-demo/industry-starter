@@ -5,7 +5,7 @@ import { METHOD_ALLOWANCE, METHOD_RESTRICTED } from '@/lib/funding/tender';
 import { log } from '@/lib/log';
 
 /**
- * What a cancelled or refused order gives back to the CARD payment (D-035). Checkout owns the payment lifecycle:
+ * What a cancelled or refused order gives back to the CARD payment. Checkout owns the payment lifecycle:
  * the storefront asks, through the `PaymentProvider` seam (Payment Intents API), and never writes its own Refund or
  * capture transactions on a card Payment. The connector records the result (CancelAuthorization, Refund) on the
  * Payment and the order page reads it back.

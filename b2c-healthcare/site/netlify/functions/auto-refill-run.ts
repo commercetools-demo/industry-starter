@@ -1,5 +1,5 @@
 /**
- * Netlify scheduled function: the daily auto-refill check (workstream T). A thin wrapper: the work (decideRun, the
+ * Netlify scheduled function: the daily auto-refill check. A thin wrapper: the work (decideRun, the
  * prescription ledger, `malva-refill-log`) runs in the Next app behind `POST /api/internal/auto-refill-run`, where the
  * storefront's modules are; this function only calls it with the shared secret. No commercetools code is imported
  * here (`server-only` modules cannot be bundled into a function).

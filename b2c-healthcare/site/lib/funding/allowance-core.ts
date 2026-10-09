@@ -9,7 +9,7 @@ import {
 } from '@/lib/funding/allowance-types';
 
 /**
- * Benefit allowance logic over a small store interface (workstream U, benefit-allowance-drawdown). No server-only
+ * Benefit allowance logic over a small store interface (benefit-allowance-drawdown). No server-only
  * import and no commercetools client: the storefront (`lib/ct/allowance.ts`, Custom Objects through the BFF client), the
  * reload script (`scripts/reload-allowances.ts`, the admin client) and the Netlify function all run this same code with
  * their own store. One Custom Object per member per monthly cycle, written only under optimistic concurrency

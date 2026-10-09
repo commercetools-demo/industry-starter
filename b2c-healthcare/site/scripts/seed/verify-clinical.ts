@@ -56,7 +56,7 @@ export async function verifyClinical(root: Root, check: Check): Promise<void> {
   check('RX-48213 has 0 refills left; RX-77102 has at most 3 (fewer once an order has dispensed it)', left('RX-48213') === 0 && left('RX-77102') !== undefined && (left('RX-77102') as number) >= 0 && (left('RX-77102') as number) <= 3);
   check('Sam has five labs and the controlled-class credential', (labs.map((o) => o.value) as LabOrder[]).filter((l) => l.patientRef === SAM.patientRef).length === 5 && (credentials.map((o) => o.value) as Credential[]).some((c) => c.patientRef === SAM.patientRef && c.status === 'active'));
 
-  // funding (workstream U): allowance cycle, credentials and controlled prescriptions for the demo patients
+  // funding: allowance cycle, credentials and controlled prescriptions for the demo patients
   const allowances = (await listObjects(root, 'malva-allowance')).map((o) => o.value as AllowanceCycle);
   const missingAllowance = ALLOWANCE_MEMBERS.filter((m) => !allowances.some((a) => a.patientRef === m.patientRef && a.monthly === m.monthly));
   check('malva-allowance holds a monthly grant for every allowance member (Sam: $50.00)', missingAllowance.length === 0, missingAllowance.map((m) => m.patientRef).join(', '));

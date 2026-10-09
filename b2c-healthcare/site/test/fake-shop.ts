@@ -18,7 +18,7 @@ export interface ShopLine {
   name: Record<string, string>;
   variant: { id: number; sku: string };
   price: { id: string; value: Money };
-  /** `ExternalPrice` after `setLineItemPrice` with an external price (workstream U). */
+  /** `ExternalPrice` after `setLineItemPrice` with an external price. */
   priceMode?: 'Platform' | 'ExternalPrice';
   /** What the platform price of the line is (list), for reverting an external price in the fake. */
   listCents?: number;
@@ -79,7 +79,7 @@ export interface FakeShop {
   /** Payments created through the API (tender payments of workstream U). */
   payments: Map<string, ShopPayment>;
   methods: MethodDef[];
-  /** Sales tax in percent by state code (default 0, D-033). */
+  /** Sales tax in percent by state code (default 0). */
   taxPercent: Record<string, number>;
   /** States no method serves. */
   unserved: Set<string>;
@@ -91,7 +91,7 @@ export interface FakeShop {
   updates: { id: string; version: number; actions: { action: string; [k: string]: unknown }[] }[];
   orderCreates: unknown[];
   matchingCalls: string[];
-  seedCart: (over?: Partial<ShopCart> & { lines?: { sku: string; cents: number; rxNumber?: string; lineRef?: string; /** copied hsaEligible (workstream U) */ eligible?: boolean; /** external price (what the patient owes) */ owed?: number; covered?: number }[]; methodKey?: string }) => ShopCart;
+  seedCart: (over?: Partial<ShopCart> & { lines?: { sku: string; cents: number; rxNumber?: string; lineRef?: string; /** copied hsaEligible */ eligible?: boolean; /** external price (what the patient owes) */ owed?: number; covered?: number }[]; methodKey?: string }) => ShopCart;
   apiRoot: unknown;
 }
 

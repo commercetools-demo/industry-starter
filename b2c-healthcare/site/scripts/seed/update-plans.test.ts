@@ -10,7 +10,7 @@ import { customTypePlan, productPlan, productTypePlan, RESET_HINT } from './upda
 const ctxOf = (fake: ReturnType<typeof createFakeRoot>) => ({ ...makeCtx(fake.root, { dryRun: false }, () => {}), pauseMs: 0 });
 const doctorType = () => structuredClone(PRODUCT_TYPES[0]) as unknown as Record<string, unknown> & { attributes: Record<string, unknown>[] };
 
-describe('seed update plans: a changed seed updates existing resources (D-038)', () => {
+describe('seed update plans: a changed seed updates existing resources', () => {
   it('a new product type attribute is added and a changed isSearchable is sent as changeIsSearchable', () => {
     const existing = doctorType();
     existing.attributes = existing.attributes.filter((a) => a.name !== 'timezone').map((a) => (a.name === 'clinicName' ? { ...a, isSearchable: false } : a));

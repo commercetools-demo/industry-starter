@@ -101,16 +101,16 @@
    NOT part of design/source/_ds/tokens.css. The parity check ignores everything
    from the marker line above to the end of this file. */
 :root {
-  /* D-009: status text colors that reach 4.5:1 on the matching -50 background */
+  /* status text colors that reach 4.5:1 on the matching -50 background */
   --color-success-700: #067a05;
   --color-warning-700: #8a5d00;
   --color-info-700: #0a6f8c;
   --color-danger-700: #b3402a;
 
-  /* D-008: content container (the prototype's 1200px); --container-width stays verbatim */
+  /* content container (the prototype's 1200px); --container-width stays verbatim */
   --container-content: 1200px;
 
-  /* D-010 / SO-01: label on the azure fill (white is ~2.6:1 and fails AA) */
+  /* label on the azure fill (white is ~2.6:1 and fails AA) */
   --color-action-label: var(--color-navy-900);
   /* navy-900 on --color-action-hover (brand-600) is only 4.38:1; navy-950 reaches 5.54:1 */
   --color-action-label-hover: var(--color-navy-950);

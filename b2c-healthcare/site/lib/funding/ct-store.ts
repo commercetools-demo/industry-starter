@@ -12,7 +12,7 @@ export interface CustomObjectsRoot {
 }
 
 /**
- * An `AllowanceStore` over Custom Objects for any commercetools client (workstream U). It carries no `server-only`
+ * An `AllowanceStore` over Custom Objects for any commercetools client. It carries no `server-only`
  * import and reads no environment, so the reload script (admin client) and the Netlify scheduled function (their own
  * client, outside Next) can run the same allowance code as the storefront. The storefront itself uses
  * `lib/ct/custom-objects.ts`, which is the same three calls.

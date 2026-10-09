@@ -22,7 +22,7 @@ function sources(dirs: string[]): { file: string; code: string }[] {
 /** The storefront's own source. Seed scripts and tests are not rendered and are out of scope. */
 const STOREFRONT = ['app', 'components', 'hooks', 'lib', 'i18n', 'messages'];
 
-describe('design-checkout: Payment through the payment widget: no card data in storefront code (Q-04)', () => {
+describe('design-checkout: Payment through the payment widget: no card data in storefront code', () => {
   it('Payment card: no source file declares an autocomplete value starting with cc-', () => {
     const offenders = sources(STOREFRONT).filter(({ code }) => /autocomplete["'`]?\s*[:=]\s*\{?\s*["'`]cc-/i.test(code) || /["'`]cc-(number|exp|csc|name|type|exp-month|exp-year)["'`]/.test(code));
     expect(offenders.map((o) => o.file)).toEqual([]);

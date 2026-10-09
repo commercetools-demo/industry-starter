@@ -16,7 +16,7 @@ describe('design-home-page: site image slots', () => {
     }
   });
 
-  it('a stored URL with a query string is rejected, a clean one is returned without any credit (D-040)', () => {
+  it('a stored URL with a query string is rejected, a clean one is returned without any credit', () => {
     const images = {
       'home-hero': { url: 'https://images.example/a.jpg?w=800', photographer: 'P' },
       'home-cta': { url: 'https://images.example/b.jpg', photographer: 'Q' },

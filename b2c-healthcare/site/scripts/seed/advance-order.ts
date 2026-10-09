@@ -7,7 +7,7 @@ import { coll, getAdminRoot, isMain, listAll, makeCtx, parseFlags, PREFIX, withR
  *   npm run seed:advance -- <orderNumber> <state> [--shipment <ShipmentState>] [--dry-run]     (state: `pharmacist-review` or `mlv-pharmacist-review`)
  *   npm run seed:advance -- <orderNumber> --shipment Partial                                    (only the shipment state)
  *
- * `--shipment` sets the order's `shipmentState` (workstream S, QA of the order page): Pending, Ready, Shipped, Delivered,
+ * `--shipment` sets the order's `shipmentState` (QA of the order page): Pending, Ready, Shipped, Delivered,
  * Partial (shown as "partly shipped"), Backorder or Delayed. It is independent of the State (a `Partial` order is
  * usually `mlv-packed-shipped`) and is applied after the state move, in a separate update.
  *

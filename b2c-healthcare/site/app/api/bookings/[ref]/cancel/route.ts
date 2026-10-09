@@ -4,7 +4,7 @@ import { BookingNotCancellableError, BookingNotFoundError, CancelTooLateError, c
 
 /**
  * POST /api/bookings/:ref/cancel: the signed-in patient cancels their own upcoming booking, at least 2 h before the
- * start (Q-027); the slot is released. An unknown reference and someone else's booking answer the same 404. Too late
+ * start; the slot is released. An unknown reference and someone else's booking answer the same 404. Too late
  * answers 409 with `code: 'too-late'`. No reschedule in v1. Nothing about the booking is logged.
  */
 export async function POST(_request: Request, ctx: { params: Promise<{ ref: string }> }): Promise<Response> {

@@ -31,7 +31,7 @@ async function seededWithCustomerData() {
   return { fake, samId: sam.id };
 }
 
-describe('full cleanup before a full seeding (D-038)', () => {
+describe('full cleanup before a full seeding', () => {
   it('the container list covers every container in lib/ct/custom-objects.ts', () => {
     const source = readFileSync(path.join(process.cwd(), 'lib/ct/custom-objects.ts'), 'utf8');
     const block = source.slice(source.indexOf('export const CONTAINERS'), source.indexOf('} as const'));

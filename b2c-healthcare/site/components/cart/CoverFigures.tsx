@@ -5,7 +5,7 @@ import { formatMoney } from '@/lib/utils';
 import type { CartLine } from '@/lib/types';
 
 /**
- * Payer cost-share on a cart line (workstream U): what the patient owes and what the plan covers, both from the
+ * Payer cost-share on a cart line: what the patient owes and what the plan covers, both from the
  * platform/resolver figures on the line. "Not covered" (the plan answered: nothing covered) and "Cover unresolved"
  * (the plan could not be asked: no figure at all) look different on purpose.
  */

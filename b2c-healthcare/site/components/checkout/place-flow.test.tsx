@@ -58,7 +58,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 const callsTo = (path: string) => calls.filter((c) => c.path === path);
 
-describe('design-checkout: Place order, the gate then Checkout then the callback (Q-06, AA)', () => {
+describe('design-checkout: Place order, the gate then Checkout then the callback', () => {
   it('Success in the demo build: the gate runs with the amount shown, the demo Checkout creates the order, the callback finalizes it, then /order/<id>', async () => {
     const user = userEvent.setup();
     renderWithProviders(<Harness mode="demo" />);

@@ -1,7 +1,7 @@
 import { DEMO_SKU_CLASS } from '@/lib/funding/demo-classes';
 
 /**
- * Payer cost-share (workstream U, Q-060..Q-062 defaults): which part of a medicine the patient's funding scheme
+ * Payer cost-share (defaults): which part of a medicine the patient's funding scheme
  * covers and what the patient owes. This is a MOCK behind an interface: `FundingResolver` is what a real payer
  * integration would implement; nothing else in the storefront knows the demo rules.
  *

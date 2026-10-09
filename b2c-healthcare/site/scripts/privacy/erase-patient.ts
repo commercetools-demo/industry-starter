@@ -89,7 +89,7 @@ export async function erasePatient(root: Root, idOrEmail: string, o: EraseOption
 
   // Recurring orders have no dataErasure DELETE: cancel them so nothing is generated for an erased person, and report them.
   for (const r of subject.recurringOrders) {
-    report.notErasable.push({ kind: 'RecurringOrder', id: r.id as string, action: 'cancelled; no dataErasure DELETE exists for this resource (see plans/notes/X-todos.md)' });
+    report.notErasable.push({ kind: 'RecurringOrder', id: r.id as string, action: 'cancelled; no dataErasure DELETE exists for this resource' });
     log(`${o.dryRun ? 'would cancel' : 'cancelled'}  RecurringOrder ${String(r.id)}`);
     if (!o.dryRun) {
       await withRetry(() => collOf(root, 'recurringOrders').withId({ ID: r.id as string }).post({ body: { version: r.version, actions: [{ action: 'setRecurringOrderState', recurringOrderState: { type: 'canceled', reason: 'erasure' } }] } }).execute(), o.sleep);

@@ -4,7 +4,7 @@ import { StoredMethodNotFoundError, type AuthorizationState, type PaymentCartRef
 /**
  * DEMO PAYMENT PROVIDER: development and tests only.
  *
- * There is no payment service account yet (OA-04), so this stand-in keeps "authorizations" in memory. It is loaded
+ * There is no payment service account yet, so this stand-in keeps "authorizations" in memory. It is loaded
  * only through `loadFakePaymentProvider` (lib/ct/fixtures.ts), which returns null in production and unless
  * `MALVA_FIXTURES=1`; the checkout page then shows the banner "DEMO payment (no PSP configured)". No card data
  * exists anywhere here: "authorizing" records an amount, optionally as declined. Nothing is charged.

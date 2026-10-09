@@ -3,7 +3,7 @@ import storedImages from '@/scripts/seed/data/product-images.json';
 import { DOCTORS, doctorKey } from '@/scripts/seed/data/doctors';
 import { fixtureCandidates, fixtureDoctor, fixtureDoctorsByText, fixtureMedicinesByText, storedImageUrl } from './doctors-fixtures';
 
-describe('fixtures mode shows the stored photos without credentials (D-040)', () => {
+describe('fixtures mode shows the stored photos without credentials', () => {
   it('every doctor card and profile carries the first stored photo of its product', () => {
     const { cards } = fixtureCandidates({ mode: 'remote', q: '' });
     expect(cards.length).toBeGreaterThan(0);
@@ -28,7 +28,7 @@ describe('fixtures mode shows the stored photos without credentials (D-040)', ()
     expect(storedImageUrl('k', { k: [{ url: 'https://h/a.jpg' }] })).toBe('https://h/a.jpg');
   });
 
-  it('a typed clinic name finds the doctors of that clinic, as the live query does (D-039)', () => {
+  it('a typed clinic name finds the doctors of that clinic, as the live query does', () => {
     const clinic = DOCTORS[0].clinicName.split(' ')[0].toLowerCase();
     const hits = fixtureDoctorsByText(clinic);
     expect(hits.some((h) => h.key === doctorKey(DOCTORS[0]))).toBe(true);

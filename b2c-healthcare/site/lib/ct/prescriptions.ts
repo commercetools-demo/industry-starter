@@ -14,7 +14,7 @@ import { recordOf, type CredentialRecord } from '@/lib/funding/credential';
 import type { Money, RxLineView, RxQuickPick, RxView } from '@/lib/types';
 
 /**
- * Prescription lookup and selection checks (workstream N). Health-data rule: the RX number, the medications and the
+ * Prescription lookup and selection checks. Health-data rule: the RX number, the medications and the
  * lookup input are never logged and never placed in a URL or cache key. Foreign and unknown numbers are the same
  * outcome (`null` / `RxNotFoundError`), so a caller cannot tell them apart.
  */
@@ -80,7 +80,7 @@ async function contextsFor(rx: Prescription, ctx: RxContext, today: string): Pro
 }
 
 /**
- * Credentialed purchase scope (workstream U): a controlled row that could otherwise be bought needs a credential that is
+ * Credentialed purchase scope: a controlled row that could otherwise be bought needs a credential that is
  * valid today and covers its class. A row that cannot be bought for another reason keeps that reason. The row stays
  * visible with the requirement stated (`status: 'CREDENTIAL'`, `credential` says why); the credential that allowed a
  * row is returned per line ref so it can be copied onto the cart and order line.
@@ -131,7 +131,7 @@ export interface SelectedLine {
   /** Limits to carry into the cart check (O) and into `consumeAuthorization` (Q). */
   perOrderMax: number | null;
   periodCeiling: number | null;
-  /** The product's `hsaEligible` (workstream U): copied to the cart line as `eligibleForRestricted` when added. */
+  /** The product's `hsaEligible`: copied to the cart line as `eligibleForRestricted` when added. */
   hsaEligible?: boolean;
   /** The credential that allowed a controlled product (id and expiry), copied to the cart line; absent for uncontrolled goods. */
   credential?: { id: string; validTo: string };
@@ -146,7 +146,7 @@ export interface RxSelectionResult {
 }
 
 /**
- * The check behind "Add to cart" and the cart load (workstream O, `POST /api/cart/rx-lines`): the patient's own
+ * The check behind "Add to cart" and the cart load (`POST /api/cart/rx-lines`): the patient's own
  * prescription, the requested lines, each evaluated now. Nothing is consumed (consumption happens once, at order
  * placement, `consumeAuthorization`). Throws `RxNotFoundError` for unknown and foreign numbers.
  * Re-run it when the cart loads: a lowered ceiling or exhausted stock then shows up as a refused line.

@@ -84,7 +84,7 @@ describe('search-results-page: Search results with exact part-number resolution'
     expect(Object.keys(result)).not.toContain('correctedQuery');
   });
 
-  it('a typed clinic name also matches doctors through the searchable clinicName attribute (D-039)', async () => {
+  it('a typed clinic name also matches doctors through the searchable clinicName attribute', async () => {
     answer({});
     await searchAll({ ...base, q: 'Austin Central' });
     expect(JSON.stringify(searchProducts.mock.calls[0][0].extraQuery)).toContain('variants.attributes.clinicName');

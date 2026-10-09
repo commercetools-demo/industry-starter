@@ -4,7 +4,7 @@ import { expandedCart } from '@/lib/mappers/recurring';
 import { listRecurring, paymentMethodOf, pauseRecurring } from '@/lib/ct/recurring';
 
 /**
- * Saved payment methods ("Payment methods", workstream T-08/T-09) over Checkout Stored Payment Methods, through the
+ * Saved payment methods ("Payment methods") over Checkout Stored Payment Methods, through the
  * `PaymentProvider` seam (the real adapter is `lib/ct/stored-methods.ts`; the fake in fixtures). The storefront holds
  * the provider's TOKEN only inside the adapter: everything here, and everything the page, the routes and the logs see,
  * is the descriptor (brand, last four, expiry, default flag).

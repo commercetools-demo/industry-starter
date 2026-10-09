@@ -1,7 +1,7 @@
 /**
  * Every Custom Object container the storefront (and the seed) writes: the values of `CONTAINERS` in lib/ct/custom-objects.ts
  * plus the ones the seed script writes. A unit test (reset.test.ts) reads lib/ct/custom-objects.ts and fails when this list
- * misses a container, so the full reset (D-038) cannot silently leave one behind.
+ * misses a container, so the full reset cannot silently leave one behind.
  */
 export const MALVA_CONTAINERS = [
   'malva-schedule',

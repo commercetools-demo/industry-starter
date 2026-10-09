@@ -8,7 +8,7 @@ import { restoreAllowance as restoreAllowanceDraw, type RestoreAllowanceResult }
  */
 
 /**
- * Gives back what the order drew from the member's allowance (workstream U). Returns the outcome (`restored`,
+ * Gives back what the order drew from the member's allowance. Returns the outcome (`restored`,
  * `unrecoverable` when the cycle it came from has closed, `already`, `none`).
  */
 export async function restoreAllowance(orderId: string): Promise<RestoreAllowanceResult> {

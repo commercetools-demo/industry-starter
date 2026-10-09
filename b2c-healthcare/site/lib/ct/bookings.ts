@@ -5,7 +5,7 @@ import { claimSlot, getClaim, listFreeSlots, releaseSlot, SlotTakenError } from 
 import { MIN_LEAD_MS, MODES, type Mode } from '@/lib/clinical/slots';
 import type { Booking, GuestContact } from '@/lib/clinical/types';
 
-/** Bookings are Custom Objects, not Orders, and are not paid online (D-011). Health data rule: never log or put a booking in a URL. */
+/** Bookings are Custom Objects, not Orders, and are not paid online. Health data rule: never log or put a booking in a URL. */
 
 export type { Booking, BookingStatus, GuestContact } from '@/lib/clinical/types';
 
@@ -24,7 +24,7 @@ export interface BookingInput {
 /** Who is asking: a signed-in patient (by `patientRef`) or a guest (by the booking's email). */
 export interface Requester { patientRef?: string; guestEmail?: string }
 
-/** Guest bookings (and their reason text) are unreadable, and may be purged, this long after the visit (Q-025). */
+/** Guest bookings (and their reason text) are unreadable, and may be purged, this long after the visit. */
 export const GUEST_RETENTION_DAYS = 90;
 export const CANCEL_LEAD_MS = MIN_LEAD_MS;
 

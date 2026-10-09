@@ -1,12 +1,12 @@
 <!-- SPDX-License-Identifier: MIT -->
 <!-- Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED. -->
 
-# Privacy inventory (workstream X, spec `health-data-minimization`, D-025)
+# Privacy inventory (spec `health-data-minimization`)
 
 Every place where personal or health data may be stored. All data in this project is synthetic. The boundary: what crosses into
 commerce is an identifier, a quantity and a price. Orders carry `rxNumber`, `rxLineRef`, quantity and price; never a sig,
 diagnosis, lab value or reason for a visit. The clinical stand-in (Custom Objects in the `malva-*` containers) is a labelled demo
-replacement for an EHR (D-025).
+replacement for an EHR.
 
 The scripts that act on this list live in `scripts/privacy/` and use the seed admin client (project-key guard, `--dry-run`):
 
@@ -30,7 +30,7 @@ logs for the resource). Messages are disabled in this project (PROJECT-FINDINGS)
 | Payment | Tender amounts, method (`allowance`, `restricted-health-account`, card), PSP interface id | With the order | `dataErasure=true` (also payments only referenced by the patient's carts and orders) |
 | Review | `customer` reference, text | Until the account is closed | `dataErasure=true` |
 | ShoppingList | Saved lists: customer reference, line items (medication SKUs) | Until the account is closed | `dataErasure=true` |
-| RecurringOrder | Customer reference, recurring cart (auto-refill) | Until cancelled | Not in the platform's `dataErasure` list: `erase-patient` cancels it and reports it; see `plans/notes/X-todos.md` |
+| RecurringOrder | Customer reference, recurring cart (auto-refill) | Until cancelled | Not in the platform's `dataErasure` list: `erase-patient` cancels it and reports it |
 | DiscountCode | Only if a `cartPredicate` names a customer id | Owner decision | `dataErasure=true` for codes whose predicate contains the customer id |
 | BusinessUnit, Quote, QuoteRequest, StagedQuote | Not used by this B2C storefront; queried and erased for completeness | n/a | `dataErasure=true` (a shared Business Unit only loses the associate) |
 | Message | Created by the platform per change; disabled here | n/a | Removed by `dataErasure=true` on the source resource |
@@ -84,17 +84,17 @@ if a route is defined with a health-like query parameter. No analytics or error-
 
 ## 6. Disclosure through the goods (decision record, task X-08)
 
-Pseudonymity does not remove what the goods themselves say. Decision (to be confirmed by the owner at SO-04):
+Pseudonymity does not remove what the goods themselves say. Decision (to be confirmed by the owner):
 
 - The order confirmation page, the order list and order detail, and any future packing slip show the **medication name** (and
   strength, pack and quantity) of each line. The patient is signed in and sees their own record; the name is not hidden because the
   patient must be able to check what was ordered.
 - They show **no** sig, diagnosis, prescriber's reason, lab value or RX contents beyond the prescription number the patient typed.
-- There are **no emails, SMS messages or shipping labels in v1** (D-029), so nothing leaves the site. A dispatch note or
+- There are **no emails, SMS messages or shipping labels in v1**, so nothing leaves the site. A dispatch note or
   parcel label would be a new surface: it must show only the order number and the recipient, not the product names, unless the
   owner re-decides.
 - A booking confirmation (`/booked/<ref>`) shows doctor, time and mode, never the reason, phone or email (tested in
   `app/[locale]/booked/[ref]/page.test.tsx`). Guests have no order view.
 
-Owner sign-off: SO-04 (privacy policy wording and the confirmation-content decision above). Evidence to attach: this section, the
+Owner sign-off (privacy policy wording and the confirmation-content decision above). Evidence to attach: this section, the
 confirmation page in the browser recipe, and the `audit-live` output.

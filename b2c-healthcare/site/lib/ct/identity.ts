@@ -9,10 +9,10 @@ import { checkPassword } from '@/lib/password-policy';
 import { clearCustomer } from '@/lib/session';
 
 /**
- * Identity: sign-in, registration (auto-verified, D-029), password change, email-token functions
+ * Identity: sign-in, registration (auto-verified), password change, email-token functions
  * and the sign-out of the cookie session. Server only; every Route Handler under `app/api/auth` calls one of these.
  *
- * No password reset exists on purpose (D-032): there is no reset function, route or link.
+ * No password reset exists on purpose: there is no reset function, route or link.
  */
 
 /** Custom Type key of the patient customer fields (seeded by workstream E). */
@@ -198,7 +198,7 @@ export interface RegisterInput {
 
 /**
  * Creates the customer (full name, email, password, `custom.patientRef`; no funding scheme) and verifies the
- * address straight away through the email-token flow (D-029: no email provider). The customer is active at once;
+ * address straight away through the email-token flow (no email provider). The customer is active at once;
  * there is no seller activation step. A duplicate address raises EmailUnavailableError, counted per client so the
  * endpoint cannot be used to enumerate accounts.
  */

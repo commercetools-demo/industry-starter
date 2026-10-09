@@ -16,7 +16,7 @@ import TokensPage from './%5Ftokens/page';
 
 const params = Promise.resolve({ locale: 'en-US' });
 
-// The home route itself (formerly the bootstrap placeholder) is covered by home.test.tsx (workstream M).
+// The home route itself (formerly the bootstrap placeholder) is covered by home.test.tsx.
 describe('storefront-project-bootstrap › Bootstrap smoke test', () => {
   beforeEach(() => {
     notFound.mockClear();

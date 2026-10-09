@@ -11,7 +11,7 @@ export const diffPolicy = (e: Rec, d: Rec): string | null => {
   return norm(e) === norm(d) ? null : 'schedule differs (existing refills would change cadence: fix it in the Merchant Center)';
 };
 
-/** Saved lists and auto-refill (workstream T): the list line type, then the two Recurrence Policies. */
+/** Saved lists and auto-refill: the list line type, then the two Recurrence Policies. */
 export function listAndRecurrenceSteps(ctx: Ctx): Step[] {
   return [
     { name: `type ${LIST_LINE_TYPE.key}`, run: () => ensurePlanned(ctx, 'types', LIST_LINE_TYPE, customTypePlan) },

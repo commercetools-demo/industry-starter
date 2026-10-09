@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { PRODUCT_TYPES, SEARCHED_ATTRIBUTES } from './data/types';
 
 /**
- * D-039: every product attribute the storefront filters, facets or full-text matches on must be `isSearchable` in the seed
+ * every product attribute the storefront filters, facets or full-text matches on must be `isSearchable` in the seed
  * product types. The test reads the query builders and lists the attribute names they use.
  */
 const SOURCES = ['lib/ct/search-query.ts', 'lib/ct/doctors.ts', 'lib/ct/search-all.ts'];

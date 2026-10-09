@@ -8,7 +8,7 @@ import { signInAs, watchConsole } from './helpers';
 /**
  * Z-01 / Z-02: every route of design/DESIGN.md at 1440 px and 390 px. Per page: HTTP status, no console or page
  * errors, no horizontal overflow at 390 px, no critical or serious axe violation (WCAG 2 A/AA), and a screenshot
- * under plans/evidence/ (Z-<name>-1440.jpg / -390.jpg).
+ * under the evidence folder (Z-<name>-1440.jpg / -390.jpg).
  */
 
 const EVIDENCE = join(__dirname, '..', '..', 'plans', 'evidence');

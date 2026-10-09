@@ -99,7 +99,7 @@ describe('seed.ts and verify.ts against a fake project', () => {
     expect((await runSeed(ctxOf(fake), { images: allImages })).ok).toBe(true);
   });
 
-  it('verify fails when clinicName is not searchable in the project (D-039)', async () => {
+  it('verify fails when clinicName is not searchable in the project', async () => {
     const fake = createFakeRoot();
     await runSeed(ctxOf(fake), { images: allImages });
     const doctorType = fake.store.productTypes.find((t) => t.key === 'mlv-doctor') as { attributes: { name: string; isSearchable: boolean }[] };

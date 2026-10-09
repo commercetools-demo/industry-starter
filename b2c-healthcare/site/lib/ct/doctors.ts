@@ -18,7 +18,7 @@ export const MAX_CANDIDATES = 50;
 /** Days of availability looked at for the badge ("none if no slot in 7 days"). */
 export const AVAILABILITY_DAYS = 7;
 
-/** Page size (Q-031: 9). `DOCTOR_PAGE_SIZE` overrides it for testing the pager with few doctors. */
+/** Page size (9). `DOCTOR_PAGE_SIZE` overrides it for testing the pager with few doctors. */
 export function doctorPageSize(): number {
   const n = Number(process.env.DOCTOR_PAGE_SIZE);
   return Number.isInteger(n) && n >= 1 && n <= 50 ? n : DEFAULT_DOCTOR_PAGE_SIZE;

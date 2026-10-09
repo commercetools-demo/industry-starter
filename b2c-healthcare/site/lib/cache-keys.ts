@@ -9,7 +9,7 @@ export const KEY_ACCOUNT = 'account';
 export const KEY_ADDRESSES = 'addresses';
 
 
-/** Free times of one doctor in one mode (workstream L). Never cached beyond the open page. */
+/** Free times of one doctor in one mode. Never cached beyond the open page. */
 export const keyDoctorSlots = (doctorKey: string, mode: string) => ['doctor-slots', doctorKey, mode] as const;
 
 /** Checkout page state (cart, delivery options). Per patient and never shared; sign-out clears it. */

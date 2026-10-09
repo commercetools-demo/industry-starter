@@ -1,4 +1,4 @@
-// Route manifest for the static content pages (workstream V). Locale-less paths; the footer, the
+// Route manifest for the static content pages. Locale-less paths; the footer, the
 // sitemap and the route test all read from here so a page cannot be linked before it exists.
 import { POLICY_SLUGS, getPublishedArticles, hasJournalRow } from '@/lib/content';
 
@@ -29,5 +29,5 @@ export function contentSitemapEntries(locale: string): SitemapEntry[] {
   ];
 }
 
-/** Whether the header "Health journal" link and the home journal row should show (M-07, D-018). */
+/** Whether the header "Health journal" link and the home journal row should show. */
 export const showJournal = (locale: string): boolean => hasJournalRow(locale);

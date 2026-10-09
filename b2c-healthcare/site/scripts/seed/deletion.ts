@@ -8,7 +8,7 @@ export type Mode = 'sample' | 'seed';
 
 /** Sample data order (E-03): carts, orders, inventory, products, categories (leaves first), product types, shipping methods, tax categories, stores, zones. */
 export const SAMPLE_ORDER: Kind[] = ['carts', 'orders', 'inventory', 'products', 'categories', 'productTypes', 'shippingMethods', 'taxCategories', 'stores', 'zones'];
-/** Seed reset order (D-038): reviews first (they reference products and customers), then shipping before zones and tax; states, types and channels last (they are referenced by the rest). */
+/** Seed reset order: reviews first (they reference products and customers), then shipping before zones and tax; states, types and channels last (they are referenced by the rest). */
 export const SEED_ORDER: Kind[] = ['reviews', 'inventory', 'products', 'categories', 'productTypes', 'shippingMethods', 'taxCategories', 'zones', 'recurrencePolicies', 'states', 'types', 'channels'];
 /** Zones that existed before the seed and stay (project findings: `usa` is reused, `europe` is left alone). */
 export const KEPT_ZONES = ['usa', 'europe'];

@@ -2,7 +2,7 @@ import { timingSafeEqual } from 'node:crypto';
 import type { RetentionResult } from './retention';
 
 /**
- * The HTTP side of the scheduled retention run (workstream X), free of Netlify and commercetools imports so it can be tested.
+ * The HTTP side of the scheduled retention run, free of Netlify and commercetools imports so it can be tested.
  * Retention deletes data, so the endpoint answers only a caller that sends the shared secret in `x-malva-retention-secret`
  * (`RETENTION_SECRET`); without a configured secret it is closed (503). Same pattern as the allowance reload.
  */

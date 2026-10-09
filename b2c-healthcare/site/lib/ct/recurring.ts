@@ -5,7 +5,7 @@ import { loadAccountFixtures } from '@/lib/ct/fixtures';
 import { POLICY_KEY, type Cadence } from '@/lib/refill-types';
 
 /**
- * Auto-refill on commercetools Recurring Orders (workstream T, Q-067). Every read and write is scoped by the customer
+ * Auto-refill on commercetools Recurring Orders. Every read and write is scoped by the customer
  * id: a recurring order that belongs to somebody else is the same `null` as one that does not exist.
  *
  *  - create: a recurring Cart (customer, address, medicines with `recurrenceInfo` = policy + `Dynamic` price
@@ -14,7 +14,7 @@ import { POLICY_KEY, type Cadence } from '@/lib/refill-types';
  *  - change: pause, resume, skip next (a `Counter` skip configuration), change the schedule in place
  *    (`setSchedule`: applies from the next generated order), cancel.
  *
- * The platform generates the orders on schedule; the storefront cannot intercept a run (no API Extension, D-028). The
+ * The platform generates the orders on schedule; the storefront cannot intercept a run (no API Extension). The
  * scheduled function `auto-refill-run` checks the prescription ahead of each run and pauses, skips or stops it.
  * Health-data rule: RX numbers and medication names are never logged.
  */
@@ -96,7 +96,7 @@ export interface CreateRecurringInput {
   cadence: Cadence;
   /** The first refill: one cadence after the order that is being repeated. */
   startsAt: Date;
-  /** The saved payment method charged for every refill (needs OA-04); omitted = the refill is created without payment. */
+  /** The saved payment method charged for every refill (needs the Checkout connector); omitted = the refill is created without payment. */
   paymentMethodId?: string;
 }
 

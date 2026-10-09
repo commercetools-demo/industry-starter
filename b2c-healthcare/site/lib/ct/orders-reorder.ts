@@ -15,7 +15,7 @@ const nameOf = (name: Record<string, string>, locale: string): string => name[lo
 type Groups = Map<string, { lineRef: string; name: string }[]>;
 
 /**
- * The shared core of "reorder" and "add a whole saved list" (workstream T): re-validates every prescription line now
+ * The shared core of "reorder" and "add a whole saved list": re-validates every prescription line now
  * (N `validateRxSelection`), adds the dispensable ones through `addRxLines`, and names each one that could not be
  * added with its reason into `out.notAdded`. Returns the id of the cart that now holds the lines.
  */

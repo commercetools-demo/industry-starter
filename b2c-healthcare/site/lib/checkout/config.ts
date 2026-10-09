@@ -1,5 +1,5 @@
 /**
- * Checkout configuration (workstream Q). Same-day delivery (D-033): offered only before the cut-off, New York
+ * Checkout configuration. Same-day delivery: offered only before the cut-off, New York
  * time, and only where the platform's matching-cart answer contains the method (zone NY/TX/IL). The cut-off is
  * enforced here, not in commercetools.
  */

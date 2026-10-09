@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 
 /**
- * Header search entry (D-017): a magnifier link to the search page, whose form (components/search/SearchForm)
+ * Header search entry: a magnifier link to the search page, whose form (components/search/SearchForm)
  * works without JavaScript and lands on results scoped to doctors and medicines. Shown from the nav
  * breakpoint up; under it the home hero and the search page carry the form.
  */

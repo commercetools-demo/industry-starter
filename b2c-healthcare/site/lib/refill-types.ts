@@ -1,4 +1,4 @@
-// Shapes of the auto-refill pages (workstream T). Types and pure constants only: safe in client components.
+// Shapes of the auto-refill pages. Types and pure constants only: safe in client components.
 
 /** The seeded Recurrence Policies (scripts/seed/data/recurrence.ts) as the buyer chooses them. */
 export type Cadence = 'monthly' | 'quarterly';

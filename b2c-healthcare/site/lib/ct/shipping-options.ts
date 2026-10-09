@@ -20,7 +20,7 @@ function matchingPrice(method: ShippingMethod): DeliveryOption['price'] | null {
 
 /**
  * The delivery methods valid for this cart (`GET shipping-methods/matching-cart`: it considers the cart's address,
- * contents and the project's zones), minus same-day once the 14:00 New York cut-off has passed (D-033). The list
+ * contents and the project's zones), minus same-day once the 14:00 New York cut-off has passed. The list
  * is never filtered in the browser. Returns an empty list when no method fits the address.
  */
 export async function getOptionsForCart(cartId: string, now: Date): Promise<DeliveryOption[]> {

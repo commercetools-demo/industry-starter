@@ -2,7 +2,7 @@ import { credentialKey, type Credential } from '../../../lib/clinical/types';
 import { JORDAN, SAM } from './patients';
 
 /**
- * Credentialed purchase scope demo (workstream U): Sam holds a valid credential for schedule IV, Jordan has submitted
+ * Credentialed purchase scope demo: Sam holds a valid credential for schedule IV, Jordan has submitted
  * one that is still being verified, Alex has none.
  */
 export const CREDENTIALS: Credential[] = [

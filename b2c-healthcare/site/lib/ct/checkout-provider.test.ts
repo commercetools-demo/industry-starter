@@ -24,7 +24,7 @@ beforeEach(() => {
   shop = createFakeShop();
 });
 
-describe('design-checkout: Payment through the payment widget: Checkout adapter (Q-04)', () => {
+describe('design-checkout: Payment through the payment widget: Checkout adapter', () => {
   it('derives the region from CTP_API_URL', () => {
     expect(regionFromApiUrl('https://api.us-central1.gcp.commercetools.com')).toBe('us-central1.gcp');
     expect(regionFromApiUrl('https://api.europe-west1.gcp.commercetools.com/')).toBe('europe-west1.gcp');
@@ -71,7 +71,7 @@ describe('design-checkout: Payment through the payment widget: Checkout adapter 
     spy.mockRestore();
   });
 
-  it('without the Checkout Application key (OA-04 pending) the adapter reports unavailable instead of guessing', () => {
+  it('without the Checkout Application key (not configured) the adapter reports unavailable instead of guessing', () => {
     expect(() => readCheckoutProviderConfig({ CTP_PROJECT_KEY: 'p', CTP_AUTH_URL: 'a', CTP_API_URL: 'b', CTP_CLIENT_ID: 'c', CTP_CLIENT_SECRET: 'd' })).toThrow(PaymentUnavailableError);
     expect(readCheckoutProviderConfig({ CTP_PROJECT_KEY: 'p', CTP_AUTH_URL: 'a', CTP_API_URL: 'b', CTP_CLIENT_ID: 'c', CTP_CLIENT_SECRET: 'd', CTP_CHECKOUT_APP_KEY: 'k' }).applicationKey).toBe('k');
   });
@@ -88,7 +88,7 @@ describe('design-checkout: Payment through the payment widget: Checkout adapter 
     expect(JSON.parse(String(calls[1].init.body))).toEqual({ actions: [{ action: 'cancelPayment' }] });
   });
 
-  it('refund asks the Payment Intents API for refundPayment with the amount (Checkout owns the lifecycle, D-035)', async () => {
+  it('refund asks the Payment Intents API for refundPayment with the amount (Checkout owns the lifecycle)', async () => {
     const calls: { url: string; init: RequestInit }[] = [];
     const fetchImpl = vi.fn(async (url: string, init: RequestInit) => {
       calls.push({ url, init });
@@ -120,7 +120,7 @@ describe('design-checkout: Payment through the payment widget: Checkout adapter 
   });
 });
 
-describe('design-checkout: the fake provider is never active in production (Q-04)', () => {
+describe('design-checkout: the fake provider is never active in production', () => {
   it('paymentModeNow is demo only with MALVA_FIXTURES=1 outside production', () => {
     expect(paymentModeNow({ MALVA_FIXTURES: '1', NODE_ENV: 'development' })).toBe('demo');
     expect(paymentModeNow({ MALVA_FIXTURES: '1', NODE_ENV: 'production' })).toBe('psp');

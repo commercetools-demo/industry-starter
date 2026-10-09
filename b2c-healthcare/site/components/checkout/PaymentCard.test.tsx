@@ -19,7 +19,7 @@ beforeEach(() => {
   sdk.paymentFlow.mockReset();
 });
 
-describe('design-checkout: Payment through the full Checkout flow (Q-04, AA)', () => {
+describe('design-checkout: Payment through the full Checkout flow', () => {
   it('Payment card: once the gate passed it hosts the FULL Checkout flow (mount point and session) and renders no card inputs', async () => {
     renderWithProviders(<PaymentCard {...props()} />);
     await waitFor(() => expect(sdk.checkoutFlow).toHaveBeenCalledTimes(1));

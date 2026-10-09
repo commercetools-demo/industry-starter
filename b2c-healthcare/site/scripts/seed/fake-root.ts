@@ -8,7 +8,7 @@ import type { Rec, Root } from './lib';
  * a published product, a category with children, a product type still used, a zone still used by a shipping method
  * and a tax category still used cannot be deleted.
  */
-export interface FakeLog { op: 'create' | 'update' | 'delete'; kind: string; key?: string; id: string; actions?: string[]; /** The `dataErasure` query argument of a DELETE (workstream X). */ dataErasure?: boolean }
+export interface FakeLog { op: 'create' | 'update' | 'delete'; kind: string; key?: string; id: string; actions?: string[]; /** The `dataErasure` query argument of a DELETE. */ dataErasure?: boolean }
 
 export interface FakeRoot {
   root: Root;

@@ -1,8 +1,7 @@
 import { getAdminRoot, hasPrefix, isMain, listAll, PREFIX, type Kind, type Root } from './lib';
 
 /**
- * Prints how many resources of every kind the project holds (and how many carry the seed prefix),
- * so plans/PROJECT-FINDINGS.md can be completed. Read-only.
+ * Prints how many resources of every kind the project holds (and how many carry the seed prefix). Read-only.
  *
  *   npx tsx scripts/seed/inventory-project.ts
  */

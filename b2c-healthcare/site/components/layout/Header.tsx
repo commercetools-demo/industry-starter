@@ -23,7 +23,7 @@ export function Logo({ inverse = false }: { inverse?: boolean }) {
 export interface HeaderProps {
   variant?: HeaderVariant;
   hasArticles?: boolean;
-  /** Regions for the switcher (workstream W); fewer than two renders none. */
+  /** Regions for the switcher; fewer than two renders none. */
   regions?: RegionOption[];
 }
 

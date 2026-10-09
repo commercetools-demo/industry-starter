@@ -1,6 +1,6 @@
 import type { Address, AddressInput } from '@/lib/types';
 
-// Address rules shared by the form and the Route Handlers (format validation only: no provider, Q-042).
+// Address rules shared by the form and the Route Handlers (format validation only: no provider).
 
 export const US_STATES = [
   'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',

@@ -5,9 +5,9 @@ import { HomeImage } from './HomeImage';
 
 export interface RxDeliveryProps {
   image: SiteImage | null;
-  /** A same-day shipping method exists (D-014). Without one the same-day claim is not shown. */
+  /** A same-day shipping method exists. Without one the same-day claim is not shown. */
   sameDay: boolean;
-  /** Auto-refills are shipped (workstream T). Defaults to false in config until then. */
+  /** Auto-refills are shipped. Defaults to false in config until then. */
   autoRefill: boolean;
 }
 

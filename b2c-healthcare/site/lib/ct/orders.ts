@@ -25,7 +25,7 @@ import { paymentsOf } from '@/lib/mappers/order';
 import type { PlaceOrderFailure, PlacedOrder, PrepareResult } from '@/lib/types';
 
 /**
- * Orders in the full-Checkout design (D-034, follow-up AA). Two halves, because commercetools Checkout - not the
+ * Orders in the full-Checkout design. Two halves, because commercetools Checkout - not the
  * storefront - creates the order from the cart once the payment is authorized:
  *
  *  1. `prepareCheckout` (the gate, before Checkout runs): re-validates every line (N prescription rules, U credentials),
@@ -39,7 +39,7 @@ import type { PlaceOrderFailure, PlacedOrder, PrepareResult } from '@/lib/types'
  *     browser's `checkout_completed` callback, lazily when the order is read (S), and from a secret-guarded route for a
  *     commercetools subscription (OrderCreated). Whoever gets there first does the work; the others get the same answer.
  *
- * The storefront never models capture: Checkout and the connector own the payment lifecycle (D-035). Totals are the
+ * The storefront never models capture: Checkout and the connector own the payment lifecycle. Totals are the
  * cart's; nothing here adds a price. Health-data rule: no RX number, medication or address reaches a log line.
  */
 
@@ -131,7 +131,7 @@ async function prepareLines(ctx: CheckoutContext, cart: CtCart): Promise<Prepare
         for (const name of ['dispensedQty', 'authorizationParams', 'suppliedLots'] as const) {
           actions.push({ action: 'setLineItemCustomField', lineItemId: lineId, name, value: fields[name] });
         }
-        // The credential that allowed a controlled line, as checked now: its id and expiry are copied, not referenced (workstream U).
+        // The credential that allowed a controlled line, as checked now: its id and expiry are copied, not referenced.
         if (accepted.credential) {
           actions.push({ action: 'setLineItemCustomField', lineItemId: lineId, name: 'credentialRef', value: accepted.credential.id });
           actions.push({ action: 'setLineItemCustomField', lineItemId: lineId, name: 'credentialValidTo', value: accepted.credential.validTo });

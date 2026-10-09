@@ -4,7 +4,7 @@ import { realSleep, withRetry } from '../seed/lib';
 import { slotClaimKey } from '../../lib/clinical/slots';
 
 /**
- * Retention (workstream X, spec: "Retention expires with the basis"): removes or de-identifies what outlived its basis.
+ * Retention (spec: "Retention expires with the basis"): removes or de-identifies what outlived its basis.
  *
  *  - guest bookings past `expiresAt` (visit + 90 days) are deleted, with their slot claim;
  *  - cancelled patient bookings more than 90 days after the visit are de-identified (the reason text and the phone are removed,

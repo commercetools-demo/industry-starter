@@ -17,9 +17,9 @@ export interface LineContext {
   supply: Supply | undefined;
   /** Packs the patient already received this calendar month. */
   usedInPeriod: number;
-  /** The product's `hsaEligible` (copied to the cart line as `eligibleForRestricted`, workstream U). */
+  /** The product's `hsaEligible` (copied to the cart line as `eligibleForRestricted`). */
   hsaEligible?: boolean;
-  /** The product's controlled-substance class, when it has one (workstream U). */
+  /** The product's controlled-substance class, when it has one. */
   controlClass?: string | null;
 }
 

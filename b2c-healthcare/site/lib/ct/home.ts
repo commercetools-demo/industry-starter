@@ -117,7 +117,7 @@ export async function getHomeSnapshot(ctx: { locale: string; currency: string; c
   }
 }
 
-/** Whether a same-day shipping method is configured (D-014): the home page claims same-day delivery only then. */
+/** Whether a same-day shipping method is configured: the home page claims same-day delivery only then. */
 export async function hasSameDayMethod(): Promise<boolean> {
   try {
     const methods = await getShippingMethods();

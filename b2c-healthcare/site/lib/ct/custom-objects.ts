@@ -2,7 +2,7 @@ import 'server-only';
 import { apiRoot } from '@/lib/ct/client';
 import { loadDevRoot } from '@/lib/ct/fixtures';
 
-/** Custom Object containers used by the storefront (workstream F). Keys and containers allow only `[-_~.a-zA-Z0-9]`. */
+/** Custom Object containers used by the storefront. Keys and containers allow only `[-_~.a-zA-Z0-9]`. */
 export const CONTAINERS = {
   schedule: 'malva-schedule',
   slotClaim: 'malva-slot-claim',
@@ -12,16 +12,16 @@ export const CONTAINERS = {
   credential: 'malva-credential',
   counter: 'malva-counter',
   ratelimit: 'malva-ratelimit',
-  /** One entry per order id: what an order consumed from which prescription (workstream N). */
+  /** One entry per order id: what an order consumed from which prescription. */
   dispenseLedger: 'malva-dispense-ledger',
-  /** One entry per checkout attempt (idempotency key = cart id + version): the double-submit lock (workstream Q). */
+  /** One entry per checkout attempt (idempotency key = cart id + version): the double-submit lock. */
   orderAttempt: 'malva-order-attempt',
-  /** One entry per scheduled auto-refill check: what the gate decided and why (workstream T). */
+  /** One entry per scheduled auto-refill check: what the gate decided and why. */
   refillLog: 'malva-refill-log',
 
-  /** One entry per member per monthly cycle: `{granted, consumed, lapsed, ...}` under optimistic concurrency (workstream U). */
+  /** One entry per member per monthly cycle: `{granted, consumed, lapsed, ...}` under optimistic concurrency. */
   allowance: 'malva-allowance',
-  /** One entry per order that drew from an allowance (key = order id): finds the cycle again on cancel (workstream U). */
+  /** One entry per order that drew from an allowance (key = order id): finds the cycle again on cancel. */
   allowanceLedger: 'malva-allowance-ledger',
 } as const;
 

@@ -1,4 +1,4 @@
-// Shapes the account area passes between server code and components (workstream R). Types only.
+// Shapes the account area passes between server code and components. Types only.
 import type { BookingStatus } from '@/lib/clinical/types';
 import type { LabFlag } from '@/lib/labs';
 

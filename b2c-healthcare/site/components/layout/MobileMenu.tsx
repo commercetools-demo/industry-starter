@@ -18,7 +18,7 @@ export interface MobileMenuProps {
 }
 
 /**
- * Menu button + slide-down panel for viewports under the nav breakpoint (design D10, SO-02).
+ * Menu button + slide-down panel for viewports under the nav breakpoint.
  * Opens a disclosure (not a modal): focus moves to the first link, Escape or the button close it and
  * return focus to the button, following a link closes it, and widening the viewport past the
  * breakpoint closes it. The button is hidden at and above the breakpoint by CSS.

@@ -1,4 +1,4 @@
-// Shapes of the saved lists ("My medicines", workstream T). Types and pure constants only: safe in client components.
+// Shapes of the saved lists ("My medicines"). Types and pure constants only: safe in client components.
 import type { Money } from '@/lib/types';
 import type { NotAddedReason } from '@/lib/order-types';
 

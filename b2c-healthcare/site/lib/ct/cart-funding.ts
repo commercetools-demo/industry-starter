@@ -8,7 +8,7 @@ import { log } from '@/lib/log';
 import { coveredCentsOf, unitPriceOf } from '@/lib/mappers/cart';
 
 /**
- * Payer cost-share on the cart (workstream U, payer-and-patient-cost-share).
+ * Payer cost-share on the cart (payer-and-patient-cost-share).
  *
  * The platform price of a line is the LIST price. The resolver says how much of it the plan covers; the cart keeps
  * the patient's share as the line's EXTERNAL price (`setLineItemPrice` with `externalPrice`), so the cart total, the
@@ -104,7 +104,7 @@ export async function applyFunding(cart: CtCart, patient: Pick<Patient, 'patient
 }
 
 /**
- * Resolves the cost-share again right before the order is created (workstream U): list prices come from the platform
+ * Resolves the cost-share again right before the order is created: list prices come from the platform
  * afresh, the resolver answers again, the cart is rewritten if the figures moved. `changed` tells the caller the cart
  * is not the one it read. A patient without a scheme and without cover on the cart is untouched.
  */

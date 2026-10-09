@@ -40,7 +40,7 @@ describe('seed data files (F-06)', () => {
     expect(SAM.fundingScheme).toBe('Demo Health Plan');
   });
 
-  it('Sam\'s prototype prescriptions match; the controlled-class demo adds one each for Sam, Alex and Jordan (workstream U)', () => {
+  it('Sam\'s prototype prescriptions match; the controlled-class demo adds one each for Sam, Alex and Jordan', () => {
     const sam = PRESCRIPTIONS.filter((r) => r.patientRef === SAM.patientRef);
     expect(sam.map((r) => [r.number, r.refillsLeft, r.lines.map((l) => l.qty)])).toEqual([['RX-48213', 0, [21, 20, 30]], ['RX-77102', 3, [30, 30]], ['RX-61044', 2, [30]]]);
     expect(sam[0].lines.map((l) => l.name)).toEqual(['Amoxicillin 500 mg capsules', 'Ibuprofen 400 mg tablets', 'Cetirizine 10 mg tablets']);

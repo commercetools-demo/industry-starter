@@ -15,7 +15,7 @@ describe('development fixtures for /prescriptions', () => {
     expect(await loadRxFixtures()).not.toBeNull();
   });
 
-  it('serve Sam Rivera prescriptions from the seed: RX-48213 without refills, RX-77102 with 3, and the controlled RX-61044 (workstream U)', async () => {
+  it('serve Sam Rivera prescriptions from the seed: RX-48213 without refills, RX-77102 with 3, and the controlled RX-61044', async () => {
     const patient = fixturePatient(fixtureCustomerId('sam-rivera'));
     expect(patient).toMatchObject({ name: 'Sam Rivera' });
     const own = await fixturePrescriptionSource.listForPatient(patient!.patientRef);

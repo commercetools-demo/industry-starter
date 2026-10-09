@@ -39,7 +39,7 @@ export interface DoctorCard {
   /** Portrait (clean URL) or null: the avatar then shows the initials. */
   portraitUrl: string | null;
   /**
-   * Set by the mappers: false when the doctor has no fee in the visitor's currency (not sold in this region, workstream W): show
+   * Set by the mappers: false when the doctor has no fee in the visitor's currency (not sold in this region): show
    * "not available in this region" instead of a price and do not offer booking. Absent means sellable; lists exclude such doctors.
    */
   sellableInRegion?: boolean;
@@ -85,7 +85,7 @@ export interface MedicineAvailability {
   shortDatedPrice?: Money;
 }
 
-/** Medicine detail page (workstream AB): the list shape plus the gallery and availability. */
+/** Medicine detail page: the list shape plus the gallery and availability. */
 export interface MedicineDetail extends Medication {
   imageUrls: string[];
   /** Null when stock could not be read: the page then states nothing about stock. */
@@ -98,7 +98,7 @@ export interface CartSummary {
   version: number;
   /** Total quantity across lines. */
   itemCount: number;
-  /** Number of cart lines; the header count bubble shows this (Q-020). */
+  /** Number of cart lines; the header count bubble shows this. */
   lineCount: number;
   currencyCode: string;
 }
@@ -158,7 +158,7 @@ export interface ApiErrorBody {
   error: string;
 }
 
-/** Next free slot of a doctor in the current mode (workstream K): drives the card badge and the "Available today" filter. */
+/** Next free slot of a doctor in the current mode: drives the card badge and the "Available today" filter. */
 export interface DoctorAvailability {
   /** UTC instant of the slot. */
   startsAt: string;
@@ -195,7 +195,7 @@ export interface Address {
 /** The editable part of an address, as the form submits it and the validators return it. */
 export type AddressInput = Omit<Address, 'id' | 'isDefault' | 'country'>;
 
-/** A verified patient's review as shown on a doctor profile (workstream L). */
+/** A verified patient's review as shown on a doctor profile. */
 export interface DoctorReview {
   id: string;
   rating: number;
@@ -252,12 +252,12 @@ export interface BookingView {
   guest: boolean;
 }
 
-// ---- prescriptions (workstream N) -------------------------------------------------------------
+// ---- prescriptions -------------------------------------------------------------
 
 /** `ok` can be selected; `short-dated` can be selected on its own terms; the rest are the refusal reasons shown on the row. */
 export type RxLineStatus = 'ok' | 'short-dated' | 'NO_REFILLS' | 'EXPIRED' | 'OUT_OF_STOCK' | 'CEILING' | 'SHELF_LIFE' | 'CREDENTIAL';
 
-/** Why a credential does not permit a controlled purchase (workstream U). */
+/** Why a credential does not permit a controlled purchase. */
 export type CredentialProblem = 'NONE' | 'WRONG_SCOPE' | 'EXPIRED' | 'PENDING';
 
 /** One medication row of a prescription card; shown to the owner of the prescription only. */
@@ -281,7 +281,7 @@ export interface RxLineView {
   expiryDate?: string;
   /** "Minimum N months of shelf life on delivery"; null for undated goods or no promise. */
   minShelfLifeMonths: number | null;
-  /** Controlled class of the product, when it has one (workstream U); the row is shown but unavailable without a valid credential. */
+  /** Controlled class of the product, when it has one; the row is shown but unavailable without a valid credential. */
   controlClass?: string;
   /** `CREDENTIAL` only. */
   credential?: CredentialProblem;
@@ -303,7 +303,7 @@ export interface RxQuickPick {
   issuedAt: string;
 }
 
-// ---- cart (workstream O) ----------------------------------------------------------------------
+// ---- cart ----------------------------------------------------------------------
 
 /** Why a cart line can no longer be dispensed; the N rule reasons, plus `UNAVAILABLE` (prescription no longer found). */
 export type CartLineIssue = 'NO_REFILLS' | 'EXPIRED' | 'OUT_OF_STOCK' | 'CEILING' | 'SHELF_LIFE' | 'UNAVAILABLE' | 'CREDENTIAL';
@@ -315,7 +315,7 @@ export interface CartLineProblem {
   ceiling?: number;
   scope?: 'order' | 'period';
   expiryDate?: string;
-  /** `CREDENTIAL` only: why the credential does not hold (workstream U), and the control class it must cover. */
+  /** `CREDENTIAL` only: why the credential does not hold, and the control class it must cover. */
   credential?: CredentialProblem;
   credentialClass?: string;
 }
@@ -336,7 +336,7 @@ export interface CartLine {
   priceUpdated: boolean;
   /** Set by re-validation on load; the line stays in the cart until the patient removes it. */
   unavailable?: CartLineProblem;
-  /** Payer cost-share (workstream U); absent when the patient has no funding scheme. */
+  /** Payer cost-share; absent when the patient has no funding scheme. */
   cover?: LineCover;
   /** What the plan covers for this line (line total); present when `cover` is covered/partly/not-covered. */
   coveredAmount?: Money;
@@ -366,12 +366,12 @@ export interface Cart extends CartSummary {
   total: Money;
   /** Number of lines that failed re-validation; Checkout is disabled while above zero. */
   unavailableCount: number;
-  /** Payer cost-share (workstream U): the amount the patient owes (the platform total) and what the plan covers. */
+  /** Payer cost-share: the amount the patient owes (the platform total) and what the plan covers. */
   youOwe?: Money;
   planCovers?: Money;
   /** The resolver could not answer: no cover figures are shown and Checkout is disabled. */
   unresolved?: boolean;
-  /** Allowance, restricted instrument and card split for this cart (workstream U); filled by the server reads that know the patient. */
+  /** Allowance, restricted instrument and card split for this cart; filled by the server reads that know the patient. */
   tender?: TenderView;
 }
 
@@ -387,13 +387,13 @@ export interface TenderView {
 
 export const isFullCart = (cart: CartSummary | Cart | null | undefined): cart is Cart => Boolean(cart && 'lines' in cart);
 
-/** One entry of the region switcher (workstream W): a locale the project can sell in, with its display label. */
+/** One entry of the region switcher: a locale the project can sell in, with its display label. */
 export interface RegionOption {
   locale: string;
   label: string;
 }
 
-// ---------------------------------------------------------------- checkout (workstream Q)
+// ---------------------------------------------------------------- checkout
 
 /** A delivery method the platform says fits the cart (matching-cart), with the price of the rate that matches. */
 export interface DeliveryOption {

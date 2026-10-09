@@ -15,7 +15,7 @@ import { OrderTimeline } from './OrderTimeline';
  * Payment's transactions. Estimate: "Today by 8 pm" for same-day, else "1-2 business days"; it is not shown once the
  * order is delivered or cancelled.
  */
-export function OrderConfirmation({ order, allowanceBalance }: { order: OrderView; /** The member's allowance balance now, when this order drew from it (workstream U). */ allowanceBalance?: Money | null }) {
+export function OrderConfirmation({ order, allowanceBalance }: { order: OrderView; /** The member's allowance balance now, when this order drew from it. */ allowanceBalance?: Money | null }) {
   const t = useTranslations('orders');
   const locale = useLocale();
   const cancelled = order.status === 'cancelled';

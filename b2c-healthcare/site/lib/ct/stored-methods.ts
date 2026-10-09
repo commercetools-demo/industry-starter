@@ -4,7 +4,7 @@ import { apiRoot } from '@/lib/ct/client';
 import { StoredMethodNotFoundError, type StoredMethodDescriptor } from '@/lib/checkout/payment-provider';
 
 /**
- * Checkout Stored Payment Methods through the commercetools PaymentMethod API (workstream T, T-08). The adapter side
+ * Checkout Stored Payment Methods through the commercetools PaymentMethod API. The adapter side
  * of `PaymentProvider.listStoredMethods / setDefaultStoredMethod / removeStoredMethod`.
  *
  *  - Every operation is scoped to the customer (`customer(id=...)`): somebody else's method is the same

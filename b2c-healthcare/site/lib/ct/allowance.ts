@@ -6,7 +6,7 @@ import type { AllowanceView } from '@/lib/funding/allowance-types';
 import { log } from '@/lib/log';
 
 /**
- * Benefit allowance for the storefront (workstream U): the logic is `lib/funding/allowance-core.ts`; this module gives
+ * Benefit allowance for the storefront: the logic is `lib/funding/allowance-core.ts`; this module gives
  * it the BFF's Custom Object store (or the in-memory one under `MALVA_FIXTURES=1`, development only). See the core
  * module for the rules: versioned writes, idempotency on the order id, restore to the open cycle only, forfeiture.
  */

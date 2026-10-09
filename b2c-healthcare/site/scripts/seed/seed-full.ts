@@ -7,7 +7,7 @@ import { DEFAULT_EXPECTED, waitForSearch } from './wait-for-search';
 import { getAdminRoot, isMain, makeCtx, parseFlags, PROJECT_KEY, readSeedEnv, realSleep, type Ctx, type Flags, type Root } from './lib';
 
 /**
- * A full seeding on a clean slate (D-038), every stage in one process with the same client and project-key guard:
+ * A full seeding on a clean slate, every stage in one process with the same client and project-key guard:
  *
  *   1. reset           reviews, mlv- resources, every malva-* Custom Object, recurrence policies and (--include-customers, always on here)
  *                      the example.com customers with their carts, orders, payments, lists and recurring orders
@@ -19,7 +19,7 @@ import { getAdminRoot, isMain, makeCtx, parseFlags, PROJECT_KEY, readSeedEnv, re
  *   npm run seed:full -- --dry-run          (lists what would happen; writes nothing; verify and the search wait are skipped)
  *   npm run seed:full                       (the script passes --confirm spec-test-b2c-healthcare)
  *
- * Needs `.env.seed.local` (OA-01). Without credentials nothing runs: the project key is checked before any network call.
+ * Needs `.env.seed.local`. Without credentials nothing runs: the project key is checked before any network call.
  */
 export interface FullOptions { dryRun: boolean; patientPassword?: string; sleep?: (ms: number) => Promise<void> }
 export interface FullResult { ok: boolean; stages: { name: string; ok: boolean; detail: string }[] }

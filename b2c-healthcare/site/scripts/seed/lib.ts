@@ -77,7 +77,7 @@ export function assertProjectKey(key: string | undefined, where = 'SEED_CTP_PROJ
 /** Builds the admin client. Guards twice: the env key (no network) and the project the API reports. */
 export async function getAdminRoot(env: Record<string, string | undefined> = readSeedEnv()): Promise<{ root: Root; projectKey: string }> {
   const missing = missingEnv(env);
-  if (missing.length > 0) throw new Error(`Missing ${missing.join(', ')}. Copy .env.seed.example to .env.seed.local and fill it (OA-01).`);
+  if (missing.length > 0) throw new Error(`Missing ${missing.join(', ')}. Copy .env.seed.example to .env.seed.local and fill it.`);
   assertProjectKey(env.SEED_CTP_PROJECT_KEY);
   const projectKey = env.SEED_CTP_PROJECT_KEY as string;
   const builder = new ClientBuilder()
@@ -203,7 +203,7 @@ export async function ensureKeyed(ctx: Ctx, kind: Kind, draft: Rec & { key: stri
 export type Planner = (existing: Rec, draft: Rec, ctx: Ctx) => { actions: Rec[]; blocked?: string } | Promise<{ actions: Rec[]; blocked?: string }>;
 
 /**
- * Create-if-missing, otherwise UPDATE the existing resource to match the draft (D-038). The plan returns the update actions;
+ * Create-if-missing, otherwise UPDATE the existing resource to match the draft. The plan returns the update actions;
  * a change commercetools forbids comes back as `blocked` with the exact reset that is needed (reported like a diff).
  */
 export async function ensurePlanned(ctx: Ctx, kind: Kind, draft: Rec & { key: string }, plan: Planner): Promise<EnsureResult> {

@@ -7,7 +7,7 @@ export interface Patient {
   patientRef: string;
   /** Display name for "Patient: <name>". */
   name: string;
-  /** The customer's `fundingScheme` (payer cost-share, workstream U); absent when the patient has none. */
+  /** The customer's `fundingScheme` (payer cost-share); absent when the patient has none. */
   fundingScheme?: string;
 }
 

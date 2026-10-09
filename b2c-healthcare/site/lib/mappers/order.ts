@@ -15,7 +15,7 @@ export function statusOfState(key: string | undefined): OrderStatus {
 const INTERNAL_METHODS = ['allowance', 'restricted-health-account'];
 
 /**
- * What happened to the buyer's CARD money, from the card Payments' transactions (Checkout owns them, D-035):
+ * What happened to the buyer's CARD money, from the card Payments' transactions (Checkout owns them):
  * an open `Refund` is "requested", a finished one "refunded"; a cancelled order whose card payment was only authorized
  * (nothing captured) is "released": the hold was cancelled and no refund exists. The allowance and the restricted
  * instrument are internal tenders and are shown by the tender rows instead.
@@ -35,7 +35,7 @@ export const paymentsOf = (order: Pick<Order, 'paymentInfo'>): Payment[] =>
 
 const INSTRUMENTS: readonly Instrument[] = ['allowance', 'restricted-health-account', 'card'];
 
-/** What the line records (workstream U): whether it qualified for the restricted instrument and which instruments settled it. */
+/** What the line records: whether it qualified for the restricted instrument and which instruments settled it. */
 function lineRecord(l: Order['lineItems'][number]): Pick<OrderLineView, 'eligible' | 'settledBy'> {
   const f = l.custom?.fields as Record<string, unknown> | undefined;
   if (!f) return {};

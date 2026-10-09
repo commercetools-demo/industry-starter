@@ -2,7 +2,7 @@ import { timingSafeEqual } from 'node:crypto';
 import type { ReloadResult } from '@/lib/funding/allowance-core';
 
 /**
- * The HTTP side of the scheduled allowance reload (workstream U), kept free of Netlify and commercetools imports so it
+ * The HTTP side of the scheduled allowance reload, kept free of Netlify and commercetools imports so it
  * can be tested. The reload itself is idempotent (a second run in the same cycle changes nothing), but it is still a
  * write on behalf of every member, so the endpoint answers only a caller that sends the shared secret in the
  * `x-malva-reload-secret` header (`RELOAD_ALLOWANCES_SECRET`). No secret configured means the endpoint is closed.

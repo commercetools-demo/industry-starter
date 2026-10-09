@@ -4,7 +4,7 @@ import { PRESCRIPTIONS } from '../seed/data/prescriptions';
 import { getAdminRoot, isMain, queryAll, type Rec, type Root } from './lib';
 
 /**
- * Live audit (workstream X-06, spec "Order carries a reference not a condition"): after the seed and a purchase, reads the
+ * Live audit (spec "Order carries a reference not a condition"): after the seed and a purchase, reads the
  * commerce resources and fails if any value contains a clinical fixture string (a sig, a lab name or result name, a lab note,
  * a booking reason) or if a custom field carries a clinical-looking name.
  *

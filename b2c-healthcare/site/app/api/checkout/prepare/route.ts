@@ -45,7 +45,7 @@ interface Body {
 
 /**
  * POST /api/checkout/prepare `{ expectedTotal: { centAmount, currencyCode } }`: the gate before the commercetools Checkout
- * flow (D-034). Re-validates the server-held cart (prescription rules, credentials, cost-share, delivery, the total the
+ * flow. Re-validates the server-held cart (prescription rules, credentials, cost-share, delivery, the total the
  * buyer saw), writes the line records and the allowance / restricted-instrument Payments onto the cart, and answers what the
  * page does next: `{ kind: 'checkout', session, cardDue }` to mount Checkout, `{ kind: 'demo', cardDue }` for the
  * dev-only demo provider, or `{ kind: 'order', orderId, orderNumber }` when nothing is left for the card (the order is made

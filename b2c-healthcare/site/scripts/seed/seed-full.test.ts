@@ -10,7 +10,7 @@ import { checkFullConfirm, runFull } from './seed-full';
 const silent = () => {};
 const opts = (dryRun: boolean) => ({ dryRun, patientPassword: 'pw', sleep: async () => {} });
 
-describe('seed:full (D-038): reset, cleanup-sample, seed, verify, wait-for-search', () => {
+describe('seed:full: reset, cleanup-sample, seed, verify, wait-for-search', () => {
   it('on a project holding the sample data, an old seed and customer data it ends with a verified, searchable, re-seedable project', async () => {
     const fake = createFakeRoot({ products: [{ id: 'sample', key: 'charcoal-chair', version: 1, masterData: { published: false, staged: {} } }], taxCategories: [{ id: 'tx', key: 'standard-tax', version: 1 }] });
     await runSeed({ root: fake.root, dryRun: false, log: silent, pauseMs: 0 }, { clinical: true, patientPassword: 'pw' });

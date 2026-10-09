@@ -1,5 +1,5 @@
 // Lab result maths (design-account-area: Result table). Pure: no server imports, so components and tests share it.
-// Reference ranges are fixed per test (Q-046): they come with each result, not from the patient's age or sex.
+// Reference ranges are fixed per test: they come with each result, not from the patient's age or sex.
 
 export type LabFlag = 'normal' | 'high' | 'low';
 

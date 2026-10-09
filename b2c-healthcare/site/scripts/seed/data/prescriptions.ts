@@ -34,7 +34,7 @@ export const PRESCRIPTIONS: Prescription[] = [
     number: 'RX-31877', patientRef: JORDAN.patientRef, prescriber: 'Dr. Priya Nair', issuedAt: '2025-09-01', expiresAt: '2026-03-01', refillsLeft: 1,
     lines: [{ lineRef: 'RX-31877-1', sku: sku('sertraline-50-mg'), name: 'Sertraline 50 mg tablets', sig: '1 tablet each morning', qty: 30 }],
   },
-  // Credentialed purchase scope demo (workstream U): the same controlled class (schedule IV) for three patients. Sam holds
+  // Credentialed purchase scope demo: the same controlled class (schedule IV) for three patients. Sam holds
   // a valid credential (purchasable), Jordan's is awaiting verification (pending), Alex has none (credential required).
   {
     number: 'RX-61044', patientRef: SAM.patientRef, prescriber: 'Dr. Sofia Marchetti', issuedAt: '2026-10-05', expiresAt: '2027-10-05', refillsLeft: 2,

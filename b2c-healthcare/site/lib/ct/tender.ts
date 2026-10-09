@@ -13,7 +13,7 @@ import { log } from '@/lib/log';
 import type { TenderView } from '@/lib/types';
 
 /**
- * Tenders as commercetools Payments (workstream U). One order, up to three instruments in this order: the
+ * Tenders as commercetools Payments. One order, up to three instruments in this order: the
  * allowance and the restricted instrument as their own Payments (`paymentMethodInfo.method` = `allowance` and
  * `restricted-health-account`, each with its own `amountPlanned`), and the remainder on the card Payment that
  * Checkout creates. The amounts are computed here and asserted before the Payments are set: the platform neither

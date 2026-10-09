@@ -2,7 +2,7 @@ import { useFormatter, useTranslations } from 'next-intl';
 import type { HomeStats } from '@/lib/ct/home';
 
 /**
- * Navy band of measured figures only (Q-016): the doctor count, the review-weighted rating and the doctors with
+ * Navy band of measured figures only: the doctor count, the review-weighted rating and the doctors with
  * a slot today. A figure without a source (null) is not rendered, and with none left the band is omitted, so a
  * literal such as "2M+ consultations" can never appear.
  */

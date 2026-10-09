@@ -10,7 +10,7 @@ const releaseBuild = process.env.NETLIFY === "true" || process.env.MALVA_RELEASE
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   ...(releaseBuild ? { typescript: { ignoreBuildErrors: true } } : {}),
-  // Static content (workstream V) is read from disk at runtime, so it must ship with the deployment.
+  // Static content is read from disk at runtime, so it must ship with the deployment.
   outputFileTracingIncludes: { "/**": ["./content/**/*"] },
   // Patient data is never cached (design-account-area: Caching). Route Handlers also set it themselves.
   async headers() {

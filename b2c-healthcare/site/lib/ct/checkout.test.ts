@@ -22,7 +22,7 @@ beforeEach(() => {
   validateRxSelection.mockReset().mockResolvedValue({ rxNumber: 'RX-77102', accepted: [], refused: [] });
 });
 
-describe('checkout-page: Checkout re-reading totals after each shipping change (Q-02)', () => {
+describe('checkout-page: Checkout re-reading totals after each shipping change', () => {
   it('Address change moves tax: after the address the summary shows the recalculated tax, shipping and total from the cart read', async () => {
     shop.taxPercent = { NY: 8 };
     const cart = shop.seedCart();

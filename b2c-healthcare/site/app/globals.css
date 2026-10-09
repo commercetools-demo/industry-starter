@@ -13,7 +13,7 @@ textarea:focus-visible,
   outline-offset: 2px;
 }
 
-/* Navigation breakpoint (design D10): below it the header links collapse into the menu.
+/* Navigation breakpoint: below it the header links collapse into the menu.
    Keep in sync with NAV_BREAKPOINT_PX in lib/nav.ts. Utilities: `nav:` and `max-nav:`. */
 @theme {
   --breakpoint-nav: 900px;

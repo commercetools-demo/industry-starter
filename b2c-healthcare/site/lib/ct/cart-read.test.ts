@@ -52,7 +52,7 @@ describe('storefront-data-loading: Initial client state from the session', () =>
   });
 });
 
-describe('fixture mode (workstream Z)', () => {
+describe('fixture mode', () => {
   it('with MALVA_FIXTURES=1 no platform cart is read and nothing is logged', async () => {
     vi.stubEnv('MALVA_FIXTURES', '1');
     const log = vi.spyOn(console, 'error').mockImplementation(() => undefined);

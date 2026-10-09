@@ -5,7 +5,7 @@ import { coll, listAll, realSleep, withRetry, type Ctx, type Rec } from './lib';
 import { isSyntheticEmail } from './synthetic';
 
 /**
- * Full cleanup before a full seeding (D-038), in dependency order:
+ * Full cleanup before a full seeding, in dependency order:
  *
  *   1. (--include-customers) the synthetic customers: emails on example.com (the seed's patients and the demo/test sign-ups).
  *      Their recurring orders first (they reference orders, carts and recurrence policies), then everything the patient erasure

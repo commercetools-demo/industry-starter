@@ -1,5 +1,5 @@
 /**
- * Benefit allowance (workstream U, benefit-allowance-drawdown). Pure types and date rules: no server imports, so the
+ * Benefit allowance (benefit-allowance-drawdown). Pure types and date rules: no server imports, so the
  * account page and tests can use them.
  *
  * A member has one `malva-allowance` Custom Object per monthly cycle (key `<patientRef>_<YYYY-MM>`; the plan's

@@ -6,7 +6,7 @@ import type { Money } from '@/lib/types';
 /**
  * Remaining shelf life (expiry-dated-supply). The promise ("minimum N months of shelf life on delivery") is the
  * product attribute `minRemainingShelfLifeDays`; the fact is the inventory entry custom field `expiryDate`
- * (one worst-case date per location, Q-039). The promise is a commitment derived from stock, the lot actually
+ * (one worst-case date per location). The promise is a commitment derived from stock, the lot actually
  * supplied is recorded later on the order line (`lib/dispense/line-record.ts`); one never overwrites the other.
  * Stock figures are eventually consistent for a few seconds: fine for display, and the promise is re-checked
  * before dispatch (`promiseStillMet`).

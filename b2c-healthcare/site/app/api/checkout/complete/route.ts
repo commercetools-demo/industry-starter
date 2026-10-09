@@ -5,7 +5,7 @@ import { NO_STORE } from '@/lib/rx-route';
 import { clearCart } from '@/lib/session';
 
 /**
- * POST /api/checkout/complete `{ orderId }`: the browser's `checkout_completed` callback (D-034). Checkout has created the
+ * POST /api/checkout/complete `{ orderId }`: the browser's `checkout_completed` callback. Checkout has created the
  * order; this runs the domain logic once for it (`finalizeOrder`: prescription, allowance, `MLV-` number, state) and
  * answers `{ orderId, orderNumber }` so the page can go to `/order/<id>`. The browser's word is never trusted for anything
  * but the id: the order must be the signed-in customer's (a foreign and an unknown id are the same 404) and everything

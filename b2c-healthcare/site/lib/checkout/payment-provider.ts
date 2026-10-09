@@ -1,7 +1,7 @@
 import type { PaymentMode, PaymentSessionInfo } from '@/lib/types';
 
 /**
- * Seam between the storefront and the payment service (D-034/D-035: the FULL commercetools Checkout, connected to the
+ * Seam between the storefront and the payment service (the FULL commercetools Checkout, connected to the
  * Stripe connector). Checkout creates the order and owns the payment lifecycle (authorize, capture, cancel, refund,
  * through its Payment Intents API); the storefront never sees card data and never models capture itself. The server
  * only creates the session for a prepared cart, asks for a cancel (release) or a refund when an order is cancelled, and
@@ -73,7 +73,7 @@ export class StoredMethodNotFoundError extends Error {
   }
 }
 
-/** The payment service is not configured (OA-04) or unreachable. The message is safe to show. */
+/** The payment service is not configured or unreachable. The message is safe to show. */
 export class PaymentUnavailableError extends Error {
   constructor(message = 'Payment is not available right now.') {
     super(message);

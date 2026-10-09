@@ -32,7 +32,7 @@ describe('privacy inventory', () => {
   });
 });
 
-describe('disclosure through the goods (X-08)', () => {
+describe('disclosure through the goods', () => {
   const doc = () => read('docs/privacy-inventory.md');
   const members = (file: string, name: string): string[] => {
     const sf = ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, true);
@@ -49,7 +49,7 @@ describe('disclosure through the goods (X-08)', () => {
     expect(text).toMatch(/medication name/);
     expect(text).toMatch(/no emails, SMS messages or shipping labels in v1/);
     expect(text).toMatch(/packing slip/);
-    expect(text).toContain('SO-04');
+    expect(text).toContain('Owner sign-off');
   });
 
   it('Disclosure through the goods is handled: what the order pages carry is name, quantity and the catalog SKU (the link to the medicine page, AB) per line, with no sig, RX content, diagnosis or reason', () => {

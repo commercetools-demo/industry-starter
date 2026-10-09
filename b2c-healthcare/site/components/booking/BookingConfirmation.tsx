@@ -24,7 +24,7 @@ export interface BookingConfirmationProps {
 }
 
 /**
- * "Booking confirmed" card. No email is sent (D-029), so the copy tells the visitor to keep the reference, never that
+ * "Booking confirmed" card. No email is sent, so the copy tells the visitor to keep the reference, never that
  * a confirmation was sent. It shows no reason, phone or email.
  */
 export function BookingConfirmation({ booking, signedIn }: BookingConfirmationProps) {

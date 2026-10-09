@@ -1,7 +1,7 @@
 import { RELOAD_SECRET_HEADER } from '../../lib/funding/reload-handler';
 
 /**
- * Netlify scheduled function (workstream U): at 00:10 UTC on the first of every month it asks the guarded
+ * Netlify scheduled function: at 00:10 UTC on the first of every month it asks the guarded
  * `reload-allowances` function to run the allowance reload (grant the new cycle, forfeit the unspent remainder of the
  * old one). The schedule itself carries no secret and does no work of its own; it presents `RELOAD_ALLOWANCES_SECRET` to
  * the guarded endpoint, which is also what a manual or retried run uses. Doubled or retried runs are harmless: the

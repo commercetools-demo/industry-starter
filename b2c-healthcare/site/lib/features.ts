@@ -2,7 +2,7 @@
 // Pure and server-side: the home page reads them at request time.
 
 /**
- * Whether auto-refills exist (workstream T, recurring orders). Defaults to FALSE: the "Auto-refills you can
+ * Whether auto-refills exist (recurring orders). Defaults to FALSE: the "Auto-refills you can
  * pause anytime" claim is shown only after T ships and `AUTO_REFILL_ENABLED=true` is set.
  */
 export function autoRefillEnabled(env: Record<string, string | undefined> = process.env): boolean {

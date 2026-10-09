@@ -1,7 +1,7 @@
 import type { Prescription } from '@/lib/clinical/types';
 import type { Medication } from '@/lib/types';
 
-/** Synthetic prescriptions and catalog rows for the prescription tests (workstream N). */
+/** Synthetic prescriptions and catalog rows for the prescription tests. */
 export const SAM_REF = 'pt_sam';
 export const ALEX_REF = 'pt_alex';
 

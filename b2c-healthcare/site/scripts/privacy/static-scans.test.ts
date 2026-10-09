@@ -6,7 +6,7 @@ import { CUSTOM_TYPES } from '../seed/data/types';
 import { LIST_LINE_TYPE } from '../seed/data/recurrence';
 
 /**
- * Static scans (workstream X-05, spec health-data-minimization): the rules of D-025 enforced as tests over the whole code base.
+ * Static scans (spec health-data-minimization): its rules enforced as tests over the whole code base.
  *  (a) no commerce custom-field type has a field named like a clinical value;
  *  (b) no logging call receives a health-like key, property or variable (AST scan of lib/, app/api and the other server code);
  *  (c) no route definition or URL builder carries a health-like query parameter.

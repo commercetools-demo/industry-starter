@@ -1,5 +1,5 @@
 /**
- * Single source for the privacy scripts (workstream X, D-025): which Custom Object containers exist, how each one links to a
+ * Single source for the privacy scripts: which Custom Object containers exist, how each one links to a
  * person, and what the erase, subject-access and retention scripts do with them. `inventory.test.ts` fails when
  * `lib/ct/custom-objects.ts` gets a container that is not listed here or in `docs/privacy-inventory.md`.
  */

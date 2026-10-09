@@ -6,7 +6,7 @@ import type { SiteImage } from '@/lib/site-images';
 import { HomeImage } from './HomeImage';
 
 /**
- * The prototype's four chips minus Mental health (D-018: hidden until designed), keyed by the doctor
+ * The prototype's four chips minus Mental health (hidden until designed), keyed by the doctor
  * specialty enum so each chip is a link to the filtered list.
  */
 export const HERO_CHIPS = ['general-practice', 'dermatology', 'pediatrics'] as const;

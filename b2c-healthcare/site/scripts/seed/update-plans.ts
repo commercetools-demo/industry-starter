@@ -1,7 +1,7 @@
 import { listAll, type Ctx, type Rec } from './lib';
 
 /**
- * Update plans (D-038, follow-up AC): given an EXISTING resource and the seed DRAFT, return the update actions that make the
+ * Update plans: given an EXISTING resource and the seed DRAFT, return the update actions that make the
  * resource equal the draft, or a `blocked` message when commercetools cannot make that change in place. The message names the
  * reset that is needed, so a changed seed never just "stops on a diff" when an update is possible.
  */

@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * Contact details as plain text (Q-072): no enquiry form and no chat script, so there is nothing that can
+ * Contact details as plain text: no enquiry form and no chat script, so there is nothing that can
  * fail silently or be blocked by consent. A region without an office shows the general block only.
  */
 export default async function ContactPage({ params }: Props) {

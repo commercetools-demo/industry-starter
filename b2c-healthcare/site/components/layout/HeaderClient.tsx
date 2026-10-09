@@ -16,7 +16,7 @@ import { DesktopLinks, useNavItems, type HeaderVariant } from './NavLinks';
 export interface HeaderClientProps {
   /** Explicit variant; by default the home page (`/`) gets the home variant. */
   variant?: HeaderVariant;
-  /** The "Health journal" link appears only once articles exist (D-018). */
+  /** The "Health journal" link appears only once articles exist. */
   hasArticles?: boolean;
   /** Regions the project can sell in; the switcher is shown only for two or more (none in v1). */
   regions?: RegionOption[];
