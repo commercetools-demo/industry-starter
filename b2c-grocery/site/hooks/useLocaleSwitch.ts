@@ -20,7 +20,7 @@ export function useLocaleSwitch() {
       setPending(true);
       setError(null);
       try {
-        // TODO(G-02 merged): use sendJson from lib/fetcher.ts (see plan/IDEAS.md).
+        // TODO: use sendJson from lib/fetcher.ts.
         const response = await fetch('/api/locale', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },

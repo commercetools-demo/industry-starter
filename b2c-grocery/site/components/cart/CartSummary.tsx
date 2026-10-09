@@ -11,7 +11,7 @@ import { dayLabel, windowLabel } from './SlotPicker';
 
 /**
  * Sticky summary. Every amount is the server cart's value; nothing is recomputed here.
- * Checkout needs `canCheckout(cart)` (address, slot, stock, Q) and an `onCheckout` handler (workstream V provides it).
+ * Checkout needs `canCheckout(cart)` (address, slot, stock, Q) and an `onCheckout` handler.
  */
 export function CartSummary({ cart, onCheckout }: { cart: Cart; onCheckout?: () => void }) {
   const t = useTranslations('cart');

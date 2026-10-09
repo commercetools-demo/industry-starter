@@ -12,9 +12,9 @@ import { NavLinks } from './NavLinks';
 import { PrimaryNav } from './PrimaryNav';
 
 type HeaderProps = {
-  /** Bag button with count (provided by workstream J). */
+  /** Bag button with count. */
   bag: ReactNode;
-  /** Account link or menu (provided by workstream O). */
+  /** Account link or menu. */
   account: ReactNode;
   markets: CountryConfig[];
 };

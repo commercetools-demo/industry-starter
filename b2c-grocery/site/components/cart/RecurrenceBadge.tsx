@@ -6,7 +6,7 @@ import { isRecurrencePolicyKey } from '@/lib/config/features';
 import type { CartLine } from '@/lib/types';
 
 /**
- * Subscription badge of a bag line (workstream W): "Repeats every 2 weeks" plus the plain-words price notice. Renders
+ * Subscription badge of a bag line: "Repeats every 2 weeks" plus the plain-words price notice. Renders
  * nothing for a one-time line. A line only has recurrence info when the add route accepted it, so a disabled flag
  * needs no check here.
  */

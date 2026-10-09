@@ -80,7 +80,7 @@ export function buildProductDrafts(): Record<string, unknown>[] {
         { value: { currencyCode: 'USD', centAmount: v.usd }, country: 'US' },
         { value: { currencyCode: 'EUR', centAmount: eurCents(v.usd) }, country: 'DE' },
       ],
-      // Photos picked by `npm run seed:images` when present, else a placeholder.
+      // Placeholder image.
       images: (savedImages as Record<string, { url: string; dimensions: { w: number; h: number } }[]>)[d.key] ?? [
         { url: `https://picsum.photos/seed/${skuOf(d.key, v).toLowerCase()}/800/800`, dimensions: { w: 800, h: 800 } },
       ],

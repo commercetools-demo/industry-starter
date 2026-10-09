@@ -8,14 +8,14 @@ async function main() {
   let orders = 0;
   let carts = 0;
   for (const c of qa) {
-    // orphan wishlist created by workstream T
+    // orphan wishlist
     const list = await root.shoppingLists().get({ queryArgs: { where: `key="wishlist-${c.id}"`, limit: 1 } }).execute();
     for (const l of list.body.results) {
       await root.shoppingLists().withId({ ID: l.id }).delete({ queryArgs: { version: l.version } }).execute();
       console.log('deleted wishlist', l.id);
     }
     const where = `customerId="${c.id}"`;
-    // Recurring Orders (workstream W): only Canceled/Expired ones can be deleted. Their recurring carts carry the customer id.
+    // Recurring Orders: only Canceled/Expired ones can be deleted. Their recurring carts carry the customer id.
     for (const ro of (await root.recurringOrders().get({ queryArgs: { where: `customer(id="${c.id}")`, limit: 500 } }).execute()).body.results) {
       let version = ro.version;
       if (ro.recurringOrderState !== 'Canceled' && ro.recurringOrderState !== 'Expired') {
@@ -25,7 +25,7 @@ async function main() {
       console.log('deleted recurring order', ro.id);
     }
     for (const o of (await root.orders().get({ queryArgs: { where, limit: 500 } }).execute()).body.results) {
-      // substitution proposals (Order Edits, workstream U) of the order go first
+      // substitution proposals (Order Edits) of the order go first
       for (const edit of (await root.orders().edits().get({ queryArgs: { where: `resource(id="${o.id}")`, limit: 500 } }).execute()).body.results) {
         await root.orders().edits().withId({ ID: edit.id }).delete({ queryArgs: { version: edit.version } }).execute();
       }

@@ -4,7 +4,7 @@ import { getAdminRoot, type Root } from './lib';
 
 /**
  * Creates a substitution proposal (an Order Edit of custom type `substitution-proposal`, status `pending`) on a QA order,
- * the way Merchant Center staff would (there is no Merchant Center screen for it, see plan/recipes/create-substitution-proposal.md).
+ * the way Merchant Center staff would (there is no Merchant Center screen for it).
  *
  *   npx tsx scripts/seed/create-qa-substitution.ts                      # new QA customer + order, proposal on the whole-milk line
  *   npx tsx scripts/seed/create-qa-substitution.ts --order <orderId>    # proposal on an existing order
