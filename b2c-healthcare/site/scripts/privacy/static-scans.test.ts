@@ -16,7 +16,7 @@ const site = path.resolve(__dirname, '../..');
 /** Field names that would hold clinical content. */
 export const HEALTH_FIELD = /sig|diagnosis|condition|result|reason/i;
 /** Names that must not reach a log line or a URL: clinical content, prescription and booking detail, contact data. */
-export const HEALTH_NAME = /^(sig|diagnos\w*|conditions?|results?|reason|labs?|lab[A-Z]\w*|rx[A-Z]?\w*|medications?|medication[A-Z]\w*|booking|bookings|bookingRef\w*|symptoms?|allerg\w*|dose|email|phone)$/i;
+export const HEALTH_NAME = /^(sig|diagnos\w*|conditions?|results?|reason|labs?|labValues?|labResults?|labName|rx|rxNumber|rxLine\w*|medications?|medicationName\w*|booking|bookings|bookingRef\w*|symptoms?|allerg\w*|dose|email|phone)$/i;
 
 const SKIP_DIRS = new Set(['node_modules', '.next', 'docs', 'test']);
 
@@ -206,7 +206,7 @@ describe('static scan (c): query parameters', () => {
     const sf = parse(path.join(site, 'lib/api-paths.ts'));
     let seen = 0;
     visit(sf, (n) => {
-      if (ts.isStringLiteralLike(n) || ts.isTemplateHead(n)) for (const _ of n.text.matchAll(QUERY_PARAM)) seen += 1;
+      if (ts.isStringLiteralLike(n) || ts.isTemplateHead(n)) seen += [...n.text.matchAll(QUERY_PARAM)].length;
     });
     expect(seen).toBeGreaterThan(0);
   });

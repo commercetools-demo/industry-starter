@@ -1,5 +1,4 @@
 // Privacy operations are an admin tool outside the storefront architecture (no lib/ct): like the seed scripts they use the seed admin client.
-/* eslint-disable @typescript-eslint/no-restricted-imports, no-restricted-syntax */
 import path from 'node:path';
 import { withRetry, type Rec, type Root } from '../seed/lib';
 
