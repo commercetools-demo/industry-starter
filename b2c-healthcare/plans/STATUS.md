@@ -24,7 +24,7 @@ Planning complete (all defaults accepted by the owner 2026-10-08). Counts below 
 | Q | Checkout and payment | 9/9 | 17/17 | Not started |
 | R | Account area: shell, overview, labs, appointments | 10/10 | 16/24 | Not started |
 | S | Orders: confirmation and tracking, history, post-purchase | 9/9 | 11/13 | Not started |
-| T | Saved lists ("My medicines"), recurring orders / auto-refill, saved payment methods | 0/10 | 0/10 | Not started |
+| T | Saved lists ("My medicines"), recurring orders / auto-refill, saved payment methods | 10/10 | 10/10 | Not started |
 | U | Funding and restricted tender: payer cost-share, benefit allowance, eligible-item tender, credentialed purchase scope | 0/14 | 0/26 | Not started |
 | V | Static content: FAQ, contact, about, policies, health journal | 8/8 | 12/16 | Not started |
 | W | Region and language switching (v1: single region, structure only) | 4/4 | 3/3 | Not started |
