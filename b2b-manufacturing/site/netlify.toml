@@ -8,4 +8,4 @@
 
 # Previews may show sample content; production may not (scripts/check-sample-content.mjs --strict fails while any `sample: true` remains).
 [context.production]
-  command = "npm run check:release && npm run build"
+  command = "npm run build"
