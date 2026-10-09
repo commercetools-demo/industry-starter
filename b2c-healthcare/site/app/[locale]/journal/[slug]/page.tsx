@@ -12,6 +12,7 @@ import { DEFAULT_LOCALE } from '@/lib/utils';
 import { getArticle, getArticles, getRelatedArticles } from '@/lib/content';
 import { formatIsoDate } from '@/lib/format-date';
 import { pageMetadata } from '@/lib/seo';
+import { getSiteImage } from '@/lib/site-images';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -64,7 +65,7 @@ export default async function ArticlePage({ params }: Props) {
         <span>{t('minutes', { count: article.minutes })}</span>
         {article.published ? <time dateTime={article.published}>{t('publishedOn', { date: formatIsoDate(article.published, locale) })}</time> : null}
       </div>
-      <ArticleCover className="max-w-180" />
+      <ArticleCover image={getSiteImage(article.cover)} className="max-w-180" />
       <Markdown source={article.body} />
       {related.length > 0 ? (
         <section aria-labelledby="related" className="grid gap-4">

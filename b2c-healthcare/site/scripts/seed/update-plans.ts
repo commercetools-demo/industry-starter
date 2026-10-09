@@ -110,7 +110,7 @@ const normAttr = (v: unknown): unknown => {
 
 /**
  * Prices (add, change, remove by channel + currency + country), attributes (`setAttribute`) and name, slug and description are updated in place on the
- * staged master variant; the product is then published again when the draft says `publish`.
+ * staged master variant; the product is then published again when the draft says `publish`. Images are owned by update-images.ts.
  */
 export async function productPlan(existing: Rec, draft: Rec, ctx: Ctx): Promise<UpdatePlan> {
   const want = draft.masterVariant as VariantRec;

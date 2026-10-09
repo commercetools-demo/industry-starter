@@ -8,6 +8,7 @@ import { JournalRow } from '@/components/home/JournalRow';
 import { RxDelivery } from '@/components/home/RxDelivery';
 import { ServicesGrid } from '@/components/home/ServicesGrid';
 import { StatsBand } from '@/components/home/StatsBand';
+import { siteImage } from '@/content/images';
 import { getPublishedArticles } from '@/lib/content';
 import { getHomeSnapshot, hasSameDayMethod } from '@/lib/ct/home';
 import { autoRefillEnabled } from '@/lib/features';
@@ -35,14 +36,14 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
   const articles = showJournal(locale) ? getPublishedArticles(locale).slice(0, JOURNAL_CARDS) : [];
   return (
     <>
-      <Hero availableToday={snapshot?.stats.availableToday ?? null} />
+      <Hero image={siteImage('home-hero')} availableToday={snapshot?.stats.availableToday ?? null} />
       <ServicesGrid />
       <HowItWorks />
       <AvailableToday data={snapshot?.available ?? null} />
-      <RxDelivery sameDay={sameDay} autoRefill={autoRefillEnabled()} />
+      <RxDelivery image={siteImage('home-rx-delivery')} sameDay={sameDay} autoRefill={autoRefillEnabled()} />
       <StatsBand stats={snapshot?.stats ?? null} />
       <JournalRow articles={articles} />
-      <ClosingCta />
+      <ClosingCta image={siteImage('home-cta')} />
     </>
   );
 }

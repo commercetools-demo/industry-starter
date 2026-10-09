@@ -1,5 +1,6 @@
 import { createTranslator } from 'next-intl';
 import { describe, expect, it, vi } from 'vitest';
+import { getSiteImage } from '@/lib/site-images';
 import messages from '@/messages/en-US.json';
 import { renderWithProviders, screen } from '@/test/utils';
 
@@ -30,10 +31,19 @@ describe('blog-resources › Articles addressable and indexable independently of
     expect(screen.getByText('4 min read')).toBeInTheDocument();
   });
 
-  it('covers: every card shows the token-styled placeholder', async () => {
+  it('covers: the committed journal-1..3 photos are shown on the listing (no placeholder gradient, D-040); an empty file falls back to a token-styled placeholder (nothing invented)', async () => {
     const { container } = await list();
-    expect(container.querySelectorAll('[data-cover="placeholder"]')).toHaveLength(3);
-    expect(container.querySelector('img')).toBeNull();
+    expect(getSiteImage('journal-1')?.url).toMatch(/^https:\/\/[^?#]+$/);
+    expect(container.querySelectorAll('[data-cover="image"]')).toHaveLength(3);
+    expect(container.querySelectorAll('[data-cover="placeholder"]')).toHaveLength(0);
+    expect(getSiteImage('journal-1', {})).toBeNull();
+  });
+
+  it('covers: a seeded slot renders its photo; non-https and unknown slots do not', () => {
+    const images = { 'journal-1': { url: 'https://images.example/a.jpg', photographer: 'P' }, 'journal-2': { url: 'javascript:x' } };
+    expect(getSiteImage('journal-1', images)).toEqual({ url: 'https://images.example/a.jpg' });
+    expect(getSiteImage('journal-2', images)).toBeNull();
+    expect(getSiteImage('journal-9', images)).toBeNull();
   });
 
   it('the category filter narrows the list and marks the applied filter', async () => {

@@ -20,7 +20,7 @@ async function seeded() {
   }
   return { fake, r };
 }
-const failures = async (fake: ReturnType<typeof createFakeRoot>) => (await runVerify(fake.root, { clinical: true })).filter((c) => !c.ok).map((c) => c.name);
+const failures = async (fake: ReturnType<typeof createFakeRoot>) => (await runVerify(fake.root, { images: false, clinical: true })).filter((c) => !c.ok).map((c) => c.name);
 const objects = (fake: ReturnType<typeof createFakeRoot>, container: string) => fake.objects.objects.filter((o) => o.container === container);
 
 describe('funding seed additions (U-13)', () => {

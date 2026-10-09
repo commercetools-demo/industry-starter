@@ -59,7 +59,7 @@ function snapshot(partial: Partial<HomeSnapshot> = {}): HomeSnapshot {
 function article(n: number): Article {
   return {
     slug: `article-${n}`, title: `Article title ${n}`, description: '', category: n % 2 ? 'Sleep' : 'Medication', minutes: n + 3,
-    published: '2026-09-01', tags: [], withdrawn: false, body: 'x', draft: false, fellBack: false,
+    published: '2026-09-01', tags: [], cover: `journal-${n}`, withdrawn: false, body: 'x', draft: false, fellBack: false,
   };
 }
 
@@ -90,8 +90,9 @@ describe('design-home-page › Home page sections in design order', () => {
     expect(screen.queryByText(/mental health/i)).toBeNull();
     const image = container.querySelector('[data-image]');
     expect(image).toHaveClass('nav:h-115', 'rounded-t-xl');
-    expect(image).toHaveAttribute('data-image', 'placeholder');
-    expect(container.querySelector('[data-image] img')).toBeNull();
+    // The committed site-images.json (D-040) gives the hero a stored photo with a clean URL, never an invented one.
+    expect(image).toHaveAttribute('data-image', 'photo');
+    expect(container.querySelector('[data-image] img')?.getAttribute('src')).toMatch(/^https:\/\/[^?#]+$/);
   });
 
   it('Search submit: a plain GET form to the search results; empty or blank text cannot be submitted', async () => {
@@ -297,14 +298,17 @@ describe('design-home-page › Prescription delivery and journal blocks', () => 
     expect(within(cards[1] as HTMLElement).getByRole('link', { name: 'Article title 2' })).toHaveAttribute('href', '/en-US/journal/article-2');
     expect(within(row).getByRole('link', { name: /All articles/ })).toHaveAttribute('href', '/en-US/journal');
     expect(row.querySelectorAll('.h-45')).toHaveLength(3);
-    expect(container.querySelectorAll('#journal [data-image="placeholder"]')).toHaveLength(3);
+    // journal-1..3 are in the committed site-images.json (D-040): each cover is a photo, no placeholder gradient is shown.
+    expect(container.querySelectorAll('#journal [data-image="photo"]')).toHaveLength(3);
+    expect(container.querySelector('#journal [data-image="placeholder"]')).toBeNull();
   });
 
-  it('Closing band: the brand gradient with the call to action', async () => {
+  it('Closing band: the home-cta photo sits under the brand gradient overlay; without a photo the band is the plain gradient', async () => {
     const { container } = await renderHome();
     const band = container.querySelector('section[aria-labelledby="home-cta-title"] [data-image]');
-    expect(band).toHaveAttribute('data-image', 'placeholder');
-    expect(band?.className).toContain('--gradient-brand');
+    expect(band).toHaveAttribute('data-image', 'photo');
+    expect(band?.querySelector('img')?.getAttribute('src')).toMatch(/^https:\/\/[^?#]+$/);
+    expect(band?.querySelector('[aria-hidden="true"]')?.className).toContain('--gradient-brand');
     expect(within(band as HTMLElement).getByRole('link', { name: h.cta.button })).toHaveAttribute('href', '/en-US/doctors/remote');
   });
 

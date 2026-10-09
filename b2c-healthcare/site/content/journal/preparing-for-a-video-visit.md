@@ -4,6 +4,7 @@ description: Draft article with a short checklist for remote sessions.
 category: Care
 minutes: 3
 published: 2026-07-20
+cover: journal-3
 draft: true
 ---
 Draft article text for review. This is placeholder content, not medical advice.

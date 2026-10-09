@@ -5,6 +5,7 @@ category: Wellness
 minutes: 4
 published: 2026-09-01
 tags: [sleep, wellness]
+cover: journal-1
 draft: true
 ---
 Draft article text for review. This is placeholder content, not medical advice.

@@ -29,11 +29,11 @@
   schedule = "30 3 * * *"
 
 # Security headers on every response. The CSP allows the commercetools Checkout widget (and the Stripe elements it
-# frames); 'unsafe-inline' is needed for Next's inline bootstrap scripts and styles.
+# frames) and the seeded photos (images.pexels.com, and media.istockphoto.com which the public Pexels search endpoint serves, see scripts/seed/README.md); 'unsafe-inline' is needed for Next's inline bootstrap scripts and styles.
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://*.commercetools.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://storage.googleapis.com https://*.stripe.com; font-src 'self' data:; connect-src 'self' https://*.commercetools.com https://api.stripe.com https://*.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com https://*.commercetools.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://*.commercetools.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.pexels.com https://media.istockphoto.com https://storage.googleapis.com https://*.stripe.com; font-src 'self' data:; connect-src 'self' https://*.commercetools.com https://api.stripe.com https://*.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com https://*.commercetools.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "same-origin"
     X-Frame-Options = "DENY"

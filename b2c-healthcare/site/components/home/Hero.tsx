@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 import { SearchForm } from '@/components/search/SearchForm';
 import { Link } from '@/i18n/routing';
 import { listingHref } from '@/lib/listing-url';
+import type { SiteImage } from '@/lib/site-images';
 import { HomeImage } from './HomeImage';
 
 /**
@@ -11,12 +12,13 @@ import { HomeImage } from './HomeImage';
 export const HERO_CHIPS = ['general-practice', 'dermatology', 'pediatrics'] as const;
 
 export interface HeroProps {
+  image: SiteImage | null;
   /** Live count of doctors with a free slot today; null (no source) hides the floating chip. */
   availableToday: number | null;
 }
 
-/** Sky hero: H1, lead, search (to /search?q=, empty submit stays), specialty chips, and the 460 px banner area. */
-export function Hero({ availableToday }: HeroProps) {
+/** Sky hero: H1, lead, search (to /search?q=, empty submit stays), specialty chips, and the 460 px image area. */
+export function Hero({ image, availableToday }: HeroProps) {
   const t = useTranslations('home.hero');
   return (
     <section aria-labelledby="home-hero-title" className="overflow-hidden bg-(image:--gradient-sky) pt-18">
@@ -45,7 +47,7 @@ export function Hero({ availableToday }: HeroProps) {
             </ul>
           </nav>
         </div>
-        <HomeImage className="h-75 rounded-t-xl nav:h-115">
+        <HomeImage image={image} className="h-75 rounded-t-xl nav:h-115">
           {availableToday === null ? null : (
             <p
               data-testid="hero-available-chip"

@@ -72,10 +72,11 @@ describe('medication data', () => {
     expect(dated[0].expiryDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
-  it('uses the 0% medicine tax category, is published', () => {
+  it('uses the 0% medicine tax category, is published, and has a generic image query', () => {
     const d = medicationDraft(MEDICATIONS[0]);
     expect(d.taxCategory.key).toBe('mlv-rx-medicine');
     expect(d.publish).toBe(true);
+    expect(MEDICATIONS.every((x) => x.imageQuery.length > 0 && !x.imageQuery.includes(x.name.split(' ')[0]))).toBe(true);
   });
 });
 

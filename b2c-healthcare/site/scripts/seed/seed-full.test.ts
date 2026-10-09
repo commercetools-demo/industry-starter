@@ -10,7 +10,7 @@ import { checkFullConfirm, runFull } from './seed-full';
 const silent = () => {};
 const opts = (dryRun: boolean) => ({ dryRun, patientPassword: 'pw', sleep: async () => {} });
 
-describe('seed:full (D-038): reset, cleanup-sample, seed, verify, wait-for-search', () => {
+describe('seed:full (D-038): reset, cleanup-sample, seed, images, verify, wait-for-search', () => {
   it('on a project holding the sample data, an old seed and customer data it ends with a verified, searchable, re-seedable project', async () => {
     const fake = createFakeRoot({ products: [{ id: 'sample', key: 'charcoal-chair', version: 1, masterData: { published: false, staged: {} } }], taxCategories: [{ id: 'tx', key: 'standard-tax', version: 1 }] });
     await runSeed({ root: fake.root, dryRun: false, log: silent, pauseMs: 0 }, { clinical: true, patientPassword: 'pw' });
@@ -18,7 +18,7 @@ describe('seed:full (D-038): reset, cleanup-sample, seed, verify, wait-for-searc
     const lines: string[] = [];
     const result = await runFull(fake.root, opts(false), (l) => lines.push(l));
     expect(lines.filter((l) => /FAIL|stopped/.test(l)).join('\n')).toBe('');
-    expect(result.stages.map((s) => s.name)).toEqual(['reset (--include-customers)', 'cleanup-sample', 'seed', 'verify', 'wait-for-search']);
+    expect(result.stages.map((s) => s.name)).toEqual(['reset (--include-customers)', 'cleanup-sample', 'seed', 'images', 'verify', 'wait-for-search']);
     expect(result.ok).toBe(true);
     expect(fake.store.products.map((p) => String(p.key))).not.toContain('charcoal-chair');
     expect(fake.store.taxCategories.map((t) => String(t.key))).toEqual(['mlv-rx-medicine', 'mlv-consultation']);
@@ -36,7 +36,7 @@ describe('seed:full (D-038): reset, cleanup-sample, seed, verify, wait-for-searc
     const lines: string[] = [];
     const result = await runFull(fake.root, opts(true), (l) => lines.push(l));
     expect(result.ok).toBe(true);
-    expect(result.stages.map((s) => s.name)).toEqual(['reset (--include-customers)', 'cleanup-sample', 'seed']);
+    expect(result.stages.map((s) => s.name)).toEqual(['reset (--include-customers)', 'cleanup-sample', 'seed', 'images']);
     expect(fake.log.length).toBe(logged);
     expect(fake.objects.calls.filter((c) => c.op === 'delete' || c.op === 'post').length).toBe(objectCalls);
     expect(lines.join('\n')).toContain('verify and wait-for-search are skipped');
@@ -53,8 +53,9 @@ describe('seed:full (D-038): reset, cleanup-sample, seed, verify, wait-for-searc
     expect(() => assertProjectKey('some-production-project')).toThrow(/Refusing/);
   });
 
-  it('the npm script passes the confirmation', () => {
+  it('the npm script passes the confirmation and the json-only image script exists', () => {
     const scripts = (JSON.parse(readFileSync(path.join(process.cwd(), 'package.json'), 'utf8')) as { scripts: Record<string, string> }).scripts;
     expect(scripts['seed:full']).toBe('tsx scripts/seed/seed-full.ts --confirm spec-test-b2c-healthcare');
+    expect(scripts['seed:images:json']).toBe('tsx scripts/seed/update-images.ts --json-only');
   });
 });

@@ -255,6 +255,8 @@ export interface Article {
   /** ISO publication date. */
   published: string;
   tags: string[];
+  /** Image slot key from site-images.json (journal-1..3), or ''. */
+  cover: string;
   withdrawn: boolean;
   /** Empty for a withdrawn article: the withdrawn text is never served. */
   body: string;
@@ -274,6 +276,7 @@ export function getArticles(locale: string, root: string = CONTENT_ROOT): Articl
         minutes: num(doc.meta.minutes, 1),
         published: str(doc.meta.published),
         tags: list(doc.meta.tags),
+        cover: str(doc.meta.cover),
         withdrawn,
         body: withdrawn ? '' : doc.body,
         draft: doc.meta.draft === true,

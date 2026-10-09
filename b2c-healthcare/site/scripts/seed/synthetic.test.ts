@@ -68,11 +68,11 @@ describe('seed test-environment guard', () => {
 describe('seed:verify Messages check', () => {
   it('passes when Messages are disabled and fails (with the fix) when they are enabled', async () => {
     const ok = createFakeRoot();
-    expect((await runVerify(ok.root, { search: false })).find((c) => /Messages are disabled/.test(c.name))?.ok).toBe(true);
+    expect((await runVerify(ok.root, { search: false, images: false })).find((c) => /Messages are disabled/.test(c.name))?.ok).toBe(true);
     const on = createFakeRoot();
     const get = on.root.get.bind(on.root);
     on.root.get = (() => ({ execute: async () => ({ ...(await get().execute()), body: { key: on.projectKey, messages: { enabled: true } } }) })) as never;
-    const failed = (await runVerify(on.root, { search: false })).find((c) => /Messages are disabled/.test(c.name));
+    const failed = (await runVerify(on.root, { search: false, images: false })).find((c) => /Messages are disabled/.test(c.name));
     expect(failed?.ok).toBe(false);
     expect(failed?.detail).toMatch(/changeMessagesConfiguration/);
   });

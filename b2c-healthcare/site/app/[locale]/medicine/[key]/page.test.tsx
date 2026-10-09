@@ -82,7 +82,7 @@ describe('product-detail-page: rendering', () => {
   });
 
   it('gallery: shows every image, with a placeholder when there is none', async () => {
-    getMedicine.mockResolvedValue(medicine({ imageUrls: ['https://images.example/a.jpg', 'https://images.example/b.jpg'] }));
+    getMedicine.mockResolvedValue(medicine({ imageUrls: ['https://images.pexels.com/a.jpg', 'https://images.pexels.com/b.jpg'] }));
     const { unmount } = await render();
     expect(screen.getAllByRole('img')).toHaveLength(2);
     unmount();

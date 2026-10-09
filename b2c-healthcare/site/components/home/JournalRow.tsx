@@ -1,10 +1,11 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import type { Article } from '@/lib/content';
+import { getSiteImage } from '@/lib/site-images';
 import { HomeImage } from './HomeImage';
 
 /**
- * Three journal cards (180 px banner area, "Category · N min read", linked title). Omitted while there are no
+ * Three journal cards (180 px image area, "Category · N min read", linked title). Omitted while there are no
  * articles to show: the page passes an empty list unless the journal row exists (lib/routes `showJournal`).
  */
 export function JournalRow({ articles }: { articles: readonly Article[] }) {
@@ -24,7 +25,7 @@ export function JournalRow({ articles }: { articles: readonly Article[] }) {
         <ul className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,18.75rem),1fr))] gap-6 p-0">
           {articles.map((article) => (
             <li key={article.slug} className="overflow-hidden rounded-lg bg-surface shadow-sm">
-              <HomeImage className="h-45" />
+              <HomeImage image={getSiteImage(article.cover)} className="h-45" />
               <div className="grid gap-2 p-5">
                 <small className="font-meta text-xs text-neutral-600">{t('meta', { category: article.category, minutes: article.minutes })}</small>
                 <h3 className="font-display text-lg font-semibold text-text-heading">

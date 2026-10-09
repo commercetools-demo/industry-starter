@@ -58,7 +58,7 @@ present): `MALVA_FIXTURES`, `SAME_DAY_NOW_OVERRIDE`, `RESOLVER_FORCE_FAIL`, `MAL
 
 **Scripts only, never on Netlify** (loaded from `.env.seed.local` or the shell on a developer machine): `SEED_CTP_PROJECT_KEY`,
 `SEED_CTP_AUTH_URL`, `SEED_CTP_API_URL`, `SEED_CTP_CLIENT_ID`, `SEED_CTP_CLIENT_SECRET`, `SEED_CTP_SCOPES`,
-`SEED_PATIENT_PASSWORD`. The seed admin credentials must never be a Netlify variable.
+`SEED_PATIENT_PASSWORD`, `PEXELS_CLIENT_ID`, `PEXELS_API_KEY`. The seed admin credentials must never be a Netlify variable.
 
 Deploy previews: use the same (development) commercetools project, which holds synthetic data only; never point a preview at real
 data. Set the secrets for the "Deploy Previews" context to their own values (not the production ones).
@@ -79,7 +79,7 @@ data. Set the secrets for the "Deploy Previews" context to their own values (not
   working tree and runs only when `NETLIFY=true` or `MALVA_RELEASE_BUILD=1`; use a throw-away clone for the latter.
 - After the build: no secret variable name or value in `.next/static` or `.next/server`, no source map in the public bundle,
   and (release build) no compiled health/`_tokens`/`_boom` route. `check-no-health-in-release.mjs` guards the health route source.
-- Response headers come from `netlify.toml`: CSP (Stripe, commercetools Checkout), `X-Content-Type-Options`,
+- Response headers come from `netlify.toml`: CSP (Stripe, commercetools Checkout, Pexels images), `X-Content-Type-Options`,
   `Referrer-Policy: same-origin`, `X-Frame-Options`, HSTS, and `Cache-Control: no-store` for `/api/account/*` and
   `/<locale>/account/*`; `/<locale>/prescriptions` is `private, no-store`. `x-powered-by` is disabled in `next.config.ts`.
 

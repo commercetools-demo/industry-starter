@@ -17,12 +17,12 @@ async function seeded() {
   }
   return fake;
 }
-const failures = async (fake: ReturnType<typeof createFakeRoot>) => (await runVerify(fake.root, { clinical: true })).filter((c) => !c.ok).map((c) => c.name);
+const failures = async (fake: ReturnType<typeof createFakeRoot>) => (await runVerify(fake.root, { images: false, clinical: true })).filter((c) => !c.ok).map((c) => c.name);
 
 describe('seed:verify clinical checks (F-07)', () => {
   it('a freshly seeded project passes every check, including the existing ones', async () => {
     const fake = await seeded();
-    const checks = await runVerify(fake.root, { clinical: true });
+    const checks = await runVerify(fake.root, { images: false, clinical: true });
     expect(formatChecks(checks.filter((c) => !c.ok))).toBe('');
     expect(checks.map((c) => c.name)).toEqual(expect.arrayContaining(['exactly three example.com patients', 'every RX line SKU exists as a product variant', 'every lab orderedByDoctorKey exists as a product']));
   });
@@ -30,7 +30,7 @@ describe('seed:verify clinical checks (F-07)', () => {
   it('clinical checks are off by default (existing callers are unchanged)', async () => {
     const fake = createFakeRoot();
     await runSeed(ctxOf(fake));
-    const names = (await runVerify(fake.root, {})).map((c) => c.name);
+    const names = (await runVerify(fake.root, { images: false })).map((c) => c.name);
     expect(names.some((n) => n.startsWith('malva-'))).toBe(false);
   });
 
