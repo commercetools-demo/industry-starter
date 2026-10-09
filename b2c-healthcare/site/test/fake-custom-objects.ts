@@ -30,6 +30,14 @@ export function createFakeObjects(): FakeObjects {
   let n = 0;
   const find = (container: string, key: string) => self.objects.find((o) => o.container === container && o.key === key);
   self.customObjects = () => ({
+    // every object of the project, paged (the full reset lists all `malva-*` containers this way)
+    get: (a: { queryArgs?: { limit?: number; offset?: number } } = {}) => ({
+      execute: async () => {
+        self.calls.push({ op: 'query', container: '*' });
+        const { limit = 20, offset = 0 } = a.queryArgs ?? {};
+        return { body: { results: structuredClone(self.objects.slice(offset, offset + limit)), count: Math.min(limit, self.objects.length), total: self.objects.length, limit, offset } };
+      },
+    }),
     post: (a: { body: { container: string; key: string; value: unknown; version?: number } }) => ({
       execute: async () => {
         const { container, key, value, version } = a.body;

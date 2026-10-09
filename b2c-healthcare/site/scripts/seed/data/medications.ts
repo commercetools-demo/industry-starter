@@ -32,7 +32,7 @@ const m = (
   o: Partial<MedicationDef> = {},
 ): MedicationDef => ({
   slug, name, strength, form, rxOnly, packSize, priceCents, cls,
-  hsaEligible: true, controlClass: 'none', minRemainingShelfLifeDays: 90, imageQuery: form === 'capsule' ? 'capsules pills medicine' : 'pills blister pack',
+  hsaEligible: true, controlClass: 'none', minRemainingShelfLifeDays: 90, imageQuery: form === 'capsule' ? 'capsules pills medicine' : 'pharmacy medicine blister pack',
   ...o,
 });
 

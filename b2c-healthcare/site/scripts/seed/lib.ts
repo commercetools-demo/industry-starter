@@ -27,6 +27,8 @@ export const SEED_ENV_NAMES = [
 
 export interface Flags {
   dryRun: boolean;
+  /** `--include-customers`: the full reset also erases the synthetic customers (emails on example.com) and everything of theirs. */
+  includeCustomers?: boolean;
   only?: string;
   confirm?: string;
 }
@@ -39,7 +41,7 @@ export function parseFlags(argv: string[]): Flags {
     if (!v || v.startsWith('--')) throw new Error(`${name} needs a value`);
     return v;
   };
-  return { dryRun: argv.includes('--dry-run'), only: get('--only'), confirm: get('--confirm') };
+  return { dryRun: argv.includes('--dry-run'), includeCustomers: argv.includes('--include-customers'), only: get('--only'), confirm: get('--confirm') };
 }
 
 /** Parses KEY=value lines; a missing file gives an empty object. */
@@ -171,7 +173,7 @@ export const KINDS = [
   'channels',
 ] as const;
 /** `customers` is listed and counted but never deleted by the cleanup (see E-questions.md). */
-export type Kind = (typeof KINDS)[number] | 'customers' | 'reviews' | 'recurrencePolicies';
+export type Kind = (typeof KINDS)[number] | 'customers' | 'reviews' | 'recurrencePolicies' | 'recurringOrders';
 
 export const coll = (root: Root, kind: Kind): Coll => (root as unknown as Record<Kind, () => Coll>)[kind].call(root);
 

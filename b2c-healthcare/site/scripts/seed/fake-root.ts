@@ -71,6 +71,16 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
     return null;
   }
 
+  /** The platform rolls review ratings up into the product's `reviewRatingStatistics` (the real one lags by seconds; the fake is immediate). */
+  function rollUpRating(review: Rec): void {
+    const target = review.target as { key?: string; id?: string } | undefined;
+    const product = fake.store.products.find((p) => p.key === target?.key || p.id === target?.id);
+    if (!product || typeof review.rating !== 'number') return;
+    const stats = (product.reviewRatingStatistics as { count: number; averageRating: number } | undefined) ?? { count: 0, averageRating: 0 };
+    const count = stats.count + 1;
+    product.reviewRatingStatistics = { count, averageRating: (stats.averageRating * stats.count + review.rating) / count };
+  }
+
   const zoneId = (z: unknown) => (z as { id?: string }).id ?? fake.store.zones.find((x) => x.key === (z as { key?: string }).key)?.id;
 
   function applyAction(kind: string, r: Rec, a: Rec): void {
@@ -163,6 +173,7 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
         if (dup) throw err(400, `duplicate key ${String(a.body.key)}`);
         const r = materialize(kind, a.body);
         fake.store[kind].push(r);
+        if (kind === 'reviews') rollUpRating(r);
         fake.log.push({ op: 'create', kind, key: r.key as string | undefined, id: r.id as string });
         return { body: r };
       },
