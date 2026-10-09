@@ -15,7 +15,6 @@ describe('FooterLegalLinks', () => {
       ['Shipping and returns', '/en-US/legal/shipping-returns'],
       ['Terms', '/en-US/legal/terms'],
       ['Privacy', '/en-US/legal/privacy'],
-      ['Image credits', '/en-US/legal/image-credits'],
     ]);
   });
 

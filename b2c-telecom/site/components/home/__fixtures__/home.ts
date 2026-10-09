@@ -17,7 +17,7 @@ import {
 import type { Category, Offer } from '@/lib/types';
 
 export const HERO_IMAGE = 'https://images.pexels.com/photos/1/hero.jpeg';
-export const HERO_ALT = 'Photo: Jane Doe via Pexels';
+export const HERO_ALT = 'A family on a video call';
 
 /** The listing fixtures' seeded-like tree with the cable category carrying an image. */
 export const HOME_TREE: Category[] = TREE.map((category) => (category.key === 'malva-cat-cable-internet' ? { ...category, image: HERO_IMAGE, imageAlt: HERO_ALT } : category));

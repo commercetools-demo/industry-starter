@@ -12,7 +12,6 @@ const LINKS = [
   { href: '/legal/shipping-returns', key: 'shippingReturns' },
   { href: '/legal/terms', key: 'terms' },
   { href: '/legal/privacy', key: 'privacy' },
-  { href: '/legal/image-credits', key: 'imageCredits' },
 ] as const;
 
 /** Company and legal links, appended to the site footer. */

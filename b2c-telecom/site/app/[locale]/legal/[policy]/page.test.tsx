@@ -18,9 +18,6 @@ vi.mock('next/navigation', async (importOriginal) => ({
   },
 }));
 
-const credits = vi.hoisted(() => ({ list: [] as { photographer: string; url: string }[] }));
-vi.mock('@/lib/content/credits', () => ({ getImageCredits: () => credits.list }));
-
 import LegalPage, { generateMetadata } from './page';
 
 function props(policy: string, locale = 'en-US', asOf?: string) {
@@ -33,7 +30,6 @@ beforeEach(() => {
 });
 afterEach(() => {
   vi.useRealTimers();
-  credits.list = [];
 });
 
 describe('legal page', () => {
@@ -69,19 +65,6 @@ describe('legal page', () => {
     renderWithProviders(await LegalPage(props('terms', 'de-DE')), { locale: 'de-DE' });
     expect(screen.getByText('Gültig seit 1. Januar 2026')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 1, name: 'Allgemeine Geschäftsbedingungen' })).toBeInTheDocument();
-  });
-
-  it('image-credits page links to https://www.pexels.com with rel noopener and lists photographers', async () => {
-    credits.list = [
-      { photographer: 'Ada Ng', url: 'https://www.pexels.com/photo/2' },
-      { photographer: 'Zoe Lee', url: 'https://www.pexels.com/photo/1' },
-    ];
-    renderWithProviders(await LegalPage(props('image-credits')));
-    const pexels = screen.getByRole('link', { name: 'Pexels' });
-    expect(pexels).toHaveAttribute('href', 'https://www.pexels.com');
-    expect(pexels).toHaveAttribute('target', '_blank');
-    expect(pexels.getAttribute('rel')).toContain('noopener');
-    expect(screen.getAllByRole('link', { name: /^Photo by / }).map((l) => l.textContent)).toEqual(['Photo by Ada Ng on Pexels', 'Photo by Zoe Lee on Pexels']);
   });
 
   it('Opened from checkout: the policy page imports no cart or session module', () => {

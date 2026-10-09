@@ -67,7 +67,7 @@ The system SHALL require an explicit, matching confirmation of the target projec
 - **THEN** it reports the conflict and skips that product type and everything that depends on it, rather than deleting and recreating the type
 
 #### Scenario: Credentials kept out of the repository
-- **GIVEN** the seeding credential and the Pexels key
+- **GIVEN** the seeding credential
 - **WHEN** the repository and the `site/` build are inspected
 - **THEN** neither appears in either, and they are read only from the environment of the seeding process
 

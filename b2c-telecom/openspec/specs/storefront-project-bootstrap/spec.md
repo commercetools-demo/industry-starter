@@ -40,7 +40,7 @@ The system SHALL provide a storefront application under `site/` that installs an
 #### Scenario: Secret never reaches the browser
 - **GIVEN** a production build
 - **WHEN** the client bundle and the public environment are inspected
-- **THEN** no commercetools client secret, session secret, seeding credential or Pexels key appears in either, and no such variable carries the public prefix
+- **THEN** no commercetools client secret, session secret or seeding credential appears in either, and no such variable carries the public prefix
 
 #### Scenario: Connection check available in development only
 - **GIVEN** the health route that exercises the commercetools connection

@@ -42,7 +42,7 @@ describe('categories', () => {
   });
 
   it('category assets come from the lock file and none when the key has no entry', () => {
-    const lock = { 'malva-cat-cable-internet': { term: 't', images: [{ url: 'https://media.istockphoto.com/a.jpg', dimensions: { w: 612, h: 408 }, photographer: null }] } };
+    const lock = { 'malva-cat-cable-internet': { images: [{ url: 'https://media.istockphoto.com/a.jpg', dimensions: { w: 612, h: 408 } }] } };
     const built = buildCategories(lock);
     expect(built.find((c) => c.key === 'malva-cat-cable-internet')?.assets).toEqual([
       { key: 'malva-cat-cable-internet-image-1', name: { 'en-US': 'Cable internet', 'de-DE': 'Kabel-Internet' }, sources: [{ uri: 'https://media.istockphoto.com/a.jpg', dimensions: { w: 612, h: 408 } }] },

@@ -78,7 +78,7 @@ Hosting is Netlify (no Vercel config). Prerequisites: OA-06 (the Netlify site an
 | `CHECKOUT_DEMO_PAYMENT` | optional | `true` simulates the payment before OA-05 is done; unset in production without a key answers `CHECKOUT_UNAVAILABLE` |
 | `SITE_URL` | optional | forces the canonical origin; unset uses Netlify's `URL` |
 
-Never set `CTP_SEED_*` or `PEXELS_API_KEY` on Netlify, and never prefix a variable with `NEXT_PUBLIC_`. `SECRETS_SCAN_OMIT_KEYS` in `netlify.toml` lists only non-secret names; never add a secret to it.
+Never set `CTP_SEED_*` on Netlify, and never prefix a variable with `NEXT_PUBLIC_`. `SECRETS_SCAN_OMIT_KEYS` in `netlify.toml` lists only non-secret names; never add a secret to it.
 
 **Release procedure.**
 

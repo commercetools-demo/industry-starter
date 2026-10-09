@@ -6,7 +6,6 @@ import { SERVICEABILITY_CONTAINER } from '../data/serviceability';
 import { demoCustomers } from '../data/demo/customers';
 import { demoOrders } from '../data/demo/orders';
 import { getLock } from '../images';
-import { IMAGE_TARGETS } from '../data/image-terms';
 import type { ProductDraft, VariantDraft } from '../types';
 import type { Check, CheckResult } from './platform';
 
@@ -157,7 +156,7 @@ export const imageCoverage: Check = {
   async run(api) {
     const live = await liveProducts(api);
     const lock = getLock();
-    const missing = IMAGE_TARGETS.filter((t) => {
+    const missing = Object.keys(lock).map((key) => ({ key })).filter((t) => {
       if (t.key.startsWith('malva-cat-')) return !lock[t.key];
       const product = live.get(t.key);
       return !product || liveVariants(product).every((v) => ((v as { images?: unknown[] }).images ?? []).length === 0);
