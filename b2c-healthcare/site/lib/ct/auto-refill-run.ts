@@ -155,7 +155,7 @@ export interface ReconcileSummary {
 }
 
 /** The consume lines of a generated order, from the prescription fields copied onto its lines. */
-async function consumeLinesOf(order: Order): Promise<ConsumeLine[] | null> {
+export async function consumeLinesOf(order: Order): Promise<ConsumeLine[] | null> {
   if (!order.customerId) return null;
   const patient = await getPatient(order.customerId);
   if (!patient) return null;

@@ -2,10 +2,10 @@
 import { useCallback } from 'react';
 import useSWR, { useSWRConfig, type SWRResponse } from 'swr';
 import type { AddressProblems } from '@/lib/address';
-import { API_CHECKOUT, API_CHECKOUT_ADDRESS, API_CHECKOUT_DEMO_AUTHORIZE, API_CHECKOUT_PLACE, API_CHECKOUT_SHIPPING_METHOD, API_CHECKOUT_TENDER } from '@/lib/api-paths';
+import { API_CHECKOUT, API_CHECKOUT_ADDRESS, API_CHECKOUT_COMPLETE, API_CHECKOUT_DEMO_AUTHORIZE, API_CHECKOUT_PREPARE, API_CHECKOUT_SHIPPING_METHOD, API_CHECKOUT_TENDER } from '@/lib/api-paths';
 import { KEY_CART, KEY_CART_DETAILS, KEY_CHECKOUT } from '@/lib/cache-keys';
 import { fetchJson, isUnauthorized } from '@/lib/http';
-import type { AddressInput, CheckoutState, Money, PlaceOrderFailure } from '@/lib/types';
+import type { AddressInput, CheckoutState, Money, PlaceOrderFailure, PrepareResult } from '@/lib/types';
 
 /** `GET /api/checkout`; `null` when signed out or when there is no cart. */
 export async function fetchCheckout(): Promise<CheckoutState | null> {
@@ -111,54 +111,76 @@ export function useCheckout(): SWRResponse<CheckoutState | null> & {
   return Object.assign(swr, { saveAddress, chooseMethod, chooseRestricted });
 }
 
-export type PlaceResult =
-  | { ok: true; orderId: string }
+export type PrepareClientResult =
+  | { ok: true; result: PrepareResult }
   /** `UNAVAILABLE`: payment is not configured (503); `FAILED`: the server could not be reached or answered oddly. */
   | { ok: false; code: PlaceOrderFailure | 'UNAVAILABLE' | 'FAILED' };
 
-export type DemoAuthorizeResult = 'authorized' | 'declined' | 'failed';
+export type CompleteClientResult = { ok: true; orderId: string } | { ok: false; code: string };
+
+export type DemoAuthorizeResult = { status: 'authorized'; orderId: string } | { status: 'declined' | 'failed' };
 
 /**
- * The two server calls of the payment step. `placeOrder` sends the amount the buyer saw and the cart version the
- * page showed (the idempotency key is built from the session's cart id and that version on the server). On success
- * the cart caches are cleared: the cart is now an order.
+ * The server calls of the payment step (D-034). `prepare` is the gate before Checkout: it sends the amount the buyer saw
+ * (compared with the cart, never charged) and answers what to mount. `complete` is the completion callback: Checkout
+ * created the order, the server finalizes it. On success the cart caches are cleared: the cart is now an order.
  */
 export function usePaymentActions() {
   const { mutate } = useSWRConfig();
+  const clearCaches = useCallback(() => Promise.all([KEY_CART, KEY_CART_DETAILS, KEY_CHECKOUT].map((key) => mutate(key, null, { revalidate: false }))), [mutate]);
 
-  const placeOrder = useCallback(
-    async (cart: { version: number; total: Money }): Promise<PlaceResult> => {
+  const prepare = useCallback(
+    async (cart: { total: Money }): Promise<PrepareClientResult> => {
       let response: Response;
       try {
-        response = await fetch(API_CHECKOUT_PLACE, {
+        response = await fetch(API_CHECKOUT_PREPARE, {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ expectedTotal: { centAmount: cart.total.centAmount, currencyCode: cart.total.currencyCode }, cartVersion: cart.version }),
+          body: JSON.stringify({ expectedTotal: { centAmount: cart.total.centAmount, currencyCode: cart.total.currencyCode } }),
         });
       } catch {
         return { ok: false, code: 'FAILED' };
       }
-      const data = (await response.json().catch(() => null)) as { orderId?: string; code?: PlaceOrderFailure } | null;
-      if (response.ok && typeof data?.orderId === 'string') {
-        await Promise.all([KEY_CART, KEY_CART_DETAILS, KEY_CHECKOUT].map((key) => mutate(key, null, { revalidate: false })));
-        return { ok: true, orderId: data.orderId };
+      const data = (await response.json().catch(() => null)) as (Partial<PrepareResult> & { code?: PlaceOrderFailure }) | null;
+      if (response.ok && (data?.kind === 'checkout' || data?.kind === 'demo' || data?.kind === 'order')) {
+        if (data.kind === 'order') await clearCaches();
+        return { ok: true, result: data as PrepareResult };
       }
-      if (response.status === 503) return { ok: false, code: 'UNAVAILABLE' };
+      if (response.status === 503 && !data?.code) return { ok: false, code: 'UNAVAILABLE' };
       return { ok: false, code: data?.code ?? 'FAILED' };
     },
-    [mutate],
+    [clearCaches],
   );
 
-  /** Demo provider only (the endpoint is a 404 elsewhere). */
+  const complete = useCallback(
+    async (orderId: string): Promise<CompleteClientResult> => {
+      let response: Response;
+      try {
+        response = await fetch(API_CHECKOUT_COMPLETE, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ orderId }) });
+      } catch {
+        return { ok: false, code: 'FAILED' };
+      }
+      const data = (await response.json().catch(() => null)) as { orderId?: string; code?: string } | null;
+      if (response.ok && typeof data?.orderId === 'string') {
+        await clearCaches();
+        return { ok: true, orderId: data.orderId };
+      }
+      return { ok: false, code: data?.code ?? 'FAILED' };
+    },
+    [clearCaches],
+  );
+
+  /** Demo provider only (the endpoint is a 404 elsewhere): the stand-in for Checkout authorizing and creating the order. */
   const demoAuthorize = useCallback(async (decline: boolean): Promise<DemoAuthorizeResult> => {
     try {
       const response = await fetch(API_CHECKOUT_DEMO_AUTHORIZE, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ decline }) });
-      const data = (await response.json().catch(() => null)) as { status?: string } | null;
-      return response.ok && (data?.status === 'authorized' || data?.status === 'declined') ? data.status : 'failed';
+      const data = (await response.json().catch(() => null)) as { status?: string; orderId?: string } | null;
+      if (response.ok && data?.status === 'authorized' && typeof data.orderId === 'string') return { status: 'authorized', orderId: data.orderId };
+      return { status: response.ok && data?.status === 'declined' ? 'declined' : 'failed' };
     } catch {
-      return 'failed';
+      return { status: 'failed' };
     }
   }, []);
 
-  return { placeOrder, demoAuthorize };
+  return { prepare, complete, demoAuthorize };
 }

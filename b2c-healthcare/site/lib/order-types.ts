@@ -10,8 +10,11 @@ export const ORDER_STEPS = ['received', 'pharmacist-review', 'packed-shipped', '
 /** commercetools `ShipmentState`; null when never set. */
 export type ShipmentState = 'Pending' | 'Ready' | 'Shipped' | 'Delivered' | 'Partial' | 'Backorder' | 'Delayed';
 
-/** Refund as the buyer sees it, from the Payment's `Refund` transactions. Only cancelled orders can have one. */
-export type RefundStatus = 'none' | 'requested' | 'refunded';
+/**
+ * What happened to the card money of a cancelled order, from the card Payment's transactions: `released` when only an
+ * authorization existed (nothing was captured, so nothing is refunded), `requested`/`refunded` after a capture.
+ */
+export type RefundStatus = 'none' | 'released' | 'requested' | 'refunded';
 
 /** The instruments an order line can be settled with (workstream U). */
 export type Instrument = 'allowance' | 'restricted-health-account' | 'card';

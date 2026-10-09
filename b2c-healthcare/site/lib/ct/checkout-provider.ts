@@ -1,20 +1,17 @@
 import 'server-only';
-import type { Payment } from '@commercetools/platform-sdk';
-import { apiRoot } from '@/lib/ct/client';
 import { listStored, removeStored, setDefaultStored } from '@/lib/ct/stored-methods';
 import { log } from '@/lib/log';
-import { PaymentUnavailableError, type AuthorizationState, type PaymentCartRef, type PaymentProvider } from '@/lib/checkout/payment-provider';
+import { PaymentUnavailableError, type PaymentCartRef, type PaymentProvider } from '@/lib/checkout/payment-provider';
 
 /**
- * The real adapter: commercetools Checkout in payment-only mode (D-026; Stripe sandbox connector, OA-04).
+ * The real adapter: the full commercetools Checkout (`checkoutFlow`, D-034; Stripe sandbox connector, OA-04).
  *
  *  - session: `POST https://session.{region}.commercetools.com/{projectKey}/sessions` (scope `manage_sessions`)
- *    with the cart and the Checkout Application key; the browser SDK (`paymentFlow`) takes the session id;
- *  - authorization: read from the platform. Checkout creates a Payment on the cart; an `Authorization` transaction
- *    in state `Success` means authorized, `Failure` means declined. The browser's word is never trusted;
- *  - release: the Checkout Payment Intents API `cancelPayment`
+ *    with the cart and the Checkout Application key; the browser SDK (`checkoutFlow`) takes the session id. Checkout
+ *    authorizes the payment AND creates the order;
+ *  - release / refund: the Checkout Payment Intents API (`cancelPayment`, `refundPayment`)
  *    (`POST https://checkout.{region}.commercetools.com/{projectKey}/payment-intents/{paymentId}`, scope
- *    `manage_checkout_payment_intents`).
+ *    `manage_checkout_payment_intents`). Capture is not modelled here: it is Checkout's lifecycle (D-035).
  *
  * Needs `CTP_CHECKOUT_APP_KEY` (the Application's key; not a secret). Credentials come from the same API client as
  * the rest of the BFF and are never logged. Without the Application key every call throws `PaymentUnavailableError`.
@@ -55,18 +52,6 @@ interface TokenCache {
   expiresAt: number;
 }
 
-/** Latest payment on the cart that carries an Authorization transaction decides the state. */
-export function authorizationOf(payments: Pick<Payment, 'id' | 'createdAt' | 'transactions' | 'amountPlanned'>[]): AuthorizationState {
-  const sorted = [...payments].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  for (const payment of sorted) {
-    const auths = payment.transactions.filter((t) => t.type === 'Authorization');
-    const success = auths.find((t) => t.state === 'Success');
-    if (success) return { status: 'authorized', paymentId: payment.id, centAmount: success.amount.centAmount, currencyCode: success.amount.currencyCode };
-    if (auths.some((t) => t.state === 'Failure')) return { status: 'declined', paymentId: payment.id };
-  }
-  return { status: 'none' };
-}
-
 export function createCheckoutProvider(config: CheckoutProviderConfig = readCheckoutProviderConfig(), fetchImpl: Fetch = fetch): PaymentProvider {
   const region = regionFromApiUrl(config.apiUrl);
   const tokens = new Map<string, TokenCache>();
@@ -92,6 +77,19 @@ export function createCheckoutProvider(config: CheckoutProviderConfig = readChec
     return body.access_token;
   }
 
+  async function intent(paymentId: string, action: Record<string, unknown>, what: string): Promise<void> {
+    const bearer = await token('manage_checkout_payment_intents');
+    const response = await fetchImpl(`https://checkout.${region}.commercetools.com/${config.projectKey}/payment-intents/${encodeURIComponent(paymentId)}`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${bearer}` },
+      body: JSON.stringify({ actions: [action] }),
+    });
+    if (!response.ok) {
+      log.error('checkout', `${what} request failed`, { status: response.status });
+      throw new PaymentUnavailableError();
+    }
+  }
+
   return {
     kind: 'psp',
 
@@ -111,23 +109,12 @@ export function createCheckoutProvider(config: CheckoutProviderConfig = readChec
       return { sessionId: body.id, projectKey: config.projectKey, region };
     },
 
-    async getAuthorization(cartId: string): Promise<AuthorizationState> {
-      const { body } = await apiRoot.carts().withId({ ID: cartId }).get({ queryArgs: { expand: ['paymentInfo.payments[*]'] } }).execute();
-      const payments = (body.paymentInfo?.payments ?? []).map((ref) => ref.obj).filter((p): p is Payment => p !== undefined);
-      return authorizationOf(payments);
+    async release(paymentId: string): Promise<void> {
+      await intent(paymentId, { action: 'cancelPayment' }, 'release');
     },
 
-    async release(paymentId: string): Promise<void> {
-      const bearer = await token('manage_checkout_payment_intents');
-      const response = await fetchImpl(`https://checkout.${region}.commercetools.com/${config.projectKey}/payment-intents/${encodeURIComponent(paymentId)}`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', authorization: `Bearer ${bearer}` },
-        body: JSON.stringify({ actions: [{ action: 'cancelPayment' }] }),
-      });
-      if (!response.ok) {
-        log.error('checkout', 'release request failed', { status: response.status });
-        throw new PaymentUnavailableError();
-      }
+    async refund(paymentId: string, amount: { centAmount: number; currencyCode: string }): Promise<void> {
+      await intent(paymentId, { action: 'refundPayment', amount: { centAmount: amount.centAmount, currencyCode: amount.currencyCode } }, 'refund');
     },
 
     // Saved methods live on the PaymentMethod API (Checkout Stored Payment Methods, OA-04), see lib/ct/stored-methods.ts.

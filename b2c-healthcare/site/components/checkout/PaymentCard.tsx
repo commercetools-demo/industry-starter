@@ -1,11 +1,9 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Checkbox } from '@/components/ui/Inputs';
 import { Link } from '@/i18n/routing';
-import { API_CHECKOUT_SESSION } from '@/lib/api-paths';
 import type { PaymentMode, PaymentSessionInfo } from '@/lib/types';
 
 /** What the payment widget reports; the page decides what each means for the order. */
@@ -15,11 +13,12 @@ export interface PaymentCardProps {
   mode: PaymentMode;
   /** Address and delivery method are on the cart; payment cannot start before. */
   ready: boolean;
-  /** Changes whenever the cart total or delivery changes: the payment session is created again for the new amount. */
-  cartKey: string;
-  /** Inline message from the page (declined payment, release failed, ...). */
+  /** The Checkout session the gate (`/api/checkout/prepare`) created for this cart; null until the buyer continues to payment. */
+  session: PaymentSessionInfo | null;
+  /** Inline message from the page (declined payment, ...). */
   message?: string | null;
-  onEvent: (event: PaymentEvent) => void;
+  /** `completed` carries the id of the order Checkout created. */
+  onEvent: (event: PaymentEvent, orderId?: string) => void;
   /** Demo provider only. */
   simulateDecline: boolean;
   onSimulateDeclineChange: (value: boolean) => void;
@@ -27,53 +26,51 @@ export interface PaymentCardProps {
   noCard?: boolean;
 }
 
-type Phase = 'idle' | 'loading' | 'ready' | 'failed' | 'unavailable';
+type Phase = 'idle' | 'loading' | 'ready' | 'failed';
 
 /**
- * Payment. Production path: the commercetools Checkout browser SDK (`paymentFlow`, payment-only mode) renders the
- * payment component inside this card at `<div data-ctc />`; card data is entered in the SDK's own frame and never
- * touches storefront code (there is no card input in this file, and a test keeps it that way). The Place order
- * button in the summary is the SDK's custom payment button (`data-ctc-selector="paymentButton"`).
+ * Payment. Production path: once the pre-checkout gate has passed, the commercetools Checkout browser SDK
+ * (`checkoutFlow`, the full flow) renders inside this card at `<div data-ctc />`; it authorizes the card and creates the
+ * order. Card data is entered in the SDK's own frame and never touches storefront code (there is no card input in this
+ * file, and a test keeps it that way). Its `checkout_completed` message carries the order id.
  *
  * Development path (`MALVA_FIXTURES=1` only): a visible "DEMO payment (no PSP configured)" banner and one checkbox to
  * simulate a decline; no card fields, nothing prefilled.
  */
-export function PaymentCard({ mode, ready, cartKey, message, onEvent, simulateDecline, onSimulateDeclineChange, noCard = false }: PaymentCardProps) {
+export function PaymentCard({ mode, ready, session, message, onEvent, simulateDecline, onSimulateDeclineChange, noCard = false }: PaymentCardProps) {
   const t = useTranslations('checkout.payment');
   const locale = useLocale();
-  const [attempt, setAttempt] = useState(0);
-  // The outcome belongs to the run that produced it (cart, locale, retry); a newer run starts as `loading`.
-  const runKey = `${cartKey}|${locale}|${attempt}`;
-  const [outcome, setOutcome] = useState<{ key: string; phase: Phase } | null>(null);
-  const phase: Phase = mode !== 'psp' || !ready || noCard ? 'idle' : outcome?.key === runKey ? outcome.phase : 'loading';
   const onEventRef = useRef(onEvent);
   useEffect(() => {
     onEventRef.current = onEvent;
   }, [onEvent]);
+  const sessionId = session?.sessionId;
+  const projectKey = session?.projectKey;
+  const region = session?.region;
+  // The outcome belongs to the run that produced it (session, locale); a newer run starts as `loading`.
+  const runKey = `${sessionId ?? ''}|${locale}`;
+  const [outcome, setOutcome] = useState<{ key: string; phase: Phase } | null>(null);
+  const phase: Phase = mode !== 'psp' || !ready || noCard || !sessionId ? 'idle' : outcome?.key === runKey ? outcome.phase : 'loading';
 
   useEffect(() => {
-    if (mode !== 'psp' || !ready || noCard) return;
+    if (mode !== 'psp' || !ready || noCard || !sessionId || !projectKey || !region) return;
     let cancelled = false;
     const finish = (next: Phase) => {
       if (!cancelled) setOutcome({ key: runKey, phase: next });
     };
     (async () => {
       try {
-        const response = await fetch(API_CHECKOUT_SESSION, { method: 'POST' });
-        if (cancelled) return;
-        if (response.status === 503) return finish('unavailable');
-        if (!response.ok) return finish('failed');
-        const session = (await response.json()) as PaymentSessionInfo;
         const sdk = await import('@commercetools/checkout-browser-sdk');
         if (cancelled) return;
-        sdk.paymentFlow({
-          projectKey: session.projectKey,
-          region: session.region,
-          sessionId: session.sessionId,
+        // The browser's message only carries the order id; the server reads everything else from the platform.
+        sdk.checkoutFlow({
+          projectKey,
+          region,
+          sessionId,
           locale,
           onInfo: (m) => {
             if (m.code === 'payment_started') onEventRef.current('started');
-            else if (m.code === 'payment_completed' || m.code === 'checkout_completed') onEventRef.current('completed');
+            else if (m.code === 'checkout_completed') onEventRef.current('completed', (m.payload as { order?: { id?: string } } | undefined)?.order?.id);
             else if (m.code === 'payment_cancelled') onEventRef.current('cancelled');
           },
           onError: (m) => {
@@ -89,7 +86,7 @@ export function PaymentCard({ mode, ready, cartKey, message, onEvent, simulateDe
     return () => {
       cancelled = true;
     };
-  }, [mode, ready, noCard, runKey, locale]);
+  }, [mode, ready, noCard, sessionId, projectKey, region, runKey, locale]);
 
   return (
     <Card as="section" aria-labelledby="checkout-payment-title" className="grid gap-4" data-checkout-card="payment" data-payment-mode={mode}>
@@ -122,17 +119,15 @@ export function PaymentCard({ mode, ready, cartKey, message, onEvent, simulateDe
               {t('loading')}
             </p>
           ) : null}
-          {phase === 'failed' || phase === 'unavailable' ? (
-            <div className="grid justify-items-start gap-3" role="alert">
-              <p className="text-sm font-medium text-danger-700">{phase === 'unavailable' ? t('unavailable') : t('loadFailed')}</p>
-              <Button variant="outline" size="sm" onClick={() => setAttempt((n) => n + 1)}>
-                {t('retry')}
-              </Button>
-            </div>
+          {phase === 'failed' ? (
+            <p className="text-sm font-medium text-danger-700" role="alert">
+              {t('loadFailed')}
+            </p>
           ) : null}
-          {/* Mount point of the Checkout payment component (inline, not the full-screen overlay). */}
-          <div data-ctc />
-          {/* Stored Payment Methods (workstream T): the widget lists the customer's saved cards first and offers "Save this card"
+          {phase === 'idle' ? <p className="text-sm text-neutral-600">{t('continueHint')}</p> : null}
+          {/* Mount point of the Checkout flow (inline, not the full-screen overlay); it exists only once the gate has passed. */}
+          {session ? <div data-ctc /> : null}
+          {/* Stored Payment Methods (workstream T): Checkout lists the customer's saved cards first and offers "Save this card"
               itself, because the cart carries the customer id. Nothing here touches a card. */}
           <p className="text-sm text-neutral-600" data-saved-hint>
             {t('savedHint')}{' '}

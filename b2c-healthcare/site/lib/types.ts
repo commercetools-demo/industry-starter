@@ -428,6 +428,18 @@ export type PlaceOrderFailure =
   | 'PLACEMENT_FAILED'
   | 'IN_PROGRESS';
 
+/**
+ * What the pre-checkout gate (`POST /api/checkout/prepare`) answers once the cart passed every check:
+ *  - `checkout`: mount the commercetools Checkout flow with this session (it authorizes the card and creates the order);
+ *  - `demo`: the dev-only demo provider stands in for Checkout;
+ *  - `order`: nothing is left for the card (allowance and restricted instrument cover it), so the storefront created
+ *    the order itself and it is already finalized.
+ */
+export type PrepareResult =
+  | { kind: 'checkout'; session: PaymentSessionInfo; cardDue: number }
+  | { kind: 'demo'; cardDue: number }
+  | ({ kind: 'order' } & PlacedOrder);
+
 export interface PlacedOrder {
   orderId: string;
   orderNumber: string;

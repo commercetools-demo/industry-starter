@@ -19,7 +19,7 @@ interface Held {
 
 export interface FakePaymentProvider extends PaymentProvider {
   readonly kind: 'demo';
-  /** Records an authorization (or a decline) for the cart at the amount it has now. */
+  /** Records the demo "Checkout" payment (or a decline) for the cart at the amount the card must pay. */
   authorize(cart: PaymentCartRef, options?: { decline?: boolean }): AuthorizationState;
   /** Test helper: a saved card for a customer (descriptor only: there is no card number anywhere in the fake). */
   addStoredMethod(customerId: string, card: { brand: string; last4: string; expMonth?: number; expYear?: number; isDefault?: boolean }): StoredMethodDescriptor;
@@ -27,11 +27,14 @@ export interface FakePaymentProvider extends PaymentProvider {
   reset(): void;
   /** Test helper: payment ids released so far. */
   readonly released: readonly string[];
+  /** Test helper: refunds requested so far. */
+  readonly refunded: readonly { paymentId: string; centAmount: number }[];
 }
 
 export function createFakePaymentProvider(): FakePaymentProvider {
   const held = new Map<string, Held>();
   const released: string[] = [];
+  const refunded: { paymentId: string; centAmount: number }[] = [];
   // On globalThis: in `next dev` the account pages and the route handlers are separate bundles, each with its own module copy.
   const g = globalThis as unknown as { __malvaFakeStoredMethods?: Map<string, (StoredMethodDescriptor & { customerId: string })[]> };
   const stored = (g.__malvaFakeStoredMethods ??= new Map<string, (StoredMethodDescriptor & { customerId: string })[]>());
@@ -48,11 +51,12 @@ export function createFakePaymentProvider(): FakePaymentProvider {
   return {
     kind: 'demo',
     released,
+    refunded,
     async createSession(cart) {
       return { sessionId: `demo-session-${cart.id}`, projectKey: 'demo', region: 'demo' };
     },
-    async getAuthorization(cartId) {
-      return stateOf(held.get(cartId));
+    async refund(paymentId, amount) {
+      refunded.push({ paymentId, centAmount: amount.centAmount });
     },
     async release(paymentId) {
       for (const h of held.values()) {
@@ -98,6 +102,7 @@ export function createFakePaymentProvider(): FakePaymentProvider {
       stored.clear();
       held.clear();
       released.length = 0;
+      refunded.length = 0;
     },
   };
 }

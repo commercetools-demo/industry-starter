@@ -843,6 +843,7 @@
       "demoNote": "This build has no payment service connected. No card is used and no money moves. It exists to check the page.",
       "demoDecline": "Simulate a declined payment",
       "loading": "Loading the payment form",
+      "continueHint": "Choose \"Continue to payment\" in the summary. We check your order first, then the secure payment form opens here.",
       "needAddress": "Save your delivery address to continue to payment.",
       "loadFailed": "The payment form could not be loaded. Please try again.",
       "unavailable": "Payment is not available right now. Your cart is kept; please try again later.",
@@ -861,6 +862,7 @@
       "free": "FREE",
       "total": "Total",
       "placeOrder": "Place order",
+      "continueToPayment": "Continue to payment",
       "placing": "Placing your order",
       "needAddress": "Save your delivery address to place your order.",
       "notDeliverable": "No delivery option is available for this address.",
@@ -869,14 +871,14 @@
       "coverUnresolved": "We could not confirm what your plan covers. Placing the order is unavailable until we can."
     },
     "place": {
-      "TOTALS_MOVED": "The total changed after your payment was authorized, so your order was not placed. Review the summary and pay the new amount.",
+      "TOTALS_MOVED": "The total changed, so payment was not started. Review the summary and continue.",
       "PAYMENT_REQUIRED": "Authorize your payment before placing the order.",
       "PAYMENT_DECLINED": "Your payment was declined. No order was placed and your cart is kept.",
       "LINES_UNAVAILABLE": "An item in your cart can no longer be filled. Go back to your cart to review it. No order was placed.",
       "ADDRESS_MISSING": "Save your delivery address before placing the order.",
       "NO_DELIVERY_METHOD": "No delivery option is available for this address. No order was placed.",
       "DISPENSE_REFUSED": "A prescription can no longer be filled, so the order was not placed. Your payment was released.",
-      "PLACEMENT_FAILED": "We could not place your order just now. Your payment was released and your cart is kept. Please try again.",
+      "PLACEMENT_FAILED": "We could not start your payment just now. Nothing was charged and your cart is kept. Please try again.",
       "IN_PROGRESS": "Your order is already being placed. Please wait a moment.",
       "EMPTY_CART": "Your cart is empty.",
       "generic": "We could not place your order. Your cart is kept. Please try again.",
@@ -927,7 +929,8 @@
       "Delayed": "Delayed"
     },
     "refund": {
-      "requested": "Refund requested. Your payment was released; it can take a few business days to show on your statement.",
+      "released": "Payment released. Your card was not charged; the hold on it is lifted and can take a few business days to disappear.",
+      "requested": "Refund requested. It can take a few business days to show on your statement.",
       "refunded": "Refunded"
     },
     "cancel": {
