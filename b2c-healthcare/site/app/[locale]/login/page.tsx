@@ -2,6 +2,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { SignInCard } from '@/components/account/SignInCard';
 import { redirect } from '@/i18n/routing';
 import { resolveLoginDestination } from '@/lib/login-destination';
+import { DEMO_PATIENTS, demoLoginEnabled } from '@/lib/demo-login';
 import { getSession } from '@/lib/session';
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -15,5 +16,6 @@ export default async function LoginPage({ params, searchParams }: { params: Prom
   const session = await getSession();
   if (session.customerId) redirect({ href: destination.path, locale: destination.locale ?? locale });
   const mode = query.mode === 'register' ? 'up' : 'in';
-  return <SignInCard next={destination.path} reason={destination.reason} initialMode={mode} />;
+  const demoPatients = demoLoginEnabled() ? DEMO_PATIENTS.map(({ slug, label }) => ({ slug, label })) : [];
+  return <SignInCard next={destination.path} reason={destination.reason} initialMode={mode} demoPatients={demoPatients} />;
 }

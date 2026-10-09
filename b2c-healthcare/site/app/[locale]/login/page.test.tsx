@@ -24,12 +24,12 @@ beforeEach(() => {
 
 describe('account-sign-in: sign-in page', () => {
   it('anonymous visitor: renders the card with the sanitized destination and its reason', async () => {
-    expect(await render({ next: '/en-US/cart' })).toEqual({ next: '/cart', reason: 'cart', initialMode: 'in' });
+    expect(await render({ next: '/en-US/cart' })).toEqual({ next: '/cart', reason: 'cart', initialMode: 'in', demoPatients: [] });
     expect(redirect).not.toHaveBeenCalled();
   });
 
   it('no next: destination /account, no reason', async () => {
-    expect(await render()).toEqual({ next: '/account', reason: null, initialMode: 'in' });
+    expect(await render()).toEqual({ next: '/account', reason: null, initialMode: 'in', demoPatients: [] });
   });
 
   it('?mode=register opens the card in create mode', async () => {

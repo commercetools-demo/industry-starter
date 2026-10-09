@@ -20,6 +20,8 @@ export interface SignInCardProps {
   next?: string;
   reason?: AuthReason | null;
   initialMode?: SignInMode;
+  /** Demo shops only (server decides): one-click sign-in buttons for the synthetic patients, shown under the card. */
+  demoPatients?: { slug: string; label: string }[];
 }
 
 const FIELD_ORDER: readonly Field[] = ['name', 'email', 'password'];
@@ -31,12 +33,12 @@ const FIELD_ID_PREFIX = 'sign-in-';
  * focus moves to the first problem, the submit button is `busy` while the request runs. The same
  * validation functions run here and on the server.
  */
-export function SignInCard({ next = '/account', reason = null, initialMode = 'in' }: SignInCardProps) {
+export function SignInCard({ next = '/account', reason = null, initialMode = 'in', demoPatients = [] }: SignInCardProps) {
   const t = useTranslations('auth');
   const errors = useTranslations('errors');
   const router = useRouter();
   const toast = useToast();
-  const { signIn, register } = useAuth();
+  const { signIn, signInDemo, register } = useAuth();
 
   const [mode, setMode] = useState<SignInMode>(initialMode);
   const [values, setValues] = useState({ name: '', email: '', password: '' });
@@ -102,6 +104,23 @@ export function SignInCard({ next = '/account', reason = null, initialMode = 'in
     setFormError(
       result.status === 409 ? t('refused') : result.status === 429 ? t('tooManyAttempts') : result.status === 0 ? errors('network') : errors('generic'),
     );
+    requestFocus('form');
+  }
+
+  async function onDemo(slug: string) {
+    if (busy) return;
+    setProblems({});
+    setFormError('');
+    setBusy(true);
+    const result = await signInDemo(slug);
+    setBusy(false);
+    if (result.ok) {
+      toast.show({ message: t('signedIn') });
+      router.replace(next);
+      router.refresh();
+      return;
+    }
+    setFormError(result.status === 0 ? errors('network') : result.status === 429 ? t('tooManyAttempts') : t('failed'));
     requestFocus('form');
   }
 
@@ -172,6 +191,16 @@ export function SignInCard({ next = '/account', reason = null, initialMode = 'in
           </p>
         </form>
       </Card>
+      {demoPatients.length > 0 ? (
+        <div className="mx-auto -mt-8 mb-14 flex max-w-110 flex-wrap items-center justify-center gap-2" data-demo-patients>
+          <span className="text-xs text-neutral-600">{t('demo.label')}</span>
+          {demoPatients.map((p) => (
+            <Button key={p.slug} type="button" variant="outline" size="sm" disabled={busy} onClick={() => void onDemo(p.slug)}>
+              {p.label}
+            </Button>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

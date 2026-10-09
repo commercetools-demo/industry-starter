@@ -68,6 +68,7 @@
   },
   "auth": {
     "signInTitle": "Sign in to Malva",
+    "demo": { "label": "Demo patients:" },
     "registerTitle": "Create your account",
     "reason": {
       "cart": "Sign in to view your cart.",

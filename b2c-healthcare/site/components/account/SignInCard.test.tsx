@@ -232,3 +232,22 @@ describe('account-registration-request: Create account', () => {
     expect(screen.getByLabelText('Email')).toHaveFocus();
   });
 });
+
+describe('demo patients (demo shops only)', () => {
+  it('shows no buttons unless the server passes demo patients', () => {
+    const { container } = renderWithProviders(<SignInCard />);
+    expect(container.querySelector('[data-demo-patients]')).toBeNull();
+  });
+  it('shows small buttons under the card and signs the patient in with the slug only', async () => {
+    const user = userEvent.setup();
+    fetchMock.mockResolvedValue(json(sam));
+    const { container } = renderWithProviders(<SignInCard demoPatients={[{ slug: 'sam-rivera', label: 'Sam Rivera' }, { slug: 'alex-chen', label: 'Alex Chen' }]} />);
+    const row = container.querySelector('[data-demo-patients]') as HTMLElement;
+    expect(row).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Sam Rivera' }));
+    await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/account'));
+    const [path, init] = fetchMock.mock.calls[0];
+    expect(path).toBe('/api/auth/demo-login');
+    expect(JSON.parse(init.body)).toEqual({ slug: 'sam-rivera' });
+  });
+});

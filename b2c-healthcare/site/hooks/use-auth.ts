@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { useSWRConfig } from 'swr';
 import { useRouter } from '@/i18n/routing';
-import { API_AUTH_LOGIN, API_AUTH_LOGOUT, API_AUTH_REGISTER } from '@/lib/api-paths';
+import { API_AUTH_DEMO_LOGIN, API_AUTH_LOGIN, API_AUTH_LOGOUT, API_AUTH_REGISTER } from '@/lib/api-paths';
 import { KEY_ACCOUNT, KEY_CART } from '@/lib/cache-keys';
 import type { AccountUser } from '@/lib/types';
 import { useClearPatientState } from './sign-out';
@@ -37,6 +37,8 @@ async function post(path: string, body: unknown): Promise<AuthResult> {
 export interface Auth {
   signIn: (email: string, password: string) => Promise<AuthResult>;
   register: (name: string, email: string, password: string) => Promise<AuthResult>;
+  /** Demo shops: signs in a synthetic patient by slug (the password stays on the server). */
+  signInDemo: (slug: string) => Promise<AuthResult>;
   /** Ends the session, clears the patient-scoped client state and goes to the sign-in page. */
   signOut: () => Promise<boolean>;
 }
@@ -62,6 +64,7 @@ export function useAuth(): Auth {
   );
 
   const signIn = useCallback((email: string, password: string) => post(API_AUTH_LOGIN, { email, password }).then(adopt), [adopt]);
+  const signInDemo = useCallback((slug: string) => post(API_AUTH_DEMO_LOGIN, { slug }).then(adopt), [adopt]);
   const register = useCallback(
     (name: string, email: string, password: string) => post(API_AUTH_REGISTER, { name, email, password }).then(adopt),
     [adopt],
@@ -79,5 +82,5 @@ export function useAuth(): Auth {
     return true;
   }, [clear, router]);
 
-  return { signIn, register, signOut };
+  return { signIn, signInDemo, register, signOut };
 }

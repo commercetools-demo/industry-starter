@@ -40,6 +40,7 @@ secret ones "Contains secret values" (Netlify then hides them and, with the secr
 | `SESSION_SECRET` | yes | **yes** | 32+ random characters (`openssl rand -base64 48`) |
 | `CTP_CHECKOUT_APP_KEY` | yes | no | key of the commercetools Checkout Application (OA-04); without it no order can be placed |
 | `ORDER_FINALIZE_SECRET` | optional | **yes** | 16+ characters; guards `POST /api/internal/order-created` (finalizes an order Checkout created when the browser never called back); without it the order page finalizes lazily |
+| `DEMO_LOGIN_PASSWORD` | optional | **yes** | demo shops only: 8+ characters, the seeded patients' password (`SEED_PATIENT_PASSWORD`); shows small one-click sign-in buttons for Sam, Alex and Jordan under the login card via `POST /api/auth/demo-login`. Leave unset on a real shop |
 | `SITE_URL` | yes | no | public origin (canonical URLs, sitemap, robots), e.g. the production URL |
 | `AUTO_REFILL_ENABLED` | optional | no | `true` shows the auto-refill claims; only where the recurring-order scopes and the daily check exist |
 | `AUTO_REFILL_RUN_SECRET` | yes | **yes** | 16+ characters; the same value for the app and the function |
