@@ -61,7 +61,7 @@ describe('storefront-project-bootstrap: Local quality gate', () => {
     expect(check).toContain('node scripts/check-token-parity.mjs');
   });
 
-  it('verify:build is check plus build', () => {
-    expect(pkg.scripts['verify:build']).toMatch(/^npm run check && npm run build/);
+  it('verify:build is check, the release-only prune step (Y), then build', () => {
+    expect(pkg.scripts['verify:build']).toMatch(/^npm run check && (node scripts\/prune-dev-routes\.mjs && )?npm run build/);
   });
 });

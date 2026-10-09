@@ -23,7 +23,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check": "npm run typecheck && npm run lint && node scripts/check-versions.mjs && node scripts/check-token-parity.mjs && node scripts/gen-lint-allowlist.mjs --check && node scripts/check-tracked-files.mjs && npm run test",
-    "verify:build": "npm run check && npm run build && node scripts/check-bundle.mjs && node scripts/check-no-health-in-release.mjs"
+    "verify:build": "npm run check && node scripts/prune-dev-routes.mjs && npm run build && node scripts/check-bundle.mjs && node scripts/check-no-health-in-release.mjs"
   },
   "dependencies": {
     "@commercetools/checkout-browser-sdk": "^1.7.5",
@@ -52,6 +52,7 @@
     "eslint-config-next": "^16",
     "jsdom": "^29.1.1",
     "oxlint": "^1.87.0",
+    "smol-toml": "^1.9.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5",
