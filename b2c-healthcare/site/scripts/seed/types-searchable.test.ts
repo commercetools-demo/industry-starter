@@ -52,3 +52,13 @@ describe('product type attributes the platform accepts', () => {
     expect(bad).toEqual([]);
   });
 });
+
+describe('custom types use resource type ids the platform knows', () => {
+  it('every resourceTypeIds value is in the platform enum', async () => {
+    const { CUSTOM_TYPES } = await import('./data/types');
+    const { LIST_LINE_TYPE } = await import('./data/recurrence');
+    const valid = new Set(['address', 'asset', 'cart-discount', 'category', 'channel', 'customer', 'customer-group', 'custom-line-item', 'discount-code', 'inventory-entry', 'line-item', 'order', 'order-edit', 'order-delivery', 'order-parcel', 'order-return-item', 'payment', 'payment-interface-interaction', 'payment-method', 'payment-method-info', 'product-price', 'product-selection', 'product-tailoring', 'quote', 'reservation', 'review', 'recurring-order', 'shipping', 'shipping-method', 'shopping-list', 'shopping-list-text-line-item', 'standalone-price', 'store', 'transaction']);
+    const bad = [...CUSTOM_TYPES, LIST_LINE_TYPE].flatMap((t) => t.resourceTypeIds.filter((id: string) => !valid.has(id)).map((id: string) => `${t.key}:${id}`));
+    expect(bad).toEqual([]);
+  });
+});

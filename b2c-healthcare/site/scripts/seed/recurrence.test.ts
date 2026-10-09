@@ -16,7 +16,8 @@ describe('subscriptions-and-recurring-orders: seeded Recurrence Policies', () =>
 
   it('the list line type holds the prescription reference and the saved price, no sig', () => {
     expect(LIST_LINE_TYPE.key).toBe('mlv-list-line');
-    expect(LIST_LINE_TYPE.resourceTypeIds).toEqual(['shopping-list-line-item']);
+    // the platform's ResourceTypeId has no 'shopping-list-line-item': a shopping-list line is customised with 'line-item' (API 400 otherwise)
+    expect(LIST_LINE_TYPE.resourceTypeIds).toEqual(['line-item']);
     expect(LIST_LINE_TYPE.fieldDefinitions.map((f) => f.name)).toEqual(['rxNumber', 'rxLineRef', 'savedUnitPrice']);
   });
 

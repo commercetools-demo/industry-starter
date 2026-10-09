@@ -18,7 +18,7 @@ export const RECURRENCE_POLICIES = [
 export const LIST_LINE_TYPE = {
   key: `${PREFIX}list-line`,
   name: L('Saved list line'),
-  resourceTypeIds: ['shopping-list-line-item'],
+  resourceTypeIds: ['line-item'],
   fieldDefinitions: [
     { name: 'rxNumber', label: L('Prescription number'), required: false, type: { name: 'String' } },
     { name: 'rxLineRef', label: L('Prescription line reference'), required: false, type: { name: 'String' } },

@@ -8,7 +8,7 @@ Save a card in the Stripe sandbox widget during payment ("Save this card"), see 
 
 ## Live checks of the build
 
-1. **Seed:** `npm run seed` creates type `mlv-list-line` (resource `shopping-list-line-item`) and RecurrencePolicies `mlv-monthly` (Months 1) and `mlv-quarterly` (Months 3). `npm run seed:verify` includes both checks. Existing projects: types that already exist are compared, not changed.
+1. **Seed:** `npm run seed` creates type `mlv-list-line` (resource `line-item`) and RecurrencePolicies `mlv-monthly` (Months 1) and `mlv-quarterly` (Months 3). `npm run seed:verify` includes both checks. Existing projects: types that already exist are compared, not changed.
 2. **API client scopes:** add `manage_recurring_orders`, `view_recurrence_policies`, `manage_payment_methods` (and `manage_shopping_lists`, already listed) to `CTP_SCOPES`. Confirm the Recurring Orders and Carts calls are not refused for lack of a scope (`manage_orders` also covers the recurring Cart).
 3. **Shopping Lists:** save RX-77102 lines from `/prescriptions`; MC MCP `read_shopping_lists`: key `mlv-list-my-medicines-<customerId>`, `customer` set, `deleteDaysAfterLastModification` 360, line custom fields `rxNumber`, `rxLineRef`, `savedUnitPrice`. A foreign list id gives the same 404 as an unknown one. "Add all" with both lines: both in the cart; edit `malva-rx` for one line (refillsLeft 0 via MC MCP) -> that line is named "no refills left" and the other stays in the cart.
 4. **Price delta:** change the catalog price of a saved medicine and reopen the list: "Up/Down $x since you saved it".
