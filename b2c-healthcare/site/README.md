@@ -126,3 +126,14 @@ Quantity ceilings and prescription limits are enforced in the storefront BFF onl
 - Stripe sandbox test cards (use only in the sandbox, never type them in a build without a sandbox connector): `4242 4242 4242 4242` succeeds, `4000 0000 0000 0002` is declined, `4000 0025 0000 3155` asks for 3D Secure; any future expiry, any CVC. They are typed into the Checkout widget, never into storefront code.
 - Needs OA-04 (a Checkout Application and a Stripe sandbox connector). Until then, the real adapter reports "Payment is not available right now" and no order can be placed outside fixture mode.
 - Browser check without commercetools: `MALVA_FIXTURES=1`, `SESSION_SECRET=... npx tsx scripts/dev-session.ts` for a cookie, add lines from `/prescriptions`, open `/checkout`; `SAME_DAY_NOW_OVERRIDE=2026-10-08T09:00:00-04:00` shows both sides of the cut-off. Development only.
+
+## Funding model is a demo
+
+Payer cost-share, the monthly benefit allowance and the health-account card are a **demo**, not a real payer or card-network integration.
+
+- Cover comes from a mock `FundingResolver` (`lib/funding/resolver.ts`) with fixed percentages per scheme and a per-order cap. It never falls back to the list price: if the resolver fails the cart says "Cover unresolved" and Checkout is disabled. `RESOLVER_FORCE_FAIL=1` (development only, ignored in production) shows that state.
+- Tender order is fixed: allowance, then the restricted health-account card (eligible items only, opt-in), then the card provider for the remainder. Allowance and restricted tender are separate commercetools Payments with methods `allowance` and `restricted-health-account`.
+- The allowance balance is a Custom Object per patient and month. `npm run allowances:reload` (idempotent, `--dry-run`, `--at`) grants the monthly cycle; `netlify/functions/reload-allowances-scheduled.ts` calls the guarded `reload-allowances` function with the `x-malva-reload-secret` header (`RELOAD_ALLOWANCES_SECRET`).
+- Controlled products are shown but unavailable until the patient has a valid credential for that class.
+- Seed additions are in `scripts/seed/data/allowances.ts` and `credentials.ts`; re-seed after pulling (custom types gained fields).
+- Browser check without commercetools: `MALVA_FIXTURES=1` as above; Sam has an allowance.

@@ -39,3 +39,10 @@ Read through the `spec-b2c-health` Merchant Center MCP on 2026-10-08. Workstream
 4. **Shipping rates in cents are 100× too high** (50000 on a $ project); never reuse them.
 5. No custom Types exist, so the line-item / customer types (RX reference, patient reference) are created by E.
 6. The MCP exposes create/update for almost every resource type; **API clients cannot be created through it**, hence OA-01/02 for the owner.
+
+## Funding Payments (workstream U)
+Tender is modelled as several commercetools Payments on one cart/order:
+- `paymentMethodInfo.method = "allowance"`: `amountPlanned` is the allowance applied; a `Charge` transaction is added when the order is placed and a `Refund` on cancel (the balance is restored once).
+- `paymentMethodInfo.method = "restricted-health-account"`: `amountPlanned` is the eligible subtotal paid by the health-account card; `Charge` on placement, `Refund` on cancel. Only eligible lines may be covered.
+- The remainder is the card provider's Payment (Checkout payment-only mode), created for the remainder only.
+- Cover on lines uses an external line price (`setLineItemPrice`); omitting the external price reverts to the platform price. Needs `manage_payments` and `manage_orders`.

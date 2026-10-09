@@ -26,7 +26,7 @@ Order meta: `custom.mlv-order-meta` records `allowanceApplied` and `restrictedAp
 - [x] U-11 `lib/ct/credentials.ts` `checkCredential(patientRef, controlClass, at)` returning `OK | NONE | WRONG_SCOPE | EXPIRED | PENDING`; tests for all six scenarios [SKILL: commercetools-commerce-patterns] [SPEC: credentialed-purchase-scope]
 - [x] U-12 Enforce at add (rx-lines route), cart load and order placement; copy credential id + expiry to the line; UI states (shown but unavailable with requirement); tests incl. expired between cart and order [SKILL: commercetools-commerce-patterns] [SPEC: credentialed-purchase-scope]
 - [x] U-13 Seed additions (cycle objects, credentials, `hsaEligible`/`controlClass` demo products, funding schemes) verified by `seed:verify` [SKILL: commercetools-catalog-migration] [SPEC: benefit-allowance-drawdown]
-- [ ] U-14 Update README "Funding model is a demo" and PROJECT-FINDINGS with the Payment shape used (methods `allowance`, `restricted-health-account`) [SPEC: payer-and-patient-cost-share]
+- [x] U-14 Update README "Funding model is a demo" and PROJECT-FINDINGS with the Payment shape used (methods `allowance`, `restricted-health-account`) [SPEC: payer-and-patient-cost-share]
 
 ## Scenarios
 Every scenario is a unit test (or a scripted check) named after it.
