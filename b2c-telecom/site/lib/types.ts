@@ -153,7 +153,7 @@ export interface Category {
   parentId?: string;
   orderHint?: string;
   image?: string;
-  /** Alternative text of `image` (the asset name; names the photographer). */
+  /** Alternative text of `image` (the asset name). */
   imageAlt?: string;
   children: Category[];
 }

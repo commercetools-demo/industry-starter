@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseEnv } from 'node:util';
 
-const SECRET_NAMES = ['CLIENT_SECRET', 'SESSION_SECRET', 'CTP_SEED', 'PEXELS_API_KEY'];
+const SECRET_NAMES = ['CLIENT_SECRET', 'SESSION_SECRET', 'CTP_SEED'];
 const VALUE_NAMES = ['CTP_CLIENT_SECRET', 'CTP_CLIENT_ID', 'SESSION_SECRET', 'CTP_SEED_CLIENT_ID', 'CTP_SEED_CLIENT_SECRET'];
 const MIN_VALUE_LENGTH = 8; // shorter values would match unrelated text
 

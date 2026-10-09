@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true, // the commercetools image CDN rejects Next optimiser query parameters
     remotePatterns: [
-      ...IMAGE_HOSTS.map((hostname) => ({ protocol: 'https' as const, hostname })), // seeded stock photos (D-055, D-066)
+      ...IMAGE_HOSTS.map((hostname) => ({ protocol: 'https' as const, hostname })), // stock photo hosts
       { protocol: 'https', hostname: 'storage.googleapis.com' }, // commercetools-hosted product images (Planner default)
     ],
   },

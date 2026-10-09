@@ -84,8 +84,8 @@ describe('getPolicy', () => {
     expect(listVersions('shipping-returns', 'en-US', { root })).toEqual(['2026-01-01', '2025-06-01']);
   });
 
-  it('exposes the four policy slugs and their paths', () => {
-    expect([...LEGAL_SLUGS]).toEqual(['shipping-returns', 'terms', 'privacy', 'image-credits']);
+  it('exposes the three policy slugs and their paths', () => {
+    expect([...LEGAL_SLUGS]).toEqual(['shipping-returns', 'terms', 'privacy']);
     expect(legalPath('terms')).toBe('/legal/terms');
   });
 });

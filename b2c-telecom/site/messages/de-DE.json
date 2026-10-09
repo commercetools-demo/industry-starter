@@ -34,7 +34,6 @@
   },
   "nav": {},
   "footer": {
-    "photoCredit": "Fotos von Pexels",
     "nav": "Fußzeile",
     "support": "Support",
     "copyright": "© 2026 Malva Telecom"
@@ -931,9 +930,6 @@
       "viewCurrent": "Aktuelle Version ansehen",
       "earlier": "Frühere Versionen"
     },
-    "credits": {
-      "photoBy": "Foto von {name} auf Pexels"
-    },
     "footer": {
       "label": "Unternehmen und Rechtliches",
       "about": "Über uns",
@@ -941,8 +937,7 @@
       "blog": "Blog",
       "shippingReturns": "Versand und Rückgabe",
       "terms": "Bedingungen",
-      "privacy": "Datenschutz",
-      "imageCredits": "Bildnachweise"
+      "privacy": "Datenschutz"
     }
   },
   "errors": {

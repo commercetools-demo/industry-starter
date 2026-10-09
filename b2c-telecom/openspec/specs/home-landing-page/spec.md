@@ -54,7 +54,7 @@ Design-to-spec mapping and deviations:
 
 - Hero, promo tiles, category cards and add-on tiles are the `[STATIC]`/`[CACHED]` merchandising; "From $X/mo" and add-on prices must come from the catalog, not literals (the prototype hard-codes "$39.99" and "$25 a line" in copy).
 - The design has **no search bar, quick-order widget, recently-ordered strip or account alerts**; those rows of the Components table are out of scope for the first build unless the design is extended. The signed-in identity and bundle count live in the shell, not on this page.
-- The hero image is a placeholder; real imagery is sourced per `seed-product-images-pexels`.
+- The hero image is the category image, or a striped placeholder when there is none.
 
 ## commercetools
 

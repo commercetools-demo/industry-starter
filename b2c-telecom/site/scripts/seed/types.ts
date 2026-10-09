@@ -188,7 +188,7 @@ export interface CategoryDraft extends Draft {
   description?: LocalizedString;
   orderHint?: string;
   parent?: string; // category key
-  /** Category images (D-055): one asset per entry, keyed `<category key>-image-<n>`. */
+  /** Category images: one asset per entry, keyed `<category key>-image-<n>`. */
   assets?: { key: string; name: LocalizedString; sources: { uri: string; dimensions: { w: number; h: number } }[] }[];
 }
 

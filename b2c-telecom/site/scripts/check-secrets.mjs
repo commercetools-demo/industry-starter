@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const IGNORED_DIRECTORIES = new Set(['node_modules', '.next', '.git']);
 const CODE_EXTENSIONS = /\.(ts|tsx|js|jsx|mjs|cjs)$/;
 const TEST_FILE = /\.test\.[a-z]+$/;
-const PUBLIC_SECRET = /NEXT_PUBLIC_[A-Z0-9_]*(CTP|SESSION|SECRET|SEED|PEXELS)/;
+const PUBLIC_SECRET = /NEXT_PUBLIC_[A-Z0-9_]*(CTP|SESSION|SECRET|SEED)/;
 const SECRET_LITERAL = /\b(SESSION_SECRET|CLIENT_SECRET)\b\s*[:=]\s*(['"`])[^'"`\n]{32,}\2/;
 const MUST_BE_EMPTY = [
   'CTP_CLIENT_ID',

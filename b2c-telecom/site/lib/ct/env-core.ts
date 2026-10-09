@@ -26,7 +26,7 @@ const REQUIRED = [
   'SESSION_SECRET',
 ] as const;
 
-const SECRET_LIKE = /CTP|SECRET|SESSION|SEED|PEXELS/;
+const SECRET_LIKE = /CTP|SECRET|SESSION|SEED/;
 
 function missing(name: string): Error {
   return new Error(`Missing environment variable: ${name}`);

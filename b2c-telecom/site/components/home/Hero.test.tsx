@@ -32,7 +32,7 @@ describe('Hero', () => {
     expect(screen.getByRole('link', { name: 'See cable plans' })).toHaveAttribute('href', '/en-US/shop/cable-internet');
   });
 
-  it('the image alt names the photographer', () => {
+  it('the image alt is the hero alt text', () => {
     renderWithProviders(<Hero locale="en-US" tree={HOME_TREE} facts={facts} />);
     expect(screen.getByRole('img', { name: HERO_ALT })).toBeInTheDocument();
   });

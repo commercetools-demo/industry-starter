@@ -33,7 +33,7 @@ Scope: turn the Malva Telecom Claude Design prototype (`source/`) into the Next.
 | D1 | Term: "bundle" vs "cart" in UI copy | Bundle in UI; cart in code and routes |
 | D2 | Extend token scale for off-scale values (spacing 12/14/28/32/36/48/56/64; type 30/48/56; danger color) | Local "storefront extensions" block, flagged |
 | D3 | Label data model: new attributes for typical speed/latency, ETF formula, equipment fee; store label at order time | Attributes added to `telecom-catalog-model` (the AT&T reference project, `plan/ATT-REFERENCE-MODEL.md`, has none of these); snapshot with order |
-| D4 | Hero and category imagery | Pexels-sourced per `seed-product-images-pexels`; striped placeholder remains until then |
+| D4 | Hero and category imagery | Stock photo URLs recorded in `product-images.json`; striped placeholder when there is none |
 | D5 | Add-on logos (Spotify, Apple TV+, Netflix, Disney+ …) vs text banner; licensing | Text banner |
 | D6 | Does "Choose plan" add to the cart immediately? | Yes (header count truthful) |
 | D10 | Offer layer and handsets (decided 2026-10-07): `malva-offer` product type wraps sellable items; `malva-device` handsets in scope; plan card headline price = master variant; cable speed chips are `<= 500` / `> 500` Mbps bands | Specified in `telecom-catalog-model` and `seed-catalog-data` |
