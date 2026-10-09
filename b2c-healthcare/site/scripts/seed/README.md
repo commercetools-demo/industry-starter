@@ -26,8 +26,6 @@ npm run seed:cleanup -- --dry-run                        # lists what would go
 npm run seed:cleanup -- --confirm spec-test-b2c-healthcare
 npm run seed                                             # second run must print "0 change(s)"
 npm run seed:wait                                        # wait until Product Search holds the 28 products
-npm run seed:images                                      # live: searches Pexels, replaces product images, writes data/*.json
-npm run seed:images:json                                 # no credentials: only writes data/*.json (commit them)
 npm run seed:verify
 ```
 
@@ -40,7 +38,6 @@ npm run seed:verify
 | `wait-for-search.ts` (`seed:wait`) | checks `searchIndexing.productsSearch.status` is `Activated`, polls Product Search (prefix on `key`) until the seeded count is reached (timeout 5 min, `--expected N`, `--timeout-min M`) |
 | `cleanup-sample.ts` (`seed:cleanup`) | deletes non-`mlv-` carts, orders, inventory, products (unpublish first), categories (leaves first), product types, shipping methods, tax categories, stores, zones. Keeps zones `usa` and `europe`; never deletes customers |
 | `seed.ts` (`seed`) | channels, tax categories, order states and transitions, custom types, product types, categories, same-day zone, shipping methods, 8 doctors, 20 medications, inventory with cart limits. `--only <product-key>` limits the product steps |
-| `update-images.ts` (`seed:images`, `seed:images:json`) | searches Pexels for every doctor (portrait), medication (generic `imageQuery`) and banner slot; every product and slot gets its own photos, a photo whose URL does not load is skipped, too few results widen the query (logged as `WIDENED`). `--json-only` writes `data/product-images.json` and `data/site-images.json` WITHOUT touching commercetools (no credentials); without it the products are updated and republished. `--count 1..6`, `--only <key\|slot>`, `--dry-run` |
 | `seed-full.ts` (`seed:full`) | the whole sequence above in one process; `--dry-run` supported |
 | `update-plans.ts` | what a changed seed updates in place, and the reset hint for what cannot be updated |
 | `verify.ts` (`seed:verify`) | read-back assertions: counts, prefixes, published, USD, clean image URLs, doctor fees and modes vs price channels, shipping cents, inventory limits, states, types, categories, Product Search finds "Okafor" (`--skip-search`, `--no-images`) |
@@ -61,11 +58,11 @@ npm run seed:verify
 
 ## Images
 
-`update-images.ts` has two sources. With `PEXELS_API_KEY` in the shell (free key from pexels.com/api) it uses the OFFICIAL Pexels API: every photo is under the Pexels licence (free to use, no attribution needed). Without it, it uses the public JSON endpoint behind pexels.com/search (undocumented, public web client id, `PEXELS_CLIENT_ID` overrides it). **Warning (found by workstream AC):** that endpoint answers with partner stock thumbnails hosted on `media.istockphoto.com` (response type `ad_medium`), not Pexels-licensed photos. The committed JSON was generated that way. If royalty-free is a hard requirement, run `PEXELS_API_KEY=... npm run seed:images:json` and commit the result (the `img-src` host list in `netlify.toml` and `next.config.ts` already allows `images.pexels.com`). Stored URLs are clean (no query, no fragment): `cleanUrl()`; no photographer credit is stored or shown.
+Product photos are stored as clean https URLs (no query, no fragment) in `data/product-images.json` (per product key) and `data/site-images.json` (banner and cover slots); the seed puts them on the products. The `img-src` host list in `netlify.toml` and `next.config.ts` allows their hosts.
 
 ## API client scopes
 
-The storefront client's scopes are the comments of `site/.env.example` (a reason per scope; `lib/ct/scopes.test.ts` fails on a duplicate, a missing reason or a resource the code calls without a scope). The seed admin client's scopes are the comments of `site/.env.seed.example`: simplest is `manage_project`, the narrow list is there with the script that needs each one. The exact text for the owner is in `plans/notes/AC-todos.md`.
+The storefront client's scopes are the comments of `site/.env.example` (a reason per scope; `lib/ct/scopes.test.ts` fails on a duplicate, a missing reason or a resource the code calls without a scope). The seed admin client's scopes are the comments of `site/.env.seed.example`: simplest is `manage_project`, the narrow list is there with the script that needs each one.
 
 ## Data model notes
 

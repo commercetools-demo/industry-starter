@@ -76,7 +76,6 @@ describe('medication data', () => {
     const d = medicationDraft(MEDICATIONS[0]);
     expect(d.taxCategory.key).toBe('mlv-rx-medicine');
     expect(d.publish).toBe(true);
-    expect(MEDICATIONS.every((x) => x.imageQuery.length > 0 && !x.imageQuery.includes(x.name.split(' ')[0]))).toBe(true);
   });
 });
 

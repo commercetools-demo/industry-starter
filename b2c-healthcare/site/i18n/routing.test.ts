@@ -25,7 +25,7 @@ describe('storefront-locale-routing: routing configuration', () => {
     expect(Object.keys(messages)).toEqual(expect.arrayContaining(['common', 'errors']));
   });
 
-  it('next.config: unoptimized images and the remote hosts (Pexels, the photo host of the seed public search, the commercetools CDN)', () => {
+  it('next.config: unoptimized images and the remote image hosts', () => {
     expect(nextConfig.images?.unoptimized).toBe(true);
     expect(nextConfig.images?.remotePatterns?.map((pattern) => (pattern as { hostname: string }).hostname)).toEqual([
       'images.pexels.com',

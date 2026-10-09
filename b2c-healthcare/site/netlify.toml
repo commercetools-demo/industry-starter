@@ -29,7 +29,7 @@
   schedule = "30 3 * * *"
 
 # Security headers on every response. The CSP allows the commercetools Checkout widget (and the Stripe elements it
-# frames) and the seeded photos (images.pexels.com, and media.istockphoto.com which the public Pexels search endpoint serves, see scripts/seed/README.md); 'unsafe-inline' is needed for Next's inline bootstrap scripts and styles.
+# frames) and the product and banner photos (images.pexels.com, media.istockphoto.com); 'unsafe-inline' is needed for Next's inline bootstrap scripts and styles.
 [[headers]]
   for = "/*"
   [headers.values]

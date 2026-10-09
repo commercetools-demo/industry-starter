@@ -36,7 +36,7 @@ export interface DoctorCard {
   reviewCount: number;
   /** Two letters for the avatar fallback. */
   initials: string;
-  /** Pexels portrait (clean URL) or null: the avatar then shows the initials. */
+  /** Portrait (clean URL) or null: the avatar then shows the initials. */
   portraitUrl: string | null;
   /**
    * Set by the mappers: false when the doctor has no fee in the visitor's currency (not sold in this region, workstream W): show

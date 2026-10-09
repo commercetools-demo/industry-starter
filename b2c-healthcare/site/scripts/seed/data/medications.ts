@@ -23,8 +23,6 @@ export interface MedicationDef {
   maxQtyPerOrder?: number;
   /** Short-dated demo supply (expiry-dated-supply): ISO date held on the inventory entry. */
   expiryDate?: string;
-  /** Generic photo-search term (brand names return noise). */
-  imageQuery: string;
 }
 
 const m = (
@@ -32,7 +30,7 @@ const m = (
   o: Partial<MedicationDef> = {},
 ): MedicationDef => ({
   slug, name, strength, form, rxOnly, packSize, priceCents, cls,
-  hsaEligible: true, controlClass: 'none', minRemainingShelfLifeDays: 90, imageQuery: form === 'capsule' ? 'capsules pills medicine' : 'pharmacy medicine blister pack',
+  hsaEligible: true, controlClass: 'none', minRemainingShelfLifeDays: 90,
   ...o,
 });
 

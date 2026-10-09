@@ -29,7 +29,7 @@ describe('netlify.toml', () => {
     expect(fn['retention-scheduled']?.schedule).toBe(retentionConfig.schedule);
   });
 
-  it('every host of the committed seed photos is allowed by img-src (a blocked photo would show nothing in production)', () => {
+  it('every host of the committed photos is allowed by img-src (a blocked photo would show nothing in production)', () => {
     const hosts = new Set<string>();
     for (const file of ['product-images.json', 'site-images.json']) {
       const data = JSON.parse(readFileSync(resolve(import.meta.dirname, 'scripts/seed/data', file), 'utf8')) as Record<string, { url: string } | { url: string }[]>;
@@ -47,13 +47,12 @@ describe('netlify.toml', () => {
     expect(values['X-Frame-Options']).toBe('DENY');
   });
 
-  it('CSP allows Stripe, commercetools Checkout and Pexels images, and nothing wildcard-wide', () => {
+  it('CSP allows Stripe, commercetools Checkout and the photo hosts, and nothing wildcard-wide', () => {
     expect(csp).toContain("default-src 'self'");
     expect(csp).toMatch(/script-src[^;]*https:\/\/js\.stripe\.com/);
     expect(csp).toMatch(/frame-src[^;]*https:\/\/\*\.commercetools\.com/);
     expect(csp).toMatch(/connect-src[^;]*https:\/\/\*\.commercetools\.com/);
     expect(csp).toMatch(/img-src[^;]*https:\/\/images\.pexels\.com/);
-    // the committed seed photos (data/*-images.json) come from these hosts: every one must be allowed or the browser blocks it (D-040)
     expect(csp).toMatch(/img-src[^;]*https:\/\/media\.istockphoto\.com/);
     expect(csp).toContain("object-src 'none'");
     expect(csp).toContain("frame-ancestors 'none'");

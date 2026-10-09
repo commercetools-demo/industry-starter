@@ -3,8 +3,8 @@ import { cx } from '@/components/ui/cx';
 import type { SiteImage } from '@/lib/site-images';
 
 /**
- * Decorative home image from a `site-images.json` slot: the seeded photo (clean URL, no query string) or a
- * token-styled gradient block while no photo has been chosen. Never an invented URL. Children (the hero's
+ * Decorative home image from a `site-images.json` slot: the photo (clean URL, no query string) or a
+ * token-styled gradient block while no photo is set. Never an invented URL. Children (the hero's
  * floating chip) are positioned over it.
  */
 export function HomeImage({
