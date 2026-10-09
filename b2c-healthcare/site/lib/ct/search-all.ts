@@ -5,7 +5,7 @@ import { mapMedication } from '@/lib/mappers/medication';
 import { matchSpecialtyKeys } from '@/lib/specialties';
 import { loadFixtures } from '@/lib/ct/fixtures';
 import { searchProducts } from '@/lib/ct/search';
-import { buildNameMatch, type Query } from '@/lib/ct/search-query';
+import { buildClinicMatch, buildNameMatch, type Query } from '@/lib/ct/search-query';
 import { COUNTRY_CONFIG, DEFAULT_LOCALE, isSupportedLocale } from '@/lib/utils';
 import type { DoctorCard, Medication } from '@/lib/types';
 
@@ -99,7 +99,7 @@ export async function searchAll(params: { q: string | undefined; locale: string;
 
   const [doctors, medicines, exact] = await Promise.all([
     searchProducts(
-      { ...base, extraQuery: buildNameMatch(query, locale, specialtyMatch), filters: { modes: ['remote', 'office'] }, sort: 'name-asc' },
+      { ...base, extraQuery: buildNameMatch(query, locale, [...specialtyMatch, buildClinicMatch(query)]), filters: { modes: ['remote', 'office'] }, sort: 'name-asc' },
       (projection) => mapDoctorCard(projection, { locale, currency }),
     ),
     searchProducts({ ...base, extraQuery: and(MEDICINES_ONLY, buildNameMatch(query, locale)) }, (projection) => mapMedication(projection, { locale, currency })),

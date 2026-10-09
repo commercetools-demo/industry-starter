@@ -9,6 +9,13 @@ import { MEDICATIONS, medKey, medSku } from '@/scripts/seed/data/medications';
 import { DOCTORS, doctorKey } from '@/scripts/seed/data/doctors';
 import { REVIEWS } from '@/scripts/seed/data/reviews';
 import { SCHEDULES } from '@/scripts/seed/data/schedules';
+import storedImages from '@/scripts/seed/data/product-images.json';
+
+/** The photo the seed stores for a product (`scripts/seed/data/product-images.json`), so fixtures mode shows images without credentials. Clean https URLs only. */
+export function storedImageUrl(key: string, images: unknown = storedImages): string | null {
+  const first = (images as Record<string, { url?: unknown }[] | undefined>)[key]?.[0]?.url;
+  return typeof first === 'string' && first.startsWith('https://') && !/[?#]/.test(first) ? first : null;
+}
 
 const USD = (centAmount: number) => ({ centAmount, currencyCode: 'USD', fractionDigits: 2 });
 
@@ -31,9 +38,12 @@ const doctorCards: DoctorCard[] = DOCTORS.map((d) => {
     rating: ratings.length ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) / 10 : null,
     reviewCount: ratings.length,
     initials: initialsOf(d.name),
-    portraitUrl: null,
+    portraitUrl: storedImageUrl(doctorKey(d)),
   };
 });
+
+/** Same rule as the live query: every typed word appears in the clinic name (D-039). */
+const matchesClinic = (c: DoctorCard, words: string[]) => words.length > 0 && words.every((w) => (c.clinicName ?? '').toLowerCase().includes(w));
 
 export function fixtureCandidates(p: { mode: ConsultationMode; q: string; specialty?: string; city?: string }): { cards: DoctorCard[]; facets: FacetResult[] } {
   const words = p.q.toLowerCase().split(' ').filter(Boolean);
@@ -43,7 +53,7 @@ export function fixtureCandidates(p: { mode: ConsultationMode; q: string; specia
     if (p.specialty && c.specialtyKey !== p.specialty) return false;
     if (p.city && c.city !== p.city) return false;
     if (!words.length) return true;
-    return words.every((w) => c.name.toLowerCase().includes(w)) || specialtyKeys.includes(c.specialtyKey);
+    return words.every((w) => c.name.toLowerCase().includes(w)) || specialtyKeys.includes(c.specialtyKey) || matchesClinic(c, words);
   });
   const count = (field: 'specialtyKey' | 'city') => {
     const by = new Map<string, number>();
@@ -93,14 +103,14 @@ const medicines: Medication[] = MEDICATIONS.map((d) => ({
   hsaEligible: d.hsaEligible,
   controlClass: d.controlClass === 'none' ? null : d.controlClass,
   price: USD(d.priceCents),
-  imageUrl: null,
+  imageUrl: storedImageUrl(medKey(d)),
   categoryIds: [],
 }));
 
 export function fixtureDoctorsByText(q: string): DoctorCard[] {
   const words = q.toLowerCase().split(' ').filter(Boolean);
   const keys = matchSpecialtyKeys(q);
-  return doctorCards.filter((c) => words.every((w) => c.name.toLowerCase().includes(w)) || keys.includes(c.specialtyKey));
+  return doctorCards.filter((c) => words.every((w) => c.name.toLowerCase().includes(w)) || keys.includes(c.specialtyKey) || matchesClinic(c, words));
 }
 
 export function fixtureMedicinesByText(q: string): Medication[] {

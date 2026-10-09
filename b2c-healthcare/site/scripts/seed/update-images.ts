@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { DOCTORS, doctorKey } from './data/doctors';
+import { loadProductImages, loadSiteImages } from './data/images';
 import { PRODUCT_IMAGES_FILE, SITE_IMAGES_FILE } from './data/images';
 import { MEDICATIONS, medKey } from './data/medications';
 import { SITE_SLOTS } from './data/site-slots';
@@ -8,9 +9,11 @@ import { getAdminRoot, isMain, type Root } from './lib';
 /**
  * Picks photos for every doctor, every medication and every site banner slot by searching pexels.com.
  *
- *   npx tsx scripts/seed/update-images.ts [--dry-run] [--only <product-key|slot>] [--count 2]
+ *   npx tsx scripts/seed/update-images.ts [--dry-run | --json-only] [--only <product-key|slot>] [--count 2]
  *
  * - `--dry-run` searches and prints; it writes nothing (neither commercetools nor the JSON files).
+ * - `--json-only` searches Pexels and writes `data/product-images.json` and `data/site-images.json` WITHOUT touching commercetools:
+ *   no credentials needed. Commit the result; `seed.ts` and `seed:full` then put exactly these photos on the products (D-040).
  * - Each product's old images (all variants) are removed and the new ones added to every variant, then it is published.
  * - Picks are saved to `data/product-images.json` (products) and `data/site-images.json` (banners, keyed by slot,
  *   one photo each), which a fresh seed and `site/content/images.ts` read, so the same photos are reproduced.
@@ -27,7 +30,6 @@ const FALLBACK_SIZE = { w: 612, h: 612 };
 
 export interface PickedImage { url: string; dimensions: { w: number; h: number } }
 export interface Photo { url: string; photographer?: string }
-export interface SiteImage extends PickedImage { photographer?: string }
 
 /** `https://host/a/b.jpg?s=612&k=20#x` becomes `https://host/a/b.jpg`. */
 export function cleanUrl(raw: string): string {
@@ -90,21 +92,51 @@ export function jpegSize(bytes: Uint8Array): { w: number; h: number } | null {
   return null;
 }
 
-export function parseArgs(argv: string[]): { dryRun: boolean; only?: string; count: number } {
+export function parseArgs(argv: string[]): { dryRun: boolean; jsonOnly: boolean; only?: string; count: number } {
   const get = (name: string) => (argv.includes(name) ? argv[argv.indexOf(name) + 1] : undefined);
   const count = Number(get('--count') ?? 2);
   if (!Number.isInteger(count) || count < 1 || count > 6) throw new Error('--count must be an integer from 1 to 6');
-  return { dryRun: argv.includes('--dry-run'), only: get('--only'), count };
+  const jsonOnly = argv.includes('--json-only');
+  if (jsonOnly && argv.includes('--dry-run')) throw new Error('--json-only writes the JSON files; --dry-run writes nothing. Use one of them.');
+  return { dryRun: argv.includes('--dry-run'), jsonOnly, only: get('--only'), count };
 }
 
 // ---------------------------------------------------------------- network (replaced by mocks in tests)
 
 export type SearchFn = (term: string, count: number) => Promise<Photo[]>;
-export type MeasureFn = (url: string) => Promise<{ w: number; h: number }>;
+/** `null` when the URL does not load (any status but 200): such a photo is skipped. */
+export type MeasureFn = (url: string) => Promise<{ w: number; h: number } | null>;
 
+/** Photos of an official Pexels API response (`photos[].src.large`), clean URLs, distinct. */
+export function pickPexelsApi(response: unknown, count: number): Photo[] {
+  const photos = (response as { photos?: { src?: { large?: unknown } }[] } | null)?.photos ?? [];
+  const out: Photo[] = [];
+  for (const p of photos) {
+    if (typeof p.src?.large !== 'string') continue;
+    const url = cleanUrl(p.src.large);
+    if (!out.some((o) => o.url === url)) out.push({ url });
+    if (out.length === count) break;
+  }
+  return out;
+}
+
+/**
+ * With `PEXELS_API_KEY` in the shell the OFFICIAL Pexels API is used (free key from pexels.com/api; every photo is under the Pexels licence).
+ * Without it the public JSON endpoint behind pexels.com's search box is used (no key, but it serves partner stock thumbnails, see README).
+ */
 export const searchPexels: SearchFn = async (term, count) => {
+  const key = process.env.PEXELS_API_KEY;
+  if (key) {
+    const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(term)}&per_page=${Math.min(count + 2, 80)}`, { headers: { authorization: key } });
+    if (!res.ok) throw new Error(`pexels api search "${term}" failed: ${res.status}`);
+    return pickPexelsApi(await res.json(), count);
+  }
+  return searchPublicEndpoint(term, count);
+};
+
+const searchPublicEndpoint: SearchFn = async (term, count) => {
   // Ask for a few more than needed so duplicates after cleaning do not leave us short.
-  const res = await fetch(`${ENDPOINT}/${encodeURIComponent(term)}?number=${count + 2}&page=1`, {
+  const res = await fetch(`${ENDPOINT}/${encodeURIComponent(term)}?number=${Math.min(count + 2, 100)}&page=1`, {
     headers: { accept: '*/*', 'content-type': 'application/json', 'x-client-type': 'react', 'pexels-client-id': CLIENT_ID, 'user-agent': 'malva-seed' },
   });
   if (!res.ok) throw new Error(`pexels search "${term}" failed: ${res.status}`);
@@ -114,21 +146,50 @@ export const searchPexels: SearchFn = async (term, count) => {
 export const measureImage: MeasureFn = async (url) => {
   try {
     const res = await fetch(url); // follows the redirect to the sized image
-    return res.ok ? (jpegSize(new Uint8Array(await res.arrayBuffer())) ?? FALLBACK_SIZE) : FALLBACK_SIZE;
+    return res.ok ? (jpegSize(new Uint8Array(await res.arrayBuffer())) ?? FALLBACK_SIZE) : null;
   } catch {
-    return FALLBACK_SIZE;
+    return null;
   }
 };
 
 // ---------------------------------------------------------------- core
 
-export interface ImageTarget { key: string; query: string }
+export interface ImageTarget {
+  key: string;
+  query: string;
+  /** Last-resort wide queries (in order) when the specific ones return too few photos. */
+  fallbacks?: string[];
+  /** Photos whose file name (the descriptive slug of the URL) matches are skipped: people on a pill photo, a nurse for a doctor. */
+  avoid?: RegExp;
+  /** When set, the file name must also match this. */
+  require?: RegExp;
+}
+
+/** Medicine photos should show the product, not people, factories or renderings. */
+export const AVOID_FOR_MEDICINE = /(wom[ae]n|\bman\b|men\b|person|people|worker|senior|patient|doctor|nurse|pharmacist|factory|conveyor|manufactur|rendering|hands?|holding|smartphone|phone|child|girl|boy|elderly|taking|production|suppositor|shopping|cart\b|trolley|toy\b|teddy|concept|legislation|bogota|machine|industrial|paying|vaginal|ecg|stethoscope|solo|research|laptop|shelves|bottle|pharmaceutical|customer|housewife|female|male|molecular|abstract|model-of|kit\b|first-aid|syringe|thermometer|vial|vaccine|mockup|placebo|empty|waste|remaining)/i;
+/** ... and should be about pills, tablets, capsules or blister packs. */
+export const REQUIRE_FOR_MEDICINE = /(pill|tablet|capsule|blister|medic|drug)/i;
+/** A doctor's portrait is a doctor, not a nurse or an empty hospital. */
+export const REQUIRE_FOR_DOCTOR = /(doctor|physician|medical-professional|\bgp\b)/i;
+export const AVOID_FOR_DOCTOR = /(nurse|isolated|surgeon|surgery|team|group|child|patient\b)/i;
+
+/**
+ * The queries to try in order: the given one, then the same with trailing words removed one at a time (never below one word),
+ * then the fallback. "pharmacy medicine blister pack" -> "pharmacy medicine blister" -> "pharmacy medicine" -> "pharmacy".
+ */
+export function queryLadder(query: string, ...fallbacks: (string | undefined)[]): string[] {
+  const words = query.trim().split(/\s+/).filter(Boolean);
+  const out: string[] = [];
+  for (let n = words.length; n >= 1; n -= 1) out.push(words.slice(0, n).join(' '));
+  for (const f of fallbacks) if (f && !out.includes(f)) out.push(f);
+  return out;
+}
 
 /** Doctors and medications with the term to search for. */
 export function productTargets(): ImageTarget[] {
   return [
-    ...DOCTORS.map((d) => ({ key: doctorKey(d), query: d.imageQuery })),
-    ...MEDICATIONS.map((d) => ({ key: medKey(d), query: d.imageQuery || searchTerm(d.name) })),
+    ...DOCTORS.map((d) => ({ key: doctorKey(d), query: d.imageQuery, fallbacks: ['doctor portrait', 'physician'], avoid: AVOID_FOR_DOCTOR, require: REQUIRE_FOR_DOCTOR })),
+    ...MEDICATIONS.map((d) => ({ key: medKey(d), query: d.imageQuery || searchTerm(d.name), fallbacks: ['pharmacy medicine', 'medicine tablets', 'pills', 'capsules'], avoid: AVOID_FOR_MEDICINE, require: REQUIRE_FOR_MEDICINE })),
   ];
 }
 
@@ -160,7 +221,13 @@ export interface UpdateOptions {
   log?: (line: string) => void;
 }
 
-export interface UpdateResult { products: Record<string, PickedImage[]>; slots: Record<string, SiteImage>; failed: number }
+export interface UpdateResult {
+  products: Record<string, PickedImage[]>;
+  slots: Record<string, PickedImage>;
+  failed: number;
+  /** Targets whose first query returned too few photos and a wider one was used (recorded so the choice can be reviewed). */
+  widened: { key: string; from: string; to: string }[];
+}
 
 export async function updateImages(o: UpdateOptions): Promise<UpdateResult> {
   const log = o.log ?? console.log;
@@ -168,18 +235,48 @@ export async function updateImages(o: UpdateOptions): Promise<UpdateResult> {
   const targets = productTargets().filter((t) => !o.only || t.key === o.only);
   const slots = SITE_SLOTS.filter((s) => !o.only || s.slot === o.only);
   if (targets.length + slots.length === 0) throw new Error(`No product or slot with key "${String(o.only)}"`);
-  const result: UpdateResult = { products: {}, slots: {}, failed: 0 };
+  const result: UpdateResult = { products: {}, slots: {}, failed: 0, widened: [] };
 
-  const pick = async (term: string, count: number) => {
-    const photos = await o.search(term, count);
-    if (photos.length < count) throw new Error(`only ${photos.length} result(s) for "${term}"`);
-    return Promise.all(photos.map(async (p) => ({ ...p, dimensions: await o.measure(p.url) })));
+  // Every product and slot gets its own photos: a photo chosen for one is skipped for the next (several doctors share one query).
+  const used = new Set<string>();
+  const loadStored = o.load ?? ((file: string) => (existsSync(file) ? (JSON.parse(readFileSync(file, 'utf8')) as Record<string, unknown>) : {}));
+  if (o.only) {
+    // a single re-pick must not reuse a photo another product already shows
+    for (const file of [PRODUCT_IMAGES_FILE, SITE_IMAGES_FILE]) {
+      for (const [k, v] of Object.entries(loadStored(file))) {
+        if (k === o.only) continue;
+        for (const img of Array.isArray(v) ? v : [v]) if (img && typeof (img as { url?: unknown }).url === 'string') used.add((img as { url: string }).url);
+      }
+    }
+  }
+  const pick = async (key: string, term: string, count: number, fallbacks: string[] = [], avoid?: RegExp, require?: RegExp): Promise<PickedImage[]> => {
+    const tried: string[] = [];
+    for (const query of queryLadder(term, ...fallbacks)) {
+      const all = await o.search(query, count + used.size + (avoid ? 40 : 0));
+      const candidates = all.filter((p) => !used.has(p.url) && !(avoid && avoid.test(p.url.split('/').pop() ?? '')) && (!require || require.test(p.url.split('/').pop() ?? '')));
+      const photos: PickedImage[] = [];
+      for (const p of candidates) {
+        if (photos.length === count) break;
+        const dimensions = await o.measure(p.url);
+        if (dimensions) photos.push({ url: p.url, dimensions }); // a URL that does not load (status other than 200) is skipped
+      }
+      if (photos.length >= count) {
+        for (const p of photos) used.add(p.url);
+        if (query !== term) {
+          result.widened.push({ key, from: term, to: query });
+          log(`WIDENED  ${key}: "${term}" gave too few photos, used "${query}"`);
+        }
+        // credits are not shown (royalty-free, D-040): only the URL and its size are stored
+        return photos;
+      }
+      tried.push(`"${query}" ${photos.length}`);
+    }
+    throw new Error(`too few results; tried ${tried.join(', ')}`);
   };
 
   for (const t of targets) {
     try {
-      const picked = await pick(t.query, o.count);
-      const images: PickedImage[] = picked.map(({ url, dimensions }) => ({ url, dimensions }));
+      const images = await pick(t.key, t.query, o.count, t.fallbacks, t.avoid, t.require);
       if (o.root) await replaceImages(o.root, t.key, images);
       result.products[t.key] = images;
       log(`${o.dryRun ? 'would set' : 'updated'}  ${t.key}  ("${t.query}")\n  ${images.map((i) => i.url).join('\n  ')}`);
@@ -191,7 +288,7 @@ export async function updateImages(o: UpdateOptions): Promise<UpdateResult> {
   }
   for (const s of slots) {
     try {
-      const [photo] = await pick(s.query, 1);
+      const [photo] = await pick(s.slot, s.query, 1);
       result.slots[s.slot] = photo;
       log(`${o.dryRun ? 'would set' : 'picked'}   ${s.slot}  ("${s.query}")  ${photo.url}`);
     } catch (e) {
@@ -202,7 +299,7 @@ export async function updateImages(o: UpdateOptions): Promise<UpdateResult> {
   }
 
   if (!o.dryRun) {
-    const load = o.load ?? ((file: string) => (existsSync(file) ? (JSON.parse(readFileSync(file, 'utf8')) as Record<string, unknown>) : {}));
+    const load = loadStored;
     if (Object.keys(result.products).length > 0) {
       o.save(PRODUCT_IMAGES_FILE, sortKeys({ ...load(PRODUCT_IMAGES_FILE), ...result.products }));
       log(`saved ${Object.keys(result.products).length} product(s) to scripts/seed/data/product-images.json`);
@@ -212,15 +309,44 @@ export async function updateImages(o: UpdateOptions): Promise<UpdateResult> {
       log(`saved ${Object.keys(result.slots).length} slot(s) to scripts/seed/data/site-images.json`);
     }
   }
-  log(`${o.dryRun ? 'dry run: ' : ''}${Object.keys(result.products).length} product(s), ${Object.keys(result.slots).length} slot(s) ok, ${result.failed} failed`);
+  log(`${o.dryRun ? 'dry run: ' : ''}${Object.keys(result.products).length} product(s), ${Object.keys(result.slots).length} slot(s) ok, ${result.widened.length} widened, ${result.failed} failed`);
   return result;
+}
+
+/**
+ * Puts the stored photos (data/product-images.json) on the products that differ (the seed already creates products with them, so this is
+ * normally a no-op) and checks every doctor, medication and slot has one: the deterministic "images" stage of `seed:full`.
+ */
+export function missingStoredImages(): string[] {
+  const stored = loadProductImages();
+  const slots = loadSiteImages();
+  return [...productTargets().map((t) => t.key).filter((k) => !(stored[k]?.length)), ...SITE_SLOTS.map((s) => s.slot).filter((k) => !slots[k])];
+}
+
+export async function applyStoredImages(root: Root, dryRun: boolean, log: (line: string) => void = console.log): Promise<{ applied: number; missing: string[] }> {
+  const stored = loadProductImages();
+  const missing = missingStoredImages();
+  if (missing.length > 0) throw new Error(`No stored photo for ${missing.join(', ')}. Run \`npm run seed:images -- --json-only\` (no credentials needed), commit the JSON and run again.`);
+  let applied = 0;
+  for (const t of productTargets()) {
+    const wanted = stored[t.key].map((i) => i.url);
+    const product = (await root.products().withKey({ key: t.key }).get().execute()).body;
+    const staged = product.masterData.staged;
+    const have = (staged.masterVariant.images ?? []).map((i) => i.url);
+    if (JSON.stringify(have) === JSON.stringify(wanted)) continue;
+    log(`${dryRun ? 'would set' : 'set'}      images of ${t.key}`);
+    if (!dryRun) await replaceImages(root, t.key, stored[t.key]);
+    applied += 1;
+  }
+  log(`${applied} product(s) had images that differ from data/product-images.json; ${SITE_SLOTS.length} banner slots are read from data/site-images.json`);
+  return { applied, missing };
 }
 
 const sortKeys = (o: Record<string, unknown>) => Object.fromEntries(Object.entries(o).sort(([a], [b]) => a.localeCompare(b)));
 
 async function main() {
-  const { dryRun, only, count } = parseArgs(process.argv.slice(2));
-  const root = dryRun ? null : (await getAdminRoot()).root;
+  const { dryRun, jsonOnly, only, count } = parseArgs(process.argv.slice(2));
+  const root = dryRun || jsonOnly ? null : (await getAdminRoot()).root;
   const result = await updateImages({
     root, dryRun, only, count, search: searchPexels, measure: measureImage,
     save: (file, data) => writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`),

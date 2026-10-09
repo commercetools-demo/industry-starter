@@ -27,6 +27,8 @@ export const SEED_ENV_NAMES = [
 
 export interface Flags {
   dryRun: boolean;
+  /** `--include-customers`: the full reset also erases the synthetic customers (emails on example.com) and everything of theirs. */
+  includeCustomers?: boolean;
   only?: string;
   confirm?: string;
 }
@@ -39,7 +41,7 @@ export function parseFlags(argv: string[]): Flags {
     if (!v || v.startsWith('--')) throw new Error(`${name} needs a value`);
     return v;
   };
-  return { dryRun: argv.includes('--dry-run'), only: get('--only'), confirm: get('--confirm') };
+  return { dryRun: argv.includes('--dry-run'), includeCustomers: argv.includes('--include-customers'), only: get('--only'), confirm: get('--confirm') };
 }
 
 /** Parses KEY=value lines; a missing file gives an empty object. */
@@ -171,7 +173,7 @@ export const KINDS = [
   'channels',
 ] as const;
 /** `customers` is listed and counted but never deleted by the cleanup (see E-questions.md). */
-export type Kind = (typeof KINDS)[number] | 'customers' | 'reviews' | 'recurrencePolicies';
+export type Kind = (typeof KINDS)[number] | 'customers' | 'reviews' | 'recurrencePolicies' | 'recurringOrders';
 
 export const coll = (root: Root, kind: Kind): Coll => (root as unknown as Record<Kind, () => Coll>)[kind].call(root);
 
@@ -195,6 +197,24 @@ export async function ensureKeyed(ctx: Ctx, kind: Kind, draft: Rec & { key: stri
   }
   const d = diff(existing, draft);
   return d ? { diff: `${kind} ${draft.key}: ${d}` } : 'ok';
+}
+
+/** What `ensurePlanned` asks of a plan function: update actions, or `blocked` when the change cannot be made in place. */
+export type Planner = (existing: Rec, draft: Rec, ctx: Ctx) => { actions: Rec[]; blocked?: string } | Promise<{ actions: Rec[]; blocked?: string }>;
+
+/**
+ * Create-if-missing, otherwise UPDATE the existing resource to match the draft (D-038). The plan returns the update actions;
+ * a change commercetools forbids comes back as `blocked` with the exact reset that is needed (reported like a diff).
+ */
+export async function ensurePlanned(ctx: Ctx, kind: Kind, draft: Rec & { key: string }, plan: Planner): Promise<EnsureResult> {
+  const existing = await findByKey(ctx.root, kind, draft.key);
+  if (!existing) return ensureKeyed(ctx, kind, draft);
+  const p = await plan(existing, draft, ctx);
+  if (p.blocked) return { diff: p.blocked };
+  if (p.actions.length === 0) return 'ok';
+  if (ctx.dryRun) return 'would-update';
+  await applyActions(ctx, kind, draft.key, p.actions);
+  return 'updated';
 }
 
 /** Posts update actions to a keyed resource (read fresh for the version). */

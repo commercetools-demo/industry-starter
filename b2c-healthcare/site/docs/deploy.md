@@ -57,7 +57,7 @@ present): `MALVA_FIXTURES`, `SAME_DAY_NOW_OVERRIDE`, `RESOLVER_FORCE_FAIL`, `MAL
 
 **Scripts only, never on Netlify** (loaded from `.env.seed.local` or the shell on a developer machine): `SEED_CTP_PROJECT_KEY`,
 `SEED_CTP_AUTH_URL`, `SEED_CTP_API_URL`, `SEED_CTP_CLIENT_ID`, `SEED_CTP_CLIENT_SECRET`, `SEED_CTP_SCOPES`,
-`SEED_PATIENT_PASSWORD`, `PEXELS_CLIENT_ID`. The seed admin credentials must never be a Netlify variable.
+`SEED_PATIENT_PASSWORD`, `PEXELS_CLIENT_ID`, `PEXELS_API_KEY`. The seed admin credentials must never be a Netlify variable.
 
 Deploy previews: use the same (development) commercetools project, which holds synthetic data only; never point a preview at real
 data. Set the secrets for the "Deploy Previews" context to their own values (not the production ones).

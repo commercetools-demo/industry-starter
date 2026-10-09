@@ -32,16 +32,16 @@ describe('shipping data', () => {
     expect(SAME_DAY_ZONE.locations).toEqual([{ country: 'US', state: 'NY' }, { country: 'US', state: 'TX' }, { country: 'US', state: 'IL' }]);
   });
 
-  it('seeding is idempotent and a wrong price in the project is reported, not overwritten', async () => {
+  it('seeding is idempotent and a wrong rate in the project is corrected in place', async () => {
     const fake = createFakeRoot();
     const ctx = { ...makeCtx(fake.root, { dryRun: false }, () => {}), pauseMs: 0 };
     expect((await runSteps(shippingSteps(ctx), () => {})).changed).toBe(3);
     expect(await runSteps(shippingSteps(ctx), () => {})).toMatchObject({ ok: true, changed: 0 });
-    const wrong = createFakeRoot({
-      shippingMethods: [{ key: 'mlv-same-day', isDefault: false, zoneRates: [{ zone: { id: 'z' }, shippingRates: [{ price: { centAmount: 50000, currencyCode: 'USD' } }] }] }],
-    });
-    const r = await runSteps(shippingSteps({ ...makeCtx(wrong.root, { dryRun: false }, () => {}), pauseMs: 0 }), () => {});
-    expect(r.ok).toBe(false);
+    const method = fake.store.shippingMethods.find((m) => m.key === 'mlv-same-day') as { zoneRates: { shippingRates: { price: { centAmount: number } }[] }[] };
+    method.zoneRates[0].shippingRates[0].price.centAmount = 50000;
+    expect(await runSteps(shippingSteps(ctx), () => {})).toMatchObject({ ok: true, changed: 1 });
+    expect(method.zoneRates[0].shippingRates.map((r) => r.price.centAmount)).toEqual([500]);
+    expect(await runSteps(shippingSteps(ctx), () => {})).toMatchObject({ ok: true, changed: 0 });
   });
 });
 

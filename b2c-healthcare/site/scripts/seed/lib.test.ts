@@ -32,8 +32,8 @@ describe('lib guard and env', () => {
   });
 
   it('parseFlags', () => {
-    expect(parseFlags([])).toEqual({ dryRun: false, only: undefined, confirm: undefined });
-    expect(parseFlags(['--dry-run', '--only', 'mlv-doc-x', '--confirm', 'p'])).toEqual({ dryRun: true, only: 'mlv-doc-x', confirm: 'p' });
+    expect(parseFlags([])).toEqual({ dryRun: false, includeCustomers: false, only: undefined, confirm: undefined });
+    expect(parseFlags(['--dry-run', '--only', 'mlv-doc-x', '--confirm', 'p'])).toEqual({ dryRun: true, includeCustomers: false, only: 'mlv-doc-x', confirm: 'p' });
     expect(() => parseFlags(['--only'])).toThrow();
   });
 });

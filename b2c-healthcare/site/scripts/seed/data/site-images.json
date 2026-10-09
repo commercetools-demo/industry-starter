@@ -1,1 +1,44 @@
-{}
+{
+  "home-cta": {
+    "url": "https://media.istockphoto.com/id/2178779090/photo/pharmacist-helping-customer-choosing-right-medicine-using-smartphone-app.jpg",
+    "dimensions": {
+      "h": 408,
+      "w": 612
+    }
+  },
+  "home-hero": {
+    "url": "https://media.istockphoto.com/id/1675712006/photo/young-woman-having-a-doctors-appointment-online-at-home.jpg",
+    "dimensions": {
+      "h": 408,
+      "w": 612
+    }
+  },
+  "home-rx-delivery": {
+    "url": "https://media.istockphoto.com/id/1469686707/photo/delivery-worker-hands-holding-medications-parcel.jpg",
+    "dimensions": {
+      "h": 408,
+      "w": 612
+    }
+  },
+  "journal-1": {
+    "url": "https://media.istockphoto.com/id/1500051695/photo/athletic-woman-eating-a-healthy-bowl-of-muesli-with-fruit-sitting-on-floor-in-the-kitchen-at.jpg",
+    "dimensions": {
+      "h": 408,
+      "w": 612
+    }
+  },
+  "journal-2": {
+    "url": "https://media.istockphoto.com/id/1745865419/photo/woman-sleeping-in-bed-at-night-above-view-space-for-text.jpg",
+    "dimensions": {
+      "h": 408,
+      "w": 612
+    }
+  },
+  "journal-3": {
+    "url": "https://media.istockphoto.com/id/2165018220/photo/mature-woman-enjoying-her-day-in-forest-with-friends.jpg",
+    "dimensions": {
+      "h": 408,
+      "w": 612
+    }
+  }
+}

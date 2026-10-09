@@ -99,6 +99,20 @@ describe('seed.ts and verify.ts against a fake project', () => {
     expect((await runSeed(ctxOf(fake), { images: allImages })).ok).toBe(true);
   });
 
+  it('verify fails when clinicName is not searchable in the project (D-039)', async () => {
+    const fake = createFakeRoot();
+    await runSeed(ctxOf(fake), { images: allImages });
+    const doctorType = fake.store.productTypes.find((t) => t.key === 'mlv-doctor') as { attributes: { name: string; isSearchable: boolean }[] };
+    doctorType.attributes.find((a) => a.name === 'clinicName')!.isSearchable = false;
+    const failed = (await runVerify(fake.root)).filter((c) => !c.ok);
+    expect(failed.map((c) => c.name)).toEqual(['every attribute the storefront searches is isSearchable (incl. clinicName)']);
+    expect(failed[0].detail).toContain('mlv-doctor.clinicName');
+    // the seed repairs it with changeIsSearchable, in place
+    expect((await runSeed(ctxOf(fake), { images: allImages })).ok).toBe(true);
+    expect(fake.log.some((l) => l.kind === 'productTypes' && l.actions?.includes('changeIsSearchable'))).toBe(true);
+    expect((await runVerify(fake.root)).filter((c) => !c.ok)).toEqual([]);
+  });
+
   it('reset needs --confirm', () => {
     expect(() => checkConfirm({ dryRun: false })).toThrow();
     expect(() => checkConfirm({ dryRun: false, confirm: 'spec-test-b2c-healthcare' })).not.toThrow();

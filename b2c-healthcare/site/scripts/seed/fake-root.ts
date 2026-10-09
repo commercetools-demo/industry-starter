@@ -42,7 +42,11 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
         delete r.masterVariant;
         delete r.variants;
         delete r.publish;
-        r.masterData = { published: !!d.publish, staged: { name: d.name, masterVariant: { id: 1, ...(d.masterVariant ?? {}) }, variants: d.variants ?? [] } };
+        const master = { id: 1, ...(d.masterVariant ?? {}) } as Rec;
+        // the platform gives every price an id (update actions address prices by it)
+        master.prices = ((master.prices as Rec[] | undefined) ?? []).map((p) => ({ id: `price-${(counter += 1)}`, ...p }));
+        const dd = draft as Rec;
+        r.masterData = { published: !!d.publish, staged: { name: d.name, slug: dd.slug, description: dd.description, masterVariant: master, variants: d.variants ?? [] } };
       }
     }
     if (kind === 'categories' && !draft.ancestors) {
@@ -67,6 +71,18 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
     return null;
   }
 
+  /** The platform rolls review ratings up into the product's `reviewRatingStatistics` (the real one lags by seconds; the fake is immediate). */
+  function rollUpRating(review: Rec): void {
+    const target = review.target as { key?: string; id?: string } | undefined;
+    const product = fake.store.products.find((p) => p.key === target?.key || p.id === target?.id);
+    if (!product || typeof review.rating !== 'number') return;
+    const stats = (product.reviewRatingStatistics as { count: number; averageRating: number } | undefined) ?? { count: 0, averageRating: 0 };
+    const count = stats.count + 1;
+    product.reviewRatingStatistics = { count, averageRating: (stats.averageRating * stats.count + review.rating) / count };
+  }
+
+  const zoneId = (z: unknown) => (z as { id?: string }).id ?? fake.store.zones.find((x) => x.key === (z as { key?: string }).key)?.id;
+
   function applyAction(kind: string, r: Rec, a: Rec): void {
     const md = r.masterData as { published: boolean; staged: { masterVariant: Rec; variants: Rec[] } } | undefined;
     switch (a.action) {
@@ -84,6 +100,55 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
       case 'addExternalImage':
         if (md) for (const v of [md.staged.masterVariant, ...md.staged.variants]) if (v.id === a.variantId) v.images = [...((v.images as Rec[]) ?? []), a.image as Rec];
         break;
+      // ---- update actions the seed's update plans send (additive; each mirrors the platform's effect on stored data)
+      case 'changeName': if (md) (md.staged as Rec).name = a.name; else r.name = a.name; break;
+      case 'changeSlug': if (md) (md.staged as Rec).slug = a.slug; else r.slug = a.slug; break;
+      case 'setDescription': if (md) (md.staged as Rec).description = a.description; break;
+      case 'addPrice': if (md) md.staged.masterVariant.prices = [...((md.staged.masterVariant.prices as Rec[]) ?? []), { id: `price-${(counter += 1)}`, ...(a.price as Rec) }]; break;
+      case 'changePrice': if (md) md.staged.masterVariant.prices = ((md.staged.masterVariant.prices as Rec[]) ?? []).map((p) => (p.id === a.priceId ? { id: p.id, ...(a.price as Rec) } : p)); break;
+      case 'removePrice': if (md) md.staged.masterVariant.prices = ((md.staged.masterVariant.prices as Rec[]) ?? []).filter((p) => p.id !== a.priceId); break;
+      case 'setAttribute':
+        if (md) {
+          const attrs = ((md.staged.masterVariant.attributes as { name: string; value: unknown }[]) ?? []).filter((x) => x.name !== a.name);
+          md.staged.masterVariant.attributes = [...attrs, { name: a.name as string, value: a.value }];
+        }
+        break;
+      case 'addAttributeDefinition': r.attributes = [...((r.attributes as Rec[]) ?? []), a.attribute]; break;
+      case 'changeIsSearchable': r.attributes = ((r.attributes as Rec[]) ?? []).map((x) => (x.name === a.attributeName ? { ...x, isSearchable: a.isSearchable } : x)); break;
+      case 'changeAttributeConstraint': r.attributes = ((r.attributes as Rec[]) ?? []).map((x) => (x.name === a.attributeName ? { ...x, attributeConstraint: a.newValue } : x)); break;
+      case 'addPlainEnumValue':
+        r.attributes = ((r.attributes as Rec[]) ?? []).map((x) => {
+          if (x.name !== a.attributeName) return x;
+          const t = x.type as { name: string; values?: Rec[]; elementType?: { values?: Rec[] } };
+          if (t.name === 'set' && t.elementType) return { ...x, type: { ...t, elementType: { ...t.elementType, values: [...(t.elementType.values ?? []), a.value as Rec] } } };
+          return { ...x, type: { ...t, values: [...(t.values ?? []), a.value as Rec] } };
+        });
+        break;
+      case 'addFieldDefinition': r.fieldDefinitions = [...((r.fieldDefinitions as Rec[]) ?? []), a.fieldDefinition]; break;
+      case 'changeLabel':
+        if (a.attributeName) r.attributes = ((r.attributes as Rec[]) ?? []).map((x) => (x.name === a.attributeName ? { ...x, label: a.label } : x));
+        if (a.fieldName) r.fieldDefinitions = ((r.fieldDefinitions as Rec[]) ?? []).map((x) => (x.name === a.fieldName ? { ...x, label: a.label } : x));
+        break;
+      case 'setCustomType': r.custom = { type: a.type, fields: a.fields }; break;
+      case 'setCustomField': r.custom = { ...(r.custom as Rec), fields: { ...((r.custom as { fields?: Rec } | undefined)?.fields ?? {}), [a.name as string]: a.value } }; break;
+      case 'setRoles': r.roles = a.roles; break;
+      case 'changeIsDefault': r.isDefault = a.isDefault; break;
+      case 'addZone': r.zoneRates = [...((r.zoneRates as Rec[]) ?? []), { zone: a.zone, shippingRates: [] }]; break;
+      case 'addShippingRate':
+        r.zoneRates = ((r.zoneRates as { zone: { id?: string; key?: string }; shippingRates: Rec[] }[]) ?? []).map((z) => (zoneId(z.zone) === zoneId(a.zone) ? { ...z, shippingRates: [...z.shippingRates, a.shippingRate as Rec] } : z));
+        break;
+      case 'removeShippingRate':
+        r.zoneRates = ((r.zoneRates as { zone: { id?: string; key?: string }; shippingRates: { price: { centAmount: number }; freeAbove?: { centAmount: number } }[] }[]) ?? []).map((z) =>
+          zoneId(z.zone) === zoneId(a.zone) ? { ...z, shippingRates: z.shippingRates.filter((s) => JSON.stringify([s.price, s.freeAbove ?? null]) !== JSON.stringify([(a.shippingRate as Rec).price, (a.shippingRate as Rec).freeAbove ?? null])) } : z,
+        );
+        break;
+      case 'addTaxRate': r.rates = [...((r.rates as Rec[]) ?? []), { id: `rate-${(counter += 1)}`, ...(a.taxRate as Rec) }]; break;
+      case 'replaceTaxRate': r.rates = ((r.rates as Rec[]) ?? []).map((x) => (x.id === a.taxRateId ? { id: x.id, ...(a.taxRate as Rec) } : x)); break;
+      case 'removeTaxRate': r.rates = ((r.rates as Rec[]) ?? []).filter((x) => x.id !== a.taxRateId); break;
+      case 'addLocation': r.locations = [...((r.locations as Rec[]) ?? []), a.location]; break;
+      case 'removeLocation': r.locations = ((r.locations as Rec[]) ?? []).filter((l) => JSON.stringify(l) !== JSON.stringify(a.location)); break;
+      case 'changeType': r.type = a.type; break;
+      case 'changeInitial': r.initial = a.initial; break;
       default: break;
     }
     void kind;
@@ -108,6 +173,7 @@ export function createFakeRoot(initial: Record<string, Rec[]> = {}, projectKey =
         if (dup) throw err(400, `duplicate key ${String(a.body.key)}`);
         const r = materialize(kind, a.body);
         fake.store[kind].push(r);
+        if (kind === 'reviews') rollUpRating(r);
         fake.log.push({ op: 'create', kind, key: r.key as string | undefined, id: r.id as string });
         return { body: r };
       },

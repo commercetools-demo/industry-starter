@@ -5,7 +5,8 @@ import { SITE_SLOTS } from './data/site-slots';
 import { createFakeRoot } from './fake-root';
 import { makeCtx, runSteps } from './lib';
 import { foundationSteps, doctorSteps } from './steps';
-import { cleanUrl, jpegSize, parseArgs, pickPhotos, pickUrls, productTargets, searchTerm, updateImages, type Photo } from './update-images';
+import { loadProductImages, loadSiteImages } from './data/images';
+import { cleanUrl, jpegSize, missingStoredImages, parseArgs, pickPexelsApi, pickPhotos, pickUrls, productTargets, queryLadder, searchTerm, updateImages, type Photo } from './update-images';
 
 beforeEach(() => {
   // no test in this file may reach the network
@@ -50,8 +51,10 @@ describe('update-images pure helpers', () => {
   });
 
   it('parseArgs bounds the count to 1..6', () => {
-    expect(parseArgs([])).toEqual({ dryRun: false, only: undefined, count: 2 });
-    expect(parseArgs(['--dry-run', '--only', 'mlv-doc-x', '--count', '3'])).toEqual({ dryRun: true, only: 'mlv-doc-x', count: 3 });
+    expect(parseArgs([])).toEqual({ dryRun: false, jsonOnly: false, only: undefined, count: 2 });
+    expect(parseArgs(['--dry-run', '--only', 'mlv-doc-x', '--count', '3'])).toEqual({ dryRun: true, jsonOnly: false, only: 'mlv-doc-x', count: 3 });
+    expect(parseArgs(['--json-only']).jsonOnly).toBe(true);
+    expect(() => parseArgs(['--json-only', '--dry-run'])).toThrow(/Use one of them/);
     expect(() => parseArgs(['--count', '0'])).toThrow();
     expect(() => parseArgs(['--count', '7'])).toThrow();
     expect(() => parseArgs(['--count', '1.5'])).toThrow();
@@ -100,10 +103,10 @@ describe('updateImages (mocked search, fake root)', () => {
     expect(saved).toEqual([]);
   });
 
-  it('banner slots are saved one photo each, with the photographer', async () => {
+  it('banner slots are saved one photo each; no photographer credit is stored (royalty-free, D-040)', async () => {
     const saved: Record<string, Record<string, { url: string; photographer?: string }>> = {};
     await updateImages({ ...base, root: null, dryRun: false, only: 'home-hero', save: (f, d) => { saved[f.split('/').pop() as string] = d as never; } });
-    expect(saved['site-images.json']['home-hero']).toEqual({ url: expect.stringContaining('https://images.example/'), photographer: 'P', dimensions: { w: 800, h: 600 } });
+    expect(saved['site-images.json']['home-hero']).toEqual({ url: expect.stringContaining('https://images.example/'), dimensions: { w: 800, h: 600 } });
     expect(saved['product-images.json']).toBeUndefined();
   });
 
@@ -119,6 +122,58 @@ describe('updateImages (mocked search, fake root)', () => {
     expect(Object.keys(slotFile ?? {})).toEqual(['home-cta', 'journal-1']);
     const failAll = await updateImages({ ...base, root: null, dryRun: true, only: 'home-cta', search: () => Promise.resolve([]), save: () => {} });
     expect(failAll.failed).toBe(1);
+  });
+
+  it('--json-only mode: no commercetools root, JSON files written for every doctor, medication and slot; no credit fields', async () => {
+    const saved: Record<string, Record<string, unknown>> = {};
+    const result = await updateImages({ ...base, root: null, dryRun: false, load: () => ({}), save: (f, d) => { saved[f.split('/').pop() as string] = d as never; } });
+    expect(result.failed).toBe(0);
+    expect(Object.keys(saved['product-images.json'])).toHaveLength(DOCTORS.length + MEDICATIONS.length);
+    expect(Object.keys(saved['site-images.json']).sort()).toEqual(['home-cta', 'home-hero', 'home-rx-delivery', 'journal-1', 'journal-2', 'journal-3']);
+    expect(JSON.stringify(saved)).not.toContain('photographer');
+  });
+
+  it('no photo is used twice, although several products share one query', async () => {
+    const saved: Record<string, Record<string, { url: string }[] | { url: string }>> = {};
+    await updateImages({ ...base, root: null, dryRun: false, load: () => ({}), save: (f, d) => { saved[f.split('/').pop() as string] = d as never; } });
+    const urls = [...Object.values(saved['product-images.json']).flat(), ...Object.values(saved['site-images.json'])].map((i) => (i as { url: string }).url);
+    expect(new Set(urls).size).toBe(urls.length);
+  });
+
+  it('too few results widen the query (fewer words, then the fallback) and record it', async () => {
+    const lines: string[] = [];
+    const narrow = (term: string, count: number) => (term.split(' ').length > 1 ? Promise.resolve([]) : search(`doctor-${term}`, count));
+    const result = await updateImages({ ...base, root: null, dryRun: true, only: 'mlv-doc-amara-okafor', search: narrow, save: () => {}, log: (l) => lines.push(l) });
+    expect(result.failed).toBe(0);
+    expect(result.widened).toEqual([{ key: 'mlv-doc-amara-okafor', from: 'female doctor portrait', to: 'female' }]);
+    expect(lines.some((l) => l.startsWith('WIDENED'))).toBe(true);
+    expect(queryLadder('pharmacy medicine blister pack', 'pharmacy medicine')).toEqual(['pharmacy medicine blister pack', 'pharmacy medicine blister', 'pharmacy medicine', 'pharmacy']);
+  });
+
+  it('a photo whose URL does not load is skipped and the next candidate is used', async () => {
+    const saved: Record<string, Record<string, { url: string }[]>> = {};
+    const broken = (url: string) => Promise.resolve(url.endsWith('-0.jpg') ? null : { w: 612, h: 408 });
+    await updateImages({ ...base, root: null, dryRun: false, only: 'mlv-doc-amara-okafor', measure: broken, load: () => ({}), save: (f, d) => { saved[f.split('/').pop() as string] = d as never; } });
+    expect(saved['product-images.json']['mlv-doc-amara-okafor'].map((i) => i.url.slice(-6))).toEqual(['-1.jpg', '-2.jpg']);
+  });
+
+  it('pickPexelsApi takes clean, distinct large photos of an official API response', () => {
+    const photo = (u: string) => ({ src: { large: u } });
+    const r = { photos: [photo('https://images.pexels.com/photos/1/a.jpeg?auto=compress&w=940'), photo('https://images.pexels.com/photos/1/a.jpeg?w=1'), photo('https://images.pexels.com/photos/2/b.jpeg?h=650')] };
+    expect(pickPexelsApi(r, 5).map((p) => p.url)).toEqual(['https://images.pexels.com/photos/1/a.jpeg', 'https://images.pexels.com/photos/2/b.jpeg']);
+    expect(pickPexelsApi(null, 2)).toEqual([]);
+  });
+
+  it('the committed JSON has a clean photo for every doctor, medication and slot (D-040)', () => {
+    expect(missingStoredImages()).toEqual([]);
+    const all = [...Object.values(loadProductImages()).flat(), ...Object.values(loadSiteImages())];
+    for (const i of all) {
+      expect(i.url).toMatch(/^https:\/\//);
+      expect(i.url).not.toMatch(/[?#]/);
+      expect(i.dimensions.w).toBeGreaterThan(0);
+    }
+    expect(JSON.stringify(all)).not.toContain('photographer');
+    expect(new Set(all.map((i) => i.url)).size).toBe(all.length);
   });
 
   it('rejects an unknown --only key', async () => {

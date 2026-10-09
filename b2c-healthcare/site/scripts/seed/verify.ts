@@ -5,7 +5,7 @@ import { MEDICATIONS, medKey, medSku } from './data/medications';
 import { SAME_DAY_ZONE, SHIPPING_METHODS } from './data/shipping';
 import { STATES } from './data/states';
 import { TAX_CATEGORIES } from './data/tax';
-import { CHANNELS, CUSTOM_TYPES, PRODUCT_TYPES } from './data/types';
+import { CHANNELS, CUSTOM_TYPES, PRODUCT_TYPES, SEARCHED_ATTRIBUTES } from './data/types';
 import { verifyClinical } from './verify-clinical';
 import { assertProject, getAdminRoot, hasPrefix, inventoryKey, isMain, listAll, PREFIX, type Rec, type Root } from './lib';
 
@@ -119,6 +119,13 @@ export async function runVerify(root: Root, opts: VerifyOptions = {}): Promise<C
   check('custom types', sameSet((await listAll(root, 'types')).map((t) => t.key as string), [...CUSTOM_TYPES, LIST_LINE_TYPE].map((t) => t.key)));
   check('recurrence policies', sameSet((await listAll(root, 'recurrencePolicies')).map((t) => t.key as string), RECURRENCE_POLICIES.map((t) => t.key)));
   check('product types', sameSet((await listAll(root, 'productTypes')).map((t) => t.key as string), PRODUCT_TYPES.map((t) => t.key)));
+  // D-039: Product Search cannot filter or full-text match an attribute that is not searchable (the clinic search needs clinicName)
+  const productTypes = await listAll(root, 'productTypes');
+  const notSearchable = Object.entries(SEARCHED_ATTRIBUTES).flatMap(([typeKey, names]) => {
+    const have = (productTypes.find((t) => t.key === typeKey)?.attributes as { name: string; isSearchable?: boolean }[] | undefined) ?? [];
+    return names.filter((n) => have.find((a) => a.name === n)?.isSearchable !== true).map((n) => `${typeKey}.${n}`);
+  });
+  check('every attribute the storefront searches is isSearchable (incl. clinicName)', notSearchable.length === 0, `not searchable: ${notSearchable.join(', ')}; run npm run seed (changeIsSearchable) and wait for the index`);
   check('price channels', sameSet(channels.map((c) => c.key as string), CHANNELS.map((c) => c.key)));
   check('categories match the data file', sameSet((await listAll(root, 'categories')).map((c) => c.key as string), CATEGORIES.map((c) => c.key)));
 

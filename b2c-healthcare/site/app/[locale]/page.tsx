@@ -43,7 +43,7 @@ export default async function LocaleHome({ params }: { params: Promise<{ locale:
       <RxDelivery image={siteImage('home-rx-delivery')} sameDay={sameDay} autoRefill={autoRefillEnabled()} />
       <StatsBand stats={snapshot?.stats ?? null} />
       <JournalRow articles={articles} />
-      <ClosingCta />
+      <ClosingCta image={siteImage('home-cta')} />
     </>
   );
 }

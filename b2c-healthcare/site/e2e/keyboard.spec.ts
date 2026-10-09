@@ -34,6 +34,8 @@ test('booking with the keyboard only (as a guest), including Escape closing the 
   await expect(page.getByRole('heading', { name: 'Dr. Priya Nair' })).toBeVisible();
   await expect(page.getByText('Book a time')).toBeVisible();
   await page.waitForSelector('button:text-matches("^\\\\d{2}:\\\\d{2}$")');
+  // The first slot belongs to journey 1 (same doctor, same dev server: its claim stays), so book the second one.
+  await tabTo(page, (el) => el.tagName === 'BUTTON' && /^\d{2}:\d{2}$/.test((el.textContent ?? '').trim()));
   await tabTo(page, (el) => el.tagName === 'BUTTON' && /^\d{2}:\d{2}$/.test((el.textContent ?? '').trim()));
   await expectFocusRing(page);
   await page.keyboard.press('Enter');

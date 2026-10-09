@@ -7,7 +7,7 @@ const post = vi.fn();
 const search = vi.fn(() => ({ post }));
 vi.mock('@/lib/ct/client', () => ({ apiRoot: { products: () => ({ search }) } }));
 
-import { buildFacetFilters, buildPaging, buildQuery, buildSearchRequest, buildSellableFilter, buildSort } from './search-query';
+import { buildClinicMatch, buildNameMatch, buildFacetFilters, buildPaging, buildQuery, buildSearchRequest, buildSellableFilter, buildSort } from './search-query';
 import { searchProducts } from './search';
 
 const base = { locale: 'en-US', currency: 'USD', country: 'US' };
@@ -80,6 +80,13 @@ describe('storefront-data-loading: Product Search query builders', () => {
     expect(buildPaging(3, 20)).toEqual({ limit: 20, offset: 40 });
     expect(buildPaging(0, 1000)).toEqual({ limit: 100, offset: 0 });
     expect(buildPaging()).toEqual({ limit: 20, offset: 0 });
+  });
+
+  it('Clinic search (D-039): full text on the searchable clinicName attribute, all words must match, and it is OR-ed into the name match', () => {
+    expect(buildClinicMatch('  Austin Central ')).toEqual({ fullText: { field: 'variants.attributes.clinicName', fieldType: 'text', value: 'Austin Central', mustMatch: 'all' } });
+    const q = buildNameMatch('Austin', 'en-US', [buildClinicMatch('Austin')]) as { or: unknown[] };
+    expect(q.or).toHaveLength(3);
+    expect(JSON.stringify(q.or.at(-1))).toContain('variants.attributes.clinicName');
   });
 
   it('full request: price selection with channel, facets, locale projection', () => {

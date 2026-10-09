@@ -8,12 +8,12 @@ export type Mode = 'sample' | 'seed';
 
 /** Sample data order (E-03): carts, orders, inventory, products, categories (leaves first), product types, shipping methods, tax categories, stores, zones. */
 export const SAMPLE_ORDER: Kind[] = ['carts', 'orders', 'inventory', 'products', 'categories', 'productTypes', 'shippingMethods', 'taxCategories', 'stores', 'zones'];
-/** Seed reset order: shipping before zones and tax; states, types and channels last (they are referenced by the rest). */
-export const SEED_ORDER: Kind[] = ['inventory', 'products', 'categories', 'productTypes', 'shippingMethods', 'taxCategories', 'zones', 'recurrencePolicies', 'states', 'types', 'channels'];
+/** Seed reset order (D-038): reviews first (they reference products and customers), then shipping before zones and tax; states, types and channels last (they are referenced by the rest). */
+export const SEED_ORDER: Kind[] = ['reviews', 'inventory', 'products', 'categories', 'productTypes', 'shippingMethods', 'taxCategories', 'zones', 'recurrencePolicies', 'states', 'types', 'channels'];
 /** Zones that existed before the seed and stay (project findings: `usa` is reused, `europe` is left alone). */
 export const KEPT_ZONES = ['usa', 'europe'];
 
-export interface Item { kind: Kind; id: string; key?: string; version: number; published?: boolean; depth: number }
+export interface Item { kind: Kind; id: string; key?: string; version: number; published?: boolean; depth: number; /** DELETE with `dataErasure=true` (reviews carry patient text). */ erase?: boolean }
 
 const toItem = (kind: Kind, r: Rec): Item => ({
   kind,
@@ -22,6 +22,7 @@ const toItem = (kind: Kind, r: Rec): Item => ({
   version: r.version as number,
   published: kind === 'products' ? !!(r.masterData as { published?: boolean } | undefined)?.published : undefined,
   depth: kind === 'categories' ? ((r.ancestors as unknown[]) ?? []).length : 0,
+  erase: kind === 'reviews' ? true : undefined,
 });
 
 /** Whether a resource of this kind is in scope of the mode. Never selects a prefixed resource in `sample` mode. */
@@ -61,7 +62,13 @@ export async function executeDeletion(ctx: Ctx, items: Item[]): Promise<{ delete
       // a state cannot be removed while another state lists it as a transition target
       version = (await withRetry(() => handle.post({ body: { version, actions: [{ action: 'setTransitions', transitions: [] }] } }).execute(), ctx.sleep)).body.version as number;
     }
-    await withRetry(() => handle.delete({ queryArgs: { version } }).execute(), ctx.sleep);
+    try {
+      await withRetry(() => handle.delete({ queryArgs: { version, ...(item.erase ? { dataErasure: true } : {}) } }).execute(), ctx.sleep);
+    } catch (e) {
+      const status = (e as { statusCode?: number }).statusCode;
+      if (status === 400 || status === 409) throw new Error(`${label(item)} could not be deleted (${(e as Error).message}). Something still references it (a customer's cart, order or recurring order?): run again with --include-customers (npm run seed:full does).`);
+      throw e;
+    }
     deleted += 1;
     ctx.log(`deleted       ${label(item)}`);
     if (ctx.pauseMs) await (ctx.sleep ?? realSleep)(ctx.pauseMs);
