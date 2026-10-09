@@ -68,6 +68,8 @@ async function post<T>(url: string, body: unknown): Promise<T> {
 
 export interface AuthMutations {
   login: (args: LoginArgs) => Promise<SignedIn>;
+  /** Demo only: signs in a listed sample customer (the server holds the password). */
+  demoLogin: (args: Omit<LoginArgs, 'password'>) => Promise<SignedIn>;
   register: (args: RegisterArgs) => Promise<SignedIn>;
   logout: () => Promise<void>;
   forgotPassword: (args: { email: string; locale: string }) => Promise<{ ok: true; demoLink?: string }>;
@@ -97,6 +99,7 @@ export function useAuthMutations(): AuthMutations {
   );
 
   const login = useCallback(async (args: LoginArgs) => finishSignIn(await post<SignedIn>('/api/auth/login', args)), [finishSignIn]);
+  const demoLogin = useCallback(async (args: Omit<LoginArgs, 'password'>) => finishSignIn(await post<SignedIn>('/api/auth/demo-login', args)), [finishSignIn]);
   const register = useCallback(async (args: RegisterArgs) => finishSignIn(await post<SignedIn>('/api/auth/register', args)), [finishSignIn]);
 
   const logout = useCallback(async () => {
@@ -109,5 +112,8 @@ export function useAuthMutations(): AuthMutations {
   const forgotPassword = useCallback((args: { email: string; locale: string }) => post<{ ok: true; demoLink?: string }>('/api/auth/forgot-password', args), []);
   const resetPassword = useCallback((args: { token: string; password: string; locale: string }) => post<{ ok: true; redirectTo: string }>('/api/auth/reset-password', args), []);
 
-  return useMemo(() => ({ login, register, logout, forgotPassword, resetPassword }), [login, register, logout, forgotPassword, resetPassword]);
+  return useMemo(
+    () => ({ login, demoLogin, register, logout, forgotPassword, resetPassword }),
+    [login, demoLogin, register, logout, forgotPassword, resetPassword],
+  );
 }

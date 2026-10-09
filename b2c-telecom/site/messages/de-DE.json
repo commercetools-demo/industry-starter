@@ -757,7 +757,11 @@
       "error": "Geben Sie eine gültige E-Mail-Adresse und ein gültiges Passwort ein.",
       "forgot": "Passwort vergessen?",
       "create": "Neu bei Malva? Konto erstellen",
-      "resetDone": "Passwort geändert. Melden Sie sich mit Ihrem neuen Passwort an."
+      "resetDone": "Passwort geändert. Melden Sie sich mit Ihrem neuen Passwort an.",
+      "demo": {
+        "label": "Demo: als Beispielkunde anmelden",
+        "submit": "Als Beispielkunde anmelden"
+      }
     },
     "field": {
       "email": "E-Mail",

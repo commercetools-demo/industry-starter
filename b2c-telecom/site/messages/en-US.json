@@ -757,7 +757,11 @@
       "error": "Enter a valid email and password.",
       "forgot": "Forgot your password?",
       "create": "New to Malva? Create an account",
-      "resetDone": "Password changed. Log in with your new password."
+      "resetDone": "Password changed. Log in with your new password.",
+      "demo": {
+        "label": "Demo: log in as a sample customer",
+        "submit": "Log in as sample customer"
+      }
     },
     "field": {
       "email": "Email",
