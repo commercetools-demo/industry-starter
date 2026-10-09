@@ -45,3 +45,10 @@ describe('searched attributes are searchable in the seed product types', () => {
     }
   });
 });
+
+describe('product type attributes the platform accepts', () => {
+  it("no attribute of type 'set' is required (commercetools: \"isRequired=true is not supported for attribute type 'set'\")", () => {
+    const bad = PRODUCT_TYPES.flatMap((t) => (t.attributes as { name: string; isRequired: boolean; type: { name: string } }[]).filter((a) => a.isRequired && a.type.name === 'set').map((a) => `${t.key}.${a.name}`));
+    expect(bad).toEqual([]);
+  });
+});

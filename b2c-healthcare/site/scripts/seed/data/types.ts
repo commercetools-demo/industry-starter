@@ -140,7 +140,7 @@ export const PRODUCT_TYPES = [
       attr('clinicName', 'Clinic', { name: 'text' }, { searchable: true }),
       attr('city', 'City', enumType(CITIES), { searchable: true, required: true }),
       attr('timezone', 'Time zone (IANA)', { name: 'text' }),
-      attr('modes', 'Visit modes', { name: 'set', elementType: enumType(MODES) }, { searchable: true, required: true }),
+      attr('modes', 'Visit modes', { name: 'set', elementType: enumType(MODES) }, { searchable: true }),
     ],
   },
   {
