@@ -1,0 +1,1 @@
+export { mapService } from './service';

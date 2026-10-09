@@ -1,0 +1,279 @@
+{
+  "receipt_version": 3,
+  "tool": "commercetools-spec-templates",
+  "content_version": "0.2.0",
+  "applied_at": "2026-10-08T17:09:18.263Z",
+  "framework": "openspec",
+  "industry": "manufacturing",
+  "model": "B2B",
+  "sides": [],
+  "placement": "specs",
+  "scope": "all",
+  "plan_hash": "fdfb66bc42d0fb4f279e84f7ebcb199acc1fc10f707a67516446aa55e154c4b0",
+  "files": [
+    {
+      "path": "openspec/specs/about-us/spec.md",
+      "sha256": "364cb4fcaa8b58b305fcb8d2e8098548b56e38a5a3adee0d80dbd213a737f185"
+    },
+    {
+      "path": "openspec/specs/account-and-self-service/spec.md",
+      "sha256": "d71446a1bcafa19209a880f878dd85fcb14b8b55db2732396295d0a680901697"
+    },
+    {
+      "path": "openspec/specs/account-dashboard/spec.md",
+      "sha256": "14dcb73e1379cc392e3ddfe87928fe0ce2dfdc0767a1e9df81d9e962c9e931bd"
+    },
+    {
+      "path": "openspec/specs/account-level-order-history/spec.md",
+      "sha256": "e051822308bb8ad91abe7107c31b88b5aa8ec44ffce2bf7eb7eba4907b1d5281"
+    },
+    {
+      "path": "openspec/specs/account-registration-request/spec.md",
+      "sha256": "64fc383ce6c231aa508425b5526f929b222206026718bb22f0affbf6ded5379a"
+    },
+    {
+      "path": "openspec/specs/account-sign-in/spec.md",
+      "sha256": "ef5d5c6a1d8c750c1aa0d1d0502907d10d846247dc18eb3affa78a209abee642"
+    },
+    {
+      "path": "openspec/specs/address-book/spec.md",
+      "sha256": "ff6358259e390d23e15be2d52d3828ab816fad795bfd2b60c20ad1e6e2395c3e"
+    },
+    {
+      "path": "openspec/specs/agreement-amendment-with-proration/spec.md",
+      "sha256": "7f5fe173cb01a4d427761924e53dcf1a20409e49eceb2ccc8849c133117166be"
+    },
+    {
+      "path": "openspec/specs/agreement-price-by-site/spec.md",
+      "sha256": "2707d5b7e08c4d1b1b95b2f3894c033b1d443f50dd4d2e30e353f185935c30e5"
+    },
+    {
+      "path": "openspec/specs/alternate-brand-cross-reference/spec.md",
+      "sha256": "b243ab6b99b7f0f3212704d3c0425de27125da43aa40485a312dbd6f90ffd2bd"
+    },
+    {
+      "path": "openspec/specs/approval-workflows/spec.md",
+      "sha256": "a3c6f6e727db050c170857463e016162c178ca5f9a9691151cc86fd5c3ffc01f"
+    },
+    {
+      "path": "openspec/specs/authentication-and-identity/spec.md",
+      "sha256": "8a64836a529790c26b8ba6aae017d5af585c2a4f8be218873eadffa665925881"
+    },
+    {
+      "path": "openspec/specs/bill-to-and-payer-per-destination/spec.md",
+      "sha256": "1676c9a9e346efd4bec7b0f3a355319d9fc9d1175a6d7cc904b9a94597ecd3bb"
+    },
+    {
+      "path": "openspec/specs/blog-resources/spec.md",
+      "sha256": "264defd2017b1db1553112640ba1f4997576028b823e391e1f7b223f845a4e4a"
+    },
+    {
+      "path": "openspec/specs/budget-and-spending-limits/spec.md",
+      "sha256": "537d2a262880231fa6b363b67324017644d17ff55593427813fc2fc7c2442493"
+    },
+    {
+      "path": "openspec/specs/bulk-and-repeat-ordering/spec.md",
+      "sha256": "458dd8c4163aac0202c19e5e37d89e2c97fc863b5a2bfd3b60127cfba3863568"
+    },
+    {
+      "path": "openspec/specs/cart-management/spec.md",
+      "sha256": "d7137f438289a8aee093976f82a7edd50a18c9818ff6030c212d0154b3c79864"
+    },
+    {
+      "path": "openspec/specs/cart-page/spec.md",
+      "sha256": "cceef85317d1c8ac1f910fa9a7577e168cadfa6acb232b21f767b71e17a4e603"
+    },
+    {
+      "path": "openspec/specs/checkout-page/spec.md",
+      "sha256": "1aa68162d760dc8b58bb494a859b41caa223839a8dad69dffa00fe5a8b5b7d51"
+    },
+    {
+      "path": "openspec/specs/checkout/spec.md",
+      "sha256": "4a060f9153f4c019508a256dee24d5a7e7defa043a15908afd7b32c5bb768020"
+    },
+    {
+      "path": "openspec/specs/company-account-setup/spec.md",
+      "sha256": "78c124d37b018c1bcef1cd1bc5bcd3ce842721027c3e0a89f1c5b58dd899afda"
+    },
+    {
+      "path": "openspec/specs/company-profile/spec.md",
+      "sha256": "c88185070fa19d60d5fbe4387850ea9811a11a2d2602cf2cefc3a1eaac41db1a"
+    },
+    {
+      "path": "openspec/specs/contact-us/spec.md",
+      "sha256": "ad8e2bff1feada6976300a2d52c6fa5e1458f22b78189c9920be9351fe6f84c2"
+    },
+    {
+      "path": "openspec/specs/contract-and-account-pricing/spec.md",
+      "sha256": "95a53cff60007808e76ca1268f87d0226a9768f94386038b8642fcd39d0542bd"
+    },
+    {
+      "path": "openspec/specs/contract-pricing/spec.md",
+      "sha256": "0a4b878fa3888e79f568cca7f5fde1183374461c007884257e51dc4276836853"
+    },
+    {
+      "path": "openspec/specs/cost-center-management/spec.md",
+      "sha256": "a1e2e0283425fdaed6834ec24f51740c0eb015ec57279ac2a7e8d4e19a96be6c"
+    },
+    {
+      "path": "openspec/specs/discovery-and-browse/spec.md",
+      "sha256": "27c0718b0f9f38ef5c3f34414db25da156b87e556bae0bf1fb5129acc89627d3"
+    },
+    {
+      "path": "openspec/specs/email-verification/spec.md",
+      "sha256": "6012023fc4d3b93a675b6913232081d067555ecd5316a2430df5255d8b8c356f"
+    },
+    {
+      "path": "openspec/specs/error-pages/spec.md",
+      "sha256": "b1bc9005fe62d944fffed21637a58040275bba6ce7827cd77d063d19223fd7ec"
+    },
+    {
+      "path": "openspec/specs/external-price-of-record/spec.md",
+      "sha256": "34e47cb72ad209558874df174f13a6abd05190c56f3278511329fb0c9e83813f"
+    },
+    {
+      "path": "openspec/specs/faq/spec.md",
+      "sha256": "79a0220c255578228a7bc4de84b4c5eae8d11678559e968de0e7c71b8c8dfcfc"
+    },
+    {
+      "path": "openspec/specs/fitment-by-unit-identity/spec.md",
+      "sha256": "910192ff9961d21d753032e18025f1081c3cb1afce0f2c250199fcfc099deb27"
+    },
+    {
+      "path": "openspec/specs/home-landing-page/spec.md",
+      "sha256": "0210e621ff9a6abf9307aada111309adab0ee1213b825d5e1bd4b881caab0dc0"
+    },
+    {
+      "path": "openspec/specs/included-allowance-and-overage/spec.md",
+      "sha256": "4fd620eacb4e9fef0862b29ed130a347a07d31e5c8fb735f9066bb63aed6a6cc"
+    },
+    {
+      "path": "openspec/specs/installed-base-register/spec.md",
+      "sha256": "03d8e8dedcd534e55ce3515415c318626d964bc32b6e50a21483d76b601063be"
+    },
+    {
+      "path": "openspec/specs/invoice-and-billing-history/spec.md",
+      "sha256": "73d04c9bc5c4ce8905e89c47e16955827dc12a9bc377c2e1dc9fc21834c88711"
+    },
+    {
+      "path": "openspec/specs/minimum-charge-floor/spec.md",
+      "sha256": "6e3404ebf0467c2798598b45c2fee0b4c592112d049b967a41ddead78c490477"
+    },
+    {
+      "path": "openspec/specs/mixed-oneoff-and-recurring-cart/spec.md",
+      "sha256": "05511973fdf059d44d3abdd5ef986a17cbd14807459d32f1ff337742b74c9d71"
+    },
+    {
+      "path": "openspec/specs/multi-site-order-composition/spec.md",
+      "sha256": "5508e6daf827f1aace5c6fb8d30c4f30415d8c0c75a6d0debd21056b95af30fe"
+    },
+    {
+      "path": "openspec/specs/network-stock-visibility/spec.md",
+      "sha256": "555279b8ebdca426d287339292195fdf703e86a1552b37cecf85fc6ada120ff4"
+    },
+    {
+      "path": "openspec/specs/order-approval/spec.md",
+      "sha256": "888f7fb0b7405f50ec14f1c9e265905cd41c9609dc1b905e9ddb07ccb663885c"
+    },
+    {
+      "path": "openspec/specs/order-class-routing/spec.md",
+      "sha256": "83e484115f89d7dfbe38778733bdd7d541f9de51e9a19e9c9166aa3045ca10ae"
+    },
+    {
+      "path": "openspec/specs/order-confirmation-page/spec.md",
+      "sha256": "c3044967909b4045bbdd08038fb04ba22734e6404a85ebc2295740f76cad4a8e"
+    },
+    {
+      "path": "openspec/specs/order-decomposition-by-business-unit/spec.md",
+      "sha256": "430b370c7d2240bc26244a254e027c35b6b06dd6fdb20ff35f72292c654991cb"
+    },
+    {
+      "path": "openspec/specs/order-history/spec.md",
+      "sha256": "4bd6d1f36519b4df17c63e332d4f86b858dcd0d9b29a08304f1daa26aed7c570"
+    },
+    {
+      "path": "openspec/specs/password-reset/spec.md",
+      "sha256": "e6beb9d71abe75f745ca0d77a6e8fb41e7e6a0e8407891b9be544d56932250cf"
+    },
+    {
+      "path": "openspec/specs/payment-methods/spec.md",
+      "sha256": "f94da7f3b29927942b12b394eb3b6e2cc8a55d0593722eabfb0ddae149f6e624"
+    },
+    {
+      "path": "openspec/specs/policy-pages/spec.md",
+      "sha256": "993c9412087040439f558825ef84ff9cad37691b0c53da462b78939809724830"
+    },
+    {
+      "path": "openspec/specs/post-purchase-order-management/spec.md",
+      "sha256": "d9655cc75d5f9262c3b66f32dd7e150aeaa1ccd9afe5264408666bed3f6b92df"
+    },
+    {
+      "path": "openspec/specs/product-detail-page/spec.md",
+      "sha256": "6aff6bab46aaf9a5279b302f1adb42d576d99f38ae537c6cf4a0bb6928111800"
+    },
+    {
+      "path": "openspec/specs/product-listing-page/spec.md",
+      "sha256": "839fd82a63bf8dbb20989ff5a08158c7cfa2d48997d7bc614640db623e5816c8"
+    },
+    {
+      "path": "openspec/specs/progressive-shipment-and-backorder/spec.md",
+      "sha256": "96773d6e322cd4abd60e869a35ef4951b099bf9be998c52e9337154beee17cf5"
+    },
+    {
+      "path": "openspec/specs/provisional-order-until-accepted/spec.md",
+      "sha256": "d3dfa3b03d46b09710350fb35274149852dbc9c4f0aa72347315263f4422c784"
+    },
+    {
+      "path": "openspec/specs/purchase-order-and-payment-terms/spec.md",
+      "sha256": "26512297cce447f7ff5e7af100715cac7cc9ef542a6e9777ad3d1757b23c4efb"
+    },
+    {
+      "path": "openspec/specs/quick-order-entry/spec.md",
+      "sha256": "2b3686181bef8f6d85a8cba7236be25e3f3ea8586fbadca483f799e9f7aff645"
+    },
+    {
+      "path": "openspec/specs/quote-negotiation/spec.md",
+      "sha256": "7b53e48d87aae8aee4c60ed6624d039a2e014a5c2884d6e629192b5b06723b10"
+    },
+    {
+      "path": "openspec/specs/quote-request-and-negotiation/spec.md",
+      "sha256": "5385c9689f6eea0e62980b401086845e6f92ffcc4a9f698212cb35b2739e5cbe"
+    },
+    {
+      "path": "openspec/specs/requisition-and-shopping-lists/spec.md",
+      "sha256": "31e6c3f2f2382ffc9814e9340c7ee8033c7d6ef340da7b5959ca2513dc9df357"
+    },
+    {
+      "path": "openspec/specs/saved-lists/spec.md",
+      "sha256": "f6d10debf5c0c676fbd618e4da8bd76d4a565273b64ec5e58f1aea926105b615"
+    },
+    {
+      "path": "openspec/specs/search-results-page/spec.md",
+      "sha256": "b9a873517b70b03a266c63d1df4316baf6ab89203b842b0894902ea27c32c66b"
+    },
+    {
+      "path": "openspec/specs/subscriptions-and-recurring-orders/spec.md",
+      "sha256": "813d5d7d061a9f2cec4849801ae96879b798ee2716695763e84499cdf87062a1"
+    },
+    {
+      "path": "openspec/specs/superseded-part-resolution/spec.md",
+      "sha256": "da5d80dd8525155613371bb0567e2fff51dcfba2cefbc59680aa6d90644499fb"
+    },
+    {
+      "path": "openspec/specs/switching-region-or-language/spec.md",
+      "sha256": "7af20a54183b4614b98a8beb34e5f73bcbe5c9abd795d84bcf71a143d3719c68"
+    },
+    {
+      "path": "openspec/specs/team-members-and-access/spec.md",
+      "sha256": "c85b2e76537ccc3a0fbca9e39fe130edfed2654f1d86d97d63fdb5b49663b461"
+    },
+    {
+      "path": "openspec/specs/territory-resolved-price/spec.md",
+      "sha256": "fe64a78f37240e39c95b71812dda39da9fbc831ac628176c04575ffec2868945"
+    },
+    {
+      "path": "openspec/specs/user-and-role-management/spec.md",
+      "sha256": "792773bc8eb8f80caed3d6b3f7ad38151d51fcab7a3fae45347536c468b8ef43"
+    }
+  ]
+}

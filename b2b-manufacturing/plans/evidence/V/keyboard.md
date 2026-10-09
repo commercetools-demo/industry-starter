@@ -1,0 +1,7 @@
+- **Desktop home, first 9 Tab stops**: Skip to content → 0800 555 0142 → English (US) → Deutsch (DE) → Client portal → Request a quote → Malva Plumbing & Waste → Plumbing → Waste management
+- **Skip link**: first stop "Skip to content", after Enter focus is on main#content (main#content expected)
+- **Sign-in dialog**: focus opens on "", 8 Tabs stay inside: true, after Escape focus is on "Client portal"
+- **Mobile menu**: 7 Tabs stay in menu/button: true, after Escape focus is on "Menu"
+- **Reflow at 320 px (limit 320)**: /en-US: scrollWidth 320; /en-US/plumbing/drain-cleaning-cctv-survey: scrollWidth 320; /de-DE/request-a-quote: scrollWidth 320; /en-US/quote-list: scrollWidth 320; /de-DE/privacy: scrollWidth 320
+- **prefers-reduced-motion**: transition on a button: 0s
+- **200% text size at 1440 px**: scrollWidth 1440

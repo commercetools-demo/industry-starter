@@ -1,0 +1,11 @@
+# Netlify build settings (Q-024). Environment variables are set in the Netlify UI, never here: see README "Deploy".
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Previews may show sample content; production may not (scripts/check-sample-content.mjs --strict fails while any `sample: true` remains).
+[context.production]
+  command = "npm run check:release && npm run build"

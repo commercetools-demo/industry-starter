@@ -1,0 +1,6 @@
+[
+  { "id": "facilities", "sector": "facilities", "title": { "en-US": "Facilities managers", "de-DE": "Facility Manager" }, "body": { "en-US": "Planned maintenance with one schedule across every building.", "de-DE": "Planmäßige Wartung mit einem Terminplan für alle Gebäude." }, "sample": true },
+  { "id": "manufacturing", "sector": "manufacturing", "title": { "en-US": "Manufacturers", "de-DE": "Hersteller" }, "body": { "en-US": "Process water, effluent and hazardous waste handled around production.", "de-DE": "Prozesswasser, Abwasser und Gefahrstoffabfälle werden um die Produktion herum abgewickelt." }, "sample": true },
+  { "id": "property", "sector": "property", "title": { "en-US": "Property & real estate", "de-DE": "Immobilien" }, "body": { "en-US": "Portfolio-wide contracts with consolidated reporting.", "de-DE": "Portfolioweite Verträge mit gebündeltem Reporting." }, "sample": true },
+  { "id": "healthcare", "sector": "healthcare", "title": { "en-US": "Healthcare", "de-DE": "Gesundheitswesen" }, "body": { "en-US": "Tracked clinical waste and water-safety testing for audits.", "de-DE": "Nachverfolgte klinische Abfälle und Wassersicherheitsprüfungen für Audits." }, "sample": true }
+]

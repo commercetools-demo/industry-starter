@@ -1,0 +1,6 @@
+[
+  { "id": "response", "value": "4 h", "caption": { "en-US": "Emergency response guarantee", "de-DE": "Garantierte Reaktionszeit im Notfall" }, "sample": true },
+  { "id": "on-schedule", "value": "98.6%", "caption": { "en-US": "Visits completed on schedule", "de-DE": "Einsätze termingerecht erledigt" }, "sample": true },
+  { "id": "diverted", "value": "82%", "caption": { "en-US": "Client waste diverted from landfill", "de-DE": "Kundenabfall von der Deponie ferngehalten" }, "sample": true },
+  { "id": "sites", "value": "350+", "caption": { "en-US": "Business sites under contract", "de-DE": "Betriebsstandorte unter Vertrag" }, "sample": true }
+]

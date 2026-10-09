@@ -1,0 +1,20 @@
+{
+  "projectKey": "spec-test-b2b-manufacturing",
+  "createdAt": "2026-10-09T12:05:17.724Z",
+  "entries": [
+    {
+      "kind": "zones",
+      "id": "3096122b-48dd-4b07-a89a-22a52fdb2317",
+      "version": 1,
+      "key": "europe",
+      "name": "Europe"
+    },
+    {
+      "kind": "zones",
+      "id": "d1e3fe6c-eba4-436b-86c8-7e2f27b4d082",
+      "version": 1,
+      "key": "north-america",
+      "name": "North America"
+    }
+  ]
+}

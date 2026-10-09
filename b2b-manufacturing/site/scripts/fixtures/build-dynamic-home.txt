@@ -1,0 +1,5 @@
+Route (app)
+┌ ○ /_not-found
+├ ƒ /[locale]
+├ ● /[locale]/plumbing
+└ ƒ /api/health

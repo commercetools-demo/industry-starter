@@ -1,0 +1,8 @@
+Route (app)
+┌ ○ /_not-found
+├ ● /[locale]
+│ ├ /en-US
+│ └ /de-DE
+├ ● /[locale]/plumbing
+├ ƒ /[locale]/account
+└ ƒ /api/health
