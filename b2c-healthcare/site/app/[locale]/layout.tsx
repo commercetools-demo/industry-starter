@@ -43,11 +43,14 @@ export default async function LocaleLayout({
           >
             {t('skipToContent')}
           </a>
-          <Header hasArticles={showJournal(locale)} regions={regions} />
-          <main id="main" className="min-h-[60vh] pb-20">
-            {children}
-          </main>
-          <Footer />
+          {/* The page is a column at least as tall as the viewport and <main> takes the spare height, so the footer band sits at the bottom even on short pages (sign in). */}
+          <div className="flex min-h-dvh flex-col">
+            <Header hasArticles={showJournal(locale)} regions={regions} />
+            <main id="main" className="flex-1 pb-20">
+              {children}
+            </main>
+            <Footer />
+          </div>
         </ToastProvider>
       </SwrProvider>
     </IntlProvider>
