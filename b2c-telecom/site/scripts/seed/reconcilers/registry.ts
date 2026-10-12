@@ -1,6 +1,7 @@
 import type { AnyReconciler, Kind } from '../types';
 import { cartDiscountReconciler } from './cartDiscount';
 import { categoryReconciler } from './category';
+import { channelReconciler } from './channel';
 import { customerGroupReconciler } from './customerGroup';
 import { customObjectReconciler } from './customObject';
 import { demoCustomerReconciler } from './demoCustomer';
@@ -20,6 +21,7 @@ export const reconcilers: AnyReconciler[] = [
   typeReconciler,
   taxCategoryReconciler,
   zoneCoverageReconciler,
+  channelReconciler,
   customerGroupReconciler,
   customObjectReconciler,
   recurrencePolicyReconciler,

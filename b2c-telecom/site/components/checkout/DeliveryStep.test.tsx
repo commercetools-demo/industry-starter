@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { buildReview } from '@/lib/checkout/review';
-import { fakeCheckout, readyState, usd } from '@/test/fixtures/checkoutApi';
+import { fakeCheckout, makeCart, readyState, usd } from '@/test/fixtures/checkoutApi';
 import { renderWithProviders } from '@/test/utils';
 import { CheckoutSummary } from './CheckoutSummary';
 import { DeliveryStep } from './DeliveryStep';
@@ -24,7 +24,7 @@ describe('DeliveryStep', () => {
 
   it('Address change moves tax: summary shows the recalculated tax and shipping and withdraws a no-longer-valid method', async () => {
     // The buyer changed the address: the platform recalculated tax and dropped the old method; the options are read again.
-    const after = readyState({ needsDelivery: true, delivery: { id: 'sm-old', name: 'Old method', price: usd(500) }, tax: usd(125), shipping: usd(500) });
+    const after = readyState({ needsDelivery: true, delivery: { id: 'sm-old', name: 'Old method', price: usd(500) }, tax: usd(125), shipping: usd(500), cart: makeCart({ summary: { shipping: usd(500), tax: usd(125), taxAdded: usd(125) } }) });
     const checkout = fakeCheckout(after, { loadDelivery: vi.fn(async () => ({ options: [standard, express], needsDelivery: true, state: after })) });
     renderWithProviders(
       <>

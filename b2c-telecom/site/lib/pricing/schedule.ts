@@ -15,6 +15,12 @@ export interface ScheduleInput {
   standing: Money;
   /** The engine says the intro cart discount is on the line. */
   introApplied: boolean;
+  /**
+   * What the engine takes off ONE unit of the order placed now (first-order promotions: the first-month promotion, a discount code).
+   * It makes month 1 a period of its own at the reduced price; every later month is the standing price, because promotions never reach
+   * recurring orders. Absent or zero: no first period.
+   */
+  firstOrderDiscount?: Money;
   /** Per unit price of the same offer's month-to-month variant (after-term price). */
   monthToMonth: Money | null;
   /** One-time fees attributed to this line in total (activation fee x quantity); centAmount 0 if none. */
@@ -123,6 +129,13 @@ export function buildSchedule(input: ScheduleInput, today?: string): ScheduleRes
     if (!openEnded && introDef.months >= termMonths) return fail('PERIOD_NOT_PRICED', String(introDef.months));
     const rest: Segment[] = openEnded ? segments : [{ months: termMonths - introDef.months, amount: standing, kind: 'standing' }];
     segments = [{ months: introDef.months, amount: intro.value.amount, kind: 'intro' }, ...rest];
+  }
+
+  // Promotions apply to the first order only: month 1 is its own period at the price the engine charges now (so "Due at order" matches the cart).
+  const promo = input.firstOrderDiscount?.centAmount ?? 0;
+  if (promo > 0 && !introDef && !stepDef) {
+    const first: Segment = { months: 1, amount: money(Math.max(0, standing.centAmount - promo), currency), kind: 'intro' };
+    segments = openEnded ? [first, { months: 0, amount: standing, kind: 'standing' }] : [first, ...(termMonths > 1 ? [{ months: termMonths - 1, amount: standing, kind: 'standing' as const }] : [])];
   }
 
   const periods = toPeriods(segments, orderDate);

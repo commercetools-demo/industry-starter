@@ -19,6 +19,9 @@ export const offerType: ProductTypeDraft = {
     own('compatible-addons', 'Compatible add-ons (exceptions)', 'Kompatible Zusatzangebote (Ausnahmen)', textSet),
     own('compatible-equipment', 'Compatible equipment (exceptions)', 'Kompatible Geräte (Ausnahmen)', textSet),
     shared('conflicts-with'),
+    shared('requires-offers'),
+    shared('negates-offers'),
+    shared('eligible-regions'),
     own('audience', 'Audience', 'Zielgruppe', { name: 'set', elementType: { name: 'enum', values: AUDIENCE } }, { isSearchable: true }),
     own('existing-customer', 'Existing customer', 'Bestandskunde', { name: 'enum', values: EXISTING_CUSTOMER }, { isRequired: true, isSearchable: true }),
     own('channels', 'Sales channels (empty = all)', 'Vertriebskanäle (leer = alle)', textSet, { isSearchable: true }),
@@ -35,6 +38,5 @@ export const offerType: ProductTypeDraft = {
     shared('color'),
     shared('memory-gb'),
     own('intro-free-months', 'Introductory free months', 'Kostenlose Einführungsmonate', { name: 'number' }, { savedToLineItem: true }),
-    own('price-steps', 'Price steps (JSON)', 'Preisstufen (JSON)', { name: 'text' }),
   ],
 };

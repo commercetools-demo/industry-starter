@@ -15,11 +15,12 @@ vi.mock('@/hooks/useSwitchMarket', () => ({ useSwitchMarket: () => ({ switchMark
 import { MobileDrawer } from './MobileDrawer';
 
 const ROOTS = [
-  ['phone-plans', 'Phone plans'],
-  ['cable-internet', 'Cable internet'],
-  ['add-ons', 'Add-ons'],
+  ['malva-cat-phone-plans', 'phone-plans', 'Phone plans'],
+  ['malva-cat-cable-internet', 'cable-internet', 'Cable internet'],
+  ['malva-cat-add-ons', 'add-ons', 'Add-ons'],
+  ['malva-cat-devices', 'phones-and-devices', 'Phones and devices'],
 ];
-const TREE: Category[] = ROOTS.map(([slug, name]) => ({ id: slug, key: slug, name, slug, slugs: { 'en-US': slug, 'de-DE': slug }, children: [] }));
+const TREE: Category[] = ROOTS.map(([key, slug, name]) => ({ id: key, key, name, slug, slugs: { 'en-US': slug, 'de-DE': slug }, children: [] }));
 const ITEMS = buildNavItems(TREE, 'en-US');
 
 function drawer() {
@@ -52,12 +53,13 @@ describe('MobileDrawer', () => {
     expect(screen.getByRole('button', { name: 'Close menu' })).toHaveFocus();
   });
 
-  it('lists the categories in order, the account slot and the language switch', async () => {
+  it('lists Plan finder first, the plan categories under "Browse all plans", the other roots, never Add-ons; plus the account slot and the language switch', async () => {
     const user = userEvent.setup();
     drawer();
     await user.click(menuButton());
     const nav = within(screen.getByRole('dialog')).getByRole('navigation', { name: 'Main navigation' });
-    expect(within(nav).getAllByRole('link').map((link) => link.textContent)).toEqual(['Phone plans', 'Cable internet', 'Add-ons']);
+    expect(within(nav).getAllByRole('link').map((link) => link.textContent)).toEqual(['Plan finder', 'Phone plans', 'Cable internet', 'Phones and devices']);
+    expect(within(nav).getByRole('group', { name: 'Browse all plans' })).toContainElement(within(nav).getByRole('link', { name: 'Cable internet' }));
     expect(screen.getByRole('button', { name: 'Account slot' })).toBeInTheDocument();
     expect(screen.getByRole('group', { name: 'Language and region' })).toBeInTheDocument();
   });
@@ -152,11 +154,11 @@ describe('MobileDrawer', () => {
   });
 
   it('the active item has aria-current page', async () => {
-    state.pathname = '/shop/add-ons';
+    state.pathname = '/shop/cable-internet';
     const user = userEvent.setup();
     drawer();
     await user.click(menuButton());
-    expect(screen.getByRole('link', { current: 'page' })).toHaveTextContent('Add-ons');
+    expect(screen.getByRole('link', { current: 'page' })).toHaveTextContent('Cable internet');
   });
 
   it('the menu button and close button are 44 px touch targets', async () => {

@@ -3,6 +3,7 @@ import { cartOffersByKey } from '@/lib/cart/__fixtures__/offers';
 import { ctCart } from '@/test/fixtures/ctCart';
 import type { BundleIssue } from '@/lib/types';
 import { mapCart, type CartMapDeps } from './cart';
+import { installLegacyPricingDefs } from '@/test/fixtures/legacyPricing';
 
 const ctx = { locale: 'en-US', currency: 'USD', country: 'US' } as const;
 const deps = (patch: Partial<CartMapDeps> = {}): CartMapDeps => ({
@@ -18,6 +19,8 @@ const planLine = { id: 'L1', sku: 'MLV-CBL-500-24M', offerKey: 'malva-offer-cabl
 const feeLine = { id: 'F1', offerKey: 'malva-offer-cable-500', money: 2500 };
 const routerLine = { id: 'L2', sku: 'MLV-EQP-AX3000-RENT', offerKey: 'malva-offer-router-ax3000', price: 800, mode: 'Dynamic' as const, parent: 'L1' };
 const addonLine = { id: 'L3', sku: 'MLV-ADD-APPLETV-MTH', offerKey: 'malva-offer-appletv', price: 999, mode: 'Dynamic' as const, parent: 'L1' };
+
+installLegacyPricingDefs();
 
 describe('mapCart', () => {
   it('splits monthly and one-time, marks the fee line and excludes it from the item count', () => {
@@ -106,7 +109,7 @@ describe('mapCart', () => {
   });
 
   it('Discount stops applying: DoesNotMatchCart is reported as not applicable with a reason and totals exclude it', () => {
-    const before = mapCart(ctCart({ lines: [{ ...planLine, total: 5499 }], fees: [feeLine], codes: [{ id: 'c1', code: 'MALVA-CABLE5', state: 'MatchesCart' }] }), ctx, deps());
+    const before = mapCart(ctCart({ lines: [{ ...planLine, total: 5499, discounts: ['cd-intro'], discountCents: 500 }], fees: [feeLine], codes: [{ id: 'c1', code: 'MALVA-CABLE5', state: 'MatchesCart' }] }), ctx, deps());
     expect(before.discountCodes[0]?.state).toBe('applied');
     expect(before.summary.discountTotal.centAmount).toBe(500);
     const after = mapCart(ctCart({ lines: [addonLine], codes: [{ id: 'c1', code: 'MALVA-CABLE5', state: 'DoesNotMatchCart' }] }), ctx, deps());
@@ -114,14 +117,67 @@ describe('mapCart', () => {
     expect(after.summary.discountTotal.centAmount).toBe(0);
   });
 
+  it('first-month promotion: the schedule starts with its own first period at the price the engine charges now, so Due at order equals the cart', () => {
+    const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 0, discounts: ['cd-intro'], discountCents: 5999 }], fees: [feeLine] }), ctx, deps());
+    const plan = cart.lines.find((line) => line.kind === 'plan');
+    expect(plan?.promoPerUnit?.centAmount).toBe(5999);
+    expect(plan?.schedule?.periods.map((p) => [p.kind, p.monthlyAmount.centAmount])).toEqual([
+      ['intro', 0],
+      ['standing', 5999],
+    ]);
+    expect(plan?.schedule?.dueAtOrder.centAmount).toBe(cart.summary.dueToday.centAmount);
+    // Then monthly is the standing price: the promotion never reaches recurring orders
+    expect(cart.summary.thenMonthly.centAmount).toBe(5999);
+  });
+
+  describe('promotions', () => {
+    const names = { 'cd-intro': { 'en-US': 'First month free', 'de-DE': 'Erster Monat gratis' }, 'cd-welcome': { 'en-US': 'Welcome offer', 'de-DE': 'Willkommensangebot' } };
+    const promoDeps = () => deps({ discountKeyById: { 'cd-intro': 'malva-cd-intro-free-month', 'cd-welcome': 'malva-cd-welcome-10' }, discountNameById: names });
+
+    it('one-line promotion sits under its line with its name and the engine amount; an order-level one is listed after the lines', () => {
+      const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 0, discounts: ['cd-intro'], discountCents: 5999 }, addonLine], fees: [feeLine], discountOnTotal: 1000, discountOnTotalId: 'cd-welcome' }), ctx, promoDeps());
+      const plan = cart.lines.find((line) => line.kind === 'plan');
+      expect(plan?.promotions).toEqual([{ key: 'malva-cd-intro-free-month', name: 'First month free', amount: { centAmount: 5999, currencyCode: 'USD' }, lineIds: ['L1'] }]);
+      expect(cart.promotions).toEqual([{ key: 'malva-cd-welcome-10', name: 'Welcome offer', amount: { centAmount: 1000, currencyCode: 'USD' }, lineIds: [] }]);
+      expect(cart.lines.find((line) => line.kind === 'addon')?.promotions).toBeUndefined();
+    });
+
+    it('a promotion that reduced several lines is listed after the lines with the total off', () => {
+      const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 5499, discounts: ['cd-intro'], discountCents: 500 }, { ...addonLine, total: 499, discounts: ['cd-intro'], discountCents: 500 }] }), ctx, promoDeps());
+      expect(cart.promotions).toMatchObject([{ key: 'malva-cd-intro-free-month', amount: { centAmount: 1000 }, lineIds: ['L1', 'L3'] }]);
+      expect(cart.lines.every((line) => line.promotions === undefined)).toBe(true);
+    });
+
+    it('localised name with fallback to en-US and then to the key; nothing applied gives an empty list', () => {
+      const german = mapCart(ctCart({ lines: [{ ...planLine, total: 0, discounts: ['cd-intro'], discountCents: 5999 }] }), { ...ctx, locale: 'de-DE' }, promoDeps());
+      expect(german.lines[0]?.promotions?.[0]?.name).toBe('Erster Monat gratis');
+      const noNames = mapCart(ctCart({ lines: [{ ...planLine, total: 0, discounts: ['cd-intro'], discountCents: 5999 }] }), ctx, deps({ discountKeyById: { 'cd-intro': 'malva-cd-intro-free-month' } }));
+      expect(noNames.lines[0]?.promotions?.[0]?.name).toBe('malva-cd-intro-free-month');
+      expect(mapCart(ctCart({ lines: [planLine] }), ctx, promoDeps()).promotions).toEqual([]);
+    });
+
+    it('removing the line it depended on removes the promotion', () => {
+      expect(mapCart(ctCart({ lines: [addonLine] }), ctx, promoDeps()).promotions).toEqual([]);
+    });
+  });
+
   it('discountTotal sums line discounts and the discount on the total', () => {
-    const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 5499 }], discountOnTotal: 100 }), ctx, deps());
+    const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 5499, discounts: ['cd-intro'], discountCents: 500 }], discountOnTotal: 100 }), ctx, deps());
     expect(cart.summary.discountTotal.centAmount).toBe(600);
+    expect(cart.summary.orderDiscount.centAmount).toBe(100);
   });
 
   it('tax is null until the engine has a taxed price', () => {
     expect(mapCart(ctCart({ lines: [planLine] }), ctx, deps()).summary.tax).toBeNull();
     expect(mapCart(ctCart({ lines: [planLine], taxed: { net: 1000, gross: 1190 } }), ctx, deps()).summary.tax?.centAmount).toBe(190);
+  });
+
+  it('a plan whose first month is free is not a $0 order: the minimum counts one month of what recurs', () => {
+    const free = mapCart(ctCart({ lines: [{ ...planLine, total: 0, discounts: ['cd-intro'], discountCents: 5999 }] }), ctx, deps());
+    expect(free.summary.total.centAmount).toBe(0);
+    expect(free.summary.thenMonthly.centAmount).toBe(5999);
+    expect(free.minimumOrder?.shortfall).toBeNull();
+    expect(free.checkoutBlockedBy).toEqual([]);
   });
 
   it('canCheckout: false for empty, false below the minimum, false with issues, true otherwise', () => {

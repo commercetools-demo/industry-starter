@@ -35,7 +35,7 @@ export function skuErrors(products: ProductDraft[]): string[] {
 export function ownedKeyErrors(manifest: SeedManifest): string[] {
   const errors: string[] = [];
   for (const [kind, drafts] of Object.entries(manifest)) {
-    if (kind === 'customerGroup' || kind === 'zoneCoverage' || kind === 'customObject') continue;
+    if (kind === 'customerGroup' || kind === 'channel' || kind === 'zoneCoverage' || kind === 'customObject') continue;
     for (const draft of drafts ?? []) {
       if (!draft.key.startsWith('malva-')) errors.push(`${kind} key "${draft.key}" has no malva- prefix`);
     }
@@ -89,7 +89,7 @@ export function priceErrors(offers: ProductDraft[]): string[] {
   return errors;
 }
 
-const RELATION_ATTRIBUTES = ['anchors', 'included-offers', 'compatible-addons', 'compatible-equipment', 'conflicts-with', 'included-addons', 'incompatible-with'];
+const RELATION_ATTRIBUTES = ['anchors', 'included-offers', 'compatible-addons', 'compatible-equipment', 'conflicts-with', 'included-addons', 'incompatible-with', 'requires-offers', 'negates-offers'];
 
 /** Every key named by a relation attribute exists as a product. */
 export function referenceErrors(products: ProductDraft[]): string[] {
@@ -108,6 +108,13 @@ export function referenceErrors(products: ProductDraft[]): string[] {
   return errors;
 }
 
+/** Promotions apply to the first order only: a manifest discount that can reach recurring orders would make the displayed standing price wrong. */
+export function discountScopeErrors(manifest: SeedManifest): string[] {
+  return ((manifest.cartDiscount ?? []) as { key: string; recurringOrderScope?: { type?: string } }[])
+    .filter((discount) => discount.recurringOrderScope?.type !== 'NonRecurringOrdersOnly')
+    .map((discount) => `cart discount ${discount.key} must have recurringOrderScope NonRecurringOrdersOnly (promotions apply to the first order only)`);
+}
+
 /** Everything above in one call. Empty = valid. */
 export function validateCatalog(manifest: SeedManifest): string[] {
   const products = (manifest.product ?? []) as ProductDraft[];
@@ -119,6 +126,7 @@ export function validateCatalog(manifest: SeedManifest): string[] {
     ...setRequiredErrors((manifest.productType ?? []) as ProductTypeDraft[]),
     ...priceErrors(offers),
     ...referenceErrors(products),
+    ...discountScopeErrors(manifest),
     ...Object.entries(manifest).flatMap(([kind, drafts]) => localeGaps(drafts, kind)),
   ];
 }

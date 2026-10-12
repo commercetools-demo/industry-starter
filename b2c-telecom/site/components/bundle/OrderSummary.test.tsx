@@ -10,7 +10,7 @@ describe('OrderSummary', () => {
     const summary = screen.getByRole('complementary', { name: 'Order summary' });
     expect(within(summary).getByText('Plans').nextSibling).toHaveTextContent('$59.99');
     expect(within(summary).getByText('Add-ons').nextSibling).toHaveTextContent('$9.99');
-    expect(within(summary).getByText('Monthly').nextSibling).toHaveTextContent('$69.98');
+    expect(within(summary).getByText('Then monthly').nextSibling).toHaveTextContent('$69.98');
     expect(within(summary).getByText('One-time fees').nextSibling).toHaveTextContent('$25.00');
     expect(within(summary).getByText('Due today').nextSibling).toHaveTextContent('$94.98');
     expect(within(summary).getByText(/Taxes are calculated at checkout/)).toBeInTheDocument();
@@ -18,14 +18,16 @@ describe('OrderSummary', () => {
 
   it('hides the rows that are zero: no devices, no discounts, no taxes, no one-time fees', () => {
     renderWithProviders(<OrderSummary cart={makeCart({ lines: [phoneLine()] })} signedIn />);
-    for (const label of ['Devices', 'Discounts', 'Taxes', 'One-time fees', 'Add-ons']) expect(screen.queryByText(label)).not.toBeInTheDocument();
+    for (const label of ['Devices', 'Discounts', 'Taxes', 'Tax', 'You save', 'One-time fees', 'Add-ons']) expect(screen.queryByText(label)).not.toBeInTheDocument();
   });
 
-  it('a discount is a negative row and taxes appear once the engine has them', () => {
-    const cart = makeCart({ summary: { discountTotal: usd(1000), tax: usd(190) } });
+  it('an order-level discount is a negative row, "You save" is outside the sum, and tax added on top is a row that is part of Due today', () => {
+    const cart = makeCart({ summary: { discountTotal: usd(1500), orderDiscount: usd(1000), taxAdded: usd(190), dueToday: usd(9190) } });
     renderWithProviders(<OrderSummary cart={cart} signedIn />);
     expect(screen.getByText('Discounts').nextSibling).toHaveTextContent('-$10.00');
     expect(screen.getByText('Taxes').nextSibling).toHaveTextContent('$1.90');
+    expect(screen.getByText('You save').nextSibling).toHaveTextContent('$15.00');
+    expect(screen.getByText('Due today').nextSibling).toHaveTextContent('$91.90');
   });
 
   it('Below minimum order value: shortfall stated and the route to checkout is not offered', () => {

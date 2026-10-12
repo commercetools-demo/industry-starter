@@ -5,7 +5,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import { ApiError, type ApiErrorCode } from '@/lib/api-error';
 import { KEY_CART } from '@/lib/cache-keys';
 import { fetchJson } from '@/lib/fetcher';
-import type { BlockedAdd, Cart, DiscountPrompt } from '@/lib/types';
+import type { BlockedAdd, Cart, CartNotice, DiscountPrompt } from '@/lib/types';
 
 /** What the cart routes answer: always the full mapped cart (null when there is none). */
 export type CartPayload = { cart: Cart | null };
@@ -46,8 +46,13 @@ export interface AddLineArgs {
   replaceLineId?: string;
 }
 
+/** `onNotices`: what the add did besides adding (an offer replaced by one that negates it). */
+export interface AddLineOptions {
+  onNotices?: (notices: CartNotice[]) => void;
+}
+
 export interface CartMutations {
-  addLine: (args: AddLineArgs) => Promise<Cart | null>;
+  addLine: (args: AddLineArgs, options?: AddLineOptions) => Promise<Cart | null>;
   setQuantity: (lineId: string, quantity: number) => Promise<Cart | null>;
   removeLine: (lineId: string, options?: { cascade?: boolean }) => Promise<Cart | null>;
   applyCode: (code: string) => Promise<Cart | null>;
@@ -65,7 +70,7 @@ export function useCart() {
 }
 
 /** A cart request with the contract of every cart route: the cart of the response is written into the cache, a refusal throws a CartError. */
-export type CartRequest = (url: string, method: 'POST' | 'PATCH' | 'DELETE', body?: unknown) => Promise<Cart | null>;
+export type CartRequest = (url: string, method: 'POST' | 'PATCH' | 'DELETE', body?: unknown, onNotices?: AddLineOptions['onNotices']) => Promise<Cart | null>;
 
 /**
  * The one function every cart-changing hook sends its request with (M's mutations and Q's device actions): it writes the cart of the
@@ -74,14 +79,14 @@ export type CartRequest = (url: string, method: 'POST' | 'PATCH' | 'DELETE', bod
 export function useCartRequest(): CartRequest {
   const { mutate } = useSWRConfig();
   return useCallback(
-    async (url, method, body): Promise<Cart | null> => {
+    async (url, method, body, onNotices): Promise<Cart | null> => {
       let response: Response;
       try {
         response = await fetch(url, { method, ...(body === undefined ? {} : { headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }) });
       } catch {
         throw new CartError('NETWORK', 'UPSTREAM_ERROR', 'The service is temporarily unavailable');
       }
-      let payload: { cart?: Cart | null; error?: { code?: unknown; message?: unknown; details?: unknown } } | undefined;
+      let payload: { cart?: Cart | null; notices?: CartNotice[]; error?: { code?: unknown; message?: unknown; details?: unknown } } | undefined;
       try {
         payload = (await response.json()) as typeof payload;
       } catch {
@@ -94,6 +99,7 @@ export function useCartRequest(): CartRequest {
         const details = typeof error?.details === 'object' && error.details !== null ? (error.details as Record<string, unknown>) : undefined;
         throw new CartError(bundleCode, codeForStatus(response.status), typeof error?.message === 'string' ? error.message : 'The service is temporarily unavailable', details, response.status);
       }
+      if (payload.notices?.length) onNotices?.(payload.notices);
       return payload.cart;
     },
     [mutate],
@@ -106,7 +112,7 @@ export function useCartMutations(): CartMutations {
 
   return useMemo<CartMutations>(
     () => ({
-      addLine: (args) => send('/api/cart/line-items', 'POST', args),
+      addLine: (args, options) => send('/api/cart/line-items', 'POST', args, options?.onNotices),
       setQuantity: (lineId, quantity) => send(`/api/cart/line-items/${encodeURIComponent(lineId)}`, 'PATCH', { quantity }),
       removeLine: (lineId, options) => send(`/api/cart/line-items/${encodeURIComponent(lineId)}${options?.cascade ? '?cascade=true' : ''}`, 'DELETE'),
       applyCode: (code) => send('/api/cart/discount-code', 'POST', { code }),

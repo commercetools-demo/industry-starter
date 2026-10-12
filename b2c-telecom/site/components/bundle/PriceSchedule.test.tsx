@@ -1,6 +1,7 @@
 import { screen, within } from '@testing-library/react';
 import { buildSchedule } from '@/lib/pricing/schedule';
 import type { Money, PriceSchedule as PriceScheduleData } from '@/lib/types';
+import { installLegacyPricingDefs } from '@/test/fixtures/legacyPricing';
 import { renderWithProviders } from '@/test/utils';
 import { PriceSchedule } from './PriceSchedule';
 
@@ -23,6 +24,8 @@ function schedule(patch: Partial<Parameters<typeof buildSchedule>[0]> = {}): Pri
   if (!result.ok) throw new Error(result.error.code);
   return result.value;
 }
+
+installLegacyPricingDefs();
 
 describe('PriceSchedule', () => {
   it('committed term: every period row, due at order, the total over the term and the after-term sentence', () => {
@@ -81,5 +84,14 @@ describe('PriceSchedule', () => {
     expect(screen.getByText(/Nach Ihrer Laufzeit von 24 Monaten: 69,99/)).toBeInTheDocument();
     expect(screen.getByText(/31\.10\.2028/)).toBeInTheDocument();
     expect(screen.getByText(/31\.10\.2026/)).toBeInTheDocument();
+  });
+
+  it('a one-month first period reads "First month" and is followed by the standard price', () => {
+    renderWithProviders(<PriceSchedule schedule={schedule({ standing: usd(5999), firstOrderDiscount: usd(5999) })} locale="en-US" />);
+    expect(screen.getByText('First month')).toBeInTheDocument();
+    expect(screen.queryByText('Introductory price')).not.toBeInTheDocument();
+    expect(screen.getByText('Standard price')).toBeInTheDocument();
+    expect(screen.getByText('2-24')).toBeInTheDocument();
+    expect(within(screen.getByRole('row', { name: /Due at order/ })).getByText('$25.00')).toBeInTheDocument();
   });
 });

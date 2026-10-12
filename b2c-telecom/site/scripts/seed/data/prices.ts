@@ -13,9 +13,24 @@ export function amountIn(currency: Currency, usdCents: number): number {
 }
 
 /** Monthly (recurring) prices tied to a recurrence policy, USD/US and EUR/DE. */
-export function monthlyPrices(usdCents: number, policy: string = POLICY_MONTHLY): PriceSpec[] {
-  return CURRENCIES.map((currency) => ({ currency, centAmount: amountIn(currency, usdCents), country: COUNTRY_OF[currency], recurrencePolicy: policy }));
+export function monthlyPrices(usdCents: number, policy: string = POLICY_MONTHLY, scope: { customerGroup?: string; channel?: string } = {}): PriceSpec[] {
+  return CURRENCIES.map((currency) => ({ currency, centAmount: amountIn(currency, usdCents), country: COUNTRY_OF[currency], recurrencePolicy: policy, ...scope }));
 }
+
+/** Small businesses pay this much less per month on every plan (USD cents; add-ons and equipment are not discounted). The bundle has its own group prices. */
+export const SMALL_BUSINESS_PLAN_DROP_CENTS = 500;
+
+/** The small-business group prices of one plan variant: the standing monthly price minus the drop. */
+export function smallBusinessPrices(usdCents: number): PriceSpec[] {
+  return monthlyPrices(usdCents - SMALL_BUSINESS_PLAN_DROP_CENTS, POLICY_MONTHLY, { customerGroup: 'small-business' });
+}
+
+/** The bundle: cable internet plus a phone plan at one price, with prices for two customer groups (USD cents). */
+export const BUNDLE_OFFER_KEY = 'malva-offer-bundle-cable-phone';
+export const BUNDLE_PRICES: { sku: string; usd: number; groups: Record<string, number> } = { sku: 'MLV-BDL-CBL-PHN-24M', usd: 7500, groups: { 'small-business': 5900, 'existing-customer': 6500 } };
+
+/** Monthly prices only the call-center channel gets (USD cents; the standard price stays on every variant). */
+export const CALL_CENTER_PRICES: Record<string, number> = { 'MLV-PHN-UNL-M2M': 4500 };
 
 /** One-time prices (no recurrence policy), USD/US and EUR/DE. */
 export function oneTimePrices(usdCents: number): PriceSpec[] {
@@ -100,6 +115,13 @@ export const ADDON_PRICES: Record<string, { sku: string; usd: number }> = {
   'malva-offer-cloud-200': { sku: 'MLV-ADD-CLOUD200-MTH', usd: 300 },
   'malva-offer-device-protect': { sku: 'MLV-ADD-DEVCARE-MTH', usd: 1200 },
   'malva-offer-secure': { sku: 'MLV-ADD-SECURE-MTH', usd: 500 },
+  'malva-offer-regional-sports': { sku: 'MLV-ADD-SPORTS-MTH', usd: 1500 },
+};
+
+/** One-time add-ons (installation): one variant each, priced once. */
+export const ONE_TIME_ADDON_PRICES: Record<string, { sku: string; usd: number }> = {
+  'malva-offer-diy-install': { sku: 'MLV-ADD-DIYINSTALL-ONCE', usd: 999 },
+  'malva-offer-pro-install': { sku: 'MLV-ADD-PROINSTALL-ONCE', usd: 9900 },
 };
 
 /** Equipment: rental (monthly) and purchase (one-time) variants; the 5G gateway is rental only. */

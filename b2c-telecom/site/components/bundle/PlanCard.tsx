@@ -12,6 +12,7 @@ import { QUANTITY_RULES } from '@/lib/config/cart';
 import type { CartLine, Locale } from '@/lib/types';
 import { ConfirmDialog } from './ConfirmDialog';
 import { PriceSchedule } from './PriceSchedule';
+import { LinePromotions } from './Promotions';
 
 type PlanCardProps = {
   line: CartLine;
@@ -40,7 +41,7 @@ export function PlanCard({ line, dependents, busy = false, onQuantity, onRemove 
           <h3 className="m-0 font-display text-3xl font-bold tracking-ui">{line.name}</h3>
         </div>
         <div className="font-display text-3xl font-bold">
-          {t('line.perMonth', { amount: formatMoneyExact(line.unitPrice, locale) })}
+          {t('line.perMonth', { amount: formatMoneyExact(line.unitListPrice, locale) })}
         </div>
       </CardHeader>
       <CardBody className="flex-row flex-wrap gap-7">
@@ -57,6 +58,7 @@ export function PlanCard({ line, dependents, busy = false, onQuantity, onRemove 
               ))}
             </ul>
           ) : null}
+          <LinePromotions promotions={line.promotions} />
           <div className="border-t border-border pt-4 text-sm text-text-muted">{validity}</div>
           {isPhone ? (
             <QuantityStepper

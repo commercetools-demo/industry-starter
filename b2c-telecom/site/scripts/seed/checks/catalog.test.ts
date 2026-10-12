@@ -4,7 +4,7 @@ import { buildManifest } from '../manifest';
 import { main as seedMain } from '../seed';
 import { FakeCt } from '../test/fake-ct';
 import { main as verify } from '../verify';
-import { catalogChecks, catalogCounts, demoData, imageCoverage, offerPrices, offerReferences, searchFindsOffers, yearOneDiscounts } from './catalog';
+import { catalogChecks, catalogCounts, demoData, discountScope, imageCoverage, offerPrices, offerReferences, searchFindsOffers } from './catalog';
 import { platformChecks } from './platform';
 import { releaseChecks } from './releases';
 import type { ProductDraft } from '../types';
@@ -51,7 +51,7 @@ describe('seed:verify catalog checks', () => {
     expect(unpublished.ok).toBe(false);
     expect(unpublished.detail).toMatch(/unpublished products/);
     api.collections.set('products', api.list('products').slice(1));
-    expect((await catalogCounts.run(api, { projectKey: 'x' })).detail).toMatch(/products: 51 \(expected 52\)/);
+    expect((await catalogCounts.run(api, { projectKey: 'x' })).detail).toMatch(/products: 58 \(expected 59\)/);
   });
 
   it('offer prices fail when a market price is missing or a recurring price lost its policy', async () => {
@@ -77,14 +77,6 @@ describe('seed:verify catalog checks', () => {
     expect(result.detail).toMatch(/included-offers -> malva-offer-modem-docsis31/);
   });
 
-  it('year-1 discounts must equal the first price step', async () => {
-    const api = await seeded();
-    expect((await yearOneDiscounts.run(api, { projectKey: 'x' })).ok).toBe(true);
-    const discount = api.byKey('cart-discounts', 'malva-cd-tier-year1-20') as unknown as { value: { permyriad: number } };
-    discount.value.permyriad = 1000;
-    expect((await yearOneDiscounts.run(api, { projectKey: 'x' })).detail).toMatch(/first step is 20 %/);
-  });
-
   it('image coverage reports missing images and never fails', async () => {
     const api = await seeded();
     const result = await imageCoverage.run(api, { projectKey: 'x' });
@@ -97,6 +89,22 @@ describe('seed:verify catalog checks', () => {
     api.indexedKeys = OFFER_KEYS.slice(0, 20);
     const result = await searchFindsOffers.run(api, { projectKey: 'x' });
     expect(result.ok).toBe(false);
-    expect(result.detail).toMatch(/found 20 of 27/);
+    expect(result.detail).toMatch(/found 20 of 31/);
+  });
+
+  it('discount scope: passes on the seeded fake; a Merchant Center discount that reaches recurring orders and a retired owned one are warnings; an owned one that reaches them fails', async () => {
+    const api = await seeded();
+    expect(await discountScope.run(api, { projectKey: 'x' })).toEqual({ ok: true });
+    api.seed('cart-discounts', { key: 'mc-summer', recurringOrderScope: { type: 'AnyOrder' } });
+    api.seed('cart-discounts', { key: 'malva-cd-second-line-10', recurringOrderScope: { type: 'AnyOrder' } });
+    const warned = await discountScope.run(api, { projectKey: 'x' });
+    expect(warned.ok).toBe(true);
+    expect(warned.detail).toMatch(/mc-summer is not first-order-only/);
+    expect(warned.detail).toMatch(/malva-cd-second-line-10 is no longer in the manifest/);
+    const owned = api.byKey('cart-discounts', 'malva-cd-intro-free-month') as unknown as { recurringOrderScope: { type: string } };
+    owned.recurringOrderScope = { type: 'AnyOrder' };
+    const failed = await discountScope.run(api, { projectKey: 'x' });
+    expect(failed.ok).toBe(false);
+    expect(failed.detail).toMatch(/malva-cd-intro-free-month/);
   });
 });

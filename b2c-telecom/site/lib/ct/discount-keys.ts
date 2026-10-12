@@ -21,3 +21,16 @@ export async function getCartDiscountKeys(): Promise<Record<string, string>> {
   );
   return read();
 }
+
+/** Cart Discount id to its localized name (shown in the bundle's list of promotions). Shared by every buyer, cached for the catalog TTL. */
+export async function getCartDiscountNames(): Promise<Record<string, Record<string, string>>> {
+  const read = unstable_cache(
+    async (): Promise<Record<string, Record<string, string>>> => {
+      const { body } = await withTimeout(getApiRoot().cartDiscounts().get({ queryArgs: { limit: PAGE_LIMIT } }).execute(), 'cart.discount-names');
+      return Object.fromEntries(body.results.map((discount) => [discount.id, discount.name as Record<string, string>] as const));
+    },
+    ['cart-discount-names'],
+    { revalidate: CATALOG_TTL, tags: ['catalog'] },
+  );
+  return read();
+}

@@ -1,3 +1,4 @@
+import { stateOfZip } from './zip-state';
 import type { AvailabilityState, CountryCode, ServiceLocation, Technology } from '@/lib/types';
 
 // Pure: no I/O. The singleton that reads SERVICEABILITY_STUB lives in lib/ct/serviceability.ts (D-020: stubbed provider).
@@ -73,7 +74,8 @@ export function createCachedServiceability(
       if (hit && now() - hit.at < ttlSeconds * 1000) return hit.value;
       const at = now();
       const answer = await provider.check(postalCode, country);
-      const value: ServiceLocation = { ...answer, checkedAt: new Date(at).toISOString() };
+      const state = stateOfZip(postalCode, country);
+      const value: ServiceLocation = { ...answer, ...(state ? { state } : {}), checkedAt: new Date(at).toISOString() };
       cache.set(key, { at, value });
       return value;
     },

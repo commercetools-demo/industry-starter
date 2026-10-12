@@ -10,6 +10,7 @@ import type { SessionData } from '@/lib/session-types';
 import type { Market, Offer, OfferVariant } from '@/lib/types';
 import { activationFeeOf, addFeeAction, addLineItemAction, feeSlug, isRecurringVariant } from './cartDrafts';
 import { getApiRoot } from './client';
+import { getCustomerGroupKeys } from './customer-groups';
 import { ensureAnonymousId } from './identity';
 import { assertRecurringPrice, getMonthlyPolicy, RECURRING_REASON } from './recurring';
 import { withTimeout } from './timeout';
@@ -91,7 +92,7 @@ export async function getActiveCartForSession(session: SessionData, ctx: CartCtx
 }
 
 /** Creates the market's cart for this session (anonymous id from the session, minted when missing; the route persists it). */
-export async function createCartForSession(session: SessionData, ctx: CartCtx): Promise<CtCart> {
+export async function createCartForSession(session: SessionData, ctx: CartCtx, customerGroupKey?: string | null): Promise<CtCart> {
   const owner = session.customerId ? { customerId: session.customerId } : { anonymousId: ensureAnonymousId(session).anonymousId };
   const draft: CartDraft = {
     currency: ctx.currency,
@@ -102,10 +103,23 @@ export async function createCartForSession(session: SessionData, ctx: CartCtx): 
     origin: 'Customer',
     deleteDaysAfterLastModification: CART_DELETE_DAYS,
     ...owner,
+    ...(customerGroupKey ? { customerGroup: { typeId: 'customer-group' as const, key: customerGroupKey } } : {}),
     custom: { type: { typeId: 'type', key: 'malva-order' }, fields: {} },
   };
   const { body } = await withTimeout(getApiRoot().carts().post({ body: draft, queryArgs: { expand: CART_EXPAND } }).execute(), 'cart.create');
   return body;
+}
+
+/**
+ * Puts the declared audience on an anonymous cart as its customer group (null removes it), so group prices and group-limited
+ * discounts agree with eligibility. A signed-in customer's cart is never touched: the customer's own groups apply.
+ */
+export async function setCartCustomerGroup(cart: CtCart, groupKey: string | null): Promise<CtCart> {
+  if (cart.customerId || (!groupKey && !cart.customerGroup)) return cart;
+  const keyById = await getCustomerGroupKeys();
+  const current = cart.customerGroup ? (keyById[cart.customerGroup.id] ?? null) : null;
+  if (current === groupKey) return cart;
+  return updateCart(cart, [{ action: 'setCustomerGroup', ...(groupKey ? { customerGroup: { typeId: 'customer-group' as const, key: groupKey } } : {}) }]);
 }
 
 /** One update with a fresh version. Returns the new cart (render from it, never patch local state). */
@@ -160,6 +174,12 @@ export interface AddOfferLineArgs {
   parentLineId?: string;
   /** Plans: the equipment the plan requires (J `defaultEquipment` selections resolved to offers), added after the plan (D-025). */
   equipment?: { offer: Offer; variant: OfferVariant }[];
+  /** Lines (and their dependents) the offer replaces: removed in the same cart update as the add (negated offers). */
+  removeLineIds?: string[];
+  /** The buyer's sales channel when it has channel prices: set as the lines' distribution channel so the engine selects them. */
+  channelKey?: string | null | undefined;
+  /** Plans: the offers the plan includes, added after it as child lines at price 0 (they go with the plan and cannot be removed alone). */
+  included?: { offer: Offer; variant: OfferVariant }[];
 }
 
 const isPlan = (offer: Offer): boolean => offer.kind === 'base-package' || offer.kind === 'bundle';
@@ -215,7 +235,8 @@ export async function addOfferLine(cartId: string, args: AddOfferLineArgs): Prom
     const lineQuantity = parent ? dependentQuantity(parent.quantity) : quantity;
     const known = new Set(fresh.lineItems.map((line) => line.id));
     const fee = isPlan(offer) ? activationFeeOf(offer, variant) : null;
-    const actions: CartUpdateAction[] = [addLineItemAction({ offer, variant, quantity: lineQuantity, parentLineId })];
+    const removals: CartUpdateAction[] = (args.removeLineIds ?? []).filter((id) => fresh.lineItems.some((line) => line.id === id)).map((id) => ({ action: 'removeLineItem', lineItemId: id }));
+    const actions: CartUpdateAction[] = [...removals, addLineItemAction({ offer, variant, quantity: lineQuantity, parentLineId, channelKey: args.channelKey })];
     const feeExists = fresh.customLineItems.some((item) => item.slug === feeSlug(offer.key));
     if (fee && !feeExists) actions.push(addFeeAction(offer.key, lineQuantity, fee));
 
@@ -233,7 +254,7 @@ export async function addOfferLine(cartId: string, args: AddOfferLineArgs): Prom
       const before = new Set(cart.lineItems.map((line) => line.id));
       cart = await updateCart(
         cart,
-        equipment.map((entry) => addLineItemAction({ offer: entry.offer, variant: entry.variant, quantity: 1, parentLineId: added.id })),
+        equipment.map((entry) => addLineItemAction({ offer: entry.offer, variant: entry.variant, quantity: 1, parentLineId: added.id, channelKey: args.channelKey })),
       );
       const recurringSkus = new Set(equipment.filter((entry) => isRecurringVariant(entry.offer, entry.variant)).map((entry) => entry.variant.sku));
       const created = cart.lineItems.filter((line) => !before.has(line.id) && recurringSkus.has(line.variant.sku ?? ''));
@@ -241,6 +262,17 @@ export async function addOfferLine(cartId: string, args: AddOfferLineArgs): Prom
       if (bad) {
         await updateCart(cart, [{ action: 'removeLineItem', lineItemId: bad.id }]);
         throw priceMissing(bad.variant.sku ?? '');
+      }
+    }
+    if (args.included && args.included.length > 0) {
+      try {
+        cart = await updateCart(
+          cart,
+          args.included.map((entry) => addLineItemAction({ offer: entry.offer, variant: entry.variant, quantity: lineQuantity, parentLineId: added.id, free: true, channelKey: args.channelKey })),
+        );
+      } catch (error) {
+        // The plan itself is added and priced; a failed included line only means the cart does not list it yet.
+        console.error('[cart] included offers not added to', added.id, error);
       }
     }
     return cart;
@@ -341,6 +373,7 @@ export function toGuardLines(cart: CtCart): GuardLine[] {
       sku: line.variant.sku ?? '',
       quantity: line.quantity,
       ...(parentLineItemId === undefined ? {} : { parentLineItemId }),
+      ...(line.priceMode === 'ExternalPrice' && parentLineItemId !== undefined ? { includedFree: true } : {}),
     };
   });
 }

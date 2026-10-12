@@ -9,7 +9,7 @@ type ExistingVariant = {
   id: number;
   sku: string;
   attributes?: { name: string; value: unknown }[];
-  prices?: (Obj & { key?: string; value: { centAmount: number; currencyCode: string }; country?: string; customerGroup?: Ref; recurrencePolicy?: Ref; validFrom?: string; validUntil?: string })[];
+  prices?: (Obj & { key?: string; value: { centAmount: number; currencyCode: string }; country?: string; customerGroup?: Ref; channel?: Ref; recurrencePolicy?: Ref; validFrom?: string; validUntil?: string })[];
   images?: { url: string }[];
 };
 type ExistingProduct = Versioned & {
@@ -36,6 +36,8 @@ const EXPAND = [
   'masterData.staged.categories[*]',
   'masterData.staged.masterVariant.prices[*].customerGroup',
   'masterData.staged.variants[*].prices[*].customerGroup',
+  'masterData.staged.masterVariant.prices[*].channel',
+  'masterData.staged.variants[*].prices[*].channel',
   'masterData.staged.masterVariant.prices[*].recurrencePolicy',
   'masterData.staged.variants[*].prices[*].recurrencePolicy',
 ];
@@ -53,6 +55,7 @@ function priceDraft(p: PriceDraft): Obj {
     value: p.value,
     ...(p.country ? { country: p.country } : {}),
     ...(p.customerGroup ? { customerGroup: { typeId: 'customer-group', key: p.customerGroup } } : {}),
+    ...(p.channel ? { channel: { typeId: 'channel', key: p.channel } } : {}),
     ...(p.recurrencePolicy ? { recurrencePolicy: { typeId: 'recurrence-policy', key: p.recurrencePolicy } } : {}),
     ...(p.validFrom ? { validFrom: p.validFrom } : {}),
     ...(p.validUntil ? { validUntil: p.validUntil } : {}),
@@ -65,7 +68,7 @@ function pricesDiffer(existing: ExistingVariant, wanted: VariantDraft): boolean 
   return wanted.prices.some((w) => {
     const h = have.find((x) => x.key === w.key);
     if (!h) return true;
-    return !covers(h.value, w.value) || h.country !== w.country || (h.customerGroup?.obj?.key ?? undefined) !== w.customerGroup || (h.recurrencePolicy?.obj?.key ?? undefined) !== w.recurrencePolicy || h.validFrom !== w.validFrom || h.validUntil !== w.validUntil;
+    return !covers(h.value, w.value) || h.country !== w.country || (h.customerGroup?.obj?.key ?? undefined) !== w.customerGroup || (h.channel?.obj?.key ?? undefined) !== w.channel || (h.recurrencePolicy?.obj?.key ?? undefined) !== w.recurrencePolicy || h.validFrom !== w.validFrom || h.validUntil !== w.validUntil;
   });
 }
 
@@ -243,6 +246,7 @@ export const productReconciler = asReconciler<ProductDraft, ExistingProduct>({
     ...[d.masterVariant, ...d.variants].flatMap((v) =>
       v.prices.flatMap((p) => [
         ...(p.customerGroup ? [{ kind: 'customerGroup' as const, key: p.customerGroup, from: { kind: 'product' as const, key: d.key } }] : []),
+        ...(p.channel ? [{ kind: 'channel' as const, key: p.channel, from: { kind: 'product' as const, key: d.key } }] : []),
         ...(p.recurrencePolicy ? [{ kind: 'recurrencePolicy' as const, key: p.recurrencePolicy, from: { kind: 'product' as const, key: d.key } }] : []),
       ]),
     ),

@@ -13,6 +13,7 @@ const TYPE_COLLECTION: Record<string, string> = {
   'product-type': 'product-types',
   zone: 'zones',
   'customer-group': 'customer-groups',
+  channel: 'channels',
   'cart-discount': 'cart-discounts',
   type: 'types',
   'recurrence-policy': 'recurrence-policies',
@@ -446,6 +447,10 @@ export class FakeCt implements CtApi {
       case 'tax-categories': return this.taxAction(r, a, set, unsupported);
       case 'customer-groups':
         return a.action === 'changeName' ? set('name') : unsupported();
+      case 'channels':
+        if (a.action === 'changeName') return set('name');
+        if (a.action === 'addRoles') return void (r.roles = [...new Set([...(Array.isArray(r.roles) ? (r.roles as string[]) : []), ...(a.roles as string[])])]);
+        return unsupported();
       case 'recurrence-policies':
         if (a.action === 'setName') return set('name');
         if (a.action === 'setDescription') return set('description');

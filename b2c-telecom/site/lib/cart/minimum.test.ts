@@ -16,4 +16,14 @@ describe('minimum order', () => {
   it('returns the configured minimum', () => {
     expect(getMinimumOrder('USD')).toEqual({ centAmount: 3000, currencyCode: 'USD' });
   });
+  it('MINIMUM_ORDER_USD=0 turns the minimum off for USD only', () => {
+    vi.stubEnv('MINIMUM_ORDER_USD', '0');
+    try {
+      expect(getMinimumOrder('USD')).toBeNull();
+      expect(shortfall({ centAmount: 0, currencyCode: 'USD' }, 'USD')).toBeNull();
+      expect(getMinimumOrder('EUR')).toEqual({ centAmount: 2800, currencyCode: 'EUR' });
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
 });

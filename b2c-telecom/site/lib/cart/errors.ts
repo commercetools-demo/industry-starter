@@ -25,6 +25,7 @@ const STATUS_OF_KIND: Record<BlockedAdd['kind'], number> = {
   ineligible: 403,
   invalid: 422,
   limit: 422,
+  requires: 409,
 };
 
 /** HTTP status of a blocked add (see the table in workstream M): 409 incompatible/conflict/unavailable, 403 ineligible, 422 invalid/limit. */

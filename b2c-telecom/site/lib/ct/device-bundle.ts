@@ -10,7 +10,8 @@ import type { SessionData } from '@/lib/session-types';
 import type { AcquisitionMode, DeviceOffer, DeviceVariant, Market, Offer } from '@/lib/types';
 import { getAvailableQuantities } from './availability';
 import { mapForMarket, type BundleOutcome } from './bundle';
-import { createCartForSession, deleteCart, getActiveCartForSession, getCartById, offerKeyOfLine, toGuardLines, updateCart, withCartRetry } from './cart';
+import { cartGroupKeyOf } from '@/lib/offers/declared';
+import { createCartForSession, setCartCustomerGroup, deleteCart, getActiveCartForSession, getCartById, offerKeyOfLine, toGuardLines, updateCart, withCartRetry } from './cart';
 import { getAllOffers } from './catalog';
 import { getBuyerContext } from './buyer-context';
 import { getDevicePolicyMap } from './devices';
@@ -127,7 +128,8 @@ export async function addDeviceToBundle(session: SessionData, market: Market, in
   const expectedPolicyId = policyKeyFor(input.mode, termMonths) === null ? null : (policyIdByKey[policyKeyFor(input.mode, termMonths) ?? ''] ?? null);
   if (input.mode !== 'outright' && expectedPolicyId === null) return refuse(session, market, new BundleRefusal(409, 'MODE_UNAVAILABLE', 'This payment option is not set up.', { offerKey: offer.key, mode: input.mode }));
 
-  const cart = existing ?? (await createCartForSession(session, market));
+  const groupKey = cartGroupKeyOf(buyer);
+  const cart = existing ? await setCartCustomerGroup(existing, groupKey) : await createCartForSession(session, market, groupKey);
   const updated = await withCartRetry(cart.id, async (fresh) => {
     const known = new Set(fresh.lineItems.map((line) => line.id));
     const next = await updateCart(fresh, buildAddDeviceActions({ sku: input.sku, offerKey: offer.key, quantity: input.quantity, mode: input.mode, termMonths }));

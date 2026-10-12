@@ -54,10 +54,10 @@ describe('platform reconcilers', () => {
     expect(api.byKey('recurrence-policies', 'malva-monthly')?.schedule).toEqual({ type: 'standard', value: 1, intervalUnit: 'Months' });
   });
 
-  it('creates the four customer groups with their exact keys', async () => {
+  it('creates the customer groups with their exact keys', async () => {
     const api = baseline();
     await seed(api);
-    expect(api.keysOf('customer-groups').sort()).toEqual(['consumer', 'employee', 'existing-customer', 'small-business']);
+    expect(api.keysOf('customer-groups').sort()).toEqual(['call-center', 'consumer', 'employee', 'existing-customer', 'small-business']);
   });
 
   it('a second run performs no write', async () => {

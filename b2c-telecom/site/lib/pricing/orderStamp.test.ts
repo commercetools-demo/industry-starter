@@ -3,6 +3,7 @@ import type { Offer } from '@/lib/types';
 import { parseLabelSnapshot } from './label';
 import { buildOrderPricingStamp, type StampLine } from './orderStamp';
 import { parseSchedules } from './schedule';
+import { installLegacyPricingDefs } from '@/test/fixtures/legacyPricing';
 
 const usd = (centAmount: number) => ({ centAmount, currencyCode: 'USD' });
 const offers = cartOffersByKey();
@@ -28,6 +29,8 @@ const addon: StampLine = { id: 'A1', offerKey: 'malva-offer-appletv', sku: 'MLV-
 const phone = plan({ id: 'P1', offerKey: 'malva-offer-phone-unlimited', sku: 'MLV-PHN-UNL-M2M', name: 'Unlimited', termMonths: 0, unitListPrice: usd(5500), unitPrice: usd(5500), total: usd(5500) });
 
 const build = (lines: StampLine[], orderDate = '2026-10-07', offerMap: Record<string, Offer> = offers) => buildOrderPricingStamp({ lines, orderDate, locale: 'en-US', currencyCode: 'USD', offers: offerMap });
+
+installLegacyPricingDefs();
 
 describe('buildOrderPricingStamp', () => {
   it('uses the order creation date, not today: the schedule starts on the order date', () => {

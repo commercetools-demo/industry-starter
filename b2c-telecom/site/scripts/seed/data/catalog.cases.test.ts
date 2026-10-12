@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MANIFEST } from '.';
-import type { CategoryDraft } from '../types';
+import type { CategoryDraft, ProductDraft, VariantDraft } from '../types';
 import { attr, masterAttr, nameEn, OFFERS, PRODUCTS, priceOf, product, variantsOf } from './manifest-access';
 import { PLAN_PRICES } from './prices';
 import { conflictsOf } from './relations';
@@ -70,16 +70,28 @@ describe('seed-catalog-data scenarios', () => {
         expect(v.prices.some((p) => p.value.currencyCode === 'EUR' && p.country === 'DE'), v.sku).toBe(true);
         for (const p of v.prices) expect(p.value.centAmount).toBeGreaterThan(0);
         // every recurring price is tied to a recurrence policy; one-time prices have none
-        for (const p of v.prices) expect(p.key.endsWith(`_${p.recurrencePolicy ?? 'once'}`)).toBe(true);
+        for (const p of v.prices.filter((entry) => !entry.customerGroup && !entry.channel)) expect(p.key.endsWith(`_${p.recurrencePolicy ?? 'once'}`)).toBe(true);
+        // a scoped price has its own key suffix, so it can never collide with the standard price of the same variant
+        expect(new Set(v.prices.map((p) => p.key)).size, v.sku).toBe(v.prices.length);
       }
     }
   });
 
+  it('Scoped prices: the call-center channel price on one phone variant is lower than the standard price, and a standard price remains', () => {
+    const phone = OFFERS.find((o) => o.key === 'malva-offer-phone-unlimited') as ProductDraft;
+    const variant = variantsOf(phone).find((v) => v.sku === 'MLV-PHN-UNL-M2M') as VariantDraft;
+    const standard = variant.prices.find((p) => p.value.currencyCode === 'USD' && !p.channel && !p.customerGroup);
+    const callCenter = variant.prices.find((p) => p.value.currencyCode === 'USD' && p.channel === 'call-center');
+    expect(standard?.value.centAmount).toBe(5000);
+    expect(callCenter).toMatchObject({ value: { centAmount: 4500 }, country: 'US', recurrencePolicy: 'malva-monthly' });
+    expect(callCenter?.key).toBe('mlv-phn-unl-m2m_usd_malva-monthly_chn-call-center');
+  });
+
   it('Offers wrap what is sold: every sellable item has an offer, one existing-customer, one channel offer, all keys resolve', () => {
-    expect(OFFERS).toHaveLength(27);
+    expect(OFFERS).toHaveLength(31);
     const anchors = new Set(OFFERS.flatMap((o) => masterAttr(o, 'anchors') as string[]));
     const sellable = PRODUCTS.filter((p) => p.productType !== 'malva-offer');
-    expect(sellable).toHaveLength(25);
+    expect(sellable).toHaveLength(28);
     for (const p of sellable) expect(anchors.has(p.key), p.key).toBe(true);
     expect(OFFERS.filter((o) => masterAttr(o, 'existing-customer') === 'existing').map((o) => o.key)).toEqual(['malva-offer-cable-existing-customer']);
     expect(OFFERS.filter((o) => ((masterAttr(o, 'channels') as string[] | undefined) ?? []).length > 0).map((o) => o.key)).toEqual(['malva-offer-phone-online-only']);
@@ -108,7 +120,7 @@ describe('seed-catalog-data scenarios', () => {
     expect(['wireless-lite', 'wireless-5g', 'wireless-5g-plus'].map((k) => master(`malva-offer-${k}`) / 100)).toEqual([45, 55, 75]);
     expect(['cable-100', 'cable-500', 'cable-gig'].map((k) => master(`malva-offer-${k}`) / 100)).toEqual([39.99, 59.99, 79.99]);
     // most popular badges: Unlimited, Air 5G, Cable 500
-    expect(OFFERS.filter((o) => masterAttr(o, 'badge') === 'most-popular').map(nameEn).sort()).toEqual(['Air 5G', 'Cable 500', 'Cable 500, existing customers', 'Unlimited', 'Unlimited, online only'].sort());
+    expect(OFFERS.filter((o) => masterAttr(o, 'badge') === 'most-popular').map(nameEn).sort()).toEqual(['Air 5G', 'Cable 500', 'Cable 500, existing customers', 'Cable 500 + Essential phone', 'Unlimited', 'Unlimited, online only'].sort());
     // filter chips (D-017): speed bands, data, network generation
     const cableOffers = ['malva-offer-cable-100', 'malva-offer-cable-500', 'malva-offer-cable-gig'].map(product);
     expect(cableOffers.filter((o) => (masterAttr(o, 'downstream-mbps') as number) <= 500).map(nameEn)).toEqual(['Cable 100', 'Cable 500']);
@@ -120,7 +132,9 @@ describe('seed-catalog-data scenarios', () => {
     expect(wireless.filter((o) => masterAttr(o, 'network-generation') === '5g').map(nameEn)).toEqual(['Air 5G', 'Air 5G Plus']);
     expect(wireless.filter((o) => masterAttr(o, 'network-generation') === '4g').map(nameEn)).toEqual(['Air Lite']);
     // add-on tag filter
-    const tags = (tag: string): number => OFFERS.filter((o) => masterAttr(o, 'addon-tag') === tag).length;
+    // the prototype's eight add-ons (the dependency add-ons seeded after them are not part of the prototype)
+    const dependencyAddons = ['malva-offer-regional-sports', 'malva-offer-diy-install', 'malva-offer-pro-install'];
+    const tags = (tag: string): number => OFFERS.filter((o) => !dependencyAddons.includes(o.key) && masterAttr(o, 'addon-tag') === tag).length;
     expect([tags('music'), tags('video'), tags('extras')]).toEqual([2, 3, 3]);
   });
 

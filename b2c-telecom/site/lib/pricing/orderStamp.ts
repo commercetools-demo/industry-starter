@@ -13,7 +13,7 @@ import { buildSchedule, serializeSchedules } from './schedule';
 export type StampLine = Pick<
   CartLine,
   'id' | 'offerKey' | 'sku' | 'kind' | 'name' | 'quantity' | 'termMonths' | 'chargeType' | 'unitListPrice' | 'unitPrice' | 'total' | 'appliedDiscountKeys' | 'parentLineId'
->;
+> & Partial<Pick<CartLine, 'promoPerUnit'>>;
 
 export type StampError = { offerKey: string; sku: string | null } & ({ code: ScheduleError['code']; detail?: string } | { code: 'LABEL_DATA_MISSING'; missing: string[] });
 
@@ -60,6 +60,7 @@ export function buildOrderPricingStamp(input: OrderStampInput): OrderStamp {
       quantity: line.quantity,
       standing: line.unitListPrice,
       introApplied: introDef !== null && line.appliedDiscountKeys.includes(discountKeyFor(introDef)),
+      ...(line.promoPerUnit ? { firstOrderDiscount: line.promoPerUnit } : {}),
       monthToMonth: offer.variants.find((variant) => variant.termMonths === 0 && variant.recurringPrice)?.recurringPrice ?? null,
       oneTimeDueNow: fee ? fee.total : zero(currencyCode),
       orderDate,

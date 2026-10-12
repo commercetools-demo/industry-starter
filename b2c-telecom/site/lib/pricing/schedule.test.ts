@@ -15,6 +15,7 @@ import {
   totalContractValue,
   type ScheduleInput,
 } from './schedule';
+import { installLegacyPricingDefs } from '@/test/fixtures/legacyPricing';
 
 // Fixture prices are written here on purpose: the tests never read the catalog.
 const usd = (centAmount: number): Money => ({ centAmount, currencyCode: 'USD' });
@@ -48,6 +49,8 @@ function built(input: ScheduleInput): PriceSchedule {
   if (!result.ok) throw new Error(`schedule expected, got ${result.error.code}`);
   return result.value;
 }
+
+installLegacyPricingDefs();
 
 describe('buildSchedule', () => {
   it('Every period priced: Unlimited 24-month has a year-1 and a year-2 period', () => {
@@ -126,7 +129,10 @@ describe('buildSchedule', () => {
 });
 
 describe('period lookups', () => {
-  const s = built(cable100);
+  let s: ReturnType<typeof built>;
+  beforeEach(() => {
+    s = built(cable100);
+  });
   it('periodOn and amountDueOn pick the period by date and revert to the after-term price', () => {
     expect(periodOn(s, '2026-10-07')?.kind).toBe('intro');
     expect(periodOn(s, '2027-04-06')?.kind).toBe('intro');
@@ -238,12 +244,17 @@ describe('cancel, amend, serialise', () => {
 });
 
 describe('dueTransitions', () => {
-  const intro = built(cable100);
-  const stepped = built(unlimited24);
-  const list = [
-    { orderNumber: 'A-1', schedule: intro },
-    { orderNumber: 'A-2', schedule: stepped },
-  ];
+  let intro!: ReturnType<typeof built>;
+  let stepped!: ReturnType<typeof built>;
+  let list: { orderNumber: string; schedule: ReturnType<typeof built> }[] = [];
+  beforeEach(() => {
+    intro = built(cable100);
+    stepped = built(unlimited24);
+    list = [
+      { orderNumber: 'A-1', schedule: intro },
+      { orderNumber: 'A-2', schedule: stepped },
+    ];
+  });
 
   it('Reverts without customer action: dueTransitions reports intro-ends', () => {
     expect(dueTransitions(list, '2027-04-07')).toEqual([{ orderNumber: 'A-1', sku: 'MLV-CBL-100-24M', kind: 'intro-ends', on: '2027-04-07', newAmount: usd(3999) }]);

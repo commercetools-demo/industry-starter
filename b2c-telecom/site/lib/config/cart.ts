@@ -15,7 +15,16 @@ export const QUANTITY_RULES = {
 } as const;
 
 /** Cents; 0 disables. Confirmed by the owner (D-063). */
-export const MINIMUM_ORDER_VALUE: Record<'USD' | 'EUR', number> = { USD: 3000, EUR: 2800 };
+export const DEFAULT_MINIMUM_ORDER_VALUE: Record<'USD' | 'EUR', number> = { USD: 3000, EUR: 2800 };
+
+/** `MINIMUM_ORDER_USD` / `MINIMUM_ORDER_EUR` (whole cents, 0 disables) override the default; anything that is not a non-negative integer is ignored. */
+export function minimumOrderValues(env: Record<string, string | undefined> = process.env): Record<'USD' | 'EUR', number> {
+  const read = (name: string, fallback: number): number => {
+    const raw = env[name]?.trim();
+    return raw !== undefined && /^\d+$/.test(raw) ? Number(raw) : fallback;
+  };
+  return { USD: read('MINIMUM_ORDER_USD', DEFAULT_MINIMUM_ORDER_VALUE.USD), EUR: read('MINIMUM_ORDER_EUR', DEFAULT_MINIMUM_ORDER_VALUE.EUR) };
+}
 
 /** One extra attempt after a ConcurrentModification (409). */
 export const CART_RETRY_ONCE = 1;
@@ -31,14 +40,10 @@ export const CART_DELETE_DAYS = 90;
 /** Probe carts of the discount prompt (they are deleted right away; this is the safety net). */
 export const PROBE_CART_DELETE_DAYS = 1;
 export const PROBE_CART_KEY_PREFIX = 'prompt-probe-';
+/** The plan finder's price preview prices a throwaway cart too; a leftover is found by this key prefix and swept. */
+export const PREVIEW_PROBE_KEY_PREFIX = 'preview-probe-';
 
 export const PROMPT_MAX_CANDIDATES = 3;
-
-/**
- * L's spike decides how one-time lines are created. `false` (architecture A / A-prime, the best guess recorded in
- * PROJECT-FINDINGS `SPIKE-L`): one-time variants are normal line items without `recurrenceInfo`.
- */
-export const ONE_TIME_AS_CUSTOM_LINE_ITEM = false;
 
 /** Fee line names (custom line items have no catalog name). */
 export const ACTIVATION_FEE_NAME = { 'en-US': 'Activation fee', 'de-DE': 'Aktivierungsgebühr' } as const;

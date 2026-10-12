@@ -1,5 +1,5 @@
 import type { Category } from '@/lib/types';
-import { activeNavKey, buildNavItems } from './nav';
+import { activeNavKey, buildNavItems, splitNavItems } from './nav';
 
 function category(key: string, slugs: { 'en-US': string; 'de-DE': string }, name: string, children: Category[] = []): Category {
   return { id: key, key, name, slug: slugs['en-US'], slugs, children };
@@ -17,8 +17,8 @@ const TREE: Category[] = [
 describe('nav', () => {
   it('nav items follow the tree order', () => {
     const items = buildNavItems(TREE, 'en-US');
-    expect(items.map((item) => item.key)).toEqual(TREE.map((root) => root.key));
-    expect(items.map((item) => item.label)).toEqual(['Phone plans', 'Wireless internet', 'Cable internet', 'Add-ons']);
+    expect(items.map((item) => item.key)).toEqual(['malva-cat-phone-plans', 'malva-cat-home-wireless', 'malva-cat-cable-internet']);
+    expect(items.map((item) => item.label)).toEqual(['Phone plans', 'Wireless internet', 'Cable internet']);
     expect(items[2].path).toBe('/shop/cable-internet');
   });
 
@@ -26,17 +26,28 @@ describe('nav', () => {
     expect(buildNavItems(TREE, 'de-DE')[2].path).toBe('/shop/kabel-internet');
   });
 
-  it('Active category highlighted: add-ons listing and a child category mark the Add-ons item', () => {
+  it('Add-ons is not navigation: no item, and its pages mark nothing as active', () => {
     const items = buildNavItems(TREE, 'en-US');
-    expect(activeNavKey('/shop/add-ons', items)).toBe('malva-cat-add-ons');
-    expect(activeNavKey('/shop/streaming-entertainment', items)).toBe('malva-cat-add-ons');
+    expect(items.some((item) => item.key === 'malva-cat-add-ons')).toBe(false);
+    expect(activeNavKey('/shop/add-ons', items)).toBeUndefined();
+    expect(activeNavKey('/shop/streaming-entertainment', items)).toBeUndefined();
     expect(activeNavKey('/shop/cable-internet', items)).toBe('malva-cat-cable-internet');
   });
 
   it('the de-DE slug of the same category maps to the same root', () => {
-    const items = buildNavItems(TREE, 'en-US');
-    expect(activeNavKey('/shop/kabel-internet', items)).toBe('malva-cat-cable-internet');
-    expect(activeNavKey('/shop/streaming-unterhaltung', buildNavItems(TREE, 'de-DE'))).toBe('malva-cat-add-ons');
+    expect(activeNavKey('/shop/kabel-internet', buildNavItems(TREE, 'en-US'))).toBe('malva-cat-cable-internet');
+    expect(activeNavKey('/shop/kabel-internet', buildNavItems(TREE, 'de-DE'))).toBe('malva-cat-cable-internet');
+  });
+
+  it('splits the plan categories (menu order) from the other roots', () => {
+    const devices = category('malva-cat-devices', { 'en-US': 'phones-and-devices', 'de-DE': 'geraete' }, 'Phones and devices');
+    const { plans, others } = splitNavItems(buildNavItems([devices, ...TREE], 'en-US'));
+    expect(plans.map((plan) => [plan.id, plan.key])).toEqual([
+      ['phone', 'malva-cat-phone-plans'],
+      ['wireless', 'malva-cat-home-wireless'],
+      ['cable', 'malva-cat-cable-internet'],
+    ]);
+    expect(others.map((item) => item.key)).toEqual(['malva-cat-devices']);
   });
 
   it('other routes map to none', () => {

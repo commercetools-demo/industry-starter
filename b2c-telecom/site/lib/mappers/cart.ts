@@ -11,12 +11,14 @@ import { buildLabel, formatLabelMoney } from '@/lib/pricing/label';
 import { LABEL_STRINGS } from '@/lib/pricing/labelStrings';
 import { discountKeyFor, introDefFor } from '@/lib/pricing/introPeriod';
 import { buildSchedule } from '@/lib/pricing/schedule';
+import { taxAddedOf, thenMonthlyOf } from '@/lib/pricing/summary';
 import type {
   BundleIssue,
   BundleLineKind,
   Cart,
   CartDiscountCodeInfo,
   CartLine,
+  AppliedPromotion,
   CartSummary,
   DiscountCodeReason,
   Locale,
@@ -41,6 +43,8 @@ export interface CartMapDeps {
   today: string;
   /** Cart Discount id to key (references in a cart carry the id only). */
   discountKeyById: Record<string, string>;
+  /** Cart Discount id to its localized name, for the list of promotions (a missing name falls back to the key). */
+  discountNameById?: Record<string, Record<string, string>>;
   /** Recurrence policy id to key of the device policies (workstream Q); only needed when the cart has a device line. */
   devicePolicyKeys?: Record<string, string>;
 }
@@ -82,6 +86,49 @@ function discountKeys(line: LineItem, deps: CartMapDeps): string[] {
   return [...keys];
 }
 
+/** What the engine took off a line: discounted amount of every included discount times the quantity of its portion. */
+function engineDiscountOf(line: LineItem | CustomLineItem): number {
+  let total = 0;
+  for (const portion of line.discountedPricePerQuantity ?? []) {
+    for (const included of portion.discountedPrice.includedDiscounts) total += included.discountedAmount.centAmount * portion.quantity;
+  }
+  return total;
+}
+
+interface Reduction {
+  discountId: string;
+  /** Total off, over every unit it reached. */
+  cents: number;
+  lineId: string | null;
+}
+
+/** Every reduction the engine reports: per line (discountedPricePerQuantity x quantity of the portion) and on the order total. */
+function reductionsOf(ct: CtCart): Reduction[] {
+  const out: Reduction[] = [];
+  for (const line of [...ct.lineItems, ...ct.customLineItems]) {
+    for (const portion of line.discountedPricePerQuantity ?? []) {
+      for (const included of portion.discountedPrice.includedDiscounts) {
+        out.push({ discountId: included.discount.id, cents: included.discountedAmount.centAmount * portion.quantity, lineId: line.id });
+      }
+    }
+  }
+  for (const included of ct.discountOnTotalPrice?.includedDiscounts ?? []) out.push({ discountId: included.discount.id, cents: included.discountedAmount.centAmount, lineId: null });
+  return out.filter((reduction) => reduction.cents > 0);
+}
+
+/** One entry per promotion: its name, the amount off in total and the lines it reduced. */
+function promotionsOf(ct: CtCart, deps: CartMapDeps, locale: string, currency: string): AppliedPromotion[] {
+  const byDiscount = new Map<string, AppliedPromotion>();
+  for (const reduction of reductionsOf(ct)) {
+    const key = deps.discountKeyById[reduction.discountId] ?? reduction.discountId;
+    const entry = byDiscount.get(reduction.discountId) ?? { key, name: getLocalizedString(deps.discountNameById?.[reduction.discountId], locale) || key, amount: zero(currency), lineIds: [] };
+    entry.amount = { centAmount: entry.amount.centAmount + reduction.cents, currencyCode: currency };
+    if (reduction.lineId !== null && !entry.lineIds.includes(reduction.lineId)) entry.lineIds.push(reduction.lineId);
+    byDiscount.set(reduction.discountId, entry);
+  }
+  return [...byDiscount.values()];
+}
+
 function issueFor(code: string, messageKey: string, line: Pick<CartLine, 'id' | 'offerKey'>, extra: Record<string, string | number> = {}): BundleIssue {
   return { code, severity: 'blocking', lineId: line.id, offerKey: line.offerKey, resolution: 'none', reasons: [{ code, messageKey, params: extra, offerKeys: [line.offerKey] }] };
 }
@@ -105,6 +152,7 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
   // Lines keep the order in which they were first added: a device re-added in another mode carries its old `addedAt` (Q, verified live).
   const ordered = [...ct.lineItems].sort((a, b) => (a.addedAt ?? '').localeCompare(b.addedAt ?? ''));
   const base: CartLine[] = ordered.map((item): CartLine => {
+    const taken = engineDiscountOf(item);
     const fields = item.custom?.fields as Record<string, unknown> | undefined;
     const offerKey = fieldText(fields, 'offerKey') ?? item.productKey ?? '';
     const offer = deps.offersByKey[offerKey];
@@ -137,6 +185,7 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
       recurrence: item.recurrenceInfo && !acquisition ? { policyKey: MONTHLY_POLICY_KEY, priceSelectionMode: item.recurrenceInfo.priceSelectionMode === 'Fixed' ? 'Fixed' : 'Dynamic' } : null,
       unitListPrice,
       unitPrice: { centAmount: quantity > 0 ? Math.round(total.centAmount / quantity) : total.centAmount, currencyCode: total.currencyCode },
+      ...(taken > 0 && item.quantity > 0 ? { promoPerUnit: money({ ...item.totalPrice, centAmount: Math.round(taken / item.quantity) }) } : {}),
       total,
       appliedDiscountKeys: discountKeys(item, deps),
       parentLineId: fieldText(fields, 'parentLineItemId') ?? null,
@@ -219,6 +268,7 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
         quantity: line.quantity,
         standing: line.unitListPrice,
         introApplied: introDef !== null && line.appliedDiscountKeys.includes(discountKeyFor(introDef)),
+        ...(line.promoPerUnit ? { firstOrderDiscount: line.promoPerUnit } : {}),
         monthToMonth,
         oneTimeDueNow: fee ? money(fee.totalPrice) : zero(currency),
         orderDate: deps.today,
@@ -245,12 +295,17 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
   });
 
   const all = [...lines, ...feeLines];
+  // A promotion that reduced exactly one line (and nothing else) sits under that line; any other is listed after the lines.
+  const promotions = promotionsOf(ct, deps, ctx.locale, currency);
+  const lineOnly = (promotion: AppliedPromotion): boolean => promotion.lineIds.length === 1 && !(ct.discountOnTotalPrice?.includedDiscounts ?? []).some((included) => (deps.discountKeyById[included.discount.id] ?? included.discount.id) === promotion.key);
+  const underLine = new Map<string, AppliedPromotion[]>();
+  for (const promotion of promotions.filter(lineOnly)) underLine.set(promotion.lineIds[0] as string, [...(underLine.get(promotion.lineIds[0] as string) ?? []), promotion]);
+  const lineView = (line: CartLine): CartLine => (underLine.has(line.id) ? { ...line, promotions: underLine.get(line.id) } : line);
   const sum = (predicate: (line: CartLine) => boolean): Money => all.filter(predicate).reduce((acc, line) => add(acc, line.total), zero(currency));
-  const discountOnLines = all.reduce((acc, line) => {
-    const list = line.unitListPrice.centAmount * line.quantity;
-    return acc + Math.max(0, list - line.total.centAmount);
-  }, 0);
+  const discountOnLines = [...ct.lineItems, ...ct.customLineItems].reduce((acc, line) => acc + engineDiscountOf(line), 0);
   const discountOnTotal = ct.discountOnTotalPrice?.discountedAmount.centAmount ?? 0;
+  const totalPrice = money(ct.totalPrice);
+  const taxAdded = taxAddedOf(totalPrice, ct.taxedPrice ? money(ct.taxedPrice.totalGross) : null);
   const summary: CartSummary = {
     plans: sum((line) => line.chargeType === 'recurring' && line.kind === 'plan'),
     addons: sum((line) => line.chargeType === 'recurring' && (line.kind === 'addon' || line.kind === 'equipment')),
@@ -258,8 +313,13 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
     monthly: sum((line) => line.chargeType === 'recurring'),
     oneTime: sum((line) => line.chargeType === 'one-time'),
     discountTotal: { centAmount: discountOnLines + discountOnTotal, currencyCode: currency },
+    orderDiscount: { centAmount: discountOnTotal, currencyCode: currency },
+    shipping: ct.shippingInfo ? money(ct.shippingInfo.price) : null,
     tax: ct.taxedPrice ? { centAmount: ct.taxedPrice.totalGross.centAmount - ct.taxedPrice.totalNet.centAmount, currencyCode: currency } : null,
-    total: money(ct.totalPrice),
+    taxAdded,
+    total: totalPrice,
+    dueToday: taxAdded ? add(totalPrice, taxAdded) : totalPrice,
+    thenMonthly: thenMonthlyOf(all, currency),
   };
 
   const discountCodes: CartDiscountCodeInfo[] = ct.discountCodes.map((info) => {
@@ -268,7 +328,9 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
   });
 
   const required = getMinimumOrder(currency);
-  const gap = shortfall(summary.total, currency);
+  // The order's value is what is due today or, when more, one month of what recurs: a plan with a free first month is not a $0 order.
+  const worth = summary.thenMonthly.centAmount > summary.total.centAmount ? summary.thenMonthly : summary.total;
+  const gap = shortfall(worth, currency);
   const blockedBy: Cart['checkoutBlockedBy'] = [];
   if (lines.length === 0) blockedBy.push('EMPTY');
   if (lines.length > 0 && gap) blockedBy.push('MINIMUM_ORDER');
@@ -279,10 +341,12 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
     version: ct.version,
     currencyCode: currency,
     country: ct.country ?? ctx.country,
-    lines: all,
-    itemCount: lines.length,
+    lines: all.map(lineView),
+    // What the buyer chose: an included child line is part of its plan, not another item.
+    itemCount: lines.filter((line) => !line.includedAtNoCharge).length,
     summary,
     discountCodes,
+    promotions: promotions.filter((promotion) => !lineOnly(promotion)),
     minimumOrder: required ? { required, shortfall: lines.length > 0 ? gap : null } : null,
     issues,
     canCheckout: blockedBy.length === 0,

@@ -132,7 +132,8 @@ export function revalidateCartCompat(lines: CartLineRef[], offersByKey: Record<s
       const parentOffer = offersByKey[parent.offerKey];
       if (!parentOffer) continue; // the parent line reports OFFER_NOT_FOUND; removing it takes this line along
       const verdict = evaluateCandidate(parentOffer, offer);
-      if (verdict.status !== 'allowed') issue('remove', verdict.reasons);
+      // An included child line reads 'included' (the plan gives it away at price 0); a paid line of an offer the plan now includes is flagged.
+      if (verdict.status !== 'allowed' && !(verdict.status === 'included' && line.includedFree)) issue('remove', verdict.reasons);
       continue;
     }
     if (offer.kind === 'base-package' || offer.kind === 'bundle') {

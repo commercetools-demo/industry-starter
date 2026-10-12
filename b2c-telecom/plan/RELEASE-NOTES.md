@@ -162,3 +162,13 @@ Questions raised only in workstream reports (not yet in `QUESTIONS.md`):
 - **Rate limits are in memory** (per instance): not reliable on serverless Netlify.
 - **Netlify build:** needs `CTP_CHECKOUT_APP_KEY` and the untested Package directory `b2c-telecom` (fallback is in `Y-netlify-deployment.md`); Google Fonts are fetched at build and have flaked once per workstream (retry).
 - **Live project hygiene:** `seed:experiments` can leave a stock reservation until the next `npm run seed`; QA customers may remain; `Gate 2` (M-L-2) is formally still open although M and U were built.
+
+## 9. Change `dtv-experience-parity` (branch `feat/telecom-plan-finder`)
+
+- **Plan finder** at `/<locale>/plan-finder` (header, drawer and footer link): buyer context bar (customer type, existing customer, ZIP), family control, plans with the first-month message, three sections per plan (Included, Compatible add-ons, Compatible equipment), draft extras, a live "Due today / Then monthly" strip from `POST /api/pricing/preview`, and one Continue to `/bundle` (refused lines and replacements are shown there; the bundle links back to the finder with the plan preselected).
+- **New endpoints:** `GET /api/offers`, `GET /api/offers/[key]`, `POST /api/pricing/preview` (throwaway probe cart, deleted after use), `GET/POST /api/buyer-context`.
+- **Promotions:** first order only (`NonRecurringOrdersOnly`); only the first-month promotion, WELCOME10 and MALVA-CABLE5 remain. The retired discounts are not deleted by the release: run `npm run seed:cleanup-discounts` (report) and, with owner approval, `--execute --confirm-project`.
+- **Prices:** customer-group and `call-center` channel prices; included equipment becomes child lines at price 0; summary rows and discount order fixed; shipping tiers come from the engine.
+- **Rules:** required and negated offers, required add-on kinds, regional add-ons.
+- **No schedule format change:** stored schedules stay v1.
+- **Not run on the live project (owner approval needed):** the seeder for the new catalog data, spikes 3.1 and 3.2 (recurring order with a zero external price; generated-order query), the cleanup script, and the browser walk-through 9.1. Clearing the ZIP clears the cookie only; the cart's postal-code fields have no clear route.

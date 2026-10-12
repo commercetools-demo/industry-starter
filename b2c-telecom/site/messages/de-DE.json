@@ -10,7 +10,15 @@
     "home": "Malva Telecom Startseite",
     "skipToContent": "Zum Inhalt springen",
     "nav": {
-      "primary": "Hauptnavigation"
+      "primary": "Hauptnavigation",
+      "planFinder": "Tarifberater",
+      "browsePlans": "Alle Tarife",
+      "mega": {
+        "label": "Tarifkategorien",
+        "phone": "Unbegrenzt telefonieren und schreiben, mit passendem Datenvolumen",
+        "wireless": "Internet für zu Hause über 4G und 5G, ganz ohne Kabel",
+        "cable": "Schnelles Kabel-Internet für den ganzen Haushalt"
+      }
     },
     "account": {
       "login": "Anmelden",
@@ -35,6 +43,7 @@
   "nav": {},
   "footer": {
     "nav": "Fußzeile",
+    "planFinder": "Tarifberater",
     "support": "Support",
     "copyright": "© 2026 Malva Telecom"
   },
@@ -207,7 +216,12 @@
       "discounts": "Rabatte",
       "tax": "Steuern",
       "dueToday": "Heute fällig",
-      "taxNote": "Steuern werden an der Kasse berechnet. Das Broadband-Facts-Label jedes Tarifs wird beim Tarif angezeigt."
+      "taxNote": "Steuern werden an der Kasse berechnet. Das Broadband-Facts-Label jedes Tarifs wird beim Tarif angezeigt.",
+      "thenMonthly": "Danach monatlich",
+      "thenMonthlyNote": "Der Betrag, der Ihnen für Ihre späteren Monatsbestellungen berechnet wird.",
+      "save": "Sie sparen",
+      "shipping": "Versand",
+      "taxIncluded": "Enthält {amount} Steuer"
     },
     "cta": {
       "checkout": "Zur Kasse",
@@ -275,6 +289,10 @@
       "region": "Sparmöglichkeiten"
     },
     "loading": "Ihr Bundle wird geladen",
+    "promotions": {
+      "title": "Aktionen",
+      "off": "{name}: {amount} Rabatt"
+    },
     "section": {
       "plans": "Tarife",
       "addons": "Zusatzoptionen"
@@ -283,7 +301,13 @@
       "empty": "Noch keine Zusatzoptionen.",
       "browse": "Zusatzoptionen ansehen"
     },
-    "home": "Startseite"
+    "home": "Startseite",
+    "finder": {
+      "back": "Tarif oder Extras ändern",
+      "backAria": "Zurück zum Tarifberater",
+      "refusedTitle": "{name} konnte Ihrem Tarif nicht hinzugefügt werden",
+      "replaced": "{added} ersetzt {removed}."
+    }
   },
   "checkout": {
     "title": "Kasse",
@@ -363,7 +387,9 @@
       "tax": "Steuer",
       "dueToday": "Heute fällig",
       "monthly": "Monatlich danach",
-      "contractTotal": "Gesamt über die Laufzeit"
+      "contractTotal": "Gesamt über die Laufzeit",
+      "save": "Sie sparen",
+      "taxIncluded": "Enthält {amount} Steuer"
     },
     "payment": {
       "heading": "Zahlung",
@@ -974,6 +1000,8 @@
       "selected": "Ausgewählt ✓"
     },
     "perMonth": "/Monat",
+    "firstMonthFree": "Erster Monat gratis, danach {price}/Monat",
+    "activationFee": "{fee} Aktivierungsgebühr",
     "mostPopular": "Am beliebtesten",
     "term": {
       "label": "Vertragslaufzeit",
@@ -1037,11 +1065,16 @@
       "REQUIRED_EQUIPMENT_MISSING": "{planName} benötigt ein kompatibles Gerät ({kind}).",
       "PARENT_REQUIRED": "Fügen Sie zuerst einen Tarif hinzu.",
       "AMBIGUOUS_PARENT": "Wählen Sie, zu welchem Tarif das gehört.",
+      "REQUIRED_OFFER_MISSING": "Erfordert {requiredName}.",
+      "REQUIRED_ADDON_KIND_MISSING": "{planName} benötigt eine Auswahl für: {kind}.",
+      "NEGATED_OFFER_CONFLICT": "{candidateName} ersetzt {otherName}; wählen Sie nur eines.",
       "ALREADY_ATTACHED": "Bereits zu {planName} hinzugefügt.",
       "HELD_SERVICE_CONFLICT": "Sie haben bereits {otherName}; das lässt sich nicht mit {candidateName} kombinieren.",
       "NOT_ELIGIBLE_AUDIENCE": "{offerName} ist für Ihren Kontotyp nicht verfügbar.",
       "NOT_ELIGIBLE_EXISTING_CUSTOMER": "{rule, select, existing {{offerName} gilt nur für bestehende Malva-Kunden.} other {{offerName} gilt nur für Neukunden.}}",
       "NOT_ELIGIBLE_CHANNEL": "{offerName} ist in diesem Vertriebskanal nicht verfügbar.",
+      "NOT_AVAILABLE_IN_REGION": "{offerName} ist in Ihrer Region nicht verfügbar ({postalCode}).",
+      "LOCATION_REQUIRED": "{offerName} ist nur in ausgewählten Gebieten verfügbar. Geben Sie Ihre Postleitzahl ein.",
       "NOT_STARTED": "{offerName} ist noch nicht verfügbar.",
       "ENDED": "{offerName} ist beendet.",
       "NOT_SERVICEABLE": "{offerName} ist unter {postalCode} nicht verfügbar."
@@ -1077,6 +1110,7 @@
     },
     "row": {
       "intro": "Einführungspreis",
+      "firstMonth": "Erster Monat",
       "standing": "Regulärer Preis"
     },
     "dueAtOrder": "Fällig bei Bestellung",
@@ -1121,6 +1155,7 @@
     "lock": "Price locked for {months} months.",
     "noLock": "Price can change with notice.",
     "intro": "Introductory price {amount}/mo for the first {months} months, then {standing}/mo.",
+    "introOne": "First-month price {amount}, then {standing}/mo.",
     "step": "Price changes to {amount}/mo from month {month}.",
     "perMonth": "{amount}/mo",
     "unlimited": "Unlimited",
@@ -1128,9 +1163,8 @@
     "mbps": "{n} Mbps",
     "ms": "{n} ms",
     "discounts": {
-      "cable": "{bundle} off monthly when you add a phone plan.",
-      "wireless": "{bundle} off monthly when you add a phone plan.",
-      "phone": "Second line {secondLine} off. {bundle} off your internet plan when you also have a phone plan."
+      "firstMonth": "First month free. Later months are charged at the standing price.",
+      "none": "No promotions apply."
     }
   },
   "devices": {
@@ -1378,6 +1412,92 @@
         "Refunded": "Erstattet",
         "NotRefunded": "Nicht erstattet"
       }
+    }
+  },
+  "finder": {
+    "title": "Tarifberater",
+    "home": "Startseite",
+    "intro": "Wählen Sie einen Tarif, fügen Sie Zubehör hinzu und sehen Sie Ihren Preis, bevor Sie fortfahren.",
+    "loading": "Tarife werden geladen …",
+    "family": {
+      "label": "Tarifart",
+      "phone": "Mobilfunktarife",
+      "home-wireless": "Funk-Internet",
+      "cable": "Kabel-Internet"
+    },
+    "plans": {
+      "label": "Tarife"
+    },
+    "empty": {
+      "plans": "Für die aktuelle Auswahl sind keine Tarife verfügbar.",
+      "notServed": "{postalCode} versorgen wir noch nicht, daher sind dort keine Tarife verfügbar."
+    },
+    "error": {
+      "offers": "Die Tarife konnten nicht geladen werden.",
+      "detail": "Die Details dieses Tarifs konnten nicht geladen werden.",
+      "retry": "Erneut versuchen"
+    },
+    "context": {
+      "title": "Ihre Angaben",
+      "fromAccount": "Aus Ihrem Konto",
+      "declareFailed": "Die Auswahl konnte nicht gespeichert werden. Bitte erneut versuchen.",
+      "customerType": {
+        "label": "Kundenart",
+        "consumer": "Privatkunde",
+        "small-business": "Kleinunternehmen",
+        "employee": "Mitarbeiter"
+      },
+      "existing": {
+        "label": "Bestandskunde",
+        "unspecified": "Keine Angabe",
+        "yes": "Ja",
+        "no": "Nein"
+      },
+      "zip": {
+        "label": "Postleitzahl",
+        "apply": "Übernehmen",
+        "clear": "Löschen",
+        "none": "Geben Sie Ihre Postleitzahl ein, um zu sehen, was an Ihrer Adresse verfügbar ist.",
+        "state": "Bundesland: {state}"
+      },
+      "zipFailed": "Die Postleitzahl konnte nicht geprüft werden. Bitte erneut versuchen.",
+      "notServed": "{postalCode} versorgen wir noch nicht."
+    },
+    "detail": {
+      "loading": "Details werden geladen …",
+      "refused": "Dieser Artikel kann diesem Tarif nicht hinzugefügt werden.",
+      "cleared": "Ihre Extras wurden entfernt, weil sie für einen anderen Tarif gewählt wurden.",
+      "kind": {
+        "addon": "Zusatzoption",
+        "equipment": "Ausstattung"
+      },
+      "included": {
+        "title": "Enthalten",
+        "empty": "In diesem Tarif ist nichts Weiteres enthalten."
+      },
+      "addons": {
+        "title": "Passende Zusatzoptionen",
+        "empty": "Für diesen Tarif sind keine passenden Zusatzoptionen verfügbar."
+      },
+      "equipment": {
+        "title": "Passende Ausstattung",
+        "empty": "Für diesen Tarif ist keine passende Ausstattung verfügbar."
+      },
+      "add": "Zum Tarif hinzufügen",
+      "remove": "Hinzugefügt ✓ Entfernen",
+      "unavailable": "Nicht verfügbar",
+      "addTo": "{name} zu Ihrem Tarif hinzufügen",
+      "removeFrom": "{name} aus Ihrem Tarif entfernen",
+      "unavailableFor": "{name} ist für diesen Tarif nicht verfügbar"
+    },
+    "strip": {
+      "title": "Ihr Preis",
+      "loading": "Ihr Preis wird berechnet …",
+      "unavailable": "Preis nicht verfügbar"
+    },
+    "continue": {
+      "withPlan": "Weiter mit {name}",
+      "extras": "{count, plural, =0 {Keine Extras hinzugefügt} one {# Extra hinzugefügt} other {# Extras hinzugefügt}}"
     }
   }
 }

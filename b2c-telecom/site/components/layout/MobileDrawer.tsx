@@ -9,9 +9,10 @@ import { Pill } from '@/components/ui/Pill';
 import { Link, usePathname } from '@/i18n/routing';
 import { HEADER_SEARCH_ENABLED } from '@/lib/config/search';
 import { cx } from '@/lib/cx';
-import { activeNavKey, type NavItem } from '@/lib/nav';
+import { activeNavKey, splitNavItems, type NavItem } from '@/lib/nav';
 import type { Market } from '@/lib/utils';
 import { LocaleSwitcher } from './LocaleSwitcher';
+import { PlanFinderPill } from './PlanFinderPill';
 
 const DRAWER_ID = 'mobile-drawer';
 const FOCUSABLE = 'a[href], button:not([disabled])';
@@ -33,6 +34,7 @@ export function MobileDrawer({ items, account, locale }: MobileDrawerProps): Rea
   const panel = useRef<HTMLDivElement>(null);
   const wasOpen = useRef(false);
   const active = activeNavKey(pathname, items);
+  const { plans, others } = splitNavItems(items);
 
   const close = (): void => setOpenPath(null);
 
@@ -120,21 +122,22 @@ export function MobileDrawer({ items, account, locale }: MobileDrawerProps): Rea
             </div>
             {HEADER_SEARCH_ENABLED ? <DrawerSearchLink onNavigate={close} /> : null}
             <nav aria-label={t('nav.primary')} className="flex flex-col gap-3">
-              {items.map((item) => {
-                const isActive = active === item.key;
-                return (
-                  <Pill
-                    key={item.key}
-                    href={item.path}
-                    active={isActive}
-                    aria-current={isActive ? 'page' : undefined}
-                    onClick={close}
-                    className="w-full"
-                  >
-                    {item.label}
-                  </Pill>
-                );
-              })}
+              <PlanFinderPill onNavigate={close} className="w-full" />
+              {plans.length > 0 ? (
+                <div role="group" aria-label={t('nav.browsePlans')} className="flex flex-col gap-3">
+                  <span className="px-5 font-display text-sm font-semibold text-text-muted">{t('nav.browsePlans')}</span>
+                  {plans.map((item) => (
+                    <Pill key={item.key} href={item.path} active={active === item.key} aria-current={active === item.key ? 'page' : undefined} onClick={close} className="w-full">
+                      {item.label}
+                    </Pill>
+                  ))}
+                </div>
+              ) : null}
+              {others.map((item) => (
+                <Pill key={item.key} href={item.path} active={active === item.key} aria-current={active === item.key ? 'page' : undefined} onClick={close} className="w-full">
+                  {item.label}
+                </Pill>
+              ))}
             </nav>
             <hr className="m-0 border-0 border-t border-border" />
             <div>{account}</div>

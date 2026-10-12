@@ -10,7 +10,15 @@
     "home": "Malva Telecom home",
     "skipToContent": "Skip to content",
     "nav": {
-      "primary": "Main navigation"
+      "primary": "Main navigation",
+      "planFinder": "Plan finder",
+      "browsePlans": "Browse all plans",
+      "mega": {
+        "label": "Plan categories",
+        "phone": "Unlimited talk and text with data to match",
+        "wireless": "Home internet over 4G and 5G, no cable needed",
+        "cable": "Fast wired internet for the whole household"
+      }
     },
     "account": {
       "login": "Log in",
@@ -35,6 +43,7 @@
   "nav": {},
   "footer": {
     "nav": "Footer",
+    "planFinder": "Plan finder",
     "support": "Support",
     "copyright": "© 2026 Malva Telecom"
   },
@@ -207,7 +216,12 @@
       "discounts": "Discounts",
       "tax": "Taxes",
       "dueToday": "Due today",
-      "taxNote": "Taxes are calculated at checkout. Each plan's Broadband Facts label is shown with the plan."
+      "taxNote": "Taxes are calculated at checkout. Each plan's Broadband Facts label is shown with the plan.",
+      "thenMonthly": "Then monthly",
+      "thenMonthlyNote": "What your later monthly orders will be charged.",
+      "save": "You save",
+      "shipping": "Shipping",
+      "taxIncluded": "Includes {amount} tax"
     },
     "cta": {
       "checkout": "Check out",
@@ -275,6 +289,10 @@
       "region": "Ways to save"
     },
     "loading": "Loading your bundle",
+    "promotions": {
+      "title": "Promotions",
+      "off": "{name}: {amount} off"
+    },
     "section": {
       "plans": "Plans",
       "addons": "Add-ons"
@@ -283,7 +301,13 @@
       "empty": "No add-ons yet.",
       "browse": "Browse add-ons"
     },
-    "home": "Home"
+    "home": "Home",
+    "finder": {
+      "back": "Change plan or extras",
+      "backAria": "Back to the plan finder",
+      "refusedTitle": "We could not add {name} to your plan",
+      "replaced": "{added} replaced {removed}."
+    }
   },
   "checkout": {
     "title": "Checkout",
@@ -363,7 +387,9 @@
       "tax": "Tax",
       "dueToday": "Due today",
       "monthly": "Monthly after today",
-      "contractTotal": "Total over the term"
+      "contractTotal": "Total over the term",
+      "save": "You save",
+      "taxIncluded": "Includes {amount} tax"
     },
     "payment": {
       "heading": "Payment",
@@ -974,6 +1000,8 @@
       "selected": "Selected ✓"
     },
     "perMonth": "/mo",
+    "firstMonthFree": "First month free, then {price}/mo",
+    "activationFee": "{fee} activation fee",
     "mostPopular": "Most popular",
     "term": {
       "label": "Contract term",
@@ -1038,10 +1066,15 @@
       "PARENT_REQUIRED": "Add a plan first.",
       "AMBIGUOUS_PARENT": "Choose which plan to attach this to.",
       "ALREADY_ATTACHED": "Already added to {planName}.",
+      "REQUIRED_OFFER_MISSING": "Requires {requiredName}.",
+      "REQUIRED_ADDON_KIND_MISSING": "{planName} needs a choice for: {kind}.",
+      "NEGATED_OFFER_CONFLICT": "{candidateName} replaces {otherName}; keep only one.",
       "HELD_SERVICE_CONFLICT": "You already have {otherName}, which can't be combined with {candidateName}.",
       "NOT_ELIGIBLE_AUDIENCE": "{offerName} isn't available for your account type.",
       "NOT_ELIGIBLE_EXISTING_CUSTOMER": "{rule, select, existing {{offerName} is for existing Malva customers.} other {{offerName} is for new customers only.}}",
       "NOT_ELIGIBLE_CHANNEL": "{offerName} isn't available in this sales channel.",
+      "NOT_AVAILABLE_IN_REGION": "{offerName} isn't available in your area ({postalCode}).",
+      "LOCATION_REQUIRED": "{offerName} is available in selected areas. Enter your ZIP code to check.",
       "NOT_STARTED": "{offerName} isn't available yet.",
       "ENDED": "{offerName} has ended.",
       "NOT_SERVICEABLE": "{offerName} isn't available at {postalCode}."
@@ -1077,6 +1110,7 @@
     },
     "row": {
       "intro": "Introductory price",
+      "firstMonth": "First month",
       "standing": "Standard price"
     },
     "dueAtOrder": "Due at order",
@@ -1121,6 +1155,7 @@
     "lock": "Price locked for {months} months.",
     "noLock": "Price can change with notice.",
     "intro": "Introductory price {amount}/mo for the first {months} months, then {standing}/mo.",
+    "introOne": "First-month price {amount}, then {standing}/mo.",
     "step": "Price changes to {amount}/mo from month {month}.",
     "perMonth": "{amount}/mo",
     "unlimited": "Unlimited",
@@ -1128,9 +1163,8 @@
     "mbps": "{n} Mbps",
     "ms": "{n} ms",
     "discounts": {
-      "cable": "{bundle} off monthly when you add a phone plan.",
-      "wireless": "{bundle} off monthly when you add a phone plan.",
-      "phone": "Second line {secondLine} off. {bundle} off your internet plan when you also have a phone plan."
+      "firstMonth": "First month free. Later months are charged at the standing price.",
+      "none": "No promotions apply."
     }
   },
   "devices": {
@@ -1378,6 +1412,92 @@
         "Refunded": "Refunded",
         "NotRefunded": "Not refunded"
       }
+    }
+  },
+  "finder": {
+    "title": "Plan finder",
+    "home": "Home",
+    "intro": "Choose a plan, add what goes with it and see your price before you continue.",
+    "loading": "Loading plans…",
+    "family": {
+      "label": "Plan type",
+      "phone": "Phone plans",
+      "home-wireless": "Wireless internet",
+      "cable": "Cable internet"
+    },
+    "plans": {
+      "label": "Plans"
+    },
+    "empty": {
+      "plans": "No plans are available for the current selection.",
+      "notServed": "We don't serve {postalCode} yet, so no plans are available there."
+    },
+    "error": {
+      "offers": "We couldn't load the plans.",
+      "detail": "We couldn't load this plan's details.",
+      "retry": "Try again"
+    },
+    "context": {
+      "title": "Your details",
+      "fromAccount": "From your account",
+      "declareFailed": "We couldn't save that choice. Try again.",
+      "customerType": {
+        "label": "Customer type",
+        "consumer": "Consumer",
+        "small-business": "Small business",
+        "employee": "Employee"
+      },
+      "existing": {
+        "label": "Existing customer",
+        "unspecified": "Not specified",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "zip": {
+        "label": "ZIP code",
+        "apply": "Apply",
+        "clear": "Clear",
+        "none": "Enter your ZIP code to see what is available at your address.",
+        "state": "State: {state}"
+      },
+      "zipFailed": "We couldn't check that ZIP code. Try again.",
+      "notServed": "We don't serve {postalCode} yet."
+    },
+    "detail": {
+      "loading": "Loading details…",
+      "refused": "This item can't be added to this plan.",
+      "cleared": "Your extras were cleared because they were chosen for another plan.",
+      "kind": {
+        "addon": "Add-on",
+        "equipment": "Equipment"
+      },
+      "included": {
+        "title": "Included",
+        "empty": "Nothing extra is included with this plan."
+      },
+      "addons": {
+        "title": "Compatible add-ons",
+        "empty": "No compatible add-ons are available for this plan."
+      },
+      "equipment": {
+        "title": "Compatible equipment",
+        "empty": "No compatible equipment is available for this plan."
+      },
+      "add": "Add to plan",
+      "remove": "Added ✓ Remove",
+      "unavailable": "Unavailable",
+      "addTo": "Add {name} to your plan",
+      "removeFrom": "Remove {name} from your plan",
+      "unavailableFor": "{name} is unavailable for this plan"
+    },
+    "strip": {
+      "title": "Your price",
+      "loading": "Calculating your price…",
+      "unavailable": "Price unavailable"
+    },
+    "continue": {
+      "withPlan": "Continue with {name}",
+      "extras": "{count, plural, =0 {No extras added} one {# extra added} other {# extras added}}"
     }
   }
 }

@@ -6,6 +6,7 @@ export type Kind =
   | 'taxCategory'
   | 'zoneCoverage'
   | 'customerGroup'
+  | 'channel'
   | 'recurrencePolicy'
   | 'category'
   | 'shippingMethod'
@@ -24,6 +25,7 @@ export const COLLECTION: Record<Kind, string> = {
   taxCategory: 'tax-categories',
   zoneCoverage: 'zones',
   customerGroup: 'customer-groups',
+  channel: 'channels',
   recurrencePolicy: 'recurrence-policies',
   category: 'categories',
   shippingMethod: 'shipping-methods',
@@ -176,6 +178,11 @@ export interface CustomerGroupDraft extends Draft {
   groupName: string;
 }
 
+/** A sales channel whose prices are separate from the standard ones (role ProductDistribution: line items name it as their distribution channel). */
+export interface ChannelDraft extends Draft {
+  name: LocalizedString;
+}
+
 export interface RecurrencePolicyDraft extends Draft {
   name: LocalizedString;
   description?: LocalizedString;
@@ -241,6 +248,7 @@ export interface PriceDraft {
   value: Money;
   country?: string;
   customerGroup?: string; // key
+  channel?: string; // key
   /** Recurrence policy key; absent = one-time price. */
   recurrencePolicy?: string;
   validFrom?: string;

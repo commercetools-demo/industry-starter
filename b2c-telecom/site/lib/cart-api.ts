@@ -38,7 +38,7 @@ export async function cartResponse(run: (session: SessionData, market: Market) =
     const session = await getSession();
     const market = await getMarket();
     const result = await run(session, market);
-    const response = json({ cart: result.cart });
+    const response = json({ cart: result.cart, ...(result.notices?.length ? { notices: result.notices } : {}) });
     await syncSession(session, result, response);
     if (result.postalCode) {
       response.cookies.set(POSTAL_COOKIE, result.postalCode, { httpOnly: true, sameSite: 'lax', path: '/', secure: process.env.NODE_ENV === 'production', maxAge: POSTAL_COOKIE_MAX_AGE });

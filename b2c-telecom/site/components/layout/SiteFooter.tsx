@@ -2,6 +2,7 @@ import type { ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
 import { FooterLegalLinks } from '@/components/content/FooterLegalLinks';
 import { Link } from '@/i18n/routing';
+import { PLAN_FINDER_PATH } from '@/lib/config/nav';
 import type { NavItem } from '@/lib/nav';
 
 const LINK = 'rounded-sm font-display text-sm font-medium text-brand-100 no-underline hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500';
@@ -20,6 +21,11 @@ export function SiteFooter({ items }: SiteFooterProps): ReactElement {
           <span className="font-display text-3xl font-bold leading-none tracking-widest text-brand-500">malva</span>
           <nav aria-label={t('nav')}>
             <ul className="m-0 flex list-none flex-wrap gap-x-7 gap-y-3 p-0">
+              <li>
+                <Link href={PLAN_FINDER_PATH} className={LINK}>
+                  {t('planFinder')}
+                </Link>
+              </li>
               {items.map((item) => (
                 <li key={item.key}>
                   <Link href={item.path} className={LINK}>

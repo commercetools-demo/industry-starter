@@ -1,7 +1,7 @@
 // "$5 off Cable with code" and its Discount Code MALVA-CABLE5 (workstream M). Predicates use the backtick-escaped attribute name proven
 // live in G-18 (category predicates would need ids; offers are products, so the offer-family attribute is the stable handle).
 // Docs: https://docs.commercetools.com/api/projects/cartDiscounts , https://docs.commercetools.com/api/projects/discountCodes
-import { CABLE5_CODE, DISCOUNT_AMOUNTS, DISCOUNT_KEYS } from '../../../../lib/config/discounts';
+import { CABLE5_CODE, DISCOUNT_AMOUNTS, DISCOUNT_KEYS, sortOrderOf } from '../../../../lib/config/discounts';
 import type { CartDiscountDraft, DiscountCodeDraft } from '../../types';
 
 const CABLE = 'attributes.`offer-family` = "cable"';
@@ -22,7 +22,7 @@ export const cable5Discount: CartDiscountDraft = {
   },
   cartPredicate: `lineItemExists(${CABLE}) = true`,
   target: { type: 'lineItems', predicate: CABLE },
-  sortOrder: '0.8',
+  sortOrder: sortOrderOf(DISCOUNT_KEYS.codeCable5),
   stackingMode: 'Stacking',
   isActive: true,
   requiresDiscountCode: true,

@@ -16,10 +16,10 @@ export const EXPECTED = {
   productTypes: 6,
   customTypes: 6,
   categories: 8,
-  products: 52,
-  offers: 27,
+  products: 59,
+  offers: 31,
   inventory: 19,
-  cartDiscounts: 6,
+  cartDiscounts: 2,
   discountCodes: 1,
   policies: 5,
   serviceability: 11,
@@ -43,7 +43,7 @@ function liveVariants(p: LiveProduct): LiveVariant[] {
 const keysWithPrefix = (items: Obj[], prefix: string): string[] => items.map((i) => String(i.key ?? i.sku ?? '')).filter((k) => k.startsWith(prefix));
 
 export const catalogCounts: Check = {
-  name: 'catalog counts (6 product types, 6 custom types, 8 categories, 52 products, 19 inventory entries, at least 6 discounts, at least 1 code, 5 policies, 11 serviceability objects)',
+  name: 'catalog counts (6 product types, 6 custom types, 8 categories, 59 products, 19 inventory entries, at least 2 discounts, at least 1 code, 5 policies, 11 serviceability objects)',
   async run(api) {
     const problems: string[] = [];
     const expect = (label: string, actual: number, wanted: number): void => {
@@ -103,7 +103,7 @@ export const offerPrices: Check = {
 };
 
 export const offerReferences: Check = {
-  name: 'every key an offer references exists and price-steps parse',
+  name: 'every key an offer references exists',
   async run(api) {
     const live = await liveProducts(api);
     const problems: string[] = [];
@@ -112,42 +112,13 @@ export const offerReferences: Check = {
       if (!product) continue;
       for (const variant of liveVariants(product)) {
         for (const attribute of variant.attributes ?? []) {
-          if (['anchors', 'included-offers', 'conflicts-with', 'compatible-addons', 'compatible-equipment'].includes(attribute.name) && Array.isArray(attribute.value)) {
+          if (['anchors', 'included-offers', 'conflicts-with', 'compatible-addons', 'compatible-equipment', 'requires-offers', 'negates-offers'].includes(attribute.name) && Array.isArray(attribute.value)) {
             for (const key of attribute.value as string[]) if (!live.has(key)) problems.push(`${offer.key}.${attribute.name} -> ${key}`);
-          }
-          if (attribute.name === 'price-steps') {
-            try {
-              const steps = JSON.parse(String(attribute.value)) as { fromMonth: number; percentOff: number }[];
-              if (!Array.isArray(steps) || steps.some((s) => typeof s.fromMonth !== 'number' || typeof s.percentOff !== 'number')) problems.push(`${offer.key}.price-steps has the wrong shape`);
-            } catch {
-              problems.push(`${offer.key}.price-steps is not JSON`);
-            }
           }
         }
       }
     }
     return problems.length === 0 ? ok() : fail(problems.slice(0, 8).join('; '));
-  },
-};
-
-export const yearOneDiscounts: Check = {
-  name: 'year-1 discounts equal the first price step of their offer',
-  async run(api) {
-    const live = await liveProducts(api);
-    const pairs: [string, string][] = [['malva-cd-tier-year1-20', 'malva-offer-cable-gig'], ['malva-cd-tier-year1-15', 'malva-offer-phone-unlimited-max']];
-    const problems: string[] = [];
-    for (const [discountKey, offerKey] of pairs) {
-      const discount = (await api.get(`cart-discounts/key=${discountKey}`)) as { value?: { permyriad?: number } } | null;
-      const product = live.get(offerKey);
-      const steps = product ? ((liveVariants(product)[0].attributes ?? []).find((a) => a.name === 'price-steps')?.value as string | undefined) : undefined;
-      if (!discount || !steps) {
-        problems.push(`${discountKey} or ${offerKey}.price-steps is missing`);
-        continue;
-      }
-      const first = (JSON.parse(steps) as { percentOff: number }[])[0];
-      if (discount.value?.permyriad !== first.percentOff * 100) problems.push(`${discountKey} is ${String(discount.value?.permyriad)} permyriad, first step is ${first.percentOff} %`);
-    }
-    return problems.length === 0 ? ok() : fail(problems.join('; '));
   },
 };
 
@@ -166,7 +137,7 @@ export const imageCoverage: Check = {
 };
 
 export const searchFindsOffers: Check = {
-  name: 'product search finds all 27 offers',
+  name: 'product search finds all 31 offers',
   async run(api) {
     const keys = manifestOffers.map((o) => o.key);
     try {
@@ -205,4 +176,26 @@ export const demoData: Check = {
   },
 };
 
-export const catalogChecks: Check[] = [catalogCounts, offerPrices, offerReferences, yearOneDiscounts, imageCoverage, searchFindsOffers, demoData];
+/**
+ * Promotions apply to the first order only: every Cart Discount in the project must be `NonRecurringOrdersOnly`, or the standing
+ * price shown for recurring orders ("Then monthly") would be wrong. Owned discounts that are not fail; a discount made in the Merchant
+ * Center is reported as a warning (never fails), and so is an owned discount the manifest no longer has (the retired ones).
+ */
+export const discountScope: Check = {
+  name: 'cart discounts apply to the first order only (recurringOrderScope NonRecurringOrdersOnly)',
+  async run(api) {
+    const live = (await getAll(api, 'cart-discounts')) as (Obj & { key?: string; recurringOrderScope?: { type?: string } })[];
+    const wanted = new Set((MANIFEST.cartDiscount ?? []).map((draft) => draft.key));
+    const scoped = (discount: { recurringOrderScope?: { type?: string } }): boolean => discount.recurringOrderScope?.type === 'NonRecurringOrdersOnly';
+    const owned = live.filter((discount) => discount.key?.startsWith('malva-'));
+    const bad = owned.filter((discount) => wanted.has(String(discount.key)) && !scoped(discount)).map((discount) => String(discount.key));
+    if (bad.length > 0) return fail(`apply to recurring orders: ${bad.join(', ')} (re-run the seed)`);
+    const warnings = [
+      ...live.filter((discount) => !discount.key?.startsWith('malva-') && !scoped(discount)).map((discount) => `${String(discount.key ?? '(no key)')} is not first-order-only (Merchant Center discount)`),
+      ...owned.filter((discount) => !wanted.has(String(discount.key))).map((discount) => `${String(discount.key)} is no longer in the manifest (retired: remove it with the cleanup script)`),
+    ];
+    return ok(warnings.length === 0 ? undefined : `warning: ${warnings.join('; ')}`);
+  },
+};
+
+export const catalogChecks: Check[] = [catalogCounts, offerPrices, offerReferences, discountScope, imageCoverage, searchFindsOffers, demoData];

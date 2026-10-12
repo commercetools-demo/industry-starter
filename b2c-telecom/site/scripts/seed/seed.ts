@@ -28,6 +28,7 @@ function restrict(manifest: SeedManifest, only: Kind[] | undefined): SeedManifes
 export async function main(argv: string[], deps: SeedDeps = {}): Promise<number> {
   const log = deps.log ?? consoleLog;
   const args = parseArgs(argv, ['confirm-project', 'only']);
+  console.log(args)
   const planOnly = args.flags.has('plan');
   const json = args.flags.has('json');
   const reconcilers = deps.reconcilers ?? defaultReconcilers;

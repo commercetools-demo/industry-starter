@@ -30,7 +30,7 @@ import {
   attrStringSet,
   type RawAttribute,
 } from './attributes';
-import { selectFinancedOptions, selectPrices, selectRecurringPrices, type RawPrice } from './price';
+import { selectFinancedOptions, selectPrices, selectRecurringPrices, type RawPrice, type ScopeInput } from './price';
 
 type Attrs = ReadonlyArray<RawAttribute> | undefined;
 
@@ -38,7 +38,7 @@ const OFFER_KINDS: readonly OfferKind[] = ['base-package', 'addon', 'equipment',
 const AUDIENCES: readonly AudienceKey[] = ['consumer', 'small-business', 'employee'];
 const EXISTING: readonly ExistingCustomerRule[] = ['any', 'existing', 'new'];
 const EQUIPMENT_KINDS: readonly EquipmentKind[] = ['router', 'modem', 'extender', 'gateway'];
-const ADDON_KINDS: readonly AddonFacts['addonKind'][] = ['streaming', 'security', 'protection'];
+const ADDON_KINDS: readonly AddonFacts['addonKind'][] = ['streaming', 'security', 'protection', 'installation'];
 const TERMS: Record<TermKey, TermMonths> = { 'month-to-month': 0, '12-months': 12, '24-months': 24 };
 
 const oneOf = <T extends string>(allowed: readonly T[], value: string | undefined): T | undefined => allowed.find((candidate) => candidate === value);
@@ -96,7 +96,6 @@ export function mapAddonFacts(projection: ProductProjection, locale: string): Ad
     ...optional({
       provider: attrString(attrs, 'provider'),
       chargeType: attrEnumKey(attrs, 'charge-type'),
-      trialDays: attrNumber(attrs, 'trial-days'),
       tag: attrEnumKey(attrs, 'addon-tag'),
     }),
     appliesToFamilies: keepAllowed<PlanFamily>(['internet', 'phone'], attrEnumKeys(attrs, 'applies-to-families')),
@@ -155,6 +154,8 @@ export interface OfferContext {
   market: Market;
   categoryIdToKey: Record<string, string>;
   now: Date;
+  /** The buyer's price scope (customer group and channel); absent = standard prices. */
+  scope?: ScopeInput;
 }
 
 /** Drops `undefined` values so the result is plain JSON (the cache and the client boundary serialise it). */
@@ -166,7 +167,7 @@ function mapVariant(variant: ProductVariant, isMaster: boolean, kind: OfferKind,
   const attrs = variant.attributes;
   const sku = variant.sku ?? '';
   const prices = (variant.prices ?? []) as RawPrice[];
-  const selected = selectPrices(prices, ctx.market, ctx.now, sku);
+  const selected = selectPrices(prices, ctx.market, ctx.now, sku, ctx.scope);
   const term = oneOf(Object.keys(TERMS) as TermKey[], attrEnumKey(attrs, 'contract-term')) ?? null;
   const plain: OfferVariant['attributes'] = {};
   for (const name of ['color', 'memory-gb', 'contract-term', 'charge-type']) {
@@ -221,10 +222,14 @@ export function mapOffer(projection: ProductProjection, ctx: OfferContext, local
     compatibleAddons: attrStringSet(attrs, 'compatible-addons'),
     compatibleEquipment: attrStringSet(attrs, 'compatible-equipment'),
     conflictsWith: attrStringSet(attrs, 'conflicts-with'),
+    requiresOffers: attrStringSet(attrs, 'requires-offers'),
+    negatesOffers: attrStringSet(attrs, 'negates-offers'),
+    eligibleRegions: attrStringSet(attrs, 'eligible-regions'),
     audience: keepAllowed(AUDIENCES, attrEnumKeys(attrs, 'audience')),
     existingCustomer: oneOf(EXISTING, attrEnumKey(attrs, 'existing-customer')) ?? 'any',
     channels: attrStringSet(attrs, 'channels'),
     ...optional({ startTime: attrDate(attrs, 'start-time'), endTime: attrDate(attrs, 'end-time') }),
+    ...((attrNumber(attrs, 'intro-free-months') ?? 0) > 0 ? { firstMonthFree: true } : {}),
     variants,
     headline: {
       ...(master.recurringPrice ? { recurring: master.recurringPrice } : {}),

@@ -1,5 +1,10 @@
 import { buildSchedule, serializeSchedules } from '../../lib/pricing/schedule';
 import type { Money, PriceSchedule } from '../../lib/types';
+import { clearLegacyPricingDefs, setLegacyPricingDefs } from '../../test/fixtures/legacyPricing';
+
+// The schedules below are built at module level with the definitions that used to be shipped.
+setLegacyPricingDefs();
+afterAll(clearLegacyPricingDefs);
 
 const get = vi.fn();
 const post = vi.fn();

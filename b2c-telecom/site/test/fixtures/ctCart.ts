@@ -41,6 +41,8 @@ export interface CartSpec {
   totalPrice?: number;
   taxed?: { net: number; gross: number };
   discountOnTotal?: number;
+  /** Id of the cart discount behind `discountOnTotal` (reported in includedDiscounts). */
+  discountOnTotalId?: string;
   postalCode?: string;
 }
 
@@ -106,7 +108,7 @@ export function ctCart(spec: CartSpec = {}): CtCart {
     customLineItems: fees.map((fee) => ctFee(fee, currency)),
     totalPrice: cents(spec.totalPrice ?? sum, currency),
     ...(spec.taxed ? { taxedPrice: { totalNet: cents(spec.taxed.net, currency), totalGross: cents(spec.taxed.gross, currency), taxPortions: [] } } : {}),
-    ...(spec.discountOnTotal ? { discountOnTotalPrice: { discountedAmount: cents(spec.discountOnTotal, currency), includedDiscounts: [] } } : {}),
+    ...(spec.discountOnTotal ? { discountOnTotalPrice: { discountedAmount: cents(spec.discountOnTotal, currency), includedDiscounts: spec.discountOnTotalId ? [{ discount: { typeId: 'cart-discount', id: spec.discountOnTotalId }, discountedAmount: cents(spec.discountOnTotal, currency) }] : [] } } : {}),
     discountCodes: (spec.codes ?? []).map((entry) => ({
       discountCode: { typeId: 'discount-code', id: entry.id, obj: { id: entry.id, code: entry.code } },
       state: entry.state,

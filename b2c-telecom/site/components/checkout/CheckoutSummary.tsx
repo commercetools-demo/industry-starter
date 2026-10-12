@@ -2,7 +2,10 @@ import type { ReactElement } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { cx } from '@/lib/cx';
 import { formatMoneyExact } from '@/lib/format';
+import { summaryRows, type SummaryRowId } from '@/lib/pricing/summary';
 import type { CheckoutReview, Locale, Money } from '@/lib/types';
+
+const LABEL_OF: Record<SummaryRowId, string> = { plans: 'plans', addons: 'addons', devices: 'devices', oneTime: 'oneTime', orderDiscount: 'discounts', shipping: 'shipping', tax: 'tax' };
 
 // Junior design choice (D-068): the checkout summary is the cart's "Order summary" (design/specs/cart.md) without the discount-code form
 // and the CTA. Every figure is a projection of the last cart response: nothing is added up here.
@@ -22,21 +25,19 @@ function Rows({ review }: { review: CheckoutReview }): ReactElement {
   const fmt = (money: Money): string => formatMoneyExact(money, locale);
   const { state } = review;
   const { summary } = state.cart;
-  const zero: Money = { centAmount: 0, currencyCode: state.cart.currencyCode };
-  const negative = (money: Money): Money => ({ ...money, centAmount: -money.centAmount });
   return (
     <div className="flex flex-col gap-4">
-      {summary.plans.centAmount > 0 ? <Row label={t('plans')} value={fmt(summary.plans)} /> : null}
-      {summary.addons.centAmount > 0 ? <Row label={t('addons')} value={fmt(summary.addons)} /> : null}
-      {summary.devicesMonthly.centAmount > 0 ? <Row label={t('devices')} value={fmt(summary.devicesMonthly)} /> : null}
-      {summary.oneTime.centAmount > 0 ? <Row label={t('oneTime')} value={fmt(summary.oneTime)} muted /> : null}
-      {summary.discountTotal.centAmount > 0 ? <Row label={t('discounts')} value={fmt(negative(summary.discountTotal))} /> : null}
-      {state.shipping ? <Row label={t('shipping')} value={fmt(state.shipping)} /> : null}
-      <Row label={t('tax')} value={fmt(state.tax ?? summary.tax ?? zero)} />
+      {summaryRows(summary).map((row) => (
+        <Row key={row.id} label={t(LABEL_OF[row.id])} value={fmt(row.amount)} muted={row.id === 'oneTime'} />
+      ))}
       <div className="border-t border-border pt-4">
-        <Row label={t('dueToday')} value={fmt(summary.total)} strong />
+        <Row label={t('dueToday')} value={fmt(summary.dueToday)} strong />
       </div>
+      {summary.taxAdded === null && (state.tax ?? summary.tax) && (state.tax ?? summary.tax)!.centAmount > 0 ? (
+        <p className="m-0 text-sm text-text-muted">{t('taxIncluded', { amount: fmt((state.tax ?? summary.tax) as Money) })}</p>
+      ) : null}
       {review.monthlyAfterToday.centAmount > 0 ? <Row label={t('monthly')} value={fmt(review.monthlyAfterToday)} muted /> : null}
+      {summary.discountTotal.centAmount > 0 ? <Row label={t('save')} value={fmt(summary.discountTotal)} muted /> : null}
       {review.contractTotal ? <Row label={t('contractTotal')} value={fmt(review.contractTotal)} muted /> : null}
     </div>
   );
@@ -51,7 +52,7 @@ export function CheckoutSummary({ review }: { review: CheckoutReview }): ReactEl
   return (
     <>
       <details className="rounded-xl border border-border bg-surface p-5 md:hidden">
-        <summary className="cursor-pointer font-display text-md font-bold">{t('toggle', { total: formatMoneyExact(review.state.cart.summary.total, locale) })}</summary>
+        <summary className="cursor-pointer font-display text-md font-bold">{t('toggle', { total: formatMoneyExact(review.state.cart.summary.dueToday, locale) })}</summary>
         <div className="pt-4">
           <Rows review={review} />
         </div>

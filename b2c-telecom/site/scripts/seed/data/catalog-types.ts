@@ -26,6 +26,10 @@ export interface PriceSpec {
   centAmount: number;
   country: string;
   recurrencePolicy?: string;
+  /** Customer group key: the price applies only to buyers in this group. */
+  customerGroup?: string;
+  /** Channel key: the price applies only in this sales channel. */
+  channel?: string;
   validFrom?: string;
   validUntil?: string;
 }
@@ -47,15 +51,18 @@ export function ls(enUS: string, deDE: string): LocalizedString {
 export const POLICY_MONTHLY = 'malva-monthly';
 
 /** `<sku-lower>_<currency-lower>_<policy key or once>` (the platform allows only alphanumerics, underscores and hyphens in keys). */
-export function priceKey(sku: string, currency: Currency, policy: string | undefined): string {
-  return `${sku.toLowerCase()}_${currency.toLowerCase()}_${policy ?? 'once'}`;
+export function priceKey(sku: string, currency: Currency, policy: string | undefined, scope: { customerGroup?: string; channel?: string } = {}): string {
+  const scoped = [scope.customerGroup && `grp-${scope.customerGroup}`, scope.channel && `chn-${scope.channel}`].filter(Boolean).join('_');
+  return `${sku.toLowerCase()}_${currency.toLowerCase()}_${policy ?? 'once'}${scoped ? `_${scoped}` : ''}`;
 }
 
 export function toPriceDraft(sku: string, spec: PriceSpec): PriceDraft {
   return {
-    key: priceKey(sku, spec.currency, spec.recurrencePolicy),
+    key: priceKey(sku, spec.currency, spec.recurrencePolicy, spec),
     value: { currencyCode: spec.currency, centAmount: spec.centAmount },
     country: spec.country,
+    ...(spec.customerGroup ? { customerGroup: spec.customerGroup } : {}),
+    ...(spec.channel ? { channel: spec.channel } : {}),
     ...(spec.recurrencePolicy ? { recurrencePolicy: spec.recurrencePolicy } : {}),
     ...(spec.validFrom ? { validFrom: spec.validFrom } : {}),
     ...(spec.validUntil ? { validUntil: spec.validUntil } : {}),

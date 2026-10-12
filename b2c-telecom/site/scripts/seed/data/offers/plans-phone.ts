@@ -1,18 +1,10 @@
 import type { ProductDraft } from '../../types';
-import { monthlyPrices, PLAN_PRICES, TERM_KEY } from '../prices';
+import { CALL_CENTER_PRICES, monthlyPrices, smallBusinessPrices, PLAN_PRICES, TERM_KEY } from '../prices';
 import { buildOffer, type OfferSpec } from './helpers';
 
 const PHONE_OFFERS = ['malva-offer-phone-essential', 'malva-offer-phone-plus', 'malva-offer-phone-unlimited', 'malva-offer-phone-unlimited-max'];
 
-export const PHONE_MAX_PRICE_STEPS = JSON.stringify([
-  { fromMonth: 0, percentOff: 15 },
-  { fromMonth: 12, percentOff: 10 },
-  { fromMonth: 24, percentOff: 0 },
-]);
-
-const EXTRAS: Record<string, OfferSpec['extras']> = {
-  'malva-offer-phone-unlimited-max': { 'price-steps': PHONE_MAX_PRICE_STEPS },
-};
+const EXTRAS: Record<string, OfferSpec['extras']> = {};
 
 function phoneOffer(key: string, spec: Partial<OfferSpec> = {}): ProductDraft {
   return buildOffer({
@@ -22,7 +14,7 @@ function phoneOffer(key: string, spec: Partial<OfferSpec> = {}): ProductDraft {
     variants: PLAN_PRICES[key].map((v) => ({
       sku: v.sku,
       values: { 'contract-term': TERM_KEY[v.term], 'charge-type': 'monthly' },
-      prices: monthlyPrices(v.usd),
+      prices: [...monthlyPrices(v.usd), ...smallBusinessPrices(v.usd), ...(CALL_CENTER_PRICES[v.sku] === undefined ? [] : monthlyPrices(CALL_CENTER_PRICES[v.sku] as number, undefined, { channel: 'call-center' }))],
     })),
   });
 }

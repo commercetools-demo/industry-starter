@@ -46,7 +46,7 @@ describe('header search entry', () => {
     expect(screen.queryByRole('link', { name: 'Search' })).not.toBeInTheDocument();
   });
 
-  it('the drawer shows Search first, above the category pills', async () => {
+  it('the drawer shows Search first, above the plan finder and the category pills', async () => {
     header();
     await userEvent.click(screen.getByRole('button', { name: 'Open menu' }));
     const drawer = within(screen.getByRole('dialog'));
@@ -54,6 +54,7 @@ describe('header search entry', () => {
     expect(links[0]).toHaveAccessibleName('Malva Telecom home');
     expect(links[1]).toHaveTextContent('Search');
     expect(links[1]).toHaveAttribute('href', '/en-US/search');
-    expect(links[2]).toHaveTextContent('phone-plans');
+    expect(links[2]).toHaveTextContent('Plan finder');
+    expect(links[3]).toHaveTextContent('phone-plans');
   });
 });

@@ -24,14 +24,25 @@ describe('mobile drawer and the category tree', () => {
     const items = buildNavItems(tree, 'en-US');
 
     const header = renderWithProviders(<SiteHeader items={items} account={<span>Log in</span>} bundle={<span>bundle slot</span>} />);
-    const desktop = within(screen.getAllByRole('navigation', { name: 'Main navigation' })[0]).getAllByRole('link');
-    const desktopOrder = desktop.map((link) => [link.textContent, link.getAttribute('href')]);
+    // Plan finder first, then the plan menu (opened here), then the other roots
+    const desktop = within(screen.getAllByRole('navigation', { name: 'Main navigation' })[0]);
+    expect(desktop.getAllByRole('link')[0]).toHaveAttribute('href', '/en-US/plan-finder');
+    await userEvent.click(desktop.getByRole('button', { name: 'Browse all plans' }));
+    const menuLinks = within(screen.getByRole('region', { name: 'Plan categories' })).getAllByRole('link');
+    const menuOrder = menuLinks.map((link) => [link.querySelector('span')?.textContent, link.getAttribute('href')]);
+    const others = desktop.getAllByRole('link').filter((link) => !link.getAttribute('href')?.endsWith('/plan-finder') && !menuLinks.includes(link)).map((link) => [link.textContent, link.getAttribute('href')]);
     header.unmount();
 
     renderWithProviders(<MobileDrawer items={items} account={<span>Log in</span>} locale="en-US" />);
     await userEvent.click(screen.getByRole('button', { name: 'Open menu' }));
-    const drawer = within(within(screen.getByRole('dialog')).getByRole('navigation', { name: 'Main navigation' })).getAllByRole('link');
-    expect(drawer.map((link) => [link.textContent, link.getAttribute('href')])).toEqual(desktopOrder);
-    expect(drawer.map((link) => link.textContent)).toEqual(tree.map((root) => root.name));
+    const nav = within(within(screen.getByRole('dialog')).getByRole('navigation', { name: 'Main navigation' }));
+    const drawer = nav.getAllByRole('link');
+    expect(drawer[0]).toHaveAttribute('href', '/en-US/plan-finder');
+    const inGroup = within(nav.getByRole('group', { name: 'Browse all plans' })).getAllByRole('link');
+    expect(inGroup.map((link) => [link.textContent, link.getAttribute('href')])).toEqual(menuOrder);
+    expect(drawer.slice(1 + inGroup.length).map((link) => [link.textContent, link.getAttribute('href')])).toEqual(others);
+    // Add-ons is in the tree but in no navigation
+    expect(tree.some((root) => root.name === 'Add-ons')).toBe(true);
+    expect(drawer.some((link) => link.textContent === 'Add-ons')).toBe(false);
   });
 });

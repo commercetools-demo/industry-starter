@@ -1,6 +1,7 @@
 import type { IntroDef } from '@/lib/config/pricing';
 import type { Money } from '@/lib/types';
 import { amountOn, computeIntro, discountKeyFor, introDefFor, isIntroActive, resolveEarlyCancellation, shiftForDelay } from './introPeriod';
+import { installLegacyPricingDefs } from '@/test/fixtures/legacyPricing';
 
 const usd = (centAmount: number): Money => ({ centAmount, currencyCode: 'USD' });
 const wireless: IntroDef = { offerKey: 'malva-offer-wireless-5g', term: 12, months: 3, amountCents: { USD: 3500, EUR: 3200 } };
@@ -10,6 +11,8 @@ function intro(orderDate = '2026-10-07', def = wireless, standing = usd(5500)) {
   if (!result.ok) throw new Error('intro expected');
   return result.value;
 }
+
+installLegacyPricingDefs();
 
 describe('introductory period', () => {
   it('Both prices shown before commitment: exposes promotional amount, standing amount and the date the standing amount begins', () => {

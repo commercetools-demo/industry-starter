@@ -80,9 +80,8 @@ describe('checkout page', () => {
     expect(screen.getByRole('list', { name: 'Checkout steps' }).querySelectorAll('li')).toHaveLength(5);
     const summary = screen.getByRole('complementary', { name: 'Order summary' });
     expect(summary).toHaveTextContent(`Due today$${(cart.summary.total.centAmount / 100).toFixed(2)}`);
-    expect(summary).toHaveTextContent('Shipping$0.00');
-    expect(summary).toHaveTextContent('Tax$0.00');
-  });
+    expect(summary).not.toHaveTextContent('Shipping');
+      });
 
   it('de-DE: German title strip and money', async () => {
     state.find.mockResolvedValue(makeState({ needsDelivery: false }));

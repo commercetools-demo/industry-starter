@@ -5,8 +5,10 @@ import { CATALOG_TTL, PRODUCT_TYPE_IDS_TTL } from '@/lib/config/cache';
 import { findDescendantKeys, flattenTree } from '@/lib/mappers/category';
 import { mapFacts, mapOffer, mergeFacts } from '@/lib/mappers/offer';
 import { filterReleased } from '@/lib/offers/release';
-import type { Locale, Market, Offer, OfferFacts } from '@/lib/types';
+import type { Locale, Market, Offer, OfferFacts, PriceScope } from '@/lib/types';
 import { getCategoryTree } from './categories';
+import { getChannelKeys } from './channels';
+import { getCustomerGroupKeys } from './customer-groups';
 import { getApiRoot } from './client';
 import { withTimeout } from './timeout';
 
@@ -74,11 +76,21 @@ export async function getCatalogFacts(locale: Locale): Promise<Record<string, Of
   return read();
 }
 
-/** Every sellable offer of the market, priced for it, inside its release window. Offers without facts or without a market price are hidden and logged. */
-export async function getAllOffers(market: Market): Promise<Offer[]> {
+/**
+ * Every sellable offer of the market, priced for it, inside its release window. Offers without facts or without a market price are
+ * hidden and logged. With a `scope` the prices are the buyer's (customer-group and channel prices); the cache is keyed by market,
+ * group and channel so one buyer's price is never served to another. Without it: standard prices.
+ */
+export async function getAllOffers(market: Market, scope?: PriceScope): Promise<Offer[]> {
+  const groups = [...new Set(scope?.groupKeys ?? [])].sort();
   const read = unstable_cache(
     async (): Promise<Offer[]> => {
-      const [ids, tree, facts] = await Promise.all([getProductTypeIds(), getCategoryTree(market.locale), getCatalogFacts(market.locale)]);
+      const [ids, tree, facts, keys] = await Promise.all([
+        getProductTypeIds(),
+        getCategoryTree(market.locale),
+        getCatalogFacts(market.locale),
+        scope ? Promise.all([getCustomerGroupKeys(), getChannelKeys()]) : Promise.resolve(null),
+      ]);
       const offerTypeId = ids[OFFER_TYPE_KEY];
       if (!offerTypeId) throw new Error(`Product type ${OFFER_TYPE_KEY} not found`);
       const categoryIdToKey = Object.fromEntries(flattenTree(tree).map((category) => [category.id, category.key]));
@@ -89,7 +101,7 @@ export async function getAllOffers(market: Market): Promise<Offer[]> {
       const now = new Date();
       const offers: Offer[] = [];
       for (const projection of projections) {
-        const mapped = mapOffer(projection, { market, categoryIdToKey, now });
+        const mapped = mapOffer(projection, { market, categoryIdToKey, now, ...(scope && keys ? { scope: { scope: { groupKeys: groups, channelKey: scope.channelKey }, keys: { groupKeyById: keys[0], channelKeyById: keys[1] } } } : {}) });
         if (!mapped) continue;
         const offer = mergeFacts(mapped, facts);
         if (offer.facts === null) {
@@ -102,7 +114,7 @@ export async function getAllOffers(market: Market): Promise<Offer[]> {
       }
       return offers;
     },
-    ['offers', market.locale, market.currency, market.country],
+    ['offers', market.locale, market.currency, market.country, groups.join(',') || '-', scope?.channelKey ?? '-'],
     { revalidate: CATALOG_TTL, tags: CACHE_TAGS },
   );
   // Coordinated release (X, D-057): the cache keeps the raw offers including start/end time; the release window is applied on every
@@ -111,13 +123,13 @@ export async function getAllOffers(market: Market): Promise<Offer[]> {
 }
 
 /** `null` for an unknown, unpublished or hidden offer. */
-export async function getOfferByKey(key: string, market: Market): Promise<Offer | null> {
-  return (await getAllOffers(market)).find((offer) => offer.key === key) ?? null;
+export async function getOfferByKey(key: string, market: Market, scope?: PriceScope): Promise<Offer | null> {
+  return (await getAllOffers(market, scope)).find((offer) => offer.key === key) ?? null;
 }
 
 /** In the order of `keys`; unknown keys are skipped. */
-export async function getOffersByKeys(keys: readonly string[], market: Market): Promise<Offer[]> {
-  const byKey = new Map((await getAllOffers(market)).map((offer) => [offer.key, offer]));
+export async function getOffersByKeys(keys: readonly string[], market: Market, scope?: PriceScope): Promise<Offer[]> {
+  const byKey = new Map((await getAllOffers(market, scope)).map((offer) => [offer.key, offer]));
   return [...new Set(keys)].flatMap((key) => {
     const offer = byKey.get(key);
     return offer ? [offer] : [];
@@ -125,8 +137,8 @@ export async function getOffersByKeys(keys: readonly string[], market: Market): 
 }
 
 /** Offers assigned to the category or any of its descendants (the add-ons root shows streaming, equipment and protection). */
-export async function getOffersInCategory(categoryKey: string, market: Market): Promise<Offer[]> {
-  const [offers, tree] = await Promise.all([getAllOffers(market), getCategoryTree(market.locale)]);
+export async function getOffersInCategory(categoryKey: string, market: Market, scope?: PriceScope): Promise<Offer[]> {
+  const [offers, tree] = await Promise.all([getAllOffers(market, scope), getCategoryTree(market.locale)]);
   const category = flattenTree(tree).find((candidate) => candidate.key === categoryKey);
   if (!category) return [];
   const keys = new Set(findDescendantKeys(category));

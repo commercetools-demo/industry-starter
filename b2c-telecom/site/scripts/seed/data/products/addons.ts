@@ -6,10 +6,14 @@ export interface AddonSpec {
   sku: string;
   name: Copy;
   description: Copy;
-  kind: 'streaming' | 'security' | 'protection';
+  kind: 'streaming' | 'security' | 'protection' | 'installation';
   tag: 'music' | 'video' | 'extras';
   provider: string;
   families: ('internet' | 'phone')[];
+  /** One-time items (installation) are sold once, not monthly. Default monthly. */
+  charge?: 'monthly' | 'one-time';
+  /** Technologies the add-on works with; absent = every technology of its families. */
+  technologies?: ('cable' | 'fixed-wireless')[];
 }
 
 export const ADDONS: AddonSpec[] = [
@@ -96,6 +100,40 @@ export const ADDONS: AddonSpec[] = [
     provider: 'Malva',
     families: ['internet'],
   },
+  {
+    key: 'malva-diy-install',
+    sku: 'MLV-ADD-DIYINSTALL-BASE',
+    name: { en: 'Self-installation kit', de: 'Selbstinstallations-Set' },
+    description: { en: 'Everything to set up your service yourself, shipped to your door.', de: 'Alles für die Einrichtung in Eigenregie, direkt zu Ihnen geliefert.' },
+    kind: 'installation',
+    tag: 'extras',
+    provider: 'Malva',
+    families: ['internet'],
+    charge: 'one-time',
+    technologies: ['cable', 'fixed-wireless'],
+  },
+  {
+    key: 'malva-pro-install',
+    sku: 'MLV-ADD-PROINSTALL-BASE',
+    name: { en: 'Professional installation', de: 'Professionelle Installation' },
+    description: { en: 'A technician sets up your service and your equipment at home.', de: 'Ein Techniker richtet Anschluss und Geräte bei Ihnen zu Hause ein.' },
+    kind: 'installation',
+    tag: 'extras',
+    provider: 'Malva',
+    families: ['internet'],
+    charge: 'one-time',
+    technologies: ['cable', 'fixed-wireless'],
+  },
+  {
+    key: 'malva-regional-sports',
+    sku: 'MLV-ADD-SPORTS-BASE',
+    name: { en: 'Regional Sports Pass', de: 'Regional Sports Pass' },
+    description: { en: 'Local team games, live. Sold in selected states.', de: 'Spiele lokaler Teams, live. In ausgewählten Bundesstaaten erhältlich.' },
+    kind: 'streaming',
+    tag: 'video',
+    provider: 'Malva Sports',
+    families: ['internet'],
+  },
 ];
 
 export const addonProducts: ProductDraft[] = ADDONS.map((spec) =>
@@ -112,7 +150,8 @@ export const addonProducts: ProductDraft[] = ADDONS.map((spec) =>
           'addon-tag': spec.tag,
           provider: spec.provider,
           'applies-to-families': spec.families,
-          'charge-type': 'monthly',
+          ...(spec.technologies ? { 'applies-to-technologies': spec.technologies } : {}),
+          'charge-type': spec.charge === 'one-time' ? 'one-time' : 'monthly',
         },
       },
     ],

@@ -2,7 +2,8 @@ import 'server-only';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
 import { marketFromLocale } from '@/lib/config/markets';
-import { GROUP_EXISTING_CUSTOMER, POSTAL_COOKIE, SALES_CHANNEL } from '@/lib/config/eligibility';
+import { BUYER_CONTEXT_COOKIE, CHANNEL_CALL_CENTER, GROUP_CALL_CENTER, GROUP_EXISTING_CUSTOMER, POSTAL_COOKIE, SALES_CHANNEL } from '@/lib/config/eligibility';
+import { groupKeyOf, parseDeclared } from '@/lib/offers/declared';
 import { customerTypeFromGroups } from '@/lib/offers/eligibility';
 import { normalizePostalCode } from '@/lib/offers/serviceability';
 import type { BuyerContext, HeldService, Locale, Market, ServiceLocation } from '@/lib/types';
@@ -45,8 +46,21 @@ async function readGroupKeys(customerId: string): Promise<string[]> {
 // React `cache` keys by argument identity, so the argument is a primitive (the locale); one resolution per request and market.
 const resolve = cache(async (locale: Locale): Promise<BuyerContext> => {
   const market = marketFromLocale(locale);
-  const [session, location] = await Promise.all([getSession(), readLocation(market.country)]);
-  const anonymous: BuyerContext = { customerType: 'consumer', isExistingCustomer: false, held: [], signedIn: false, channel: SALES_CHANNEL, now: new Date(), location };
+  const [session, location, declaredRaw] = await Promise.all([getSession(), readLocation(market.country), cookies().then((jar) => jar.get(BUYER_CONTEXT_COOKIE)?.value)]);
+  // The declaration is read for anonymous sessions only; a signed-in customer's groups replace it below.
+  const declared = parseDeclared(declaredRaw);
+  const anonymous: BuyerContext = {
+    customerType: declared.customerType,
+    isExistingCustomer: declared.existing === 'yes',
+    existingUnspecified: declared.existing === 'unspecified',
+    // The declared audience is the cart's customer group (a cart carries one), so prices follow what eligibility says.
+    groupKeys: [groupKeyOf(declared.customerType, declared.existing === 'yes')].flatMap((key) => (key ? [key] : [])),
+    held: [],
+    signedIn: false,
+    channel: SALES_CHANNEL,
+    now: new Date(),
+    location,
+  };
   const customerId = session.customerId;
   if (!customerId) return anonymous;
   try {
@@ -54,6 +68,10 @@ const resolve = cache(async (locale: Locale): Promise<BuyerContext> => {
     const [groupKeys, held]: [string[], HeldService[]] = await Promise.all([readGroupKeys(customerId), getHoldings(customerId, offersByKey)]);
     return {
       ...anonymous,
+      existingUnspecified: false,
+      groupKeys,
+      // Only a signed-in customer in the call-center group is in that channel; a visitor cannot pick one.
+      channel: groupKeys.includes(GROUP_CALL_CENTER) ? CHANNEL_CALL_CENTER : SALES_CHANNEL,
       customerType: customerTypeFromGroups(groupKeys),
       isExistingCustomer: groupKeys.includes(GROUP_EXISTING_CUSTOMER) || held.length > 0,
       held,
@@ -62,7 +80,7 @@ const resolve = cache(async (locale: Locale): Promise<BuyerContext> => {
   } catch (error) {
     // Never block browsing: fall back to the anonymous context but remember that the buyer is signed in.
     console.error(error);
-    return { ...anonymous, signedIn: true };
+    return { ...anonymous, customerType: 'consumer', isExistingCustomer: false, existingUnspecified: false, groupKeys: [], signedIn: true };
   }
 });
 

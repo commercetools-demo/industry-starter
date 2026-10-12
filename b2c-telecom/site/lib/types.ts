@@ -57,13 +57,12 @@ export interface PlanFacts {
 }
 export interface AddonFacts {
   kind: 'addon';
-  addonKind: 'streaming' | 'security' | 'protection';
+  addonKind: 'streaming' | 'security' | 'protection' | 'installation';
   provider?: string;
   appliesToFamilies: PlanFamily[];
   /** Empty = any. */
   appliesToTechnologies: Technology[];
   chargeType?: string;
-  trialDays?: number;
   /** Key of attribute `addon-tag`: music, video or extras. */
   tag?: string;
   highlights: string[];
@@ -129,6 +128,12 @@ export interface Offer {
   compatibleEquipment: string[];
   /** RAW: offer.conflicts-with union plan.conflicts-with. */
   conflictsWith: string[];
+  /** RAW offer keys that must be in the cart (or held) before this offer can be added. */
+  requiresOffers: string[];
+  /** RAW offer keys this offer replaces when it is added (professional installation negates DIY). */
+  negatesOffers: string[];
+  /** US state codes or ZIP prefixes where the offer is sold; empty = everywhere. */
+  eligibleRegions: string[];
   /** Empty = everyone. */
   audience: AudienceKey[];
   existingCustomer: ExistingCustomerRule;
@@ -137,6 +142,8 @@ export interface Offer {
   /** ISO. */
   startTime?: string;
   endTime?: string;
+  /** First-month promotion: the offer's `intro-free-months` is above 0 (a flag; the discount carries the rule). */
+  firstMonthFree?: boolean;
   /** variants[0] is ALWAYS the master variant (D-011). */
   variants: OfferVariant[];
   /** = master variant (D-011). */
@@ -208,6 +215,9 @@ export type ReasonCode =
   | 'PARENT_REQUIRED'
   | 'AMBIGUOUS_PARENT'
   | 'ALREADY_ATTACHED'
+  | 'REQUIRED_OFFER_MISSING'
+  | 'REQUIRED_ADDON_KIND_MISSING'
+  | 'NEGATED_OFFER_CONFLICT'
   // used by workstream K (declared here once so nobody edits the union twice):
   | 'HELD_SERVICE_CONFLICT'
   | 'NOT_ELIGIBLE_AUDIENCE'
@@ -215,7 +225,9 @@ export type ReasonCode =
   | 'NOT_ELIGIBLE_CHANNEL'
   | 'NOT_STARTED'
   | 'ENDED'
-  | 'NOT_SERVICEABLE';
+  | 'NOT_SERVICEABLE'
+  | 'NOT_AVAILABLE_IN_REGION'
+  | 'LOCATION_REQUIRED';
 
 export interface Reason {
   code: ReasonCode;
@@ -256,6 +268,8 @@ export interface CartLineRef {
   offerKey: string;
   parentLineItemId?: string;
   quantity: number;
+  /** An included offer's child line (added at price 0 with its plan). */
+  includedFree?: boolean;
 }
 export type CartIssueResolution = 'remove' | 'replace' | 'choose-equipment';
 export interface CartIssue {
@@ -272,12 +286,19 @@ export interface CandidateEntry {
 
 // ===== K: eligibility and exclusivity =====
 export type CustomerType = 'consumer' | 'small-business' | 'employee';
+/** Whose prices the catalog read selects: the buyer's customer groups and sales channel (null = the default online channel, which has no channel prices). */
+export interface PriceScope {
+  groupKeys: string[];
+  channelKey: string | null;
+}
 export interface ServiceLocation {
   postalCode: string;
   country: CountryCode;
   /** cable, fixed-wireless, mobile */
   served: Record<Technology, boolean>;
   anyServed: boolean;
+  /** US state derived from the ZIP (never from a city). */
+  state?: string;
   /** ISO time of the (cached) answer. */
   checkedAt: string;
 }
@@ -292,6 +313,10 @@ export interface HeldService {
 export interface BuyerContext {
   customerType: CustomerType;
   isExistingCustomer: boolean;
+  /** An anonymous visitor who has not said whether they are a customer: offers restricted to new customers are not shown either. */
+  existingUnspecified?: boolean;
+  /** Customer Group keys the buyer's prices and discounts are selected for: the account's, or the declared audience of an anonymous visitor. */
+  groupKeys?: string[];
   channel: string;
   now: Date;
   location?: ServiceLocation;
@@ -388,6 +413,14 @@ export interface RecurringOrderSummary {
 // Name notes: J's `CartIssue` (per line, with reasons) is kept as is; the cart API's issue shape is `BundleIssue`.
 // M does not re-declare `OfferFacts`: the offer data the mappers need is `Offer` (H).
 export type BundleLineKind = 'plan' | 'addon' | 'equipment' | 'device' | 'fee';
+/** A promotion the engine applied: its localized name and what it took off (the engine's own discounted amounts). */
+export interface AppliedPromotion {
+  key: string;
+  name: string;
+  amount: Money;
+  /** The lines it reduced (empty for an order-level discount). */
+  lineIds: string[];
+}
 export interface CartLine {
   /** commercetools line item id, or custom line item id for fee lines. */
   id: string;
@@ -414,6 +447,10 @@ export interface CartLine {
   unitListPrice: Money;
   /** Engine line total / quantity (after discounts, before tax); display only, `total` is authoritative. */
   unitPrice: Money;
+  /** Promotions that reduced only this line: shown under it. */
+  promotions?: AppliedPromotion[];
+  /** What the engine took off ONE unit of this line for the order placed now (first-order promotions); absent when nothing. */
+  promoPerUnit?: Money;
   /** Engine `totalPrice`. */
   total: Money;
   /** From `discountedPricePerQuantity[].discountedPrice.includedDiscounts[].discount.key`. */
@@ -458,18 +495,29 @@ export interface BundleIssue {
   reasons: BundleIssueReason[];
 }
 export interface CartSummary {
-  /** Recurring subtotals by kind (sum of engine line totals). */
+  /** Recurring subtotals by kind (sum of engine line totals: the first period, net of first-order promotions). */
   plans: Money;
   addons: Money;
   devicesMonthly: Money;
   /** Sum of engine line totals of recurring / one-time lines (one-time includes fee lines). */
   monthly: Money;
   oneTime: Money;
-  /** Sum of the discounts the engine applied (positive amount). */
+  /** Every promotion the engine reported (lines and order total), positive. Informational ("You save"), never a summed row. */
   discountTotal: Money;
-  /** Engine taxedPrice portion (null until it exists) and engine totalPrice (due today). */
+  /** Order-level discount only (positive); the one discount that is a row above Due today. */
+  orderDiscount: Money;
+  /** Engine shipping price (null until a method is chosen). */
+  shipping: Money | null;
+  /** Tax portion of the taxed price (gross minus net), null until it exists. Shown as "includes" when the rate is part of the price. */
   tax: Money | null;
+  /** Tax added on top of the total (null when the rate is part of the price). It is a row above Due today. */
+  taxAdded: Money | null;
+  /** Engine totalPrice (the amount the payment guard compares). */
   total: Money;
+  /** What is payable now: `total` plus `taxAdded`. */
+  dueToday: Money;
+  /** What recurring orders will charge: the standing price of every recurring line times quantity. */
+  thenMonthly: Money;
 }
 export interface Cart {
   id: string;
@@ -481,6 +529,8 @@ export interface Cart {
   itemCount: number;
   summary: CartSummary;
   discountCodes: CartDiscountCodeInfo[];
+  /** Promotions that affect several lines or the order total, listed after the lines (one-line promotions sit under their line). */
+  promotions: AppliedPromotion[];
   /** null when the minimum is 0 for this currency. */
   minimumOrder: { required: Money; shortfall: Money | null } | null;
   issues: BundleIssue[];
@@ -489,12 +539,20 @@ export interface Cart {
   /** Cart custom field (K serviceability). */
   postalCode: string | null;
 }
+/** Told to the buyer after an add changed something they did not ask for by name. */
+export interface CartNotice {
+  code: 'REPLACED';
+  addedName: string;
+  removedNames: string[];
+}
 export interface BlockedAdd {
-  kind: 'incompatible' | 'conflict' | 'ineligible' | 'unavailable' | 'invalid' | 'limit';
+  kind: 'incompatible' | 'conflict' | 'ineligible' | 'unavailable' | 'invalid' | 'limit' | 'requires';
   offerKey: string;
   reasons: BundleIssueReason[];
   /** Only for kind 'conflict' and for ONE_PLAN_PER_CATEGORY. */
   replace?: { removeLineId: string; removeOfferKey: string; removeOfferName: string };
+  /** Only for kind 'requires': the offers to add first (the buyer can add them together with the candidate). */
+  requires?: { offerKey: string; offerName: string }[];
 }
 export interface DiscountPrompt {
   pairingKey: string;
@@ -717,6 +775,8 @@ export interface OrderLine {
   /** 0 = month-to-month, null = unknown. */
   termMonths: number | null;
   unitPrice: Money;
+  /** What the engine took off ONE unit of this line for the order placed now (first-order promotions); absent when nothing. */
+  promoPerUnit?: Money;
   total: Money;
   parentLineId: string | null;
   acquisition: OrderLineAcquisition | null;

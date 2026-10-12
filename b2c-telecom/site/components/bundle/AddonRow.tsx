@@ -8,6 +8,7 @@ import { Link } from '@/i18n/routing';
 import { cx } from '@/lib/cx';
 import { formatMoneyExact } from '@/lib/format';
 import type { CartLine, Locale } from '@/lib/types';
+import { LinePromotions } from './Promotions';
 
 type AddonRowProps = {
   line: CartLine;
@@ -32,6 +33,7 @@ export function AddonRow({ line, planName, busy = false, onRemove }: AddonRowPro
         <div className="font-display text-lg font-bold">{line.name}</div>
         {line.description ? <div className="text-sm text-text-muted">{line.description}</div> : null}
         {planName ? <div className="text-sm text-text-muted">{t('line.forPlan', { plan: planName })}</div> : null}
+        <LinePromotions promotions={line.promotions} />
         {stock && !stock.inStock ? (
           <Tag tone="danger" className="mt-2">
             {stock.available && stock.available > 0 ? t('stock.few', { count: stock.available }) : t('stock.out')}
@@ -54,15 +56,18 @@ export function AddonRow({ line, planName, busy = false, onRemove }: AddonRowPro
           {t('line.change')}
         </Link>
       ) : null}
-      <button
-        type="button"
-        disabled={busy}
-        onClick={() => onRemove(line.id)}
-        aria-label={t('line.removeAria', { name: line.name })}
-        className={cx('rounded-pill bg-transparent p-0 font-display text-sm font-semibold text-text underline underline-offset-4', FOCUS_RING)}
-      >
-        {t('line.remove')}
-      </button>
+      {/* An included offer is part of its plan: it goes when the plan goes, so it has no remove control of its own. */}
+      {line.includedAtNoCharge ? null : (
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => onRemove(line.id)}
+          aria-label={t('line.removeAria', { name: line.name })}
+          className={cx('rounded-pill bg-transparent p-0 font-display text-sm font-semibold text-text underline underline-offset-4', FOCUS_RING)}
+        >
+          {t('line.remove')}
+        </button>
+      )}
     </li>
   );
 }

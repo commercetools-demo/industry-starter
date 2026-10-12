@@ -28,6 +28,8 @@ const withTimeout = vi.fn<(promise: Promise<unknown>, label: string) => Promise<
 vi.mock('next/cache', () => ({ unstable_cache: (fn: () => Promise<unknown>, keys: string[], options: object) => unstableCache(fn, keys, options) }));
 vi.mock('./client', () => ({ getApiRoot: () => ({ productTypes: () => ({ get: productTypeGet }), productProjections: () => ({ get: projectionGet }) }) }));
 vi.mock('./timeout', () => ({ withTimeout: (promise: Promise<unknown>, label: string) => withTimeout(promise, label) }));
+vi.mock('./customer-groups', () => ({ getCustomerGroupKeys: async () => ({ 'g-sb': 'small-business', 'g-ex': 'existing-customer' }) }));
+vi.mock('./channels', () => ({ getChannelKeys: async () => ({ 'ch-cc': 'call-center' }) }));
 vi.mock('./categories', () => ({
   getCategoryTree: async () => buildCategoryTree((categoryFixture as unknown as SdkCategory[]).map((category) => mapCategory(category, 'en-US'))),
 }));
@@ -76,10 +78,10 @@ describe('catalog reads', () => {
     expect(phone?.facts).toMatchObject({ kind: 'plan', family: 'phone' });
     const offerCalls = projectionGet.mock.calls.filter(([args]) => args.queryArgs.where?.startsWith('productType(id="'));
     expect(offerCalls[0]?.[0].queryArgs).toMatchObject({ priceCurrency: 'USD', priceCountry: 'US', staged: false, limit: 500 });
-    expect(unstableCache).toHaveBeenCalledWith(expect.any(Function), ['offers', 'en-US', 'USD', 'US'], { revalidate: CATALOG_TTL, tags: ['catalog'] });
+    expect(unstableCache).toHaveBeenCalledWith(expect.any(Function), ['offers', 'en-US', 'USD', 'US', '-', '-'], { revalidate: CATALOG_TTL, tags: ['catalog'] });
     const de = await getAllOffers(DE);
     expect(de.find((offer) => offer.key === 'malva-offer-phone-unlimited')?.headline.recurring?.currencyCode).toBe('EUR');
-    expect(unstableCache).toHaveBeenCalledWith(expect.any(Function), ['offers', 'de-DE', 'EUR', 'DE'], expect.objectContaining({ revalidate: CATALOG_TTL }));
+    expect(unstableCache).toHaveBeenCalledWith(expect.any(Function), ['offers', 'de-DE', 'EUR', 'DE', '-', '-'], expect.objectContaining({ revalidate: CATALOG_TTL }));
   });
 
   it('reads pages until the total is reached', async () => {
@@ -133,3 +135,38 @@ describe('catalog reads', () => {
     expect(await getOffersInCategory('does-not-exist', US)).toEqual([]);
   });
 });
+
+describe('catalog reads with a price scope', () => {
+  const recurring = (centAmount: number, extra: Json = {}) => ({ value: { type: 'centPrecision', centAmount, currencyCode: 'USD', fractionDigits: 2 }, recurrencePolicy: { typeId: 'recurrence-policy', id: 'pol' }, ...extra });
+  const scopedPhone = (): ProductProjection => {
+    const projection = clone(offerPhoneUnlimited);
+    const variant = projection.masterVariant as unknown as { prices: unknown[] };
+    variant.prices = [recurring(5000), recurring(4500, { channel: { typeId: 'channel', id: 'ch-cc' } }), recurring(4000, { customerGroup: { typeId: 'customer-group', id: 'g-sb' } })];
+    return projection;
+  };
+  const read = async (scope?: Parameters<typeof getAllOffers>[1]) => {
+    projectionExecute.mockImplementation(async (queryArgs: { where?: string }) => ({ body: { results: queryArgs.where?.startsWith('productType(id="') ? [scopedPhone()] : factProjections, total: 99 } }));
+    const offers = await getAllOffers(US, scope);
+    return offers.find((offer) => offer.key === 'malva-offer-phone-unlimited')?.headline.recurring?.centAmount;
+  };
+
+  it('no scope: the standard price, scoped prices ignored', async () => {
+    expect(await read()).toBe(5000);
+  });
+
+  it('a group price applies to a buyer in the group, a channel price to the call-center channel, neither to others', async () => {
+    expect(await read({ groupKeys: ['small-business'], channelKey: null })).toBe(4000);
+    expect(await read({ groupKeys: [], channelKey: 'call-center' })).toBe(4500);
+    expect(await read({ groupKeys: ['existing-customer'], channelKey: null })).toBe(5000);
+  });
+
+  it('both qualify: the lowest of the scoped prices', async () => {
+    expect(await read({ groupKeys: ['small-business'], channelKey: 'call-center' })).toBe(4000);
+  });
+
+  it('the cache is keyed by market, group and channel so buyers never share a price', async () => {
+    await read({ groupKeys: ['small-business', 'existing-customer'], channelKey: 'call-center' });
+    expect(unstableCache).toHaveBeenCalledWith(expect.any(Function), ['offers', 'en-US', 'USD', 'US', 'existing-customer,small-business', 'call-center'], expect.anything());
+  });
+});
+
