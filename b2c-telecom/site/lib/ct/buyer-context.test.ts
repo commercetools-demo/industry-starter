@@ -3,7 +3,15 @@ import * as fx from '@/lib/offers/__fixtures__/offers';
 import type { HeldService, Market } from '@/lib/types';
 
 const cookieValue = vi.fn<() => string | undefined>();
-vi.mock('next/headers', () => ({ cookies: async () => ({ get: (name: string) => (name === 'malva-postal-code' && cookieValue() !== undefined ? { name, value: cookieValue() } : undefined) }) }));
+const declaredValue = vi.fn<() => string | undefined>();
+vi.mock('next/headers', () => ({
+  cookies: async () => ({
+    get: (name: string) => {
+      const value = name === 'malva-postal-code' ? cookieValue() : name === 'malva-buyer-context' ? declaredValue() : undefined;
+      return value === undefined ? undefined : { name, value };
+    },
+  }),
+}));
 const getSession = vi.fn<() => Promise<{ customerId?: string }>>();
 vi.mock('./session', () => ({ getSession: () => getSession() }));
 const customerExecute = vi.fn();
@@ -26,6 +34,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   vi.spyOn(console, 'error').mockImplementation(() => {});
   cookieValue.mockReturnValue(undefined);
+  declaredValue.mockReturnValue(undefined);
   getSession.mockResolvedValue({});
   getAllOffers.mockResolvedValue(fx.ALL_OFFERS);
   getHoldings.mockResolvedValue([]);
@@ -40,6 +49,25 @@ describe('getBuyerContext', () => {
     expect(buyer.location).toBeUndefined();
     expect(buyer.now).toBeInstanceOf(Date);
     expect(withId).not.toHaveBeenCalled();
+  });
+
+  it('anonymous: the declared type and existing-customer answer come from the cookie; no answer is not the same as no', async () => {
+    expect(await getBuyerContext()).toMatchObject({ customerType: 'consumer', isExistingCustomer: false, existingUnspecified: true });
+    declaredValue.mockReturnValue('employee:yes');
+    expect(await getBuyerContext()).toMatchObject({ customerType: 'employee', isExistingCustomer: true, existingUnspecified: false });
+    declaredValue.mockReturnValue('small-business:no');
+    expect(await getBuyerContext()).toMatchObject({ customerType: 'small-business', isExistingCustomer: false, existingUnspecified: false });
+  });
+
+  it('a forged cookie value is ignored', async () => {
+    declaredValue.mockReturnValue('root:yes');
+    expect(await getBuyerContext()).toMatchObject({ customerType: 'consumer', isExistingCustomer: true });
+  });
+
+  it('signed in: the account governs and the declaration is ignored', async () => {
+    declaredValue.mockReturnValue('employee:yes');
+    getSession.mockResolvedValue({ customerId: 'c1' });
+    expect(await getBuyerContext()).toMatchObject({ customerType: 'consumer', isExistingCustomer: false, existingUnspecified: false, signedIn: true });
   });
 
   it('resolves the remembered ZIP for the market country and ignores an invalid cookie', async () => {

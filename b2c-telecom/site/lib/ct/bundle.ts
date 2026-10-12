@@ -6,6 +6,7 @@ import { precheckPlan } from '@/lib/cart/precheck';
 import { checkQuantity } from '@/lib/cart/quantity';
 import { codeStateInfo, mapCart } from '@/lib/mappers/cart';
 import { removalPlan } from '@/lib/offers/addons';
+import { cartGroupKeyOf } from '@/lib/offers/declared';
 import { negatedLines } from '@/lib/offers/dependencies';
 import { refersTo } from '@/lib/offers/refs';
 import { toDateOnly } from '@/lib/pricing/dates';
@@ -24,6 +25,7 @@ import {
   offerKeyOfLine,
   parentIdOfLine,
   removeLine,
+  setCartCustomerGroup,
   statusOf,
   toGuardLines,
   updateCart,
@@ -189,7 +191,8 @@ export async function addToBundle(session: SessionData, market: Market, input: A
   }
 
   try {
-    let ct = existing ?? (await createCartForSession(session, market));
+    const groupKey = cartGroupKeyOf(buyer);
+    let ct = existing ? await setCartCustomerGroup(existing, groupKey) : await createCartForSession(session, market, groupKey);
     if (removeLineId) ct = await removeLine(ct.id, removeLineId, { cascade: true, locale: market.locale });
     const updated = await addOfferLine(ct.id, { offer: candidate, variant, quantity: input.quantity, parentLineId: guard.parentLineId, equipment, included, removeLineIds: [...replacedIds] });
     const mapped = await mapForMarket(updated, market);

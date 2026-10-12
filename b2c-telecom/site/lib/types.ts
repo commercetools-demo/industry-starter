@@ -308,6 +308,8 @@ export interface HeldService {
 export interface BuyerContext {
   customerType: CustomerType;
   isExistingCustomer: boolean;
+  /** An anonymous visitor who has not said whether they are a customer: offers restricted to new customers are not shown either. */
+  existingUnspecified?: boolean;
   channel: string;
   now: Date;
   location?: ServiceLocation;

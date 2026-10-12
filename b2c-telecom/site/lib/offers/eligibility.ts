@@ -39,7 +39,7 @@ export function evaluateEligibility(offer: Offer, buyer: BuyerContext): { eligib
   }
   if (offer.existingCustomer === 'existing' && !buyer.isExistingCustomer) {
     reasons.push(makeReason('NOT_ELIGIBLE_EXISTING_CUSTOMER', { ...params, rule: 'existing' }, keys));
-  } else if (offer.existingCustomer === 'new' && buyer.isExistingCustomer) {
+  } else if (offer.existingCustomer === 'new' && (buyer.isExistingCustomer || buyer.existingUnspecified)) {
     reasons.push(makeReason('NOT_ELIGIBLE_EXISTING_CUSTOMER', { ...params, rule: 'new' }, keys));
   }
   if (offer.channels.length > 0 && !offer.channels.includes(buyer.channel)) {

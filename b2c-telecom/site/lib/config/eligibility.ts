@@ -6,6 +6,10 @@ export const SALES_CHANNEL = 'online';
 export const POSTAL_COOKIE = 'malva-postal-code';
 export const POSTAL_COOKIE_MAX_AGE = 2_592_000; // 30 days
 
+/** What an anonymous visitor declares about themselves (HttpOnly): `<customerType>:<yes|no|unspecified>`. */
+export const BUYER_CONTEXT_COOKIE = 'malva-buyer-context';
+export const BUYER_CONTEXT_COOKIE_MAX_AGE = 2_592_000; // 30 days
+
 /** Customer Group keys (D-058). */
 export const GROUP_EMPLOYEE = 'employee';
 export const GROUP_SMALL_BUSINESS = 'small-business';

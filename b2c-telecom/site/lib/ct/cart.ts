@@ -10,6 +10,7 @@ import type { SessionData } from '@/lib/session-types';
 import type { Market, Offer, OfferVariant } from '@/lib/types';
 import { activationFeeOf, addFeeAction, addLineItemAction, feeSlug, isRecurringVariant } from './cartDrafts';
 import { getApiRoot } from './client';
+import { getCustomerGroupKeys } from './customer-groups';
 import { ensureAnonymousId } from './identity';
 import { assertRecurringPrice, getMonthlyPolicy, RECURRING_REASON } from './recurring';
 import { withTimeout } from './timeout';
@@ -91,7 +92,7 @@ export async function getActiveCartForSession(session: SessionData, ctx: CartCtx
 }
 
 /** Creates the market's cart for this session (anonymous id from the session, minted when missing; the route persists it). */
-export async function createCartForSession(session: SessionData, ctx: CartCtx): Promise<CtCart> {
+export async function createCartForSession(session: SessionData, ctx: CartCtx, customerGroupKey?: string | null): Promise<CtCart> {
   const owner = session.customerId ? { customerId: session.customerId } : { anonymousId: ensureAnonymousId(session).anonymousId };
   const draft: CartDraft = {
     currency: ctx.currency,
@@ -102,10 +103,23 @@ export async function createCartForSession(session: SessionData, ctx: CartCtx): 
     origin: 'Customer',
     deleteDaysAfterLastModification: CART_DELETE_DAYS,
     ...owner,
+    ...(customerGroupKey ? { customerGroup: { typeId: 'customer-group' as const, key: customerGroupKey } } : {}),
     custom: { type: { typeId: 'type', key: 'malva-order' }, fields: {} },
   };
   const { body } = await withTimeout(getApiRoot().carts().post({ body: draft, queryArgs: { expand: CART_EXPAND } }).execute(), 'cart.create');
   return body;
+}
+
+/**
+ * Puts the declared audience on an anonymous cart as its customer group (null removes it), so group prices and group-limited
+ * discounts agree with eligibility. A signed-in customer's cart is never touched: the customer's own groups apply.
+ */
+export async function setCartCustomerGroup(cart: CtCart, groupKey: string | null): Promise<CtCart> {
+  if (cart.customerId || (!groupKey && !cart.customerGroup)) return cart;
+  const keyById = await getCustomerGroupKeys();
+  const current = cart.customerGroup ? (keyById[cart.customerGroup.id] ?? null) : null;
+  if (current === groupKey) return cart;
+  return updateCart(cart, [{ action: 'setCustomerGroup', ...(groupKey ? { customerGroup: { typeId: 'customer-group' as const, key: groupKey } } : {}) }]);
 }
 
 /** One update with a fresh version. Returns the new cart (render from it, never patch local state). */

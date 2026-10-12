@@ -202,3 +202,17 @@ describe('eligible regions', () => {
     expect(evaluateEligibility(nc, buyer({ location })).eligible).toBe(false);
   });
 });
+
+describe('existing customer: not specified is not "no"', () => {
+  const onlyNew = { ...fx.appletv, existingCustomer: 'new' as const };
+  const onlyExisting = { ...fx.appletv, existingCustomer: 'existing' as const };
+
+  it('unspecified sees only unrestricted offers; yes sees the existing-only; no sees the new-only', () => {
+    const unspecified = buyer({ existingUnspecified: true });
+    expect(evaluateEligibility(fx.appletv, unspecified).eligible).toBe(true);
+    expect(evaluateEligibility(onlyNew, unspecified).eligible).toBe(false);
+    expect(evaluateEligibility(onlyExisting, unspecified).eligible).toBe(false);
+    expect(evaluateEligibility(onlyExisting, buyer({ isExistingCustomer: true })).eligible).toBe(true);
+    expect(evaluateEligibility(onlyNew, buyer({ isExistingCustomer: false })).eligible).toBe(true);
+  });
+});
