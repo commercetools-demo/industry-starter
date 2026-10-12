@@ -13,7 +13,10 @@ export interface AppEnv {
   frontend: CtConfig;
   sessionSecret: string;
   contentoolsOrigin: string;
+  geocoder: GeocoderEnv;
 }
+/** Address search for the store picker (workstream I). `GEOCODER=off` disables it; otherwise a contact address is required. */
+export type GeocoderEnv = { enabled: false } | { enabled: true; url: string; contact: string };
 
 type Env = Record<string, string | undefined>;
 export const MIN_SECRET_LENGTH = 32;
@@ -40,6 +43,13 @@ function secret(env: Env): string {
   return value;
 }
 
+/** `NOMINATIM_CONTACT` (the usage policy needs an identifying contact) is only required when geocoding is on. */
+export function geocoderEnv(env: Env): GeocoderEnv {
+  if (env.GEOCODER?.trim().toLowerCase() === 'off') return { enabled: false };
+  const url = env.GEOCODER_URL?.trim() ? requiredUrl(env, 'GEOCODER_URL') : 'https://nominatim.openstreetmap.org';
+  return { enabled: true, url: url.replace(/\/+$/, ''), contact: required(env, 'NOMINATIM_CONTACT') };
+}
+
 export function validateEnv(env: Env): AppEnv {
   const scopes = required(env, 'CTP_SCOPES').split(/\s+/).filter(Boolean);
   return {
@@ -53,6 +63,7 @@ export function validateEnv(env: Env): AppEnv {
     },
     sessionSecret: secret(env),
     contentoolsOrigin: requiredUrl(env, 'CONTENTOOLS_ORIGIN').replace(/\/+$/, ''),
+    geocoder: geocoderEnv(env),
   };
 }
 

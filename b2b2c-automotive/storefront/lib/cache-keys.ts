@@ -1,3 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
-export {};
+// SWR cache keys: one place so hooks and `mutate` calls agree. Each workstream appends its keys.
+
+/** The cart (workstream N). Mutating a key that starts with this prefix refreshes every cart read, summary included. */
+export const KEY_CART = '/api/cart';
+/** Units in the cart for the header (workstream I). */
+export const KEY_CART_SUMMARY = '/api/cart/summary';
+/** Branches of the session's store (workstream I); the locale is part of the key because branch names are localized. */
+export const KEY_BRANCHES = '/api/store-context/branches';
+export const keyBranches = (locale: string): string => `${KEY_BRANCHES}?locale=${encodeURIComponent(locale)}`;
+/** The shopper's garage (workstream J): `{ garage, vehicles, active }`. */
+export const KEY_GARAGE = '/api/garage';
+/** Dependent vehicle selector options (workstream J); the query string carries market, make, model and year. */
+export const KEY_VEHICLE_OPTIONS = '/api/vehicles/options';

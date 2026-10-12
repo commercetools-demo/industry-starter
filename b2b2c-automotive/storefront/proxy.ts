@@ -16,7 +16,8 @@ const sameStoreFields = (a: Session, b: Session) =>
   a.distributionChannelId === b.distributionChannelId &&
   a.supplyChannelId === b.supplyChannelId &&
   a.productSelectionId === b.productSelectionId &&
-  a.cartId === b.cartId;
+  a.cartId === b.cartId &&
+  a.branchKey === b.branchKey;
 
 /** Locale step, then store resolution: the first segment after the locale is the store key. */
 export async function proxy(request: NextRequest) {

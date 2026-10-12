@@ -6,7 +6,7 @@ import deDE from '@/messages/de-DE.json';
 import { renderWithProviders } from '@/test/render';
 
 vi.mock('next-intl/server', () => ({
-  getTranslations: async (ns: string) => (key: string) => (deDE as Record<string, Record<string, string>>)[ns][key],
+  getTranslations: async (ns: string) => (key: string) => (deDE as unknown as Record<string, Record<string, string>>)[ns][key],
 }));
 vi.mock('@/i18n/routing', () => ({
   Link: ({ href, children, ...rest }: { href: string; children: React.ReactNode }) => (

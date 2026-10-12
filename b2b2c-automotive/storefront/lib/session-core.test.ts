@@ -94,6 +94,17 @@ describe('Store resolved from the path: session half', () => {
     const s = applyStore({ cartId: 'cart', ...storeA }, storeB);
     expect(s).toEqual(storeB);
   });
+  it('store change clears branchKey and cartId', () => {
+    const s = applyStore({ cartId: 'cart', branchKey: 'mau-br-north-hamburg', ...storeA }, storeB);
+    expect(s).toEqual(storeB);
+    expect(applyStore({ branchKey: 'b', ...storeA }, storeA).branchKey).toBe('b');
+  });
+  it('branchKey survives a locale change', () => {
+    expect(applyLocale({ branchKey: 'mau-br-north-hamburg', currency: 'EUR', locale: 'de-DE', country: 'DE' }, 'en-US').branchKey).toBe('mau-br-north-hamburg');
+  });
+  it('branchKey is allow-listed in the session', () => {
+    expect(pickSession({ branchKey: 'b1', other: 'x' })).toEqual({ branchKey: 'b1' });
+  });
   it('Same store keeps the cart', () => {
     expect(applyStore({ cartId: 'cart', ...storeA }, storeA).cartId).toBe('cart');
   });

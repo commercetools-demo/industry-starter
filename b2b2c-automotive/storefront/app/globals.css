@@ -139,3 +139,9 @@ body {
   color: var(--color-text);
   font-family: var(--font-body);
 }
+
+/* Visible keyboard focus everywhere, in the theme's focus colour (workstream I). */
+:focus-visible {
+  outline: medium solid var(--color-focus);
+  outline-offset: 0.125rem;
+}

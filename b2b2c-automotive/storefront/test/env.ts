@@ -10,6 +10,7 @@ const defaults: Record<string, string> = {
   CTP_SCOPES: 'view_stores view_project_settings',
   SESSION_SECRET: 'x'.repeat(48),
   CONTENTOOLS_ORIGIN: 'https://contentools.example.test',
+  NOMINATIM_CONTACT: 'ops@example.test',
 };
 for (const [key, value] of Object.entries(defaults)) {
   if (!process.env[key]) process.env[key] = value;

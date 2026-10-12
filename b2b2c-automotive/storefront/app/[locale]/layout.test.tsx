@@ -15,7 +15,7 @@ vi.mock('next-intl/server', () => ({
   setRequestLocale: vi.fn(),
   getMessages: async () => ({}),
   getTranslations: async (ns: string) => (key: string, values?: Record<string, string>) => {
-    const text = (enUS as Record<string, Record<string, string>>)[ns][key];
+    const text = (enUS as unknown as Record<string, Record<string, string>>)[ns][key];
     return values ? text.replace('{store}', values.store) : text;
   },
 }));

@@ -1,10 +1,151 @@
 {
+  "vehicleFinder": {
+    "title": "Find parts for your vehicle",
+    "verify": "Verify fitment",
+    "saving": "Saving",
+    "shopFit": "Shop parts that fit",
+    "change": "Change",
+    "yourVehicle": "Your vehicle",
+    "fieldMake": "Make",
+    "fieldModel": "Model",
+    "fieldYear": "Year",
+    "fieldEngine": "Engine",
+    "chooseMake": "Select make",
+    "chooseModel": "Select model",
+    "chooseYear": "Select year",
+    "chooseEngine": "Select engine",
+    "tabsLabel": "How do you want to find your vehicle?",
+    "tabVehicle": "Make, model, year",
+    "tabPlate": "Plate",
+    "tabVin": "VIN"
+  },
+  "vehicleLookup": {
+    "plateCountry": "Country",
+    "plateLabel": "Registration plate",
+    "plateHint": "For example B-AB 1234",
+    "plateLookUp": "Look up",
+    "countryDE": "Germany",
+    "countryAT": "Austria",
+    "countryCH": "Switzerland",
+    "countryUS": "United States",
+    "vinLabel": "VIN",
+    "vinHint": "17 characters, no I, O or Q",
+    "vinLookUp": "Look up",
+    "demo": "Demo lookup",
+    "looking": "Looking up",
+    "found": "We found",
+    "save": "Save to garage",
+    "notMine": "Not my car",
+    "needsEngine": "We found a {year} {make} {model}. Choose the engine to continue."
+  },
+  "vehicleErrors": {
+    "plateFormat": "This is not a plate we can read. Use 2 to 10 letters, digits, spaces or dashes.",
+    "vinLength": "A VIN has exactly 17 characters.",
+    "vinCharacters": "A VIN uses only letters and digits, and never I, O or Q.",
+    "notFoundPlate": "We could not find that plate. Check it or choose your vehicle by make, model and year.",
+    "notFoundVin": "We could not find that VIN. Check it or choose your vehicle by make, model and year.",
+    "unavailable": "The lookup is not available right now. Choose your vehicle by make, model and year.",
+    "useSelectors": "Choose by make, model and year",
+    "options": "The vehicle list could not be loaded.",
+    "retry": "Try again",
+    "save": "The vehicle could not be saved. Please try again.",
+    "garage": "Your garage could not be loaded."
+  },
+  "vehicleGarage": {
+    "title": "My garage",
+    "change": "Change vehicle",
+    "select": "Select your vehicle",
+    "dialogTitle": "Your vehicles",
+    "close": "Close",
+    "add": "Add a vehicle",
+    "list": "Vehicles in your garage",
+    "empty": "No vehicle saved yet.",
+    "active": "Active",
+    "setActive": "Set active",
+    "remove": "Remove",
+    "setActiveLabel": "Set {vehicle} as active",
+    "removeLabel": "Remove {vehicle} from your garage",
+    "full": "Your garage holds five vehicles. Adding another removes the oldest one that is not active."
+  },
+  "vehicleFit": {
+    "fits": "Fits your vehicle",
+    "doesNotFit": "Does not fit",
+    "unknown": "Select your vehicle to check fit",
+    "bannerFits": "Fits your {vehicle}",
+    "bannerNo": "This part does not fit your {vehicle}",
+    "alternatives": "View fitting alternatives",
+    "toggle": "Fits my vehicle"
+  },
   "common": {
     "appName": "Malva",
     "placeholder": "The {store} shop is being built here.",
     "loading": "Loading",
     "tryAgain": "Try again",
     "backHome": "Back to home"
+  },
+  "shell": {
+    "skipToContent": "Skip to content",
+    "utilityBar": {
+      "label": "Store information",
+      "pickupToday": "Pickup today at {branch}",
+      "pickupTomorrow": "Pickup tomorrow at {branch}",
+      "shipToStore": "Ship to store: {branch}",
+      "freeShipping": "Free shipping over {amount}",
+      "help": "Help",
+      "track": "Track order"
+    },
+    "storeChip": {
+      "label": "Your store",
+      "change": "Change"
+    },
+    "search": {
+      "label": "Search",
+      "placeholder": "Search parts, brands, part numbers",
+      "submit": "Search"
+    },
+    "account": {
+      "signIn": "Sign in",
+      "account": "Account"
+    },
+    "cart": {
+      "label": "Cart · {count}"
+    },
+    "nav": {
+      "label": "Categories",
+      "allParts": "All parts"
+    },
+    "footer": {
+      "soldBy": "Sold and fulfilled by {store}",
+      "legalLabel": "Legal",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "returns": "Returns",
+      "fitmentDisclaimer": "Fitment information is a guide. Check the part number against your vehicle or ask us before you buy."
+    }
+  },
+  "storePicker": {
+    "title": "Choose your store",
+    "close": "Close",
+    "searchLabel": "Postal code or city",
+    "searchPlaceholder": "For example 21079 or Hamburg",
+    "useLocation": "Use my location",
+    "locationPending": "Finding your location",
+    "locationDenied": "Location is off. Enter a postal code or city instead.",
+    "locationUnavailable": "Your location is not available. Enter a postal code or city instead.",
+    "geocodeUnavailable": "Place search is not available right now. The list is filtered by what you type.",
+    "searching": "Searching for places",
+    "listLabel": "Branches",
+    "mapLabel": "Map of branches",
+    "noMatch": "No branch matches your search.",
+    "choose": "Shop at this store",
+    "current": "Your store",
+    "hoursOpenUntil": "Open until {time}",
+    "hoursClosedOpens": "Closed · opens {time}",
+    "hoursClosed": "Closed",
+    "pickupToday": "Pickup today",
+    "pickupTomorrow": "Pickup tomorrow",
+    "shipToStore": "Ship to store",
+    "chooseFailed": "The store could not be changed. Please try again."
   },
   "errors": {
     "genericTitle": "Something went wrong",

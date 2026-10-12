@@ -28,6 +28,7 @@ export const SESSION_KEYS = [
   'distributionChannelId',
   'supplyChannelId',
   'productSelectionId',
+  'branchKey',
 ] as const satisfies readonly (keyof Session)[];
 
 const STRING_KEYS = SESSION_KEYS.filter((k) => k !== 'locale');
@@ -72,14 +73,17 @@ export function applyLocale(session: Session, locale: AppLocale): Session {
   return next;
 }
 
-/** Writes the four store fields in one value (throws on an empty field, changes nothing); `cartId` is dropped when the store changes. */
+/** Writes the four store fields in one value (throws on an empty field, changes nothing); `cartId` and `branchKey` are dropped when the store changes. */
 export function applyStore(session: Session, ctx: StoreContext): Session {
   const { storeKey, distributionChannelId, supplyChannelId, productSelectionId } = ctx;
   for (const [name, value] of Object.entries({ storeKey, distributionChannelId, supplyChannelId, productSelectionId })) {
     if (typeof value !== 'string' || value.length === 0) throw new Error(`Incomplete store context: ${name} is empty`);
   }
   const next: Session = { ...session, storeKey, distributionChannelId, supplyChannelId, productSelectionId };
-  if (session.storeKey !== storeKey) delete next.cartId;
+  if (session.storeKey !== storeKey) {
+    delete next.cartId;
+    delete next.branchKey;
+  }
   return next;
 }
 

@@ -1,10 +1,151 @@
 {
+  "vehicleFinder": {
+    "title": "Teile für Ihr Fahrzeug finden",
+    "verify": "Passgenauigkeit prüfen",
+    "saving": "Wird gespeichert",
+    "shopFit": "Passende Teile ansehen",
+    "change": "Ändern",
+    "yourVehicle": "Ihr Fahrzeug",
+    "fieldMake": "Marke",
+    "fieldModel": "Modell",
+    "fieldYear": "Baujahr",
+    "fieldEngine": "Motor",
+    "chooseMake": "Marke wählen",
+    "chooseModel": "Modell wählen",
+    "chooseYear": "Baujahr wählen",
+    "chooseEngine": "Motor wählen",
+    "tabsLabel": "Wie möchten Sie Ihr Fahrzeug finden?",
+    "tabVehicle": "Marke, Modell, Baujahr",
+    "tabPlate": "Kennzeichen",
+    "tabVin": "FIN"
+  },
+  "vehicleLookup": {
+    "plateCountry": "Land",
+    "plateLabel": "Kennzeichen",
+    "plateHint": "Zum Beispiel B-AB 1234",
+    "plateLookUp": "Suchen",
+    "countryDE": "Deutschland",
+    "countryAT": "Österreich",
+    "countryCH": "Schweiz",
+    "countryUS": "USA",
+    "vinLabel": "FIN (VIN)",
+    "vinHint": "17 Zeichen, ohne I, O und Q",
+    "vinLookUp": "Suchen",
+    "demo": "Demo-Abfrage",
+    "looking": "Wird gesucht",
+    "found": "Gefunden",
+    "save": "In der Garage speichern",
+    "notMine": "Nicht mein Auto",
+    "needsEngine": "Wir haben einen {make} {model} ({year}) gefunden. Wählen Sie den Motor, um fortzufahren."
+  },
+  "vehicleErrors": {
+    "plateFormat": "Dieses Kennzeichen können wir nicht lesen. Verwenden Sie 2 bis 10 Buchstaben, Ziffern, Leerzeichen oder Bindestriche.",
+    "vinLength": "Eine FIN hat genau 17 Zeichen.",
+    "vinCharacters": "Eine FIN besteht nur aus Buchstaben und Ziffern, niemals aus I, O oder Q.",
+    "notFoundPlate": "Dieses Kennzeichen haben wir nicht gefunden. Prüfen Sie die Eingabe oder wählen Sie Ihr Fahrzeug nach Marke, Modell und Baujahr.",
+    "notFoundVin": "Diese FIN haben wir nicht gefunden. Prüfen Sie die Eingabe oder wählen Sie Ihr Fahrzeug nach Marke, Modell und Baujahr.",
+    "unavailable": "Die Abfrage ist gerade nicht verfügbar. Wählen Sie Ihr Fahrzeug nach Marke, Modell und Baujahr.",
+    "useSelectors": "Nach Marke, Modell und Baujahr wählen",
+    "options": "Die Fahrzeugliste konnte nicht geladen werden.",
+    "retry": "Erneut versuchen",
+    "save": "Das Fahrzeug konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+    "garage": "Ihre Garage konnte nicht geladen werden."
+  },
+  "vehicleGarage": {
+    "title": "Meine Garage",
+    "change": "Fahrzeug ändern",
+    "select": "Fahrzeug auswählen",
+    "dialogTitle": "Ihre Fahrzeuge",
+    "close": "Schließen",
+    "add": "Fahrzeug hinzufügen",
+    "list": "Fahrzeuge in Ihrer Garage",
+    "empty": "Noch kein Fahrzeug gespeichert.",
+    "active": "Aktiv",
+    "setActive": "Aktivieren",
+    "remove": "Entfernen",
+    "setActiveLabel": "{vehicle} aktivieren",
+    "removeLabel": "{vehicle} aus der Garage entfernen",
+    "full": "Ihre Garage fasst fünf Fahrzeuge. Ein weiteres Fahrzeug ersetzt das älteste, das nicht aktiv ist."
+  },
+  "vehicleFit": {
+    "fits": "Passt zu Ihrem Fahrzeug",
+    "doesNotFit": "Passt nicht",
+    "unknown": "Fahrzeug wählen, um die Passform zu prüfen",
+    "bannerFits": "Passt zu Ihrem {vehicle}",
+    "bannerNo": "Dieses Teil passt nicht zu Ihrem {vehicle}",
+    "alternatives": "Passende Alternativen ansehen",
+    "toggle": "Passt zu meinem Fahrzeug"
+  },
   "common": {
     "appName": "Malva",
     "placeholder": "Hier entsteht der Shop {store}.",
     "loading": "Wird geladen",
     "tryAgain": "Erneut versuchen",
     "backHome": "Zur Startseite"
+  },
+  "shell": {
+    "skipToContent": "Zum Inhalt springen",
+    "utilityBar": {
+      "label": "Shop-Informationen",
+      "pickupToday": "Abholung heute in {branch}",
+      "pickupTomorrow": "Abholung morgen in {branch}",
+      "shipToStore": "Lieferung an die Filiale: {branch}",
+      "freeShipping": "Kostenloser Versand ab {amount}",
+      "help": "Hilfe",
+      "track": "Bestellung verfolgen"
+    },
+    "storeChip": {
+      "label": "Ihre Filiale",
+      "change": "Ändern"
+    },
+    "search": {
+      "label": "Suche",
+      "placeholder": "Teile, Marken, Teilenummern suchen",
+      "submit": "Suchen"
+    },
+    "account": {
+      "signIn": "Anmelden",
+      "account": "Konto"
+    },
+    "cart": {
+      "label": "Warenkorb · {count}"
+    },
+    "nav": {
+      "label": "Kategorien",
+      "allParts": "Alle Teile"
+    },
+    "footer": {
+      "soldBy": "Verkauft und geliefert von {store}",
+      "legalLabel": "Rechtliches",
+      "terms": "AGB",
+      "privacy": "Datenschutz",
+      "returns": "Rückgabe",
+      "fitmentDisclaimer": "Passformangaben sind eine Orientierung. Vergleichen Sie die Teilenummer mit Ihrem Fahrzeug oder fragen Sie uns vor dem Kauf."
+    }
+  },
+  "storePicker": {
+    "title": "Filiale auswählen",
+    "close": "Schließen",
+    "searchLabel": "Postleitzahl oder Ort",
+    "searchPlaceholder": "Zum Beispiel 21079 oder Hamburg",
+    "useLocation": "Meinen Standort verwenden",
+    "locationPending": "Standort wird ermittelt",
+    "locationDenied": "Der Standort ist ausgeschaltet. Geben Sie stattdessen eine Postleitzahl oder einen Ort ein.",
+    "locationUnavailable": "Ihr Standort ist nicht verfügbar. Geben Sie stattdessen eine Postleitzahl oder einen Ort ein.",
+    "geocodeUnavailable": "Die Ortssuche ist gerade nicht verfügbar. Die Liste wird nach Ihrer Eingabe gefiltert.",
+    "searching": "Orte werden gesucht",
+    "listLabel": "Filialen",
+    "mapLabel": "Karte der Filialen",
+    "noMatch": "Keine Filiale passt zu Ihrer Suche.",
+    "choose": "In dieser Filiale einkaufen",
+    "current": "Ihre Filiale",
+    "hoursOpenUntil": "Geöffnet bis {time}",
+    "hoursClosedOpens": "Geschlossen · öffnet {time}",
+    "hoursClosed": "Geschlossen",
+    "pickupToday": "Abholung heute",
+    "pickupTomorrow": "Abholung morgen",
+    "shipToStore": "Lieferung an die Filiale",
+    "chooseFailed": "Die Filiale konnte nicht gewechselt werden. Bitte versuchen Sie es erneut."
   },
   "errors": {
     "genericTitle": "Etwas ist schiefgelaufen",

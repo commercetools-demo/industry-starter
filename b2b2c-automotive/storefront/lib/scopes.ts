@@ -16,6 +16,7 @@ export const FRONTEND_SCOPES: readonly ScopeDoc[] = [
   { scope: 'view_product_selections', reason: "the store's assortment (product selection) for search filters" },
   { scope: 'view_shipping_methods', reason: 'shipping choices at checkout' },
   { scope: 'view_types', reason: 'read custom type definitions (vehicle fitment, garage)' },
+  { scope: 'view_key_value_documents', reason: 'read the vehicle table (custom objects, container mau-vehicles)' },
   { scope: 'create_anonymous_token', reason: 'anonymous sessions and carts' },
   { scope: 'manage_customers', reason: 'sign-in, registration, account area' },
   { scope: 'manage_orders', reason: "place and read the shopper's orders" },

@@ -12,6 +12,7 @@ const good = (): Record<string, string> => ({
   CTP_SCOPES: 'view_stores  view_categories\nmanage_customers',
   SESSION_SECRET: 'y'.repeat(40),
   CONTENTOOLS_ORIGIN: 'https://contentools.example.test/',
+  NOMINATIM_CONTACT: 'ops@example.test',
 });
 
 afterEach(() => vi.unstubAllEnvs());
@@ -29,6 +30,17 @@ describe('Environment and least privilege: validateEnv', () => {
     expect(() => validateEnv(env)).toThrow(`Missing environment variable ${name}`);
     env[name] = '   ';
     expect(() => validateEnv(env)).toThrow(`Missing environment variable ${name}`);
+  });
+
+  it('Geocoder defaults to the public instance and needs a contact', () => {
+    expect(validateEnv(good()).geocoder).toEqual({ enabled: true, url: 'https://nominatim.openstreetmap.org', contact: 'ops@example.test' });
+    expect(validateEnv({ ...good(), GEOCODER_URL: 'https://geo.example.test/' }).geocoder).toMatchObject({ url: 'https://geo.example.test' });
+    expect(() => validateEnv({ ...good(), GEOCODER_URL: 'nope' })).toThrow(/GEOCODER_URL.*URL/);
+  });
+  it('GEOCODER=off needs no contact', () => {
+    const env: Record<string, string | undefined> = { ...good(), GEOCODER: 'off' };
+    delete env.NOMINATIM_CONTACT;
+    expect(validateEnv(env).geocoder).toEqual({ enabled: false });
   });
 
   it('Weak secret', () => {
