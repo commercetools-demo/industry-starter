@@ -1,8 +1,8 @@
 ## 1. Foundations
 
-- [ ] 1.1 Write `lib/pricing/summary.ts` with the figure and row definitions of design D-9 (dueToday, thenMonthly, rows, "You save") and unit tests from the `pricing-consistency` scenarios
-- [ ] 1.2 Move the probe-cart builder out of `lib/ct/prompts.ts` into `lib/ct/probe.ts` with the leak-detection custom field and delete-in-`finally`; keep prompts behaviour identical [SKILL: commercetools-commerce-patterns]
-- [ ] 1.3 Add a test that fails when an attribute mapped into offer facts has no consumer; remove `trial-days`, `price-steps` seed data and the unused `ONE_TIME_AS_CUSTOM_LINE_ITEM`; decide delete or document for `charge-type` and record it in the model notes
+- [x] 1.1 Write `lib/pricing/summary.ts` with the figure and row definitions of design D-9 (dueToday, thenMonthly, rows, "You save") and unit tests from the `pricing-consistency` scenarios
+- [x] 1.2 Move the probe-cart builder out of `lib/ct/prompts.ts` into `lib/ct/probe.ts` with the leak-detection custom field and delete-in-`finally`; keep prompts behaviour identical [SKILL: commercetools-commerce-patterns]
+- [x] 1.3 Add a test that fails when an attribute mapped into offer facts has no consumer; remove `trial-days`, `price-steps` seed data and the unused `ONE_TIME_AS_CUSTOM_LINE_ITEM`; `charge-type` is kept: it is read by the offer mapper and release validation (decision recorded here; model-notes update with 9.2)
 
 ## 2. Seed and catalog data
 

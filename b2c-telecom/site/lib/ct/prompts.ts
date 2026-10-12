@@ -1,10 +1,11 @@
 import 'server-only';
 import type { Cart as CtCart } from '@commercetools/platform-sdk';
 import { guardAdd } from '@/lib/cart/guard';
-import { PROBE_CART_KEY_PREFIX, PROMPT_MAX_CANDIDATES } from '@/lib/config/cart';
+import { PROMPT_MAX_CANDIDATES } from '@/lib/config/cart';
 import { PROMPT_PAIRINGS, type PromptPairing, type PromptState } from '@/lib/config/promptPairings';
 import { buildProbeDraft } from './cartDrafts';
-import { createProbeCart, deleteCart, offerKeyOfLine, toGuardLines } from './cart';
+import { offerKeyOfLine, toGuardLines } from './cart';
+import { probeKey, withProbeCart } from './probe';
 import { formatMoneyExact } from '@/lib/format';
 import type { BuyerContext, DiscountPrompt, Market, Offer, TermMonths } from '@/lib/types';
 
@@ -84,11 +85,8 @@ export async function getPrompts(input: PromptInput): Promise<DiscountPrompt[]> 
     const guard = guardAdd({ candidate: offer, sku: variant.sku, quantity: picked.quantity, lines, offersByKey, buyer });
     if (!guard.allowed) continue;
 
-    let probe: CtCart | undefined;
     try {
-      const key = `${PROBE_CART_KEY_PREFIX}${crypto.randomUUID()}`;
-      probe = await createProbeCart(buildProbeDraft(ct, market, { offer, variant, quantity: picked.quantity, parentLineId: guard.parentLineId }, key));
-      const saving = attributable(probe, pairing.discountKey, discountKeyById) - current(pairing.discountKey);
+      const saving = await withProbeCart(buildProbeDraft(ct, market, { offer, variant, quantity: picked.quantity, parentLineId: guard.parentLineId }, probeKey()), (probe) => attributable(probe, pairing.discountKey, discountKeyById) - current(pairing.discountKey));
       if (saving <= 0) continue;
       const money = { centAmount: saving, currencyCode: market.currency };
       prompts.push({
@@ -101,8 +99,6 @@ export async function getPrompts(input: PromptInput): Promise<DiscountPrompt[]> 
       });
     } catch (error) {
       console.error('[prompts] could not price', pairing.key, error);
-    } finally {
-      if (probe) await deleteCart(probe).catch((error: unknown) => console.error('[prompts] probe cart not deleted (it expires on its own)', probe?.id, error));
     }
   }
   return prompts;
