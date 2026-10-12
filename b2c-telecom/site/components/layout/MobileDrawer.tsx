@@ -12,6 +12,7 @@ import { cx } from '@/lib/cx';
 import { activeNavKey, type NavItem } from '@/lib/nav';
 import type { Market } from '@/lib/utils';
 import { LocaleSwitcher } from './LocaleSwitcher';
+import { PlanFinderPill } from './PlanFinderPill';
 
 const DRAWER_ID = 'mobile-drawer';
 const FOCUSABLE = 'a[href], button:not([disabled])';
@@ -135,6 +136,7 @@ export function MobileDrawer({ items, account, locale }: MobileDrawerProps): Rea
                   </Pill>
                 );
               })}
+              <PlanFinderPill onNavigate={close} className="w-full" />
             </nav>
             <hr className="m-0 border-0 border-t border-border" />
             <div>{account}</div>

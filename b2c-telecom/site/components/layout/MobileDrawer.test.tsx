@@ -57,7 +57,7 @@ describe('MobileDrawer', () => {
     drawer();
     await user.click(menuButton());
     const nav = within(screen.getByRole('dialog')).getByRole('navigation', { name: 'Main navigation' });
-    expect(within(nav).getAllByRole('link').map((link) => link.textContent)).toEqual(['Phone plans', 'Cable internet', 'Add-ons']);
+    expect(within(nav).getAllByRole('link').map((link) => link.textContent)).toEqual(['Phone plans', 'Cable internet', 'Add-ons', 'Plan finder']);
     expect(screen.getByRole('button', { name: 'Account slot' })).toBeInTheDocument();
     expect(screen.getByRole('group', { name: 'Language and region' })).toBeInTheDocument();
   });

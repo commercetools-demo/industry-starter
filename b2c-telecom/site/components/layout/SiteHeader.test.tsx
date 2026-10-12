@@ -44,15 +44,16 @@ describe('SiteHeader', () => {
     expect(home).toHaveTextContent('malva');
   });
 
-  it('a four-root tree renders four pills, a five-root tree five', () => {
+  it('a four-root tree renders four category pills and the plan finder', () => {
     header(buildNavItems(tree(4), 'en-US'));
-    expect(within(screen.getByRole('navigation', { name: 'Main navigation' })).getAllByRole('link')).toHaveLength(4);
+    expect(within(screen.getByRole('navigation', { name: 'Main navigation' })).getAllByRole('link')).toHaveLength(5);
   });
 
   it('five roots render five pills in tree order', () => {
     header();
     const links = within(screen.getByRole('navigation', { name: 'Main navigation' })).getAllByRole('link');
-    expect(links.map((link) => link.textContent)).toEqual(NAMES);
+    expect(links.map((link) => link.textContent)).toEqual([...NAMES, 'Plan finder']);
+    expect(links.at(-1)).toHaveAttribute('href', '/en-US/plan-finder');
   });
 
   it('the active pill follows the route', () => {
@@ -65,11 +66,20 @@ describe('SiteHeader', () => {
     expect(screen.getByRole('link', { name: 'Malva Telecom home' })).toBeInTheDocument();
     expect(screen.getByText('Log in')).toBeInTheDocument();
     expect(screen.getByText('bundle slot')).toBeInTheDocument();
-    expect(within(screen.getByRole('navigation', { name: 'Main navigation' })).queryAllByRole('link')).toHaveLength(0);
+    // the plan finder is static: it is there with no categories at all
+    expect(within(screen.getByRole('navigation', { name: 'Main navigation' })).getAllByRole('link').map((link) => link.textContent)).toEqual(['Plan finder']);
   });
 
   it('the desktop nav is hidden below md', () => {
     header();
     expect(screen.getByRole('navigation', { name: 'Main navigation' })).toHaveClass('hidden', 'md:flex');
+  });
+
+  it('the plan finder item is active on its route and only there; German label', () => {
+    state.pathname = '/plan-finder';
+    header();
+    expect(screen.getByRole('link', { current: 'page' })).toHaveTextContent('Plan finder');
+    expect(screen.getAllByRole('link', { current: 'page' })).toHaveLength(1);
+    state.pathname = '/shop/cable-internet';
   });
 });

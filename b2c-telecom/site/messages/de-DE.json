@@ -10,7 +10,8 @@
     "home": "Malva Telecom Startseite",
     "skipToContent": "Zum Inhalt springen",
     "nav": {
-      "primary": "Hauptnavigation"
+      "primary": "Hauptnavigation",
+      "planFinder": "Tarifberater"
     },
     "account": {
       "login": "Anmelden",
@@ -35,6 +36,7 @@
   "nav": {},
   "footer": {
     "nav": "Fußzeile",
+    "planFinder": "Tarifberater",
     "support": "Support",
     "copyright": "© 2026 Malva Telecom"
   },

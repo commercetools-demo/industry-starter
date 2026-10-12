@@ -1,3 +1,4 @@
+import { PLAN_FINDER_PATH } from '@/lib/config/nav';
 import type { Category, Locale } from '@/lib/types';
 
 export interface NavItem {
@@ -40,4 +41,9 @@ export function activeNavKey(pathname: string, items: NavItem[]): string | undef
     return undefined;
   }
   return items.find((item) => item.matchSlugs.includes(slug))?.key;
+}
+
+/** `pathname` has no locale prefix: the plan finder and its sub-paths. */
+export function isPlanFinderPath(pathname: string): boolean {
+  return pathname === PLAN_FINDER_PATH || pathname.startsWith(`${PLAN_FINDER_PATH}/`);
 }

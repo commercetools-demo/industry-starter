@@ -57,7 +57,7 @@
 
 ## 8. Frontend
 
-- [ ] 8.1 Header, drawer and footer "Plan finder" item from static config with active state; en-US and de-DE labels; update the existing nav tests [SKILL: commercetools-storefront]
+- [x] 8.1 Header, drawer and footer "Plan finder" item from static config with active state; en-US and de-DE labels; update the existing nav tests [SKILL: commercetools-storefront]
 - [ ] 8.2 Buyer context bar and ZIP form (wire `useCart().setPostalCode` and `/api/serviceability`), derived/read-only states for signed-in buyers
 - [ ] 8.3 Finder route: family control, list, default selection, `?plan=` restore, context-change reselect, empty state
 - [ ] 8.4 Three-section detail with per-section empty text, loading and failure states, disabled-with-reason rows

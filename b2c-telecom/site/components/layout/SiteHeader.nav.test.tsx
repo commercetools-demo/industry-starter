@@ -26,7 +26,11 @@ function header(locale: Locale, categories: SdkCategory[] = SDK) {
   return tree;
 }
 
-const pills = () => within(screen.getByRole('navigation', { name: /Main navigation|Hauptnavigation/ })).getAllByRole('link');
+// the categories only: the plan finder is a static entry after them (see SiteHeader.test.tsx)
+const pills = () =>
+  within(screen.getByRole('navigation', { name: /Main navigation|Hauptnavigation/ }))
+    .getAllByRole('link')
+    .filter((link) => !link.getAttribute('href')?.endsWith('/plan-finder'));
 
 describe('header and the category tree', () => {
   it('Header reflects the tree: order, submenu children, locale names', () => {

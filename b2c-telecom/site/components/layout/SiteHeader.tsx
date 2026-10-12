@@ -10,6 +10,7 @@ import type { Market } from '@/lib/utils';
 import { LocaleSwitcher } from './LocaleSwitcher';
 import { MobileDrawer } from './MobileDrawer';
 import { NavPill } from './NavPill';
+import { PlanFinderPill } from './PlanFinderPill';
 
 type SiteHeaderProps = {
   /** Root categories; empty when the catalog is unavailable (the frame still renders). */
@@ -36,6 +37,7 @@ export function SiteHeader({ items, account, bundle }: SiteHeaderProps): ReactEl
           {items.map((item) => (
             <NavPill key={item.key} item={item} items={items} />
           ))}
+          <PlanFinderPill />
         </nav>
         <div className="ml-auto flex items-center gap-5 md:ml-0">
           <div className="hidden md:block">

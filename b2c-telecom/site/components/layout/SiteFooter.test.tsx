@@ -27,12 +27,13 @@ describe('SiteFooter', () => {
     renderWithProviders(<SiteFooter items={buildNavItems(tree('en-US'), 'en-US')} />);
     const nav = screen.getByRole('navigation', { name: 'Footer' });
     const links = within(nav).getAllByRole('link');
-    expect(links.map((link) => link.textContent)).toEqual(['Phone plans', 'Wireless internet', 'Cable internet', 'Add-ons', 'Support']);
+    expect(links.map((link) => link.textContent)).toEqual(['Phone plans', 'Wireless internet', 'Cable internet', 'Add-ons', 'Plan finder', 'Support']);
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
       '/en-US/shop/phone-plans',
       '/en-US/shop/home-wireless-internet',
       '/en-US/shop/cable-internet',
       '/en-US/shop/add-ons',
+      '/en-US/plan-finder',
       '/en-US/support',
     ]);
   });
@@ -47,7 +48,7 @@ describe('SiteFooter', () => {
 
   it('with no items (catalog unavailable) Support and the copyright remain', () => {
     renderWithProviders(<SiteFooter items={[]} />);
-    expect(within(screen.getByRole('navigation', { name: 'Footer' })).getAllByRole('link').map((link) => link.textContent)).toEqual(['Support']);
+    expect(within(screen.getByRole('navigation', { name: 'Footer' })).getAllByRole('link').map((link) => link.textContent)).toEqual(['Plan finder', 'Support']);
   });
 
   it('de-DE labels and hrefs', () => {

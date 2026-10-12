@@ -7,3 +7,6 @@ export const NAV_TIE_BREAK_ORDER: readonly string[] = [
   'malva-cat-add-ons',
   'malva-cat-devices',
 ];
+
+/** Static navigation entries: not part of the category tree, so they survive a catalog outage (like Support). */
+export const PLAN_FINDER_PATH = '/plan-finder';

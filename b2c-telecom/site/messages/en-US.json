@@ -10,7 +10,8 @@
     "home": "Malva Telecom home",
     "skipToContent": "Skip to content",
     "nav": {
-      "primary": "Main navigation"
+      "primary": "Main navigation",
+      "planFinder": "Plan finder"
     },
     "account": {
       "login": "Log in",
@@ -35,6 +36,7 @@
   "nav": {},
   "footer": {
     "nav": "Footer",
+    "planFinder": "Plan finder",
     "support": "Support",
     "copyright": "© 2026 Malva Telecom"
   },

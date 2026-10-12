@@ -25,13 +25,16 @@ describe('mobile drawer and the category tree', () => {
 
     const header = renderWithProviders(<SiteHeader items={items} account={<span>Log in</span>} bundle={<span>bundle slot</span>} />);
     const desktop = within(screen.getAllByRole('navigation', { name: 'Main navigation' })[0]).getAllByRole('link');
-    const desktopOrder = desktop.map((link) => [link.textContent, link.getAttribute('href')]);
+    // the plan finder is a static entry after the categories, in the header and in the drawer
+    expect(desktop.at(-1)).toHaveAttribute('href', '/en-US/plan-finder');
+    const desktopOrder = desktop.slice(0, -1).map((link) => [link.textContent, link.getAttribute('href')]);
     header.unmount();
 
     renderWithProviders(<MobileDrawer items={items} account={<span>Log in</span>} locale="en-US" />);
     await userEvent.click(screen.getByRole('button', { name: 'Open menu' }));
     const drawer = within(within(screen.getByRole('dialog')).getByRole('navigation', { name: 'Main navigation' })).getAllByRole('link');
-    expect(drawer.map((link) => [link.textContent, link.getAttribute('href')])).toEqual(desktopOrder);
-    expect(drawer.map((link) => link.textContent)).toEqual(tree.map((root) => root.name));
+    expect(drawer.at(-1)).toHaveAttribute('href', '/en-US/plan-finder');
+    expect(drawer.slice(0, -1).map((link) => [link.textContent, link.getAttribute('href')])).toEqual(desktopOrder);
+    expect(drawer.slice(0, -1).map((link) => link.textContent)).toEqual(tree.map((root) => root.name));
   });
 });
