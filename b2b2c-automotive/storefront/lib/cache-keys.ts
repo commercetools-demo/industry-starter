@@ -4,6 +4,8 @@
 
 /** The cart (workstream N). Mutating a key that starts with this prefix refreshes every cart read, summary included. */
 export const KEY_CART = '/api/cart';
+/** The signed-in shopper, `{ customer }` (workstream N, `useAccount`); `customer` is null when signed out. */
+export const KEY_ACCOUNT = '/api/auth/me';
 /** Units in the cart for the header (workstream I). */
 export const KEY_CART_SUMMARY = '/api/cart/summary';
 /** Branches of the session's store (workstream I); the locale is part of the key because branch names are localized. */

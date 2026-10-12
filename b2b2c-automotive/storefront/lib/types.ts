@@ -315,3 +315,99 @@ export interface PolicyOption {
   key: string;
   label: string;
 }
+
+// ---- Cart (workstream N) ----
+
+export type CartFit = 'fits' | 'does-not-fit' | 'unknown';
+export type PromoReason = 'does-not-match' | 'not-active' | 'not-valid' | 'max-reached' | 'stopped-by-previous';
+export type DeliveryMode = 'pickup' | 'ship';
+
+export interface CartLine {
+  id: string;
+  sku: string;
+  productSlug: string;
+  brand: string | null;
+  name: string;
+  imageUrl: string | null;
+  quantity: number;
+  /** The price of one unit after a Product Discount (what the shopper pays before cart discounts). */
+  unitPrice: Money;
+  /** The undiscounted unit price when a Product Discount applies, else null. */
+  listUnitPrice: Money | null;
+  /** The line total after every discount. */
+  total: Money;
+  /** `fromStore` units come from the branch, `shipsLater` from the warehouse; `available` is their sum (0: out of stock). */
+  stock: { fromStore: number; shipsLater: number; capped: boolean; available: number; branchName: string | null };
+  /** Fit against the active vehicle at the time the cart was read; the page recomputes it live from `fitment`. */
+  fit: CartFit;
+  fitment: FitmentProduct;
+  /** Null for a one-time line. */
+  recurrence: { policyKey: string; policyName: string; priceMode: 'Fixed' | 'Dynamic' } | null;
+}
+
+/** A named discount; `amount` is positive, the UI shows the minus sign. */
+export interface CartSaving {
+  discountId: string;
+  name: string;
+  amount: Money;
+}
+
+export interface DeliveryOption {
+  mode: DeliveryMode;
+  methodKey: string;
+  fee: Money;
+  freeAbove: Money | null;
+  remainingForFree: Money | null;
+  branch: { key: string; name: string; city: string; pickupPromise: PickupOption | null } | null;
+}
+
+export interface PromoCodeState {
+  code: string;
+  id: string;
+  state: 'applied' | 'not-applied';
+  reason: PromoReason | null;
+}
+
+export interface CartTotals {
+  subtotal: Money;
+  savings: CartSaving[];
+  delivery: Money;
+  /** Null only when commercetools has not calculated tax yet ("Calculated at checkout"). */
+  tax: { label: string; rate: number | null; amount: Money } | null;
+  total: Money;
+  pricesIncludeTax: boolean;
+}
+
+export interface Cart {
+  id: string;
+  version: number;
+  lines: CartLine[];
+  /** Units, not lines. */
+  itemCount: number;
+  delivery: { selected: DeliveryMode | null; options: DeliveryOption[] };
+  promoCodes: PromoCodeState[];
+  totals: CartTotals;
+  hasSubscription: boolean;
+  /** SKUs that have no price at the new branch after a branch change (kept in the cart, flagged). */
+  unpricedSkus: string[];
+}
+
+/** The answer of every cart route that changes the cart. */
+export interface CartResponse {
+  cart: Cart | null;
+  notice?: 'capped' | 'out-of-stock';
+  /** Only for the promo code route: the state of the code the shopper just typed (a rejected code is not in the cart). */
+  promo?: PromoCodeState;
+}
+
+/** The signed-in shopper as the account area reads it (no secrets). */
+export interface AccountCustomer {
+  id: string;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+  mobile: string | null;
+  addresses: Array<{ id: string; firstName: string | null; lastName: string | null; streetName: string | null; streetNumber: string | null; postalCode: string | null; city: string | null; country: string }>;
+  defaultShippingAddressId: string | null;
+  defaultBillingAddressId: string | null;
+}

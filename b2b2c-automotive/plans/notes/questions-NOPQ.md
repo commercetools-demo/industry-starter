@@ -40,6 +40,15 @@ Updated 2026-10-12 after the owner interview (`notes/owner-answers.md`, binding)
 | Q-Q05 | Delete account retention behaviour? | Anonymise customer, lock credentials, cancel subscriptions, keep orders unchanged, sign out | Delete flow in Q-11 (legal check M-Q03) |
 | Q-Q07 (new) | Which update action changes the frequency of an existing recurring order? | Confirmed from the OAS before coding (Q-12); if none exists the "Change frequency" action is hidden and the gap is reported | Change frequency in Q-12 |
 
+## Added by workstream N (J18, 2026-10-12; default taken, nothing waits)
+
+| Id | Question | Default taken | What it blocks |
+| --- | --- | --- | --- |
+| Q-N04 | The seeded tax rate names are "DE VAT 19%" and "US sales tax placeholder 0%"; the spec wants "VAT (19%)". Can the seed carry a plain localized rate name (for example "VAT" and "MwSt.")? | The cart page derives the label: rate name without country prefix, repeated percentage and the word "placeholder", then the rate (`taxLabel` in `lib/mappers/cart.ts`): "VAT (19%)" (also in de-DE) and "Sales tax (0%)" | The German label reads "VAT" not "MwSt."; M-N03 |
+| Q-N05 | Where does "ships later" arrive in days? | Not shown: the line says "Ships later" (or "{n} from {branch}, {m} ships later"); the delivery option has no business-day text because the shipping methods have no localized description | Wording of the stock line, Q-P04 |
+| Q-N06 | The `next` address after sign-in: store relative (`/cart`) or full? | Store relative path without locale and store key (`safeNext`), the form adds the store key; Q's account area and Checkout use the same form (`/{store}/cart`, `/account/orders`) | Q-03 redirects, O return links |
+| Q-N07 | Does the storefront need `view_shipping_methods`, `view_inventory`-type scopes beyond the list in the plan? | Reads use the existing client scopes of `.env.example` plus those the plan N-01 names; a 403 names the missing scope and the cart degrades (empty delivery options, stock 0) instead of failing | First live run (M-N02) |
+
 ## Removed as obsolete (owner answer Q-P01: no emails)
 
 | Id | Was | Why removed |
