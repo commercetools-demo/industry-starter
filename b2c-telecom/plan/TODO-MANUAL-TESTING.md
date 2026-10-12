@@ -55,3 +55,12 @@ Claude builds these exactly as specified in the workstream and takes screenshots
 | M-Z-1 | Z | Revoke the seed/admin API client in Merchant Center and confirm `npm run seed` now fails with an authentication error → seeding no longer possible with the old credentials. | OA-03 | TODO |
 | M-Z-2 | Z | Skim `plan/FINAL-REPORT.md` and the Netlify site; approve release or list changes → `APPROVED` in `TODO-MANUAL-TESTING.md`. | OA-05, OA-06 | TODO |
 <!-- M-TESTS:END -->
+
+## dtv-experience-parity: needs the owner (live project writes)
+
+| ID | Action | Why | Status |
+| --- | --- | --- | --- |
+| DTV-01 | Approve `npm run seed` for the new catalog data (channel `call-center`, scoped prices, bundle offer, installation and regional add-ons, retired discounts' replacement copy) | Finder, group and channel prices and the dependency rules need the data live; no seeder has been run on this branch | TODO |
+| DTV-02 | Approve spikes 3.1 and 3.2 (recurring order with a zero external price; generated-order query for the reconcile report) | Confirms included lines on recurring orders and the report's query | TODO |
+| DTV-03 | Approve `seed:cleanup-discounts --execute --confirm-project` after reading its report | Removes the retired discounts | TODO |
+| DTV-04 | After DTV-01: browser walk-through of `/plan-finder` with each sample customer (task 9.1); Claude can run it once approved | Confirms the finder, preview and bundle agree live | TODO |
