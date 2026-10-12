@@ -150,3 +150,11 @@ describe('guardAdd: offer dependencies', () => {
     expect(result).toMatchObject({ allowed: false, blocked: { kind: 'conflict', replace: { removeLineId: 'L7' }, reasons: [{ code: 'NEGATED_OFFER_CONFLICT' }] } });
   });
 });
+
+describe('guardAdd: regions', () => {
+  const limited: Offer = { ...appletv, eligibleRegions: ['TX'] };
+  it('an offer limited to regions cannot be added until a location is known', () => {
+    const result = guardAdd(input(limited, 'MLV-ADD-APPLETV-MTH', [cableLine], { offersByKey: { ...offersByKey, [limited.key]: limited } }));
+    expect(result).toMatchObject({ allowed: false, blocked: { kind: 'ineligible', reasons: [{ code: 'LOCATION_REQUIRED' }] } });
+  });
+});

@@ -225,7 +225,9 @@ export type ReasonCode =
   | 'NOT_ELIGIBLE_CHANNEL'
   | 'NOT_STARTED'
   | 'ENDED'
-  | 'NOT_SERVICEABLE';
+  | 'NOT_SERVICEABLE'
+  | 'NOT_AVAILABLE_IN_REGION'
+  | 'LOCATION_REQUIRED';
 
 export interface Reason {
   code: ReasonCode;
@@ -290,6 +292,8 @@ export interface ServiceLocation {
   /** cable, fixed-wireless, mobile */
   served: Record<Technology, boolean>;
   anyServed: boolean;
+  /** US state derived from the ZIP (never from a city). */
+  state?: string;
   /** ISO time of the (cached) answer. */
   checkedAt: string;
 }

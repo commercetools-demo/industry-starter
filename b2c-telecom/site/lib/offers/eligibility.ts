@@ -52,8 +52,20 @@ export function evaluateEligibility(offer: Offer, buyer: BuyerContext): { eligib
   if (buyer.location && notServiceable(offer, buyer.location)) {
     reasons.push(makeReason('NOT_SERVICEABLE', { ...params, postalCode: buyer.location.postalCode }, keys));
   }
+  if (buyer.location && !inRegion(offer, buyer.location)) {
+    reasons.push(makeReason('NOT_AVAILABLE_IN_REGION', { ...params, postalCode: buyer.location.postalCode }, keys));
+  }
   return { eligible: reasons.length === 0, reasons };
 }
+
+/** Does the location match one of the offer's regions (a state code or a ZIP)? An offer without regions matches everywhere. Only state and ZIP are compared. */
+export function inRegion(offer: Pick<Offer, 'eligibleRegions'>, location: Pick<ServiceLocation, 'postalCode' | 'state'>): boolean {
+  if (offer.eligibleRegions.length === 0) return true;
+  return offer.eligibleRegions.some((region) => (/^\d{5}$/.test(region) ? region === location.postalCode : region.toUpperCase() === location.state));
+}
+
+/** An offer limited to regions, for a buyer who has not given a location: shown with "enter your ZIP", but not addable. */
+export const needsLocation = (offer: Pick<Offer, 'eligibleRegions'>, buyer: Pick<BuyerContext, 'location'>): boolean => offer.eligibleRegions.length > 0 && !buyer.location;
 
 export function filterEligible(offers: Offer[], buyer: BuyerContext): Offer[] {
   return offers.filter((offer) => evaluateEligibility(offer, buyer).eligible);

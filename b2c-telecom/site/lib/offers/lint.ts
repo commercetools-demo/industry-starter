@@ -42,6 +42,10 @@ export function lintCatalog(offers: Offer[]): LintFinding[] {
       }
     }
 
+    for (const region of offer.eligibleRegions) {
+      if (!/^([A-Za-z]{2}|\d{5})$/.test(region)) add('error', offer, `eligible-regions entry "${region}" is neither a two-letter state code nor a five-digit ZIP`);
+    }
+
     for (const ref of offer.conflictsWith) {
       const other = offers.find((candidate) => candidate.key !== offer.key && refersTo(ref, candidate));
       if (other && !other.conflictsWith.some((back) => refersTo(back, offer))) {

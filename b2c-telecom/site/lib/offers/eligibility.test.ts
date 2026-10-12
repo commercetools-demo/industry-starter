@@ -1,7 +1,7 @@
 import * as fx from '@/lib/offers/__fixtures__/offers';
 import type { BuyerContext, CartLineRef, Offer, ServiceLocation } from '@/lib/types';
 import { createCachedServiceability, createStubProvider } from './serviceability';
-import { customerTypeFromGroups, describeAvailability, evaluateEligibility, filterEligible, resolveVisibleOffer, revalidateCartEligibility } from './eligibility';
+import { customerTypeFromGroups, describeAvailability, evaluateEligibility, filterEligible, needsLocation, resolveVisibleOffer, revalidateCartEligibility } from './eligibility';
 
 const NOW = new Date('2026-10-07T12:00:00Z');
 const byKey = fx.offersByKey();
@@ -171,5 +171,34 @@ describe('customerTypeFromGroups and revalidation', () => {
     expect(evaluateEligibility.length).toBe(2);
     expect(resolveVisibleOffer.length).toBe(3);
     expect(revalidateCartEligibility.length).toBe(3);
+  });
+});
+
+describe('eligible regions', () => {
+  const limited = { ...fx.appletv, eligibleRegions: ['TX', 'NC', 'WA', '97201'] };
+  const at = (postalCode: string, state: string): BuyerContext => ({ ...buyer(), location: { postalCode, country: 'US' as const, served: { cable: true, 'fixed-wireless': true, mobile: true }, anyServed: true, state, checkedAt: '2026-10-07T00:00:00Z' } });
+
+  it('a state in the list is eligible; another state is not, with the region reason', () => {
+    expect(evaluateEligibility(limited, at('98101', 'WA')).eligible).toBe(true);
+    expect(evaluateEligibility(limited, at('30301', 'GA'))).toMatchObject({ eligible: false, reasons: [{ code: 'NOT_AVAILABLE_IN_REGION' }] });
+  });
+
+  it('a ZIP entry matches that ZIP only, even in the same state', () => {
+    const zipOnly = { ...fx.appletv, eligibleRegions: ['97201'] };
+    expect(evaluateEligibility(zipOnly, at('97201', 'OR')).eligible).toBe(true);
+    expect(evaluateEligibility(zipOnly, at('97202', 'OR')).eligible).toBe(false);
+  });
+
+  it('no regions means everywhere; no location means shown but needing a ZIP', () => {
+    expect(evaluateEligibility(fx.appletv, at('30301', 'GA')).eligible).toBe(true);
+    expect(evaluateEligibility(limited, buyer()).eligible).toBe(true);
+    expect(needsLocation(limited, buyer())).toBe(true);
+    expect(needsLocation(fx.appletv, buyer())).toBe(false);
+  });
+
+  it('only state and ZIP are compared: a city named like a state code does not match', () => {
+    const nc = { ...fx.appletv, eligibleRegions: ['NC'] };
+    const location = { ...at('30301', 'GA').location, city: 'Nc Town' } as ServiceLocation;
+    expect(evaluateEligibility(nc, buyer({ location })).eligible).toBe(false);
   });
 });

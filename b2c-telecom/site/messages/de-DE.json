@@ -1052,6 +1052,8 @@
       "NOT_ELIGIBLE_AUDIENCE": "{offerName} ist für Ihren Kontotyp nicht verfügbar.",
       "NOT_ELIGIBLE_EXISTING_CUSTOMER": "{rule, select, existing {{offerName} gilt nur für bestehende Malva-Kunden.} other {{offerName} gilt nur für Neukunden.}}",
       "NOT_ELIGIBLE_CHANNEL": "{offerName} ist in diesem Vertriebskanal nicht verfügbar.",
+      "NOT_AVAILABLE_IN_REGION": "{offerName} ist in Ihrer Region nicht verfügbar ({postalCode}).",
+      "LOCATION_REQUIRED": "{offerName} ist nur in ausgewählten Gebieten verfügbar. Geben Sie Ihre Postleitzahl ein.",
       "NOT_STARTED": "{offerName} ist noch nicht verfügbar.",
       "ENDED": "{offerName} ist beendet.",
       "NOT_SERVICEABLE": "{offerName} ist unter {postalCode} nicht verfügbar."

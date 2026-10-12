@@ -7,7 +7,7 @@
 // exclusivityVerdict, dedupeVerdict and revalidateCart.
 import { evaluateAddition, mergeVerdicts } from '@/lib/offers/compat';
 import { requiredOfferReasons, negatedLines } from '@/lib/offers/dependencies';
-import { evaluateEligibility } from '@/lib/offers/eligibility';
+import { evaluateEligibility, needsLocation } from '@/lib/offers/eligibility';
 import { makeReason } from '@/lib/offers/rules';
 import { dedupeVerdict, exclusivityVerdict } from '@/lib/offers/exclusivity';
 import { revalidateCart as revalidateRules } from '@/lib/offers/revalidate';
@@ -102,6 +102,7 @@ export function guardAdd(input: GuardInput): GuardResult {
 
   const eligibility = evaluateEligibility(candidate, buyer);
   if (!eligibility.eligible) return blocked('ineligible', candidate, eligibility.reasons.map(toReason));
+  if (needsLocation(candidate, buyer)) return blocked('ineligible', candidate, [toReason(makeReason('LOCATION_REQUIRED', { offerName: candidate.name }, [candidate.key]))]);
 
   const required = requiredOfferReasons(candidate, lines, buyer.held, offersByKey);
   if (required.reasons.length > 0) {

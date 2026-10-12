@@ -26,8 +26,8 @@
 - [x] 4.2 Enforce `required-addon-kinds` at revalidation and in `canCheckout` with the `IssuesBanner` message and link; make lint and checkout share one rule [SKILL: commercetools-storefront]
 - [x] 4.3 Add negated-offer replacement to the add request (single cart update, notice returned), symmetric choice for the reverse add, report-only on read [SKILL: commercetools-storefront]
 - [x] 4.4 Create included offers as zero-price child lines in `addOfferLine`, remove with the parent, forbid single removal [SKILL: commercetools-storefront]
-- [ ] 4.5 Add `eligible-regions` to the eligibility resolution (state and ZIP only), the "enter your ZIP" state and cart re-validation on location change [SKILL: commercetools-storefront]
-- [ ] 4.6 Remove any cart-side matching of all service-address values against an offer's list
+- [x] 4.5 Add `eligible-regions` to the eligibility resolution (state and ZIP only), the "enter your ZIP" state and cart re-validation on location change [SKILL: commercetools-storefront]
+- [x] 4.6 Remove any cart-side matching of all service-address values against an offer's list
 
 ## 5. Buyer context, group and channel pricing
 

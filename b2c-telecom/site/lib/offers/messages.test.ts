@@ -29,6 +29,8 @@ const K_CODES: ReasonCode[] = [
   'NOT_STARTED',
   'ENDED',
   'NOT_SERVICEABLE',
+  'NOT_AVAILABLE_IN_REGION',
+  'LOCATION_REQUIRED',
 ];
 const ALL_CODES = [...J_CODES, ...K_CODES];
 
