@@ -15,7 +15,16 @@ export const QUANTITY_RULES = {
 } as const;
 
 /** Cents; 0 disables. Confirmed by the owner (D-063). */
-export const MINIMUM_ORDER_VALUE: Record<'USD' | 'EUR', number> = { USD: 3000, EUR: 2800 };
+export const DEFAULT_MINIMUM_ORDER_VALUE: Record<'USD' | 'EUR', number> = { USD: 3000, EUR: 2800 };
+
+/** `MINIMUM_ORDER_USD` / `MINIMUM_ORDER_EUR` (whole cents, 0 disables) override the default; anything that is not a non-negative integer is ignored. */
+export function minimumOrderValues(env: Record<string, string | undefined> = process.env): Record<'USD' | 'EUR', number> {
+  const read = (name: string, fallback: number): number => {
+    const raw = env[name]?.trim();
+    return raw !== undefined && /^\d+$/.test(raw) ? Number(raw) : fallback;
+  };
+  return { USD: read('MINIMUM_ORDER_USD', DEFAULT_MINIMUM_ORDER_VALUE.USD), EUR: read('MINIMUM_ORDER_EUR', DEFAULT_MINIMUM_ORDER_VALUE.EUR) };
+}
 
 /** One extra attempt after a ConcurrentModification (409). */
 export const CART_RETRY_ONCE = 1;

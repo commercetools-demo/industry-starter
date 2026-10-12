@@ -1,11 +1,15 @@
-import { ACTIVATION_FEE_TAX_CATEGORY_KEY, MAX_PHONE_LINES, MINIMUM_ORDER_VALUE, QUANTITY_RULES } from './cart';
+import { ACTIVATION_FEE_TAX_CATEGORY_KEY, MAX_PHONE_LINES, minimumOrderValues, QUANTITY_RULES } from './cart';
 import { DISCOUNT_AMOUNTS, DISCOUNT_KEYS } from './discounts';
 
 describe('cart config', () => {
-  it('MINIMUM_ORDER_VALUE has USD and EUR integers (cents)', () => {
-    expect(Number.isInteger(MINIMUM_ORDER_VALUE.USD)).toBe(true);
-    expect(Number.isInteger(MINIMUM_ORDER_VALUE.EUR)).toBe(true);
-    expect(MINIMUM_ORDER_VALUE).toEqual({ USD: 3000, EUR: 2800 });
+  it('the minimum order has USD and EUR integers (cents), by default 30 and 28', () => {
+    expect(minimumOrderValues({})).toEqual({ USD: 3000, EUR: 2800 });
+  });
+
+  it('MINIMUM_ORDER_USD / MINIMUM_ORDER_EUR override it, 0 disables, anything invalid is ignored', () => {
+    expect(minimumOrderValues({ MINIMUM_ORDER_USD: '0', MINIMUM_ORDER_EUR: ' 1500 ' })).toEqual({ USD: 0, EUR: 1500 });
+    expect(minimumOrderValues({ MINIMUM_ORDER_USD: '-5', MINIMUM_ORDER_EUR: '12.5' })).toEqual({ USD: 3000, EUR: 2800 });
+    expect(minimumOrderValues({ MINIMUM_ORDER_USD: '', MINIMUM_ORDER_EUR: 'abc' })).toEqual({ USD: 3000, EUR: 2800 });
   });
 
   it('phone plans take 1 to 5 lines, every other plan exactly 1', () => {

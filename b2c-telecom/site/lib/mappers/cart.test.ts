@@ -172,6 +172,14 @@ describe('mapCart', () => {
     expect(mapCart(ctCart({ lines: [planLine], taxed: { net: 1000, gross: 1190 } }), ctx, deps()).summary.tax?.centAmount).toBe(190);
   });
 
+  it('a plan whose first month is free is not a $0 order: the minimum counts one month of what recurs', () => {
+    const free = mapCart(ctCart({ lines: [{ ...planLine, total: 0, discounts: ['cd-intro'], discountCents: 5999 }] }), ctx, deps());
+    expect(free.summary.total.centAmount).toBe(0);
+    expect(free.summary.thenMonthly.centAmount).toBe(5999);
+    expect(free.minimumOrder?.shortfall).toBeNull();
+    expect(free.checkoutBlockedBy).toEqual([]);
+  });
+
   it('canCheckout: false for empty, false below the minimum, false with issues, true otherwise', () => {
     const empty = mapCart(ctCart(), ctx, deps());
     expect(empty).toMatchObject({ canCheckout: false, checkoutBlockedBy: ['EMPTY'], itemCount: 0 });

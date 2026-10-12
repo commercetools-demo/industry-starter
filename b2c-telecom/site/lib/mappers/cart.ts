@@ -328,7 +328,9 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
   });
 
   const required = getMinimumOrder(currency);
-  const gap = shortfall(summary.total, currency);
+  // The order's value is what is due today or, when more, one month of what recurs: a plan with a free first month is not a $0 order.
+  const worth = summary.thenMonthly.centAmount > summary.total.centAmount ? summary.thenMonthly : summary.total;
+  const gap = shortfall(worth, currency);
   const blockedBy: Cart['checkoutBlockedBy'] = [];
   if (lines.length === 0) blockedBy.push('EMPTY');
   if (lines.length > 0 && gap) blockedBy.push('MINIMUM_ORDER');
