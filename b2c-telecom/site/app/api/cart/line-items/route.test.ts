@@ -34,7 +34,9 @@ describe('POST /api/cart/line-items', () => {
     expect(world.created).toBe(1);
     expect(routeState.patches[0]).toMatchObject({ cartId: 'cart-new' });
     expect(routeState.patches[0]?.anonymousId).toMatch(/^[0-9a-f-]{36}$/);
-    expect(cart.lines.map((line: { kind: string }) => line.kind)).toEqual(['plan', 'fee']);
+    expect(cart.lines.map((line: { kind: string }) => line.kind)).toEqual(['plan', 'equipment', 'fee']);
+    // what the plan includes is listed as a child line at no charge and does not count as another item or change the totals
+    expect(cart.lines[1]).toMatchObject({ offerKey: 'malva-offer-modem-docsis31', parentLineId: cart.lines[0].id, includedAtNoCharge: true, total: { centAmount: 0 } });
     expect(cart.lines[0]).toMatchObject({ offerKey: 'malva-offer-cable-500', recurrence: { priceSelectionMode: 'Fixed' }, label: { id: 'MLV-CBL-500-24M' } });
     expect(cart.summary).toMatchObject({ monthly: { centAmount: 5999 }, oneTime: { centAmount: 2500 }, total: { centAmount: 8499 } });
     expect(cart.itemCount).toBe(1);
@@ -93,7 +95,7 @@ describe('POST /api/cart/line-items', () => {
     const replaced = await post({ offerKey: 'malva-offer-wireless-5g', sku: 'MLV-AIR-5G-12M', replaceLineId: planLine });
     expect(replaced.status).toBe(200);
     const { cart } = await replaced.json();
-    expect(cart.lines.map((line: { offerKey: string }) => line.offerKey)).toEqual(['malva-offer-wireless-5g']);
+    expect(cart.lines.map((line: { offerKey: string }) => line.offerKey)).toEqual(['malva-offer-wireless-5g', 'malva-offer-5g-gateway']);
     expect(world.handle?.cart.customLineItems).toHaveLength(0);
   });
 

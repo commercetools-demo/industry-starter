@@ -7,6 +7,7 @@ import { checkQuantity } from '@/lib/cart/quantity';
 import { codeStateInfo, mapCart } from '@/lib/mappers/cart';
 import { removalPlan } from '@/lib/offers/addons';
 import { negatedLines } from '@/lib/offers/dependencies';
+import { refersTo } from '@/lib/offers/refs';
 import { toDateOnly } from '@/lib/pricing/dates';
 import { getPrompts } from '@/lib/ct/prompts';
 import type { SessionData } from '@/lib/session-types';
@@ -21,6 +22,7 @@ import {
   getActiveCartForSession,
   normalizeCart,
   offerKeyOfLine,
+  parentIdOfLine,
   removeLine,
   statusOf,
   toGuardLines,
@@ -49,6 +51,7 @@ export interface BundleOutcome {
   postalCode?: string;
 }
 
+const isPlanOffer = (offer: Offer): boolean => offer.kind === 'base-package' || offer.kind === 'bundle';
 const PHYSICAL: ReadonlySet<Offer['kind']> = new Set(['equipment', 'device']);
 
 async function offersByKeyFor(market: Market): Promise<Record<string, Offer>> {
@@ -164,14 +167,23 @@ export async function addToBundle(session: SessionData, market: Market, input: A
     return offer && selected ? [{ offer, variant: selected }] : [];
   });
 
-  const physicalSkus = [...(PHYSICAL.has(candidate.kind) ? [variant.sku] : []), ...equipment.map((entry) => entry.variant.sku)];
+  const included = isPlanOffer(candidate)
+    ? candidate.includedOffers.flatMap((ref) => {
+        const offer = Object.values(offersByKey).find((entry) => (entry.kind === 'addon' || entry.kind === 'equipment') && refersTo(ref, entry));
+        const chosen = offer?.variants.find((entry) => entry.termMonths === 0) ?? offer?.variants[0];
+        // required equipment is already added as the plan's equipment lines; a second line for the same offer would be a duplicate
+        return offer && chosen && !equipment.some((entry) => entry.offer.key === offer.key) ? [{ offer, variant: chosen }] : [];
+      })
+    : [];
+
+  const physicalSkus = [...(PHYSICAL.has(candidate.kind) ? [variant.sku] : []), ...equipment.map((entry) => entry.variant.sku), ...included.filter((entry) => PHYSICAL.has(entry.offer.kind)).map((entry) => entry.variant.sku)];
   if (physicalSkus.length > 0) {
     const available = await getAvailableQuantities(physicalSkus);
     const inCart = lines.filter((line) => line.sku === variant.sku).reduce((sum, line) => sum + line.quantity, 0);
     if (PHYSICAL.has(candidate.kind) && (available[variant.sku] ?? 0) < inCart + input.quantity) {
       return refuse(session, market, stockRefusal(candidate, available[variant.sku] ?? 0));
     }
-    for (const entry of equipment) {
+    for (const entry of [...equipment, ...included.filter((candidateEntry) => PHYSICAL.has(candidateEntry.offer.kind))]) {
       if ((available[entry.variant.sku] ?? 0) < 1) return refuse(session, market, stockRefusal(entry.offer, available[entry.variant.sku] ?? 0));
     }
   }
@@ -179,7 +191,7 @@ export async function addToBundle(session: SessionData, market: Market, input: A
   try {
     let ct = existing ?? (await createCartForSession(session, market));
     if (removeLineId) ct = await removeLine(ct.id, removeLineId, { cascade: true, locale: market.locale });
-    const updated = await addOfferLine(ct.id, { offer: candidate, variant, quantity: input.quantity, parentLineId: guard.parentLineId, equipment, removeLineIds: [...replacedIds] });
+    const updated = await addOfferLine(ct.id, { offer: candidate, variant, quantity: input.quantity, parentLineId: guard.parentLineId, equipment, included, removeLineIds: [...replacedIds] });
     const mapped = await mapForMarket(updated, market);
     const notices: CartNotice[] = negated.length > 0 ? [{ code: 'REPLACED', addedName: candidate.name, removedNames: negated.map((entry) => entry.offer.name) }] : [];
     return { ...outcome(mapped.cart), ...(notices.length > 0 ? { notices } : {}), ...(updated.anonymousId ? { anonymousId: updated.anonymousId } : {}) };
@@ -219,6 +231,9 @@ export async function setLineQuantity(session: SessionData, market: Market, line
 export async function removeFromBundle(session: SessionData, market: Market, lineId: string, cascade: boolean): Promise<BundleOutcome> {
   const existing = await getActiveCartForSession(session, market);
   if (!existing || !existing.lineItems.some((entry) => entry.id === lineId)) return refuse(session, market, new BundleRefusal(404, 'LINE_NOT_FOUND', 'That line is not in your bundle.'));
+  const target = existing.lineItems.find((entry) => entry.id === lineId);
+  // An included offer is part of its plan: it goes when the plan goes and cannot be removed alone.
+  if (target?.priceMode === 'ExternalPrice' && parentIdOfLine(target)) return refuse(session, market, new BundleRefusal(409, 'INCLUDED_LINE', 'This item is included with your plan. Remove the plan to remove it.'));
   try {
     const updated = await removeLine(existing.id, lineId, { cascade, locale: market.locale });
     return outcome((await mapForMarket(updated, market)).cart);

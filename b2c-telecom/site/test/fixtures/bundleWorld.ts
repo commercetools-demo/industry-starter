@@ -17,6 +17,8 @@ export const PRICES: Record<string, FakePrice> = {
   'MLV-ADD-DEVCARE-MTH': { recurring: 1200 },
   'MLV-EQP-AX3000-RENT': { recurring: 800 },
   'MLV-EQP-AX3000-BUY': { oneTime: 12999 },
+  'MLV-EQP-MODEM-DOCSIS31-RENT': { recurring: 600 },
+  'MLV-EQP-5G-GATEWAY-RENT': { recurring: 1000 },
 };
 
 export const world = {
@@ -32,7 +34,7 @@ export function resetWorld(patch: { codes?: FakeCodes; inventory?: Record<string
   world.handle = undefined;
   world.prices = patch.prices ?? PRICES;
   world.codes = patch.codes ?? {};
-  world.inventory = patch.inventory ?? { 'MLV-EQP-AX3000-RENT': 10, 'MLV-EQP-AX3000-BUY': 10 };
+  world.inventory = patch.inventory ?? { 'MLV-EQP-AX3000-RENT': 10, 'MLV-EQP-AX3000-BUY': 10, 'MLV-EQP-MODEM-DOCSIS31-RENT': 10, 'MLV-EQP-5G-GATEWAY-RENT': 10 };
   world.inventoryCalls = 0;
   world.created = 0;
 }

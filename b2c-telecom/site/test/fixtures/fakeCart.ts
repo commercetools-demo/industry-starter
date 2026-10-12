@@ -40,7 +40,8 @@ export function fakeCart(prices: Record<string, FakePrice>, initial: Partial<CtC
           const sku = action.sku as string;
           const price = prices[sku] ?? {};
           const recurrenceInfo = action.recurrenceInfo as { priceSelectionMode: string } | undefined;
-          const cents = recurrenceInfo ? price.recurring : (price.oneTime ?? price.recurring);
+          const external = action.externalPrice as { centAmount: number } | undefined;
+          const cents = external ? external.centAmount : recurrenceInfo ? price.recurring : (price.oneTime ?? price.recurring);
           const quantity = (action.quantity as number | undefined) ?? 1;
           const custom = action.custom as { fields: Record<string, string> } | undefined;
           counter += 1;
@@ -49,6 +50,7 @@ export function fakeCart(prices: Record<string, FakePrice>, initial: Partial<CtC
             productKey: custom?.fields.offerKey,
             name: { 'en-US': sku },
             variant: { id: 1, sku },
+            ...(external ? { priceMode: 'ExternalPrice' } : {}),
             price: { value: { type: 'centPrecision', centAmount: cents ?? 0, currencyCode: 'USD', fractionDigits: 2 }, ...(recurrenceInfo && price.recurring !== undefined ? { recurrencePolicy: { typeId: 'recurrence-policy', id: 'pol-1' } } : {}) },
             quantity,
             totalPrice: { type: 'centPrecision', centAmount: (cents ?? 0) * quantity, currencyCode: 'USD', fractionDigits: 2 },

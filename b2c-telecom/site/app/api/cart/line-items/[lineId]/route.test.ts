@@ -43,7 +43,7 @@ describe('PATCH /api/cart/line-items/[lineId]', () => {
     const lineId = world.handle?.cart.lineItems[0]?.id as string;
     await add({ offerKey: 'malva-offer-device-protect', sku: 'MLV-ADD-DEVCARE-MTH', parentLineId: lineId });
     const { cart } = await (await patch(lineId, { quantity: 2 })).json();
-    expect(cart.lines.map((line: { quantity: number }) => line.quantity)).toEqual([2, 2]);
+    expect(cart.lines.map((line: { quantity: number }) => line.quantity)).toEqual([2, 2, 2]);
   });
 
   it('quantity 6 is refused with 422 OFFER_BLOCKED kind limit and the cart is unchanged', async () => {
@@ -84,7 +84,7 @@ describe('DELETE /api/cart/line-items/[lineId]', () => {
     const refused = await del(planId);
     expect(refused.status).toBe(409);
     const body = await refused.json();
-    expect(body.error).toMatchObject({ code: 'HAS_DEPENDENTS', details: { dependents: [{ name: 'MLV-ADD-APPLETV-MTH' }] } });
+    expect(body.error).toMatchObject({ code: 'HAS_DEPENDENTS', details: { dependents: expect.arrayContaining([{ lineId: expect.any(String), name: 'MLV-ADD-APPLETV-MTH' }]) } });
     expect(body.cart.itemCount).toBe(2);
 
     const ok = await del(planId, '?cascade=true');
@@ -99,9 +99,20 @@ describe('DELETE /api/cart/line-items/[lineId]', () => {
     await add(cable);
     const planId = world.handle?.cart.lineItems[0]?.id as string;
     await add({ offerKey: 'malva-offer-appletv', sku: 'MLV-ADD-APPLETV-MTH', parentLineId: planId });
-    const addonId = world.handle?.cart.lineItems[1]?.id as string;
+    const addonId = world.handle?.cart.lineItems.find((line) => line.variant.sku === 'MLV-ADD-APPLETV-MTH')?.id as string;
     expect((await del(addonId)).status).toBe(200);
-    expect(world.handle?.cart.lineItems).toHaveLength(1);
+    expect(world.handle?.cart.lineItems.map((line) => line.variant.sku)).not.toContain('MLV-ADD-APPLETV-MTH');
+  });
+
+  it('a line the plan includes cannot be removed alone; removing the plan takes it along', async () => {
+    await add(cable);
+    const included = world.handle?.cart.lineItems.find((line) => line.variant.sku === 'MLV-EQP-MODEM-DOCSIS31-RENT')?.id as string;
+    const refused = await del(included);
+    expect(refused.status).toBe(409);
+    expect((await refused.json()).error.code).toBe('INCLUDED_LINE');
+    const planId = world.handle?.cart.lineItems[0]?.id as string;
+    expect((await del(planId, '?cascade=true')).status).toBe(200);
+    expect(world.handle?.cart.lineItems).toHaveLength(0);
   });
 
   it('404 when the line is not in the bundle', async () => {

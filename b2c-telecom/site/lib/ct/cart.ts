@@ -162,6 +162,8 @@ export interface AddOfferLineArgs {
   equipment?: { offer: Offer; variant: OfferVariant }[];
   /** Lines (and their dependents) the offer replaces: removed in the same cart update as the add (negated offers). */
   removeLineIds?: string[];
+  /** Plans: the offers the plan includes, added after it as child lines at price 0 (they go with the plan and cannot be removed alone). */
+  included?: { offer: Offer; variant: OfferVariant }[];
 }
 
 const isPlan = (offer: Offer): boolean => offer.kind === 'base-package' || offer.kind === 'bundle';
@@ -244,6 +246,17 @@ export async function addOfferLine(cartId: string, args: AddOfferLineArgs): Prom
       if (bad) {
         await updateCart(cart, [{ action: 'removeLineItem', lineItemId: bad.id }]);
         throw priceMissing(bad.variant.sku ?? '');
+      }
+    }
+    if (args.included && args.included.length > 0) {
+      try {
+        cart = await updateCart(
+          cart,
+          args.included.map((entry) => addLineItemAction({ offer: entry.offer, variant: entry.variant, quantity: lineQuantity, parentLineId: added.id, free: true })),
+        );
+      } catch (error) {
+        // The plan itself is added and priced; a failed included line only means the cart does not list it yet.
+        console.error('[cart] included offers not added to', added.id, error);
       }
     }
     return cart;
@@ -344,6 +357,7 @@ export function toGuardLines(cart: CtCart): GuardLine[] {
       sku: line.variant.sku ?? '',
       quantity: line.quantity,
       ...(parentLineItemId === undefined ? {} : { parentLineItemId }),
+      ...(line.priceMode === 'ExternalPrice' && parentLineItemId !== undefined ? { includedFree: true } : {}),
     };
   });
 }

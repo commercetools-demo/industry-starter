@@ -266,6 +266,8 @@ export interface CartLineRef {
   offerKey: string;
   parentLineItemId?: string;
   quantity: number;
+  /** An included offer's child line (added at price 0 with its plan). */
+  includedFree?: boolean;
 }
 export type CartIssueResolution = 'remove' | 'replace' | 'choose-equipment';
 export interface CartIssue {

@@ -294,7 +294,8 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
     currencyCode: currency,
     country: ct.country ?? ctx.country,
     lines: all,
-    itemCount: lines.length,
+    // What the buyer chose: an included child line is part of its plan, not another item.
+    itemCount: lines.filter((line) => !line.includedAtNoCharge).length,
     summary,
     discountCodes,
     minimumOrder: required ? { required, shortfall: lines.length > 0 ? gap : null } : null,

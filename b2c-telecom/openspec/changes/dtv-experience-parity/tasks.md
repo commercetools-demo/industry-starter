@@ -18,14 +18,14 @@
 ## 3. Spikes (before dependent tasks)
 
 - [ ] 3.1 Spike: place an order from a cart with a monthly recurring line carrying the first-month promotion and WELCOME10; price the second to fourth generated recurring orders on Fixed and Dynamic price modes; record the result in design.md [SKILL: commercetools-commerce-patterns]
-- [ ] 3.2 Spike: customer-group price and channel price on recurring lines (first order and generated orders); whether a cart can carry several customer groups; cost of price selection by group and channel in the catalog read; record in design.md [SKILL: commercetools-commerce-patterns]
+- [ ] 3.2 Spike: customer-group price and channel price on recurring lines (first order and generated orders); whether a cart can carry several customer groups; cost of price selection by group and channel in the catalog read; record in design.md; also confirm a recurring line added with `externalPrice` 0 (included offers, task 4.4) places and generates recurring orders at 0 [SKILL: commercetools-commerce-patterns]
 
 ## 4. Rules and cart behaviour
 
 - [x] 4.1 Add required-offer evaluation to `lib/offers`, wire into `guardAdd`, `revalidateLines` and the blocked-add response, including held services [SKILL: commercetools-storefront]
 - [x] 4.2 Enforce `required-addon-kinds` at revalidation and in `canCheckout` with the `IssuesBanner` message and link; make lint and checkout share one rule [SKILL: commercetools-storefront]
 - [x] 4.3 Add negated-offer replacement to the add request (single cart update, notice returned), symmetric choice for the reverse add, report-only on read [SKILL: commercetools-storefront]
-- [ ] 4.4 Create included offers as zero-price child lines in `addOfferLine`, remove with the parent, forbid single removal [SKILL: commercetools-storefront]
+- [x] 4.4 Create included offers as zero-price child lines in `addOfferLine`, remove with the parent, forbid single removal [SKILL: commercetools-storefront]
 - [ ] 4.5 Add `eligible-regions` to the eligibility resolution (state and ZIP only), the "enter your ZIP" state and cart re-validation on location change [SKILL: commercetools-storefront]
 - [ ] 4.6 Remove any cart-side matching of all service-address values against an offer's list
 
