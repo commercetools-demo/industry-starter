@@ -1,0 +1,22 @@
+versions: OK
+tailwind: OK
+secrets: OK
+server-only: OK
+tokens: OK
+messages: OK
+check-routes: static mode, nothing to check
+dev pages: OK
+no-health-in-release: OK
+
+ RUN  v5.0.4 /Users/behnam/code/commercetools-labs/industry-starter/.claude/worktrees/b2b2c-automotive/b2b2c-automotive/storefront
+
+
+ Test Files  26 passed (26)
+      Tests  131 passed (131)
+   Start at  15:45:28
+   Duration  2.26s (environment 63%, setup 21%, tests 10%, import 3%, transform 2%)
+
+Environment  jsdom was created 26 times · 16.04s total, 63% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

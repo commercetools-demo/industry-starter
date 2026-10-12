@@ -1,0 +1,11 @@
+Storefront /dev/tokens, font requests (Chrome DevTools MCP, dev server port 3010). No request to fonts.googleapis.com or fonts.gstatic.com.
+GET /_next/static/media/47fe1b7cd6e6ed85-s.p.3bh2vc0w-r-ll.woff2 [200]
+GET /_next/static/media/75affa71d1e2f6a7-s.p.17-aodiw50953.woff2 [200]
+GET /_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2 [200]
+GET /_next/static/media/8e6fa89aa22d24ec-s.p.2o7m9ogm38dql.woff2 [200]
+GET /_next/static/media/a218039a3287bcfd-s.p.43zbiuwnnoiok.woff2 [200]
+GET /_next/static/media/e2334d715941921e-s.p.3o_v2fun1jzxk.woff2 [200]
+GET /_next/static/media/fa0520225c6f3d07-s.p.33u8lzvd44aqk.woff2 [200]
+Loaded font faces: Poppins, Archivo, Public Sans, Inter. External resource entries matching googleapis|gstatic: none.
+Computed: --color-brand-700 = #821810; swatch-color-surface-utility background = rgb(0, 0, 0); btn-sample (bg-action) = rgb(130, 24, 16);
+font-display = Poppins; font-utility = Archivo; font-ui = Public Sans.

@@ -1,0 +1,15 @@
+{
+  "common": {
+    "appName": "Malva",
+    "placeholder": "The {store} shop is being built here.",
+    "loading": "Loading",
+    "tryAgain": "Try again",
+    "backHome": "Back to home"
+  },
+  "errors": {
+    "genericTitle": "Something went wrong",
+    "genericBody": "Please try again.",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "This address does not exist."
+  }
+}

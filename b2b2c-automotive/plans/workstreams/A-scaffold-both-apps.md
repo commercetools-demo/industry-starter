@@ -214,3 +214,19 @@ None required. If A-02 hits the Puck peer-dependency conflict, the owner action 
 
 ## 10. Evidence to record
 `plans/evidence/A/`: `storefront-root.png`, `portal-root.png`, `storefront-build.txt`, `portal-build.txt`, and the output of `node -v; npm ls next next-intl @commercetools/platform-sdk @commercetools/ts-client react` for each app (`versions-storefront.txt`, `versions-portal.txt`).
+
+## Progress
+
+Storefront (J2). Portal tasks are tracked by the portal junior.
+
+- A-01 storefront: done (create-next-app 16, deps, next pinned 16.4.0, `.nvmrc`; plugin-react 5, see Q-J2-01)
+- A-02 storefront: n/a (portal only)
+- A-03 storefront: done (`scripts/check-versions.mjs`, also checks react 19)
+- A-04 storefront: done
+- A-05 storefront: done (`.env.example`, `.gitignore`, `check-secrets`; scope parser reads `.env.local` too)
+- A-06 storefront: done (also guards `lib/contentools/**` except `origin.ts`)
+- A-07 storefront: done (rules 1 to 5; rule 6 admin fence is portal only)
+- A-08 storefront: done (`check-tokens` and `check-messages` were written directly in their full B and C form, no pass-through stage; release gates per Q-J2-03)
+- A-09 storefront: done (`npm run check` and `verify:build` green; helpers and smoke tests)
+- A-10 storefront: done (root layout is async per C-07; `AGENTS.md` block written by `next dev`; `CLAUDE.md`, `netlify.toml`)
+- A-11 storefront: partial (README done; the fresh-clone dry run was not possible because nothing is committed yet; both gates are green in the working tree. Lead: run it after committing). Evidence: `plans/evidence/A/` (`storefront-build.txt`, `versions-storefront.txt`; no `storefront-root.png`, the root path only redirects, see `plans/evidence/C/`)

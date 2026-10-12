@@ -202,3 +202,15 @@ Add under section 3 (never wait on it; continue with C):
 
 ## 10. Evidence to record
 `plans/evidence/B/`: the five screenshots above (`storefront-tokens-1440.png`, `storefront-tokens-375.png`, `portal-tokens-light-1440.png`, `portal-tokens-dark-1440.png`, `portal-tokens-light-375.png`), `check-tokens-fail.txt` (message from the deliberate raw hex), `tokens-diff-storefront.txt`, `tokens-diff-portal.txt`, `network-fonts.txt` (the filtered request list showing no Google host).
+
+## Progress
+
+Storefront (J2). Portal tasks are tracked by the portal junior.
+
+- B-01 storefront: done (`app/tokens.css`, `scripts/tokens-source.mjs`, source is `../design/export/tokens.automotive.css`, identical to `design-systems/automotive/tokens.css`)
+- B-02 storefront: done (generated `@theme inline` block; note Tailwind still emits the same-name aliases inside `@layer theme`, harmless because `tokens.css` is unlayered and wins; tested)
+- B-03 storefront: done (`next/font/google` fetched fonts at build, no `@fontsource` swap needed)
+- B-04 storefront: done (all 9 rules; deliberate raw hex message in `plans/evidence/B/check-tokens-fail.txt`)
+- B-05 storefront: n/a (portal only)
+- B-06 storefront: done (`/dev/tokens`, `lib/dev/token-list.ts`, tests; no portal toggle)
+- B-07 storefront: partial (`npm run check` and `verify:build` green; fresh-clone dry run left to the lead). Evidence in `plans/evidence/B/`: `storefront-tokens-1440.png`, `storefront-tokens-375.png`, `check-tokens-fail.txt`, `tokens-diff-storefront.txt`, `network-fonts.txt`. M-B-1 row already exists. Q-B01 already exists.

@@ -1,0 +1,8 @@
+v22.21.1
+malva-storefront@0.1.0 /Users/behnam/code/commercetools-labs/industry-starter/.claude/worktrees/b2b2c-automotive/b2b2c-automotive/storefront
+├── @commercetools/platform-sdk@8.27.0
+├── @commercetools/ts-client@4.10.0
+├── next-intl@4.14.9
+├── next@16.4.0
+└── react@19.2.4
+

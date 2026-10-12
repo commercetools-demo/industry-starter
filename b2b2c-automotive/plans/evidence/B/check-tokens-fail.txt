@@ -1,0 +1,1 @@
+components/Probe.tsx:1: raw colour #821810; use var(--color-brand-700)

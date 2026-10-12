@@ -1,0 +1,15 @@
+{
+  "common": {
+    "appName": "Malva",
+    "placeholder": "Hier entsteht der Shop {store}.",
+    "loading": "Wird geladen",
+    "tryAgain": "Erneut versuchen",
+    "backHome": "Zur Startseite"
+  },
+  "errors": {
+    "genericTitle": "Etwas ist schiefgelaufen",
+    "genericBody": "Bitte versuchen Sie es erneut.",
+    "notFoundTitle": "Seite nicht gefunden",
+    "notFoundBody": "Diese Adresse gibt es nicht."
+  }
+}

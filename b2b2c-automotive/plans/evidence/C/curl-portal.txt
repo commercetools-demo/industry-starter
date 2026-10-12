@@ -1,0 +1,8 @@
+portal dev server on port 3100 (curl -s -o /dev/null -w '%{http_code} %{redirect_url}')
+/                                   307 http://localhost:3100/de-DE
+/ (Cookie your-shop-country-locale=en-US)  307 http://localhost:3100/en-US
+/DE-de (wrong case)                 307 http://localhost:3100/de-DE
+/de-DE                              200
+/en-US                              200
+/fr-FR                              404
+/dev/tokens (development only)      200 (no redirect to /de-DE/dev/tokens)

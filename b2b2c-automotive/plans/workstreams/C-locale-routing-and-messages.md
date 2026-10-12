@@ -199,3 +199,18 @@ Also add to section 2 (sign-offs) only if the owner answers Q-C01 with "en-US mu
 
 ## 10. Evidence to record
 `plans/evidence/C/`: `curl-storefront.txt`, `curl-portal.txt`, `storefront-bare-notfound.png`, `storefront-de.png`, `storefront-en.png`, `storefront-cookie-redirect.png`, `portal-de.png`, `portal-en.png`, and the final `npm run check` tail for each app (`check-storefront.txt`, `check-portal.txt`).
+
+## Progress
+
+Storefront (J2). Portal tasks are tracked by the portal junior.
+
+- C-01 storefront: done
+- C-02 storefront: done
+- C-03 storefront: done (real `check-messages`)
+- C-04 storefront: done (`lib/locale-redirect.ts`, `proxy.ts`)
+- C-05 storefront: done (layout, error, not-found, root not-found, global-error, `[locale]` page is not-found, `[store]` placeholder)
+- C-06 storefront: done (`/dev/tokens` answers 200 without redirect in dev)
+- C-07 storefront: done (see Q-J2-02)
+- C-08 storefront: partial (README locales section done; fresh-clone `check` and `verify:build` left to the lead)
+
+Evidence in `plans/evidence/C/`: `curl-storefront.txt`, `storefront-bare-notfound.png`, `storefront-de.png`, `storefront-en.png`, `storefront-cookie-redirect.png`, `check-storefront.txt`. Browser checks ran on port 3010: placeholder renders in both locales, `lang` and cookie correct, no console errors (the 404 document of `/fr-FR/hartmann` is the only logged resource error, as expected).
