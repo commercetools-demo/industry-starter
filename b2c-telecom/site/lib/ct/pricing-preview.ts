@@ -7,13 +7,13 @@ import { cartGroupKeyOf } from '@/lib/offers/declared';
 import { negatedLines } from '@/lib/offers/dependencies';
 import { resolveVisibleOffer } from '@/lib/offers/eligibility';
 import { OffersApiError } from '@/lib/offers-api/errors';
-import type { PreviewRequest } from '@/lib/offers-api/preview';
+import type { PreviewIssue, PreviewLine, PreviewRequest, PreviewResult } from '@/lib/offers-api/preview';
 import { reasonTextFor } from '@/lib/offers-api/text';
 import { mapCart } from '@/lib/mappers/cart';
 import { PREVIEW_PROBE_KEY_PREFIX } from '@/lib/config/cart';
 import { toDateOnly } from '@/lib/pricing/dates';
 import type { SessionData } from '@/lib/session-types';
-import type { AppliedPromotion, BuyerContext, CartLine, CartSummary, Locale, Market, Money, Offer, OfferVariant } from '@/lib/types';
+import type { BuyerContext, Locale, Market, Offer, OfferVariant } from '@/lib/types';
 import { getBuyerContext } from './buyer-context';
 import { activationFeeOf, addLineItemAction, buildPreviewDraft } from './cartDrafts';
 import { getActiveCartForSession } from './cart';
@@ -26,38 +26,7 @@ import { probeKey, withProbeCart } from './probe';
 // afterwards. The cart is built by the same builders a real add uses and read by the same mapper the bundle uses, so what it says is what
 // /bundle shows once the same items are added. Nothing is persisted and the buyer's own cart is only read (its discount codes apply).
 
-export interface PreviewIssue {
-  offerKey: string;
-  name: string;
-  /** `blocked`: the rules refuse it for this plan; `unavailable`: it cannot be priced. */
-  kind: 'blocked' | 'unavailable';
-  reasons: { code: string; message: string }[];
-}
-
-export interface PreviewLine {
-  offerKey: string;
-  sku: string | null;
-  kind: CartLine['kind'];
-  name: string;
-  quantity: number;
-  chargeType: CartLine['chargeType'];
-  /** The engine's standing price per unit (selected for the buyer's group and channel). */
-  unitListPrice: Money;
-  /** The engine's total for the line for the order placed now (after first-order promotions). */
-  total: Money;
-  includedAtNoCharge: boolean;
-}
-
-export interface PreviewResult {
-  dueToday: Money;
-  thenMonthly: Money;
-  summary: CartSummary;
-  lines: PreviewLine[];
-  promotions: AppliedPromotion[];
-  issues: PreviewIssue[];
-  /** Offers removed from the preview because the plan's extra replaces them (professional installation replaces the kit). */
-  replaced: string[];
-}
+export type { PreviewIssue, PreviewLine, PreviewResult };
 
 const variantOf = (offer: Offer, sku: string | undefined): OfferVariant | undefined => (sku ? offer.variants.find((entry) => entry.sku === sku) : (offer.variants.find((entry) => entry.isMaster) ?? offer.variants[0]));
 

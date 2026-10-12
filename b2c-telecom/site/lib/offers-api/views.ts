@@ -6,9 +6,13 @@ import { apiFamilyOf, type ApiFamily } from './filters';
 
 export interface OfferItem {
   key: string;
+  /** The master variant's SKU: what a cart add of this offer sends. */
+  sku: string | null;
   name: string;
   kind: Offer['kind'];
   family: ApiFamily | null;
+  /** Equipment only: the kind (router, modem, ...). A plan holds one item per kind. */
+  equipmentKind: string | null;
   description: string;
   image?: string;
   /** The buyer's prices for the market, customer group and channel (the master variant). */
@@ -58,9 +62,11 @@ export function toOfferItem(offer: Offer, offersByKey: Record<string, Offer>, op
   const facts = offer.facts?.kind === 'plan' ? offer.facts : null;
   return {
     key: offer.key,
+    sku: master?.sku ?? null,
     name: offer.name,
     kind: offer.kind,
     family: apiFamilyOf(offer),
+    equipmentKind: offer.facts?.kind === 'equipment' ? offer.facts.equipmentKind : null,
     description: offer.description,
     ...(offer.image ? { image: offer.image } : {}),
     price,

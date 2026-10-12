@@ -294,7 +294,13 @@
       "empty": "Noch keine Zusatzoptionen.",
       "browse": "Zusatzoptionen ansehen"
     },
-    "home": "Startseite"
+    "home": "Startseite",
+    "finder": {
+      "back": "Tarif oder Extras ändern",
+      "backAria": "Zurück zum Tarifberater",
+      "refusedTitle": "{name} konnte Ihrem Tarif nicht hinzugefügt werden",
+      "replaced": "{added} ersetzt {removed}."
+    }
   },
   "checkout": {
     "title": "Kasse",
@@ -1399,6 +1405,92 @@
         "Refunded": "Erstattet",
         "NotRefunded": "Nicht erstattet"
       }
+    }
+  },
+  "finder": {
+    "title": "Tarifberater",
+    "home": "Startseite",
+    "intro": "Wählen Sie einen Tarif, fügen Sie Zubehör hinzu und sehen Sie Ihren Preis, bevor Sie fortfahren.",
+    "loading": "Tarife werden geladen …",
+    "family": {
+      "label": "Tarifart",
+      "phone": "Mobilfunktarife",
+      "home-wireless": "Funk-Internet",
+      "cable": "Kabel-Internet"
+    },
+    "plans": {
+      "label": "Tarife"
+    },
+    "empty": {
+      "plans": "Für die aktuelle Auswahl sind keine Tarife verfügbar.",
+      "notServed": "{postalCode} versorgen wir noch nicht, daher sind dort keine Tarife verfügbar."
+    },
+    "error": {
+      "offers": "Die Tarife konnten nicht geladen werden.",
+      "detail": "Die Details dieses Tarifs konnten nicht geladen werden.",
+      "retry": "Erneut versuchen"
+    },
+    "context": {
+      "title": "Ihre Angaben",
+      "fromAccount": "Aus Ihrem Konto",
+      "declareFailed": "Die Auswahl konnte nicht gespeichert werden. Bitte erneut versuchen.",
+      "customerType": {
+        "label": "Kundenart",
+        "consumer": "Privatkunde",
+        "small-business": "Kleinunternehmen",
+        "employee": "Mitarbeiter"
+      },
+      "existing": {
+        "label": "Bestandskunde",
+        "unspecified": "Keine Angabe",
+        "yes": "Ja",
+        "no": "Nein"
+      },
+      "zip": {
+        "label": "Postleitzahl",
+        "apply": "Übernehmen",
+        "clear": "Löschen",
+        "none": "Geben Sie Ihre Postleitzahl ein, um zu sehen, was an Ihrer Adresse verfügbar ist.",
+        "state": "Bundesland: {state}"
+      },
+      "zipFailed": "Die Postleitzahl konnte nicht geprüft werden. Bitte erneut versuchen.",
+      "notServed": "{postalCode} versorgen wir noch nicht."
+    },
+    "detail": {
+      "loading": "Details werden geladen …",
+      "refused": "Dieser Artikel kann diesem Tarif nicht hinzugefügt werden.",
+      "cleared": "Ihre Extras wurden entfernt, weil sie für einen anderen Tarif gewählt wurden.",
+      "kind": {
+        "addon": "Zusatzoption",
+        "equipment": "Ausstattung"
+      },
+      "included": {
+        "title": "Enthalten",
+        "empty": "In diesem Tarif ist nichts Weiteres enthalten."
+      },
+      "addons": {
+        "title": "Passende Zusatzoptionen",
+        "empty": "Für diesen Tarif sind keine passenden Zusatzoptionen verfügbar."
+      },
+      "equipment": {
+        "title": "Passende Ausstattung",
+        "empty": "Für diesen Tarif ist keine passende Ausstattung verfügbar."
+      },
+      "add": "Zum Tarif hinzufügen",
+      "remove": "Hinzugefügt ✓ Entfernen",
+      "unavailable": "Nicht verfügbar",
+      "addTo": "{name} zu Ihrem Tarif hinzufügen",
+      "removeFrom": "{name} aus Ihrem Tarif entfernen",
+      "unavailableFor": "{name} ist für diesen Tarif nicht verfügbar"
+    },
+    "strip": {
+      "title": "Ihr Preis",
+      "loading": "Ihr Preis wird berechnet …",
+      "unavailable": "Preis nicht verfügbar"
+    },
+    "continue": {
+      "withPlan": "Weiter mit {name}",
+      "extras": "{count, plural, =0 {Keine Extras hinzugefügt} one {# Extra hinzugefügt} other {# Extras hinzugefügt}}"
     }
   }
 }

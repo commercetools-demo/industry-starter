@@ -1,3 +1,4 @@
+import type { AppliedPromotion, CartLine, CartSummary, Money } from '@/lib/types';
 import { OffersApiError } from './errors';
 
 // Pure. The body of POST /api/pricing/preview: a plan, optional sku and line count, and the extras to price with it.
@@ -38,4 +39,38 @@ export function parsePreview(body: unknown): PreviewRequest {
   const seen = new Set<string>();
   const unique = parsed.filter((extra) => (seen.has(`${extra.offerKey}|${extra.sku ?? ''}`) ? false : (seen.add(`${extra.offerKey}|${extra.sku ?? ''}`), true)));
   return { planKey, ...(sku === undefined ? {} : { sku }), quantity, extras: unique };
+}
+
+// The answer of POST /api/pricing/preview (client-safe: the finder reads it).
+export interface PreviewIssue {
+  offerKey: string;
+  name: string;
+  /** `blocked`: the rules refuse it for this plan; `unavailable`: it cannot be priced. */
+  kind: 'blocked' | 'unavailable';
+  reasons: { code: string; message: string }[];
+}
+
+export interface PreviewLine {
+  offerKey: string;
+  sku: string | null;
+  kind: CartLine['kind'];
+  name: string;
+  quantity: number;
+  chargeType: CartLine['chargeType'];
+  /** The engine's standing price per unit (selected for the buyer's group and channel). */
+  unitListPrice: Money;
+  /** The engine's total for the line for the order placed now (after first-order promotions). */
+  total: Money;
+  includedAtNoCharge: boolean;
+}
+
+export interface PreviewResult {
+  dueToday: Money;
+  thenMonthly: Money;
+  summary: CartSummary;
+  lines: PreviewLine[];
+  promotions: AppliedPromotion[];
+  issues: PreviewIssue[];
+  /** Offers removed from the preview because the plan's extra replaces them (professional installation replaces the kit). */
+  replaced: string[];
 }

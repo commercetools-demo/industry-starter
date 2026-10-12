@@ -58,13 +58,13 @@
 ## 8. Frontend
 
 - [x] 8.1 Header, drawer and footer "Plan finder" item from static config with active state; en-US and de-DE labels; update the existing nav tests [SKILL: commercetools-storefront]
-- [ ] 8.2 Buyer context bar and ZIP form (wire `useCart().setPostalCode` and `/api/serviceability`), derived/read-only states for signed-in buyers
-- [ ] 8.3 Finder route: family control, list, default selection, `?plan=` restore, context-change reselect, empty state
-- [ ] 8.4 Three-section detail with per-section empty text, loading and failure states, disabled-with-reason rows
-- [ ] 8.5 Draft add and remove, one equipment per kind, clear on plan change, live price strip from the preview, and the one-button Continue with partial-failure handling and no duplicates
-- [ ] 8.6 Bundle: back-to-finder link with plan preselected and shared context
-- [ ] 8.7 Messages in en-US and de-DE for all new strings; keep the parity test green
-- [ ] 8.8 Accessibility pass on the finder (focus order, live regions for loading and refusal messages, labels on all controls)
+- [x] 8.2 Buyer context bar and ZIP form (wire `useCart().setPostalCode` and `/api/serviceability`), derived/read-only states for signed-in buyers
+- [x] 8.3 Finder route: family control, list, default selection, `?plan=` restore, context-change reselect, empty state
+- [x] 8.4 Three-section detail with per-section empty text, loading and failure states, disabled-with-reason rows
+- [x] 8.5 (note: a conflicting extra is not blocked at add time; the preview's `issues` name it with the reason on its row and Continue's server guard decides) Draft add and remove, one equipment per kind, clear on plan change, live price strip from the preview, and the one-button Continue with partial-failure handling and no duplicates
+- [x] 8.6 Bundle: back-to-finder link with plan preselected and shared context
+- [x] 8.7 Messages in en-US and de-DE for all new strings; keep the parity test green
+- [x] 8.8 Accessibility pass on the finder (focus order, live regions for loading and refusal messages, labels on all controls)
 
 ## 9. Verification and docs
 

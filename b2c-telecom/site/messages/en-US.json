@@ -294,7 +294,13 @@
       "empty": "No add-ons yet.",
       "browse": "Browse add-ons"
     },
-    "home": "Home"
+    "home": "Home",
+    "finder": {
+      "back": "Change plan or extras",
+      "backAria": "Back to the plan finder",
+      "refusedTitle": "We could not add {name} to your plan",
+      "replaced": "{added} replaced {removed}."
+    }
   },
   "checkout": {
     "title": "Checkout",
@@ -1399,6 +1405,92 @@
         "Refunded": "Refunded",
         "NotRefunded": "Not refunded"
       }
+    }
+  },
+  "finder": {
+    "title": "Plan finder",
+    "home": "Home",
+    "intro": "Choose a plan, add what goes with it and see your price before you continue.",
+    "loading": "Loading plans…",
+    "family": {
+      "label": "Plan type",
+      "phone": "Phone plans",
+      "home-wireless": "Wireless internet",
+      "cable": "Cable internet"
+    },
+    "plans": {
+      "label": "Plans"
+    },
+    "empty": {
+      "plans": "No plans are available for the current selection.",
+      "notServed": "We don't serve {postalCode} yet, so no plans are available there."
+    },
+    "error": {
+      "offers": "We couldn't load the plans.",
+      "detail": "We couldn't load this plan's details.",
+      "retry": "Try again"
+    },
+    "context": {
+      "title": "Your details",
+      "fromAccount": "From your account",
+      "declareFailed": "We couldn't save that choice. Try again.",
+      "customerType": {
+        "label": "Customer type",
+        "consumer": "Consumer",
+        "small-business": "Small business",
+        "employee": "Employee"
+      },
+      "existing": {
+        "label": "Existing customer",
+        "unspecified": "Not specified",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "zip": {
+        "label": "ZIP code",
+        "apply": "Apply",
+        "clear": "Clear",
+        "none": "Enter your ZIP code to see what is available at your address.",
+        "state": "State: {state}"
+      },
+      "zipFailed": "We couldn't check that ZIP code. Try again.",
+      "notServed": "We don't serve {postalCode} yet."
+    },
+    "detail": {
+      "loading": "Loading details…",
+      "refused": "This item can't be added to this plan.",
+      "cleared": "Your extras were cleared because they were chosen for another plan.",
+      "kind": {
+        "addon": "Add-on",
+        "equipment": "Equipment"
+      },
+      "included": {
+        "title": "Included",
+        "empty": "Nothing extra is included with this plan."
+      },
+      "addons": {
+        "title": "Compatible add-ons",
+        "empty": "No compatible add-ons are available for this plan."
+      },
+      "equipment": {
+        "title": "Compatible equipment",
+        "empty": "No compatible equipment is available for this plan."
+      },
+      "add": "Add to plan",
+      "remove": "Added ✓ Remove",
+      "unavailable": "Unavailable",
+      "addTo": "Add {name} to your plan",
+      "removeFrom": "Remove {name} from your plan",
+      "unavailableFor": "{name} is unavailable for this plan"
+    },
+    "strip": {
+      "title": "Your price",
+      "loading": "Calculating your price…",
+      "unavailable": "Price unavailable"
+    },
+    "continue": {
+      "withPlan": "Continue with {name}",
+      "extras": "{count, plural, =0 {No extras added} one {# extra added} other {# extras added}}"
     }
   }
 }

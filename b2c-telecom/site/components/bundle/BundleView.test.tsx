@@ -137,4 +137,18 @@ describe('BundleView', () => {
     const call = fetchMock.mock.calls.find(([url]) => url === '/api/cart/line-items');
     expect(call?.[1]).toMatchObject({ method: 'POST', body: JSON.stringify({ offerKey: 'malva-offer-phone-essential', sku: 'MLV-PHN-ESS-M2M', quantity: 1 }) });
   });
+
+  it('plan finder hand-off: a refused extra is named with its reason once, a replacement is announced, and the finder link preselects the plan', async () => {
+    const cart = makeCart({ lines: [planLine(), feeLine()] });
+    stubServer(cart);
+    const { writeHandoff } = await import('@/lib/finder/handoff');
+    writeHandoff({
+      refused: [{ offerKey: 'malva-offer-netflix', name: 'Netflix', reasons: [] }],
+      notices: [{ code: 'REPLACED', addedName: 'Professional installation', removedNames: ['DIY kit'] }],
+    });
+    renderWithProviders(<BundleView initialCart={cart} signedIn links={[...links]} />);
+    expect(await screen.findByText('We could not add Netflix to your plan')).toBeInTheDocument();
+    expect(screen.getByText('Professional installation replaced DIY kit.')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Back to the plan finder' }).getAttribute('href')).toMatch(/\/plan-finder\?plan=/);
+  });
 });

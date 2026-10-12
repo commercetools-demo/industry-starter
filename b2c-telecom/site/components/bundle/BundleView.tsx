@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type ReactElement } from 'react';
+import { useState, useSyncExternalStore, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
 import { SWRConfig } from 'swr';
 import { AcquisitionLine } from '@/components/devices/AcquisitionLine';
@@ -9,6 +9,7 @@ import { useToast } from '@/components/ui/Toast';
 import { CartError, useCart, useCartMutations } from '@/hooks/useCart';
 import { Link } from '@/i18n/routing';
 import { KEY_CART } from '@/lib/cache-keys';
+import { takeHandoff } from '@/lib/finder/handoff';
 import type { BlockedAdd, Cart } from '@/lib/types';
 import { AddonRow } from './AddonRow';
 import { DiscountCodeForm } from './DiscountCodeForm';
@@ -16,6 +17,7 @@ import { DiscountPrompts } from './DiscountPrompts';
 import { EmptyBundle, type EmptyBundleLink } from './EmptyBundle';
 import { IssuesBanner } from './IssuesBanner';
 import { BlockedAddNotice } from './BlockedAddNotice';
+import { useReasonText } from './useReasonText';
 import { OrderSummary } from './OrderSummary';
 import { PlanCard } from './PlanCard';
 import { Promotions } from './Promotions';
@@ -29,6 +31,8 @@ type BundleViewProps = {
   links: EmptyBundleLink[];
 };
 
+const subscribeNothing = (): (() => void) => () => undefined;
+
 const ADDON_KINDS = new Set(['addon', 'equipment', 'device']);
 
 function BundleContent({ signedIn, links }: Omit<BundleViewProps, 'initialCart'>): ReactElement {
@@ -39,6 +43,9 @@ function BundleContent({ signedIn, links }: Omit<BundleViewProps, 'initialCart'>
   const mutations = useCartMutations();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<{ blocked: BlockedAdd; name: string } | null>(null);
+  // What the plan finder's Continue left for this page: lines the server refused (named with their reasons) and replacements.
+  const handoff = useSyncExternalStore(subscribeNothing, takeHandoff, () => null);
+  const reasonText = useReasonText();
 
   async function run(action: () => Promise<unknown>, name = ''): Promise<void> {
     setBusy(true);
@@ -68,7 +75,29 @@ function BundleContent({ signedIn, links }: Omit<BundleViewProps, 'initialCart'>
       <div className="flex min-w-0 flex-col gap-6">
         <OrderedBannerSlot />
         <IssuesBanner issues={cart.issues} lines={lines} busy={busy} onRemove={(lineId) => void removeLine(lineId, true)} />
+        {handoff?.notices.map((entry) => (
+          <p key={`${entry.addedName}-${entry.removedNames.join(',')}`} role="status" className="m-0 rounded-lg bg-brand-100 p-4 text-sm">
+            {t('finder.replaced', { added: entry.addedName, removed: entry.removedNames.join(', ') })}
+          </p>
+        ))}
+        {handoff?.refused.map((entry) => (
+          <div key={entry.offerKey} role="alert" className="flex flex-col gap-2 rounded-lg border border-danger bg-surface p-5">
+            <p className="m-0 font-display text-md font-semibold">{t('finder.refusedTitle', { name: entry.name })}</p>
+            <ul className="m-0 flex list-none flex-col gap-1 p-0">
+              {(entry.reasons.length > 0 ? entry.reasons : [null]).map((reason, index) => (
+                <li key={reason ? `${reason.code}-${index}` : 'generic'} className="text-sm">
+                  {reason ? reasonText(reason) : t('blocked.generic')}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
         {notice ? <BlockedAddNotice blocked={notice.blocked} name={notice.name} onDismiss={() => setNotice(null)} /> : null}
+        {plans.length > 0 ? (
+          <Link href={{ pathname: '/plan-finder', query: { plan: plans[0]?.offerKey } }} aria-label={t('finder.backAria')} className="w-fit text-md text-text underline underline-offset-4">
+            {t('finder.back')}
+          </Link>
+        ) : null}
         {plans.length > 0 ? <h2 className="m-0 font-display text-3xl font-bold tracking-ui">{t('section.plans')}</h2> : null}
         {plans.map((plan) => (
           <PlanCard
