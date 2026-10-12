@@ -10,7 +10,7 @@
 - [ ] 2.2 Seed validation: fail on any cart discount whose `recurringOrderScope` is not `NonRecurringOrdersOnly`; catalog lint warning for Merchant Center discounts that are not [SKILL: commercetools-commerce-patterns]
 - [x] 2.3 Re-rank the remaining discounts descending in intended order, create the single order table and add the engine-order test [SKILL: commercetools-commerce-patterns]
 - [ ] 2.4 Add the `call-center` channel and customer group, customer-group prices on the bundle offer (`small-business`, `existing-customer`) and a call-center price on one phone plan variant; update price seeding and its tests [SKILL: commercetools-commerce-patterns]
-- [ ] 2.5 Add `requires-offers`, `negates-offers` and `eligible-regions` to the offer type and draft types; update `telecom-catalog-model` notes [SKILL: commercetools-commerce-patterns]
+- [x] 2.5 Add `requires-offers`, `negates-offers` and `eligible-regions` to the offer type and draft types; update `telecom-catalog-model` notes [SKILL: commercetools-commerce-patterns]
 - [ ] 2.6 Seed: a bundle offer, DIY and professional installation with `negates-offers`, a required-offer pair, a state-limited add-on, and `required-addon-kinds` where the lint expects it
 - [ ] 2.7 Write the confirm-flagged cleanup script that removes the retired discounts from a live project; do not run it without the owner's go-ahead [SKILL: commercetools-platform]
 - [ ] 2.8 Update `seed-catalog-data` plan notes, `design/` label text and the seed counts in tests
@@ -22,9 +22,9 @@
 
 ## 4. Rules and cart behaviour
 
-- [ ] 4.1 Add required-offer evaluation to `lib/offers`, wire into `guardAdd`, `revalidateLines` and the blocked-add response, including held services [SKILL: commercetools-storefront]
-- [ ] 4.2 Enforce `required-addon-kinds` at revalidation and in `canCheckout` with the `IssuesBanner` message and link; make lint and checkout share one rule [SKILL: commercetools-storefront]
-- [ ] 4.3 Add negated-offer replacement to the add request (single cart update, notice returned), symmetric choice for the reverse add, report-only on read [SKILL: commercetools-storefront]
+- [x] 4.1 Add required-offer evaluation to `lib/offers`, wire into `guardAdd`, `revalidateLines` and the blocked-add response, including held services [SKILL: commercetools-storefront]
+- [x] 4.2 Enforce `required-addon-kinds` at revalidation and in `canCheckout` with the `IssuesBanner` message and link; make lint and checkout share one rule [SKILL: commercetools-storefront]
+- [x] 4.3 Add negated-offer replacement to the add request (single cart update, notice returned), symmetric choice for the reverse add, report-only on read [SKILL: commercetools-storefront]
 - [ ] 4.4 Create included offers as zero-price child lines in `addOfferLine`, remove with the parent, forbid single removal [SKILL: commercetools-storefront]
 - [ ] 4.5 Add `eligible-regions` to the eligibility resolution (state and ZIP only), the "enter your ZIP" state and cart re-validation on location change [SKILL: commercetools-storefront]
 - [ ] 4.6 Remove any cart-side matching of all service-address values against an offer's list

@@ -89,7 +89,7 @@ export function priceErrors(offers: ProductDraft[]): string[] {
   return errors;
 }
 
-const RELATION_ATTRIBUTES = ['anchors', 'included-offers', 'compatible-addons', 'compatible-equipment', 'conflicts-with', 'included-addons', 'incompatible-with'];
+const RELATION_ATTRIBUTES = ['anchors', 'included-offers', 'compatible-addons', 'compatible-equipment', 'conflicts-with', 'included-addons', 'incompatible-with', 'requires-offers', 'negates-offers'];
 
 /** Every key named by a relation attribute exists as a product. */
 export function referenceErrors(products: ProductDraft[]): string[] {

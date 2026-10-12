@@ -57,7 +57,7 @@ export interface PlanFacts {
 }
 export interface AddonFacts {
   kind: 'addon';
-  addonKind: 'streaming' | 'security' | 'protection';
+  addonKind: 'streaming' | 'security' | 'protection' | 'installation';
   provider?: string;
   appliesToFamilies: PlanFamily[];
   /** Empty = any. */
@@ -128,6 +128,12 @@ export interface Offer {
   compatibleEquipment: string[];
   /** RAW: offer.conflicts-with union plan.conflicts-with. */
   conflictsWith: string[];
+  /** RAW offer keys that must be in the cart (or held) before this offer can be added. */
+  requiresOffers: string[];
+  /** RAW offer keys this offer replaces when it is added (professional installation negates DIY). */
+  negatesOffers: string[];
+  /** US state codes or ZIP prefixes where the offer is sold; empty = everywhere. */
+  eligibleRegions: string[];
   /** Empty = everyone. */
   audience: AudienceKey[];
   existingCustomer: ExistingCustomerRule;
@@ -209,6 +215,9 @@ export type ReasonCode =
   | 'PARENT_REQUIRED'
   | 'AMBIGUOUS_PARENT'
   | 'ALREADY_ATTACHED'
+  | 'REQUIRED_OFFER_MISSING'
+  | 'REQUIRED_ADDON_KIND_MISSING'
+  | 'NEGATED_OFFER_CONFLICT'
   // used by workstream K (declared here once so nobody edits the union twice):
   | 'HELD_SERVICE_CONFLICT'
   | 'NOT_ELIGIBLE_AUDIENCE'
@@ -501,12 +510,20 @@ export interface Cart {
   /** Cart custom field (K serviceability). */
   postalCode: string | null;
 }
+/** Told to the buyer after an add changed something they did not ask for by name. */
+export interface CartNotice {
+  code: 'REPLACED';
+  addedName: string;
+  removedNames: string[];
+}
 export interface BlockedAdd {
-  kind: 'incompatible' | 'conflict' | 'ineligible' | 'unavailable' | 'invalid' | 'limit';
+  kind: 'incompatible' | 'conflict' | 'ineligible' | 'unavailable' | 'invalid' | 'limit' | 'requires';
   offerKey: string;
   reasons: BundleIssueReason[];
   /** Only for kind 'conflict' and for ONE_PLAN_PER_CATEGORY. */
   replace?: { removeLineId: string; removeOfferKey: string; removeOfferName: string };
+  /** Only for kind 'requires': the offers to add first (the buyer can add them together with the candidate). */
+  requires?: { offerKey: string; offerName: string }[];
 }
 export interface DiscountPrompt {
   pairingKey: string;

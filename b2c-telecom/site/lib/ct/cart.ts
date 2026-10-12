@@ -160,6 +160,8 @@ export interface AddOfferLineArgs {
   parentLineId?: string;
   /** Plans: the equipment the plan requires (J `defaultEquipment` selections resolved to offers), added after the plan (D-025). */
   equipment?: { offer: Offer; variant: OfferVariant }[];
+  /** Lines (and their dependents) the offer replaces: removed in the same cart update as the add (negated offers). */
+  removeLineIds?: string[];
 }
 
 const isPlan = (offer: Offer): boolean => offer.kind === 'base-package' || offer.kind === 'bundle';
@@ -215,7 +217,8 @@ export async function addOfferLine(cartId: string, args: AddOfferLineArgs): Prom
     const lineQuantity = parent ? dependentQuantity(parent.quantity) : quantity;
     const known = new Set(fresh.lineItems.map((line) => line.id));
     const fee = isPlan(offer) ? activationFeeOf(offer, variant) : null;
-    const actions: CartUpdateAction[] = [addLineItemAction({ offer, variant, quantity: lineQuantity, parentLineId })];
+    const removals: CartUpdateAction[] = (args.removeLineIds ?? []).filter((id) => fresh.lineItems.some((line) => line.id === id)).map((id) => ({ action: 'removeLineItem', lineItemId: id }));
+    const actions: CartUpdateAction[] = [...removals, addLineItemAction({ offer, variant, quantity: lineQuantity, parentLineId })];
     const feeExists = fresh.customLineItems.some((item) => item.slug === feeSlug(offer.key));
     if (fee && !feeExists) actions.push(addFeeAction(offer.key, lineQuantity, fee));
 

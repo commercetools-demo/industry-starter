@@ -45,8 +45,16 @@ describe('lintCatalog', () => {
     expect(warnings).toEqual(['malva-offer-cable-500: conflict with malva-offer-cable-100 is declared on this side only']);
   });
 
-  it('warns that required-addon-kinds installation is ignored', () => {
+  it('errors when a plan requires a kind no offer in the catalog can satisfy, and accepts it when one can', () => {
     const installing = { ...fx.cable500, facts: { ...(fx.cable500.facts as object), requiredAddonKinds: ['installation'] } } as typeof fx.cable500;
-    expect(messages([installing], 'warning')).toEqual([expect.stringContaining('installation')]);
+    const kindErrors = (offers: Parameters<typeof lintCatalog>[0]) => messages(offers, 'error').filter((message) => message.includes('required-addon-kinds'));
+    expect(kindErrors([installing])).toEqual([expect.stringContaining('"installation"')]);
+    const installer = { ...fx.secure, facts: { ...(fx.secure.facts as object), addonKind: 'installation' } } as typeof fx.secure;
+    expect(kindErrors([installing, installer])).toEqual([]);
+  });
+
+  it('flags requires-offers and negates-offers that point at no offer', () => {
+    const broken = { ...fx.cable500, requiresOffers: ['malva-offer-ghost'], negatesOffers: ['malva-offer-ghost2'] };
+    expect(messages([broken], 'error').filter((message) => /requires-offers|negates-offers/.test(message))).toHaveLength(2);
   });
 });

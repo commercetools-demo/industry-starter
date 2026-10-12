@@ -14,7 +14,7 @@ export interface ValidateOptions {
 }
 
 const LOCALES = ['en-US', 'de-DE'] as const;
-const SET_ATTRIBUTES = ['included-offers', 'conflicts-with', 'compatible-addons', 'compatible-equipment'] as const;
+const SET_ATTRIBUTES = ['included-offers', 'conflicts-with', 'compatible-addons', 'compatible-equipment', 'requires-offers', 'negates-offers'] as const;
 const RECURRING_CHARGES = ['monthly', 'monthly-rental'];
 const MARKETS: { currency: string; country: string }[] = [
   { currency: 'USD', country: 'US' },

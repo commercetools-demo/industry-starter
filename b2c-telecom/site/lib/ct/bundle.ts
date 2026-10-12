@@ -6,10 +6,11 @@ import { precheckPlan } from '@/lib/cart/precheck';
 import { checkQuantity } from '@/lib/cart/quantity';
 import { codeStateInfo, mapCart } from '@/lib/mappers/cart';
 import { removalPlan } from '@/lib/offers/addons';
+import { negatedLines } from '@/lib/offers/dependencies';
 import { toDateOnly } from '@/lib/pricing/dates';
 import { getPrompts } from '@/lib/ct/prompts';
 import type { SessionData } from '@/lib/session-types';
-import type { BlockedAdd, Cart, DiscountCodeReason, DiscountPrompt, Market, Offer, OfferVariant, ServiceLocation } from '@/lib/types';
+import type { BlockedAdd, Cart, CartNotice, DiscountCodeReason, DiscountPrompt, Market, Offer, OfferVariant, ServiceLocation } from '@/lib/types';
 import { getAvailableQuantities } from './availability';
 import { getBuyerContext } from './buyer-context';
 import {
@@ -40,6 +41,8 @@ export interface BundleOutcome {
   cart: Cart | null;
   /** The id the session cookie must hold afterwards (undefined = clear it). */
   cartId: string | undefined;
+  /** What the add did besides adding (an offer replaced by one that negates it). */
+  notices?: CartNotice[];
   /** Set when a cart was created for an anonymous visitor: the session must remember it. */
   anonymousId?: string;
   /** Set by the address route: the route also remembers the ZIP in the HttpOnly cookie K reads. */
@@ -133,6 +136,11 @@ export async function addToBundle(session: SessionData, market: Market, input: A
     lines = allLines.filter((line) => !gone.has(line.lineItemId));
   }
 
+  // An offer that negates others replaces them in the same update (the buyer's add is the action); the reverse is a conflict the buyer resolves.
+  const negated = negatedLines(candidate, lines, offersByKey).filter((entry) => entry.declaredBy === 'candidate');
+  const replacedIds = new Set(negated.flatMap((entry) => removalPlan(lines, entry.line.lineItemId).removeIds));
+  if (replacedIds.size > 0) lines = lines.filter((line) => !replacedIds.has(line.lineItemId));
+
   const buyer = await getBuyerContext(market);
   const guard = guardAdd({ candidate, sku: input.sku, quantity: input.quantity, parentLineId: input.parentLineId, lines, offersByKey, buyer });
   if (!guard.allowed) {
@@ -171,9 +179,10 @@ export async function addToBundle(session: SessionData, market: Market, input: A
   try {
     let ct = existing ?? (await createCartForSession(session, market));
     if (removeLineId) ct = await removeLine(ct.id, removeLineId, { cascade: true, locale: market.locale });
-    const updated = await addOfferLine(ct.id, { offer: candidate, variant, quantity: input.quantity, parentLineId: guard.parentLineId, equipment });
+    const updated = await addOfferLine(ct.id, { offer: candidate, variant, quantity: input.quantity, parentLineId: guard.parentLineId, equipment, removeLineIds: [...replacedIds] });
     const mapped = await mapForMarket(updated, market);
-    return { ...outcome(mapped.cart), ...(updated.anonymousId ? { anonymousId: updated.anonymousId } : {}) };
+    const notices: CartNotice[] = negated.length > 0 ? [{ code: 'REPLACED', addedName: candidate.name, removedNames: negated.map((entry) => entry.offer.name) }] : [];
+    return { ...outcome(mapped.cart), ...(notices.length > 0 ? { notices } : {}), ...(updated.anonymousId ? { anonymousId: updated.anonymousId } : {}) };
   } catch (error) {
     const mapped = refusalFromApiError(error);
     if (mapped) return refuse(session, market, mapped);

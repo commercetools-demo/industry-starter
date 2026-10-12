@@ -1,5 +1,6 @@
 import type { BuyerContext, CartIssue, CartIssueResolution, CartLineRef, Offer } from '@/lib/types';
 import { revalidateCartCompat } from './compat';
+import { revalidateNegations, revalidateRequiredAddonKinds, revalidateRequiredOffers } from './dependencies';
 import { revalidateCartEligibility } from './eligibility';
 import { revalidateExclusivity } from './exclusivity';
 
@@ -13,7 +14,11 @@ const PRECEDENCE: Record<CartIssueResolution, number> = { remove: 3, replace: 2,
  */
 export function revalidateCart(args: { lines: CartLineRef[]; offersByKey: Record<string, Offer>; buyer: BuyerContext }): CartIssue[] {
   const { lines, offersByKey, buyer } = args;
-  const all = [...revalidateCartCompat(lines, offersByKey), ...revalidateExclusivity(lines, buyer.held, offersByKey), ...revalidateCartEligibility(lines, offersByKey, buyer)];
+  const all = [...revalidateCartCompat(lines, offersByKey), ...revalidateExclusivity(lines, buyer.held, offersByKey), ...revalidateCartEligibility(lines, offersByKey, buyer),
+    ...revalidateRequiredOffers(lines, buyer, offersByKey),
+    ...revalidateRequiredAddonKinds(lines, offersByKey),
+    ...revalidateNegations(lines, offersByKey),
+  ];
   const merged = new Map<string, CartIssue>();
   for (const issue of all) {
     const existing = merged.get(issue.lineItemId);

@@ -125,3 +125,28 @@ describe('revalidateLines', () => {
     expect(orphan[0]).toMatchObject({ lineId: 'L4', reasons: [{ code: 'PARENT_REQUIRED' }] });
   });
 });
+
+describe('guardAdd: offer dependencies', () => {
+  const needsRouter: Offer = { ...appletv, requiresOffers: [routerAx3000.key] };
+  const withDeps = { ...offersByKey, [needsRouter.key]: needsRouter };
+
+  it('refuses an offer whose required offer is missing, names it and lists what to add', () => {
+    const result = guardAdd(input(needsRouter, 'MLV-ADD-APPLETV-MTH', [cableLine], { offersByKey: withDeps }));
+    expect(result).toMatchObject({ allowed: false, blocked: { kind: 'requires', requires: [{ offerKey: routerAx3000.key }], reasons: [{ code: 'REQUIRED_OFFER_MISSING' }] } });
+  });
+
+  it('accepts when the required offer is in the cart, or held', () => {
+    const router = line('L9', routerAx3000, 'MLV-EQP-AX3000-RENT', { parentLineItemId: 'L1' });
+    expect(guardAdd(input(needsRouter, 'MLV-ADD-APPLETV-MTH', [cableLine, router], { offersByKey: withDeps }))).toMatchObject({ allowed: true });
+    const held = [{ offerKey: routerAx3000.key, offerName: routerAx3000.name, source: 'order' as const, reference: 'ORD-1' }];
+    expect(guardAdd(input(needsRouter, 'MLV-ADD-APPLETV-MTH', [cableLine], { offersByKey: withDeps, buyer: buyer({ held }) }))).toMatchObject({ allowed: true });
+  });
+
+  it('the reverse of a negation is a conflict the buyer resolves by replacing', () => {
+    const negating: Offer = { ...spotify, key: 'malva-offer-negating', negatesOffers: [appletv.key] };
+    const offers = { ...offersByKey, [negating.key]: negating };
+    const negatingLine = line('L7', negating, 'MLV-ADD-SPOTIFY-MTH', { parentLineItemId: 'L1' });
+    const result = guardAdd(input(appletv, 'MLV-ADD-APPLETV-MTH', [cableLine, negatingLine], { offersByKey: offers }));
+    expect(result).toMatchObject({ allowed: false, blocked: { kind: 'conflict', replace: { removeLineId: 'L7' }, reasons: [{ code: 'NEGATED_OFFER_CONFLICT' }] } });
+  });
+});

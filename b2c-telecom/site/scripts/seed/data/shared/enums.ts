@@ -22,7 +22,7 @@ export const CONTRACT_TERM: LEnumValue[] = [
 export const CHARGE_TYPE: LEnumValue[] = [l('monthly', 'Monthly', 'Monatlich'), l('monthly-rental', 'Monthly rental', 'Monatliche Miete'), l('one-time', 'One-time', 'Einmalig')];
 export const NETWORK_GENERATION: LEnumValue[] = [l('4g', 'LTE', 'LTE'), l('5g', '5G', '5G')];
 export const BADGE: LEnumValue[] = [l('most-popular', 'Most popular', 'Am beliebtesten')];
-export const ADDON_KIND: LEnumValue[] = [l('streaming', 'Streaming', 'Streaming'), l('security', 'Security', 'Sicherheit'), l('protection', 'Protection', 'Schutz')];
+export const ADDON_KIND: LEnumValue[] = [l('streaming', 'Streaming', 'Streaming'), l('security', 'Security', 'Sicherheit'), l('protection', 'Protection', 'Schutz'), l('installation', 'Installation', 'Installation')];
 export const ADDON_TAG: LEnumValue[] = [l('music', 'Music', 'Musik'), l('video', 'Video', 'Video'), l('extras', 'Extras', 'Extras')];
 export const COLOR: LEnumValue[] = [l('black', 'Black', 'Schwarz'), l('silver', 'Silver', 'Silber'), l('violet', 'Violet', 'Violett')];
 

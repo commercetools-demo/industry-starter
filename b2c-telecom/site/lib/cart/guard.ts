@@ -6,7 +6,9 @@
 // J's evaluateAddition (verdict with parentLineItemId, candidateParents, replaces, requiredEquipment) and K's evaluateEligibility,
 // exclusivityVerdict, dedupeVerdict and revalidateCart.
 import { evaluateAddition, mergeVerdicts } from '@/lib/offers/compat';
+import { requiredOfferReasons, negatedLines } from '@/lib/offers/dependencies';
 import { evaluateEligibility } from '@/lib/offers/eligibility';
+import { makeReason } from '@/lib/offers/rules';
 import { dedupeVerdict, exclusivityVerdict } from '@/lib/offers/exclusivity';
 import { revalidateCart as revalidateRules } from '@/lib/offers/revalidate';
 import type { BlockedAdd, BuyerContext, BundleIssue, BundleIssueReason, CartLineRef, CompatVerdict, EquipmentSelection, Offer, Reason } from '@/lib/types';
@@ -100,6 +102,20 @@ export function guardAdd(input: GuardInput): GuardResult {
 
   const eligibility = evaluateEligibility(candidate, buyer);
   if (!eligibility.eligible) return blocked('ineligible', candidate, eligibility.reasons.map(toReason));
+
+  const required = requiredOfferReasons(candidate, lines, buyer.held, offersByKey);
+  if (required.reasons.length > 0) {
+    const requires = required.missing.flatMap((entry) => (entry.offer ? [{ offerKey: entry.offer.key, offerName: entry.offer.name }] : []));
+    return { allowed: false, blocked: { kind: 'requires', offerKey: candidate.key, reasons: required.reasons.map(toReason), ...(requires.length > 0 ? { requires } : {}) } };
+  }
+
+  // The reverse of a negation: the cart holds an offer that negates the candidate. The buyer chooses to replace it or keep it.
+  const negating = negatedLines(candidate, lines, offersByKey).filter((entry) => entry.declaredBy === 'other');
+  if (negating.length > 0) {
+    const first = negating[0]!;
+    const reasons = negating.map((entry) => toReason(makeReason('NEGATED_OFFER_CONFLICT', { candidateName: candidate.name, otherName: entry.offer.name }, [candidate.key, entry.offer.key])));
+    return blocked('conflict', candidate, reasons, { removeLineId: first.line.lineItemId, removeOfferKey: first.offer.key, removeOfferName: first.offer.name });
+  }
 
   let verdict = evaluateAddition({ candidate, cart: lines, requestedParentLineItemId: input.parentLineId, offersByKey });
   if (isPlan(candidate)) verdict = dedupeVerdict(mergeVerdicts(verdict, exclusivityVerdict(candidate, lines, buyer.held, offersByKey)));

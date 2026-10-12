@@ -16,7 +16,10 @@ export function lintCatalog(offers: Offer[]): LintFinding[] {
     const facts = offer.facts;
     if (facts?.kind === 'plan') {
       if (facts.family === 'internet' && facts.downstreamMbps === undefined) add('error', offer, 'internet plan without downstream-mbps');
-      if (facts.requiredAddonKinds.includes('installation')) add('warning', offer, 'required-addon-kinds contains "installation": no such add-on type exists, it is ignored');
+      for (const kind of facts.requiredAddonKinds) {
+        const satisfiable = kind === 'equipment' ? offers.some((other) => other.kind === 'equipment') : offers.some((other) => other.facts?.kind === 'addon' && other.facts.addonKind === kind);
+        if (!satisfiable) add('error', offer, `required-addon-kinds contains "${kind}": no offer in the catalog can satisfy it, so the plan could never be checked out`);
+      }
     }
     if (facts?.kind === 'equipment') {
       if (facts.maxDownstreamMbps === undefined) add('error', offer, 'equipment without max-downstream-mbps');
@@ -29,6 +32,8 @@ export function lintCatalog(offers: Offer[]): LintFinding[] {
       ['conflicts-with', offer.conflictsWith],
       ['compatible-addons', offer.compatibleAddons],
       ['compatible-equipment', offer.compatibleEquipment],
+      ['requires-offers', offer.requiresOffers],
+      ['negates-offers', offer.negatesOffers],
       ['incompatible-with', facts?.kind === 'equipment' ? facts.incompatibleWith : []],
     ];
     for (const [attribute, refs] of references) {

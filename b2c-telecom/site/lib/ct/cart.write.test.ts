@@ -46,6 +46,17 @@ beforeEach(() => {
 });
 
 describe('addOfferLine', () => {
+  it('lines the offer replaces are removed in the same update as the add', async () => {
+    await addOfferLine('cart-1', { offer: cable500, variant: variantOf(cable500, 'MLV-CBL-500-24M'), quantity: 1 });
+    const planId = h().cart.lineItems[0]?.id as string;
+    await addOfferLine('cart-1', { offer: appletv, variant: variantOf(appletv, 'MLV-ADD-APPLETV-MTH'), quantity: 1, parentLineId: planId });
+    const oldId = h().cart.lineItems[1]?.id as string;
+    const before = h().updates.length;
+    await addOfferLine('cart-1', { offer: routerAx3000, variant: variantOf(routerAx3000, 'MLV-EQP-AX3000-RENT'), quantity: 1, parentLineId: planId, removeLineIds: [oldId] });
+    expect(actionsOf(before)).toMatchObject([{ action: 'removeLineItem', lineItemId: oldId }, { action: 'addLineItem', sku: 'MLV-EQP-AX3000-RENT' }]);
+    expect(h().cart.lineItems.map((line) => line.id)).not.toContain(oldId);
+  });
+
   it('a 24-month plan is Fixed and a month-to-month plan Dynamic, both on policy malva-monthly', async () => {
     await addOfferLine('cart-1', { offer: cable500, variant: variantOf(cable500, 'MLV-CBL-500-24M'), quantity: 1 });
     expect(actionsOf(0)[0]).toMatchObject({

@@ -38,7 +38,7 @@ const OFFER_KINDS: readonly OfferKind[] = ['base-package', 'addon', 'equipment',
 const AUDIENCES: readonly AudienceKey[] = ['consumer', 'small-business', 'employee'];
 const EXISTING: readonly ExistingCustomerRule[] = ['any', 'existing', 'new'];
 const EQUIPMENT_KINDS: readonly EquipmentKind[] = ['router', 'modem', 'extender', 'gateway'];
-const ADDON_KINDS: readonly AddonFacts['addonKind'][] = ['streaming', 'security', 'protection'];
+const ADDON_KINDS: readonly AddonFacts['addonKind'][] = ['streaming', 'security', 'protection', 'installation'];
 const TERMS: Record<TermKey, TermMonths> = { 'month-to-month': 0, '12-months': 12, '24-months': 24 };
 
 const oneOf = <T extends string>(allowed: readonly T[], value: string | undefined): T | undefined => allowed.find((candidate) => candidate === value);
@@ -220,6 +220,9 @@ export function mapOffer(projection: ProductProjection, ctx: OfferContext, local
     compatibleAddons: attrStringSet(attrs, 'compatible-addons'),
     compatibleEquipment: attrStringSet(attrs, 'compatible-equipment'),
     conflictsWith: attrStringSet(attrs, 'conflicts-with'),
+    requiresOffers: attrStringSet(attrs, 'requires-offers'),
+    negatesOffers: attrStringSet(attrs, 'negates-offers'),
+    eligibleRegions: attrStringSet(attrs, 'eligible-regions'),
     audience: keepAllowed(AUDIENCES, attrEnumKeys(attrs, 'audience')),
     existingCustomer: oneOf(EXISTING, attrEnumKey(attrs, 'existing-customer')) ?? 'any',
     channels: attrStringSet(attrs, 'channels'),
