@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
+import { ProductImage } from '@/components/ui/ProductImage';
 import { FOCUS_RING } from '@/components/ui/focus';
 import { Link } from '@/i18n/routing';
 import { ADDONS_CATEGORY_KEY } from '@/lib/config/listing';
@@ -32,14 +33,12 @@ export function PopularAddons({ locale, tree, addons }: PopularAddonsProps): Rea
             </Link>
           ) : null}
         </div>
-        <ul className="m-0 grid list-none gap-5 p-0 [grid-template-columns:repeat(auto-fit,minmax(min(100%,12.5rem),1fr))]">
+        <ul className="m-0 grid list-none grid-cols-2 gap-5 p-0 md:grid-cols-4">
           {tiles.map(({ addon, href }) => (
             <li key={addon.key}>
-              <Link href={href} className={`flex items-center gap-5 rounded-lg bg-surface p-5 text-text no-underline hover:shadow-md ${FOCUS_RING}`}>
-                <span aria-hidden="true" className="flex size-12 shrink-0 items-center justify-center rounded-md bg-pink-900 font-display text-xl font-bold text-text-on-pink">
-                  {addon.initial}
-                </span>
-                <span className="flex flex-col">
+              <Link href={href} className={`flex h-full flex-col overflow-hidden rounded-lg bg-surface text-text no-underline hover:shadow-md ${FOCUS_RING}`}>
+                <ProductImage src={addon.offer.image} name={addon.name} sizes="(min-width: 48rem) 16rem, 50vw" />
+                <span className="flex flex-col p-4">
                   <span className="font-display text-md font-semibold">{addon.name}</span>
                   <span className="text-sm text-text-muted">{t('price', { price: formatMoney(addon.price, locale) })}</span>
                 </span>
