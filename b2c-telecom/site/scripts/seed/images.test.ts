@@ -22,7 +22,7 @@ describe('seeded images', () => {
     api.seed('zones', { key: 'europe', name: 'europe', locations: [{ country: 'DE' }] });
     const code = await seed(['--confirm-project', 'spec-test-b2c-telecom', '--no-wait'], { api, source: { CTP_SEED_PROJECT_KEY: 'spec-test-b2c-telecom' }, manifest: buildManifest(), log: () => undefined });
     expect(code).toBe(0);
-    expect(api.list('products')).toHaveLength(52);
+    expect(api.list('products')).toHaveLength(59);
   });
 
   it('a lock entry on a foreign host is rejected before it reaches commercetools', () => {

@@ -20,6 +20,8 @@ export interface InternetPlanSpec {
   labelId: string;
   term: '12-months' | '24-months';
   requiredEquipmentKinds: string[];
+  /** Kinds of add-on the buyer must choose before checkout (installation: self-install kit or a technician). */
+  requiredAddonKinds?: string[];
   includedAddons?: string[];
   bundleDiscountText: Copy;
   highlights: Copy[];
@@ -27,8 +29,8 @@ export interface InternetPlanSpec {
 
 const CABLE_ETF: Copy = { en: '$10 x months remaining', de: '10 € x verbleibende Monate' };
 const BUNDLE_PHONE: Copy = {
-  en: 'Bundle with a phone plan for $5 off monthly.',
-  de: 'In Kombination mit einem Handytarif 5 € monatlich sparen.',
+  en: 'Cable 500 is also sold with a phone plan as a bundle at one monthly price.',
+  de: 'Cable 500 gibt es auch als Paket mit einem Handytarif zu einem Monatspreis.',
 };
 
 export function internetPlanProduct(spec: InternetPlanSpec): ProductDraft {
@@ -59,6 +61,7 @@ export function internetPlanProduct(spec: InternetPlanSpec): ProductDraft {
           'bundle-discount-text': ls(spec.bundleDiscountText.en, spec.bundleDiscountText.de),
           'included-addons': spec.includedAddons,
           'required-equipment-kinds': spec.requiredEquipmentKinds,
+          'required-addon-kinds': spec.requiredAddonKinds,
           highlights: highlightSet(spec.highlights),
         },
       },
@@ -68,7 +71,7 @@ export function internetPlanProduct(spec: InternetPlanSpec): ProductDraft {
 
 const cable = (
   spec: Pick<InternetPlanSpec, 'key' | 'sku' | 'name' | 'description' | 'downstream' | 'upstream' | 'typical' | 'labelId' | 'highlights'> &
-    Partial<Pick<InternetPlanSpec, 'badge' | 'includedAddons'>>,
+    Partial<Pick<InternetPlanSpec, 'badge' | 'includedAddons' | 'requiredAddonKinds'>>,
 ): InternetPlanSpec => ({
   technology: 'cable',
   data: -1,
@@ -94,6 +97,8 @@ export const CABLE_PLANS: InternetPlanSpec[] = [
     upstream: 10,
     typical: { download: 104, upload: 11, latencyMs: 16 },
     labelId: 'MLV-CA-100',
+    // Cable 100 has no included installation: the buyer chooses the self-install kit or a technician (the other cable plans include it)
+    requiredAddonKinds: ['installation'],
     highlights: [
       { en: '100 Mbps download', de: '100 Mbit/s Download' },
       { en: 'Unlimited data', de: 'Unbegrenztes Datenvolumen' },

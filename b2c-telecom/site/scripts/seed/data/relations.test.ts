@@ -16,8 +16,8 @@ describe('relations', () => {
 
   it('every home-internet offer conflicts with every other one and phone offers conflict with nothing', () => {
     const home = OFFER_WIRING.filter((w) => w.family === 'cable' || w.family === 'fixed-wireless');
-    expect(home).toHaveLength(7);
-    for (const offer of home) expect(conflictsOf(offer.key)).toHaveLength(6);
+    expect(home).toHaveLength(8); // the bundle is a home-internet offer too
+    for (const offer of home) expect(conflictsOf(offer.key)).toHaveLength(7);
     for (const offer of OFFER_WIRING.filter((w) => w.family === 'phone' || w.family === 'addon')) expect(conflictsOf(offer.key)).toEqual([]);
   });
 

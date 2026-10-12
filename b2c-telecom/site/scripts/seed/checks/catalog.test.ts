@@ -51,7 +51,7 @@ describe('seed:verify catalog checks', () => {
     expect(unpublished.ok).toBe(false);
     expect(unpublished.detail).toMatch(/unpublished products/);
     api.collections.set('products', api.list('products').slice(1));
-    expect((await catalogCounts.run(api, { projectKey: 'x' })).detail).toMatch(/products: 51 \(expected 52\)/);
+    expect((await catalogCounts.run(api, { projectKey: 'x' })).detail).toMatch(/products: 58 \(expected 59\)/);
   });
 
   it('offer prices fail when a market price is missing or a recurring price lost its policy', async () => {
@@ -89,6 +89,6 @@ describe('seed:verify catalog checks', () => {
     api.indexedKeys = OFFER_KEYS.slice(0, 20);
     const result = await searchFindsOffers.run(api, { projectKey: 'x' });
     expect(result.ok).toBe(false);
-    expect(result.detail).toMatch(/found 20 of 27/);
+    expect(result.detail).toMatch(/found 20 of 31/);
   });
 });

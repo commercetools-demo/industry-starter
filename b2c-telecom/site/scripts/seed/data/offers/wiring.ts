@@ -6,7 +6,7 @@ export interface OfferWiring {
   key: string;
   /** Descriptive product the offer wraps (first anchor). */
   anchor: string;
-  kind: 'base-package' | 'addon' | 'equipment' | 'device';
+  kind: 'base-package' | 'bundle' | 'addon' | 'equipment' | 'device';
   family: OfferFamily;
   /** Category key -> order hint (decimal string). */
   categories: Record<string, string>;
@@ -31,6 +31,14 @@ export const OFFER_WIRING: OfferWiring[] = [
   { key: 'malva-offer-cable-500', anchor: 'malva-cable-500', kind: 'base-package', family: 'cable', categories: { [CABLE]: '0.2' }, included: [MODEM] },
   { key: 'malva-offer-cable-gig', anchor: 'malva-cable-gig', kind: 'base-package', family: 'cable', categories: { [CABLE]: '0.3' }, included: [MODEM, 'malva-offer-appletv'] },
   { key: 'malva-offer-cable-existing-customer', anchor: 'malva-cable-500', kind: 'base-package', family: 'cable', categories: { [CABLE]: '0.4' }, included: [MODEM] },
+  {
+    key: 'malva-offer-bundle-cable-phone',
+    anchor: 'malva-cable-500',
+    kind: 'bundle',
+    family: 'cable',
+    categories: { [CABLE]: '0.5' },
+    included: [MODEM, 'malva-offer-phone-essential'],
+  },
   { key: 'malva-offer-wireless-lite', anchor: 'malva-wireless-lite', kind: 'base-package', family: 'fixed-wireless', categories: { [WIRELESS]: '0.1' }, included: [GATEWAY] },
   { key: 'malva-offer-wireless-5g', anchor: 'malva-wireless-5g', kind: 'base-package', family: 'fixed-wireless', categories: { [WIRELESS]: '0.2' }, included: [GATEWAY] },
   { key: 'malva-offer-wireless-5g-plus', anchor: 'malva-wireless-5g-plus', kind: 'base-package', family: 'fixed-wireless', categories: { [WIRELESS]: '0.3' }, included: [GATEWAY] },
@@ -54,6 +62,9 @@ export const OFFER_WIRING: OfferWiring[] = [
   { key: 'malva-offer-cloud-200', anchor: 'malva-cloud-200', kind: 'addon', family: 'addon', categories: { [PROTECTION]: '0.3', [ADDONS]: '0.6' }, included: [] },
   { key: 'malva-offer-device-protect', anchor: 'malva-device-protect', kind: 'addon', family: 'addon', categories: { [PROTECTION]: '0.2', [ADDONS]: '0.7' }, included: [] },
   { key: 'malva-offer-secure', anchor: 'malva-secure', kind: 'addon', family: 'addon', categories: { [PROTECTION]: '0.1', [ADDONS]: '0.8' }, included: [] },
+  { key: 'malva-offer-regional-sports', anchor: 'malva-regional-sports', kind: 'addon', family: 'addon', categories: { [STREAMING]: '0.6', [ADDONS]: '0.9' }, included: [] },
+  { key: 'malva-offer-diy-install', anchor: 'malva-diy-install', kind: 'addon', family: 'addon', categories: { [ADDONS]: '1.0' }, included: [] },
+  { key: 'malva-offer-pro-install', anchor: 'malva-pro-install', kind: 'addon', family: 'addon', categories: { [ADDONS]: '1.1' }, included: [] },
   { key: 'malva-offer-router-ac1200', anchor: 'malva-router-ac1200', kind: 'equipment', family: 'equipment', categories: { [EQUIPMENT]: '0.1' }, included: [] },
   { key: 'malva-offer-router-ax3000', anchor: 'malva-router-ax3000', kind: 'equipment', family: 'equipment', categories: { [EQUIPMENT]: '0.2' }, included: [] },
   { key: 'malva-offer-mesh-be9300', anchor: 'malva-mesh-be9300', kind: 'equipment', family: 'equipment', categories: { [EQUIPMENT]: '0.3' }, included: [] },

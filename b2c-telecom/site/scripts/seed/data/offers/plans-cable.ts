@@ -1,5 +1,5 @@
 import type { ProductDraft } from '../../types';
-import { monthlyPrices, oneTimePrices, CABLE_ACTIVATION_FEE_CENTS, PLAN_PRICES, TERM_KEY } from '../prices';
+import { BUNDLE_OFFER_KEY, BUNDLE_PRICES, monthlyPrices, oneTimePrices, CABLE_ACTIVATION_FEE_CENTS, PLAN_PRICES, TERM_KEY } from '../prices';
 import { buildOffer, type OfferSpec } from './helpers';
 
 const CABLE_OFFERS = ['malva-offer-cable-100', 'malva-offer-cable-500', 'malva-offer-cable-gig', 'malva-offer-cable-existing-customer'];
@@ -24,3 +24,24 @@ function cableOffer(key: string): ProductDraft {
 }
 
 export const cableOffers: ProductDraft[] = CABLE_OFFERS.map(cableOffer);
+
+/**
+ * The bundle: cable internet plus a phone plan for one monthly price, anchoring both plans' products. The bundled price is the offer's own
+ * price (no cart discount); small-business and existing customers have their own prices, selected by the platform for their group.
+ */
+export const bundleOffer: ProductDraft = buildOffer({
+  key: BUNDLE_OFFER_KEY,
+  name: { en: 'Cable 500 + Essential phone', de: 'Cable 500 + Phone Essential' },
+  extras: { anchors: ['malva-cable-500', 'malva-phone-essential'] },
+  variants: [
+    {
+      sku: BUNDLE_PRICES.sku,
+      values: { 'contract-term': TERM_KEY['24M'], 'charge-type': 'monthly' },
+      prices: [
+        ...monthlyPrices(BUNDLE_PRICES.usd),
+        ...Object.entries(BUNDLE_PRICES.groups).flatMap(([customerGroup, usd]) => monthlyPrices(usd, undefined, { customerGroup })),
+        ...oneTimePrices(CABLE_ACTIVATION_FEE_CENTS),
+      ],
+    },
+  ],
+});

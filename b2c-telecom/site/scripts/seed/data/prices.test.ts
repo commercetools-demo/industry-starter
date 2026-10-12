@@ -72,7 +72,7 @@ describe('prices', () => {
   });
 
   it('the table has the specified add-on, equipment and handset prices', () => {
-    expect(Object.values(ADDON_PRICES).map((p) => p.usd)).toEqual([1000, 1000, 1100, 800, 800, 300, 1200, 500]);
+    expect(Object.values(ADDON_PRICES).map((p) => p.usd)).toEqual([1000, 1000, 1100, 800, 800, 300, 1200, 500, 1500]);
     expect(EQUIPMENT_PRICES['malva-offer-router-ax3000']).toEqual({ rent: { sku: 'MLV-EQP-AX3000-RENT', usd: 800 }, buy: { sku: 'MLV-EQP-AX3000-BUY', usd: 12999 } });
     expect(EQUIPMENT_PRICES['malva-offer-5g-gateway'].buy).toBeUndefined();
     expect(CABLE_ACTIVATION_FEE_CENTS).toBe(2500);

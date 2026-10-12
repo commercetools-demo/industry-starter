@@ -83,7 +83,7 @@ describe('telecom-catalog-model scenarios', () => {
     const first = await run(api, ['--confirm-project', 'spec-test-b2c-telecom', '--no-wait']);
     expect(first.code).toBe(0);
     expect(api.list('product-types')).toHaveLength(6);
-    expect(api.list('products')).toHaveLength(52);
+    expect(api.list('products')).toHaveLength(59);
     expect(api.list('categories')).toHaveLength(8);
     expect(api.list('inventory')).toHaveLength(19);
     expect(api.list('cart-discounts')).toHaveLength(2);

@@ -18,8 +18,8 @@ export interface PhonePlanSpec {
 
 const PHONE_ETF: Copy = { en: 'None', de: 'Keine' };
 const PHONE_BUNDLE: Copy = {
-  en: 'Add a second line for $10 off. Bundle with cable or wireless for $5 off monthly.',
-  de: 'Zweite Leitung für 10 € weniger. In Kombination mit Kabel oder Funk 5 € monatlich sparen.',
+  en: 'Essential is also sold with Cable 500 as a bundle at one monthly price.',
+  de: 'Essential gibt es auch im Paket mit Cable 500 zu einem Monatspreis.',
 };
 
 // One offer, one line: cart quantity 1 to 5 is the number of lines (D-014).

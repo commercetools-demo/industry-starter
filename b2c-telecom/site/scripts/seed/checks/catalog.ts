@@ -16,8 +16,8 @@ export const EXPECTED = {
   productTypes: 6,
   customTypes: 6,
   categories: 8,
-  products: 52,
-  offers: 27,
+  products: 59,
+  offers: 31,
   inventory: 19,
   cartDiscounts: 2,
   discountCodes: 1,
@@ -43,7 +43,7 @@ function liveVariants(p: LiveProduct): LiveVariant[] {
 const keysWithPrefix = (items: Obj[], prefix: string): string[] => items.map((i) => String(i.key ?? i.sku ?? '')).filter((k) => k.startsWith(prefix));
 
 export const catalogCounts: Check = {
-  name: 'catalog counts (6 product types, 6 custom types, 8 categories, 52 products, 19 inventory entries, at least 2 discounts, at least 1 code, 5 policies, 11 serviceability objects)',
+  name: 'catalog counts (6 product types, 6 custom types, 8 categories, 59 products, 19 inventory entries, at least 2 discounts, at least 1 code, 5 policies, 11 serviceability objects)',
   async run(api) {
     const problems: string[] = [];
     const expect = (label: string, actual: number, wanted: number): void => {
@@ -137,7 +137,7 @@ export const imageCoverage: Check = {
 };
 
 export const searchFindsOffers: Check = {
-  name: 'product search finds all 27 offers',
+  name: 'product search finds all 31 offers',
   async run(api) {
     const keys = manifestOffers.map((o) => o.key);
     try {

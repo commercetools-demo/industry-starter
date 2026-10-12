@@ -88,10 +88,10 @@ describe('seed-catalog-data scenarios', () => {
   });
 
   it('Offers wrap what is sold: every sellable item has an offer, one existing-customer, one channel offer, all keys resolve', () => {
-    expect(OFFERS).toHaveLength(27);
+    expect(OFFERS).toHaveLength(31);
     const anchors = new Set(OFFERS.flatMap((o) => masterAttr(o, 'anchors') as string[]));
     const sellable = PRODUCTS.filter((p) => p.productType !== 'malva-offer');
-    expect(sellable).toHaveLength(25);
+    expect(sellable).toHaveLength(28);
     for (const p of sellable) expect(anchors.has(p.key), p.key).toBe(true);
     expect(OFFERS.filter((o) => masterAttr(o, 'existing-customer') === 'existing').map((o) => o.key)).toEqual(['malva-offer-cable-existing-customer']);
     expect(OFFERS.filter((o) => ((masterAttr(o, 'channels') as string[] | undefined) ?? []).length > 0).map((o) => o.key)).toEqual(['malva-offer-phone-online-only']);
@@ -120,7 +120,7 @@ describe('seed-catalog-data scenarios', () => {
     expect(['wireless-lite', 'wireless-5g', 'wireless-5g-plus'].map((k) => master(`malva-offer-${k}`) / 100)).toEqual([45, 55, 75]);
     expect(['cable-100', 'cable-500', 'cable-gig'].map((k) => master(`malva-offer-${k}`) / 100)).toEqual([39.99, 59.99, 79.99]);
     // most popular badges: Unlimited, Air 5G, Cable 500
-    expect(OFFERS.filter((o) => masterAttr(o, 'badge') === 'most-popular').map(nameEn).sort()).toEqual(['Air 5G', 'Cable 500', 'Cable 500, existing customers', 'Unlimited', 'Unlimited, online only'].sort());
+    expect(OFFERS.filter((o) => masterAttr(o, 'badge') === 'most-popular').map(nameEn).sort()).toEqual(['Air 5G', 'Cable 500', 'Cable 500, existing customers', 'Cable 500 + Essential phone', 'Unlimited', 'Unlimited, online only'].sort());
     // filter chips (D-017): speed bands, data, network generation
     const cableOffers = ['malva-offer-cable-100', 'malva-offer-cable-500', 'malva-offer-cable-gig'].map(product);
     expect(cableOffers.filter((o) => (masterAttr(o, 'downstream-mbps') as number) <= 500).map(nameEn)).toEqual(['Cable 100', 'Cable 500']);
@@ -132,7 +132,9 @@ describe('seed-catalog-data scenarios', () => {
     expect(wireless.filter((o) => masterAttr(o, 'network-generation') === '5g').map(nameEn)).toEqual(['Air 5G', 'Air 5G Plus']);
     expect(wireless.filter((o) => masterAttr(o, 'network-generation') === '4g').map(nameEn)).toEqual(['Air Lite']);
     // add-on tag filter
-    const tags = (tag: string): number => OFFERS.filter((o) => masterAttr(o, 'addon-tag') === tag).length;
+    // the prototype's eight add-ons (the dependency add-ons seeded after them are not part of the prototype)
+    const dependencyAddons = ['malva-offer-regional-sports', 'malva-offer-diy-install', 'malva-offer-pro-install'];
+    const tags = (tag: string): number => OFFERS.filter((o) => !dependencyAddons.includes(o.key) && masterAttr(o, 'addon-tag') === tag).length;
     expect([tags('music'), tags('video'), tags('extras')]).toEqual([2, 3, 3]);
   });
 

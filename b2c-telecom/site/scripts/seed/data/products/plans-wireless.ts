@@ -4,8 +4,8 @@ import type { Copy } from './helpers';
 
 const WIRELESS_ETF: Copy = { en: '$0', de: '0 €' };
 const BUNDLE_PHONE: Copy = {
-  en: 'Bundle with a phone plan for $5 off monthly.',
-  de: 'In Kombination mit einem Handytarif 5 € monatlich sparen.',
+  en: 'No bundle pricing applies to this plan.',
+  de: 'Für diesen Tarif gibt es keine Paketpreise.',
 };
 
 const wireless = (
