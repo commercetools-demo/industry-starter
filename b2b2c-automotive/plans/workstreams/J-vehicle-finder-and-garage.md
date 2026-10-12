@@ -202,3 +202,24 @@ Never wait silently: add the row, continue on the default, mention it in the PR 
 
 ## Seed requests
 Conditional (only if the J-00 query check fails; also in `plans/notes/seed-requests.md`): a flat searchable helper attribute on `mau-pt-part` holding one pipe-free, space-free token per fitment key (for example a slug of the key), so Product Search can match it exactly. Nothing else is needed: `fitment-keys`, `universal-fit`, `mau-vehicles` and `malva-customer.garage` exist in the seed.
+
+## Progress
+
+Storefront (J10, 2026-10-12). Unit-tested against mocks; browser-checked against a throw-away local fake of the commercetools endpoints (kept outside the repo); live checks are rows M-J-3 to M-J-6 in `plans/TODO-MANUAL-TESTING.md`. Evidence in `plans/evidence/J/` (`storefront-*.png`, `README.md`). Deviations are Q-J06 to Q-J10 in `plans/notes/questions-IJKLM.md`.
+
+- J-00: partial (live MCP checks and the Search `values`/pipe query check deferred to M-J-3; `plans/evidence/J/mcp-checks.md` says so)
+- J-01: done (`lib/vehicles/id.ts`)
+- J-02: done (`lib/ct/vehicles.ts`, `lib/vehicles/catalog.ts`, `lib/mappers/vehicle.ts`; in-memory TTL cache, Q-J08)
+- J-03: done (`app/api/vehicles/options`, `market` query parameter instead of a session read so the response can be public-cached)
+- J-04: done (`lib/vehicles/fitment-keys.ts`, `lib/search/fitment.ts`, agreement test over every record and year)
+- J-05: done (`lib/vehicles/garage.ts`; `parseGarage(json, resolveKey)` takes a table resolver instead of an id predicate)
+- J-06: done (`lib/vehicles/cookie.ts`, `lib/vehicles/service.ts`, `app/api/garage`, `/active`, `/merge`; `mergeGarageOnSignIn`)
+- J-07: done (`KEY_GARAGE`, `hooks/useGarage.ts`, `context/GarageProvider.tsx`, `components/vehicle/GarageRoot.tsx` mounted in the `[store]` layout; add is server-confirmed, set-active and remove are optimistic)
+- J-08: done (`VehicleSelectors`, `selectorReducer`)
+- J-09: done (`GarageChip`, `VehicleFinderCard`, `ChangeVehicleDialog`, `VehicleList`)
+- J-10: done (`FitBadge`, `GarageBar`, `FitBanner` computes in the browser, `FitToggle`)
+- J-11: done (`lib/vehicles/active.ts`)
+- J-12: done (de-DE and en-US, five two-level namespaces, Q-J07)
+- J-13: done (`lib/theme/locked-tokens.test.ts`; `tokens.css` untouched)
+- J-14: partial (`npm run check` parts for J green; fake-endpoint browser recipe done, live parts M-J-3 to M-J-6)
+- J-15 to J-18: done (`validate`, `provider`, stub, `index`, `app/api/vehicles/lookup`, `PlateVinTabs`, `scripts/check-vehicle-provider.mjs`, `.env.example`)

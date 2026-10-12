@@ -1,0 +1,26 @@
+{
+  "order-confirmation": {
+    "enabled": true,
+    "subject": { "de-DE": "Ihre Bestellung {{order_number}} ist bestätigt", "en-US": "Your order {{order_number}} is confirmed" },
+    "body": {
+      "de-DE": "Hallo {{customer_name}},\n\nvielen Dank für Ihre Bestellung {{order_number}}. Wir melden uns, sobald sie unterwegs ist.",
+      "en-US": "Hello {{customer_name}},\n\nthank you for your order {{order_number}}. We will let you know when it is on its way."
+    }
+  },
+  "shipment-update": {
+    "enabled": true,
+    "subject": { "de-DE": "Ihre Bestellung {{order_number}} ist unterwegs", "en-US": "Your order {{order_number}} has shipped" },
+    "body": {
+      "de-DE": "Hallo {{customer_name}},\n\nIhre Bestellung {{order_number}} wurde versendet.",
+      "en-US": "Hello {{customer_name}},\n\nyour order {{order_number}} has been shipped."
+    }
+  },
+  "win-back": {
+    "enabled": false,
+    "subject": { "de-DE": "Wir vermissen Sie, {{customer_name}}", "en-US": "We miss you, {{customer_name}}" },
+    "body": {
+      "de-DE": "Hallo {{customer_name}},\n\nes ist eine Weile her. Schauen Sie wieder vorbei.",
+      "en-US": "Hello {{customer_name}},\n\nit has been a while. Come and see what is new."
+    }
+  }
+}

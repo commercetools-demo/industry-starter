@@ -27,6 +27,7 @@ export const ACTION_ROLES = {
   'catalog.view': ALL,
   'catalog.edit': ADMIN,
   'price.edit': ADMIN,
+  'tailoring.edit': ADMIN,
   'discount.edit': ADMIN,
   'bundles.manage': ADMIN,
   'import.run': ADMIN,

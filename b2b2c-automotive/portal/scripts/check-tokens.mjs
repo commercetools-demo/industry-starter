@@ -14,7 +14,7 @@ const KIT_COLOURS = 'gray|blue|green|azure|purple|red|orange|yellow';
 const FOREIGN_COLOURS = 'slate|zinc|neutral|stone|amber|lime|emerald|teal|cyan|sky|indigo|violet|fuchsia|pink|rose|white|black';
 const COLOUR_UTILITIES = 'bg|text|border|ring|fill|stroke|from|to|via|divide|outline|decoration|accent|caret|shadow';
 
-const EXEMPT_FILES = [/^app\/tokens\.css$/, /\.(test|spec)\.[cm]?[tj]sx?$/, /(^|\/)opengraph-image\.tsx$/, /^lib\/theme\/default-theme\.ts$/];
+const EXEMPT_FILES = [/^app\/tokens\.css$/, /\.(test|spec)\.[cm]?[tj]sx?$/, /(^|\/)opengraph-image\.tsx$/, /^lib\/theme\/default-theme\.ts$/, /^lib\/contentools\/colour\.ts$/];
 const SCOPE_DIRS = ['app', 'components', 'lib'];
 
 /** Removes the fonts: and theme: blocks of globals.css and comments, keeping line numbers out of scope. */

@@ -5,6 +5,8 @@ import 'server-only';
 import { ApiError } from '@/lib/api';
 import { can, type PortalAction } from '@/lib/authz/permissions';
 import { getAssociateRoles } from '@/lib/ct/associate';
+import { fixtureViewer } from '@/lib/portal/dev-fixtures';
+import { devFixturesEnabled } from '@/lib/portal/seam';
 import type { Session } from '@/lib/types';
 
 /**
@@ -15,6 +17,7 @@ import type { Session } from '@/lib/types';
 export async function authorizeStore(session: Session, storeKey: string, action: PortalAction): Promise<void> {
   if (!session.customerId || !session.businessUnitKey || session.pending) throw new ApiError(403, 'Forbidden');
   if (!session.storeKey || session.storeKey !== storeKey) throw new ApiError(403, 'Forbidden');
-  const { roles, ctPermissions } = await getAssociateRoles(session);
+  // PORTAL_DEV_FIXTURES=on (never production): the fixture user's role stands in for the commercetools role lookup.
+  const { roles, ctPermissions } = devFixturesEnabled() ? { roles: fixtureViewer(session)?.roles ?? [], ctPermissions: [] as string[] } : await getAssociateRoles(session);
   if (!can({ roles, ctPermissions }, action)) throw new ApiError(403, 'Forbidden');
 }

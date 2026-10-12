@@ -4,6 +4,7 @@
 import { z } from 'zod';
 import { LOCALES } from '@/i18n/config';
 import { plan } from '@/lib/portal/copilot';
+import '@/lib/portal/copilot-discounts'; // registers set-discount-active (workstream T)
 import { ApiError, handle, json, parseJson, requireCustomer } from '@/lib/portal/route-kit';
 import { getPorts, readSession } from '@/lib/portal/seam';
 

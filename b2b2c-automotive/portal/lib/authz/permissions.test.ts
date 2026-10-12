@@ -9,6 +9,7 @@ const MATRIX: Record<PortalAction, { admin: boolean; buyer: boolean }> = {
   'catalog.view': { admin: true, buyer: true },
   'catalog.edit': { admin: true, buyer: false },
   'price.edit': { admin: true, buyer: false },
+  'tailoring.edit': { admin: true, buyer: false },
   'discount.edit': { admin: true, buyer: false },
   'bundles.manage': { admin: true, buyer: false },
   'import.run': { admin: true, buyer: false },

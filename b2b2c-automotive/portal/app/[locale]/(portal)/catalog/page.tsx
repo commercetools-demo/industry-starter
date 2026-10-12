@@ -1,4 +1,6 @@
-import { placeholderRoute } from '@/components/portal/placeholderRoute';
+import { AssortmentTable } from '@/components/catalog/AssortmentTable';
 
-// Catalog & pricing: workstream T replaces the body.
-export default placeholderRoute('nav.items.catalog', 'catalog.view');
+// Tab "Assigned products" (workstream T).
+export default function CatalogPage() {
+  return <AssortmentTable />;
+}

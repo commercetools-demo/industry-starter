@@ -21,6 +21,7 @@ npm run dev                  # http://localhost:3000, or: npm run dev -- -p 3100
 | `npm run lint` / `typecheck` / `test` | ESLint, `tsc --noEmit`, Vitest |
 | `npm run check` | The quality gate: typecheck, lint, then the gate scripts below, then tests |
 | `npm run verify:build` | `next build`, then route, health-route and bundle-secret checks on the output |
+| `node scripts/ensure-w.mjs [--apply]` | W: verifies the seed types for marketing, bundles and local products; writes demo campaigns and e-mail templates only with `--apply` (see "Selling tools") |
 
 ## Gates (`scripts/`)
 
@@ -84,6 +85,17 @@ export const POST = handle(async (request: Request) => {
 `npm run build` and `verify:build` import the clients while collecting page data, so they need the variables of `.env.example` (a real `.env.local`, or dummy values such as the set in `test/env.ts`); there is no fallback key.
 
 `proxy.ts`: locale step, then a signed-out visitor outside `sign-in`, `register`, `reset`, `pending-approval` is redirected to `/{locale}/sign-in?next=<path>`; `sanitizeNext` in `lib/next-path.ts` validates the return path (use it again when sign-in redirects back). `/api/health` exists in development and test only (`check-no-health-in-release` keeps it out of a release).
+
+## Selling tools (workstream W)
+
+Marketing (`/marketing`), E-mail (`/email`), Bundles (`/bundles`), Product import (`/import`) and Brand partnership (`/partnership`) are Admin only. Server code is in `lib/ct/seller/{campaigns,email-templates,email-campaigns,audience-facts,bundles,local-products,product-import,partnership}.ts`, the pure rules in `lib/{email,bundles,marketing,import,partnership}/`, the routes in `app/api/seller/{campaigns,email,bundles,local-products,import,partnership}/`. Facts to keep:
+
+- **No e-mail is ever sent.** Templates and campaigns are custom objects (`malva-email-templates`, `malva-email-campaigns`) that are stored and previewed; "Mark ready" stores a recipient count only. `lib/email/no-mail.test.ts` fails on a provider variable or a send function.
+- **Prices are standalone prices** on the store's distribution channel, written only by `setStandalonePrice` of `lib/ct/seller/prices.ts` (bundles, local products). The CSV import writes the same prices through the Import API (`lib/import/import-api.ts`, the one file allowed to call the Import API host with `fetch`; the host is `CTP_API_URL` with `api.` replaced by `import.`; scope `manage_import_containers`).
+- A local product with a fitment claim is created unpublished with `review-state=pending` and stays out of every selection; Malva approves it in the Merchant Center. A CSV import can never carry fitment.
+- Dev fixture mode (`PORTAL_DEV_FIXTURES=on`, never production): `lib/portal/w-fixture-root.ts` extends T's in-memory commercetools client with products, custom object lists, orders, customers and an in-memory Import API; demo campaigns, vehicles, six customers per store and one stored template are seeded.
+
+`node scripts/ensure-w.mjs [--apply] [--store <key>]` (needs `.env.local`; refuses any project but `spec-test-b2b2c-automotive`) verifies that the seed's custom types and the product types `mau-pt-local-part` and `mau-pt-bundle` exist with the attributes W uses, then (with `--apply`) writes only demo custom objects (`"demo": true`): two co-op campaigns and the default e-mail templates per store. It creates no type. Dry run without `--apply`.
 
 ## Deployment
 

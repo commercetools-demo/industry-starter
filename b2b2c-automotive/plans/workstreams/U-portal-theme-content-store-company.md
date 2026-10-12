@@ -442,4 +442,13 @@ Rename ids to the next free number when merging. Claude adds the rows and contin
 
 ## Notes
 
-(Fill in during the work.)
+(Details: `plans/notes/questions-RSTU.md` Q-U11 to Q-U17, `plans/MISSED-FEATURES.md`, TODO rows M-U-5 to M-U-8.)
+
+Contracts for later workstreams: `lib/contentools/{origin,jwt,allowlist,proxy-policy,theme,service}.ts` (W and P import `getStoreTheme` and `themePrimaryColour`; X hardens `allowlist.ts` and `proxy-policy.ts`, the route is `app/api/contentools/[...path]/route.ts`); `lib/store/{schemas,types}.ts`; `lib/portal/share-links.ts` (`parseChannelParam`, `parseSalesChannel`); `lib/ct/seller/branch-stock.ts` imports `setStandalonePrice`, `assignedBySku` and `isAssigned` from T's `prices.ts`; `authorizeStore` reads fixture roles in fixture mode; route helpers `lib/portal/store-route.ts` and `test/seller.ts` (`refusalSuite`).
+
+## Progress
+
+- 2026-10-12 J12: server layer done and tested: proxy (151 policy tests, 19 route tests), JWT, theme loader, store settings, branches, branch stock and price, channel stats, geocode, branding upload, company and account routes, accept-invite; every `app/api/seller/**` route has a cross-store test.
+- 2026-10-12 J12: UI done: Store (Settings with map, Branches with form and stock drawer, Channels, Share with QR, Theme with preview, save toast and Reset), Content (Pages and Content blocks), Company, Account, accept-invite; en-US and de-DE messages with identical keys.
+- 2026-10-12 J12: `npm run check` green for U (one failing test belongs to T: `lib/ct/seller/discounts.test.ts` priority, in progress by J11); `verify:build` green with the dummy env.
+- 2026-10-12 J12: HTTP smoke of every page and read route in fixture mode with the fake Contentools passed (found and fixed a server-side use of tab constants exported from a client file). Chrome DevTools pass NOT done: the Chrome MCP hung; see M-U-5.

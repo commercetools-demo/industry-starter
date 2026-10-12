@@ -152,5 +152,16 @@ Never wait silently: if a manual row is pending, add it to the file, continue on
 - Manual rows added (none new; M-I-1, M-I-2, SO-01 stay). Questions Q-I01, Q-I02 and Q-I04 are answered by the owner (Q-005, Q-I02, Q-I04) and Q-I03 keeps its default in `plans/notes/questions-IJKLM.md`.
 - Gate G5 (shell, picker and theme on every page at 375 and 1440 px) can be run by Claude.
 
+## Progress
+- 2026-10-12 (J9) I-01 done: `components/ui/{Button,Badge,Field,Select,Modal}` and the jsdom `<dialog>` shim in `test/setup.ts` (Modal tests: showModal, Escape, focus return, backdrop, axe).
+- I-02 done: `lib/mappers/shell.ts` (`mapStoreSettings`, `mapBranch`, `mapShellContext`, zod hours, malformed hours closed with a warning) and `lib/ct/shell.ts` `getShellContext(storeKey, locale)` (TTL cache 60 s, stale on outage); types in `lib/types.ts`. The G file `lib/ct/stores.ts` is untouched (Q-I11).
+- I-03 done: `lib/store/pickup.ts` (Intl, branch timezone wins, DST test). I-04 done: `branchKey` in the session (cleared with `cartId` on a store change, proxy compares it), `lib/store/branch-scope.ts` (`getBranchScope`, `selectPrice`).
+- I-05 done: `GET /api/store-context/branches`, `POST /api/store-context/branch` (calls the `rescopeCartToBranch` seam in `lib/ct/cart.ts`, Q-I10), hooks `useBranches`, `useSelectBranch`. I-06 done: `getCartSummary`, `GET /api/cart/summary`, `useCartSummary`. I-07 done: `lib/ct/categories.ts` (facet call, per-root fallback, TTL 5 min).
+- I-08, I-09 done in `components/shell/*` (paths per the coordinator, Q-I05): UtilityBar, Wordmark, StoreChip, SearchField (seam for L), AccountLink, CartButton, Header (garage slot imports `GarageChip` with no props), CategoryNav, Footer, SkipLink. I-10 done: `app/[locale]/[store]/layout.tsx` (+ metadata title template and favicon).
+- I-11, I-12 done in `components/store-picker/*`: BranchList (listbox), BranchRow, BranchMap (Leaflet + OSM, attribution, divIcon pins), StorePicker, StorePickerHost + `context/StorePickerContext.tsx` (`useStorePicker().open()`), `useGeolocation`, `useGeocode` (600 ms debounce). I-12b done: `lib/geo/nominatim.ts` (cache 24 h/500, serial queue 1100 ms, UA with contact, 2 s timeout, degrade), `lib/rate-limit.ts`, `GET /api/store-context/geocode`, env `GEOCODER`, `GEOCODER_URL`, `NOMINATIM_CONTACT`.
+- I-13 done: `lib/csp.ts` and `headers()` in `next.config.ts`, `next.config.csp.test.ts` (OSM tile host the only third-party image host, no `unsafe-eval` in production, extra hosts only through `CSP_IMG_HOSTS`, Q-I09).
+- I-14 open: MCP checks need the live project, see M-I-3. Chrome recipe steps 1 to 11 run against a local fake of commercetools (evidence `plans/evidence/I/storefront-*`, summary in `storefront-README.md`); step 12 waits for L, M, N (M-I-5).
+- Gates: `npm run check` green; `npm run verify:build` green with the dummy env of the README (now also `NOMINATIM_CONTACT`).
+
 ## 9. Evidence
 `plans/evidence/I/`: `shell-A-375.png`, `shell-A-768.png`, `shell-A-1024.png`, `shell-A-1440.png`, `picker-1440.png`, `picker-375.png`, `picker-geocode-1440.png`, `mcp-checks.md`, `console-log.txt`.

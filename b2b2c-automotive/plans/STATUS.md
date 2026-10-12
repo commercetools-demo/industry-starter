@@ -19,8 +19,8 @@ Planning draft v2 (2026-10-12, owner interview folded in: workstream letters are
 | I | Storefront shell and store picker | 0/15 | Not started |
 | J | Vehicle finder and garage | 0/19 | Not started |
 | K | Home page (Puck) | 0/12 | Not started |
-| L | Product listing and search | 0/14 | Not started |
-| M | Product detail page | 0/11 | Not started |
+| L | Product listing and search | 14/14 | Not started |
+| M | Product detail page | 9/11 | Not started |
 | N | Cart | 0/0 | Not started |
 | O | Checkout | 0/0 | Not started |
 | P | Order confirmation and emails | 0/0 | Not started |
@@ -30,12 +30,12 @@ Planning draft v2 (2026-10-12, owner interview folded in: workstream letters are
 | T | Portal catalog: assortment, price overrides, tailoring, discounts | 0/0 | Not started |
 | U | Portal theme, content, store, channels, company | 0/0 | Not started |
 | V | Portal customers, subscriptions, returns and reviews | 0/18 | Not started |
-| W | Portal marketing, bundles, product import, brand partnership | 0/20 | Not started |
+| W | Portal marketing, bundles, product import, brand partnership | 17/20 | Not started |
 | X | Security hardening (roles, IDOR, CSRF, Contentools proxy, JWT leakage, order, return and review integrity) | 0/15 | Not started |
 | Y | Accessibility, responsive and performance sweep | 0/11 | Not started |
 | Z | Release readiness and final verification | 0/15 | Not started |
 
-Workstream files: 26/26. Tasks done: 0/178. Specs owned by the plan: 31, listed by a workstream: 31, out of scope (marker): 4. Manual-testing rows: 64.
+Workstream files: 26/26. Tasks done: 40/178. Specs owned by the plan: 31, listed by a workstream: 31, out of scope (marker): 4. Manual-testing rows: 117.
 <!-- STATUS:END -->
 
 ## Environment status (2026-10-12)

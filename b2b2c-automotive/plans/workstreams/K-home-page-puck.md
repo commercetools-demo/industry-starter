@@ -125,3 +125,16 @@ Never wait silently: add the row, continue on the default, mention it in the PR 
 
 ## Seed requests
 - `popularity-rank` (number, searchable) on `mau-pt-part` (1 is most popular, absent = unranked), set on roughly 12 to 16 parts per store-relevant mix (some in each reseller's assortment, some not ranked). Why: D6 (owner answer Q-L01) needs a ranked sort for the home block and L's "Most popular". Also recorded in `plans/notes/seed-requests.md`.
+
+## Progress
+- K-00: done (H and I deliverables present; `npm run check` green; live MCP checks M-K-2, no credentials)
+- K-01: done (`lib/puck/automotive-blocks.schema.ts` plus `lib/puck/automotive-fields.ts`; tests in `automotive-blocks.schema.test.ts`)
+- K-02: done (`lib/ct/home.ts`, `lib/home/types.ts`, `lib/home/template.ts`; `home.test.ts`). The home slug is `/home` (H's `HOME_SLUG`), not `home`
+- K-03: done (`components/home/HomeDataContext.tsx`)
+- K-04, K-05, K-07: done (`AutomotiveHero`, `CategoryTiles`, `PromoBanner`, `BrandStrip`, `VehicleFinderBlock`, `BlockLink`; hero line also takes `{pickup}`, empty means automatic; Q-K03, Q-K05)
+- K-06: done against L's `searchParts`/`getListingProjections`/`mapProductSummary`/`ProductCard` (merged in the tree); tinted badge not done (Q-K04)
+- K-08: done (`components/contentools/automotive-puck-config.ts`, `render-config.ts` now exports it, `ContentoolsPage` takes `config` and `homeData`; server rendered, `plans/evidence/K/render-mode.md`)
+- K-09: done (`DefaultHome`, `app/[locale]/[store]/page.tsx` with metadata; removed the placeholder test in `app/[locale]/layout.test.tsx`)
+- K-10: done (hand-off comments at the top of both `lib/puck/` files, Q-K01)
+- K-11: done (`home.*` messages in both catalogs; `npm run check` and `verify:build` green, home route is dynamic)
+- Browser recipe run against fakes (commercetools stand-in plus fake Contentools): `plans/evidence/K/`; live rows M-K-2, M-K-3

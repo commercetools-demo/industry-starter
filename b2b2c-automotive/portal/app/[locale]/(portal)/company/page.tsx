@@ -1,4 +1,7 @@
-import { placeholderRoute } from '@/components/portal/placeholderRoute';
+import { redirect } from '@/i18n/routing';
 
-// Company & team (read-only for a Buyer): workstream U replaces the body.
-export default placeholderRoute('nav.items.company', 'company.view');
+// Company & team (workstream U): the first tab is the landing page. The layout gates the role.
+export default async function CompanyPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  redirect({ href: '/company/users', locale });
+}

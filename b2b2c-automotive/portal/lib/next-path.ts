@@ -4,7 +4,7 @@
 import { isAppLocale } from '@/i18n/config';
 
 /** Routes (after the locale segment) that a signed-out visitor may open. */
-export const AUTH_ROUTES = ['sign-in', 'register', 'reset', 'pending-approval'] as const;
+export const AUTH_ROUTES = ['sign-in', 'register', 'reset', 'pending-approval', 'accept-invite'] as const;
 
 export function isAuthRoute(firstSegment: string | undefined): boolean {
   return firstSegment !== undefined && (AUTH_ROUTES as readonly string[]).includes(firstSegment);

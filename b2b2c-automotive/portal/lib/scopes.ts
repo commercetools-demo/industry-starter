@@ -22,11 +22,27 @@ export const FRONTEND_SCOPES: readonly ScopeDoc[] = [
   { scope: 'manage_quotes', reason: 'quote lifecycle for the signed-in business unit' },
   { scope: 'manage_quote_requests', reason: 'quote requests for the signed-in business unit' },
   { scope: 'view_quotes', reason: 'read quotes' },
+  { scope: 'manage_business_units', reason: 'company profile, addresses and invitations through the as-associate business unit endpoints (Admin and Buyer roles must be buyer assignable, see seed requests)' },
 ];
 
 /** `CTP_ADMIN_SCOPES`: the seller-admin client. Workstreams T, U, V and W add theirs here and in `.env.example`. */
 export const ADMIN_SCOPES: readonly ScopeDoc[] = [
   { scope: 'manage_key_value_documents', reason: 'read and refresh the Contentools JWT custom object' },
+  { scope: 'manage_stores', reason: 'store name, logo and favicon, location fields and the supply and distribution channel lists (branches)' },
+  { scope: 'manage_channels', reason: 'create and edit branch channels (address, geo location, branch-info)' },
+  { scope: 'view_types', reason: 'read the store-settings and branch-info custom types before writing custom fields' },
+  { scope: 'view_orders', reason: 'order counts and revenue per sales channel for the Channels tab' },
+  { scope: 'manage_products', reason: 'branch stock: inventory entries on the branch supply channel (inventory has no scope of its own)' },
+  { scope: 'view_standalone_prices', reason: 'read the branch prices shown in the branch stock drawer (writes go through the price module)' },
+  { scope: 'view_recurring_orders', reason: 'active subscriptions and renewals on the dashboard (orders, reviews and inventory reads there use view_orders and manage_products above)' },
+  { scope: 'manage_product_selections', reason: "catalog: add and remove products in the store's own selection (the master selection is read only)" },
+  { scope: 'view_categories', reason: 'catalog: category tree for assortment filters' },
+  { scope: 'manage_standalone_prices', reason: 'catalog: create, change and suspend the store retail and branch prices (also covers the price import)' },
+  { scope: 'manage_product_discounts', reason: "catalog: the store's own product discounts" },
+  { scope: 'manage_cart_discounts', reason: "catalog: the store's own cart discounts" },
+  { scope: 'manage_discount_codes', reason: 'catalog: codes of the store cart discounts and their redemption counts' },
+  { scope: 'manage_import_containers', reason: 'W: CSV product import through the Import API (the Import API host is derived from CTP_API_URL)' },
+  { scope: 'view_customers', reason: "W: audience rules read the marketing consent and the order history of the store's customers (counts only are shown)" },
 ];
 
 /** `CTP_PROVISION_SCOPES`: the provisioning client (registration endpoint only). No admin scopes and no project-wide manage scope. */

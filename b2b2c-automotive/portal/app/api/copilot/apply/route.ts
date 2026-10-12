@@ -2,6 +2,7 @@
 // The permission is re-checked here, whatever the panel showed. Unknown actions and missing permissions change nothing.
 import { z } from 'zod';
 import { applyConfirmed } from '@/lib/portal/copilot';
+import '@/lib/portal/copilot-discounts'; // registers set-discount-active (workstream T)
 import { ApiError, handle, json, parseJson, requireCustomer } from '@/lib/portal/route-kit';
 import { getPorts, readSession } from '@/lib/portal/seam';
 

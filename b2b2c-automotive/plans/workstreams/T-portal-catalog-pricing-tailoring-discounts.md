@@ -522,6 +522,16 @@ The lead merges these into the master file with the ids shown.
 
 `plans/evidence/T/01-assortment-1440.png`, `02-withdraw-dialog.png`, `03-storefront-gone.png`, `04-storefront-back.png`, `05-price-input.png`, `06-price-published.png`, `07-tailored-images.png`, `08-discount-editor.png`, `09-cross-store.png`, `10-assortment-375.png`, `11-prices-375.png`, and under "Notes": the propagation script output (seconds until absent and present), the rejected price response body of step 10, MCP read-back lines, the tailoring localisation finding, the image selection finding, and the standalone price consumption finding (decision 5).
 
+## Progress
+
+- 2026-10-12 J11: T-00 to T-13 built test-first against a mocked SDK (not live). One in-memory fake commercetools (`lib/portal/catalog-fixture-root.ts`) serves both the unit tests and the browser run with `PORTAL_DEV_FIXTURES=on`; `lib/ct/seller/catalog-root.ts` switches between it and the admin client.
+- Assortment (`assortment*.ts`): master inheritance, assign, withdraw with a 409 `CONFIRMATION_REQUIRED` impact (count, open carts, branches), reconcile, `isAssigned` guard, `onAssortmentChanged` hooks. Prices (`prices.ts`) are the single writer of standalone prices (a test greps for it and for banned floor or cost terms). Tailoring (`tailoring.ts`, `image-url.ts` SSRF guard, `image-rules.ts` by magic bytes), discounts (`discounts.ts`, `discount-rule.ts`, `sort-order.ts` two-phase reorder, `discount-access.ts`).
+- 22 seller routes, each with `route.cross-store.test.ts`, and `app/api/seller/roles.matrix.test.ts` (Buyer 403, Admin 2xx, signed-out 401). `tailoring.edit` added to `ACTION_ROLES`. Admin scopes added (OA-12 lists them). Copilot action `set-discount-active` in `lib/portal/copilot-discounts.ts`, imported by the two copilot routes.
+- UI: six tabs plus the discount editor under `app/[locale]/(portal)/catalog/**`; component tests in `components/catalog/catalog-components.test.tsx`. Production image upload delegates to U's `uploadStoreFile`.
+- Chrome (fixtures, port 3120, own isolated context): assortment at 1440, 1024 and 375, price zero error and publish, product discounts, editor with preview, priority, product info as Buyer (all disabled). Console: no errors or warnings. Cross-store GET 403 and Buyer PUT 403 by curl. Evidence in `plans/evidence/T/portal-*.png`. The storefront steps (recipe 5 to 8) wait for L and M (M-T-2).
+- Gates: `npm run check` (174 files, 1318 tests) and `npm run verify:build` (dummy env) green. Live checks left: M-T-1 to M-T-7, M-F-02, OA-12.
+- Q-T11 to Q-T16 added to `plans/notes/questions-RSTU.md` (deviations).
+
 ## Notes
 
 (Fill in during the work.)
