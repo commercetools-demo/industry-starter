@@ -7,7 +7,11 @@ import { Link } from '@/i18n/routing';
 import { FOCUS_RING } from '@/components/ui/focus';
 import { cx } from '@/lib/cx';
 import { formatMoneyExact } from '@/lib/format';
+import { summaryRows, type SummaryRowId } from '@/lib/pricing/summary';
 import type { Cart, Locale, Money } from '@/lib/types';
+
+/** Message key of each summed row (the order-level discount reads "Discounts"). */
+const LABEL_OF: Record<SummaryRowId, string> = { plans: 'plans', addons: 'addons', devices: 'devices', oneTime: 'oneTime', orderDiscount: 'discounts', shipping: 'shipping', tax: 'tax' };
 
 type OrderSummaryProps = {
   cart: Cart;
@@ -27,30 +31,31 @@ function Row({ label, value, strong, muted }: { label: string; value: string; st
   );
 }
 
-/** Every figure is the server's (`cart.summary`); nothing is added up here. */
+/** Every figure is the server's (`cart.summary`); the rows add up to Due today (lib/pricing/summary). */
 export function OrderSummary({ cart, signedIn, codeForm, extra }: OrderSummaryProps): ReactElement {
   const t = useTranslations('bundle');
   const locale = useLocale() as Locale;
   const fmt = (money: Money): string => formatMoneyExact(money, locale);
   const { summary } = cart;
   const shortfall = cart.minimumOrder?.shortfall ?? null;
-  const negative = (money: Money): Money => ({ ...money, centAmount: -money.centAmount });
 
   return (
     <aside aria-label={t('summary.title')} className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-7 lg:sticky lg:top-24">
       <h2 className="m-0 font-display text-xl font-bold tracking-ui">{t('summary.title')}</h2>
-      {summary.plans.centAmount > 0 ? <Row label={t('summary.plans')} value={fmt(summary.plans)} /> : null}
-      {summary.addons.centAmount > 0 ? <Row label={t('summary.addons')} value={fmt(summary.addons)} /> : null}
-      {summary.devicesMonthly.centAmount > 0 ? <Row label={t('summary.devices')} value={fmt(summary.devicesMonthly)} /> : null}
+      {summaryRows(summary).map((row) => (
+        <Row key={row.id} label={t(`summary.${LABEL_OF[row.id]}`)} value={fmt(row.amount)} muted={row.id === 'oneTime'} />
+      ))}
       <div className="border-t border-border pt-4">
-        <Row label={t('summary.monthly')} value={fmt(summary.monthly)} strong />
+        <Row label={t('summary.dueToday')} value={fmt(summary.dueToday)} strong />
       </div>
-      {summary.oneTime.centAmount > 0 ? <Row label={t('summary.oneTime')} value={fmt(summary.oneTime)} muted /> : null}
-      {summary.discountTotal.centAmount > 0 ? <Row label={t('summary.discounts')} value={fmt(negative(summary.discountTotal))} /> : null}
-      {summary.tax ? <Row label={t('summary.tax')} value={fmt(summary.tax)} /> : null}
-      <div className="border-t border-border pt-4">
-        <Row label={t('summary.dueToday')} value={fmt(summary.total)} strong />
-      </div>
+      {summary.taxAdded === null && summary.tax && summary.tax.centAmount > 0 ? <p className="m-0 text-sm text-text-muted">{t('summary.taxIncluded', { amount: fmt(summary.tax) })}</p> : null}
+      {summary.thenMonthly.centAmount > 0 ? (
+        <div className="flex flex-col gap-1">
+          <Row label={t('summary.thenMonthly')} value={fmt(summary.thenMonthly)} strong />
+          <p className="m-0 text-sm text-text-muted">{t('summary.thenMonthlyNote')}</p>
+        </div>
+      ) : null}
+      {summary.discountTotal.centAmount > 0 ? <Row label={t('summary.save')} value={fmt(summary.discountTotal)} muted /> : null}
       {codeForm}
       {shortfall && cart.minimumOrder ? (
         <p role="status" className="m-0 text-sm font-semibold">

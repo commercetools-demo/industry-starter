@@ -109,7 +109,7 @@ describe('mapCart', () => {
   });
 
   it('Discount stops applying: DoesNotMatchCart is reported as not applicable with a reason and totals exclude it', () => {
-    const before = mapCart(ctCart({ lines: [{ ...planLine, total: 5499 }], fees: [feeLine], codes: [{ id: 'c1', code: 'MALVA-CABLE5', state: 'MatchesCart' }] }), ctx, deps());
+    const before = mapCart(ctCart({ lines: [{ ...planLine, total: 5499, discounts: ['cd-intro'], discountCents: 500 }], fees: [feeLine], codes: [{ id: 'c1', code: 'MALVA-CABLE5', state: 'MatchesCart' }] }), ctx, deps());
     expect(before.discountCodes[0]?.state).toBe('applied');
     expect(before.summary.discountTotal.centAmount).toBe(500);
     const after = mapCart(ctCart({ lines: [addonLine], codes: [{ id: 'c1', code: 'MALVA-CABLE5', state: 'DoesNotMatchCart' }] }), ctx, deps());
@@ -118,8 +118,9 @@ describe('mapCart', () => {
   });
 
   it('discountTotal sums line discounts and the discount on the total', () => {
-    const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 5499 }], discountOnTotal: 100 }), ctx, deps());
+    const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 5499, discounts: ['cd-intro'], discountCents: 500 }], discountOnTotal: 100 }), ctx, deps());
     expect(cart.summary.discountTotal.centAmount).toBe(600);
+    expect(cart.summary.orderDiscount.centAmount).toBe(100);
   });
 
   it('tax is null until the engine has a taxed price', () => {

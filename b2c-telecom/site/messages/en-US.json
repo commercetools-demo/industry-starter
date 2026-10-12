@@ -207,7 +207,12 @@
       "discounts": "Discounts",
       "tax": "Taxes",
       "dueToday": "Due today",
-      "taxNote": "Taxes are calculated at checkout. Each plan's Broadband Facts label is shown with the plan."
+      "taxNote": "Taxes are calculated at checkout. Each plan's Broadband Facts label is shown with the plan.",
+      "thenMonthly": "Then monthly",
+      "thenMonthlyNote": "What your later monthly orders will be charged.",
+      "save": "You save",
+      "shipping": "Shipping",
+      "taxIncluded": "Includes {amount} tax"
     },
     "cta": {
       "checkout": "Check out",
@@ -363,7 +368,9 @@
       "tax": "Tax",
       "dueToday": "Due today",
       "monthly": "Monthly after today",
-      "contractTotal": "Total over the term"
+      "contractTotal": "Total over the term",
+      "save": "You save",
+      "taxIncluded": "Includes {amount} tax"
     },
     "payment": {
       "heading": "Payment",

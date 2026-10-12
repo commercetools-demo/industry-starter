@@ -207,7 +207,12 @@
       "discounts": "Rabatte",
       "tax": "Steuern",
       "dueToday": "Heute fällig",
-      "taxNote": "Steuern werden an der Kasse berechnet. Das Broadband-Facts-Label jedes Tarifs wird beim Tarif angezeigt."
+      "taxNote": "Steuern werden an der Kasse berechnet. Das Broadband-Facts-Label jedes Tarifs wird beim Tarif angezeigt.",
+      "thenMonthly": "Danach monatlich",
+      "thenMonthlyNote": "Der Betrag, der Ihnen für Ihre späteren Monatsbestellungen berechnet wird.",
+      "save": "Sie sparen",
+      "shipping": "Versand",
+      "taxIncluded": "Enthält {amount} Steuer"
     },
     "cta": {
       "checkout": "Zur Kasse",
@@ -363,7 +368,9 @@
       "tax": "Steuer",
       "dueToday": "Heute fällig",
       "monthly": "Monatlich danach",
-      "contractTotal": "Gesamt über die Laufzeit"
+      "contractTotal": "Gesamt über die Laufzeit",
+      "save": "Sie sparen",
+      "taxIncluded": "Enthält {amount} Steuer"
     },
     "payment": {
       "heading": "Zahlung",

@@ -459,18 +459,29 @@ export interface BundleIssue {
   reasons: BundleIssueReason[];
 }
 export interface CartSummary {
-  /** Recurring subtotals by kind (sum of engine line totals). */
+  /** Recurring subtotals by kind (sum of engine line totals: the first period, net of first-order promotions). */
   plans: Money;
   addons: Money;
   devicesMonthly: Money;
   /** Sum of engine line totals of recurring / one-time lines (one-time includes fee lines). */
   monthly: Money;
   oneTime: Money;
-  /** Sum of the discounts the engine applied (positive amount). */
+  /** Every promotion the engine reported (lines and order total), positive. Informational ("You save"), never a summed row. */
   discountTotal: Money;
-  /** Engine taxedPrice portion (null until it exists) and engine totalPrice (due today). */
+  /** Order-level discount only (positive); the one discount that is a row above Due today. */
+  orderDiscount: Money;
+  /** Engine shipping price (null until a method is chosen). */
+  shipping: Money | null;
+  /** Tax portion of the taxed price (gross minus net), null until it exists. Shown as "includes" when the rate is part of the price. */
   tax: Money | null;
+  /** Tax added on top of the total (null when the rate is part of the price). It is a row above Due today. */
+  taxAdded: Money | null;
+  /** Engine totalPrice (the amount the payment guard compares). */
   total: Money;
+  /** What is payable now: `total` plus `taxAdded`. */
+  dueToday: Money;
+  /** What recurring orders will charge: the standing price of every recurring line times quantity. */
+  thenMonthly: Money;
 }
 export interface Cart {
   id: string;

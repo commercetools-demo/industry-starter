@@ -11,6 +11,7 @@ import { buildLabel, formatLabelMoney } from '@/lib/pricing/label';
 import { LABEL_STRINGS } from '@/lib/pricing/labelStrings';
 import { discountKeyFor, introDefFor } from '@/lib/pricing/introPeriod';
 import { buildSchedule } from '@/lib/pricing/schedule';
+import { taxAddedOf, thenMonthlyOf } from '@/lib/pricing/summary';
 import type {
   BundleIssue,
   BundleLineKind,
@@ -80,6 +81,15 @@ function discountKeys(line: LineItem, deps: CartMapDeps): string[] {
     }
   }
   return [...keys];
+}
+
+/** What the engine took off a line: discounted amount of every included discount times the quantity of its portion. */
+function engineDiscountOf(line: LineItem | CustomLineItem): number {
+  let total = 0;
+  for (const portion of line.discountedPricePerQuantity ?? []) {
+    for (const included of portion.discountedPrice.includedDiscounts) total += included.discountedAmount.centAmount * portion.quantity;
+  }
+  return total;
 }
 
 function issueFor(code: string, messageKey: string, line: Pick<CartLine, 'id' | 'offerKey'>, extra: Record<string, string | number> = {}): BundleIssue {
@@ -246,11 +256,10 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
 
   const all = [...lines, ...feeLines];
   const sum = (predicate: (line: CartLine) => boolean): Money => all.filter(predicate).reduce((acc, line) => add(acc, line.total), zero(currency));
-  const discountOnLines = all.reduce((acc, line) => {
-    const list = line.unitListPrice.centAmount * line.quantity;
-    return acc + Math.max(0, list - line.total.centAmount);
-  }, 0);
+  const discountOnLines = [...ct.lineItems, ...ct.customLineItems].reduce((acc, line) => acc + engineDiscountOf(line), 0);
   const discountOnTotal = ct.discountOnTotalPrice?.discountedAmount.centAmount ?? 0;
+  const totalPrice = money(ct.totalPrice);
+  const taxAdded = taxAddedOf(totalPrice, ct.taxedPrice ? money(ct.taxedPrice.totalGross) : null);
   const summary: CartSummary = {
     plans: sum((line) => line.chargeType === 'recurring' && line.kind === 'plan'),
     addons: sum((line) => line.chargeType === 'recurring' && (line.kind === 'addon' || line.kind === 'equipment')),
@@ -258,8 +267,13 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
     monthly: sum((line) => line.chargeType === 'recurring'),
     oneTime: sum((line) => line.chargeType === 'one-time'),
     discountTotal: { centAmount: discountOnLines + discountOnTotal, currencyCode: currency },
+    orderDiscount: { centAmount: discountOnTotal, currencyCode: currency },
+    shipping: ct.shippingInfo ? money(ct.shippingInfo.price) : null,
     tax: ct.taxedPrice ? { centAmount: ct.taxedPrice.totalGross.centAmount - ct.taxedPrice.totalNet.centAmount, currencyCode: currency } : null,
-    total: money(ct.totalPrice),
+    taxAdded,
+    total: totalPrice,
+    dueToday: taxAdded ? add(totalPrice, taxAdded) : totalPrice,
+    thenMonthly: thenMonthlyOf(all, currency),
   };
 
   const discountCodes: CartDiscountCodeInfo[] = ct.discountCodes.map((info) => {

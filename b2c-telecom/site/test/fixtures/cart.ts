@@ -126,10 +126,16 @@ export function makeCart(patch: Omit<Partial<Cart>, 'summary'> & { summary?: Par
     monthly: sum(recurring),
     oneTime: sum(lines.filter((line) => line.chargeType === 'one-time')),
     discountTotal: usd(0),
+    orderDiscount: usd(0),
+    shipping: null,
     tax: null,
+    taxAdded: null,
     total: sum(lines),
+    dueToday: usd(0),
+    thenMonthly: sum(recurring),
     ...patch.summary,
   };
+  if (!patch.summary?.dueToday) summary.dueToday = summary.total;
   const { lines: _lines, summary: _summary, ...rest } = patch;
   void _lines;
   void _summary;
