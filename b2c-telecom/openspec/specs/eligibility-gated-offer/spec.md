@@ -11,6 +11,8 @@ In most industries the catalog is what the merchant sells and eligibility is an 
 
 **As built by workstream K (D-020, D-021, D-059).** Serviceability is a built-in deterministic table stub (ZIP codes, cached 5 min; G's Custom Object table exists but is not read). Customer type comes from the Customer Group. "Ineligible offer absent not refused" is implemented by filtering listings. The existing-customer cable offer is deduplicated behind Cable 500 and reachable only through `?offer=` (Q-017). No agent override (D-022). Business-unit entitlement is not built (D-005).
 
+**Changed by `dtv-experience-parity`.** The buyer context now carries the visitor's declared customer type and existing-customer value (cookie `malva-buyer-context`, `type:existing`; "not specified" is distinct from "no"; a signed-in account always governs). Offers may carry `eligible-regions` (US states, from the ZIP table): outside a region the offer is hidden, with no location it is shown as "enter your ZIP" and cannot be added. The declared audience is applied to the anonymous cart as a customer group (employee, small-business, existing-customer; one per cart, in that priority). Customer-group and `call-center` channel prices are selected from the embedded prices, so the buyer's own price is the one on every surface. `GET /api/offers`, `GET /api/offers/[key]` and `/api/buyer-context` expose the same resolution.
+
 ## Requirements
 
 ### Requirement: Offers resolved from where the service reaches and who is asking

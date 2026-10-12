@@ -11,6 +11,8 @@ Opening periods — a week free, a month at no charge, a reduced rate for six mo
 
 **As built by workstreams L and G (D-023, D-065).** The intro period starts at the order date, independent of the service-start date (the cancellation window, D-023). `recurringOrderScope` cannot limit a discount to the first order, so the stored schedule is the promise (Q-014). G's "first month free" discount also stacks on Cable 100 and Air 5G, so the first charge can be 0 (Q-013).
 
+**Changed by `dtv-experience-parity`.** The seeded promotion is now one first-order cart discount (`NonRecurringOrdersOnly`) plus WELCOME10 and MALVA-CABLE5; there are no free-day, duration or trial-day promotions. On a first-order promotion the stored schedule (format v1, unchanged) gets its first period as a one-month `intro` computed from the engine's per-unit discount, and every later month is the standing price. Recurring orders keep the standing price. Retired discounts are removed by `seed:cleanup-discounts` (read-only by default, owner-confirmed, not yet run).
+
 ## Requirements
 
 ### Requirement: A free or reduced opening period that ends on a known date

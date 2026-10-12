@@ -11,6 +11,8 @@ A telecom catalog is not one kind of product. An internet plan is described by s
 
 **As built by workstream G (differences from the spec's attribute table).** Added: `end-time`, `offer-family`, `intro-free-months`, `price-steps`, `addon-tag`, `label-plan-id`, `bundle-discount-text`, `activation-fee` (also a one-time price on cable variants) and plan facts copied onto offers. `isRequired` is dropped on set attributes (the platform refuses it); empty sets are omitted. Extra recurrence policies `malva-device-installment-12/24/36` and `malva-device-lease-24` (D-060). Customer-group keys are `consumer`, `small-business`, `employee`, `existing-customer` (no `malva-` prefix, D-058). Price keys use `_`, not `.`. No Stores or Product Selections (D-058).
 
+**Changed by `dtv-experience-parity`.** `required-addon-kinds` is now enforced: a plan that lists `installation` is not accepted into the cart or at checkout until an add-on of that kind is attached (`REQUIRED_ADDON_KIND_MISSING`; `equipment` stays satisfied by the equipment rule). The `addon-kind` enum gained `installation`; offers gained `requires-offers`, `negates-offers` and `eligible-regions`; a `call-center` customer group and sales channel exist for channel prices; embedded prices may carry `customerGroup` and `channel`. Seeded counts are now 59 products and 31 offers.
+
 ## Requirements
 
 ### Requirement: Telecom catalog model
