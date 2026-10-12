@@ -1,0 +1,16 @@
+{
+  "common": {
+    "appName": "Malva Partner-Portal",
+    "placeholder": "Partner-Portal",
+    "signedOut": "Sie sind nicht angemeldet.",
+    "loading": "Wird geladen",
+    "tryAgain": "Erneut versuchen",
+    "backHome": "Zur Startseite"
+  },
+  "errors": {
+    "genericTitle": "Etwas ist schiefgelaufen",
+    "genericBody": "Bitte versuchen Sie es erneut.",
+    "notFoundTitle": "Seite nicht gefunden",
+    "notFoundBody": "Diese Adresse gibt es nicht."
+  }
+}

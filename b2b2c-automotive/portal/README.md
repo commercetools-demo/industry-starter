@@ -1,0 +1,61 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED. -->
+
+# Malva Partner Portal
+
+Next.js 16 app for resellers' staff: run a store (assortment, prices, theme, content). B2B surface, admin design kit (Inter, near-black action, light and dark). Not reseller-themed. Routes are `/[locale]/...`; the store is held in the session, never in the path. Locales: `de-DE` (default) and `en-US`.
+
+Node 22 (`.nvmrc`). Install and run:
+
+```
+cp .env.example .env.local   # fill in values; never commit .env.local
+npm ci
+npm run dev                  # http://localhost:3000, or: npm run dev -- -p 3100
+```
+
+## Scripts
+
+| Script | What it does |
+| --- | --- |
+| `npm run dev` / `build` / `start` | Next.js |
+| `npm run lint` / `typecheck` / `test` | ESLint, `tsc --noEmit`, Vitest |
+| `npm run check` | The quality gate: typecheck, lint, then the gate scripts below, then tests |
+| `npm run verify:build` | `next build`, then route, health-route and bundle-secret checks on the output |
+
+## Gates (`scripts/`)
+
+- `check-versions`: next above 16.0.0, next-intl 4, platform-sdk 8, ts-client 4, react 19, `.nvmrc` starts with 22.
+- `check-tailwind`: Tailwind v4 only (no config file, `@import 'tailwindcss'`, `@tailwindcss/postcss`).
+- `check-secrets`: no `NEXT_PUBLIC_` on a secret, no tracked `.env*`, `.env.example` lists every variable empty, every scope has a `# <scope> : <reason>` line and no scope used in code is undocumented.
+- `check-server-only`: `lib/ct/**`, `lib/session*.ts`, `lib/contentools/**` (except `origin.ts`) start with `import 'server-only'`; client code never imports them.
+- `check-tokens`: components use tokens only (see below).
+- `check-messages`: exactly `de-DE.json` and `en-US.json`, identical keys and ICU placeholders, no empty values, every `t('ns.key')` exists.
+- `check-routes`, `check-no-dev-pages`, `check-no-health-in-release`, `check-bundle-secrets`: release hygiene. Dev pages are named `page.dev.tsx` and only exist outside production builds (`next.config.ts` `pageExtensions`); the health route must not exist when `RELEASE=1` or on the production context.
+- ESLint rules (`eslint.config.mjs`, tests in `eslint/rules.test.mjs`): `new ClientBuilder` only in `lib/ct/client.ts`; commercetools SDK only in `lib/ct/**` and `lib/mappers/**`; no `fetch('/api/...')` in components and pages (hooks only); locale-aware navigation only (`@/i18n/routing`); no Puck value imports in Server Components; admin client importable only from `app/api/seller/**`, `lib/ct/seller/**`, `lib/contentools/jwt.ts`, provisioning client only from `app/api/auth/register/**`.
+
+## Design tokens
+
+Components use tokens only; see `scripts/check-tokens.mjs`. `app/tokens.css` is a copy of `../design/export/tokens.admin.css` without its Google Fonts `@import` (fonts are self-hosted by `next/font`, Q-B01); `check-tokens` fails when the copy drifts. The `@theme inline` block in `app/globals.css` between `theme:begin` and `theme:end` is generated: run `node scripts/gen-theme-block.mjs` after editing `app/tokens.css`. The default Tailwind scales are removed, so only token utilities exist (`bg-bg-surface`, `text-text`, `p-400`, `rounded-300`, `text-body-2`, `shadow-card`, `h-topbar`). Light and dark through `data-theme` on `<html>` (key `malva-portal-theme` in localStorage, applied before first paint); the top bar `--color-bg-topbar` is dark in both themes. Dev specimen: `/dev/tokens` (development only).
+
+## Locales
+
+Two locales only. Add a message key to both `messages/de-DE.json` and `messages/en-US.json` in the same commit. Never import `Link`, `redirect`, `useRouter` or `usePathname` from `next/link` or `next/navigation`; use `@/i18n/routing`. `/` redirects to the locale in the cookie `your-shop-country-locale`, else `de-DE` (no Accept-Language detection). A supported locale in the wrong case is redirected to the canonical case; an unsupported one is a 404. `proxy.ts` skips `/api`, `/_next`, files with an extension and, outside production, `/dev`.
+
+## Puck manager peer set (A-02, Q-A01)
+
+`@commercetools-demo/puck-page-manager`, `puck-content-manager` and `puck-theme-manager` are pinned to `0.8.1`. They install with `npm install` and no `--legacy-peer-deps`, together with React 19. The peers they declare, as resolved here (matching `b2b2c-starter/dealer`, whose ranges are `^3.36.0`, `^3.2.0`, `5.3.4`, `^10.1.14`):
+
+| Peer | Declared by the managers | Installed |
+| --- | --- | --- |
+| `@chakra-ui/react` | `^3.36.0` | 3.37.0 |
+| `@commercetools/nimbus` | `^3.2.0` | 3.6.0 |
+| `@commercetools/nimbus-icons` | `^3.2.0` (page and content manager) | 3.6.0 |
+| `react-router-dom` | `>=5.0.0 <6` | 5.3.4 |
+| `react-intl` | `>=6.0.0` | 10.2.2 |
+| `react`, `react-dom` | `>=19.0.0` | 19.2.4 |
+
+`@emotion/react` ^11.14 is installed as the reference does. `puck-renderer` and `puck-editor` arrive transitively and are not installed explicitly. Test-runner note: `@vitejs/plugin-react` is on `^5` because v6 declares an optional peer on `@babel/core` 8, which conflicts with the nimbus dependency tree (`@babel/core` 7).
+
+## Deployment
+
+`netlify.toml` is in this directory. In the Netlify UI set Base directory to `b2b2c-automotive/portal`. `AGENTS.md` is the block `next dev` writes; commit it as is. Shared code with the storefront is copied, not packaged (no workspace).

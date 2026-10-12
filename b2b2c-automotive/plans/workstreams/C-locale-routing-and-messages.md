@@ -214,3 +214,15 @@ Storefront (J2). Portal tasks are tracked by the portal junior.
 - C-08 storefront: partial (README locales section done; fresh-clone `check` and `verify:build` left to the lead)
 
 Evidence in `plans/evidence/C/`: `curl-storefront.txt`, `storefront-bare-notfound.png`, `storefront-de.png`, `storefront-en.png`, `storefront-cookie-redirect.png`, `check-storefront.txt`. Browser checks ran on port 3010: placeholder renders in both locales, `lang` and cookie correct, no console errors (the 404 document of `/fr-FR/hartmann` is the only logged resource error, as expected).
+
+Portal (J3):
+- C-01 portal: done (`i18n/config.ts`, `lib/utils.ts`; 11 tests)
+- C-02 portal: done (`i18n/routing.ts`, `i18n/request.ts`, `next.config.ts` with the next-intl plugin; 3 tests)
+- C-03 portal: done (catalogs `common.*` and `errors.*`, plus `common.signedOut`; real `check-messages`, 8 tests)
+- C-04 portal: done (`lib/locale-redirect.ts`, `proxy.ts` with the comment for R; 11 plus 5 tests)
+- C-05 portal: done (`app/[locale]/{layout,page,error,not-found}.tsx`, `app/not-found.tsx`, `app/global-error.tsx`; tests in `app/[locale]/pages.test.tsx`; the page is the signed-out placeholder)
+- C-06 portal: done (`/dev/tokens` answers 200 in development without a redirect)
+- C-07 portal: done (async root layout reads `x-next-intl-locale`; `app/layout.test.tsx`)
+- C-08 portal: partial (README locales section done; fresh-clone `check` and `verify:build` left to the lead)
+
+Evidence in `plans/evidence/C/`: `curl-portal.txt`, `portal-de.png`, `portal-en.png`, `portal-fr-notfound.png`, `check-portal.txt`, `portal-README.md`. Browser checks ran on port 3100: both locales render with tokens applied, `lang` and cookie correct, bare `/` with the `en-US` cookie lands on `/en-US`, `/fr-FR` is 404, no console errors. The sign-in redirect after `/de-DE` is R's.

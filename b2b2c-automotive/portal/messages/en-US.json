@@ -1,0 +1,16 @@
+{
+  "common": {
+    "appName": "Malva Partner Portal",
+    "placeholder": "Partner portal",
+    "signedOut": "You are not signed in.",
+    "loading": "Loading",
+    "tryAgain": "Try again",
+    "backHome": "Back to home"
+  },
+  "errors": {
+    "genericTitle": "Something went wrong",
+    "genericBody": "Please try again.",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "This address does not exist."
+  }
+}

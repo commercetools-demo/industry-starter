@@ -230,3 +230,16 @@ Storefront (J2). Portal tasks are tracked by the portal junior.
 - A-09 storefront: done (`npm run check` and `verify:build` green; helpers and smoke tests)
 - A-10 storefront: done (root layout is async per C-07; `AGENTS.md` block written by `next dev`; `CLAUDE.md`, `netlify.toml`)
 - A-11 storefront: partial (README done; the fresh-clone dry run was not possible because nothing is committed yet; both gates are green in the working tree. Lead: run it after committing). Evidence: `plans/evidence/A/` (`storefront-build.txt`, `versions-storefront.txt`; no `storefront-root.png`, the root path only redirects, see `plans/evidence/C/`)
+
+Portal (J3):
+- A-01 portal: n/a (storefront only)
+- A-02 portal: done (`create-next-app@16`, Next pinned 16.4.0; the three Puck managers pinned 0.8.1; installs cleanly with React 19 and no `--legacy-peer-deps`; peers `@chakra-ui/react` 3.37.0, `@commercetools/nimbus` and `nimbus-icons` 3.6.0, `react-router-dom` 5.3.4, `react-intl` 10.2.2, `@emotion/react` ^11.14; recorded in `portal/README.md`; Q-A01 resolved, OA-07 not needed. `@vitejs/plugin-react` is ^5 and `@types/node` ^22 to avoid peer conflicts, see Q-J3-01)
+- A-03 portal: done (`check-versions`, adds react 19; 8 tests)
+- A-04 portal: done (`check-tailwind`, 4 tests)
+- A-05 portal: done (`check-secrets`, `.env.example` with the three credential sets and `# <scope> : <reason>` lines, `.gitignore`; 8 tests)
+- A-06 portal: done (`check-server-only` also covers `lib/contentools/**`; placeholder `lib/ct/index.ts`; 3 tests)
+- A-07 portal: done (all 6 rules incl. the admin and provisioning client fence; fixtures and `eslint/rules.test.mjs`)
+- A-08 portal: done (`check-bundle-secrets`, `check-no-dev-pages` (rule: dev routes must be `page.dev.tsx`, see Q-J3-02), `check-no-health-in-release`, `check-routes`; `check-tokens` and `check-messages` were written directly in their full B and C form, no pass-through stage)
+- A-09 portal: done (`npm run check` and `verify:build` green; helpers and smoke tests; 25 test files, 128 tests)
+- A-10 portal: done (`lib/*` placeholders, async root layout per C-07, `netlify.toml`, `AGENTS.md` block written by `next dev`, `CLAUDE.md`)
+- A-11 portal: partial (README done; the fresh-clone dry run was not possible before commit. Lead: run `npm ci && npm run check && npm run verify:build` in `portal/` after committing). Evidence: `plans/evidence/A/portal-build.txt`, `versions-portal.txt`
