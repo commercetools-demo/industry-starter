@@ -21,6 +21,11 @@ export function SiteFooter({ items }: SiteFooterProps): ReactElement {
           <span className="font-display text-3xl font-bold leading-none tracking-widest text-brand-500">malva</span>
           <nav aria-label={t('nav')}>
             <ul className="m-0 flex list-none flex-wrap gap-x-7 gap-y-3 p-0">
+              <li>
+                <Link href={PLAN_FINDER_PATH} className={LINK}>
+                  {t('planFinder')}
+                </Link>
+              </li>
               {items.map((item) => (
                 <li key={item.key}>
                   <Link href={item.path} className={LINK}>
@@ -28,11 +33,6 @@ export function SiteFooter({ items }: SiteFooterProps): ReactElement {
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link href={PLAN_FINDER_PATH} className={LINK}>
-                  {t('planFinder')}
-                </Link>
-              </li>
               <li>
                 <Link href="/support" className={LINK}>
                   {t('support')}

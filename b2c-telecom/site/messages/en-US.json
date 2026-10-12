@@ -11,7 +11,14 @@
     "skipToContent": "Skip to content",
     "nav": {
       "primary": "Main navigation",
-      "planFinder": "Plan finder"
+      "planFinder": "Plan finder",
+      "browsePlans": "Browse all plans",
+      "mega": {
+        "label": "Plan categories",
+        "phone": "Unlimited talk and text with data to match",
+        "wireless": "Home internet over 4G and 5G, no cable needed",
+        "cable": "Fast wired internet for the whole household"
+      }
     },
     "account": {
       "login": "Log in",

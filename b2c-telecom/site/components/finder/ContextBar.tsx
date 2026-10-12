@@ -3,6 +3,7 @@
 import { useState, type FormEvent, type ReactElement } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
+import { cx } from '@/lib/cx';
 import { Field, Input, Select } from '@/components/ui/Field';
 import { useBuyerContextActions } from '@/hooks/useFinder';
 import type { BuyerContextView } from '@/app/api/buyer-context/route';
@@ -29,6 +30,8 @@ export function ContextBar({ context, actions }: ContextBarProps): ReactElement 
   const [busy, setBusy] = useState(false);
   const [declareError, setDeclareError] = useState(false);
   const readOnly = context.fromAccount;
+  // An employee's group decides everything: whether they are an existing customer changes no plan, price or discount, so the control is hidden.
+  const employee = context.customerType === 'employee';
   const location = context.location;
 
   async function declare(patch: Parameters<typeof actions.declare>[0]): Promise<void> {
@@ -58,7 +61,7 @@ export function ContextBar({ context, actions }: ContextBarProps): ReactElement 
       <h2 id="finder-context-title" className="m-0 font-display text-lg font-bold">
         {t('title')}
       </h2>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className={cx('grid grid-cols-1 gap-4', employee ? 'md:grid-cols-2' : 'md:grid-cols-3')}>
         <Field label={t('customerType.label')} hint={readOnly ? t('fromAccount') : undefined}>
           <Select value={context.customerType} disabled={readOnly} onChange={(event) => void declare({ customerType: event.target.value as CustomerType })}>
             {CUSTOMER_TYPES.map((type) => (
@@ -68,15 +71,17 @@ export function ContextBar({ context, actions }: ContextBarProps): ReactElement 
             ))}
           </Select>
         </Field>
-        <Field label={t('existing.label')} hint={readOnly ? t('fromAccount') : undefined}>
-          <Select value={context.existingCustomer} disabled={readOnly} onChange={(event) => void declare({ existingCustomer: event.target.value as (typeof EXISTING)[number] })}>
-            {EXISTING.map((value) => (
-              <option key={value} value={value}>
-                {t(`existing.${value}`)}
-              </option>
-            ))}
-          </Select>
-        </Field>
+        {employee ? null : (
+          <Field label={t('existing.label')} hint={readOnly ? t('fromAccount') : undefined}>
+            <Select value={context.existingCustomer} disabled={readOnly} onChange={(event) => void declare({ existingCustomer: event.target.value as (typeof EXISTING)[number] })}>
+              {EXISTING.map((value) => (
+                <option key={value} value={value}>
+                  {t(`existing.${value}`)}
+                </option>
+              ))}
+            </Select>
+          </Field>
+        )}
         <form onSubmit={(event) => void submit(event)} noValidate className="flex flex-col gap-3">
           <Field label={t('zip.label')} error={zipError ?? undefined} errorLive>
             <div className="flex gap-3">

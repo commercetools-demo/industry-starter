@@ -11,6 +11,11 @@ export const COPIED_FROM_ANCHOR = ['technology', 'downstream-mbps', 'data-gb', '
 
 export const ALL_AUDIENCES = ['consumer', 'small-business', 'employee'];
 
+/** The only plans an employee may buy: one per family. Every other plan (and the bundle) is sold to consumers and small businesses only. */
+export const EMPLOYEE_PLAN_KEYS: readonly string[] = ['malva-offer-phone-unlimited', 'malva-offer-phone-unlimited-max', 'malva-offer-wireless-5g-plus', 'malva-offer-cable-gig'];
+
+const audienceOf = (key: string, kind: string): string[] => (kind === 'base-package' || kind === 'bundle') && !EMPLOYEE_PLAN_KEYS.includes(key) ? ALL_AUDIENCES.filter((entry) => entry !== 'employee') : ALL_AUDIENCES;
+
 export function productByKey(key: string): ProductDraft {
   const product = descriptiveProducts.find((p) => p.key === key);
   if (!product) throw new Error(`No descriptive product "${key}"`);
@@ -55,7 +60,7 @@ export function buildOffer(spec: OfferSpec, lock: Lock = getLock()): ProductDraf
     'included-offers': nonEmpty(includedOffersOf(spec.key)),
     'compatible-addons': nonEmpty(compatibleAddonsOf(spec.key)),
     'conflicts-with': nonEmpty(conflictsOf(spec.key)),
-    audience: ALL_AUDIENCES,
+    audience: audienceOf(spec.key, wiring.kind),
     'existing-customer': 'any',
     ...Object.fromEntries(COPIED_FROM_ANCHOR.map((name) => [name, anchorAttrs[name]])),
     ...spec.extras,

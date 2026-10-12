@@ -11,10 +11,12 @@ const ROOTS: [string, string, string, string][] = [
   ['add-ons', 'zusatzangebote', 'Add-ons', 'Zusatzangebote'],
 ];
 
+const KEY_OF: Record<string, string> = { 'phone-plans': 'malva-cat-phone-plans', 'home-wireless-internet': 'malva-cat-home-wireless', 'cable-internet': 'malva-cat-cable-internet', 'add-ons': 'malva-cat-add-ons' };
+
 function tree(locale: 'en-US' | 'de-DE'): Category[] {
   return ROOTS.map(([en, de, nameEn, nameDe]) => ({
     id: en,
-    key: `malva-cat-${en}`,
+    key: KEY_OF[en],
     name: locale === 'en-US' ? nameEn : nameDe,
     slug: locale === 'en-US' ? en : de,
     slugs: { 'en-US': en, 'de-DE': de },
@@ -23,17 +25,16 @@ function tree(locale: 'en-US' | 'de-DE'): Category[] {
 }
 
 describe('SiteFooter', () => {
-  it('Footer links: every item is a link with the category href and Support goes to /support', () => {
+  it('Footer links: Plan finder first, every category a link with its href, no Add-ons, Support last', () => {
     renderWithProviders(<SiteFooter items={buildNavItems(tree('en-US'), 'en-US')} />);
     const nav = screen.getByRole('navigation', { name: 'Footer' });
     const links = within(nav).getAllByRole('link');
-    expect(links.map((link) => link.textContent)).toEqual(['Phone plans', 'Wireless internet', 'Cable internet', 'Add-ons', 'Plan finder', 'Support']);
+    expect(links.map((link) => link.textContent)).toEqual(['Plan finder', 'Phone plans', 'Wireless internet', 'Cable internet', 'Support']);
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
+      '/en-US/plan-finder',
       '/en-US/shop/phone-plans',
       '/en-US/shop/home-wireless-internet',
       '/en-US/shop/cable-internet',
-      '/en-US/shop/add-ons',
-      '/en-US/plan-finder',
       '/en-US/support',
     ]);
   });

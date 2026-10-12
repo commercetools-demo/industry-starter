@@ -11,7 +11,14 @@
     "skipToContent": "Zum Inhalt springen",
     "nav": {
       "primary": "Hauptnavigation",
-      "planFinder": "Tarifberater"
+      "planFinder": "Tarifberater",
+      "browsePlans": "Alle Tarife",
+      "mega": {
+        "label": "Tarifkategorien",
+        "phone": "Unbegrenzt telefonieren und schreiben, mit passendem Datenvolumen",
+        "wireless": "Internet für zu Hause über 4G und 5G, ganz ohne Kabel",
+        "cable": "Schnelles Kabel-Internet für den ganzen Haushalt"
+      }
     },
     "account": {
       "login": "Anmelden",

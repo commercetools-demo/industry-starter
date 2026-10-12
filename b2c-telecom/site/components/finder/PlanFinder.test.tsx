@@ -258,4 +258,13 @@ describe('PlanFinder', () => {
     renderCable();
     expect(await screen.findByText("We don't serve 99999 yet.")).toBeInTheDocument();
   });
+
+  it('an employee has no "Existing customer" control (it changes nothing for them)', async () => {
+    stub();
+    const base = vi.mocked(fetch).getMockImplementation()!;
+    vi.mocked(fetch).mockImplementation(((url: string, init?: RequestInit) => (url === '/api/buyer-context' ? reply(200, { context: { ...context, customerType: 'employee' } }) : base(url, init))) as typeof fetch);
+    renderCable();
+    expect(await screen.findByLabelText('Customer type')).toHaveValue('employee');
+    expect(screen.queryByLabelText('Existing customer')).not.toBeInTheDocument();
+  });
 });

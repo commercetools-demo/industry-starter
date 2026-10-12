@@ -17,6 +17,14 @@ export function monthlyPrices(usdCents: number, policy: string = POLICY_MONTHLY,
   return CURRENCIES.map((currency) => ({ currency, centAmount: amountIn(currency, usdCents), country: COUNTRY_OF[currency], recurrencePolicy: policy, ...scope }));
 }
 
+/** Small businesses pay this much less per month on every plan (USD cents; add-ons and equipment are not discounted). The bundle has its own group prices. */
+export const SMALL_BUSINESS_PLAN_DROP_CENTS = 500;
+
+/** The small-business group prices of one plan variant: the standing monthly price minus the drop. */
+export function smallBusinessPrices(usdCents: number): PriceSpec[] {
+  return monthlyPrices(usdCents - SMALL_BUSINESS_PLAN_DROP_CENTS, POLICY_MONTHLY, { customerGroup: 'small-business' });
+}
+
 /** The bundle: cable internet plus a phone plan at one price, with prices for two customer groups (USD cents). */
 export const BUNDLE_OFFER_KEY = 'malva-offer-bundle-cable-phone';
 export const BUNDLE_PRICES: { sku: string; usd: number; groups: Record<string, number> } = { sku: 'MLV-BDL-CBL-PHN-24M', usd: 7500, groups: { 'small-business': 5900, 'existing-customer': 6500 } };

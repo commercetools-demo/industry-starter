@@ -1,5 +1,5 @@
 import type { ProductDraft } from '../../types';
-import { BUNDLE_OFFER_KEY, BUNDLE_PRICES, monthlyPrices, oneTimePrices, CABLE_ACTIVATION_FEE_CENTS, PLAN_PRICES, TERM_KEY } from '../prices';
+import { BUNDLE_OFFER_KEY, BUNDLE_PRICES, monthlyPrices, smallBusinessPrices, oneTimePrices, CABLE_ACTIVATION_FEE_CENTS, PLAN_PRICES, TERM_KEY } from '../prices';
 import { buildOffer, type OfferSpec } from './helpers';
 
 const CABLE_OFFERS = ['malva-offer-cable-100', 'malva-offer-cable-500', 'malva-offer-cable-gig', 'malva-offer-cable-existing-customer'];
@@ -18,7 +18,7 @@ function cableOffer(key: string): ProductDraft {
     variants: PLAN_PRICES[key].map((v) => ({
       sku: v.sku,
       values: { 'contract-term': TERM_KEY[v.term], 'charge-type': 'monthly' },
-      prices: [...monthlyPrices(v.usd), ...oneTimePrices(CABLE_ACTIVATION_FEE_CENTS)],
+      prices: [...monthlyPrices(v.usd), ...smallBusinessPrices(v.usd), ...oneTimePrices(CABLE_ACTIVATION_FEE_CENTS)],
     })),
   });
 }

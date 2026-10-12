@@ -1,5 +1,5 @@
 import type { ProductDraft } from '../../types';
-import { monthlyPrices, PLAN_PRICES, TERM_KEY } from '../prices';
+import { monthlyPrices, smallBusinessPrices, PLAN_PRICES, TERM_KEY } from '../prices';
 import { buildOffer, type OfferSpec } from './helpers';
 
 const WIRELESS_OFFERS = ['malva-offer-wireless-lite', 'malva-offer-wireless-5g', 'malva-offer-wireless-5g-plus'];
@@ -15,7 +15,7 @@ export const wirelessOffers: ProductDraft[] = WIRELESS_OFFERS.map((key) =>
     variants: PLAN_PRICES[key].map((v) => ({
       sku: v.sku,
       values: { 'contract-term': TERM_KEY[v.term], 'charge-type': 'monthly' },
-      prices: monthlyPrices(v.usd),
+      prices: [...monthlyPrices(v.usd), ...smallBusinessPrices(v.usd)],
     })),
   }),
 );

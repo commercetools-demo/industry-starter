@@ -5,8 +5,9 @@ import { HeaderSearchLink } from '@/components/search/HeaderSearchLink';
 import { FOCUS_RING_ON_BRAND } from '@/components/ui/focus';
 import { HEADER_SEARCH_ENABLED } from '@/lib/config/search';
 import { cx } from '@/lib/cx';
-import type { NavItem } from '@/lib/nav';
+import { splitNavItems, type NavItem } from '@/lib/nav';
 import type { Market } from '@/lib/utils';
+import { BrowsePlansMenu } from './BrowsePlansMenu';
 import { LocaleSwitcher } from './LocaleSwitcher';
 import { MobileDrawer } from './MobileDrawer';
 import { NavPill } from './NavPill';
@@ -23,6 +24,7 @@ type SiteHeaderProps = {
 export function SiteHeader({ items, account, bundle }: SiteHeaderProps): ReactElement {
   const t = useTranslations('shell');
   const locale = useLocale() as Market['locale'];
+  const { plans, others } = splitNavItems(items);
   return (
     <header className="sticky top-0 z-10 bg-surface-brand text-text-on-brand shadow-sm">
       <div className="mx-auto flex w-full max-w-(--container-width) items-center gap-5 px-5 py-4 md:gap-8 md:px-10">
@@ -34,10 +36,11 @@ export function SiteHeader({ items, account, bundle }: SiteHeaderProps): ReactEl
           malva
         </Link>
         <nav aria-label={t('nav.primary')} className="hidden min-w-0 flex-1 items-center gap-2 md:flex">
-          {items.map((item) => (
+          <PlanFinderPill />
+          {plans.length > 0 ? <BrowsePlansMenu plans={plans} items={items} /> : null}
+          {others.map((item) => (
             <NavPill key={item.key} item={item} items={items} />
           ))}
-          <PlanFinderPill />
         </nav>
         <div className="ml-auto flex items-center gap-5 md:ml-0">
           <div className="hidden md:block">
