@@ -1,5 +1,5 @@
 import type { ProductDraft } from '../../types';
-import { monthlyPrices, PLAN_PRICES, TERM_KEY } from '../prices';
+import { CALL_CENTER_PRICES, monthlyPrices, PLAN_PRICES, TERM_KEY } from '../prices';
 import { buildOffer, type OfferSpec } from './helpers';
 
 const PHONE_OFFERS = ['malva-offer-phone-essential', 'malva-offer-phone-plus', 'malva-offer-phone-unlimited', 'malva-offer-phone-unlimited-max'];
@@ -14,7 +14,7 @@ function phoneOffer(key: string, spec: Partial<OfferSpec> = {}): ProductDraft {
     variants: PLAN_PRICES[key].map((v) => ({
       sku: v.sku,
       values: { 'contract-term': TERM_KEY[v.term], 'charge-type': 'monthly' },
-      prices: monthlyPrices(v.usd),
+      prices: [...monthlyPrices(v.usd), ...(CALL_CENTER_PRICES[v.sku] === undefined ? [] : monthlyPrices(CALL_CENTER_PRICES[v.sku] as number, undefined, { channel: 'call-center' }))],
     })),
   });
 }

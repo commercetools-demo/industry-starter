@@ -35,7 +35,7 @@ export function skuErrors(products: ProductDraft[]): string[] {
 export function ownedKeyErrors(manifest: SeedManifest): string[] {
   const errors: string[] = [];
   for (const [kind, drafts] of Object.entries(manifest)) {
-    if (kind === 'customerGroup' || kind === 'zoneCoverage' || kind === 'customObject') continue;
+    if (kind === 'customerGroup' || kind === 'channel' || kind === 'zoneCoverage' || kind === 'customObject') continue;
     for (const draft of drafts ?? []) {
       if (!draft.key.startsWith('malva-')) errors.push(`${kind} key "${draft.key}" has no malva- prefix`);
     }

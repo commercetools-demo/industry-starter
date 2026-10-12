@@ -5,4 +5,5 @@ export const customerGroups: CustomerGroupDraft[] = [
   { key: 'small-business', groupName: 'Small business' },
   { key: 'employee', groupName: 'Employee' },
   { key: 'existing-customer', groupName: 'Existing customer' },
+  { key: 'call-center', groupName: 'Call center' },
 ];

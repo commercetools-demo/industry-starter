@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MANIFEST } from '.';
-import type { CategoryDraft } from '../types';
+import type { CategoryDraft, ProductDraft, VariantDraft } from '../types';
 import { attr, masterAttr, nameEn, OFFERS, PRODUCTS, priceOf, product, variantsOf } from './manifest-access';
 import { PLAN_PRICES } from './prices';
 import { conflictsOf } from './relations';
@@ -70,9 +70,21 @@ describe('seed-catalog-data scenarios', () => {
         expect(v.prices.some((p) => p.value.currencyCode === 'EUR' && p.country === 'DE'), v.sku).toBe(true);
         for (const p of v.prices) expect(p.value.centAmount).toBeGreaterThan(0);
         // every recurring price is tied to a recurrence policy; one-time prices have none
-        for (const p of v.prices) expect(p.key.endsWith(`_${p.recurrencePolicy ?? 'once'}`)).toBe(true);
+        for (const p of v.prices.filter((entry) => !entry.customerGroup && !entry.channel)) expect(p.key.endsWith(`_${p.recurrencePolicy ?? 'once'}`)).toBe(true);
+        // a scoped price has its own key suffix, so it can never collide with the standard price of the same variant
+        expect(new Set(v.prices.map((p) => p.key)).size, v.sku).toBe(v.prices.length);
       }
     }
+  });
+
+  it('Scoped prices: the call-center channel price on one phone variant is lower than the standard price, and a standard price remains', () => {
+    const phone = OFFERS.find((o) => o.key === 'malva-offer-phone-unlimited') as ProductDraft;
+    const variant = variantsOf(phone).find((v) => v.sku === 'MLV-PHN-UNL-M2M') as VariantDraft;
+    const standard = variant.prices.find((p) => p.value.currencyCode === 'USD' && !p.channel && !p.customerGroup);
+    const callCenter = variant.prices.find((p) => p.value.currencyCode === 'USD' && p.channel === 'call-center');
+    expect(standard?.value.centAmount).toBe(5000);
+    expect(callCenter).toMatchObject({ value: { centAmount: 4500 }, country: 'US', recurrencePolicy: 'malva-monthly' });
+    expect(callCenter?.key).toBe('mlv-phn-unl-m2m_usd_malva-monthly_chn-call-center');
   });
 
   it('Offers wrap what is sold: every sellable item has an offer, one existing-customer, one channel offer, all keys resolve', () => {

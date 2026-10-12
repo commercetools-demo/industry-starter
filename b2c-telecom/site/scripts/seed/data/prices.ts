@@ -13,9 +13,12 @@ export function amountIn(currency: Currency, usdCents: number): number {
 }
 
 /** Monthly (recurring) prices tied to a recurrence policy, USD/US and EUR/DE. */
-export function monthlyPrices(usdCents: number, policy: string = POLICY_MONTHLY): PriceSpec[] {
-  return CURRENCIES.map((currency) => ({ currency, centAmount: amountIn(currency, usdCents), country: COUNTRY_OF[currency], recurrencePolicy: policy }));
+export function monthlyPrices(usdCents: number, policy: string = POLICY_MONTHLY, scope: { customerGroup?: string; channel?: string } = {}): PriceSpec[] {
+  return CURRENCIES.map((currency) => ({ currency, centAmount: amountIn(currency, usdCents), country: COUNTRY_OF[currency], recurrencePolicy: policy, ...scope }));
 }
+
+/** Monthly prices only the call-center channel gets (USD cents; the standard price stays on every variant). */
+export const CALL_CENTER_PRICES: Record<string, number> = { 'MLV-PHN-UNL-M2M': 4500 };
 
 /** One-time prices (no recurrence policy), USD/US and EUR/DE. */
 export function oneTimePrices(usdCents: number): PriceSpec[] {

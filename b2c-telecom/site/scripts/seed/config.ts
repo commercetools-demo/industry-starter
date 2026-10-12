@@ -2,7 +2,8 @@
 export const ALLOWED_PROJECT_KEYS = ['spec-test-b2c-telecom'] as const;
 export const OWNED_PREFIX = 'malva-';
 export const OWNED_UNPREFIXED_KEYS = {
-  customerGroup: ['consumer', 'small-business', 'employee', 'existing-customer'],
+  customerGroup: ['consumer', 'small-business', 'employee', 'existing-customer', 'call-center'],
+  channel: ['call-center'],
 } as const;
 export const SKU_PREFIX = 'MLV-';
 

@@ -2,6 +2,7 @@
 import type { DemoCustomerDraft, DemoOrderDraft, SeedManifest } from '../types';
 import { cartDiscounts } from './cart-discounts';
 import { categories } from './categories';
+import { channels } from './channels';
 import { customTypes } from './custom-types';
 import { customerGroups } from './customer-groups';
 import { demoCustomers } from './demo/customers';
@@ -23,6 +24,7 @@ export const PLATFORM_MANIFEST: SeedManifest = {
   taxCategory: taxCategories,
   zoneCoverage,
   customerGroup: customerGroups,
+  channel: channels,
   recurrencePolicy: recurrencePolicies,
   shippingMethod: shippingMethods,
 };
