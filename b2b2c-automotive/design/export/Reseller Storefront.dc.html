@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/automotive-7a697ee3-23c4-414f-bd51-aedebb458570/tokens.css">
+<style>body{margin:0;background:#fdfdfd;font-family:Poppins,system-ui,sans-serif;color:#191c1f}a{color:#821810;text-decoration:none;cursor:pointer}a:hover{color:#911c14}button{font-family:inherit}input,select{font-family:'Public Sans',sans-serif}</style>
+</helmet>
+<div style="min-height:100vh;background:var(--color-surface-page);display:flex;flex-direction:column">
+  <div style="background:#000;color:#fff;font-size:13px;padding:8px 24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <span>Free pickup at {{ store.name }} · Free shipping over $99</span><span style="font-family:Archivo,sans-serif">Help · Track order · Canada (CAD $)</span>
+  </div>
+  <header style="background:#fff;border-bottom:1px solid var(--color-border);padding:16px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+    <div onClick="{{ goHome }}" style="font-weight:700;font-size:24px;color:#821810;letter-spacing:-.5px;cursor:pointer">Autoline</div>
+    <button onClick="{{ openPicker }}" style="display:flex;align-items:center;gap:10px;border:1px solid var(--color-border-strong);background:#fff;border-radius:3px;padding:8px 14px;cursor:pointer;text-align:left" style-hover="border-color:#821810">
+      <span style="width:10px;height:10px;border-radius:50%;background:#821810;box-shadow:0 0 0 4px #fcefee"></span>
+      <span style="display:flex;flex-direction:column;line-height:1.25"><span style="font-size:11px;color:#77878f;font-family:'Public Sans',sans-serif;text-transform:uppercase;letter-spacing:1.2px;font-weight:700">Your store</span><span style="font-size:14px;font-weight:600">{{ store.name }} · {{ store.city }}</span></span>
+      <span style="font-size:12px;color:#821810;font-family:Archivo,sans-serif;font-weight:700">Change</span>
+    </button>
+    <div style="flex:1;min-width:220px;display:flex"><input placeholder="Search parts, brands, part numbers" style="flex:1;height:44px;border:1px solid var(--color-border-strong);border-right:0;border-radius:2px 0 0 2px;padding:0 14px;font-size:14px;outline:none"><button onClick="{{ goAll }}" style="height:46px;padding:0 24px;background:#821810;color:#fff;border:0;border-radius:0 3px 3px 0;font-weight:600;cursor:pointer" style-hover="background:#911c14">Search</button></div>
+    <div style="display:flex;gap:20px;align-items:center;font-size:14px;font-weight:500"><a style="color:#191c1f">Sign in</a><button onClick="{{ goCart }}" style="background:#fcefee;color:#821810;border:0;border-radius:3px;padding:10px 16px;font-weight:600;cursor:pointer">Cart · {{ cartCount }}</button></div>
+  </header>
+  <nav style="background:#fff;border-bottom:1px solid var(--color-border);padding:0 24px;display:flex;gap:28px;overflow-x:auto;font-size:14px;font-weight:500">
+    <sc-for list="{{ cats }}" as="c" hint-placeholder-count="6"><a onClick="{{ c.go }}" style="padding:14px 0;color:{{ c.color }};white-space:nowrap;border-bottom:2px solid {{ c.bar }}">{{ c.name }}</a></sc-for>
+  </nav>
+
+  <div style="flex:1">
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <section style="background:#810000;color:#fff;padding:40px 24px">
+      <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px;align-items:center">
+        <div>
+          <div style="font-family:'Public Sans',sans-serif;font-size:12px;letter-spacing:1.2px;font-weight:700;text-transform:uppercase;color:#f5cb73">OEM parts · Fit guaranteed</div>
+          <h1 style="font-size:40px;line-height:1.15;font-weight:600;margin:12px 0;letter-spacing:-.5px;text-wrap:pretty">Genuine parts from {{ store.name }}, ready near you.</h1>
+          <p style="font-size:16px;line-height:1.5;margin:0 0 20px;max-width:460px;color:#f7d6d3">Pick up in {{ store.city }} {{ store.pickupLow }} or have it shipped.</p>
+          <button onClick="{{ goAll }}" style="height:48px;padding:0 28px;background:#fff;color:#821810;border:0;border-radius:28px;font-weight:600;cursor:pointer">Shop all parts</button>
+        </div>
+        <div style="background:#fff;color:#191c1f;border-radius:5px;padding:20px;display:grid;gap:12px">
+          <div style="font-weight:600;font-size:16px">Find parts for your vehicle</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">
+            <sc-for list="{{ vehicleFields }}" as="f" hint-placeholder-count="4"><select style="height:44px;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 10px;font-size:14px;background:#fff"><option>{{ f }}</option></select></sc-for>
+          </div>
+          <button onClick="{{ goAll }}" style="height:48px;background:#821810;color:#fff;border:0;border-radius:3px;font-weight:600;font-size:15px;cursor:pointer" style-hover="background:#911c14">Verify fitment</button>
+        </div>
+      </div>
+    </section>
+    <main style="max-width:1200px;margin:0 auto;padding:40px 24px;display:grid;gap:48px">
+      <section>
+        <h2 style="margin:0 0 16px;font-size:24px;font-weight:600">Shop by category</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px">
+          <sc-for list="{{ catTiles }}" as="c" hint-placeholder-count="6"><div onClick="{{ c.go }}" style="background:#810000;color:#fff;border-radius:7px;padding:18px 14px;min-height:96px;display:flex;align-items:flex-end;font-weight:600;font-size:15px;cursor:pointer" style-hover="background:#6d0115">{{ c.name }}</div></sc-for>
+        </div>
+      </section>
+      <section>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;gap:12px;flex-wrap:wrap"><h2 style="margin:0;font-size:24px;font-weight:600">Popular at {{ store.name }}</h2><a onClick="{{ goAll }}" style="font-family:Archivo,sans-serif;font-weight:500;font-size:14px">View all ›</a></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px">
+          <sc-for list="{{ popular }}" as="p" hint-placeholder-count="4">
+            <article style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:14px;display:grid;gap:8px;box-shadow:0 0 10px rgba(0,0,0,.05)">
+              <div onClick="{{ p.go }}" style="cursor:pointer;aspect-ratio:4/3;border-radius:5px;background:repeating-linear-gradient(135deg,#f2f4f5 0 10px,#e4e7e9 10px 20px);display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:11px;color:#5f6c72">product photo</div>
+              <div style="font-size:11px;font-family:'Public Sans',sans-serif;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#77878f">{{ p.brand }}</div>
+              <a onClick="{{ p.go }}" style="font-weight:500;font-size:15px;line-height:1.35;min-height:40px;color:#191c1f">{{ p.name }}</a>
+              <div style="font-size:12px;color:#8c5c1b">★ {{ p.rating }} <span style="color:#77878f">({{ p.reviews }})</span></div>
+              <div style="display:flex;gap:8px;align-items:baseline"><span style="font-size:20px;font-weight:600;color:#821810">{{ p.priceF }}</span><span style="font-size:13px;color:#77878f;text-decoration:line-through">{{ p.oldF }}</span></div>
+              <div style="font-size:12px;font-family:'Public Sans',sans-serif;font-weight:600;padding:4px 8px;border-radius:2px;background:{{ p.stockBg }};width:fit-content">{{ p.stock }}</div>
+              <button onClick="{{ p.add }}" style="height:44px;background:#821810;color:#fff;border:0;border-radius:3px;font-weight:600;cursor:pointer" style-hover="background:#911c14">Add to cart</button>
+            </article>
+          </sc-for>
+        </div>
+      </section>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isPlp }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:1200px;margin:0 auto;padding:24px;display:grid;gap:20px">
+      <div style="font-size:13px;color:#5f6c72;font-family:'Public Sans',sans-serif"><a onClick="{{ goHome }}">Home</a> › <span>{{ plpTitle }}</span></div>
+      <div style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:11px;font-family:'Public Sans',sans-serif;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#77878f">My garage</span>
+        <span style="background:#eaf7e9;border-radius:2px;padding:4px 10px;font-size:13px;font-weight:600">2019 Honda Civic · 2.0L</span>
+        <a style="font-family:Archivo,sans-serif;font-size:13px;font-weight:500">Change vehicle</a>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px">
+        <div><h1 style="margin:0;font-size:28px;font-weight:600">{{ plpTitle }}</h1><div style="font-size:13px;color:#5f6c72">{{ plpCount }} parts · prices and stock for {{ store.city }}</div></div>
+        <label style="display:flex;gap:8px;align-items:center;font-size:13px">Sort by <select onChange="{{ setSort }}" style="height:40px;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 10px;font-size:14px;background:#fff"><option value="pop">Most popular</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option><option value="rate">Top rated</option></select></label>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:24px;align-items:start">
+        <aside style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:16px;display:grid;gap:16px">
+          <div style="font-weight:600;font-size:15px">Filters</div>
+          <label style="display:flex;gap:10px;align-items:center;font-size:14px;cursor:pointer"><input type="checkbox" checked="{{ fFit }}" onChange="{{ togFit }}" style="width:18px;height:18px;accent-color:#821810">Fits my vehicle</label>
+          <label style="display:flex;gap:10px;align-items:center;font-size:14px;cursor:pointer"><input type="checkbox" checked="{{ fStock }}" onChange="{{ togStock }}" style="width:18px;height:18px;accent-color:#821810">Pickup today at {{ store.city }}</label>
+          <div style="border-top:1px solid var(--color-border);padding-top:14px;display:grid;gap:10px">
+            <div style="font-family:'Public Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#77878f">Brand</div>
+            <sc-for list="{{ brandOpts }}" as="b" hint-placeholder-count="6"><label style="display:flex;gap:10px;align-items:center;font-size:14px;cursor:pointer"><input type="checkbox" checked="{{ b.on }}" onChange="{{ b.tog }}" style="width:18px;height:18px;accent-color:#821810">{{ b.name }}</label></sc-for>
+          </div>
+        </aside>
+        <div style="grid-column:span 3;min-width:0">
+          <sc-if value="{{ plpEmpty }}" hint-placeholder-val="{{ false }}"><div style="background:#fff;border:1px dashed var(--color-border-strong);border-radius:5px;padding:48px;text-align:center;color:#5f6c72">No parts match these filters.</div></sc-if>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px">
+            <sc-for list="{{ plp }}" as="p" hint-placeholder-count="6">
+              <article style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:14px;display:grid;gap:8px;align-content:start;box-shadow:0 0 10px rgba(0,0,0,.05)">
+                <div onClick="{{ p.go }}" style="cursor:pointer;aspect-ratio:4/3;border-radius:5px;background:repeating-linear-gradient(135deg,#f2f4f5 0 10px,#e4e7e9 10px 20px);display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:11px;color:#5f6c72">product photo</div>
+                <div style="font-size:11px;font-family:'Public Sans',sans-serif;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#77878f">{{ p.brand }}</div>
+                <a onClick="{{ p.go }}" style="font-weight:500;font-size:15px;line-height:1.35;min-height:40px;color:#191c1f">{{ p.name }}</a>
+                <div style="font-size:12px;color:#8c5c1b">★ {{ p.rating }} <span style="color:#77878f">({{ p.reviews }})</span></div>
+                <div style="font-size:12px;font-family:'Public Sans',sans-serif;font-weight:600;padding:3px 8px;border-radius:2px;background:{{ p.fitBg }};width:fit-content">{{ p.fitText }}</div>
+                <div style="display:flex;gap:8px;align-items:baseline"><span style="font-size:20px;font-weight:600;color:#821810">{{ p.priceF }}</span><span style="font-size:13px;color:#77878f;text-decoration:line-through">{{ p.oldF }}</span></div>
+                <div style="font-size:12px;color:#475156">{{ p.stock }}</div>
+                <button onClick="{{ p.add }}" style="height:44px;background:#821810;color:#fff;border:0;border-radius:3px;font-weight:600;cursor:pointer" style-hover="background:#911c14">Add to cart</button>
+              </article>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isPdp }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:1200px;margin:0 auto;padding:24px;display:grid;gap:32px">
+      <div style="font-size:13px;color:#5f6c72;font-family:'Public Sans',sans-serif"><a onClick="{{ goHome }}">Home</a> › <a onClick="{{ pdp.goCat }}">{{ pdp.cat }}</a> › <span>{{ pdp.name }}</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:40px">
+        <div style="display:grid;gap:12px;align-content:start">
+          <div style="aspect-ratio:1/1;border-radius:5px;background:repeating-linear-gradient(135deg,#f2f4f5 0 14px,#e4e7e9 14px 28px);display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:12px;color:#5f6c72">product photo</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4"><div style="aspect-ratio:1/1;border-radius:5px;background:#f2f4f5;border:1px solid {{ t.bd }}"></div></sc-for></div>
+        </div>
+        <div style="display:grid;gap:14px;align-content:start">
+          <div style="font-size:12px;font-family:'Public Sans',sans-serif;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#77878f">{{ pdp.brand }} · OEM</div>
+          <h1 style="margin:0;font-size:28px;line-height:1.2;font-weight:600;text-wrap:pretty">{{ pdp.name }}</h1>
+          <div style="font-size:13px;color:#475156;font-family:'Public Sans',sans-serif">Part # {{ pdp.sku }} · <span style="color:#8c5c1b">★ {{ pdp.rating }}</span> ({{ pdp.reviews }} reviews)</div>
+          <div style="background:{{ pdp.fitBg }};border-radius:3px;padding:10px 14px;font-size:14px;font-weight:600">{{ pdp.fitLong }}</div>
+          <div style="display:flex;gap:12px;align-items:baseline"><span style="font-size:32px;font-weight:600;color:#821810">{{ pdp.priceF }}</span><span style="font-size:16px;color:#77878f;text-decoration:line-through">{{ pdp.oldF }}</span><span style="background:#fff8e8;color:#8c5c1b;font-size:12px;font-weight:700;padding:2px 8px;border-radius:2px;font-family:'Public Sans',sans-serif">{{ pdp.save }}</span></div>
+          <div style="border:1px solid var(--color-border);border-radius:5px;background:#fff;display:grid">
+            <div style="padding:14px 16px;display:flex;gap:12px;justify-content:space-between;align-items:center;border-bottom:1px solid var(--color-border);flex-wrap:wrap">
+              <div><div style="font-weight:600;font-size:14px">{{ pdp.stock }}</div><div style="font-size:13px;color:#5f6c72">{{ store.name }} · {{ store.addr }}</div></div>
+              <a onClick="{{ openPicker }}" style="font-family:Archivo,sans-serif;font-size:13px;font-weight:700">Change store</a>
+            </div>
+            <div style="padding:14px 16px;font-size:13px;color:#475156">Or ship to your door: arrives in 2–3 business days.</div>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;border:1px solid var(--color-border-strong);border-radius:3px;height:48px;background:#fff"><button onClick="{{ qtyDown }}" style="width:44px;height:100%;border:0;background:none;font-size:20px;cursor:pointer">−</button><span style="min-width:32px;text-align:center;font-weight:600">{{ pdpQty }}</span><button onClick="{{ qtyUp }}" style="width:44px;height:100%;border:0;background:none;font-size:20px;cursor:pointer">+</button></div>
+            <button onClick="{{ pdp.addQty }}" style="flex:1;min-width:180px;height:56px;background:#821810;color:#fff;border:0;border-radius:3px;font-weight:600;font-size:16px;cursor:pointer" style-hover="background:#911c14">Add to cart</button>
+          </div>
+          <div style="font-size:12px;color:#5f6c72">Sold and fulfilled by {{ store.name }}. 30-day returns at any {{ store.name }} counter.</div>
+        </div>
+      </div>
+      <section style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:32px">
+        <div><h2 style="margin:0 0 12px;font-size:18px;font-weight:600">Specifications</h2>
+          <sc-for list="{{ specs }}" as="s" hint-placeholder-count="4"><div style="display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--color-border);font-size:14px"><span style="color:#5f6c72">{{ s.k }}</span><span style="font-weight:500;text-align:right">{{ s.v }}</span></div></sc-for></div>
+        <div><h2 style="margin:0 0 12px;font-size:18px;font-weight:600">Compatible vehicles</h2>
+          <sc-for list="{{ fitList }}" as="v" hint-placeholder-count="4"><div style="padding:10px 0;border-bottom:1px solid var(--color-border);font-size:14px">{{ v }}</div></sc-for></div>
+      </section>
+      <section><h2 style="margin:0 0 16px;font-size:20px;font-weight:600">Often bought together</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px"><sc-for list="{{ related }}" as="p" hint-placeholder-count="3">
+          <article style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:14px;display:grid;gap:6px">
+            <div onClick="{{ p.go }}" style="cursor:pointer;aspect-ratio:4/3;border-radius:5px;background:repeating-linear-gradient(135deg,#f2f4f5 0 10px,#e4e7e9 10px 20px)"></div>
+            <a onClick="{{ p.go }}" style="font-weight:500;font-size:14px;color:#191c1f">{{ p.name }}</a>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600;color:#821810">{{ p.priceF }}</span><button onClick="{{ p.add }}" style="height:36px;padding:0 14px;background:#fff;color:#821810;border:1px solid #821810;border-radius:3px;font-weight:600;cursor:pointer" style-hover="background:#fcefee">Add</button></div>
+          </article></sc-for></div></section>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:1200px;margin:0 auto;padding:24px;display:grid;gap:20px">
+      <h1 style="margin:0;font-size:28px;font-weight:600">Your cart</h1>
+      <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}"><div style="background:#fff;border:1px dashed var(--color-border-strong);border-radius:5px;padding:56px;text-align:center;display:grid;gap:16px;justify-items:center"><div style="color:#5f6c72">Your cart is empty.</div><button onClick="{{ goAll }}" style="height:48px;padding:0 28px;background:#821810;color:#fff;border:0;border-radius:3px;font-weight:600;cursor:pointer">Browse parts</button></div></sc-if>
+      <sc-if value="{{ cartHas }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px;align-items:start">
+        <div style="grid-column:span 2;display:grid;gap:12px;min-width:0">
+          <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
+            <div style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:14px;display:grid;grid-template-columns:96px 1fr auto;gap:16px;align-items:center">
+              <div style="aspect-ratio:1/1;border-radius:5px;background:repeating-linear-gradient(135deg,#f2f4f5 0 8px,#e4e7e9 8px 16px)"></div>
+              <div style="display:grid;gap:4px;min-width:0"><span style="font-size:11px;font-family:'Public Sans',sans-serif;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#77878f">{{ l.brand }}</span><a onClick="{{ l.go }}" style="font-weight:500;font-size:15px;color:#191c1f">{{ l.name }}</a><span style="font-size:12px;color:#5f6c72">{{ l.stock }}</span>
+                <div style="display:flex;gap:16px;align-items:center;margin-top:6px"><div style="display:flex;align-items:center;border:1px solid var(--color-border-strong);border-radius:3px;height:36px"><button onClick="{{ l.dec }}" style="width:34px;height:100%;border:0;background:none;font-size:18px;cursor:pointer">−</button><span style="min-width:26px;text-align:center;font-weight:600;font-size:14px">{{ l.qty }}</span><button onClick="{{ l.inc }}" style="width:34px;height:100%;border:0;background:none;font-size:18px;cursor:pointer">+</button></div><a onClick="{{ l.remove }}" style="font-size:13px;font-family:Archivo,sans-serif">Remove</a></div></div>
+              <div style="font-weight:600;font-size:18px;color:#821810">{{ l.totalF }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <aside style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:20px;display:grid;gap:14px">
+          <div style="font-weight:600;font-size:18px">Order summary</div>
+          <div style="display:grid;gap:8px">
+            <label onClick="{{ setPickup }}" style="display:flex;gap:10px;align-items:flex-start;border:1px solid {{ pickBd }};background:{{ pickBg }};border-radius:3px;padding:10px 12px;cursor:pointer"><input type="radio" name="dm" checked="{{ isPickup }}" style="accent-color:#821810;margin-top:4px"><span style="font-size:14px"><b>Pick up · Free</b><br><span style="color:#5f6c72;font-size:12px">{{ store.name }}, {{ store.city }} · {{ store.pickup }}</span></span></label>
+            <label onClick="{{ setShip }}" style="display:flex;gap:10px;align-items:flex-start;border:1px solid {{ shipBd }};background:{{ shipBg }};border-radius:3px;padding:10px 12px;cursor:pointer"><input type="radio" name="dm" checked="{{ isShip }}" style="accent-color:#821810;margin-top:4px"><span style="font-size:14px"><b>Ship to me · {{ shipOptF }}</b><br><span style="color:#5f6c72;font-size:12px">2–3 business days</span></span></label>
+          </div>
+          <div style="display:flex;gap:8px"><input placeholder="Promo code" style="flex:1;min-width:0;height:40px;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 12px;font-size:14px"><button style="height:42px;padding:0 16px;background:#fff;border:1px solid #821810;color:#821810;border-radius:3px;font-weight:600;cursor:pointer">Apply</button></div>
+          <div style="display:grid;gap:8px;font-size:14px;border-top:1px solid var(--color-border);padding-top:14px">
+            <div style="display:flex;justify-content:space-between"><span>Subtotal</span><span>{{ subF }}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Delivery</span><span>{{ shipFeeF }}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>HST (13%)</span><span>{{ taxF }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:700;font-size:18px;border-top:1px solid var(--color-border);padding-top:10px"><span>Total</span><span style="color:#821810">{{ totalF }}</span></div>
+          </div>
+          <button onClick="{{ goCheckout }}" style="height:56px;background:#821810;color:#fff;border:0;border-radius:3px;font-weight:600;font-size:16px;cursor:pointer" style-hover="background:#911c14">Checkout</button>
+        </aside>
+      </div>
+      </sc-if>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:1200px;margin:0 auto;padding:24px;display:grid;gap:20px">
+      <h1 style="margin:0;font-size:28px;font-weight:600">Checkout</h1>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px;align-items:start">
+        <div style="grid-column:span 2;display:grid;gap:16px;min-width:0">
+          <section style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:20px;display:grid;gap:12px">
+            <div style="font-weight:600;font-size:16px">1 · Contact</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px"><input placeholder="Email" style="height:44px;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 14px;font-size:14px"><input placeholder="Mobile (pickup alerts)" style="height:44px;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 14px;font-size:14px"></div>
+          </section>
+          <section style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:20px;display:grid;gap:12px">
+            <div style="font-weight:600;font-size:16px">2 · Delivery</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px">
+              <label onClick="{{ setPickup }}" style="display:flex;gap:10px;border:1px solid {{ pickBd }};background:{{ pickBg }};border-radius:3px;padding:12px;cursor:pointer"><input type="radio" name="dm2" checked="{{ isPickup }}" style="accent-color:#821810"><span style="font-size:14px"><b>Pick up · Free</b><br><span style="font-size:12px;color:#5f6c72">{{ store.name }} · {{ store.pickup }}</span></span></label>
+              <label onClick="{{ setShip }}" style="display:flex;gap:10px;border:1px solid {{ shipBd }};background:{{ shipBg }};border-radius:3px;padding:12px;cursor:pointer"><input type="radio" name="dm2" checked="{{ isShip }}" style="accent-color:#821810"><span style="font-size:14px"><b>Ship to me · {{ shipOptF }}</b><br><span style="font-size:12px;color:#5f6c72">2–3 business days</span></span></label>
+            </div>
+            <sc-if value="{{ isShip }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px"><input placeholder="Full name" style="height:44px;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 14px;font-size:14px"><input placeholder="Street address" style="height:44px;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 14px;font-size:14px"><input placeholder="City" style="height:44px;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 14px;font-size:14px"><input placeholder="Postal code" style="height:44px;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 14px;font-size:14px"></div></sc-if>
+            <sc-if value="{{ isPickup }}" hint-placeholder-val="{{ true }}"><div style="font-size:13px;color:#475156;background:#f8f8f8;border-radius:3px;padding:10px 14px">{{ store.addr }} · {{ store.hours }}. Bring photo ID.</div></sc-if>
+          </section>
+          <section style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:20px;display:grid;gap:12px">
+            <div style="font-weight:600;font-size:16px">3 · Payment</div>
+            <input placeholder="Card number" style="height:44px;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 14px;font-size:14px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px"><input placeholder="MM / YY" style="height:44px;min-width:0;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 14px;font-size:14px"><input placeholder="CVC" style="height:44px;min-width:0;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 14px;font-size:14px"><input placeholder="Postal code" style="height:44px;min-width:0;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 14px;font-size:14px"></div>
+          </section>
+        </div>
+        <aside style="background:#fff;border:1px solid var(--color-border);border-radius:5px;padding:20px;display:grid;gap:12px">
+          <div style="font-weight:600;font-size:18px">Order summary</div>
+          <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2"><div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span>{{ l.qty }} × {{ l.name }}</span><span style="white-space:nowrap">{{ l.totalF }}</span></div></sc-for>
+          <div style="display:grid;gap:8px;font-size:14px;border-top:1px solid var(--color-border);padding-top:12px">
+            <div style="display:flex;justify-content:space-between"><span>Subtotal</span><span>{{ subF }}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Delivery</span><span>{{ shipFeeF }}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>HST (13%)</span><span>{{ taxF }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:700;font-size:18px;border-top:1px solid var(--color-border);padding-top:10px"><span>Total</span><span style="color:#821810">{{ totalF }}</span></div>
+          </div>
+          <button onClick="{{ placeOrder }}" style="height:56px;background:#821810;color:#fff;border:0;border-radius:3px;font-weight:600;font-size:16px;cursor:pointer" style-hover="background:#911c14">Place order · {{ totalF }}</button>
+          <a onClick="{{ goCart }}" style="text-align:center;font-size:13px;font-family:Archivo,sans-serif">‹ Back to cart</a>
+        </aside>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:640px;margin:0 auto;padding:56px 24px;display:grid;gap:16px;text-align:center;justify-items:center">
+      <div style="width:56px;height:56px;border-radius:50%;background:#eaf7e9;color:#248e1d;display:flex;align-items:center;justify-content:center;font-size:28px">✓</div>
+      <h1 style="margin:0;font-size:28px;font-weight:600">Thanks, your order is in.</h1>
+      <p style="margin:0;color:#475156;font-size:15px;line-height:1.5">Order #AL-48213. {{ doneNote }}</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><button onClick="{{ goHome }}" style="height:48px;padding:0 28px;background:#821810;color:#fff;border:0;border-radius:3px;font-weight:600;cursor:pointer">Continue shopping</button></div>
+    </main>
+  </sc-if>
+  </div>
+
+  <footer style="background:#000;color:#c9cfd2;padding:32px 24px;font-size:13px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap"><span>© Autoline · Sold and fulfilled by {{ store.name }}</span><span style="font-family:Archivo,sans-serif">Terms · Privacy · Returns</span></footer>
+</div>
+
+<sc-if value="{{ open }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px" onClick="{{ closePicker }}">
+  <div onClick="{{ stop }}" style="background:#fff;border-radius:7px;width:min(1100px,100%);height:min(680px,calc(100vh - 32px));display:grid;grid-template-rows:auto 1fr;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.14)">
+    <div style="padding:18px 24px;border-bottom:1px solid var(--color-border);display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div><div style="font-size:20px;font-weight:600">Choose your store</div><div style="font-size:13px;color:#5f6c72">Your reseller sets your prices, stock and pickup options.</div></div>
+      <button onClick="{{ closePicker }}" style="border:0;background:#f2f4f5;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer">×</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));min-height:0;overflow:auto">
+      <div style="display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--color-border)">
+        <div style="padding:14px 16px;display:grid;gap:8px;border-bottom:1px solid var(--color-border)">
+          <input value="{{ query }}" onInput="{{ setQuery }}" placeholder="Postal code or city" style="height:44px;border:1px solid var(--color-border-strong);border-radius:2px;padding:0 14px;font-size:14px;outline:none">
+          <button onClick="{{ locate }}" style="height:36px;background:#fff;border:1px solid #821810;color:#821810;border-radius:3px;font-weight:600;font-size:13px;cursor:pointer" style-hover="background:#fcefee">Use my location</button>
+        </div>
+        <div style="overflow:auto;flex:1;min-height:200px">
+          <sc-for list="{{ stores }}" as="s" hint-placeholder-count="5">
+            <div onClick="{{ s.focus }}" style="padding:14px 16px;border-bottom:1px solid var(--color-border);cursor:pointer;display:grid;gap:6px;background:{{ s.bg }};border-left:3px solid {{ s.bar }}">
+              <div style="display:flex;justify-content:space-between;gap:8px"><span style="font-weight:600;font-size:15px">{{ s.label }}</span><span style="font-size:13px;color:#5f6c72;white-space:nowrap">{{ s.dist }} km</span></div>
+              <div style="font-size:13px;color:#475156">{{ s.addr }}</div>
+              <div style="font-size:12px;color:#5f6c72">{{ s.hours }} · {{ s.pickup }}</div>
+              <sc-if value="{{ s.active }}" hint-placeholder-val="{{ false }}"><button onClick="{{ s.choose }}" style="margin-top:6px;height:40px;background:#821810;color:#fff;border:0;border-radius:3px;font-weight:600;cursor:pointer" style-hover="background:#911c14">Shop at this store</button></sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="position:relative;min-height:320px;background:#eef0ef;overflow:hidden">
+        <div style="position:absolute;inset:0;background-image:linear-gradient(#dfe3e2 1px,transparent 1px),linear-gradient(90deg,#dfe3e2 1px,transparent 1px);background-size:48px 48px"></div>
+        <div style="position:absolute;left:-10%;top:58%;width:130%;height:14px;background:#fff;transform:rotate(-12deg);box-shadow:0 0 0 1px #d6dbd9"></div>
+        <div style="position:absolute;left:44%;top:-10%;width:12px;height:130%;background:#fff;transform:rotate(8deg);box-shadow:0 0 0 1px #d6dbd9"></div>
+        <div style="position:absolute;left:-10%;top:24%;width:130%;height:8px;background:#fff;transform:rotate(6deg);box-shadow:0 0 0 1px #d6dbd9"></div>
+        <div style="position:absolute;left:8%;top:68%;width:30%;height:22%;background:#d9e6dc;border-radius:40px"></div>
+        <div style="position:absolute;left:12px;bottom:10px;font-size:11px;color:#5f6c72;font-family:monospace">placeholder map — swap in live map tiles</div>
+        <sc-for list="{{ stores }}" as="s" hint-placeholder-count="5">
+          <button onClick="{{ s.focus }}" style="position:absolute;left:{{ s.xp }};top:{{ s.yp }};transform:translate(-50%,-100%);background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;z-index:{{ s.z }}">
+            <span style="background:{{ s.pinBg }};color:{{ s.pinFg }};font-size:12px;font-weight:600;padding:5px 10px;border-radius:14px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.2);border:1px solid {{ s.pinBd }}">{{ s.label }}</span>
+            <span style="width:2px;height:10px;background:{{ s.pinBd }}"></span><span style="width:8px;height:8px;border-radius:50%;background:{{ s.pinBd }}"></span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { view: 'home', storeId: 'a', focusId: 'a', open: true, query: '', cart: [], cat: 'All', brands: [], fFit: false, fStock: false, sort: 'pop', pdpId: 1, pdpQty: 1, ship: 'pickup' };
+  stores = [
+    { id: 'a', name: 'Northline Auto', city: 'Toronto', addr: '1240 Dufferin St, Toronto ON', dist: 3.2, hours: 'Open until 8 pm', pickup: 'Pickup today', x: 56, y: 44 },
+    { id: 'b', name: 'Lakeshore Parts', city: 'Mississauga', addr: '88 Dundas St W, Mississauga ON', dist: 14.8, hours: 'Open until 6 pm', pickup: 'Pickup tomorrow', x: 30, y: 62 },
+    { id: 'c', name: 'Harbour Motors', city: 'Hamilton', addr: '402 Barton St E, Hamilton ON', dist: 61.4, hours: 'Open until 7 pm', pickup: 'Pickup today', x: 16, y: 82 },
+    { id: 'd', name: 'Maple Ridge Garage', city: 'Markham', addr: '17 Woodbine Ave, Markham ON', dist: 28.1, hours: 'Open until 9 pm', pickup: 'Pickup today', x: 76, y: 24 },
+    { id: 'e', name: 'Capital Parts Co.', city: 'Ottawa', addr: '905 Bank St, Ottawa ON', dist: 399, hours: 'Closed · opens 8 am', pickup: 'Ship to store', x: 88, y: 70 }
+  ];
+  P = [
+    [1, 'Brembo', 'Front brake pad set, ceramic', 'Brakes', 89.99, 119.99, 4.8, 312, 'BP-2210-C', 1],
+    [2, 'Bosch', 'Iridium spark plugs, 4-pack', 'Engine', 42.5, 54, 4.9, 1204, 'SP-9042-I', 1],
+    [3, 'ACDelco', 'Engine oil filter, OEM-spec', 'Filters', 12.99, 16.49, 4.7, 856, 'OF-1105-A', 1],
+    [4, 'Denso', 'Alternator, remanufactured', 'Electrical', 219, 289, 4.6, 98, 'AL-7731-D', 0],
+    [5, 'Mobil 1', 'Full synthetic 0W-20, 5 L', 'Oil & fluids', 44.99, 52.99, 4.9, 2210, 'MO-0W20-5', 1],
+    [6, 'Moog', 'Front lower control arm', 'Suspension', 134.5, 168, 4.5, 143, 'CA-5520-M', 1],
+    [7, 'Valeo', 'Cabin air filter, carbon', 'Filters', 21.75, 27, 4.7, 410, 'CF-3318-V', 1],
+    [8, 'KYB', 'Gas-a-Just strut, front', 'Suspension', 168, 205, 4.6, 187, 'ST-6601-K', 0],
+    [9, 'Brembo', 'Vented brake rotor, front pair', 'Brakes', 156, 198, 4.8, 264, 'BR-4412-V', 1],
+    [10, 'Bosch', 'Ignition coil', 'Engine', 58.25, 72, 4.6, 331, 'IC-1120-B', 1],
+    [11, 'Denso', 'Starter motor, remanufactured', 'Electrical', 189, 245, 4.4, 76, 'SM-2209-D', 1],
+    [12, 'Valeo', 'Engine air filter', 'Filters', 24.5, 31, 4.7, 502, 'AF-8102-V', 1]
+  ].map(a => ({ id: a[0], brand: a[1], name: a[2], cat: a[3], price: a[4], old: a[5], rating: a[6], reviews: a[7], sku: a[8], fits: !!a[9] }));
+  money = n => '$' + n.toFixed(2);
+  go = (view, extra = {}) => { this.setState({ view, ...extra }); window.scrollTo(0, 0); };
+  add = (id, n = 1) => this.setState(s => {
+    const c = s.cart.slice(), i = c.findIndex(l => l.id === id);
+    if (i >= 0) c[i] = { id, qty: c[i].qty + n }; else c.push({ id, qty: n });
+    return { cart: c };
+  });
+  setQty = (id, d) => this.setState(s => ({ cart: s.cart.map(l => l.id === id ? { ...l, qty: Math.max(1, l.qty + d) } : l) }));
+  renderVals() {
+    const S = this.state, store = this.stores.find(s => s.id === S.storeId), local = store.pickup === 'Pickup today', m = this.money, view = S.view;
+    const inStock = p => local || p.id % 3 !== 1;
+    const stockText = p => inStock(p) ? 'In stock · ' + store.city : 'Ships in 2–3 days';
+    const dec = p => ({
+      ...p, priceF: m(p.price), oldF: m(p.old), stock: stockText(p), stockBg: inStock(p) ? '#eaf7e9' : '#fdfae7',
+      fitText: p.fits ? '✓ Fits your vehicle' : '✕ Does not fit', fitBg: p.fits ? '#eaf7e9' : '#fdeeee',
+      go: () => this.go('pdp', { pdpId: p.id, pdpQty: 1 }), add: () => this.add(p.id),
+      goCat: () => this.go('plp', { cat: p.cat, brands: [] })
+    });
+    const catNames = ['Brakes', 'Engine', 'Filters', 'Oil & fluids', 'Suspension', 'Electrical'];
+    const catGo = c => () => this.go('plp', { cat: c, brands: [], fFit: false, fStock: false });
+    let list = this.P.filter(p => (S.cat === 'All' || p.cat === S.cat));
+    const brandOpts = [...new Set(list.map(p => p.brand))].sort().map(b => ({ name: b, on: S.brands.includes(b), tog: () => this.setState(s => ({ brands: s.brands.includes(b) ? s.brands.filter(x => x !== b) : [...s.brands, b] })) }));
+    if (S.brands.length) list = list.filter(p => S.brands.includes(p.brand));
+    if (S.fFit) list = list.filter(p => p.fits);
+    if (S.fStock) list = list.filter(inStock);
+    const sorts = { pop: (a, b) => b.reviews - a.reviews, low: (a, b) => a.price - b.price, high: (a, b) => b.price - a.price, rate: (a, b) => b.rating - a.rating };
+    list = list.slice().sort(sorts[S.sort]).map(dec);
+    const pp = this.P.find(p => p.id === S.pdpId), pd = dec(pp);
+    const pdp = { ...pd, fitLong: pp.fits ? '✓ Fits your 2019 Honda Civic 2.0L' : '✕ Does not fit your 2019 Honda Civic 2.0L', save: 'Save ' + m(pp.old - pp.price),
+      addQty: () => { this.add(pp.id, S.pdpQty); this.go('cart'); } };
+    const lines = S.cart.map(l => { const p = this.P.find(x => x.id === l.id); return { ...dec(p), qty: l.qty, totalF: m(p.price * l.qty),
+      dec: () => this.setQty(l.id, -1), inc: () => this.setQty(l.id, 1), remove: () => this.setState(s => ({ cart: s.cart.filter(x => x.id !== l.id) })) }; });
+    const sub = S.cart.reduce((t, l) => t + this.P.find(x => x.id === l.id).price * l.qty, 0);
+    const shipFee = S.ship === 'ship' && sub < 99 && sub > 0 ? 12.99 : 0, tax = (sub + shipFee) * 0.13;
+    const isP = S.ship === 'pickup', cc = S.cart.reduce((t, l) => t + l.qty, 0);
+    const catItems = ['All', ...catNames];
+    return {
+      store: { ...store, pickupLow: store.pickup.toLowerCase() },
+      cartCount: cc, open: S.open, query: S.query,
+      isHome: view === 'home', isPlp: view === 'plp', isPdp: view === 'pdp', isCart: view === 'cart', isCheckout: view === 'checkout', isDone: view === 'done',
+      cats: catItems.map(c => ({ name: c === 'All' ? 'All parts' : c, color: view === 'plp' && S.cat === c ? '#821810' : '#191c1f', bar: view === 'plp' && S.cat === c ? '#821810' : 'transparent', go: catGo(c) })),
+      catTiles: catNames.map(c => ({ name: c, go: catGo(c) })),
+      vehicleFields: ['Year', 'Make', 'Model', 'Engine'],
+      popular: this.P.slice(0, 4).map(dec),
+      plp: list, plpCount: list.length, plpEmpty: list.length === 0, plpTitle: S.cat === 'All' ? 'All parts' : S.cat, brandOpts, fFit: S.fFit, fStock: S.fStock,
+      togFit: () => this.setState(s => ({ fFit: !s.fFit })), togStock: () => this.setState(s => ({ fStock: !s.fStock })),
+      setSort: e => this.setState({ sort: e.target.value }),
+      pdp, pdpQty: S.pdpQty, qtyUp: () => this.setState(s => ({ pdpQty: s.pdpQty + 1 })), qtyDown: () => this.setState(s => ({ pdpQty: Math.max(1, s.pdpQty - 1) })),
+      thumbs: [0, 1, 2, 3].map(i => ({ bd: i === 0 ? '#821810' : '#e4e7e9' })),
+      specs: [{ k: 'Brand', v: pp.brand }, { k: 'Part number', v: pp.sku }, { k: 'Category', v: pp.cat }, { k: 'Quality', v: 'OEM-spec' }, { k: 'Warranty', v: '2 years' }],
+      fitList: ['2016–2021 Honda Civic 2.0L', '2018–2022 Honda Accord 1.5T', '2017–2021 Honda CR-V 1.5T', '2019–2022 Acura ILX 2.4L'],
+      related: this.P.filter(p => p.id !== pp.id && p.cat !== pp.cat).slice(0, 3).map(dec),
+      lines, cartEmpty: !lines.length, cartHas: lines.length > 0,
+      shipOptF: sub >= 99 ? 'Free' : '$12.99 (free over $99)', subF: m(sub), shipFeeF: shipFee ? m(shipFee) : (isP ? 'Free' : 'Free over $99'), taxF: m(tax), totalF: m(sub + shipFee + tax),
+      isPickup: isP, isShip: !isP,
+      pickBd: isP ? '#821810' : '#e4e7e9', pickBg: isP ? '#fcefee' : '#fff', shipBd: !isP ? '#821810' : '#e4e7e9', shipBg: !isP ? '#fcefee' : '#fff',
+      setPickup: () => this.setState({ ship: 'pickup' }), setShip: () => this.setState({ ship: 'ship' }),
+      doneNote: isP ? "We'll text you when it's ready at " + store.name + ' (' + store.city + ').' : 'Shipping from ' + store.name + ', arriving in 2–3 business days.',
+      goHome: () => this.go('home'), goAll: () => this.go('plp', { cat: 'All', brands: [], fFit: false, fStock: false }), goCart: () => this.go('cart'), goCheckout: () => this.go('checkout'),
+      placeOrder: () => this.go('done', { cart: [] }),
+      stores: this.stores.filter(s => { const q = S.query.trim().toLowerCase(); return !q || (s.city + s.name + s.addr).toLowerCase().includes(q); }).map(s => {
+        const f = s.id === S.focusId, cur = s.id === S.storeId;
+        return { ...s, active: f, xp: s.x + '%', yp: s.y + '%', z: f ? 5 : 1, bg: f ? '#fcefee' : '#fff', bar: f ? '#821810' : 'transparent',
+          pinBg: f ? '#821810' : '#fff', pinFg: f ? '#fff' : '#191c1f', pinBd: f ? '#821810' : '#475156', label: s.name + (cur ? ' ✓' : ''),
+          focus: () => this.setState({ focusId: s.id }), choose: e => { e.stopPropagation(); this.setState({ storeId: s.id, open: false }); } };
+      }),
+      openPicker: () => this.setState({ open: true, focusId: S.storeId }), closePicker: () => this.setState({ open: false }),
+      stop: e => e.stopPropagation(), setQuery: e => this.setState({ query: e.target.value }), locate: () => this.setState({ query: '', focusId: 'a' })
+    };
+  }
+}
+</script>
+</body>
+</html>

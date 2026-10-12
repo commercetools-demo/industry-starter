@@ -1,0 +1,115 @@
+/* Automotive design system tokens — extracted from "Auto Parts Website (Community).fig" */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700&family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap");
+
+:root {
+  /* Brand — Garage Maroon (base #821810 = brand-700) */
+  --color-brand-50: #fcefee;
+  --color-brand-100: #f7d6d3;
+  --color-brand-200: #eeaea9;
+  --color-brand-300: #e2807a;
+  --color-brand-400: #d34440;
+  --color-brand-500: #b02a22;
+  --color-brand-600: #911c14;
+  --color-brand-700: #821810;
+  --color-brand-800: #6d0115;
+  --color-brand-900: #551205;
+  --color-brand-950: #3a0c03;
+  --color-brand-deep: #810000;   /* search header band, category tiles */
+
+  /* Accent — Chrome Gold (base #d1a04a = accent-500); badges, ratings, premium trim */
+  --color-accent-50: #fff8e8;
+  --color-accent-100: #fdeccb;
+  --color-accent-200: #f9dc9f;
+  --color-accent-300: #f5cb73;
+  --color-accent-400: #e0b867;
+  --color-accent-500: #d1a04a;
+  --color-accent-600: #d7a03d;
+  --color-accent-700: #8c5c1b;
+  --color-accent-800: #6b4514;
+  --color-accent-900: #4a2f0e;
+  --color-accent-gradient: linear-gradient(135deg, #f5cb73, #d7a03d 55%, #8c5c1b);
+
+  /* Neutrals (cool gray) */
+  --color-neutral-0: #ffffff;
+  --color-neutral-25: #fdfdfd;   /* page background */
+  --color-neutral-50: #f2f4f5;
+  --color-neutral-75: #f8f8f8;   /* filter chips, quiet panels */
+  --color-neutral-100: #e4e7e9;
+  --color-neutral-200: #c9cfd2;
+  --color-neutral-300: #adb7bc;
+  --color-neutral-400: #929fa5;
+  --color-neutral-500: #77878f;
+  --color-neutral-600: #5f6c72;
+  --color-neutral-700: #475156;
+  --color-neutral-800: #2b2b2b;
+  --color-neutral-900: #191c1f;
+  --color-neutral-1000: #000000;
+
+  /* Status */
+  --color-success-50: #eaf7e9; --color-success-100: #d5f0d3; --color-success-500: #2db224; --color-success-600: #248e1d;
+  --color-danger-50: #fdeeee;  --color-danger-100: #fcdede;  --color-danger-500: #ee5858;  --color-danger-600: #be4646;
+  --color-warning-50: #fdfae7; --color-warning-100: #fbf4ce; --color-warning-400: #efd33d; --color-warning-500: #ebc80c;
+  --color-info-50: #eaf6fe;    --color-info-100: #d5edfd;    --color-info-500: #2da5f3;    --color-info-600: #2484c2;
+
+  /* Semantic */
+  --color-text: var(--color-neutral-900);
+  --color-text-strong: var(--color-neutral-1000);
+  --color-text-body: var(--color-neutral-800);
+  --color-text-muted: var(--color-neutral-700);
+  --color-text-subtle: var(--color-neutral-500);
+  --color-text-on-brand: var(--color-neutral-0);
+  --color-text-on-dark: var(--color-neutral-0);
+  --color-text-link: var(--color-brand-700);
+  --color-text-price: var(--color-brand-700);
+  --color-text-price-old: var(--color-neutral-500);
+  --color-surface-page: var(--color-neutral-25);
+  --color-surface: var(--color-neutral-0);
+  --color-surface-subtle: var(--color-neutral-50);
+  --color-surface-quiet: var(--color-neutral-75);
+  --color-surface-brand: var(--color-brand-700);
+  --color-surface-brand-deep: var(--color-brand-deep);
+  --color-surface-brand-subtle: var(--color-brand-50);
+  --color-surface-utility: var(--color-neutral-1000);   /* top delivery bar, footer */
+  --color-border: var(--color-neutral-100);
+  --color-border-strong: var(--color-neutral-200);
+  --color-border-brand: var(--color-brand-700);
+  --color-action: var(--color-brand-700);
+  --color-action-hover: var(--color-brand-600);
+  --color-action-active: var(--color-brand-900);
+  --color-action-subtle: var(--color-brand-50);
+  --color-focus: var(--color-brand-700);
+  --color-rating: var(--color-accent-600);
+
+  /* Typography */
+  --font-display: "Poppins", system-ui, sans-serif;     /* headings, nav, buttons, body */
+  --font-body: "Poppins", system-ui, sans-serif;
+  --font-utility: "Archivo", system-ui, sans-serif;     /* sign in, show more, view all, service blurbs */
+  --font-ui: "Public Sans", system-ui, sans-serif;      /* form fields, badges, table headers */
+  --font-button-alt: "Inter", system-ui, sans-serif;    /* "Watch now" style secondary buttons */
+  --text-xs: 12px; --text-sm: 14px; --text-md: 16px; --text-lg: 18px; --text-xl: 20px;
+  --text-2xl: 24px; --text-3xl: 28px; --text-4xl: 36px; --text-5xl: 48px;
+  --leading-tight: 1.2; --leading-normal: 1.5;
+  --tracking-label: 1.2px;   /* Public Sans bold uppercase labels */
+
+  /* Spacing (4px base) */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px;
+  --space-6: 32px; --space-7: 48px; --space-8: 64px; --space-9: 96px;
+
+  /* Radius */
+  --radius-xs: 2px;     /* inputs, table cards, compact buttons */
+  --radius-sm: 3px;     /* product rows, primary buttons */
+  --radius-md: 5px;     /* images, panels */
+  --radius-lg: 7px;     /* category tiles */
+  --radius-xl: 14px;    /* feature tiles */
+  --radius-pill: 28px;  /* hero CTAs, "Watch now", Verify */
+  --radius-full: 999px;
+
+  /* Elevation */
+  --shadow-hairline: 0 0 .75px rgba(23,26,31,.07), 0 0 1.5px rgba(23,26,31,.12);
+  --shadow-card: 0 0 10px rgba(0,0,0,.05);
+  --shadow-dropdown: 0 4px 16px rgba(0,0,0,.14);
+
+  /* Layout */
+  --container-width: 1440px;
+  --content-width: 1200px;
+}
