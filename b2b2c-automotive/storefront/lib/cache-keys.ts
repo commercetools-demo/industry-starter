@@ -13,3 +13,6 @@ export const keyBranches = (locale: string): string => `${KEY_BRANCHES}?locale=$
 export const KEY_GARAGE = '/api/garage';
 /** Dependent vehicle selector options (workstream J); the query string carries market, make, model and year. */
 export const KEY_VEHICLE_OPTIONS = '/api/vehicles/options';
+/** Recurrence policies of "Subscribe and save" (workstream M); the locale is part of the key because policy names are localized. */
+export const KEY_SUBSCRIPTION_POLICIES = '/api/subscriptions/policies';
+export const keySubscriptionPolicies = (locale: string): string => `${KEY_SUBSCRIPTION_POLICIES}?locale=${encodeURIComponent(locale)}`;

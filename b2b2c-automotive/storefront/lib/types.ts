@@ -27,6 +27,8 @@ export interface Session {
   productSelectionId?: string;
   /** The branch (channel key) the shopper chose; read through `getBranchScope`, cleared with `cartId` on a store change (workstream I). */
   branchKey?: string;
+  /** Random id of an anonymous shopper; set when the first cart is created (workstream L), carried by the cart for sign-in merge (N). */
+  anonymousId?: string;
 }
 
 /** The four store fields, always written to the session together. */
@@ -73,6 +75,8 @@ export interface StoreSettings {
   timezone: string;
   helpUrl?: string;
   trackUrl?: string;
+  /** Days a part may be returned after delivery (`returnWindowDays` of `store-settings`); the product page says 30 when absent. */
+  returnWindowDays?: number;
 }
 
 /** A pickup branch: a channel with the `branch-info` custom type. It carries stock and, optionally, prices. */
@@ -186,4 +190,128 @@ export interface GarageState {
   garage: Garage;
   vehicles: Vehicle[];
   active: Vehicle | null;
+}
+
+// ---- Product listing and search (workstream L) ----
+
+/** One standalone price as the selection reads it (`lib/ct/prices.ts` maps the SDK resource to this). */
+export interface PriceCandidate {
+  id: string;
+  centAmount: number;
+  currencyCode: string;
+  fractionDigits: number;
+  country?: string;
+  /** `price.channel.id`: a branch channel, the store retail channel, or absent for the Malva base price. */
+  channelId?: string;
+  validFrom?: string;
+  validUntil?: string;
+  /** The Product Discount price when a discount applies (`StandalonePrice.discounted`). */
+  discounted?: Money;
+}
+
+/** The winner of price selection (branch channel, store retail channel, Malva base price). */
+export interface SelectedPrice {
+  value: Money;
+  discounted?: Money;
+  channelId?: string;
+}
+
+/** What a product card, the home page blocks (K) and the product page header (M) show about one product. */
+export interface ProductSummary {
+  id: string;
+  sku: string;
+  slug: string;
+  name: string;
+  /** The brand label; empty for products without one (bundles). */
+  brand: string;
+  qualityLabel?: string;
+  imageUrl?: string;
+  imageAlt: string;
+  /** Null when the product has no reviews (the rating row is hidden). */
+  rating: { average: number; count: number } | null;
+  /** Null when there is no price for this shopper: the card reads "Price unavailable" and never shows zero. */
+  price: { centAmount: number; currencyCode: string; fractionDigits: number; oldCentAmount?: number } | null;
+  stock: { atBranch: boolean; quantity: number };
+  universalFit: boolean;
+  fitmentKeys: string[];
+  recurringEligible: boolean;
+  variantCount: number;
+}
+
+/** A category page: the category with its ancestors (root first) for the breadcrumb. */
+export interface ListingCategory {
+  id: string;
+  slug: string;
+  name: string;
+  ancestors: NavCategory[];
+}
+
+export interface FacetOption {
+  key: string;
+  label: string;
+  count: number;
+  selected: boolean;
+}
+/** One filter group of the panel: `param` is the address parameter (`brand` or `attr.<name>`). */
+export interface FacetGroup {
+  name: string;
+  param: string;
+  title: string;
+  options: FacetOption[];
+}
+
+// ---- Product detail page (workstream M) ----
+
+export interface ProductImage {
+  url: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+/** One specification row; `name` is the attribute name (the component translates it), `value` is display text. */
+export interface SpecRow {
+  name: string;
+  value: string;
+}
+/** The product page's model: tailored name, description, images, stock; locked data (part number, fitment, specs) from the master. */
+export interface ProductDetail {
+  id: string;
+  slug: string;
+  sku: string;
+  variants: Array<{ sku: string }>;
+  name: string;
+  description: string | null;
+  images: ProductImage[];
+  brand: string;
+  qualityLabel?: string;
+  partNumber: string;
+  oeNumbers: string[];
+  rating: { average: number; count: number } | null;
+  price: { centAmount: number; currencyCode: string; fractionDigits: number; oldCentAmount?: number } | null;
+  stock: { atBranch: boolean; quantity: number };
+  specs: SpecRow[];
+  universalFit: boolean;
+  fitmentKeys: string[];
+  recurringEligible: boolean;
+  /** `related-skus` of the master ("Often bought together"); empty when the part has none. */
+  relatedSkus: string[];
+  /** Root first, the product's deepest category last. */
+  categoryTrail: NavCategory[];
+}
+
+/** A published review of the product page. */
+export interface ReviewItem {
+  id: string;
+  author: string;
+  rating: number;
+  title: string;
+  text: string;
+  createdAt: string;
+  reply?: { text: string; by?: string };
+}
+
+/** A recurrence policy offered by "Subscribe and save". */
+export interface PolicyOption {
+  key: string;
+  label: string;
 }

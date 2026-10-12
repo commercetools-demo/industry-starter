@@ -50,6 +50,7 @@ export function mapStoreSettings(store: Store, locale: string): StoreSettings {
     timezone: str(f?.timezone) ?? 'Europe/Berlin',
     helpUrl: url(f?.helpUrl),
     trackUrl: url(f?.trackUrl),
+    returnWindowDays: num(f?.returnWindowDays),
   };
 }
 

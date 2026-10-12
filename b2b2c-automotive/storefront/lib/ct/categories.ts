@@ -4,7 +4,7 @@ import 'server-only';
 import type { Category } from '@commercetools/platform-sdk';
 import { apiRoot } from '@/lib/ct/client';
 import { createTtlCache } from '@/lib/ttl-cache';
-import type { NavCategory } from '@/lib/types';
+import type { ListingCategory, NavCategory } from '@/lib/types';
 import { getLocalizedString } from '@/lib/utils';
 
 const cache = createTtlCache<NavCategory[]>({ ttlMs: 300_000, negativeTtlMs: 30_000 });
@@ -72,5 +72,43 @@ export async function getNavCategories(storeId: string, locale: string): Promise
   } catch {
     console.error('[nav] categories could not be read');
     return cache.getStale(key)?.value ?? [];
+  }
+}
+
+// ---- Category pages (workstream L) ----
+
+const SLUG = /^[a-z0-9][a-z0-9-]{0,255}$/;
+const categoryCache = createTtlCache<ListingCategory>({ ttlMs: 300_000, negativeTtlMs: 30_000 });
+
+/**
+ * A category by its localized slug with ancestors (root first) for the breadcrumb; `null` for an unknown slug. Categories are
+ * shared by all shoppers: cached 5 minutes per slug and locale (negative entries 30 s). An outage serves the last known entry.
+ */
+export async function getCategoryBySlug(slug: string, locale: string): Promise<ListingCategory | null> {
+  if (!SLUG.test(slug)) return null;
+  const key = `${locale}:${slug}`;
+  const hit = categoryCache.get(key);
+  if (hit) return hit.value;
+  try {
+    const { body } = await apiRoot
+      .categories()
+      .get({ queryArgs: { where: `slug(${locale}="${slug}")`, expand: ['ancestors[*]'], limit: 1 } })
+      .execute();
+    const found = body.results[0];
+    if (!found) {
+      categoryCache.set(key, null);
+      return null;
+    }
+    const ancestors = (found.ancestors ?? [])
+      .map((a) => a.obj)
+      .filter((c): c is Category => c !== undefined)
+      .map((c) => ({ id: c.id, slug: getLocalizedString(c.slug, locale), name: getLocalizedString(c.name, locale) }));
+    const category = { id: found.id, slug: getLocalizedString(found.slug, locale), name: getLocalizedString(found.name, locale), ancestors };
+    categoryCache.set(key, category);
+    return category;
+  } catch (error) {
+    const stale = categoryCache.getStale(key);
+    if (stale) return stale.value;
+    throw error;
   }
 }

@@ -29,6 +29,7 @@ export const SESSION_KEYS = [
   'supplyChannelId',
   'productSelectionId',
   'branchKey',
+  'anonymousId',
 ] as const satisfies readonly (keyof Session)[];
 
 const STRING_KEYS = SESSION_KEYS.filter((k) => k !== 'locale');

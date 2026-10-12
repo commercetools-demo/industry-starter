@@ -11,6 +11,9 @@ export interface ScopeDoc {
 export const FRONTEND_SCOPES: readonly ScopeDoc[] = [
   { scope: 'view_project_settings', reason: 'read currencies, countries and languages for COUNTRY_CONFIG checks' },
   { scope: 'view_published_products', reason: 'product pages and search (published projection)' },
+  { scope: 'view_products', reason: 'Product Search (listing and search), product type labels and stock (inventory entries)' },
+  { scope: 'view_standalone_prices', reason: 'the standalone prices of the listing, product page and cart (all prices are standalone)' },
+  { scope: 'view_recurrence_policies', reason: 'the frequencies of "Subscribe and save" on the product page' },
   { scope: 'view_categories', reason: 'category tree and category pages' },
   { scope: 'view_stores', reason: 'resolve the store from the URL path' },
   { scope: 'view_product_selections', reason: "the store's assortment (product selection) for search filters" },

@@ -22,7 +22,6 @@ vi.mock('next-intl/server', () => ({
 
 import LocaleLayout from './layout';
 import LocaleRoot from './page';
-import StorePlaceholder from './[store]/page';
 
 describe('Locale routing for two locales: locale layout', () => {
   it('Unsupported locale is not found', async () => {
@@ -37,9 +36,5 @@ describe('Locale routing for two locales: locale layout', () => {
   it('No store segment is not found', () => {
     expect(() => LocaleRoot()).toThrow('NEXT_NOT_FOUND');
   });
-  it('Placeholder renders the store in English', async () => {
-    const el = await StorePlaceholder({ params: Promise.resolve({ locale: 'en-US', store: 'hartmann' }) });
-    renderWithProviders(el, { locale: 'en-US' });
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('The hartmann shop is being built here.');
-  });
+  // The store placeholder page is replaced by the home page of workstream K (app/[locale]/[store]/page.test.tsx).
 });
