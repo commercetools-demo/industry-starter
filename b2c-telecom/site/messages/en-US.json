@@ -280,6 +280,10 @@
       "region": "Ways to save"
     },
     "loading": "Loading your bundle",
+    "promotions": {
+      "title": "Promotions",
+      "off": "{name}: {amount} off"
+    },
     "section": {
       "plans": "Plans",
       "addons": "Add-ons"

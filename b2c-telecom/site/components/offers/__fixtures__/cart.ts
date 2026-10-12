@@ -41,6 +41,7 @@ export function cartOf(lines: CartLine[]): Cart {
     itemCount: lines.filter((line) => line.kind !== 'fee').length,
     summary: { plans: usd(0), addons: usd(0), devicesMonthly: usd(0), monthly: usd(0), oneTime: usd(0), discountTotal: usd(0), orderDiscount: usd(0), shipping: null, tax: null, taxAdded: null, total: usd(0), dueToday: usd(0), thenMonthly: usd(0) },
     discountCodes: [],
+    promotions: [],
     minimumOrder: null,
     issues: [],
     canCheckout: true,

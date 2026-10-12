@@ -148,6 +148,7 @@ export function makeCart(patch: Omit<Partial<Cart>, 'summary'> & { summary?: Par
     itemCount: lines.filter((line) => line.kind !== 'fee').length,
     summary,
     discountCodes: [],
+    promotions: [],
     minimumOrder: { required: usd(3000), shortfall: summary.total.centAmount < 3000 && lines.length > 0 ? usd(3000 - summary.total.centAmount) : null },
     issues: [],
     canCheckout: true,

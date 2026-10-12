@@ -280,6 +280,10 @@
       "region": "Sparmöglichkeiten"
     },
     "loading": "Ihr Bundle wird geladen",
+    "promotions": {
+      "title": "Aktionen",
+      "off": "{name}: {amount} Rabatt"
+    },
     "section": {
       "plans": "Tarife",
       "addons": "Zusatzoptionen"

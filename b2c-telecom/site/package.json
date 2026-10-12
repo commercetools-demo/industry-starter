@@ -29,6 +29,7 @@
     "demo:advance-order": "tsx scripts/demo/advance-order.ts",
     "seed:experiments": "tsx scripts/seed/experiments/platform-checks.ts",
     "job:schedule-sweep": "tsx --conditions=react-server scripts/jobs/schedule-sweep.ts",
+    "job:recurring-reconcile": "tsx --conditions=react-server scripts/jobs/recurring-reconcile.ts",
     "seed:discounts": "tsx --conditions=react-server scripts/seed/discounts.ts",
     "seed:financing-customers": "tsx scripts/seed/create-financing-customers.ts",
     "seed:customer-fields": "tsx scripts/seed/customer-fields.ts",

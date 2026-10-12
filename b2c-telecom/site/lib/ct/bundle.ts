@@ -34,7 +34,7 @@ import {
 } from './cart';
 import { getAllOffers } from './catalog';
 import { getDevicePolicyMap } from './devices';
-import { getCartDiscountKeys } from './discount-keys';
+import { getCartDiscountKeys, getCartDiscountNames } from './discount-keys';
 import { getServiceability } from './serviceability';
 
 // Orchestration of "My bundle": every function takes the session and the market, checks ownership through the cart helpers (D-070),
@@ -66,7 +66,7 @@ async function offersByKeyFor(market: Market): Promise<Record<string, Offer>> {
  * remembered ZIP of the buyer (the address route has just changed it, the cookie is not on the request yet).
  */
 export async function mapForMarket(ct: CtCart, market: Market, location?: ServiceLocation): Promise<{ cart: Cart; ct: CtCart }> {
-  const [offersByKey, baseBuyer, discountKeyById] = await Promise.all([offersByKeyFor(market), getBuyerContext(market), getCartDiscountKeys()]);
+  const [offersByKey, baseBuyer, discountKeyById, discountNameById] = await Promise.all([offersByKeyFor(market), getBuyerContext(market), getCartDiscountKeys(), getCartDiscountNames()]);
   const buyer = location ? { ...baseBuyer, location } : baseBuyer;
   const normalized = await normalizeCart(ct, offersByKey);
   const issues = revalidateLines({ lines: toGuardLines(normalized), offersByKey, buyer });
@@ -78,7 +78,7 @@ export async function mapForMarket(ct: CtCart, market: Market, location?: Servic
   // Q: a cart with a device line needs the policy ids of its prices to offer "Change how you pay".
   const hasDevice = normalized.lineItems.some((line) => offersByKey[offerKeyOfLine(line)]?.kind === 'device');
   const devicePolicyKeys = hasDevice ? await getDevicePolicyMap() : undefined;
-  const cart = mapCart(normalized, market, { offersByKey, stock, issues, today: toDateOnly(new Date()), discountKeyById, ...(devicePolicyKeys ? { devicePolicyKeys } : {}) });
+  const cart = mapCart(normalized, market, { offersByKey, stock, issues, today: toDateOnly(new Date()), discountKeyById, discountNameById, ...(devicePolicyKeys ? { devicePolicyKeys } : {}) });
   return { cart, ct: normalized };
 }
 

@@ -413,6 +413,14 @@ export interface RecurringOrderSummary {
 // Name notes: J's `CartIssue` (per line, with reasons) is kept as is; the cart API's issue shape is `BundleIssue`.
 // M does not re-declare `OfferFacts`: the offer data the mappers need is `Offer` (H).
 export type BundleLineKind = 'plan' | 'addon' | 'equipment' | 'device' | 'fee';
+/** A promotion the engine applied: its localized name and what it took off (the engine's own discounted amounts). */
+export interface AppliedPromotion {
+  key: string;
+  name: string;
+  amount: Money;
+  /** The lines it reduced (empty for an order-level discount). */
+  lineIds: string[];
+}
 export interface CartLine {
   /** commercetools line item id, or custom line item id for fee lines. */
   id: string;
@@ -439,6 +447,8 @@ export interface CartLine {
   unitListPrice: Money;
   /** Engine line total / quantity (after discounts, before tax); display only, `total` is authoritative. */
   unitPrice: Money;
+  /** Promotions that reduced only this line: shown under it. */
+  promotions?: AppliedPromotion[];
   /** What the engine took off ONE unit of this line for the order placed now (first-order promotions); absent when nothing. */
   promoPerUnit?: Money;
   /** Engine `totalPrice`. */
@@ -519,6 +529,8 @@ export interface Cart {
   itemCount: number;
   summary: CartSummary;
   discountCodes: CartDiscountCodeInfo[];
+  /** Promotions that affect several lines or the order total, listed after the lines (one-line promotions sit under their line). */
+  promotions: AppliedPromotion[];
   /** null when the minimum is 0 for this currency. */
   minimumOrder: { required: Money; shortfall: Money | null } | null;
   issues: BundleIssue[];

@@ -18,6 +18,7 @@ import { IssuesBanner } from './IssuesBanner';
 import { BlockedAddNotice } from './BlockedAddNotice';
 import { OrderSummary } from './OrderSummary';
 import { PlanCard } from './PlanCard';
+import { Promotions } from './Promotions';
 import { OrderedBannerSlot, SaveBundleSlot } from './slots';
 
 type BundleViewProps = {
@@ -105,6 +106,7 @@ function BundleContent({ signedIn, links }: Omit<BundleViewProps, 'initialCart'>
             <AcquisitionTotals lines={devices} />
           </>
         ) : null}
+        <Promotions promotions={cart.promotions} />
         <DiscountPrompts cart={cart} onAdd={(args, name) => run(() => mutations.addLine(args), name)} busy={busy} />
       </div>
       <OrderSummary

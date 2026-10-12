@@ -141,11 +141,17 @@ export async function saveDetails(session: SessionData, market: Market, input: D
 
 const money = (value: { centAmount: number; currencyCode: string }): Money => ({ centAmount: value.centAmount, currencyCode: value.currencyCode });
 
-function optionOf(method: ShippingMethod, locale: string, cartTotal: number): ShippingOption {
+/**
+ * The price the platform says this cart pays for the method: the matching tier of the rate (free shipping above an amount is a tier of the
+ * method's own rate, evaluated by commercetools against this cart), else the rate's price. The storefront holds no threshold of its own;
+ * `currency` (the cart's) is only the fallback for a method with no rate in the cart's zone.
+ */
+export function optionOf(method: ShippingMethod, locale: string, currency: string): ShippingOption {
   const rates = method.zoneRates.flatMap((zone) => zone.shippingRates);
   const rate = rates.find((candidate) => candidate.isMatching) ?? rates[0];
-  const free = rate?.freeAbove !== undefined && cartTotal >= rate.freeAbove.centAmount;
-  const price = rate ? (free ? { centAmount: 0, currencyCode: rate.price.currencyCode } : money(rate.price)) : { centAmount: 0, currencyCode: 'USD' };
+  const tier = rate?.tiers?.find((candidate) => candidate.isMatching === true && 'price' in candidate);
+  const matched = tier && 'price' in tier ? (tier.price as { centAmount: number; currencyCode: string }) : rate?.price;
+  const price = matched ? money(matched) : { centAmount: 0, currencyCode: currency };
   const localized = method.localizedName?.[locale];
   const description = method.localizedDescription?.[locale] ?? method.description;
   return { id: method.id, key: method.key ?? method.id, name: localized ?? method.name, ...(description ? { description } : {}), price };
@@ -176,7 +182,7 @@ export async function listDelivery(session: SessionData, market: Market, opts: {
     const written = digital && ct.shippingInfo?.shippingMethod?.id !== digital.id ? await updateCart(ct, [methodAction(digital.id)]) : ct;
     return { options: [], needsDelivery: false, state: (await stateOf(written, session, market)).state };
   }
-  const options = opts.forceNone ? [] : methods.filter((method) => method.key !== DIGITAL_METHOD_KEY).map((method) => optionOf(method, market.locale, ct.totalPrice.centAmount));
+  const options = opts.forceNone ? [] : methods.filter((method) => method.key !== DIGITAL_METHOD_KEY).map((method) => optionOf(method, market.locale, ct.totalPrice.currencyCode));
   return { options, needsDelivery: true, state: current.state };
 }
 

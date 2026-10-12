@@ -130,6 +130,37 @@ describe('mapCart', () => {
     expect(cart.summary.thenMonthly.centAmount).toBe(5999);
   });
 
+  describe('promotions', () => {
+    const names = { 'cd-intro': { 'en-US': 'First month free', 'de-DE': 'Erster Monat gratis' }, 'cd-welcome': { 'en-US': 'Welcome offer', 'de-DE': 'Willkommensangebot' } };
+    const promoDeps = () => deps({ discountKeyById: { 'cd-intro': 'malva-cd-intro-free-month', 'cd-welcome': 'malva-cd-welcome-10' }, discountNameById: names });
+
+    it('one-line promotion sits under its line with its name and the engine amount; an order-level one is listed after the lines', () => {
+      const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 0, discounts: ['cd-intro'], discountCents: 5999 }, addonLine], fees: [feeLine], discountOnTotal: 1000, discountOnTotalId: 'cd-welcome' }), ctx, promoDeps());
+      const plan = cart.lines.find((line) => line.kind === 'plan');
+      expect(plan?.promotions).toEqual([{ key: 'malva-cd-intro-free-month', name: 'First month free', amount: { centAmount: 5999, currencyCode: 'USD' }, lineIds: ['L1'] }]);
+      expect(cart.promotions).toEqual([{ key: 'malva-cd-welcome-10', name: 'Welcome offer', amount: { centAmount: 1000, currencyCode: 'USD' }, lineIds: [] }]);
+      expect(cart.lines.find((line) => line.kind === 'addon')?.promotions).toBeUndefined();
+    });
+
+    it('a promotion that reduced several lines is listed after the lines with the total off', () => {
+      const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 5499, discounts: ['cd-intro'], discountCents: 500 }, { ...addonLine, total: 499, discounts: ['cd-intro'], discountCents: 500 }] }), ctx, promoDeps());
+      expect(cart.promotions).toMatchObject([{ key: 'malva-cd-intro-free-month', amount: { centAmount: 1000 }, lineIds: ['L1', 'L3'] }]);
+      expect(cart.lines.every((line) => line.promotions === undefined)).toBe(true);
+    });
+
+    it('localised name with fallback to en-US and then to the key; nothing applied gives an empty list', () => {
+      const german = mapCart(ctCart({ lines: [{ ...planLine, total: 0, discounts: ['cd-intro'], discountCents: 5999 }] }), { ...ctx, locale: 'de-DE' }, promoDeps());
+      expect(german.lines[0]?.promotions?.[0]?.name).toBe('Erster Monat gratis');
+      const noNames = mapCart(ctCart({ lines: [{ ...planLine, total: 0, discounts: ['cd-intro'], discountCents: 5999 }] }), ctx, deps({ discountKeyById: { 'cd-intro': 'malva-cd-intro-free-month' } }));
+      expect(noNames.lines[0]?.promotions?.[0]?.name).toBe('malva-cd-intro-free-month');
+      expect(mapCart(ctCart({ lines: [planLine] }), ctx, promoDeps()).promotions).toEqual([]);
+    });
+
+    it('removing the line it depended on removes the promotion', () => {
+      expect(mapCart(ctCart({ lines: [addonLine] }), ctx, promoDeps()).promotions).toEqual([]);
+    });
+  });
+
   it('discountTotal sums line discounts and the discount on the total', () => {
     const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 5499, discounts: ['cd-intro'], discountCents: 500 }], discountOnTotal: 100 }), ctx, deps());
     expect(cart.summary.discountTotal.centAmount).toBe(600);
