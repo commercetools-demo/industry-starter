@@ -3,6 +3,7 @@ import { cartOffersByKey } from '@/lib/cart/__fixtures__/offers';
 import { ctCart } from '@/test/fixtures/ctCart';
 import type { BundleIssue } from '@/lib/types';
 import { mapCart, type CartMapDeps } from './cart';
+import { installLegacyPricingDefs } from '@/test/fixtures/legacyPricing';
 
 const ctx = { locale: 'en-US', currency: 'USD', country: 'US' } as const;
 const deps = (patch: Partial<CartMapDeps> = {}): CartMapDeps => ({
@@ -18,6 +19,8 @@ const planLine = { id: 'L1', sku: 'MLV-CBL-500-24M', offerKey: 'malva-offer-cabl
 const feeLine = { id: 'F1', offerKey: 'malva-offer-cable-500', money: 2500 };
 const routerLine = { id: 'L2', sku: 'MLV-EQP-AX3000-RENT', offerKey: 'malva-offer-router-ax3000', price: 800, mode: 'Dynamic' as const, parent: 'L1' };
 const addonLine = { id: 'L3', sku: 'MLV-ADD-APPLETV-MTH', offerKey: 'malva-offer-appletv', price: 999, mode: 'Dynamic' as const, parent: 'L1' };
+
+installLegacyPricingDefs();
 
 describe('mapCart', () => {
   it('splits monthly and one-time, marks the fee line and excludes it from the item count', () => {

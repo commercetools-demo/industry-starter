@@ -4,16 +4,8 @@ import { buildOffer, type OfferSpec } from './helpers';
 
 const CABLE_OFFERS = ['malva-offer-cable-100', 'malva-offer-cable-500', 'malva-offer-cable-gig', 'malva-offer-cable-existing-customer'];
 
-/** Price steps (D-013): stored on the offer, read by L; the platform cannot step a price by period. */
-export const CABLE_GIG_PRICE_STEPS = JSON.stringify([
-  { fromMonth: 0, percentOff: 20 },
-  { fromMonth: 12, percentOff: 10 },
-  { fromMonth: 24, percentOff: 0 },
-]);
-
 const EXTRAS: Record<string, OfferSpec['extras']> = {
   'malva-offer-cable-100': { 'intro-free-months': 1 },
-  'malva-offer-cable-gig': { 'price-steps': CABLE_GIG_PRICE_STEPS },
   'malva-offer-cable-existing-customer': { 'existing-customer': 'existing', audience: ['consumer', 'small-business'] },
 };
 

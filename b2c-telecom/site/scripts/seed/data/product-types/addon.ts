@@ -15,7 +15,6 @@ export const addonType: ProductTypeDraft = {
     own('applies-to-families', 'Applies to families', 'Gilt für Tarifarten', { name: 'set', elementType: { name: 'enum', values: FAMILIES } }, { isSearchable: true }),
     own('applies-to-technologies', 'Applies to technologies', 'Gilt für Technologien', { name: 'set', elementType: { name: 'enum', values: SUPPORTED_TECHNOLOGIES } }, { isSearchable: true }),
     shared('charge-type', required),
-    own('trial-days', 'Trial days', 'Testtage', { name: 'number' }),
     shared('highlights'),
   ],
 };

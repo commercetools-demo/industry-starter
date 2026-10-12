@@ -4,7 +4,7 @@ import { buildManifest } from '../manifest';
 import { main as seedMain } from '../seed';
 import { FakeCt } from '../test/fake-ct';
 import { main as verify } from '../verify';
-import { catalogChecks, catalogCounts, demoData, imageCoverage, offerPrices, offerReferences, searchFindsOffers, yearOneDiscounts } from './catalog';
+import { catalogChecks, catalogCounts, demoData, imageCoverage, offerPrices, offerReferences, searchFindsOffers } from './catalog';
 import { platformChecks } from './platform';
 import { releaseChecks } from './releases';
 import type { ProductDraft } from '../types';
@@ -75,14 +75,6 @@ describe('seed:verify catalog checks', () => {
     const result = await offerReferences.run(api, { projectKey: 'x' });
     expect(result.ok).toBe(false);
     expect(result.detail).toMatch(/included-offers -> malva-offer-modem-docsis31/);
-  });
-
-  it('year-1 discounts must equal the first price step', async () => {
-    const api = await seeded();
-    expect((await yearOneDiscounts.run(api, { projectKey: 'x' })).ok).toBe(true);
-    const discount = api.byKey('cart-discounts', 'malva-cd-tier-year1-20') as unknown as { value: { permyriad: number } };
-    discount.value.permyriad = 1000;
-    expect((await yearOneDiscounts.run(api, { projectKey: 'x' })).detail).toMatch(/first step is 20 %/);
   });
 
   it('image coverage reports missing images and never fails', async () => {

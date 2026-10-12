@@ -19,7 +19,7 @@ export const EXPECTED = {
   products: 52,
   offers: 27,
   inventory: 19,
-  cartDiscounts: 6,
+  cartDiscounts: 2,
   discountCodes: 1,
   policies: 5,
   serviceability: 11,
@@ -43,7 +43,7 @@ function liveVariants(p: LiveProduct): LiveVariant[] {
 const keysWithPrefix = (items: Obj[], prefix: string): string[] => items.map((i) => String(i.key ?? i.sku ?? '')).filter((k) => k.startsWith(prefix));
 
 export const catalogCounts: Check = {
-  name: 'catalog counts (6 product types, 6 custom types, 8 categories, 52 products, 19 inventory entries, at least 6 discounts, at least 1 code, 5 policies, 11 serviceability objects)',
+  name: 'catalog counts (6 product types, 6 custom types, 8 categories, 52 products, 19 inventory entries, at least 2 discounts, at least 1 code, 5 policies, 11 serviceability objects)',
   async run(api) {
     const problems: string[] = [];
     const expect = (label: string, actual: number, wanted: number): void => {
@@ -103,7 +103,7 @@ export const offerPrices: Check = {
 };
 
 export const offerReferences: Check = {
-  name: 'every key an offer references exists and price-steps parse',
+  name: 'every key an offer references exists',
   async run(api) {
     const live = await liveProducts(api);
     const problems: string[] = [];
@@ -115,39 +115,10 @@ export const offerReferences: Check = {
           if (['anchors', 'included-offers', 'conflicts-with', 'compatible-addons', 'compatible-equipment'].includes(attribute.name) && Array.isArray(attribute.value)) {
             for (const key of attribute.value as string[]) if (!live.has(key)) problems.push(`${offer.key}.${attribute.name} -> ${key}`);
           }
-          if (attribute.name === 'price-steps') {
-            try {
-              const steps = JSON.parse(String(attribute.value)) as { fromMonth: number; percentOff: number }[];
-              if (!Array.isArray(steps) || steps.some((s) => typeof s.fromMonth !== 'number' || typeof s.percentOff !== 'number')) problems.push(`${offer.key}.price-steps has the wrong shape`);
-            } catch {
-              problems.push(`${offer.key}.price-steps is not JSON`);
-            }
-          }
         }
       }
     }
     return problems.length === 0 ? ok() : fail(problems.slice(0, 8).join('; '));
-  },
-};
-
-export const yearOneDiscounts: Check = {
-  name: 'year-1 discounts equal the first price step of their offer',
-  async run(api) {
-    const live = await liveProducts(api);
-    const pairs: [string, string][] = [['malva-cd-tier-year1-20', 'malva-offer-cable-gig'], ['malva-cd-tier-year1-15', 'malva-offer-phone-unlimited-max']];
-    const problems: string[] = [];
-    for (const [discountKey, offerKey] of pairs) {
-      const discount = (await api.get(`cart-discounts/key=${discountKey}`)) as { value?: { permyriad?: number } } | null;
-      const product = live.get(offerKey);
-      const steps = product ? ((liveVariants(product)[0].attributes ?? []).find((a) => a.name === 'price-steps')?.value as string | undefined) : undefined;
-      if (!discount || !steps) {
-        problems.push(`${discountKey} or ${offerKey}.price-steps is missing`);
-        continue;
-      }
-      const first = (JSON.parse(steps) as { percentOff: number }[])[0];
-      if (discount.value?.permyriad !== first.percentOff * 100) problems.push(`${discountKey} is ${String(discount.value?.permyriad)} permyriad, first step is ${first.percentOff} %`);
-    }
-    return problems.length === 0 ? ok() : fail(problems.join('; '));
   },
 };
 
@@ -205,4 +176,4 @@ export const demoData: Check = {
   },
 };
 
-export const catalogChecks: Check[] = [catalogCounts, offerPrices, offerReferences, yearOneDiscounts, imageCoverage, searchFindsOffers, demoData];
+export const catalogChecks: Check[] = [catalogCounts, offerPrices, offerReferences, imageCoverage, searchFindsOffers, demoData];

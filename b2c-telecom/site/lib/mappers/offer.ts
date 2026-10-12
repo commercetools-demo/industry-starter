@@ -96,7 +96,6 @@ export function mapAddonFacts(projection: ProductProjection, locale: string): Ad
     ...optional({
       provider: attrString(attrs, 'provider'),
       chargeType: attrEnumKey(attrs, 'charge-type'),
-      trialDays: attrNumber(attrs, 'trial-days'),
       tag: attrEnumKey(attrs, 'addon-tag'),
     }),
     appliesToFamilies: keepAllowed<PlanFamily>(['internet', 'phone'], attrEnumKeys(attrs, 'applies-to-families')),
@@ -225,6 +224,7 @@ export function mapOffer(projection: ProductProjection, ctx: OfferContext, local
     existingCustomer: oneOf(EXISTING, attrEnumKey(attrs, 'existing-customer')) ?? 'any',
     channels: attrStringSet(attrs, 'channels'),
     ...optional({ startTime: attrDate(attrs, 'start-time'), endTime: attrDate(attrs, 'end-time') }),
+    ...((attrNumber(attrs, 'intro-free-months') ?? 0) > 0 ? { firstMonthFree: true } : {}),
     variants,
     headline: {
       ...(master.recurringPrice ? { recurring: master.recurringPrice } : {}),

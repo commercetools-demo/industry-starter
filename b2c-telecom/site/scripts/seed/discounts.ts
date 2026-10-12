@@ -1,11 +1,10 @@
 // npm run seed:discounts -- --confirm-project spec-test-b2c-telecom
-// Creates or updates the introductory-period Cart Discounts of workstream L and the code discount MALVA-CABLE5 of workstream M
+// Creates or updates the code discount MALVA-CABLE5 (the other Cart Discounts come from the main seed)
 // (D-054: allow-listed project, `malva-cd-` keys only).
 // Also exports `applyDiscounts`, the loader workstream M reuses for its own discounts.
 import { consoleLog, exitCodeForError, parseArgs, type Log } from './cli';
 import { EXIT } from './config';
 import { cable5Code, cable5Discount } from './data/cart-discounts/code-cable5';
-import { buildIntroManifests, apiLookup, type LookupFn } from './data/cart-discounts/intro-defs';
 import { getAdminApi, loadSeedEnv, type CtApi } from './lib';
 import { cartDiscountReconciler } from './reconcilers/cartDiscount';
 import { discountCodeReconciler } from './reconcilers/discountCode';
@@ -67,7 +66,6 @@ export async function applyDiscountCodes(api: CtApi, drafts: DiscountCodeDraft[]
 export interface DiscountsDeps {
   api?: CtApi;
   source?: Record<string, string | undefined>;
-  lookup?: LookupFn;
   log?: Log;
 }
 
@@ -76,7 +74,7 @@ export async function main(argv: string[], deps: DiscountsDeps = {}): Promise<nu
   const args = parseArgs(argv, ['confirm-project']);
   try {
     const { api } = await getAdminApi({ mode: 'write', confirmProject: args.values.get('confirm-project'), source: deps.source ?? loadSeedEnv(), api: deps.api });
-    const drafts = [...(await buildIntroManifests(deps.lookup ?? apiLookup(api))), cable5Discount];
+    const drafts = [cable5Discount];
     for (const outcome of await applyDiscounts(api, drafts)) log(`${outcome.result.padEnd(9)} ${outcome.key}`);
     for (const outcome of await applyDiscountCodes(api, [cable5Code])) log(`${outcome.result.padEnd(9)} ${outcome.key}`);
     return EXIT.OK;

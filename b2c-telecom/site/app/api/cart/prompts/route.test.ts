@@ -3,6 +3,7 @@ import { CART_OFFERS } from '@/lib/cart/__fixtures__/offers';
 import { resetRouteState, routeState } from '@/test/fixtures/bundleMocks';
 import { makeApiRoot, resetWorld, seedCart } from '@/test/fixtures/bundleWorld';
 import { ctCart } from '@/test/fixtures/ctCart';
+import { installLegacyPairings } from '@/test/fixtures/legacyPairings';
 
 const probe = vi.hoisted(() => ({ create: vi.fn(), remove: vi.fn() }));
 vi.mock('next/cache', () => ({ unstable_cache: (fn: () => Promise<unknown>) => fn }));
@@ -31,6 +32,8 @@ beforeEach(() => {
   probe.remove.mockReset().mockResolvedValue(undefined);
   routeState.offers = CART_OFFERS.map((offer) => ({ ...offer, categoryKeys: categories[offer.key] ?? offer.categoryKeys }));
 });
+
+installLegacyPairings();
 
 describe('GET /api/cart/prompts', () => {
   it('returns { prompts: [] } for a visitor without a cart and for an empty cart, and prices nothing', async () => {

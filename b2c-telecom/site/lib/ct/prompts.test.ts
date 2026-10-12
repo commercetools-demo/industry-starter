@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { cartOffersByKey } from '@/lib/cart/__fixtures__/offers';
 import { PROMPT_PAIRINGS } from '@/lib/config/promptPairings';
+import { LEGACY_PROMPT_PAIRINGS } from '@/test/fixtures/legacyPairings';
 import { addLineItemAction, buildProbeDraft } from '@/lib/ct/cartDrafts';
 import type { BuyerContext, Offer } from '@/lib/types';
 import { ctCart, type LineSpec } from '@/test/fixtures/ctCart';
@@ -32,15 +33,16 @@ const input = (lines: LineSpec[], patch: { offersByKey?: Record<string, Offer>; 
   discountKeyById,
 });
 
-const original = [...PROMPT_PAIRINGS];
+const original = LEGACY_PROMPT_PAIRINGS;
 beforeEach(() => {
+  PROMPT_PAIRINGS.splice(0, PROMPT_PAIRINGS.length, ...original);
   probe.create.mockReset();
   probe.remove.mockReset();
   probe.remove.mockResolvedValue(undefined);
   vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 afterEach(() => {
-  PROMPT_PAIRINGS.splice(0, PROMPT_PAIRINGS.length, ...original);
+  PROMPT_PAIRINGS.splice(0, PROMPT_PAIRINGS.length);
 });
 
 /** What the engine would answer for cable + essential: the bundle discount takes $5 off the cable line. */
@@ -51,6 +53,14 @@ describe('attributable', () => {
     const cart = ctCart({ lines: [{ ...cable, quantity: 2, discounts: ['cd-bundle'], discountCents: 500 }, { id: 'X', sku: 'MLV-EQP-AX3000-BUY', offerKey: 'malva-offer-router-ax3000', price: 100, discounts: ['cd-bundle'], discountCents: 99 }] });
     expect(attributable(cart, 'malva-cd-bundle-5', discountKeyById)).toBe(1000);
     expect(attributable(cart, 'malva-cd-second-line-10', discountKeyById)).toBe(0);
+  });
+});
+
+describe('shipped pairings', () => {
+  it('none is active: with no reachable discount nothing is suggested and no probe cart is built', async () => {
+    PROMPT_PAIRINGS.splice(0, PROMPT_PAIRINGS.length);
+    expect(await getPrompts(input([cable]))).toEqual([]);
+    expect(probe.create).not.toHaveBeenCalled();
   });
 });
 

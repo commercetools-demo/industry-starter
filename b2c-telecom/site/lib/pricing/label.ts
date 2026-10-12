@@ -1,6 +1,5 @@
 // Broadband Facts label builder (spec broadband-facts-label). Pure: the ONLY place where label fields are mapped from
 // catalog data. Nothing is copied: every figure comes from the offer, the line's engine prices and the price schedule.
-import { DISCOUNT_AMOUNTS } from '@/lib/config/discounts';
 import type { BroadbandLabelData, BundleLineKind, LabelRow, LabelSnapshot, Money, Offer, PriceSchedule, TermMonths } from '@/lib/types';
 
 /** Message texts of the `label` namespace (identical English in both locales). */
@@ -19,7 +18,7 @@ export interface LabelStrings {
   download: string;
   upload: string;
   latency: string;
-  discounts: { cable: string; wireless: string; phone: string };
+  discounts: { firstMonth: string; none: string };
 }
 
 export interface LabelBuildInput {
@@ -45,15 +44,8 @@ export function formatLabelMoney(money: Money): string {
 
 const amountOf = (money: Money, currencyCode: string): number => (money.currencyCode === currencyCode ? money.centAmount : 0);
 
-function discountsText(offer: Offer, strings: LabelStrings, currency: string, fmt: LabelBuildInput['fmt']): string {
-  const cur = currency === 'EUR' ? 'EUR' : 'USD';
-  const values = {
-    secondLine: fmt({ centAmount: DISCOUNT_AMOUNTS.secondLine[cur], currencyCode: currency }),
-    bundle: fmt({ centAmount: DISCOUNT_AMOUNTS.bundleCablePhone[cur], currencyCode: currency }),
-  };
-  const facts = offer.facts?.kind === 'plan' ? offer.facts : null;
-  if (facts?.family === 'phone') return fill(strings.discounts.phone, values);
-  return fill(facts?.technology === 'cable' ? strings.discounts.cable : strings.discounts.wireless, values);
+function discountsText(offer: Offer, strings: LabelStrings): string {
+  return offer.firstMonthFree ? strings.discounts.firstMonth : strings.discounts.none;
 }
 
 export function buildLabel(input: LabelBuildInput): { ok: true; label: BroadbandLabelData } | { ok: false; missing: string[] } {
@@ -107,7 +99,7 @@ export function buildLabel(input: LabelBuildInput): { ok: true; label: Broadband
       monthlyFees,
       oneTime,
       etf: facts.earlyTerminationFee ?? '',
-      discounts: discountsText(offer, strings, currency, fmt),
+      discounts: discountsText(offer, strings),
       speeds: [
         { k: strings.download, v: fill(strings.mbps, { n: facts.typicalDownloadMbps ?? 0 }) },
         { k: strings.upload, v: fill(strings.mbps, { n: facts.typicalUploadMbps ?? 0 }) },

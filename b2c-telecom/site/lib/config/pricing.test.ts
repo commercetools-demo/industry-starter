@@ -1,6 +1,10 @@
 import { INTRO_DEFS, STEP_DEFS } from './pricing';
 
 describe('pricing config', () => {
+  it('no introductory price or price step is defined: promotions apply to the first order only', () => {
+    expect(INTRO_DEFS).toEqual([]);
+    expect(STEP_DEFS).toEqual([]);
+  });
   it('no offer+term is in both lists', () => {
     const intro = new Set(INTRO_DEFS.map((d) => `${d.offerKey}|${d.term}`));
     for (const d of STEP_DEFS) expect(intro.has(`${d.offerKey}|${d.term}`)).toBe(false);

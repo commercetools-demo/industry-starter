@@ -1128,9 +1128,8 @@
     "mbps": "{n} Mbps",
     "ms": "{n} ms",
     "discounts": {
-      "cable": "{bundle} off monthly when you add a phone plan.",
-      "wireless": "{bundle} off monthly when you add a phone plan.",
-      "phone": "Second line {secondLine} off. {bundle} off your internet plan when you also have a phone plan."
+      "firstMonth": "First month free. Later months are charged at the standing price.",
+      "none": "No promotions apply."
     }
   },
   "devices": {

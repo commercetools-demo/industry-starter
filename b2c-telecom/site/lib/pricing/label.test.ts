@@ -52,7 +52,7 @@ describe('buildLabel', () => {
       { k: 'Typical Latency', v: '13 ms' },
     ]);
     expect(label.data).toBe('Unlimited');
-    expect(label.discounts).toContain('$5.00 off');
+    expect(label.discounts).toBe('No promotions apply.');
   });
 
   it('rented equipment is a provider monthly fee per line', () => {
@@ -75,7 +75,7 @@ describe('buildLabel', () => {
     expect(label.data).toBe('5 GB');
     expect(label.priceNote).toBe('Price can change with notice.');
     expect(label.kind).toBe('Phone plan');
-    expect(label.discounts).toContain('Second line $10.00 off');
+    expect(label.discounts).toBe('No promotions apply.');
   });
 
   it('Required data missing: builder reports the missing fields', () => {

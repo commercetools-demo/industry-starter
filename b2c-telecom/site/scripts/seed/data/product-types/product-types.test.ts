@@ -83,7 +83,7 @@ describe('product types', () => {
 
   it('descriptive types are not searched on denormalised copies and stay far below the 50 attribute limit', () => {
     for (const type of productTypes) expect(type.attributes.length).toBeLessThan(50);
-    for (const name of ['anchors', 'included-offers', 'compatible-addons', 'compatible-equipment', 'price-steps']) {
+    for (const name of ['anchors', 'included-offers', 'compatible-addons', 'compatible-equipment']) {
       expect(find(offerType, name).isSearchable).toBe(false);
     }
   });

@@ -35,6 +35,5 @@ export const offerType: ProductTypeDraft = {
     shared('color'),
     shared('memory-gb'),
     own('intro-free-months', 'Introductory free months', 'Kostenlose Einführungsmonate', { name: 'number' }, { savedToLineItem: true }),
-    own('price-steps', 'Price steps (JSON)', 'Preisstufen (JSON)', { name: 'text' }),
   ],
 };

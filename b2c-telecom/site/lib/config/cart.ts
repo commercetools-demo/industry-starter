@@ -34,12 +34,6 @@ export const PROBE_CART_KEY_PREFIX = 'prompt-probe-';
 
 export const PROMPT_MAX_CANDIDATES = 3;
 
-/**
- * L's spike decides how one-time lines are created. `false` (architecture A / A-prime, the best guess recorded in
- * PROJECT-FINDINGS `SPIKE-L`): one-time variants are normal line items without `recurrenceInfo`.
- */
-export const ONE_TIME_AS_CUSTOM_LINE_ITEM = false;
-
 /** Fee line names (custom line items have no catalog name). */
 export const ACTIVATION_FEE_NAME = { 'en-US': 'Activation fee', 'de-DE': 'Aktivierungsgebühr' } as const;
 

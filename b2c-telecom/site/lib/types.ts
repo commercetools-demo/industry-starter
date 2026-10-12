@@ -63,7 +63,6 @@ export interface AddonFacts {
   /** Empty = any. */
   appliesToTechnologies: Technology[];
   chargeType?: string;
-  trialDays?: number;
   /** Key of attribute `addon-tag`: music, video or extras. */
   tag?: string;
   highlights: string[];
@@ -137,6 +136,8 @@ export interface Offer {
   /** ISO. */
   startTime?: string;
   endTime?: string;
+  /** First-month promotion: the offer's `intro-free-months` is above 0 (a flag; the discount carries the rule). */
+  firstMonthFree?: boolean;
   /** variants[0] is ALWAYS the master variant (D-011). */
   variants: OfferVariant[];
   /** = master variant (D-011). */

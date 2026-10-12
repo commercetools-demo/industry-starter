@@ -1,6 +1,7 @@
 import { screen, within } from '@testing-library/react';
 import { buildSchedule } from '@/lib/pricing/schedule';
 import type { Money, PriceSchedule as PriceScheduleData } from '@/lib/types';
+import { installLegacyPricingDefs } from '@/test/fixtures/legacyPricing';
 import { renderWithProviders } from '@/test/utils';
 import { PriceSchedule } from './PriceSchedule';
 
@@ -23,6 +24,8 @@ function schedule(patch: Partial<Parameters<typeof buildSchedule>[0]> = {}): Pri
   if (!result.ok) throw new Error(result.error.code);
   return result.value;
 }
+
+installLegacyPricingDefs();
 
 describe('PriceSchedule', () => {
   it('committed term: every period row, due at order, the total over the term and the after-term sentence', () => {
