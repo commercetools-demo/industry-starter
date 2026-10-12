@@ -8,17 +8,31 @@ import { systemKey } from './categories';
  * Discounts (design-discounts-and-priority). Funding is encoded two ways because product discounts have no custom
  * fields: the key (`mau-pd-malva-*` vs `mau-pd-<reseller>-*`), and for cart discounts the type `mau-cart-discount-fields`.
  *
- * sortOrder: Malva-funded discounts take the LOWEST values (0.1x), reseller ones come after (0.5x+). Which direction the
- * platform ranks (design says "higher fires first") must be confirmed live, see Q-S05; the values are data, easy to flip.
+ * sortOrder: HIGHER value = higher rank = applied first (commercetools docs, "How Cart Discounts work": "A Cart Discount
+ * with a higher rank is prioritized"; product discounts: the highest ranked active one wins). Malva-funded discounts
+ * therefore take the band 0.91 to 0.99 and reseller ones 0.51 to 0.53 (workstream T allocates reseller values in 0.05 to
+ * 0.89). Values are unique per kind and never end in 0. Q-S05; T-00 re-confirms live and flips `SORT_HIGHER_FIRST` if needed.
  * Only one product discount applies per product (the highest ranked), so scopes are kept disjoint per reseller.
+ *
+ * Store scope: cart discounts carry `stores` (a cart discount without `stores` applies in every store); Malva-funded ones
+ * have none. Product discounts have no `stores`; the reseller ones get a clause on the store's retail distribution channel
+ * (`PRODUCT_DISCOUNT_CHANNEL`, resolved to an id at seed time, `channelClause`).
  */
 const cat = (system: string) => `categoriesWithAncestors.key contains "${systemKey(system)}"`;
+const storeRef = (key: string) => [{ typeId: 'store' as const, key }];
+/** Reseller product discounts and the retail channel (by key) their predicate is limited to; Malva-funded ones are not listed (they apply everywhere). */
+export const PRODUCT_DISCOUNT_CHANNEL: Record<string, string> = {
+  'mau-pd-north-brake-week': K.distNorth,
+  'mau-pd-south-battery-bonus': K.distSouth,
+};
+/** Predicate with the store's retail channel clause (workstream T writes the same shape: `... and channel.id = "<id>"`). */
+export const channelClause = (predicate: string, channelId: string): string => `${predicate} and channel.id = "${channelId}"`;
 const rel = (percent: number) => ({ type: 'relative' as const, permyriad: percent * 100 });
 
 export const productDiscountDrafts: ProductDiscountDraft[] = [
   {
     key: 'mau-pd-malva-filter-autumn', name: ls('Malva Herbstaktion Filter', 'Malva autumn filter promotion'), description: ls('Malva-finanziert, 10 % auf alle Filter', 'Malva-funded, 10% on all filters'),
-    value: rel(10), predicate: cat('filters'), sortOrder: '0.11', isActive: true,
+    value: rel(10), predicate: cat('filters'), sortOrder: '0.91', isActive: true,
   },
   {
     key: 'mau-pd-north-brake-week', name: ls('Küstenwerk Bremsenwoche', 'Küstenwerk brake week'), description: ls('Reseller-Rabatt Nord, 8 % auf Bremsen', 'North reseller discount, 8% on brakes'),
@@ -36,24 +50,24 @@ const cartType = (fields: Record<string, unknown>) => ({ type: { typeId: 'type' 
 export const cartDiscountDrafts: CartDiscountDraft[] = [
   {
     key: 'mau-cd-malva-welcome', name: ls('Malva Willkommensrabatt', 'Malva welcome discount'), description: ls('Malva-finanziert, 5 % auf den Warenkorb mit Code', 'Malva-funded, 5% off the cart with a code'),
-    value: { type: 'relative', permyriad: 500 }, cartPredicate: 'true', target: { type: 'totalPrice' }, sortOrder: '0.11',
+    value: { type: 'relative', permyriad: 500 }, cartPredicate: 'true', target: { type: 'totalPrice' }, sortOrder: '0.91',
     requiresDiscountCode: true, isActive: true, stackingMode: 'Stacking', custom: cartType({ fundedBy: 'malva' }),
   },
   {
     key: 'mau-cd-north-large-order', name: ls('Küstenwerk Großauftrag -3 %', 'Küstenwerk large order -3%'), description: ls('3 % ab 2.000 EUR Warenwert', '3% from a 2,000 EUR cart'),
     value: { type: 'relative', permyriad: 300 }, cartPredicate: 'lineItemTotal(true) >= "2000.00 EUR"', target: { type: 'totalPrice' }, sortOrder: '0.51',
-    requiresDiscountCode: false, isActive: true, stackingMode: 'Stacking', custom: cartType({ fundedBy: 'reseller', storeKey: K.storeNorth }),
+    requiresDiscountCode: false, isActive: true, stackingMode: 'Stacking', stores: storeRef(K.storeNorth), custom: cartType({ fundedBy: 'reseller', storeKey: K.storeNorth }),
   },
   {
     key: 'mau-cd-south-brake-code', name: ls('Südkamm Bremsen-Code', 'Südkamm brake code'), description: ls('5 % auf Bremsenteile, nur mit passendem Warenkorb', '5% on brake parts, only for a matching cart'),
     value: { type: 'relative', permyriad: 500 }, cartPredicate: 'lineItemExists(categoriesWithAncestors.key contains "mau-cat-brakes")', target: { type: 'lineItems', predicate: 'categoriesWithAncestors.key contains "mau-cat-brakes"' },
-    sortOrder: '0.52', requiresDiscountCode: true, isActive: true, stackingMode: 'Stacking', custom: cartType({ fundedBy: 'reseller', storeKey: K.storeSouth }),
+    sortOrder: '0.52', requiresDiscountCode: true, isActive: true, stackingMode: 'Stacking', stores: storeRef(K.storeSouth), custom: cartType({ fundedBy: 'reseller', storeKey: K.storeSouth }),
   },
   {
     key: 'mau-cd-south-free-shipping', name: ls('Südkamm Gratisversand', 'Südkamm free shipping'), description: ls('Versand gratis ab 120 EUR', 'Free shipping from 120 EUR'),
     value: { type: 'absolute', money: [{ currencyCode: 'EUR', centAmount: 590 }, { currencyCode: 'USD', centAmount: 990 }] },
     cartPredicate: 'lineItemTotal(true) >= "120.00 EUR"', target: { type: 'shipping' }, sortOrder: '0.53', requiresDiscountCode: false, isActive: false, stackingMode: 'Stacking',
-    custom: cartType({ fundedBy: 'reseller', storeKey: K.storeSouth }),
+    stores: storeRef(K.storeSouth), custom: cartType({ fundedBy: 'reseller', storeKey: K.storeSouth }),
   },
 ];
 

@@ -143,6 +143,8 @@ export interface BuDef {
   kind: 'malva-global' | 'malva-dach' | 'reseller' | 'branch';
   storeKey?: string;
   channelKey?: string;
+  /** Company profile shown on the portal's Company page (synthetic demo values, `example`-style). */
+  profile?: { legalName: string; taxId: string; accountNumber: string };
   /** customer keys with a role */
   associates: { customer: string; role: RoleName }[];
 }
@@ -152,10 +154,12 @@ export const BUSINESS_UNITS: BuDef[] = [
   { key: 'mau-bu-malva-dach', name: 'Malva DACH', type: 'Division', parent: 'mau-bu-malva', kind: 'malva-dach', associates: [] },
   {
     key: 'mau-bu-north', name: 'Küstenwerk Autoteile', type: 'Division', parent: 'mau-bu-malva-dach', kind: 'reseller', storeKey: K.storeNorth,
+    profile: { legalName: 'Küstenwerk Autoteile GmbH', taxId: 'DE000000001', accountNumber: 'MAU-N-0001' },
     associates: [{ customer: 'mau-cust-north-admin', role: 'admin' }, { customer: 'mau-cust-north-buyer', role: 'buyer' }],
   },
   {
     key: 'mau-bu-south', name: 'Südkamm Autoteile', type: 'Division', parent: 'mau-bu-malva-dach', kind: 'reseller', storeKey: K.storeSouth,
+    profile: { legalName: 'Südkamm Autoteile GmbH', taxId: 'DE000000002', accountNumber: 'MAU-S-0001' },
     associates: [{ customer: 'mau-cust-south-admin', role: 'admin' }, { customer: 'mau-cust-south-buyer', role: 'buyer' }],
   },
   ...BRANCHES.map<BuDef>((b) => ({
@@ -180,6 +184,8 @@ export interface CustomerDef {
   garage?: GarageEntry[];
   activeId?: string;
   marketingConsent?: boolean;
+  /** Portal users only (Users table). */
+  jobTitle?: string;
   kind: 'shopper' | 'associate';
 }
 
@@ -199,9 +205,9 @@ export const CUSTOMERS: CustomerDef[] = [
   { key: 'mau-cust-jonas-weber', email: 'jonas.weber@example.com', firstName: 'Jonas', lastName: 'Weber', locale: 'de-DE', store: K.storeNorth, country: 'DE', garage: jonas, activeId: jonas[0]?.id, marketingConsent: false, kind: 'shopper' },
   { key: 'mau-cust-mia-fischer', email: 'mia.fischer@example.com', firstName: 'Mia', lastName: 'Fischer', locale: 'de-DE', store: K.storeSouth, country: 'DE', garage: mia, activeId: mia[0]?.id, marketingConsent: false, kind: 'shopper' },
   { key: 'mau-cust-liam-carter', email: 'liam.carter@example.com', firstName: 'Liam', lastName: 'Carter', locale: 'en-US', store: K.storeSouth, country: 'US', garage: liam, activeId: liam[0]?.id, marketingConsent: true, kind: 'shopper' },
-  { key: 'mau-cust-malva-admin', email: 'malva.admin@example.com', firstName: 'Malva', lastName: 'Admin', locale: 'en-US', country: 'DE', kind: 'associate' },
-  { key: 'mau-cust-north-admin', email: 'north.admin@example.com', firstName: 'Nora', lastName: 'Admin', locale: 'de-DE', country: 'DE', kind: 'associate' },
-  { key: 'mau-cust-north-buyer', email: 'north.buyer@example.com', firstName: 'Ben', lastName: 'Buyer', locale: 'de-DE', country: 'DE', kind: 'associate' },
-  { key: 'mau-cust-south-admin', email: 'south.admin@example.com', firstName: 'Sven', lastName: 'Admin', locale: 'de-DE', country: 'DE', kind: 'associate' },
-  { key: 'mau-cust-south-buyer', email: 'south.buyer@example.com', firstName: 'Bea', lastName: 'Buyer', locale: 'en-US', country: 'DE', kind: 'associate' },
+  { key: 'mau-cust-malva-admin', email: 'malva.admin@example.com', firstName: 'Malva', lastName: 'Admin', locale: 'en-US', country: 'DE', jobTitle: 'Platform administrator', kind: 'associate' },
+  { key: 'mau-cust-north-admin', email: 'north.admin@example.com', firstName: 'Nora', lastName: 'Admin', locale: 'de-DE', country: 'DE', jobTitle: 'Store manager', kind: 'associate' },
+  { key: 'mau-cust-north-buyer', email: 'north.buyer@example.com', firstName: 'Ben', lastName: 'Buyer', locale: 'de-DE', country: 'DE', jobTitle: 'Purchasing clerk', kind: 'associate' },
+  { key: 'mau-cust-south-admin', email: 'south.admin@example.com', firstName: 'Sven', lastName: 'Admin', locale: 'de-DE', country: 'DE', jobTitle: 'Store manager', kind: 'associate' },
+  { key: 'mau-cust-south-buyer', email: 'south.buyer@example.com', firstName: 'Bea', lastName: 'Buyer', locale: 'en-US', country: 'DE', jobTitle: 'Purchasing clerk', kind: 'associate' },
 ];

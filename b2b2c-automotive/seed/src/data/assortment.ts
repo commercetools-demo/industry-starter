@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
-import { K } from './base';
+import { K, LOCAL_REVIEW_CONTAINER } from './base';
 import { BUNDLES, LOCAL_PARTS, keyOfSku } from './items';
 import { PARTS, isUsOnly, type PartDef } from './parts';
 
@@ -47,6 +47,13 @@ export function assortmentSkus(storeKey: string): string[] {
 
 export const assortmentKeys = (storeKey: string): string[] => assortmentSkus(storeKey).map(keyOfSku);
 export const masterKeys = (): string[] => masterSkus().map(keyOfSku);
+
+/** Objects of container `malva-local-review` (key `<storeKey>--<product key>`): the pending local part has a record with no claimed vehicles yet. */
+export function localReviewObjects(): { container: string; key: string; value: { state: 'pending'; claimedVehicles: string[] } }[] {
+  return LOCAL_PARTS.filter((l) => l.review === 'pending').map((l) => ({
+    container: LOCAL_REVIEW_CONTAINER, key: `${l.owner}--${keyOfSku(l.sku)}`, value: { state: 'pending' as const, claimedVehicles: [] },
+  }));
+}
 
 /** Custom object `mau-assortment/<storeKey>`: the states the portal shows that a selection alone cannot express. */
 export function assortmentObject(storeKey: string) {

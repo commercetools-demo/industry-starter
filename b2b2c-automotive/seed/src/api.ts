@@ -10,7 +10,7 @@ export type Kind =
   | 'product-types' | 'categories' | 'products' | 'tax-categories' | 'zones' | 'shipping-methods' | 'channels'
   | 'customer-groups' | 'types' | 'stores' | 'product-selections' | 'associate-roles' | 'business-units' | 'customers'
   | 'inventory' | 'product-discounts' | 'cart-discounts' | 'discount-codes' | 'recurrence-policies'
-  | 'product-tailoring' | 'standalone-prices' | 'states' | 'carts' | 'orders';
+  | 'product-tailoring' | 'standalone-prices' | 'states' | 'carts' | 'orders' | 'reviews';
 
 export interface Res {
   id: string;
@@ -98,6 +98,7 @@ function endpoint(root: ByProjectKeyRequestBuilder, kind: Kind, store?: string):
     case 'orders': return e(root.orders());
     case 'standalone-prices': return e(root.standalonePrices());
     case 'states': return e(root.states());
+    case 'reviews': return e(root.reviews());
     case 'product-tailoring':
       return store ? e(root.inStoreKeyWithStoreKeyValue({ storeKey: store }).productTailoring()) : e(root.productTailoring());
   }

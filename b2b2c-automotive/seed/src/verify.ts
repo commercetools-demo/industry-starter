@@ -2,15 +2,16 @@
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 import type { Api, Res } from './api';
 import { CONTRACT_KEYS, K } from './data/base';
-import { assortmentKeys, masterKeys } from './data/assortment';
+import { assortmentKeys, localReviewObjects, masterKeys } from './data/assortment';
+import { reviewDrafts } from './data/reviews';
 import { allProductDrafts, loadImages } from './data/catalog';
 import { ALL_GROUP_PATHS, categoryDrafts, categoryKeyOf } from './data/categories';
 import { THEME_CONTAINER, THEME_KEY, TAILORINGS } from './data/content';
 import { typeDrafts } from './data/custom-types';
-import { cartDiscountDrafts, discountCodeDrafts, productDiscountDrafts } from './data/discounts';
+import { PRODUCT_DISCOUNT_CHANNEL, cartDiscountDrafts, discountCodeDrafts, productDiscountDrafts } from './data/discounts';
 import { inventoryDrafts, recurrencePolicyDrafts } from './data/extras';
 import { BUSINESS_UNITS, CUSTOMERS, STORES, channelDrafts, roleDrafts } from './data/org';
-import { PARTS } from './data/parts';
+import { PARTS, POPULARITY, relatedSkus } from './data/parts';
 import { priceDefs, type PriceDef } from './data/prices';
 import { productTypeDrafts } from './data/product-types';
 import { stateDrafts } from './data/states';
@@ -39,6 +40,10 @@ export function checkProduct(p: Res, wantPublished: boolean): string[] {
   for (const img of v.images ?? []) if (!isCleanUrl(img.url)) out.push(`${key}: image URL is not clean: ${img.url}`);
   if (p.productType && key.startsWith('mau-part-')) {
     for (const n of ['part-number', 'brand', 'quality-tier', 'warranty-months']) if (attr(n) === undefined) out.push(`${key}: attribute ${n} missing`);
+    const sku = v.sku ?? '';
+    if (POPULARITY[sku] !== undefined && attr('popularity-rank') !== POPULARITY[sku]) out.push(`${key}: popularity-rank must be ${POPULARITY[sku]}`);
+    const related = relatedSkus(sku);
+    if (related.length > 0 && JSON.stringify([...((attr('related-skus') as string[]) ?? [])].sort()) !== JSON.stringify([...related].sort())) out.push(`${key}: related-skus differ from the seed`);
     if (attr('universal-fit') !== true && !(Array.isArray(attr('fitment-keys')) && (attr('fitment-keys') as unknown[]).length > 0)) out.push(`${key}: neither fitment-keys nor universal-fit`);
   }
   return out;
@@ -183,8 +188,23 @@ export async function verifySeed(api: Api): Promise<string[]> {
   for (const c of CUSTOMERS) if (!customers.some((x) => x.key === c.key && x.email === c.email)) problems.push(`customer ${c.email}: missing`);
 
   // discounts and tailoring
-  for (const d of productDiscountDrafts) await need('product-discounts', d.key as string);
-  for (const d of cartDiscountDrafts) await need('cart-discounts', d.key as string);
+  for (const d of productDiscountDrafts) {
+    const r = await need('product-discounts', d.key as string);
+    if (r && PRODUCT_DISCOUNT_CHANNEL[d.key as string] && !String(r.predicate).includes('channel.id')) problems.push(`product discount ${d.key}: predicate lacks the store channel clause`);
+  }
+  await refreshStoreKeys(api, idKeys);
+  for (const d of cartDiscountDrafts) {
+    const r = await need('cart-discounts', d.key as string);
+    if (!r) continue;
+    const have = ((r.stores as { key?: string; id?: string }[]) ?? []).map((x) => x.key ?? idKeys.get('store')?.get(x.id ?? '') ?? x.id).sort();
+    const want = (d.stores ?? []).map((x) => (x as { key?: string }).key).sort();
+    if (JSON.stringify(have) !== JSON.stringify(want)) problems.push(`cart discount ${d.key}: stores ${have.join(',') || 'none'} instead of ${want.join(',') || 'none'}`);
+  }
+  for (const d of reviewDrafts()) {
+    const r = await need('reviews', d.key as string);
+    if (r && r.rating !== d.rating) problems.push(`review ${d.key}: rating ${String(r.rating)} instead of ${d.rating}`);
+  }
+  for (const o of localReviewObjects()) if (!(await api.getObject(o.container, o.key))) problems.push(`custom object ${o.container}/${o.key}: missing`);
   for (const d of discountCodeDrafts) await need('discount-codes', d.key as string);
   for (const t of TAILORINGS) {
     const r = await need('product-tailoring', tailoringKey(t.store, t.sku));
@@ -199,6 +219,10 @@ export async function verifySeed(api: Api): Promise<string[]> {
   if (!(await api.getObject(THEME_CONTAINER, THEME_KEY))) problems.push(`custom object ${THEME_CONTAINER}/${THEME_KEY}: missing (Contentools default theme)`);
   for (const s of STORES) if (!(await api.getObject(K.cAssortment, s.key))) problems.push(`custom object ${K.cAssortment}/${s.key}: missing`);
   return problems;
+}
+
+async function refreshStoreKeys(api: Api, idKeys: Map<string, Map<string, string>>): Promise<void> {
+  idKeys.set('store', new Map((await api.list('stores')).filter((r) => r.key).map((r) => [r.id, r.key as string])));
 }
 
 async function main() {

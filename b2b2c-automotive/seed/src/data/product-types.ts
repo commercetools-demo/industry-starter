@@ -62,6 +62,10 @@ export const partAttributes: AttributeDefinitionDraft[] = [
   { name: 'core-charge-usd', label: ls('Altteilpfand (USD)', 'Core charge (USD)'), isRequired: false, isSearchable: false, attributeConstraint: 'None', inputHint: 'SingleLine', type: { name: 'money' } },
   { name: 'recurring-eligible', label: ls('Abo-fähig', 'Subscribable'), isRequired: false, isSearchable: true, attributeConstraint: 'None', inputHint: 'SingleLine', type: { name: 'boolean' } },
   text('size-spec', 'Abmessung / Spezifikation', 'Size / specification', false),
+  // Seeded rank for "Most popular" (Q-L01): 1 is the most popular, absent = unranked. Sort ascending with `missing: 'last'`.
+  { name: 'popularity-rank', label: ls('Beliebtheitsrang', 'Popularity rank'), isRequired: false, isSearchable: true, attributeConstraint: 'None', inputHint: 'SingleLine', type: { name: 'number' } },
+  // "Often bought together": 2 to 4 SKUs of related parts (same system).
+  { name: 'related-skus', label: ls('Passende Ergänzungen (SKU)', 'Related parts (SKU)'), isRequired: false, isSearchable: true, attributeConstraint: 'None', inputHint: 'SingleLine', type: { name: 'set', elementType: { name: 'text' } } },
 ];
 
 export const localPartAttributes: AttributeDefinitionDraft[] = [

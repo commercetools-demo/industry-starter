@@ -34,8 +34,15 @@ export const K = {
   catRoot: 'mau-cat-parts',
 } as const;
 
-/** Every custom object container the seed may write into (cleanup and reset use this list). */
+/** Every custom object container the seed OWNS completely (reset empties these). */
 export const OWNED_CONTAINERS = [K.cVehicles, K.cAssortment, K.cSite] as const;
+
+/**
+ * Contract container the portal also writes into (workstream W, review of reseller-created local parts): the seed owns
+ * only the explicit objects of `localReviewObjects()` (assortment.ts); `reset` deletes exactly those keys and never
+ * lists or empties the container. Key `<storeKey>--<product key>`.
+ */
+export const LOCAL_REVIEW_CONTAINER = 'malva-local-review';
 
 /**
  * Keys the other workstreams hard-code and that therefore do NOT carry the `mau-` prefix: the custom types and the order

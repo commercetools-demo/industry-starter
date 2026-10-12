@@ -121,12 +121,26 @@ export function planInventoryUpdate(existing: Res, draft: { quantityOnStock: num
   return existing.quantityOnStock === draft.quantityOnStock ? [] : [{ action: 'changeQuantity', quantity: draft.quantityOnStock }];
 }
 
-export function planDiscountUpdate(kind: 'product-discounts' | 'cart-discounts', existing: Res, draft: { sortOrder?: string; isActive?: boolean; predicate?: string; cartPredicate?: string }): Action[] {
+export function planDiscountUpdate(kind: 'product-discounts' | 'cart-discounts', existing: Res, draft: { sortOrder?: string; isActive?: boolean; predicate?: string; cartPredicate?: string; stores?: { key?: string }[] }, keyOf?: KeyOf): Action[] {
   const out: Action[] = [];
+  if (kind === 'cart-discounts' && draft.stores) {
+    const have = ((existing.stores as { key?: string; id?: string }[]) ?? []).map((s) => s.key ?? keyOf?.('store', s.id ?? '') ?? s.id ?? '');
+    const want = draft.stores.map((s) => s.key ?? '');
+    if (!sameSet(have, want)) out.push({ action: 'setStores', stores: draft.stores.map((s) => ({ typeId: 'store', key: s.key })) });
+  }
   if (draft.sortOrder !== undefined && existing.sortOrder !== draft.sortOrder) out.push({ action: 'changeSortOrder', sortOrder: draft.sortOrder });
   if (draft.isActive !== undefined && existing.isActive !== draft.isActive) out.push({ action: 'changeIsActive', isActive: draft.isActive });
   if (kind === 'product-discounts' && draft.predicate !== undefined && existing.predicate !== draft.predicate) out.push({ action: 'changePredicate', predicate: draft.predicate });
   if (kind === 'cart-discounts' && draft.cartPredicate !== undefined && existing.cartPredicate !== draft.cartPredicate) out.push({ action: 'changeCartPredicate', cartPredicate: draft.cartPredicate });
+  return out;
+}
+
+/** Review text and rating (the target and key never change). */
+export function planReviewUpdate(existing: Res, draft: { rating?: number; title?: string; text?: string }): Action[] {
+  const out: Action[] = [];
+  if (draft.rating !== undefined && existing.rating !== draft.rating) out.push({ action: 'setRating', rating: draft.rating });
+  if (draft.title !== undefined && existing.title !== draft.title) out.push({ action: 'setTitle', title: draft.title });
+  if (draft.text !== undefined && existing.text !== draft.text) out.push({ action: 'setText', text: draft.text });
   return out;
 }
 

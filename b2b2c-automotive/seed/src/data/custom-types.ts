@@ -65,7 +65,7 @@ export const typeDrafts: TypeDraft[] = [
     // Garage (Q-J04, at most 5 vehicles, JSON { vehicles, activeId }), contact and consent. Consent is recorded, never used to send email (Q-P01).
     key: T.customer, name: ls('Malva Kunden-Felder', 'Malva customer fields'), resourceTypeIds: ['customer'],
     fieldDefinitions: [
-      text('garage', 'Garage (JSON)', 'Garage (JSON)'), str('preferredBranchKey', 'Bevorzugte Filiale', 'Preferred branch key'), str('mobile', 'Handynummer', 'Mobile number'),
+      text('garage', 'Garage (JSON)', 'Garage (JSON)'), str('preferredBranchKey', 'Bevorzugte Filiale', 'Preferred branch key'), str('mobile', 'Handynummer', 'Mobile number'), str('jobTitle', 'Position', 'Job title'),
       bool('isDemo', 'Demo-Konto', 'Demo account'), bool('marketingConsent', 'Marketing-Einwilligung', 'Marketing consent'), when('marketingConsentAt', 'Einwilligung am', 'Consent at'), when('lastActiveAt', 'Zuletzt aktiv', 'Last active'),
     ],
   },
@@ -74,12 +74,16 @@ export const typeDrafts: TypeDraft[] = [
     fieldDefinitions: [
       str('returnNumber', 'Retourennummer', 'Return number'), enumOf('status', 'Status', 'Status', RETURN_STATUSES), str('reason', 'Grund', 'Reason'),
       num('refundCents', 'Erstattung (Cent)', 'Refund (cents)'), str('rejectReason', 'Ablehnungsgrund', 'Reject reason'),
+      // Set by the portal when a refund is requested; a Refund transaction only counts when created after it (V-12).
+      when('refundRequestedAt', 'Erstattung angefordert am', 'Refund requested at'),
     ],
   },
   {
     key: 'mau-business-unit-fields', name: ls('Malva Einheiten-Felder', 'Malva business unit fields'), resourceTypeIds: ['business-unit'],
     fieldDefinitions: [
       enumOf('kind', 'Art', 'Kind', ['malva-global', 'malva-dach', 'reseller', 'branch']), str('storeKey', 'Shop (Key)', 'Store key'), str('channelKey', 'Filial-Kanal (Key)', 'Branch channel key'),
+      // Company profile (design-company-and-account); shown only when present. No credit limit or payment terms (wholesale, Q-V01).
+      str('legalName', 'Firmenname (rechtlich)', 'Legal name'), str('taxId', 'Steuernummer / USt-IdNr.', 'Tax ID'), str('accountNumber', 'Kontonummer', 'Account number'),
     ],
   },
   {

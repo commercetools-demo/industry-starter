@@ -27,7 +27,7 @@ export function customerDraft(c: CustomerDef, password: string): Obj {
       type: { typeId: 'type', key: CONTRACT_TYPE_KEYS.customer },
       fields: c.kind === 'shopper'
         ? { isDemo: true, garage: garageJson(c), marketingConsent: c.marketingConsent === true, ...(c.marketingConsent ? { marketingConsentAt: '2026-09-01T10:00:00.000Z' } : {}) }
-        : { isDemo: true },
+        : { isDemo: true, ...(c.jobTitle ? { jobTitle: c.jobTitle } : {}) },
     },
   };
 }
@@ -42,7 +42,7 @@ export function businessUnitDraft(b: BuDef): Obj {
     associateMode: b.parent ? 'ExplicitAndFromParent' : 'Explicit',
     custom: {
       type: { typeId: 'type', key: 'mau-business-unit-fields' },
-      fields: { kind: b.kind, storeKey: b.storeKey ?? '', channelKey: b.channelKey ?? '' },
+      fields: { kind: b.kind, storeKey: b.storeKey ?? '', channelKey: b.channelKey ?? '', ...(b.profile ?? {}) },
     },
   };
   if (b.parent) base.parentUnit = { typeId: 'business-unit', key: b.parent };

@@ -99,7 +99,38 @@ export const PARTS: PartDef[] = [
   { sku: 'MLV-WW-64002', de: 'Heckwischerblatt', en: 'Rear wiper blade', cat: 'care/wipers', brand: 'nordlicht', tier: 'economy', position: 'rear', eur: 890, warranty: 12, fit: [...fits('Volkswagen', 'Golf'), ...fits('Opel', 'Astra'), ...fits('Renault', 'Clio')], recurring: true },
 ];
 
-export const partKey = (sku: string): string => `mau-part-${sku.toLowerCase()}`;
+/**
+ * Seeded popularity (Q-L01, "Most popular" and the home block): 1 is the most popular, parts not listed are unranked
+ * (the attribute is absent). 14 ranked parts, all carried by both resellers, so each store has a ranked top list.
+ */
+export const POPULARITY: Record<string, number> = {
+  'MLV-BP-41001': 1, 'MLV-OF-44001': 2, 'MLV-EO-62001': 3, 'MLV-OF-44002': 4, 'MLV-WW-64001': 5, 'MLV-BT-54001': 6, 'MLV-AF-45001': 7,
+  'MLV-CF-46001': 8, 'MLV-BD-42001': 9, 'MLV-EO-62002': 10, 'MLV-SP-48001': 11, 'MLV-BP-41002': 12, 'MLV-WW-64002': 13, 'MLV-CO-63001': 14,
+};
+
+/**
+ * "Often bought together" (`related-skus`): 2 to 4 priced master parts of the same system (the next ones in list order,
+ * wrapping), topped up from the following system when a system has fewer than 3 priced parts (exhaust has two). Never
+ * the part itself, never a pre-release part.
+ */
+export function relatedSkus(sku: string): string[] {
+  const priced = PARTS.filter((p) => p.eur !== null);
+  const self = priced.find((p) => p.sku === sku);
+  if (!self) return [];
+  const system = self.cat.split('/')[0];
+  const same = priced.filter((p) => p.cat.startsWith(`${system}/`));
+  const i = same.findIndex((p) => p.sku === sku);
+  const out: string[] = [];
+  for (let step = 1; step < same.length && out.length < 3; step += 1) out.push(same[(i + step) % same.length]!.sku);
+  if (out.length < 2) {
+    const others = priced.filter((p) => !p.cat.startsWith(`${system}/`));
+    const at = priced.indexOf(self);
+    for (const p of [...priced.slice(at + 1), ...priced.slice(0, at)]) if (others.includes(p) && out.length < 2) out.push(p.sku);
+  }
+  return out;
+}
+
+export const partKey =(sku: string): string => `mau-part-${sku.toLowerCase()}`;
 export const partBySku = (sku: string): PartDef => {
   const p = PARTS.find((x) => x.sku === sku);
   if (!p) throw new Error(`Unknown part ${sku}`);

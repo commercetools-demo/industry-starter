@@ -14,6 +14,8 @@ import { productTypeDrafts } from './data/product-types';
 import { stateDrafts } from './data/states';
 import { shippingMethodDrafts, taxCategoryDraft, zoneDrafts } from './data/tax-shipping';
 import { OWNED_CONTAINERS } from './data/base';
+import { localReviewObjects } from './data/assortment';
+import { reviewDrafts } from './data/reviews';
 import { allTailoringKeys } from './drafts';
 import { fail, getAdmin, isMainModule, parseArgs, Runner, sleep } from './lib';
 import type { Res } from './api';
@@ -31,6 +33,7 @@ const keys = (xs: { key?: string }[]): string[] => xs.map((x) => x.key as string
 /** Kind and explicit key list in DELETION order. */
 export function resetTargets(): { kind: Kind; keys: string[] }[] {
   return [
+    { kind: 'reviews', keys: keys(reviewDrafts()) },
     { kind: 'standalone-prices', keys: keys(standalonePriceDrafts()) },
     { kind: 'product-tailoring', keys: allTailoringKeys() },
     { kind: 'business-units', keys: BUSINESS_UNITS.map((b) => b.key).reverse() },
@@ -75,6 +78,8 @@ export async function planReset(api: Api): Promise<Plan & { objects: { container
   }
   const objects: { container: string; key: string }[] = [];
   for (const container of OWNED_CONTAINERS) for (const o of await api.listObjects(container)) objects.push({ container, key: o.key });
+  // Contract containers shared with the portal: only the explicit seeded keys, when they exist.
+  for (const o of localReviewObjects()) if (await api.getObject(o.container, o.key)) objects.push({ container: o.container, key: o.key });
   return { entries, counts, refused, objects };
 }
 

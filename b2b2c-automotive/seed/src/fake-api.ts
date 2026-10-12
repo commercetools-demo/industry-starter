@@ -13,7 +13,7 @@ const REF_KIND: Record<string, Kind> = {
   category: 'categories', 'product-type': 'product-types', 'tax-category': 'tax-categories', zone: 'zones', channel: 'channels',
   'customer-group': 'customer-groups', type: 'types', store: 'stores', 'product-selection': 'product-selections',
   'associate-role': 'associate-roles', 'business-unit': 'business-units', customer: 'customers', product: 'products',
-  'cart-discount': 'cart-discounts', 'product-discount': 'product-discounts', 'recurrence-policy': 'recurrence-policies',
+  review: 'reviews', 'cart-discount': 'cart-discounts', 'product-discount': 'product-discounts', 'recurrence-policy': 'recurrence-policies',
 };
 
 export class ApiError extends Error {
@@ -168,6 +168,10 @@ export class FakeApi implements Api {
       case 'inventory:changeQuantity': set('quantityOnStock', a.quantity); return;
       case 'product-discounts:changeSortOrder': case 'cart-discounts:changeSortOrder': set('sortOrder', a.sortOrder); return;
       case 'product-discounts:changeIsActive': case 'cart-discounts:changeIsActive': set('isActive', a.isActive); return;
+      case 'cart-discounts:setStores': set('stores', a.stores); return;
+      case 'reviews:setRating': set('rating', a.rating); return;
+      case 'reviews:setTitle': set('title', a.title); return;
+      case 'reviews:setText': set('text', a.text); return;
       case 'product-discounts:changePredicate': set('predicate', a.predicate); return;
       case 'cart-discounts:changeCartPredicate': set('cartPredicate', a.cartPredicate); return;
       case 'business-units:changeName': set('name', a.name); return;

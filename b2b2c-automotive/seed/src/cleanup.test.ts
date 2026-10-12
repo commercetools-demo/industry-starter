@@ -99,6 +99,18 @@ describe('seed:cleanup (explicit allow-list, no wildcard)', () => {
     expect(DELETE_ORDER[0]).toBe('standalone-prices');
   });
 
+  it('allow-list counts match the sample project read through the MCP (2026-10-12), keys are unique, and every listed kind is deleted', () => {
+    const n = (k: keyof typeof SAMPLE_ALLOWLIST) => SAMPLE_ALLOWLIST[k].length;
+    expect([n('products'), n('categories'), n('product-types'), n('shipping-methods'), n('tax-categories'), n('zones'), n('channels')]).toEqual([72, 42, 3, 2, 1, 2, 8]);
+    expect(n('product-discounts') + n('cart-discounts')).toBe(4);
+    expect([n('recurrence-policies'), n('standalone-price-skus')]).toEqual([4, 7]);
+    for (const [kind, keys] of Object.entries(SAMPLE_ALLOWLIST)) expect(new Set(keys).size, kind).toBe(keys.length);
+    expect(SAMPLE_ALLOWLIST.channels).toEqual(expect.arrayContaining(['eu-warehouse', 'spain', 'us-warehouse', 'us-large-customers', 'default-channel', 'us-medium-customers', 'de-fr-uk', 'default-warehouse']));
+    // associate roles and anything else of the sample is deliberately not deletable
+    expect(Object.keys(SAMPLE_ALLOWLIST)).not.toContain('associate-roles');
+    for (const kind of DELETE_ORDER) expect(Object.keys(SAMPLE_ALLOWLIST).some((k) => k === kind || k === 'standalone-price-skus')).toBe(true);
+  });
+
   it('cleanup then seed works on a project that has sample data (no slug or key clash)', async () => {
     const api = sampleProject();
     await executeCleanup(api, new Runner(false, quiet), await planCleanup(api));
@@ -116,8 +128,10 @@ describe('reset (the seed own resources only)', () => {
     const plan = await planReset(api);
     expect(plan.refused).toEqual([]);
     expect(plan.entries.length).toBeGreaterThan(300);
+    expect(plan.objects.some((o) => o.container === 'malva-local-review')).toBe(true);
     const failed = await executeCleanup(api, new Runner(false, quiet), plan);
     expect(failed).toBe(0);
+    expect(api.all('reviews')).toEqual([]);
     for (const o of plan.objects) await api.removeObject(o.container, o.key);
     for (const kind of ['products', 'categories', 'stores', 'customers', 'business-units', 'channels', 'inventory'] as const) {
       expect(api.all(kind).filter((r) => r.key?.startsWith('mau-'))).toEqual([]);
@@ -132,7 +146,8 @@ describe('reset (the seed own resources only)', () => {
 
   it('lists only seed keys (mau- prefix, the contract type and state keys, and the seed standalone price scheme)', () => {
     for (const t of resetTargets()) expect(t.keys.every((k) => isResettable(t.kind, k))).toBe(true);
-    expect(resetTargets()[0]?.kind).toBe('standalone-prices'); // prices reference channels, so they go first
+    expect(resetTargets()[0]?.kind).toBe('reviews'); // reviews reference products
+    expect(resetTargets()[1]?.kind).toBe('standalone-prices'); // prices reference channels, so they go first
     expect(isResettable('types', 'store-settings')).toBe(true);
     expect(isResettable('types', 'some-customer-type')).toBe(false);
     expect(isResettable('standalone-prices', 'air-filter-1')).toBe(false);

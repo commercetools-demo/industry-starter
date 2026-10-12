@@ -2,12 +2,13 @@
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 import type { Api, Kind, Res } from './api';
 import { K, ls } from './data/base';
-import { assortmentKeys, assortmentObject, masterKeys } from './data/assortment';
+import { assortmentKeys, assortmentObject, localReviewObjects, masterKeys } from './data/assortment';
 import { allProductDrafts, loadImages, type ImageMap } from './data/catalog';
 import { categoryDrafts } from './data/categories';
 import { THEME_CONTAINER, THEME_KEY, defaultTheme, TAILORINGS } from './data/content';
 import { typeDrafts } from './data/custom-types';
-import { cartDiscountDrafts, discountCodeDrafts, productDiscountDrafts } from './data/discounts';
+import { PRODUCT_DISCOUNT_CHANNEL, cartDiscountDrafts, channelClause, discountCodeDrafts, productDiscountDrafts } from './data/discounts';
+import { reviewDrafts } from './data/reviews';
 import { inventoryDrafts, recurrencePolicyDrafts } from './data/extras';
 import { BUSINESS_UNITS, CUSTOMERS, STORES, channelDrafts, roleDrafts, storeDrafts } from './data/org';
 import { standalonePriceDrafts } from './data/prices';
@@ -188,6 +189,13 @@ export const STEPS: Step[] = [
     },
   },
   {
+    // Plain reviews (no state, no approval gate) so `reviewRatingStatistics` exists for "Top rated" and the rating row.
+    name: 'reviews',
+    run: async (c) => {
+      for (const d of reviewDrafts()) await upsert(c, 'reviews', `review ${d.key}`, d as unknown as Obj, (e) => S.planReviewUpdate(e, d));
+    },
+  },
+  {
     name: 'stores',
     run: async (c) => {
       await refresh(c);
@@ -253,8 +261,15 @@ export const STEPS: Step[] = [
   {
     name: 'discounts',
     run: async (c) => {
-      for (const d of productDiscountDrafts) await upsert(c, 'product-discounts', `product discount ${d.key}`, d as unknown as Obj, (e) => S.planDiscountUpdate('product-discounts', e, d));
-      for (const d of cartDiscountDrafts) await upsert(c, 'cart-discounts', `cart discount ${d.key}`, d as unknown as Obj, (e) => S.planDiscountUpdate('cart-discounts', e, d));
+      await c.loadKeys('store', 'stores');
+      for (const base of productDiscountDrafts) {
+        // Reseller product discounts are limited to the store's retail channel (resolved to an id now; absent in a dry run before channels exist).
+        const channelKey = PRODUCT_DISCOUNT_CHANNEL[base.key as string];
+        const channel = channelKey ? await c.api.getByKey('channels', channelKey) : undefined;
+        const d = channel ? { ...base, predicate: channelClause(base.predicate, channel.id) } : base;
+        await upsert(c, 'product-discounts', `product discount ${d.key}`, d as unknown as Obj, (e) => S.planDiscountUpdate('product-discounts', e, d));
+      }
+      for (const d of cartDiscountDrafts) await upsert(c, 'cart-discounts', `cart discount ${d.key}`, d as unknown as Obj, (e) => S.planDiscountUpdate('cart-discounts', e, d, c.keyOf));
       for (const d of discountCodeDrafts) await upsert(c, 'discount-codes', `discount code ${d.key}`, d as unknown as Obj);
     },
   },
@@ -271,6 +286,8 @@ export const STEPS: Step[] = [
     name: 'content',
     run: async (c) => {
       for (const s of STORES) await putObject(c, K.cAssortment, s.key, assortmentObject(s.key));
+      // Review record of the pending local part. Only written when missing: the portal (W) owns it from then on.
+      for (const o of localReviewObjects()) await putObject(c, o.container, o.key, o.value, { onlyIfMissing: true });
       // The default Contentools theme is only created when missing: resellers and the ThemeManager own it afterwards.
       await putObject(c, THEME_CONTAINER, THEME_KEY, defaultTheme, { onlyIfMissing: true });
       if (Object.keys(c.bannerImages).length > 0) await putObject(c, K.cSite, 'banner-images', c.bannerImages);

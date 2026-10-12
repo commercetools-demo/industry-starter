@@ -82,6 +82,32 @@ describe('seed against the in-memory API', () => {
     expect(have.some((x) => x.sku === 'MLV-BP-41099')).toBe(false); // pre-release: no price at all
   });
 
+  it('seeds reviews, store scoped cart discounts, channel scoped product discounts and the pending local review record; drift comes back', async () => {
+    const api = new FakeApi();
+    await runSeed(opts(api));
+    expect(api.all('reviews').length).toBeGreaterThanOrEqual(10);
+    expect(api.all('reviews').every((r) => (r.target as { typeId: string }).typeId === 'product')).toBe(true);
+    const storeIds = new Map(api.all('stores').map((st) => [st.id, st.key]));
+    const storesOf = async (key: string) => ((((await api.getByKey('cart-discounts', key)) as Res).stores ?? []) as { id: string }[]).map((x) => storeIds.get(x.id));
+    expect(await storesOf('mau-cd-north-large-order')).toEqual([K.storeNorth]);
+    expect(await storesOf('mau-cd-malva-welcome')).toEqual([]);
+    const north = (await api.getByKey('channels', K.distNorth)) as Res;
+    expect(((await api.getByKey('product-discounts', 'mau-pd-north-brake-week')) as Res).predicate).toContain(`channel.id = "${north.id}"`);
+    expect(((await api.getByKey('product-discounts', 'mau-pd-malva-filter-autumn')) as Res).predicate).not.toContain('channel.id');
+    expect(await api.getObject('malva-local-review', 'mau-reseller-south--mau-local-sk-2002')).toMatchObject({ value: { state: 'pending' } });
+    // drift: wrong store scope, wrong review rating, wrong sortOrder, portal-owned local review record changed (must stay)
+    const cd = (await api.getByKey('cart-discounts', 'mau-cd-south-brake-code')) as Res;
+    await api.update('cart-discounts', cd, [{ action: 'setStores', stores: [] }]);
+    const rv = (await api.getByKey('reviews', 'mau-rev-mlv-bp-41001-1')) as Res;
+    await api.update('reviews', rv, [{ action: 'setRating', rating: 1 }]);
+    await api.putObject('malva-local-review', 'mau-reseller-south--mau-local-sk-2002', { state: 'approved', claimedVehicles: ['x'] });
+    expect((await verifySeed(api)).join('\n')).toMatch(/cart discount mau-cd-south-brake-code: stores none[\s\S]*review mau-rev-mlv-bp-41001-1: rating 1/);
+    const run = new Runner(false, quiet);
+    expect(await runSeed({ ...opts(api), run })).toBe(2);
+    expect(await verifySeed(api)).toEqual([]);
+    expect(await api.getObject('malva-local-review', 'mau-reseller-south--mau-local-sk-2002')).toMatchObject({ value: { state: 'approved' } });
+  });
+
   it('seeds the ready-for-pickup state, tailorings with images published at once, and no email or outbox object', async () => {
     const api = new FakeApi();
     await runSeed(opts(api));

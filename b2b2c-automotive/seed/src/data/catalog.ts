@@ -6,7 +6,7 @@ import type { Attribute, ProductDraft } from '@commercetools/platform-sdk';
 import { K, ls, slugify } from './base';
 import { categoryKeyOf } from './categories';
 import { BUNDLES, LOCAL_PARTS, eurOf, keyOfSku, type BundleDef, type LocalPartDef } from './items';
-import { PARTS, partKey, type PartDef } from './parts';
+import { PARTS, POPULARITY, partKey, relatedSkus, type PartDef } from './parts';
 import { BRANDS, QUALITY_TIERS } from './product-types';
 
 export interface PickedImage { url: string; dimensions: { w: number; h: number } }
@@ -49,6 +49,10 @@ export function partAttributes(p: PartDef): Attribute[] {
     attrs.push({ name: 'core-charge-eur', value: eurMoney(p.core.eur) }, { name: 'core-charge-usd', value: usdMoney(p.core.usd) });
   }
   if (p.size) attrs.push({ name: 'size-spec', value: p.size });
+  const rank = POPULARITY[p.sku];
+  if (rank !== undefined) attrs.push({ name: 'popularity-rank', value: rank });
+  const related = relatedSkus(p.sku);
+  if (related.length > 0) attrs.push({ name: 'related-skus', value: related });
   return attrs;
 }
 

@@ -3,28 +3,29 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { CONTRACT_KEYS, CONTRACT_TYPE_KEYS, K } from './data/base';
-import { BLOCKED_UPSTREAM, WITHDRAWN, assortmentKeys, assortmentSkus, masterSkus } from './data/assortment';
+import { BLOCKED_UPSTREAM, WITHDRAWN, localReviewObjects, assortmentKeys, assortmentSkus, masterSkus } from './data/assortment';
 import { allProductDrafts, partAttributes, partDraft } from './data/catalog';
 import { ALL_GROUP_PATHS, SYSTEMS, categoryDrafts } from './data/categories';
 import { defaultTheme, TAILORINGS, tailoringKey } from './data/content';
 import { typeDrafts } from './data/custom-types';
-import { cartDiscountDrafts, discountCodeDrafts, productDiscountDrafts } from './data/discounts';
+import { PRODUCT_DISCOUNT_CHANNEL, cartDiscountDrafts, channelClause, discountCodeDrafts, productDiscountDrafts } from './data/discounts';
+import { REVIEWS, reviewDrafts, reviewedSkus } from './data/reviews';
 import { inventoryDrafts, recurrencePolicyDrafts } from './data/extras';
 import { BUNDLES, LOCAL_PARTS, bundleEur, eurOf, keyOfSku } from './data/items';
 import { BRANCHES, BUSINESS_UNITS, CUSTOMERS, STORES, channelDrafts, roleDrafts, storeDrafts } from './data/org';
-import { PARTS } from './data/parts';
+import { PARTS, POPULARITY, relatedSkus } from './data/parts';
 import { baseKey, isSeedPriceKey, priceDefs, standalonePriceDrafts } from './data/prices';
 import { retailFactor, usdFromEur } from './data/pricing';
 import { BRANDS, partAttributes as partAttrDefs, productTypeDrafts } from './data/product-types';
 import { stateDrafts } from './data/states';
 import { OWNED_CONTAINERS } from './data/base';
-import { customerDraft, garageJson, tailoringDraft } from './drafts';
+import { businessUnitDraft, customerDraft, garageJson, tailoringDraft } from './drafts';
 import { shippingMethodDrafts, taxCategoryDraft, zoneDrafts } from './data/tax-shipping';
 import { VEHICLES, findFitmentKey } from './data/vehicles';
 import { isCleanUrl } from './lib';
 
 const dataDir = new URL('./data/', import.meta.url);
-const dataFiles = ['assortment', 'base', 'catalog', 'categories', 'content', 'custom-types', 'discounts', 'extras', 'items', 'org', 'parts', 'prices', 'pricing', 'product-types', 'states', 'tax-shipping', 'vehicles'];
+const dataFiles = ['assortment', 'base', 'catalog', 'categories', 'content', 'custom-types', 'discounts', 'extras', 'items', 'org', 'parts', 'prices', 'pricing', 'product-types', 'reviews', 'states', 'tax-shipping', 'vehicles'];
 
 describe('no prototype placeholders leak into seed data', () => {
   const banned = [/Autoline/i, /Hartmann/i, /Northline/i, /Lakeshore/i, /Harbour/i, /Maple Ridge/i, /Honda Civic/i, /Brembo/i, /\bBosch\b/i, /\bDenso\b/i, /\bMobil\b/i, /BP-2210-C/, /MLV-(OF-20233|BD-31201|AL-70441|WB-90015|SP-50108|BP-11874|TB-40517|SA-62290|HL-81120|EV-99001|CV-33102)/, /Toronto/i, /\bCAD\b/];
@@ -424,12 +425,86 @@ describe('supporting data', () => {
   it('has product and cart discounts with Malva-funded ones first and a code that needs a matching cart', () => {
     expect(productDiscountDrafts.length).toBeGreaterThanOrEqual(3);
     const malva = productDiscountDrafts.find((d) => d.key?.includes('malva'))!;
-    expect(Number(malva.sortOrder)).toBeLessThan(Number(productDiscountDrafts.find((d) => d.key?.includes('north'))!.sortOrder));
+    // Higher sortOrder = higher rank (commercetools docs): Malva-funded values sit above every reseller value of the same kind.
+    const reseller = productDiscountDrafts.filter((d) => !d.key?.includes('malva'));
+    for (const d of reseller) expect(Number(malva.sortOrder)).toBeGreaterThan(Number(d.sortOrder));
+    expect(Number(malva.sortOrder)).toBeGreaterThanOrEqual(0.9);
     expect(new Set(productDiscountDrafts.map((d) => d.sortOrder)).size).toBe(productDiscountDrafts.length);
+    const cartMalva = cartDiscountDrafts.find((d) => d.key === 'mau-cd-malva-welcome')!;
+    for (const d of cartDiscountDrafts.filter((x) => x !== cartMalva)) expect(Number(cartMalva.sortOrder)).toBeGreaterThan(Number(d.sortOrder));
+    expect(new Set(cartDiscountDrafts.map((d) => d.sortOrder)).size).toBe(cartDiscountDrafts.length);
+    for (const d of [...productDiscountDrafts, ...cartDiscountDrafts]) expect(d.sortOrder).not.toMatch(/0$/);
     const code = cartDiscountDrafts.find((d) => d.key === 'mau-cd-south-brake-code')!;
     expect(code.requiresDiscountCode).toBe(true);
     expect(code.cartPredicate).toContain('lineItemExists');
     expect(discountCodeDrafts.every((d) => d.cartDiscounts.length === 1)).toBe(true);
+  });
+
+  it('cart discounts are store scoped (reseller ones only, Malva-funded none) and product discounts carry a channel clause', () => {
+    const stores = (key: string) => (cartDiscountDrafts.find((d) => d.key === key)!.stores ?? []).map((s) => (s as { key: string }).key);
+    expect(stores('mau-cd-north-large-order')).toEqual([K.storeNorth]);
+    expect(stores('mau-cd-south-brake-code')).toEqual([K.storeSouth]);
+    expect(stores('mau-cd-south-free-shipping')).toEqual([K.storeSouth]);
+    expect(stores('mau-cd-malva-welcome')).toEqual([]);
+    expect(PRODUCT_DISCOUNT_CHANNEL).toEqual({ 'mau-pd-north-brake-week': K.distNorth, 'mau-pd-south-battery-bonus': K.distSouth });
+    expect(channelClause('a contains "b"', 'ID1')).toBe('a contains "b" and channel.id = "ID1"');
+    for (const d of cartDiscountDrafts) expect(JSON.stringify(d.custom)).not.toContain('maxDiscountPercent');
+  });
+
+  it('has popularity ranks (14, unique, only on carried parts) and 2 to 4 existing related SKUs per priced part', () => {
+    const ranks = Object.values(POPULARITY);
+    expect(ranks.length).toBe(14);
+    expect([...ranks].sort((a, b) => a - b)).toEqual(Array.from({ length: 14 }, (_, i) => i + 1));
+    for (const sku of Object.keys(POPULARITY)) {
+      expect(PARTS.find((p) => p.sku === sku)?.eur).not.toBeNull();
+      expect(assortmentSkus(K.storeNorth)).toContain(sku);
+      expect(assortmentSkus(K.storeSouth)).toContain(sku);
+    }
+    const attr = (sku: string, name: string) => partAttributes(PARTS.find((p) => p.sku === sku)!).find((a) => a.name === name)?.value;
+    expect(attr('MLV-BP-41001', 'popularity-rank')).toBe(1);
+    expect(attr('MLV-BP-41099', 'popularity-rank')).toBeUndefined();
+    const defs = productTypeDrafts.find((t) => t.key === K.ptPart)!.attributes!;
+    expect(defs.find((a) => a.name === 'popularity-rank')).toMatchObject({ isSearchable: true, type: { name: 'number' } });
+    expect(defs.find((a) => a.name === 'related-skus')).toMatchObject({ isSearchable: true, type: { name: 'set' } });
+    const priced = new Set(PARTS.filter((p) => p.eur !== null).map((p) => p.sku));
+    for (const p of PARTS.filter((x) => x.eur !== null)) {
+      const rel = relatedSkus(p.sku);
+      expect(rel.length, p.sku).toBeGreaterThanOrEqual(2);
+      expect(rel.length, p.sku).toBeLessThanOrEqual(4);
+      expect(rel.every((s) => priced.has(s) && s !== p.sku), p.sku).toBe(true);
+      expect(new Set(rel).size).toBe(rel.length);
+    }
+  });
+
+  it('has reviews for at least 5 products carried by both resellers, ratings 1 to 5, unique keys, plain (no state)', () => {
+    const drafts = reviewDrafts();
+    expect(reviewedSkus().length).toBeGreaterThanOrEqual(5);
+    expect(new Set(drafts.map((d) => d.key)).size).toBe(drafts.length);
+    for (const sku of reviewedSkus()) {
+      expect(assortmentSkus(K.storeNorth)).toContain(sku);
+      expect(assortmentSkus(K.storeSouth)).toContain(sku);
+    }
+    for (const d of drafts) {
+      expect(d.key).toMatch(/^mau-rev-/);
+      expect(d).not.toHaveProperty('state');
+      expect(Number.isInteger(d.rating) && d.rating! >= 1 && d.rating! <= 5).toBe(true);
+      expect((d.target as { key: string }).key).toMatch(/^mau-part-/);
+    }
+    const avg = (sku: string) => { const r = REVIEWS.filter((x) => x.sku === sku); return r.reduce((s, x) => s + x.rating, 0) / r.length; };
+    expect(new Set(reviewedSkus().map(avg)).size).toBeGreaterThan(3); // different averages, so "Top rated" orders something
+  });
+
+  it('adds the optional fields the portal asked for and the pending local review record', () => {
+    const t = Object.fromEntries(typeDrafts.map((x) => [x.key, (x.fieldDefinitions ?? []).map((f) => f.name)]));
+    expect(t['malva-return-item']).toContain('refundRequestedAt');
+    expect(t['mau-business-unit-fields']).toEqual(expect.arrayContaining(['legalName', 'taxId', 'accountNumber']));
+    expect(t['malva-customer']).toContain('jobTitle');
+    const north = BUSINESS_UNITS.find((b) => b.key === 'mau-bu-north')!;
+    expect(north.profile?.legalName).toBeTruthy();
+    expect(JSON.stringify((businessUnitDraft(north).custom as { fields: unknown }).fields)).toContain('taxId');
+    expect(JSON.stringify(businessUnitDraft(BUSINESS_UNITS.find((b) => b.key === 'mau-bu-malva')!).custom)).not.toContain('taxId');
+    expect((customerDraft(CUSTOMERS.find((c) => c.key === 'mau-cust-north-admin')!, 'x').custom as { fields: { jobTitle?: string } }).fields.jobTitle).toBeTruthy();
+    expect(localReviewObjects()).toEqual([{ container: 'malva-local-review', key: 'mau-reseller-south--mau-local-sk-2002', value: { state: 'pending', claimedVehicles: [] } }]);
   });
 
   it('inventory covers the warehouse and branches, with some branch gaps so "ships in 2-3 days" shows', () => {
