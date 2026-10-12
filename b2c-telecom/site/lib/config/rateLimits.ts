@@ -3,4 +3,6 @@ export const RATE_LIMITS = {
   register: { limit: 5, windowMs: 60_000 },
   forgotPassword: { limit: 5, windowMs: 60_000 },
   resetPassword: { limit: 5, windowMs: 60_000 },
+  /** Each preview creates and deletes a cart on the platform: bounded per client. */
+  pricingPreview: { limit: 30, windowMs: 60_000 },
 } as const;

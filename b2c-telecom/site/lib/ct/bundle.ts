@@ -2,6 +2,7 @@ import 'server-only';
 import type { Cart as CtCart } from '@commercetools/platform-sdk';
 import { blockedRefusal, BundleRefusal, refusalFromApiError } from '@/lib/cart/errors';
 import { guardAdd, revalidateLines } from '@/lib/cart/guard';
+import { includedLinesOf } from '@/lib/cart/included';
 import { precheckPlan } from '@/lib/cart/precheck';
 import { checkQuantity } from '@/lib/cart/quantity';
 import { codeStateInfo, mapCart } from '@/lib/mappers/cart';
@@ -9,7 +10,6 @@ import { removalPlan } from '@/lib/offers/addons';
 import { cartGroupKeyOf } from '@/lib/offers/declared';
 import { distributionChannelOf } from './price-scope';
 import { negatedLines } from '@/lib/offers/dependencies';
-import { refersTo } from '@/lib/offers/refs';
 import { toDateOnly } from '@/lib/pricing/dates';
 import { getPrompts } from '@/lib/ct/prompts';
 import type { SessionData } from '@/lib/session-types';
@@ -54,7 +54,6 @@ export interface BundleOutcome {
   postalCode?: string;
 }
 
-const isPlanOffer = (offer: Offer): boolean => offer.kind === 'base-package' || offer.kind === 'bundle';
 const PHYSICAL: ReadonlySet<Offer['kind']> = new Set(['equipment', 'device']);
 
 async function offersByKeyFor(market: Market): Promise<Record<string, Offer>> {
@@ -170,14 +169,7 @@ export async function addToBundle(session: SessionData, market: Market, input: A
     return offer && selected ? [{ offer, variant: selected }] : [];
   });
 
-  const included = isPlanOffer(candidate)
-    ? candidate.includedOffers.flatMap((ref) => {
-        const offer = Object.values(offersByKey).find((entry) => (entry.kind === 'addon' || entry.kind === 'equipment') && refersTo(ref, entry));
-        const chosen = offer?.variants.find((entry) => entry.termMonths === 0) ?? offer?.variants[0];
-        // required equipment is already added as the plan's equipment lines; a second line for the same offer would be a duplicate
-        return offer && chosen && !equipment.some((entry) => entry.offer.key === offer.key) ? [{ offer, variant: chosen }] : [];
-      })
-    : [];
+  const included = includedLinesOf(candidate, offersByKey, equipment);
 
   const physicalSkus = [...(PHYSICAL.has(candidate.kind) ? [variant.sku] : []), ...equipment.map((entry) => entry.variant.sku), ...included.filter((entry) => PHYSICAL.has(entry.offer.kind)).map((entry) => entry.variant.sku)];
   if (physicalSkus.length > 0) {

@@ -79,7 +79,7 @@ The system SHALL provide `POST /api/pricing/preview` that accepts a plan, extras
 #### Scenario: Cleanup under failure
 - **GIVEN** a failure after the probe cart was created
 - **WHEN** the request ends
-- **THEN** the cart is still deleted, and a leftover probe cart is identifiable by a custom field so that a sweep can remove it
+- **THEN** the cart is still deleted, and a leftover probe cart is identifiable by its key prefix (`preview-probe-`) and expires on its own (`deleteDaysAfterLastModification`), so that a sweep can remove it
 
 #### Scenario: Preview agrees with the bundle
 - **GIVEN** the same plan and extras added to the real cart

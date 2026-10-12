@@ -117,3 +117,37 @@ export function buildProbeDraft(cart: CtCart, market: Market, candidate: LineDra
     custom: { type: { typeId: 'type', key: 'malva-order' }, fields: {} },
   };
 }
+
+/**
+ * The first cart of a price preview: the plan line and its activation fee, exactly what a real plan add writes in its first update (the
+ * fee is priced with the plan, so "due today" equals the bundle's). Extras follow in a second update because their lines carry the plan's
+ * line id. `origin: Merchant` keeps the probe out of any customer's carts; a signed-in buyer's own customer id brings their groups, an
+ * anonymous buyer's declared audience is the cart's customer group.
+ */
+export function buildPreviewDraft(args: {
+  market: Market;
+  key: string;
+  plan: LineDraftArgs;
+  fee: Money | null;
+  buyer: { customerId?: string | undefined; groupKey: string | null };
+  discountCodes: string[];
+}): CartDraft {
+  const { market, key, plan, fee, buyer, discountCodes } = args;
+  const owner = buyer.customerId ? { customerId: buyer.customerId } : { anonymousId: `probe-${key}`, ...(buyer.groupKey ? { customerGroup: { typeId: 'customer-group' as const, key: buyer.groupKey } } : {}) };
+  const feeAction = fee ? addFeeAction(plan.offer.key, plan.quantity, fee) : null;
+  return {
+    key,
+    currency: market.currency,
+    country: market.country,
+    locale: market.locale,
+    taxMode: 'Platform',
+    inventoryMode: 'None',
+    origin: 'Merchant',
+    deleteDaysAfterLastModification: PROBE_CART_DELETE_DAYS,
+    ...owner,
+    lineItems: [lineDraftOf(addLineItemAction(plan))],
+    customLineItems: feeAction && feeAction.action === 'addCustomLineItem' ? [{ name: feeAction.name, slug: feeAction.slug, quantity: feeAction.quantity ?? plan.quantity, money: feeAction.money, taxCategory: feeAction.taxCategory }] : [],
+    ...(discountCodes.length > 0 ? { discountCodes } : {}),
+    custom: { type: { typeId: 'type', key: 'malva-order' }, fields: {} },
+  };
+}

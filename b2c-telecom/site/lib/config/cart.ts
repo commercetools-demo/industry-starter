@@ -31,6 +31,8 @@ export const CART_DELETE_DAYS = 90;
 /** Probe carts of the discount prompt (they are deleted right away; this is the safety net). */
 export const PROBE_CART_DELETE_DAYS = 1;
 export const PROBE_CART_KEY_PREFIX = 'prompt-probe-';
+/** The plan finder's price preview prices a throwaway cart too; a leftover is found by this key prefix and swept. */
+export const PREVIEW_PROBE_KEY_PREFIX = 'preview-probe-';
 
 export const PROMPT_MAX_CANDIDATES = 3;
 

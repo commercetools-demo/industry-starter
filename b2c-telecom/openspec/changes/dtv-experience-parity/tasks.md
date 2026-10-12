@@ -50,10 +50,10 @@
 
 ## 7. APIs
 
-- [ ] 7.1 `GET /api/offers` with filters, paging, `private, no-store`, typed errors, declared context for anonymous callers only [SKILL: commercetools-storefront]
-- [ ] 7.2 `GET /api/offers/[key]` with the three resolved groups, verdicts and buyer prices; 404 for ineligible [SKILL: commercetools-storefront]
-- [ ] 7.3 `POST /api/pricing/preview` on the shared probe, same-origin check, rate limit, cleanup guarantee, `issues` for refused items [SKILL: commercetools-storefront]
-- [ ] 7.4 Contract tests for the three routes against the fake client including failure and cleanup scenarios; test that preview equals the bundle for the same plan and extras
+- [x] 7.1 `GET /api/offers` with filters, paging, `private, no-store`, typed errors, declared context for anonymous callers only [SKILL: commercetools-storefront]
+- [x] 7.2 `GET /api/offers/[key]` with the three resolved groups, verdicts and buyer prices; 404 for ineligible [SKILL: commercetools-storefront]
+- [x] 7.3 `POST /api/pricing/preview` on the shared probe, same-origin check, rate limit, cleanup guarantee, `issues` for refused items [SKILL: commercetools-storefront]
+- [x] 7.4 Contract tests for the three routes against the fake client including failure and cleanup scenarios; test that preview equals the bundle for the same plan and extras
 
 ## 8. Frontend
 
