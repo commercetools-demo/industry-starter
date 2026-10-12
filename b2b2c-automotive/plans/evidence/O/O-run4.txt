@@ -1,0 +1,4 @@
+alert: "We could not start the checkout. Please try again.\n\nTry again\nBack to cart"
+session api statuses: [502]
+response body: 502 {"error":"checkout-unavailable"}
+after Try again: session requests 3 alert again: true

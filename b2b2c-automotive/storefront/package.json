@@ -17,6 +17,7 @@
     "@commercetools-demo/puck-editor": "^0.8.3",
     "@commercetools-demo/puck-renderer": "^0.8.3",
     "@commercetools-demo/puck-types": "^0.8.1",
+    "@commercetools/checkout-browser-sdk": "1.7.5",
     "@commercetools/platform-sdk": "^8.27.0",
     "@commercetools/ts-client": "^4.10.0",
     "jose": "^6.2.12",

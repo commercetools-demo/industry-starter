@@ -1,0 +1,28 @@
+O-09 flag rehearsal (workstream O). No live PSP, no commercetools call: fake key, localhost only. Date 2026-10-12.
+
+Build gate
+  npm run verify:build with the offline dummy environment and CTP_CHECKOUT_APP_KEY=test: passes (next build, check-routes OK, no-health-in-release OK, bundle secrets OK).
+  Routes in the table: /[locale]/[store]/checkout, /api/checkout/session, /api/dev/checkout/complete, /checkout/return.
+
+Production server, fake key, API url https://api.example.test (a region cannot be derived), CHECKOUT_DEV_COMPLETE=true and the dev host variables set on purpose
+  dev completion route:                 404 (production refuses it twice, even with the flag)
+  POST /api/checkout/session:           503 {"error":"checkout-not-configured"}  (production with CHECKOUT_DEV_COMPLETE=true is a misconfiguration: checkoutEnv refuses, the route answers "not configured")
+  csp:                                  script-src 'self' 'unsafe-inline'; connect-src 'self'; no frame-src (no region, no Checkout hosts)
+  csp mentions the dev stand-in host:   false
+
+Production server, fake key, API url of a commercetools region (never called), dev flags unset, BUT built before the region was derivable
+  POST /api/checkout/session without a cart in the session: 409 {"error":"cart-missing"}
+  csp unchanged ('self' only): the Content-Security-Policy is fixed when `next build` runs, so CTP_API_URL and CTP_CHECKOUT_APP_KEY must be set at BUILD time as well (see .env.example).
+
+Production server, built with the region derivable (CTP_API_URL=https://api.europe-west1.gcp.commercetools.com, CTP_CHECKOUT_APP_KEY=test)
+  dev completion route:                 404
+  POST /api/checkout/session without a cart: 409 {"error":"cart-missing"}
+  csp script-src 'self' 'unsafe-inline' https://app.checkout.europe-west1.gcp.commercetools.com https://js.stripe.com
+  csp connect-src 'self' https://checkout.europe-west1.gcp.commercetools.com https://app.checkout.europe-west1.gcp.commercetools.com https://api.stripe.com
+  csp frame-src https://app.checkout.europe-west1.gcp.commercetools.com https://js.stripe.com https://hooks.stripe.com
+  csp mentions the dev stand-in host:   false
+
+Development server (local stand-ins, see O-run4.txt and O-run5.txt)
+  Sessions API unreachable (CHECKOUT_DEV_SESSIONS_URL pointing at a dead port): POST /api/checkout/session 502 {"error":"checkout-unavailable"}, page shows "We could not start the checkout" with Try again and Back to cart.
+  CTP_CHECKOUT_APP_KEY empty: POST /api/checkout/session 503 {"error":"checkout-not-configured"}, page shows "Checkout is not set up yet", the dev panel appears by itself.
+  A real connector was not installed or configured (OA-05 is the owner's).

@@ -1,0 +1,25 @@
+no cart ->  /en-US/mau-reseller-north/cart
+cart delivery text: Ship to me · $9.90 | Add $144.60 more for free shipping 
+ship: url /en-US/mau-reseller-north/checkout pickup panel present: 0
+ship order method: mau-ship-standard custom: {"isTest":true,"salesChannel":"web"} number ok: true
+ship order has no pickupBranchKey: true
+cancelled return -> /en-US/mau-reseller-north/checkout?status=cancelled
+notice: "Your payment was not completed. Your cart is unchanged, so you can try again."
+widget mounted again: true
+sessions created so far: 3
+dev panel without ?dev=1: 0
+dev panel with ?dev=1: 1
+dev landed: /en-US/mau-reseller-north/checkout/confirmation/MA-0XFM720M
+dev order: MA-0XFM720M paymentState Pending orderState Open email qa-1@example.com isTest true
+dev order number = derived from cart id (same as session number): true
+carts: cart-1:Active,cart-2:Ordered,cart-3:Ordered
+dev route with a real email: 400
+sign in: 200
+signed in checkout url /en-US/mau-reseller-north/checkout
+signed-in cart email prefilled: anna@example.com
+customer landing has no token: true /de-DE/mau-reseller-north/checkout/confirmation/MA-1838S4EE
+customer order has customerId: cust-anna
+subscribe add: {"status":200,"body":{"cartId":"cart-4","count":1}}
+recurring orders in fake: [{"id":"ro-1","version":1,"originOrder":{"typeId":"order","id":"4dc032ea-f52d-4d5b-9306-654c515b751b"},"recurringOrderState":"Active","nextOrderAt":"2026-11-12T00:00:00.000Z"}]
+de-DE text: Kasse | Die Zahlung wird über unseren sicheren Zahlungspartner abgewickelt. Ihre Kartendaten sehen wir nie. | Abholung in Filiale Berlin | Adresse: | Teilestraße 1, 10000 Berlin | Mo | 08 Uhr – 19 Uhr | Di | 08 Uhr – 19 Uhr | Mi | 08 Uhr – 19 Uhr | Do | 08 Uhr – 19 Uhr | Fr | 08 Uhr – 19 Uhr | Sa | 09 Uhr – 14 Uhr | So | Geschlo
+console: ["error: Failed to load resource: the server responded with a status of 400 (Bad Request) http://localhost:3027/api/dev/checkout/complete","error: %c%s%c [cart] default delivery failed with status 409 (ConcurrentModification) background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server  "]

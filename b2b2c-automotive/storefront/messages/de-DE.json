@@ -410,6 +410,40 @@
       "alternatives": "Passende Alternativen ansehen"
     }
   },
+  "checkout": {
+    "title": "Kasse",
+    "metaTitle": "Kasse",
+    "secureNote": "Die Zahlung wird über unseren sicheren Zahlungspartner abgewickelt. Ihre Kartendaten sehen wir nie.",
+    "loading": "Ihre sichere Kasse wird vorbereitet",
+    "widgetLabel": "Kontakt, Lieferung und Zahlung",
+    "backToCart": "Zurück zum Warenkorb",
+    "retry": "Erneut versuchen",
+    "cancelledNotice": "Ihre Zahlung wurde nicht abgeschlossen. Ihr Warenkorb ist unverändert, Sie können es erneut versuchen.",
+    "widgetError": "Die Kasse hat ein Problem gemeldet. Sie können es erneut versuchen.",
+    "widgetErrorCode": "Referenz: {code}",
+    "errors": {
+      "cartMissing": "Es gibt keinen Warenkorb zum Bezahlen. Legen Sie zuerst ein Teil hinein.",
+      "cartEmpty": "Ihr Warenkorb ist leer.",
+      "linesUnavailable": "Einige Teile in Ihrem Warenkorb sind nicht mehr verfügbar. Bitte prüfen Sie Ihren Warenkorb.",
+      "subscriptionsUnavailable": "Abonnements können derzeit nicht gekauft werden. Entfernen Sie die Abo-Artikel oder versuchen Sie es später erneut.",
+      "notConfigured": "Die Kasse ist noch nicht eingerichtet. Bitte versuchen Sie es später erneut.",
+      "unavailable": "Die Kasse konnte nicht gestartet werden. Bitte versuchen Sie es erneut."
+    },
+    "pickup": {
+      "title": "Abholung in {branch}",
+      "addressLabel": "Adresse",
+      "hoursLabel": "Öffnungszeiten",
+      "closed": "Geschlossen",
+      "idReminder": "Bitte Lichtbildausweis mitbringen"
+    },
+    "dev": {
+      "title": "Entwickler-Abschluss (ohne Zahlung)",
+      "description": "Erstellt aus diesem Warenkorb eine Testbestellung ohne Zahlung. Nur in der Entwicklung verfügbar.",
+      "emailLabel": "Test-E-Mail (@example.com)",
+      "submit": "Testbestellung erstellen",
+      "failed": "Die Testbestellung konnte nicht erstellt werden."
+    }
+  },
   "auth": {
     "signIn": {
       "title": "Anmelden",

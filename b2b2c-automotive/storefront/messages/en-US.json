@@ -410,6 +410,40 @@
       "alternatives": "View fitting alternatives"
     }
   },
+  "checkout": {
+    "title": "Checkout",
+    "metaTitle": "Checkout",
+    "secureNote": "Payment is handled by our secure payment partner. We never see your card details.",
+    "loading": "Preparing your secure checkout",
+    "widgetLabel": "Contact, delivery and payment",
+    "backToCart": "Back to cart",
+    "retry": "Try again",
+    "cancelledNotice": "Your payment was not completed. Your cart is unchanged, so you can try again.",
+    "widgetError": "The checkout reported a problem. You can try again.",
+    "widgetErrorCode": "Reference: {code}",
+    "errors": {
+      "cartMissing": "There is no cart to check out. Add a part first.",
+      "cartEmpty": "Your cart is empty.",
+      "linesUnavailable": "Some parts in your cart are no longer available. Please review your cart.",
+      "subscriptionsUnavailable": "Subscriptions cannot be purchased right now. Remove the subscription items or try again later.",
+      "notConfigured": "Checkout is not set up yet. Please try again later.",
+      "unavailable": "We could not start the checkout. Please try again."
+    },
+    "pickup": {
+      "title": "Pickup at {branch}",
+      "addressLabel": "Address",
+      "hoursLabel": "Opening hours",
+      "closed": "Closed",
+      "idReminder": "Bring photo ID"
+    },
+    "dev": {
+      "title": "Developer completion (no payment)",
+      "description": "Creates a test order from this cart without a payment. Only available in development.",
+      "emailLabel": "Test email (@example.com)",
+      "submit": "Create test order",
+      "failed": "The test order could not be created."
+    }
+  },
   "auth": {
     "signIn": {
       "title": "Sign in",

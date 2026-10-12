@@ -25,4 +25,5 @@ export const FRONTEND_SCOPES: readonly ScopeDoc[] = [
   { scope: 'create_anonymous_token', reason: 'anonymous sessions and carts' },
   { scope: 'manage_customers', reason: 'sign-in, registration, account area' },
   { scope: 'manage_orders', reason: "place and read the shopper's orders" },
+  { scope: 'manage_sessions', reason: 'create Checkout sessions for the hosted checkout' },
 ];

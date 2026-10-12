@@ -1,0 +1,36 @@
+add line {"status":200,"body":{"cartId":"cart-2","count":1}}
+cart text: Your cart | ALPENDYN | Küstenwerk ceramic pad set | In stock at Branch Berlin | − | 1 | + | Remove | $26.87 | Küstenwerk ceramic pad set: quantity 1, line total $26.87 | Delivery | Delivery | Pick up · Free | Branch Berlin, Berlin · Pickup today | Ship to me ·
+checkout url /en-US/mau-reseller-north/checkout
+widget mounted: true
+page text: Checkout | Payment is handled by our secure payment partner. We never see your card details. | Pickup at Branch Berlin | Address: | Teilestraße 1, 10000 Berlin | Mon | 8 AM – 7 PM | Tue | 8 AM – 7 PM | Wed | 8 AM – 7 PM | Thu | 8 AM – 7 PM | Fri | 8 AM – 7 PM | Sat | 9 AM – 2 PM | Sun | Closed | Bring photo ID | Fake hosted checkout (rehearsal) | locale en-US, currencyLocale en-US, session beadd123 | Email  |  I accept the terms | Place order (test) | Decline (test) | Back to cart
+data-ctc count 1
+session requests ["POST 200"]
+commercetools api calls from the browser 0
+hosted script requests ["GET /app/main.js 200"]
+no horizontal scroll at 375: true
+no horizontal scroll at 768: true
+no horizontal scroll at 1024: true
+no horizontal scroll at 1440: true
+after decline alert: The checkout reported a problem. You can try again.
+
+Reference: payment_failed
+
+Try again
+injected markup in alert: 0
+cart still active: ["cart-1:Active","cart-2:Active"]
+landed on /en-US/mau-reseller-north/checkout/confirmation/MA-NFNKX9TM?t=eyJhbGciOiJIUzI1NiJ9.eyJzdG9yZUtleSI6Im1hdS1yZXNlbGxlci1ub3J0aCIsImF1ZCI6Im1hbHZhLW9yZGVyLWFjY2VzcyIsInN1YiI6Ijk3NjYxZmNhLWI5MGEtNDYzNC04MDUxLTg1NzE3ODFiOTE2MyIsImlhdCI6MTc5MTg0ODMyNSwiZXhwIjoxNzk0NDQwMzI1fQ.KXls4tfZXHVrQEn-CJpoZPb6GNd-RaUAaWvuWzn3LHw
+orders in fake: 1
+order number MA-NFNKX9TM matches format true
+landed number equals order number true
+order custom {"pickupBranchKey":"mau-br-north-berlin","isTest":true,"salesChannel":"web"}
+order store mau-reseller-north anonymousId set true email qa-1@example.com
+order shipping method mau-ship-pickup paymentState Paid orderState Open
+landing has token for guest true
+cart in session after return {"cart":null}
+cart states ["cart-1:Active","cart-2:Ordered"]
+manual fetch of return route (opaque redirect expected): {"status":0,"type":"opaqueredirect"}
+second return lands on /en-US/mau-reseller-north/checkout/confirmation/MA-NFNKX9TM same path: true
+orders after second return 1
+stranger sees: "Not found"
+unknown id sees: "Not found"
+console: ["error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3027/en-US/mau-reseller-north/checkout/confirmation/MA-NFNKX9TM?t=eyJhbGciOiJIUzI1NiJ9.eyJzdG9yZUtleSI6Im1hdS1yZXNlbGxlci1ub3J0aCIsImF1ZCI6Im1hbHZhLW9yZGVyLWFjY2VzcyIsInN1YiI6Ijk3NjYxZmNhLWI5MGEtNDYzNC04MDUxLTg1NzE3ODFiOTE2MyIsImlhdCI6MTc5MTg0ODMyNSwiZXhwIjoxNzk0NDQwMzI1fQ.KXls4tfZXHVrQEn-CJpoZPb6GNd-RaUAaWvuWzn3LHw","error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3027/en-US/mau-reseller-north/checkout/confirmation/MA-NFNKX9TM?t=eyJhbGciOiJIUzI1NiJ9.eyJzdG9yZUtleSI6Im1hdS1yZXNlbGxlci1ub3J0aCIsImF1ZCI6Im1hbHZhLW9yZGVyLWFjY2VzcyIsInN1YiI6Ijk3NjYxZmNhLWI5MGEtNDYzNC04MDUxLTg1NzE3ODFiOTE2MyIsImlhdCI6MTc5MTg0ODMyOCwiZXhwIjoxNzk0NDQwMzI4fQ.LHy0Z21mRUAqV64NyBWepG62MW-J2BRquWlIBccf0rc","error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3027/checkout/return?orderId=97661fca-b90a-4634-8051-8571781b9163","error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3027/checkout/return?orderId=00000000-0000-4000-8000-000000000000"]

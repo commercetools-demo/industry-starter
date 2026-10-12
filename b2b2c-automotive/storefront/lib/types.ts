@@ -411,3 +411,22 @@ export interface AccountCustomer {
   defaultShippingAddressId: string | null;
   defaultBillingAddressId: string | null;
 }
+
+// ---- Checkout (workstream O) ----
+
+/** What the browser needs to mount the hosted Checkout; `projectKey` and `region` are public identifiers, never secrets. */
+export interface CheckoutSessionResult {
+  sessionId: string;
+  projectKey: string;
+  region: string;
+}
+
+/** Why the checkout page cannot start a session (the route's error codes, plus a network failure). */
+export type CheckoutErrorReason = 'cart-missing' | 'cart-empty' | 'lines-unavailable' | 'subscriptions-unavailable' | 'not-configured' | 'unavailable';
+
+/** The pickup facts the checkout page shows when the cart's delivery preset is pickup (address, opening hours, "Bring photo ID"). */
+export interface CheckoutPickup {
+  branchName: string;
+  address: { street: string; postalCode: string; city: string };
+  hours: OpeningHours;
+}
