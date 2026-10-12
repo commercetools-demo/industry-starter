@@ -9,6 +9,8 @@ export interface TermOption {
   term: TermKey | null;
   termMonths: TermMonths;
   price: Money | null;
+  /** One-time activation fee of the variant (cable), shown on the card so the cart does not reveal it first. */
+  activationFee: Money | null;
   isMaster: boolean;
 }
 
@@ -20,6 +22,8 @@ export interface PlanCardData {
   /** The chip the plan belongs to ("5g", "up-to-500", "unlimited"): the card's own label (D-017). */
   chipId: string | null;
   mostPopular: boolean;
+  /** The first-order promotion: the first month is free (the only promotion; recurring orders keep the standing price). */
+  firstMonthFree: boolean;
   bullets: string[];
   /** In ascending order of months; the master variant is the initial choice. */
   terms: TermOption[];
@@ -41,6 +45,7 @@ export function toPlanCardData(offer: Offer): PlanCardData {
       term: variant.term,
       termMonths: variant.termMonths ?? 0,
       price: variant.recurringPrice ?? null,
+      activationFee: variant.recurringPrice && variant.oneTimePrice && variant.oneTimePrice.centAmount > 0 ? variant.oneTimePrice : null,
       isMaster: variant.isMaster,
     }))
     .sort((a, b) => a.termMonths - b.termMonths);
@@ -51,6 +56,7 @@ export function toPlanCardData(offer: Offer): PlanCardData {
     family: facts?.family ?? null,
     chipId: planChipId(offer),
     mostPopular: facts?.badge === 'most-popular',
+    firstMonthFree: offer.firstMonthFree === true,
     bullets: (facts?.highlights ?? []).slice(0, MAX_BULLETS),
     terms,
     masterSku: master?.sku ?? '',

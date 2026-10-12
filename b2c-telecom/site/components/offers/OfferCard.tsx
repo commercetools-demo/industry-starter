@@ -74,6 +74,8 @@ export function OfferCard({ offer, highlighted = false }: OfferCardProps): React
           ) : (
             <div className="font-display text-lg font-semibold text-brand-900">{tp('price.unavailable')}</div>
           )}
+          {price && data.firstMonthFree ? <div className="text-sm font-semibold">{t('firstMonthFree', { price: formatMoney(price, locale) })}</div> : null}
+          {option?.activationFee ? <div className="text-sm">{t('activationFee', { fee: formatMoney(option.activationFee, locale) })}</div> : null}
         </CardHeader>
         <CardBody className="flex-1">
           {data.bullets.length > 0 ? (

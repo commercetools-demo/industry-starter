@@ -15,7 +15,7 @@ export function PriceSchedule({ schedule, locale }: { schedule: PriceScheduleDat
   const dates = dateFormat(locale);
   const money = (value: { centAmount: number; currencyCode: string }): string => formatMoneyExact(value, locale);
   const hasIntro = schedule.periods.some((period) => period.kind === 'intro');
-  const rowLabel = (period: SchedulePeriod): string | null => (period.kind === 'intro' ? t('row.intro') : hasIntro && period.kind === 'standing' ? t('row.standing') : null);
+  const rowLabel = (period: SchedulePeriod): string | null => (period.kind === 'intro' ? t(period.months === 1 ? 'row.firstMonth' : 'row.intro') : hasIntro && period.kind === 'standing' ? t('row.standing') : null);
 
   return (
     <section aria-labelledby={`schedule-${schedule.sku}`} className="rounded-lg border border-neutral-200 p-5">

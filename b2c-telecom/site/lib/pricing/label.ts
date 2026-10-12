@@ -9,6 +9,8 @@ export interface LabelStrings {
   lock: string;
   noLock: string;
   intro: string;
+  /** The introductory period is exactly one month (the first-order promotion). */
+  introOne: string;
   step: string;
   perMonth: string;
   unlimited: string;
@@ -69,7 +71,7 @@ export function buildLabel(input: LabelBuildInput): { ok: true; label: Broadband
   const intro = schedule?.periods.find((period) => period.kind === 'intro');
   if (schedule && intro) {
     const standing = schedule.periods.find((period) => period.kind === 'standing') ?? schedule.periods.find((period) => period.index > intro.index);
-    priceNote += ` ${fill(strings.intro, {
+    priceNote += ` ${fill(intro.months === 1 ? strings.introOne : strings.intro, {
       amount: fmt(intro.monthlyAmount),
       months: intro.months,
       standing: fmt(standing?.monthlyAmount ?? line.unitListPrice),

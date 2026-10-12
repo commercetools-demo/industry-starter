@@ -117,6 +117,19 @@ describe('mapCart', () => {
     expect(after.summary.discountTotal.centAmount).toBe(0);
   });
 
+  it('first-month promotion: the schedule starts with its own first period at the price the engine charges now, so Due at order equals the cart', () => {
+    const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 0, discounts: ['cd-intro'], discountCents: 5999 }], fees: [feeLine] }), ctx, deps());
+    const plan = cart.lines.find((line) => line.kind === 'plan');
+    expect(plan?.promoPerUnit?.centAmount).toBe(5999);
+    expect(plan?.schedule?.periods.map((p) => [p.kind, p.monthlyAmount.centAmount])).toEqual([
+      ['intro', 0],
+      ['standing', 5999],
+    ]);
+    expect(plan?.schedule?.dueAtOrder.centAmount).toBe(cart.summary.dueToday.centAmount);
+    // Then monthly is the standing price: the promotion never reaches recurring orders
+    expect(cart.summary.thenMonthly.centAmount).toBe(5999);
+  });
+
   it('discountTotal sums line discounts and the discount on the total', () => {
     const cart = mapCart(ctCart({ lines: [{ ...planLine, total: 5499, discounts: ['cd-intro'], discountCents: 500 }], discountOnTotal: 100 }), ctx, deps());
     expect(cart.summary.discountTotal.centAmount).toBe(600);

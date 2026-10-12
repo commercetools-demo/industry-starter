@@ -115,6 +115,7 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
   // Lines keep the order in which they were first added: a device re-added in another mode carries its old `addedAt` (Q, verified live).
   const ordered = [...ct.lineItems].sort((a, b) => (a.addedAt ?? '').localeCompare(b.addedAt ?? ''));
   const base: CartLine[] = ordered.map((item): CartLine => {
+    const taken = engineDiscountOf(item);
     const fields = item.custom?.fields as Record<string, unknown> | undefined;
     const offerKey = fieldText(fields, 'offerKey') ?? item.productKey ?? '';
     const offer = deps.offersByKey[offerKey];
@@ -147,6 +148,7 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
       recurrence: item.recurrenceInfo && !acquisition ? { policyKey: MONTHLY_POLICY_KEY, priceSelectionMode: item.recurrenceInfo.priceSelectionMode === 'Fixed' ? 'Fixed' : 'Dynamic' } : null,
       unitListPrice,
       unitPrice: { centAmount: quantity > 0 ? Math.round(total.centAmount / quantity) : total.centAmount, currencyCode: total.currencyCode },
+      ...(taken > 0 && item.quantity > 0 ? { promoPerUnit: money({ ...item.totalPrice, centAmount: Math.round(taken / item.quantity) }) } : {}),
       total,
       appliedDiscountKeys: discountKeys(item, deps),
       parentLineId: fieldText(fields, 'parentLineItemId') ?? null,
@@ -229,6 +231,7 @@ export function mapCart(ct: CtCart, ctx: CartMapContext, deps: CartMapDeps): Car
         quantity: line.quantity,
         standing: line.unitListPrice,
         introApplied: introDef !== null && line.appliedDiscountKeys.includes(discountKeyFor(introDef)),
+        ...(line.promoPerUnit ? { firstOrderDiscount: line.promoPerUnit } : {}),
         monthToMonth,
         oneTimeDueNow: fee ? money(fee.totalPrice) : zero(currency),
         orderDate: deps.today,

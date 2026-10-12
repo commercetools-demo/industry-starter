@@ -147,4 +147,18 @@ describe('OfferCard', () => {
     expect(screen.getByText('12 Monate Preisgarantie', { selector: 'div' })).toBeInTheDocument();
     expect(screen.getByText('5G · Am beliebtesten')).toBeInTheDocument();
   });
+
+  it('a plan with the first-month promotion states it and the standing price, and the activation fee, so the cart does not reveal them first', () => {
+    const variants = LISTED_CABLE_500.variants.map((variant) => ({ ...variant, oneTimePrice: { centAmount: 2500, currencyCode: 'USD' } }));
+    renderCard({ ...LISTED_CABLE_500, firstMonthFree: true, variants });
+    const price = LISTED_CABLE_500.variants.find((variant) => variant.isMaster)?.recurringPrice?.centAmount ?? 0;
+    expect(screen.getByText(`First month free, then $${(price / 100).toFixed(price % 100 === 0 ? 0 : 2)}/mo`)).toBeInTheDocument();
+    expect(screen.getByText('$25 activation fee')).toBeInTheDocument();
+  });
+
+  it('a plan without the promotion or a fee shows neither line', () => {
+    renderCard(LISTED_PHONE_ESSENTIAL);
+    expect(screen.queryByText(/First month free/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/activation fee/)).not.toBeInTheDocument();
+  });
 });

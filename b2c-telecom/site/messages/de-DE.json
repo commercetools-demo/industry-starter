@@ -981,6 +981,8 @@
       "selected": "Ausgewählt ✓"
     },
     "perMonth": "/Monat",
+    "firstMonthFree": "Erster Monat gratis, danach {price}/Monat",
+    "activationFee": "{fee} Aktivierungsgebühr",
     "mostPopular": "Am beliebtesten",
     "term": {
       "label": "Vertragslaufzeit",
@@ -1089,6 +1091,7 @@
     },
     "row": {
       "intro": "Einführungspreis",
+      "firstMonth": "Erster Monat",
       "standing": "Regulärer Preis"
     },
     "dueAtOrder": "Fällig bei Bestellung",
@@ -1133,6 +1136,7 @@
     "lock": "Price locked for {months} months.",
     "noLock": "Price can change with notice.",
     "intro": "Introductory price {amount}/mo for the first {months} months, then {standing}/mo.",
+    "introOne": "First-month price {amount}, then {standing}/mo.",
     "step": "Price changes to {amount}/mo from month {month}.",
     "perMonth": "{amount}/mo",
     "unlimited": "Unlimited",

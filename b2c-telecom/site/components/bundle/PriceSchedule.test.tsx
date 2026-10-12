@@ -85,4 +85,13 @@ describe('PriceSchedule', () => {
     expect(screen.getByText(/31\.10\.2028/)).toBeInTheDocument();
     expect(screen.getByText(/31\.10\.2026/)).toBeInTheDocument();
   });
+
+  it('a one-month first period reads "First month" and is followed by the standard price', () => {
+    renderWithProviders(<PriceSchedule schedule={schedule({ standing: usd(5999), firstOrderDiscount: usd(5999) })} locale="en-US" />);
+    expect(screen.getByText('First month')).toBeInTheDocument();
+    expect(screen.queryByText('Introductory price')).not.toBeInTheDocument();
+    expect(screen.getByText('Standard price')).toBeInTheDocument();
+    expect(screen.getByText('2-24')).toBeInTheDocument();
+    expect(within(screen.getByRole('row', { name: /Due at order/ })).getByText('$25.00')).toBeInTheDocument();
+  });
 });

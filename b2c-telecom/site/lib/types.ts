@@ -439,6 +439,8 @@ export interface CartLine {
   unitListPrice: Money;
   /** Engine line total / quantity (after discounts, before tax); display only, `total` is authoritative. */
   unitPrice: Money;
+  /** What the engine took off ONE unit of this line for the order placed now (first-order promotions); absent when nothing. */
+  promoPerUnit?: Money;
   /** Engine `totalPrice`. */
   total: Money;
   /** From `discountedPricePerQuantity[].discountedPrice.includedDiscounts[].discount.key`. */
@@ -761,6 +763,8 @@ export interface OrderLine {
   /** 0 = month-to-month, null = unknown. */
   termMonths: number | null;
   unitPrice: Money;
+  /** What the engine took off ONE unit of this line for the order placed now (first-order promotions); absent when nothing. */
+  promoPerUnit?: Money;
   total: Money;
   parentLineId: string | null;
   acquisition: OrderLineAcquisition | null;

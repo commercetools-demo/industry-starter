@@ -8,6 +8,7 @@ export const LABEL_STRINGS: LabelStrings = {
   lock: en.label.lock,
   noLock: en.label.noLock,
   intro: en.label.intro,
+  introOne: en.label.introOne,
   step: en.label.step,
   perMonth: en.label.perMonth,
   unlimited: en.label.unlimited,

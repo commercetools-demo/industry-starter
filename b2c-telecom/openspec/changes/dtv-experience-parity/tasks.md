@@ -38,13 +38,13 @@
 
 ## 6. Pricing display fixes
 
-- [ ] 6.1 Replace list-based "Monthly after today", order monthly and contract total with standing-price amounts from the engine selection; add the bundle-checkout-confirmation-account agreement test
+- [x] 6.1 Replace list-based "Monthly after today", order monthly and contract total with standing-price amounts from the engine selection; add the bundle-checkout-confirmation-account agreement test
 - [x] 6.2 Rows that foot: Plans, Add-ons, Devices, One-time fees, order-level discounts, shipping, tax, Due today; "Then monthly" and "You save" outside the sum; update `OrderSummary`, `CheckoutSummary`, `ReviewStep`; footing test over the seeded carts
 - [x] 6.3 Include tax in Due today when not included in price
 - [x] 6.4 Compute promotion amounts from the engine's reported discounted amounts; delete the `max(0, list × qty − total)` path
 - [ ] 6.5 Move free-shipping evaluation into the shipping method's rate; delete `optionOf`'s threshold logic and the hard-coded currency [SKILL: commercetools-commerce-patterns]
-- [ ] 6.6 Schedule: show the first month as period 1 for promoted plans; Due at order equals the cart's line total plus fees; keep v1 readers
-- [ ] 6.7 Card copy: "First month free, then $X/mo" and activation fee; one decimals rule across card and cart
+- [x] 6.6 Schedule: show the first month as period 1 for promoted plans; Due at order equals the cart's line total plus fees; keep v1 readers
+- [x] 6.7 Card copy: "First month free, then $X/mo" and activation fee; one decimals rule across card and cart
 - [ ] 6.8 Reconciliation report: generated recurring orders whose line total differs from the stored standing amount [SKILL: commercetools-connect]
 - [ ] 6.9 Promotions list in the bundle (under a single line, after the lines otherwise, localised names, none when empty)
 
