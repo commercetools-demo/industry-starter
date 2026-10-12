@@ -33,7 +33,7 @@ describe('seeded images', () => {
 
   it('the committed lock only holds allowed hosts and has an entry per offer and category', () => {
     const lock = getLock();
-    expect(Object.keys(lock)).toHaveLength(35);
+    expect(Object.keys(lock)).toHaveLength(38);
     for (const key of Object.keys(lock)) expect(() => lockImages(lock, key)).not.toThrow();
   });
 });

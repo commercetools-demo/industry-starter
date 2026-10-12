@@ -3,6 +3,7 @@
 import type { ReactElement } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
+import { ProductImage } from '@/components/ui/ProductImage';
 import { formatMoney } from '@/lib/format';
 import type { DraftExtra } from '@/lib/finder/draft';
 import type { GroupItem, OfferDetail } from '@/lib/offers-api/views';
@@ -18,38 +19,45 @@ type DetailSectionsProps = {
   refusals: Record<string, string>;
 };
 
-function Row({ item, locale, action, note }: { item: GroupItem; locale: Locale; action: ReactElement | null; note?: string }): ReactElement {
+function Row({ item, locale, action, note, tile = false }: { item: GroupItem; locale: Locale; action: ReactElement | null; note?: string; tile?: boolean }): ReactElement {
   const t = useTranslations('finder.detail');
   const to = useTranslations('offers');
   const { offer, verdict } = item;
   const unavailable = verdict.status === 'unavailable';
   const price = offer.price.recurring ? `${formatMoney(offer.price.recurring, locale)}${to('perMonth')}` : offer.price.oneTime ? `${formatMoney(offer.price.oneTime, locale)} ${to('addon.oneTime')}` : null;
+  const title = (
+    <div className="flex min-w-0 flex-col">
+      <span className="font-display text-md font-semibold">{offer.name}</span>
+      <span className="text-sm text-text-muted">
+        {offer.equipmentKind ? to(`equipmentKind.${offer.equipmentKind}` as 'equipmentKind.router') : t(`kind.${offer.kind === 'equipment' ? 'equipment' : 'addon'}`)}
+        {price && verdict.status !== 'included' ? ` · ${price}` : ''}
+      </span>
+    </div>
+  );
+  const status = verdict.status === 'included' ? <span className="whitespace-nowrap text-sm font-semibold">{to('included')}</span> : action;
   return (
-    <li className={cx('flex flex-col gap-1 rounded-lg border border-neutral-300 bg-surface p-4', unavailable && 'opacity-70')}>
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex min-w-0 flex-col">
-          <span className="font-display text-md font-semibold">{offer.name}</span>
-          <span className="text-sm text-text-muted">
-            {offer.equipmentKind ? to(`equipmentKind.${offer.equipmentKind}` as 'equipmentKind.router') : t(`kind.${offer.kind === 'equipment' ? 'equipment' : 'addon'}`)}
-            {price && verdict.status !== 'included' ? ` · ${price}` : ''}
-          </span>
+    <li className={cx('flex flex-col rounded-lg border border-neutral-300 bg-surface', tile ? 'overflow-hidden' : 'gap-1 p-4', unavailable && 'opacity-70')}>
+      {tile ? <ProductImage src={offer.image} name={offer.name} sizes="(min-width: 64rem) 12rem, 50vw" /> : null}
+      <div className={cx(tile ? 'flex flex-1 flex-col justify-between gap-3 p-4' : 'contents')}>
+        <div className={cx(tile ? 'flex flex-col gap-3' : 'flex items-start justify-between gap-3')}>
+          {title}
+          {status}
         </div>
-        {verdict.status === 'included' ? <span className="whitespace-nowrap text-sm font-semibold">{to('included')}</span> : action}
+        {unavailable ? (
+          <ul className="m-0 flex list-none flex-col gap-1 p-0">
+            {verdict.reasons.map((reason) => (
+              <li key={reason.code} className="text-sm text-text-muted">
+                {reason.message}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {note ? (
+          <p role="alert" className="m-0 text-sm text-danger">
+            {note}
+          </p>
+        ) : null}
       </div>
-      {unavailable ? (
-        <ul className="m-0 flex list-none flex-col gap-1 p-0">
-          {verdict.reasons.map((reason) => (
-            <li key={reason.code} className="text-sm text-text-muted">
-              {reason.message}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {note ? (
-        <p role="alert" className="m-0 text-sm text-danger">
-          {note}
-        </p>
-      ) : null}
     </li>
   );
 }
@@ -99,9 +107,9 @@ export function DetailSections({ detail, inDraft, onAdd, onRemove, refusals }: D
           {section.items.length === 0 ? (
             <p className="m-0 text-md text-text-muted">{section.empty}</p>
           ) : (
-            <ul className="m-0 flex list-none flex-col gap-3 p-0">
+            <ul className={cx('m-0 list-none gap-3 p-0', section.id === 'addons' ? 'grid grid-cols-2 lg:grid-cols-4' : 'flex flex-col')}>
               {section.items.map((item) => (
-                <Row key={item.offer.key} item={item} locale={locale} action={action(item)} note={refusals[item.offer.key]} />
+                <Row key={item.offer.key} item={item} locale={locale} action={action(item)} note={refusals[item.offer.key]} tile={section.id === 'addons'} />
               ))}
             </ul>
           )}

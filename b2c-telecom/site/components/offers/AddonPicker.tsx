@@ -4,6 +4,7 @@ import type { ReactElement } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useReasonText } from '@/components/bundle/useReasonText';
 import { CheckIcon } from '@/components/ui/Icon';
+import { ProductImage } from '@/components/ui/ProductImage';
 import { FOCUS_RING } from '@/components/ui/focus';
 import { Link } from '@/i18n/routing';
 import { cx } from '@/lib/cx';
@@ -46,40 +47,45 @@ export function AddonPicker({ plan, planLine, attached, addons, browseHref }: Ad
 
   if (choices.length === 0 && !browseHref) return null;
   return (
-    <fieldset className="m-0 flex min-w-0 flex-col gap-3 border-0 p-0">
+    <fieldset className="@container m-0 flex min-w-0 flex-col gap-3 border-0 p-0">
       <legend className="mb-3 p-0 font-display text-md font-bold">{t('addons')}</legend>
-      <ul className="m-0 flex list-none flex-col gap-3 p-0">
+      <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 @xl:grid-cols-4">
         {choices.map((choice) => {
           const price = addonPrice(choice.offer);
           const checked = choice.state === 'attached' || choice.state === 'included';
           const disabled = !planLine || choice.state === 'included' || choice.state === 'disabled' || busyKey !== null;
           const muted = choice.state === 'disabled' || !planLine;
           return (
-            <li key={choice.offer.key} aria-disabled={choice.state === 'disabled' ? 'true' : undefined} className="flex flex-col gap-1">
-              <label className={cx('flex items-center gap-3 text-md', muted ? 'text-text-muted' : 'text-text', disabled ? 'cursor-not-allowed' : 'cursor-pointer')}>
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  disabled={disabled}
-                  onChange={() => toggle(choice)}
-                  className={cx('size-5 accent-action', FOCUS_RING)}
-                />
-                <span className="flex-1">{choice.offer.name}</span>{' '}
-                {choice.state === 'included' ? (
-                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-text">
-                    <CheckIcon />
-                    {t('included')}
+            <li key={choice.offer.key} aria-disabled={choice.state === 'disabled' ? 'true' : undefined} className={cx('flex flex-col overflow-hidden rounded-lg border bg-surface', checked ? 'border-action' : 'border-border')}>
+              <label className={cx('flex h-full flex-col text-md', muted ? 'text-text-muted' : 'text-text', disabled ? 'cursor-not-allowed' : 'cursor-pointer')}>
+                <ProductImage src={choice.offer.image} name={choice.offer.name} sizes="(min-width: 40rem) 12rem, 50vw" className={muted ? 'opacity-60' : undefined} />
+                <span className="flex flex-1 flex-col gap-1 p-3">
+                  <span className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      disabled={disabled}
+                      onChange={() => toggle(choice)}
+                      className={cx('mt-0.5 size-5 shrink-0 accent-action', FOCUS_RING)}
+                    />
+                    <span className="flex-1 text-sm font-semibold leading-snug">{choice.offer.name}</span>
                   </span>
-                ) : price ? (
-                  <span className="text-sm font-semibold">
-                    {formatMoney(price.amount, locale)}
-                    {price.recurring ? t('perMonth') : ''}
-                  </span>
-                ) : null}
+                  {choice.state === 'included' ? (
+                    <span className="inline-flex items-center gap-1 text-sm font-semibold text-text">
+                      <CheckIcon />
+                      {t('included')}
+                    </span>
+                  ) : price ? (
+                    <span className="text-sm font-semibold">
+                      {formatMoney(price.amount, locale)}
+                      {price.recurring ? t('perMonth') : ''}
+                    </span>
+                  ) : null}
+                </span>
               </label>
-              {choice.state === 'disabled' && choice.reason ? <p className="m-0 pl-8 text-xs text-text-muted">{reasonText(choice.reason)}</p> : null}
+              {choice.state === 'disabled' && choice.reason ? <p className="m-0 px-3 pb-3 text-xs text-text-muted">{reasonText(choice.reason)}</p> : null}
               {errors[choice.offer.key] ? (
-                <p role="alert" className="m-0 pl-8 text-xs text-danger">
+                <p role="alert" className="m-0 px-3 pb-3 text-xs text-danger">
                   {errors[choice.offer.key]}
                 </p>
               ) : null}

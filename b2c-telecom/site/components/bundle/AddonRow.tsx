@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import type { ReactElement } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Tag } from '@/components/ui/Tag';
@@ -26,8 +27,8 @@ export function AddonRow({ line, planName, busy = false, onRemove }: AddonRowPro
   const stock = line.stock;
   return (
     <li className="flex flex-wrap items-center gap-5 rounded-xl border border-border bg-surface px-6 py-4">
-      <div aria-hidden="true" className="grid size-12 shrink-0 place-items-center rounded-md bg-pink-900 font-display text-xl font-bold text-text-on-pink">
-        {line.name.slice(0, 1).toUpperCase()}
+      <div aria-hidden="true" className="relative grid size-16 shrink-0 place-items-center overflow-hidden rounded-md bg-pink-900 font-display text-xl font-bold text-text-on-pink">
+        {line.imageUrl ? <Image src={line.imageUrl} alt="" fill sizes="4rem" className="object-cover" /> : line.name.slice(0, 1).toUpperCase()}
       </div>
       <div className="min-w-40 flex-1">
         <div className="font-display text-lg font-bold">{line.name}</div>

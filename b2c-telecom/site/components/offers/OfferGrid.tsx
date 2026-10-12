@@ -17,10 +17,10 @@ type OfferGridProps = {
   devices?: { offers: DeviceOffer[]; today: string };
 };
 
-// Plans: cards of at least 300 px; add-ons and equipment: 280 px (design/specs/plp.md, addons.md), gap 24 px.
+// Plans: cards of at least 300 px; add-ons and equipment: a grid of 4 columns (2 on a tablet, 1 on a phone), each card with its picture.
 const GRID = 'm-0 grid list-none gap-7 p-0';
 const PLAN_COLUMNS = '[grid-template-columns:repeat(auto-fill,minmax(min(100%,18.75rem),1fr))]';
-const ADDON_COLUMNS = '[grid-template-columns:repeat(auto-fill,minmax(min(100%,17.5rem),1fr))]';
+const ADDON_COLUMNS = 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
 
 /** The cards of one listing page. The server renders the markup; every card is a client component that reads the bundle after hydration. */
 export function OfferGrid({ kind, offers, highlightKey, candidates, devices }: OfferGridProps): ReactElement {

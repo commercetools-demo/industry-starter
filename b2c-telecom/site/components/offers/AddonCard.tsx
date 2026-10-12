@@ -6,6 +6,7 @@ import { BlockedAddNotice } from '@/components/bundle/BlockedAddNotice';
 import { useReasonText } from '@/components/bundle/useReasonText';
 import { SaveToListButton } from '@/components/account/SaveToListButton';
 import { Button } from '@/components/ui/Button';
+import { ProductImage } from '@/components/ui/ProductImage';
 import { Card, CardBody } from '@/components/ui/Card';
 import { FOCUS_RING } from '@/components/ui/focus';
 import { useCartContext } from '@/context/CartProvider';
@@ -79,16 +80,15 @@ export function AddonCard({ offer, highlighted = false }: AddonCardProps): React
       className={cx('scroll-mt-28 rounded-xl', highlighted && 'outline-4 outline-offset-4 outline-action')}
     >
       <Card as="article" className="flex h-full flex-col">
-        <div className="flex h-30 items-center bg-pink-900 px-7">
-          <h2 className="m-0 line-clamp-2 font-display text-5xl font-bold tracking-ui text-text-on-pink">{offer.name}</h2>
-        </div>
-        <CardBody className="flex-1">
+        <ProductImage src={offer.image} name={offer.name} sizes="(min-width: 64rem) 16rem, (min-width: 40rem) 50vw, 100vw" />
+        <CardBody className="flex-1 gap-4 p-5">
+          <h2 className="m-0 line-clamp-2 font-display text-xl font-bold tracking-ui">{offer.name}</h2>
           {tag ? <div className="font-display text-xs font-semibold text-pink-700">{tag}</div> : null}
           {description ? <p className="m-0 text-md leading-snug">{description}</p> : null}
           <div className="mt-auto flex items-baseline gap-2 border-t border-border pt-4">
             {price ? (
               <>
-                <span className="font-display text-2xl font-bold">{formatMoney(price.amount, locale)}</span>
+                <span className="font-display text-xl font-bold">{formatMoney(price.amount, locale)}</span>
                 <span className="text-sm text-text-muted">{price.recurring ? t('perMonth') : t('addon.oneTime')}</span>
               </>
             ) : (

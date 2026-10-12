@@ -64,3 +64,4 @@ Claude builds these exactly as specified in the workstream and takes screenshots
 | DTV-02 | Approve spikes 3.1 and 3.2 (recurring order with a zero external price; generated-order query for the reconcile report) | Confirms included lines on recurring orders and the report's query | TODO |
 | DTV-03 | Approve `seed:cleanup-discounts --execute --confirm-project` after reading its report | Removes the retired discounts | TODO |
 | DTV-04 | After DTV-01: browser walk-through of `/plan-finder` with each sample customer (task 9.1); Claude can run it once approved | Confirms the finder, preview and bundle agree live | TODO |
+| DTV-05 | Approve `npm run seed:addon-images` (read-only first; then `-- --execute --confirm-project <key>`) | Puts the recorded photo on all 11 add-ons; 3 (regional sports, both installations) have none live yet and show their initial until it runs. Touches add-on images only | TODO |
