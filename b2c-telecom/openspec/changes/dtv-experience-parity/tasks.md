@@ -7,13 +7,13 @@
 ## 2. Seed and catalog data
 
 - [x] 2.1 Remove the second-line, bundle, intro-price and tier discounts from the seed manifest, `DISCOUNT_AMOUNTS`, `INTRO_DEFS`, `STEP_DEFS`, the label discount text and the prompt pairings; keep the schedule library's reading of intro and step periods [SKILL: commercetools-commerce-patterns]
-- [ ] 2.2 Seed validation: fail on any cart discount whose `recurringOrderScope` is not `NonRecurringOrdersOnly`; catalog lint warning for Merchant Center discounts that are not [SKILL: commercetools-commerce-patterns]
+- [x] 2.2 Seed validation: fail on any cart discount whose `recurringOrderScope` is not `NonRecurringOrdersOnly`; catalog lint warning for Merchant Center discounts that are not [SKILL: commercetools-commerce-patterns]
 - [x] 2.3 Re-rank the remaining discounts descending in intended order, create the single order table and add the engine-order test [SKILL: commercetools-commerce-patterns]
 - [x] 2.4 Add the `call-center` channel and customer group, customer-group prices on the bundle offer (`small-business`, `existing-customer`) and a call-center price on one phone plan variant; update price seeding and its tests [SKILL: commercetools-commerce-patterns]
 - [x] 2.5 Add `requires-offers`, `negates-offers` and `eligible-regions` to the offer type and draft types; update `telecom-catalog-model` notes [SKILL: commercetools-commerce-patterns]
 - [x] 2.6 Seed: a bundle offer, DIY and professional installation with `negates-offers`, a required-offer pair, a state-limited add-on, and `required-addon-kinds` where the lint expects it
-- [ ] 2.7 Write the confirm-flagged cleanup script that removes the retired discounts from a live project; do not run it without the owner's go-ahead [SKILL: commercetools-platform]
-- [ ] 2.8 Update `seed-catalog-data` plan notes, `design/` label text and the seed counts in tests
+- [x] 2.7 Write the confirm-flagged cleanup script that removes the retired discounts from a live project; do not run it without the owner's go-ahead [SKILL: commercetools-platform]
+- [x] 2.8 Update seed counts in tests and the stale discount copy in the seeded label text (the `seed-catalog-data` plan notes move with 9.2; `design/` is a static prototype and stays as drawn)
 
 ## 3. Spikes (before dependent tasks)
 

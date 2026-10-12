@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MANIFEST } from '.';
 import type { ProductDraft, SeedManifest } from '../types';
-import { localeGaps, priceErrors, referenceErrors, setRequiredErrors, skuErrors, validateCatalog } from './catalog-validate';
+import { discountScopeErrors, localeGaps, priceErrors, referenceErrors, setRequiredErrors, skuErrors, validateCatalog } from './catalog-validate';
 
 function offer(): ProductDraft {
   const found = (MANIFEST.product as ProductDraft[]).find((p) => p.key === 'malva-offer-cable-500');
@@ -30,6 +30,15 @@ describe('catalog validation', () => {
     const errors = priceErrors([bad]);
     expect(errors.some((e) => e.includes('no EUR/DE price'))).toBe(true);
     expect(errors.some((e) => e.includes('zero price'))).toBe(true);
+  });
+
+  it('fails a cart discount that can reach recurring orders (promotions apply to the first order only)', () => {
+    const anyOrder = { ...(MANIFEST.cartDiscount ?? [])[0], recurringOrderScope: { type: 'AnyOrder' } } as unknown as SeedManifest['cartDiscount'] extends (infer D)[] | undefined ? D : never;
+    const unscoped = { ...(MANIFEST.cartDiscount ?? [])[1], recurringOrderScope: undefined } as typeof anyOrder;
+    const errors = discountScopeErrors({ ...MANIFEST, cartDiscount: [anyOrder, unscoped] });
+    expect(errors).toHaveLength(2);
+    expect(errors[0]).toContain('NonRecurringOrdersOnly');
+    expect(discountScopeErrors(MANIFEST)).toEqual([]);
   });
 
   it('finds a relation to a product that does not exist', () => {

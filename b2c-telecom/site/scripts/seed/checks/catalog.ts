@@ -112,7 +112,7 @@ export const offerReferences: Check = {
       if (!product) continue;
       for (const variant of liveVariants(product)) {
         for (const attribute of variant.attributes ?? []) {
-          if (['anchors', 'included-offers', 'conflicts-with', 'compatible-addons', 'compatible-equipment'].includes(attribute.name) && Array.isArray(attribute.value)) {
+          if (['anchors', 'included-offers', 'conflicts-with', 'compatible-addons', 'compatible-equipment', 'requires-offers', 'negates-offers'].includes(attribute.name) && Array.isArray(attribute.value)) {
             for (const key of attribute.value as string[]) if (!live.has(key)) problems.push(`${offer.key}.${attribute.name} -> ${key}`);
           }
         }
@@ -176,4 +176,26 @@ export const demoData: Check = {
   },
 };
 
-export const catalogChecks: Check[] = [catalogCounts, offerPrices, offerReferences, imageCoverage, searchFindsOffers, demoData];
+/**
+ * Promotions apply to the first order only: every Cart Discount in the project must be `NonRecurringOrdersOnly`, or the standing
+ * price shown for recurring orders ("Then monthly") would be wrong. Owned discounts that are not fail; a discount made in the Merchant
+ * Center is reported as a warning (never fails), and so is an owned discount the manifest no longer has (the retired ones).
+ */
+export const discountScope: Check = {
+  name: 'cart discounts apply to the first order only (recurringOrderScope NonRecurringOrdersOnly)',
+  async run(api) {
+    const live = (await getAll(api, 'cart-discounts')) as (Obj & { key?: string; recurringOrderScope?: { type?: string } })[];
+    const wanted = new Set((MANIFEST.cartDiscount ?? []).map((draft) => draft.key));
+    const scoped = (discount: { recurringOrderScope?: { type?: string } }): boolean => discount.recurringOrderScope?.type === 'NonRecurringOrdersOnly';
+    const owned = live.filter((discount) => discount.key?.startsWith('malva-'));
+    const bad = owned.filter((discount) => wanted.has(String(discount.key)) && !scoped(discount)).map((discount) => String(discount.key));
+    if (bad.length > 0) return fail(`apply to recurring orders: ${bad.join(', ')} (re-run the seed)`);
+    const warnings = [
+      ...live.filter((discount) => !discount.key?.startsWith('malva-') && !scoped(discount)).map((discount) => `${String(discount.key ?? '(no key)')} is not first-order-only (Merchant Center discount)`),
+      ...owned.filter((discount) => !wanted.has(String(discount.key))).map((discount) => `${String(discount.key)} is no longer in the manifest (retired: remove it with the cleanup script)`),
+    ];
+    return ok(warnings.length === 0 ? undefined : `warning: ${warnings.join('; ')}`);
+  },
+};
+
+export const catalogChecks: Check[] = [catalogCounts, offerPrices, offerReferences, discountScope, imageCoverage, searchFindsOffers, demoData];

@@ -108,6 +108,13 @@ export function referenceErrors(products: ProductDraft[]): string[] {
   return errors;
 }
 
+/** Promotions apply to the first order only: a manifest discount that can reach recurring orders would make the displayed standing price wrong. */
+export function discountScopeErrors(manifest: SeedManifest): string[] {
+  return ((manifest.cartDiscount ?? []) as { key: string; recurringOrderScope?: { type?: string } }[])
+    .filter((discount) => discount.recurringOrderScope?.type !== 'NonRecurringOrdersOnly')
+    .map((discount) => `cart discount ${discount.key} must have recurringOrderScope NonRecurringOrdersOnly (promotions apply to the first order only)`);
+}
+
 /** Everything above in one call. Empty = valid. */
 export function validateCatalog(manifest: SeedManifest): string[] {
   const products = (manifest.product ?? []) as ProductDraft[];
@@ -119,6 +126,7 @@ export function validateCatalog(manifest: SeedManifest): string[] {
     ...setRequiredErrors((manifest.productType ?? []) as ProductTypeDraft[]),
     ...priceErrors(offers),
     ...referenceErrors(products),
+    ...discountScopeErrors(manifest),
     ...Object.entries(manifest).flatMap(([kind, drafts]) => localeGaps(drafts, kind)),
   ];
 }

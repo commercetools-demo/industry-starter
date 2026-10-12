@@ -4,7 +4,7 @@ import { buildManifest } from '../manifest';
 import { main as seedMain } from '../seed';
 import { FakeCt } from '../test/fake-ct';
 import { main as verify } from '../verify';
-import { catalogChecks, catalogCounts, demoData, imageCoverage, offerPrices, offerReferences, searchFindsOffers } from './catalog';
+import { catalogChecks, catalogCounts, demoData, discountScope, imageCoverage, offerPrices, offerReferences, searchFindsOffers } from './catalog';
 import { platformChecks } from './platform';
 import { releaseChecks } from './releases';
 import type { ProductDraft } from '../types';
@@ -90,5 +90,21 @@ describe('seed:verify catalog checks', () => {
     const result = await searchFindsOffers.run(api, { projectKey: 'x' });
     expect(result.ok).toBe(false);
     expect(result.detail).toMatch(/found 20 of 31/);
+  });
+
+  it('discount scope: passes on the seeded fake; a Merchant Center discount that reaches recurring orders and a retired owned one are warnings; an owned one that reaches them fails', async () => {
+    const api = await seeded();
+    expect(await discountScope.run(api, { projectKey: 'x' })).toEqual({ ok: true });
+    api.seed('cart-discounts', { key: 'mc-summer', recurringOrderScope: { type: 'AnyOrder' } });
+    api.seed('cart-discounts', { key: 'malva-cd-second-line-10', recurringOrderScope: { type: 'AnyOrder' } });
+    const warned = await discountScope.run(api, { projectKey: 'x' });
+    expect(warned.ok).toBe(true);
+    expect(warned.detail).toMatch(/mc-summer is not first-order-only/);
+    expect(warned.detail).toMatch(/malva-cd-second-line-10 is no longer in the manifest/);
+    const owned = api.byKey('cart-discounts', 'malva-cd-intro-free-month') as unknown as { recurringOrderScope: { type: string } };
+    owned.recurringOrderScope = { type: 'AnyOrder' };
+    const failed = await discountScope.run(api, { projectKey: 'x' });
+    expect(failed.ok).toBe(false);
+    expect(failed.detail).toMatch(/malva-cd-intro-free-month/);
   });
 });
