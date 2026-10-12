@@ -13,6 +13,7 @@
     "verify:build": "next build 2>&1 | tee .next-build-output.txt && node scripts/check-routes.mjs .next-build-output.txt && node scripts/check-no-health-in-release.mjs && node scripts/check-bundle-secrets.mjs"
   },
   "dependencies": {
+    "@commercetools-demo/puck-api": "^0.8.1",
     "@commercetools-demo/puck-editor": "^0.8.3",
     "@commercetools-demo/puck-renderer": "^0.8.3",
     "@commercetools-demo/puck-types": "^0.8.1",
@@ -23,6 +24,7 @@
     "next-intl": "^4.14.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-intl": "^12.1.4",
     "server-only": "^0.0.1",
     "swr": "^2.5.1",
     "zod": "^4.6.7"

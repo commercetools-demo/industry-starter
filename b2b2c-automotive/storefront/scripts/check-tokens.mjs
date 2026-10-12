@@ -21,7 +21,7 @@ const walk = (dir) =>
 
 const FONT_VARS = ['--font-poppins', '--font-archivo', '--font-public-sans', '--font-inter'];
 const FONT_TOKEN = { poppins: 'var(--font-display)', archivo: 'var(--font-utility)', 'public sans': 'var(--font-ui)', inter: 'var(--font-button-alt)' };
-const EXEMPT = [/(^|\/)app\/tokens\.css$/, /\.(test|spec)\.[cm]?[tj]sx?$/, /(^|\/)opengraph-image\.tsx$/, /(^|\/)lib\/theme\/default-theme\.ts$/];
+const EXEMPT = [/(^|\/)app\/tokens\.css$/, /\.(test|spec)\.[cm]?[tj]sx?$/, /(^|\/)opengraph-image\.tsx$/, /(^|\/)lib\/theme\/(default-theme|color|shadows)\.ts$/];
 const PALETTE = 'slate|gray|zinc|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|white|black';
 const PALETTE_CLASS = new RegExp(`(?<![\\w-])(?:bg|text|border|ring|fill|stroke|from|to|via|divide|outline|shadow|decoration|accent|caret)-(?:${PALETTE})(?:-\\d+)?(?![\\w-])`, 'g');
 

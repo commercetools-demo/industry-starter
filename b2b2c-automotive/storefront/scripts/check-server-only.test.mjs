@@ -29,4 +29,17 @@ describe('Directory structure: Server-only boundary', () => {
     expect(p).toMatch(/app\/b\.tsx/);
     expect(p).not.toMatch(/server-page/);
   });
+  it('Pure modules are exempt but nothing else is', () => {
+    const root = tmpApp({
+      'lib/session-core.ts': 'export const a = 1;',
+      'lib/locale-redirect.ts': 'export const b = 1;',
+      'lib/session.ts': "import 'server-only'; export const c = 1;",
+      'lib/session-extra.ts': 'export const d = 1;',
+      'components/ok.tsx': "import { a } from '@/lib/session-core';\nexport const x = a;",
+    });
+    expect(checkServerOnly(root)).toEqual(["lib/session-extra.ts must start with import 'server-only'"]);
+    const bad = tmpApp({ 'lib/session.ts': 'export const c = 1;', 'components/bad.tsx': "import { c } from '@/lib/session';\nexport const x = c;" });
+    expect(checkServerOnly(bad).join('\n')).toMatch(/session\.ts must start/);
+    expect(checkServerOnly(bad).join('\n')).toMatch(/components\/bad\.tsx/);
+  });
 });

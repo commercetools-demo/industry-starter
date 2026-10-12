@@ -17,6 +17,12 @@ const LOCALE_NAV = [
 const restrict = (paths) => ({ 'no-restricted-imports': ['error', { paths }] });
 
 const CLIENT_BUILDER = { selector: "NewExpression[callee.name='ClientBuilder']", message: 'new ClientBuilder() is only allowed in lib/ct/client.ts (one apiRoot singleton).' };
+const RAW_HTTP_MESSAGE = 'no-raw-commercetools-http: never fetch() commercetools URLs directly; use apiRoot from lib/ct/client.ts (the SDK manages OAuth).';
+const RAW_HTTP = [
+  { selector: 'CallExpression[callee.name=\'fetch\'] Literal[value=/commercetools\\.com|CTP_(API|AUTH)_URL/]', message: RAW_HTTP_MESSAGE },
+  { selector: 'CallExpression[callee.name=\'fetch\'] TemplateElement[value.raw=/commercetools\\.com|CTP_(API|AUTH)_URL/]', message: RAW_HTTP_MESSAGE },
+  { selector: "CallExpression[callee.name='fetch'] MemberExpression[property.name=/^CTP_(API|AUTH)_URL$/]", message: RAW_HTTP_MESSAGE },
+];
 const FETCH_API = [
   { selector: "CallExpression[callee.name='fetch'] > Literal[value=/^\\/api\\//]", message: "Components must not call fetch('/api/...'); use a hook from hooks/ (SWR)." },
   { selector: "CallExpression[callee.name='fetch'] > TemplateLiteral > TemplateElement[value.raw=/^\\/api\\//]", message: "Components must not call fetch('/api/...'); use a hook from hooks/ (SWR)." },
@@ -28,7 +34,7 @@ export default defineConfig([
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts', 'eslint/fixtures/**', 'coverage/**']),
   { plugins: { malva }, rules: { 'malva/no-puck-in-server': 'off' } },
   // Single client.
-  { files: ['**/*.{ts,tsx,mjs}'], ignores: ['lib/ct/client.ts', '**/*.test.*', 'scripts/**', 'eslint/**'], rules: { 'no-restricted-syntax': ['error', CLIENT_BUILDER] } },
+  { files: ['**/*.{ts,tsx,mjs}'], ignores: ['lib/ct/client.ts', '**/*.test.*', 'scripts/**', 'eslint/**'], rules: { 'no-restricted-syntax': ['error', CLIENT_BUILDER, ...RAW_HTTP] } },
   // SDK only in lib/ct and lib/mappers (tests may build fixtures).
   { files: ['**/*.{ts,tsx}'], ignores: ['lib/ct/**', 'lib/mappers/**', '**/*.test.*'], rules: restrict(SDK) },
   {
@@ -37,7 +43,7 @@ export default defineConfig([
     rules: { 'no-restricted-imports': ['error', { paths: [SDK[1], { ...SDK[0], allowTypeImports: true }] }] },
   },
   // Hook-only fetching: no fetch('/api/...') in components or app pages.
-  { files: ['components/**/*.{ts,tsx}', 'app/**/*.tsx'], ignores: ['**/*.test.*'], rules: { 'no-restricted-syntax': ['error', CLIENT_BUILDER, ...FETCH_API] } },
+  { files: ['components/**/*.{ts,tsx}', 'app/**/*.tsx'], ignores: ['**/*.test.*'], rules: { 'no-restricted-syntax': ['error', CLIENT_BUILDER, ...RAW_HTTP, ...FETCH_API] } },
   // Locale-aware navigation only.
   { files: ['app/\\[locale\\]/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}'], ignores: ['**/*.test.*'], rules: restrict([...SDK, ...LOCALE_NAV]) },
   // createContext footgun: no Puck value imports in Server Components.

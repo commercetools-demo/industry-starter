@@ -23,6 +23,18 @@ describe('BFF boundary: Single client', () => {
   });
 });
 
+describe('BFF boundary: No raw HTTP to commercetools', () => {
+  it('No raw HTTP to commercetools', async () => {
+    const m = (await lint(fixture('raw-commercetools-http.bad.ts'), 'lib/other.ts')).join('\n');
+    expect(m.match(/no-raw-commercetools-http/g)).toHaveLength(3);
+    expect((await lint(fixture('raw-commercetools-http.bad.ts'), 'app/[locale]/x/page.tsx')).join('\n')).toMatch(/no-raw-commercetools-http/);
+  });
+  it('fetch of other hosts is fine, and lib/ct/client.ts is exempt', async () => {
+    expect(await lint("export const f = () => fetch('https://example.com/data');\n", 'lib/other.ts')).toEqual([]);
+    expect(await lint(fixture('raw-commercetools-http.bad.ts'), 'lib/ct/client.ts')).toEqual([]);
+  });
+});
+
 describe('BFF boundary: SDK outside lib/ct', () => {
   it('SDK outside lib/ct', async () => {
     expect((await lint(fixture('sdk-outside-lib.bad.tsx'), 'components/cart/Cart.tsx')).join('\n')).toMatch(/only allowed in lib\/ct/);

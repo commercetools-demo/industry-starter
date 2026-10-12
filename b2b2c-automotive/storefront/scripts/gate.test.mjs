@@ -21,7 +21,11 @@ describe('Gates and tests: clean scaffold', () => {
     expect(checkTokens(root)).toEqual([]);
     expect(checkMessages(root)).toEqual([]);
     expect(checkNoDevPages(root, {})).toEqual([]);
-    expect(checkNoHealthInRelease(root, { RELEASE: '1' })).toEqual([]);
+    // Workstream G ships the dev-only health route, so a development check passes and a release check names it.
+    expect(checkNoHealthInRelease(root, {})).toEqual([]);
+  });
+  it('a release build has no health route: the real route is the only one and the release gate names it', () => {
+    expect(checkNoHealthInRelease(root, { RELEASE: '1' }).join('\n')).toMatch(/app\/api\/health\/route\.ts/);
   });
   it('a release build has no dev pages: the specimen is the only dev page and the release gate names it', () => {
     expect(checkNoDevPages(root, { RELEASE: '1' }).join('\n')).toMatch(/app\/dev\/tokens\/page\.tsx/);

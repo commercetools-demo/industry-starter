@@ -239,3 +239,33 @@ Section 3 (manual tests): none required for G (machines verify everything).
 
 ## 10. Evidence to record
 `plans/evidence/G/`: `weak-secret-storefront.txt`, `weak-secret-portal.txt`, `health-storefront.txt`, `health-portal.txt`, `health-production-404.txt`, `set-cookie-storefront.txt`, `set-cookie-portal.txt`, `locale-switch.json`, `tamper.txt`, `secret-grep.txt`, `project.json`, `stores.md`, `spike-server-only-in-proxy.md` (kept or fallback, with the error text if any), and the `npm run check` tails.
+
+## Progress
+
+Storefront (J5). Portal tasks are tracked by the portal junior.
+
+- G-01 storefront: done (`lib/env.ts`, `instrumentation.ts`, `test/env.ts`)
+- G-02 storefront: done (`lib/ct/client.ts` with client-credentials, anonymous and password flows, `lib/ct/in-store.ts`, lint rule `no-raw-commercetools-http`; no admin client in the storefront, see Q-J5-03)
+- G-03 storefront: done (`lib/session-core.ts`, `lib/session.ts`, `Session` in `lib/types.ts`, `check-server-only` amended)
+- G-04 storefront: done (`lib/api.ts`, `test/api.ts`; `requireBusinessUnit` is portal only)
+- G-05 storefront: done (`lib/types.ts`, `lib/mappers/*`, `lib/ttl-cache.ts`, `lib/ct/stores.ts`; see Q-J5-01)
+- G-06 storefront: done (spike result: `server-only` import from the proxy is kept, `plans/evidence/G/spike-server-only-in-proxy.md`; `/checkout/return` exclusion added for O, Q-J5-04)
+- G-07 storefront: done (`app/api/locale/route.ts`)
+- G-08 storefront: done (`app/api/health/route.ts`)
+- G-09 storefront: partial (`lib/scopes.ts` and `lib/scopes.test.ts` done; the `verify:build` run with the real `.env.local` is M-G-03; `verify:build` needs the env variables, Q-J5-02)
+- G-10 storefront: done (`lib/mappers/customer-store.ts`)
+- G-11 storefront: partial (README done; live checks are M-G-01 to M-G-03)
+
+Portal (J7).
+
+- portal G-01: done (`lib/env.ts` with `validatePortalEnv`, `instrumentation.ts`, `test/env.ts`)
+- portal G-02: done (`lib/ct/client.ts`, `admin-client.ts`, `provisioning-client.ts`, lint rule `no-raw-commercetools-http` with the one exemption `lib/import/import-api.ts` for W-14; plus the as-associate flows R needs: `lib/ct/associate.ts`, `auth.ts`, `business-units.ts`)
+- portal G-03: done (`Session` in `lib/types.ts` incl. `pending` and `actingAs`, `lib/session-core.ts` with `applyBusinessContext`, `lib/session.ts`, `lib/roles.ts`, `check-server-only` amended)
+- portal G-04: done (`lib/api.ts` incl. `requireBusinessUnit`, `requireStore`, coded `ApiError`; `test/api.ts`)
+- portal G-05: done (`lib/types.ts`, `lib/mappers/*`, `lib/ttl-cache.ts`, `lib/ct/stores.ts` with `getStoreContext` and `getStoreChannelData`; see Q-J7-02)
+- portal G-06: n/a for the portal; replaced by R-17's proxy part, done here (`proxy.ts` bare path and signed-out redirect with validated `next`, `lib/next-path.ts`)
+- portal G-07: done (`app/api/locale/route.ts`)
+- portal G-08: done (`app/api/health/route.ts`, `lib/ct/seller/health.ts`)
+- portal G-09: partial (`lib/scopes.ts` and `lib/scopes.test.ts` done, `view_business_units` added, Q-J7-01; the `verify:build` run with the real `.env.local` is M-G-14)
+- portal G-10: n/a (storefront only)
+- portal G-11: partial (README done; live checks are M-G-11 to M-G-14)

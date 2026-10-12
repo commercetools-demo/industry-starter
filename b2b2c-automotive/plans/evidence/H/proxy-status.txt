@@ -1,0 +1,6 @@
+GET  /api/contentools/service/mau-reseller-south/configuration/theme      200
+PUT  /api/contentools/service/mau-reseller-south/configuration/theme      404
+GET  /api/contentools/service/proxy-script?url=https://example.com         404
+GET  /api/contentools/service/mau-reseller-south/configuration/header      404
+POST /api/contentools/service/mau-reseller-north/published/puck-pages/query 200
+(measured in Chrome against the fake Contentools, next dev port 3011)

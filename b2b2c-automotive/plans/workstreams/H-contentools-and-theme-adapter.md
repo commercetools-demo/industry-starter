@@ -270,3 +270,20 @@ Add (never wait on them):
 
 ## 10. Evidence to record
 `plans/evidence/H/`: `spike-ssr.md`, `theme-qa-green-1440.png`, `theme-qa-green-375.png`, `theme-qa-navy-1440.png`, `theme-default-1440.png`, `theme-hostile-1440.png`, `theme-contentools-down.png`, `first-paint-head.txt`, `proxy-status.txt`, `ttl.txt`, `jwt-custom-object.md`, `config-keys-before.md`, `config-keys-after.md`, optional `contentools-page.png`, and the `npm run check` tail.
+
+## Progress
+
+Storefront (J6). Portal parts belong to U and X.
+
+- H-01 done (`lib/contentools/origin.ts`; test `Only origin.ts reads the variable` scans for property reads; `lib/contentools/project-key.ts` is a thin seam for the project key, swap to G's `projectKey` if wanted)
+- H-02 done (`lib/contentools/puck.ts`)
+- H-03 done (`lib/theme/color.ts`)
+- H-04 done (`lib/theme/ramp.ts`; deltas refit, Q-J6-02)
+- H-05 done (`lib/theme/fonts.ts`)
+- H-06 done (`lib/theme/{adapter,default-theme,types,shadows,radius}`; `scripts/check-tokens.mjs` exempt list and `token-allowlist.json` updated; Q-J6-01)
+- H-07 done (`lib/contentools/theme.ts`, uses G's `lib/ttl-cache.ts`)
+- H-08 done (root layout `<style id="store-theme">`, `components/contentools/*`, dev pages `app/dev/theme/[store]` and `app/dev/contentools/[store]`; SSR spike: SSR works, `plans/evidence/H/spike-ssr.md`)
+- H-09 done (`app/api/contentools/[...path]/route.ts`, `lib/contentools/proxy-policy.ts`; the `x-store-key` deletion in `proxy.ts` was already done by G)
+- H-10 done offline (`scripts/contentools-theme.mjs`, fixtures, tests); not run against a live project, needs OA-02
+- H-11 partial: README section added; `npm run check` green; `verify:build` green with dummy env (Q-J6-05)
+- Browser verification (section 6) done against the fakes: steps 2 to 5, 8, 10; evidence `plans/evidence/H/storefront-*`. Steps 1, 9, 11 and section 7 pending OA-02 (M-H-2).
