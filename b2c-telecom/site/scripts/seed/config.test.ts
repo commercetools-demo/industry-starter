@@ -88,3 +88,14 @@ describe('repository hygiene', () => {
     }
   });
 });
+
+describe('assertTarget when npm swallowed the flags', () => {
+  it('explains that `--` must come before the script flags', () => {
+    process.env.npm_config_confirm_project = 'abc';
+    try {
+      expect(() => assertTarget({ envProjectKey: 'spec-test-b2c-telecom', confirmProject: undefined, mode: 'write' })).toThrow(/put `--` before the script flags/);
+    } finally {
+      delete process.env.npm_config_confirm_project;
+    }
+  });
+});

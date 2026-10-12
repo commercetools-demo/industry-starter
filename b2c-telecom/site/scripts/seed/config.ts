@@ -42,7 +42,9 @@ export function assertTarget(opts: { envProjectKey: string; confirmProject?: str
     );
   }
   if (mode === 'write' && confirmProject !== envProjectKey) {
-    throw new TargetError(`Refusing to write: pass --confirm-project <key> naming the target project (found "${envProjectKey}")`);
+    // `npm run <script> --flag value` is read by npm itself (the flag becomes npm_config_*, the value a stray argument); only what follows `--` reaches the script.
+    const swallowed = process.env.npm_config_confirm_project !== undefined ? ' npm took the flag itself: put `--` before the script flags, e.g. `npm run seed -- --confirm-project <key>`.' : '';
+    throw new TargetError(`Refusing to write: pass --confirm-project <key> naming the target project (found "${envProjectKey}").${swallowed}`);
   }
 }
 

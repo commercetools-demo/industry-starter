@@ -54,7 +54,7 @@ export async function main(argv: string[], deps: CleanupDiscountDeps = {}): Prom
     for (const code of retired.codes) log(`${execute ? 'removing ' : 'would remove'} discount code ${String(code.key ?? code.id)}`);
     for (const discount of retired.discounts) log(`${execute ? 'removing ' : 'would remove'} cart discount ${String(discount.key)}`);
     if (!execute) {
-      log('Read-only: nothing was removed. Pass --execute --confirm-project <key> to remove.');
+      log('Read-only: nothing was removed. Run `npm run seed:cleanup-discounts -- --execute --confirm-project <key>` to remove (the `--` matters: without it npm swallows the flags).');
       return EXIT.OK;
     }
     let failed = 0;
