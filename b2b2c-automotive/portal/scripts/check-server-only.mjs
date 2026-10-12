@@ -6,14 +6,16 @@ import { isTest, runCli, walk } from './fs-utils.mjs';
 const GUARD = /^\s*(\/\/[^\n]*\n|\/\*[\s\S]*?\*\/\s*)*import\s+['"]server-only['"];?/;
 const FORBIDDEN_IN_CLIENT = /from\s+['"]@\/lib\/(ct(\/|['"])|session|contentools\/(puck|theme))/;
 const IMPORT_SIDE_EFFECT = /import\s+['"]@\/lib\/(ct(\/|['"])|session|contentools\/(puck|theme))/;
-const isCode = (f) => /\.[tj]sx?$/.test(f) && !isTest(f);
+/** Pure modules the proxy imports (G-03): exactly these two are exempt from the guard; nothing else under lib/ is. */
+export const PURE_MODULES = ['session-core.ts', 'locale-redirect.ts'];
+const isCode =(f) => /\.[tj]sx?$/.test(f) && !isTest(f);
 
 export function checkServerOnly(root) {
   const problems = [];
   const lib = path.join(root, 'lib');
   const guarded = [
     ...walk(path.join(lib, 'ct')),
-    ...(existsSync(lib) ? readdirSync(lib).filter((f) => /^session.*\.ts$/.test(f)).map((f) => path.join(lib, f)) : []),
+    ...(existsSync(lib) ? readdirSync(lib).filter((f) => /^session.*\.ts$/.test(f) && !PURE_MODULES.includes(f)).map((f) => path.join(lib, f)) : []),
     ...walk(path.join(lib, 'contentools')).filter((f) => path.basename(f) !== 'origin.ts'),
   ].filter(isCode);
   for (const f of guarded) {

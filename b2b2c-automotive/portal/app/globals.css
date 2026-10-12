@@ -353,6 +353,13 @@
   /* theme:end */
 }
 
+/* Shell breakpoint (R-11): under 700 px (43.75rem) the sidebar rail becomes a drawer. The 1024 px icon-rail step is Tailwind's max-lg. */
+@custom-variant narrow {
+  @media (width < 43.75rem) {
+    @slot;
+  }
+}
+
 body {
   background: var(--color-bg-page);
   color: var(--color-text);

@@ -21,6 +21,20 @@ describe('Server-only boundary', () => {
       "lib/session-cookie.ts must start with import 'server-only'",
     ]);
   });
+  it('Pure modules are exempt but nothing else is', () => {
+    const root = tmp({
+      'lib/session-core.ts': 'export const pure = 1;',
+      'lib/locale-redirect.ts': 'export const pure = 2;',
+      'lib/session.ts': 'export {};',
+      'lib/session-extra.ts': 'export {};',
+      'lib/ct/helper.ts': 'export {};',
+    });
+    expect(checkServerOnly(root).sort()).toEqual([
+      "lib/ct/helper.ts must start with import 'server-only'",
+      "lib/session-extra.ts must start with import 'server-only'",
+      "lib/session.ts must start with import 'server-only'",
+    ]);
+  });
   it('Server-only boundary fails when a client file imports lib/ct', () => {
     const root = tmp({
       'lib/ct/index.ts': "import 'server-only';",

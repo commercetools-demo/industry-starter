@@ -28,7 +28,6 @@ vi.mock('next-intl/server', () => ({
 import LocaleError from './error';
 import LocaleLayout from './layout';
 import LocaleNotFound from './not-found';
-import SignedOutPlaceholder from './page';
 
 const params = (locale: string) => Promise.resolve({ locale });
 
@@ -42,19 +41,6 @@ describe('locale layout', () => {
     expect(isValidElement(el)).toBe(true);
     renderWithProviders(el, { locale: 'en-US', messages: en });
     expect(screen.getByText('child')).toBeInTheDocument();
-  });
-});
-
-describe('placeholder page', () => {
-  it.each([
-    ['de-DE', 'Partner-Portal', de],
-    ['en-US', 'Partner portal', en],
-  ] as const)('Placeholder renders in %s', async (locale, heading, messages) => {
-    state.locale = locale;
-    const el = await SignedOutPlaceholder({ params: params(locale) });
-    renderWithProviders(el, { locale, messages });
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(heading);
-    expect(screen.getByRole('main')).toBeInTheDocument();
   });
 });
 

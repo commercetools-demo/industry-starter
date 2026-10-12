@@ -43,6 +43,13 @@ const noClientBuilder = {
   selector: "NewExpression[callee.name='ClientBuilder']",
   message: 'new ClientBuilder() is allowed only in lib/ct/client.ts (single client).',
 };
+// Raw HTTP to commercetools bypasses the SDK's token handling (G-02, rule id no-raw-commercetools-http).
+const RAW_MESSAGE = 'Do not call commercetools with fetch (no-raw-commercetools-http); use apiRoot from lib/ct/client.ts.';
+const noRawCtHttp = [
+  { selector: "CallExpression[callee.name='fetch']:has(Literal[value=/commercetools\\.com/])", message: RAW_MESSAGE },
+  { selector: "CallExpression[callee.name='fetch']:has(TemplateElement[value.raw=/commercetools\\.com/])", message: RAW_MESSAGE },
+  { selector: "CallExpression[callee.name='fetch']:has(Identifier[name=/^CTP_(API|AUTH)_URL$/])", message: RAW_MESSAGE },
+];
 const noFetchApiLiteral = {
   selector: "CallExpression[callee.name='fetch'] > Literal[value=/^\\/api\\//]",
   message: "Do not call fetch('/api/...') in components or pages; use a hook in hooks/ (hook-only fetching).",
@@ -64,12 +71,12 @@ export default defineConfig([
   {
     files: ['**/*.{ts,tsx,mts,mjs}'],
     rules: {
-      'no-restricted-syntax': ['error', noClientBuilder],
+      'no-restricted-syntax': ['error', noClientBuilder, ...noRawCtHttp],
       'no-restricted-imports': restrict(),
     },
   },
-  // The one place the ClientBuilder may live.
-  { files: ['lib/ct/client.ts'], rules: { 'no-restricted-syntax': 'off' } },
+  // The one place the ClientBuilder may live. The Import API host is not served by the SDK (W-14), so its one file may call fetch.
+  { files: ['lib/ct/client.ts', 'lib/import/import-api.ts'], rules: { 'no-restricted-syntax': 'off' } },
   // SDK allowed in the server layer (admin and provisioning stay fenced).
   { files: ['lib/ct/**', 'lib/mappers/**'], rules: { 'no-restricted-imports': restrict({ sdk: false }) } },
   { files: ['lib/ct/seller/**'], rules: { 'no-restricted-imports': restrict({ sdk: false, admin: false }) } },
@@ -82,7 +89,7 @@ export default defineConfig([
   // Pages and components: no fetch('/api/...') (hooks only), locale-aware navigation only.
   {
     files: ['components/**/*.{ts,tsx}', 'app/**/*.tsx'],
-    rules: { 'no-restricted-syntax': ['error', noClientBuilder, noFetchApiLiteral, noFetchApiTemplate] },
+    rules: { 'no-restricted-syntax': ['error', noClientBuilder, ...noRawCtHttp, noFetchApiLiteral, noFetchApiTemplate] },
   },
   {
     files: ['app/[[]locale]/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}'],

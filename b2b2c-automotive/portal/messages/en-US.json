@@ -12,5 +12,185 @@
     "genericBody": "Please try again.",
     "notFoundTitle": "Page not found",
     "notFoundBody": "This address does not exist."
+  },
+  "nav": {
+    "label": "Main navigation",
+    "dashboard": "Dashboard",
+    "groups": {
+      "my-store": "My store",
+      "my-customers": "My customers",
+      "with-malva": "With Malva",
+      "company": "Company"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "catalog": "Catalog & pricing",
+      "bundles": "Bundles",
+      "import": "Product import",
+      "store": "Store & channels",
+      "content": "Content",
+      "marketing": "Marketing",
+      "email": "Email",
+      "customers": "Customers",
+      "subscriptions": "Subscriptions",
+      "returns": "Returns",
+      "reviews": "Reviews",
+      "partnership": "Brand partnership",
+      "company": "Company & team",
+      "account": "Account settings"
+    }
+  },
+  "shell": {
+    "skipToContent": "Skip to content",
+    "logoAlt": "Malva",
+    "brandName": "Malva",
+    "brandSuffix": "Partner Portal",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "searchLabel": "Search parts",
+    "searchPlaceholder": "Part number, OE number or VIN",
+    "vinInfo": "Vehicle lookup isn't enabled for this portal.",
+    "paletteButton": "Command palette",
+    "notificationsButton": "Notifications",
+    "themeButton": "Toggle theme",
+    "accountButton": "Account",
+    "signOut": "Sign out",
+    "switcherTitle": "Switch business unit and store",
+    "switcherUnits": "Business unit",
+    "switcherStores": "Store",
+    "storeFromParent": "From parent",
+    "storeExplicit": "Explicit store",
+    "unitCompany": "Company",
+    "unitDivision": "Division",
+    "switched": "Switched to {name}",
+    "switchFailed": "Switching failed. Try again.",
+    "role": {
+      "admin": "Admin",
+      "buyer": "Buyer"
+    },
+    "copilotLauncher": "Copilot",
+    "sidebarUser": "Signed in as"
+  },
+  "placeholderPage": {
+    "subtitle": "This page is built in a later step."
+  },
+  "forbidden": {
+    "title": "You don't have access to this page",
+    "body": "Insufficient permissions to perform this task",
+    "back": "Back to dashboard"
+  },
+  "permissions": {
+    "insufficient": "Insufficient permissions to perform this task"
+  },
+  "banner": {
+    "actingAs": "You are shopping as {customer}. Orders are placed on their behalf.",
+    "exit": "Exit customer session"
+  },
+  "palette": {
+    "title": "Command palette",
+    "placeholder": "Jump to a page, or type a part name or number",
+    "page": "Page",
+    "part": "Part",
+    "empty": "No matches.",
+    "close": "Close"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "unread": "{count} new",
+    "empty": "You're all caught up.",
+    "dismiss": "Dismiss",
+    "orderShipped": "{order} shipped",
+    "orderShippedSub": "Order",
+    "returnReceived": "Return {ref} received",
+    "returnReceivedSub": "Customer return"
+  },
+  "copilot": {
+    "title": "Store copilot",
+    "subtitle": "Changes always ask you to confirm first.",
+    "close": "Close copilot",
+    "open": "Ask the copilot",
+    "intro": "Ask where something is, or request a change in your store.",
+    "placeholder": "Ask or request a change",
+    "send": "Send",
+    "confirmTitle": "Confirm change",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "cancelled": "Cancelled. Nothing was changed.",
+    "done": "Done: {message}",
+    "failed": "Could not apply the change: {message}",
+    "error": "The copilot could not answer. Try again.",
+    "refused": "You don't have permission to do that. Insufficient permissions to perform this task",
+    "fallback": "I can point you to a page (try \"Where is Returns?\") or change things after you confirm. Nothing else is supported yet.",
+    "whereIs": "{page} is here:"
+  },
+  "auth": {
+    "logoAlt": "Malva",
+    "fillAll": "Fill in every field to continue.",
+    "invalid": "Email or password is incorrect.",
+    "generic": "Something went wrong. Try again.",
+    "email": "Email",
+    "password": "Password",
+    "signIn": {
+      "title": "Sign in",
+      "subtitle": "Access your Malva partner account",
+      "submit": "Sign in",
+      "submitting": "Signing in"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Register your business to join the Malva partner program",
+      "company": "Company name",
+      "name": "Your name",
+      "email": "Work email",
+      "submit": "Create account",
+      "submitting": "Creating account",
+      "passwordRule": "At least 12 characters.",
+      "created": "Account created. Awaiting Malva approval of your business.",
+      "failed": "We couldn't create that account. Try signing in.",
+      "companyInvalid": "Enter a company name of 2 to 80 characters.",
+      "emailInvalid": "Enter a valid email address.",
+      "passwordShort": "The password must have at least 12 characters."
+    },
+    "reset": {
+      "title": "Reset password",
+      "subtitle": "Enter your email to choose a new password",
+      "submit": "Continue",
+      "submitting": "Please wait",
+      "requested": "If that account exists, continue below to choose a new password.",
+      "disabled": "Password reset is not available in this environment.",
+      "newTitle": "Choose a new password",
+      "newSubtitle": "Use at least 12 characters",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "save": "Set new password",
+      "saving": "Saving",
+      "enter": "Enter a new password",
+      "short": "Too short",
+      "mismatch": "Passwords don't match",
+      "good": "Looks good",
+      "invalidToken": "This reset link is invalid or has expired.",
+      "success": "Password updated. Sign in with your new password."
+    },
+    "pending": {
+      "title": "Awaiting approval",
+      "subtitle": "Your business is registered",
+      "body": "A Malva operator still has to approve {business}. You can sign in as soon as it is approved.",
+      "bodyNoName": "A Malva operator still has to approve your business. You can sign in as soon as it is approved.",
+      "signOut": "Sign out"
+    },
+    "links": {
+      "createAccount": "Create account",
+      "forgot": "Forgot password?",
+      "backToSignIn": "Back to sign in"
+    },
+    "demoLogin": {
+      "label": "Demo account",
+      "placeholder": "Select a demo account",
+      "submit": "Sign in as demo user",
+      "submitting": "Signing in",
+      "loading": "Loading demo accounts",
+      "empty": "No demo accounts found. Run the seed.",
+      "error": "Demo sign-in failed. Try again."
+    }
   }
 }

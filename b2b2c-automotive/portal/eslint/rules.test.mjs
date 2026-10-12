@@ -21,6 +21,16 @@ describe('ESLint rules', () => {
     expect(await messages('single-client.bad.tsx', 'lib/ct/client.ts')).toEqual([]);
   });
 
+  it('No raw HTTP to commercetools', async () => {
+    const bad = text(await messages('raw-commercetools-http.bad.tsx', 'lib/foo.ts'));
+    expect(bad.match(/no-raw-commercetools-http/g)).toHaveLength(3);
+    expect(text(await messages('raw-commercetools-http.bad.tsx', 'app/api/x/route.ts'))).toMatch(/no-raw-commercetools-http/);
+    expect(text(await messages('raw-commercetools-http.bad.tsx', 'components/Foo.tsx'))).toMatch(/no-raw-commercetools-http/);
+    // good: the client file, and the Import API module
+    expect(await messages('raw-commercetools-http.bad.tsx', 'lib/ct/client.ts')).toEqual([]);
+    expect(await messages('raw-commercetools-http.bad.tsx', 'lib/import/import-api.ts')).toEqual([]);
+  });
+
   it('SDK outside lib/ct', async () => {
     expect(text(await messages('sdk-outside-lib-ct.bad.tsx', 'lib/foo.ts'))).toMatch(/no-restricted-imports.*lib\/ct\/\*\* and lib\/mappers/);
     expect(text(await messages('sdk-outside-lib-ct.bad.tsx', 'components/Foo.tsx'))).toMatch(/no-restricted-imports/);

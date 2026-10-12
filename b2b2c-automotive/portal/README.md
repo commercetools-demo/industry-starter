@@ -56,6 +56,35 @@ Two locales only. Add a message key to both `messages/de-DE.json` and `messages/
 
 `@emotion/react` ^11.14 is installed as the reference does. `puck-renderer` and `puck-editor` arrive transitively and are not installed explicitly. Test-runner note: `@vitejs/plugin-react` is on `^5` because v6 declares an optional peer on `@babel/core` 8, which conflicts with the nimbus dependency tree (`@babel/core` 7).
 
+## Server tier (workstream G)
+
+Environment: copy `.env.example` to `.env.local` and fill it in; `lib/env.ts` validates it (`instrumentation.ts` at server start, and on import of any client). A missing variable fails with `Missing environment variable <NAME>`, never with its value; `SESSION_SECRET` must be at least 32 characters. Every scope of every client is listed with a reason in `.env.example` and in `lib/scopes.ts`; `lib/scopes.test.ts` fails when the two differ.
+
+Three clients, three credential sets, one `new ClientBuilder(` (in `lib/ct/client.ts`):
+
+| Client | File | Credentials | Used for |
+| --- | --- | --- | --- |
+| Frontend `apiRoot` | `lib/ct/client.ts` | `CTP_*` | login, the as-associate chain (`lib/ct/associate.ts` `asAssociate(session)`), store, business unit and role reads |
+| Seller-admin `adminRoot` | `lib/ct/admin-client.ts` | `CTP_ADMIN_*` | seller administration and the Contentools JWT object, only from `app/api/seller/**`, `lib/ct/seller/**`, `lib/contentools/jwt.ts`, and only after `authorizeStore` |
+| Provisioning `getProvisioningRoot()` | `lib/ct/provisioning-client.ts` | `CTP_PROVISION_*` | the registration endpoint only (`app/api/auth/register/**`) |
+
+Session: `lib/session.ts` (`getSession`, `updateSession`, `setSessionCookie`, `clearSessionCookie`, `getLocale`) over the pure `lib/session-core.ts` (sign, verify, `applyLocale`, `applyStore`, `applyBusinessContext`) that the proxy also uses. The cookie `malva_portal_session` is a HS256 JWT, HTTP-only, SameSite lax, 30 days, ids and flags only (`customerId`, the five business unit and store fields, `accountGroupIds`, `cartId`, the locale triple, `pending`, `actingAs`). To add a session field, extend `Session` in `lib/types.ts` and `SESSION_KEYS` plus `pickSession` in `lib/session-core.ts` in the same commit. Roles are `ROLE.admin` (`mau-role-admin`) and `ROLE.buyer` (`mau-role-buyer`) in `lib/roles.ts`.
+
+Route Handler template (`lib/api.ts`): validate the session first, call `lib/ct`, return JSON; failures are `{ "error": "<safe message>" }` and never carry commercetools text.
+
+```ts
+export const POST = handle(async (request: Request) => {
+  const session = await getSession();
+  requireBusinessUnit(session);                      // 401 Not signed in, or 400 No active business unit
+  const body = await parseJson(request, schema);     // 400 with the first zod issue
+  return Response.json(await doTheWork(session, body)); // lib/ct/* makes the commercetools call
+});
+```
+
+`npm run build` and `verify:build` import the clients while collecting page data, so they need the variables of `.env.example` (a real `.env.local`, or dummy values such as the set in `test/env.ts`); there is no fallback key.
+
+`proxy.ts`: locale step, then a signed-out visitor outside `sign-in`, `register`, `reset`, `pending-approval` is redirected to `/{locale}/sign-in?next=<path>`; `sanitizeNext` in `lib/next-path.ts` validates the return path (use it again when sign-in redirects back). `/api/health` exists in development and test only (`check-no-health-in-release` keeps it out of a release).
+
 ## Deployment
 
 `netlify.toml` is in this directory. In the Netlify UI set Base directory to `b2b2c-automotive/portal`. `AGENTS.md` is the block `next dev` writes; commit it as is. Shared code with the storefront is copied, not packaged (no workspace).

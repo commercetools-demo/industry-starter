@@ -12,7 +12,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
-    setupFiles: ['./test/setup.ts'],
+    setupFiles: ['./test/env.ts', './test/setup.ts'],
     include: ['**/*.test.{ts,tsx,mjs}'],
     exclude: ['node_modules/**', '.next/**', 'eslint/fixtures/**'],
     // next-intl imports `next/navigation` without an extension; inline it so Vite resolves it.

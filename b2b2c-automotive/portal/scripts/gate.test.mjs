@@ -19,7 +19,12 @@ describe('Gates and tests', () => {
     expect(checkTokens(appRoot)).toEqual([]);
     expect(checkMessages(appRoot)).toEqual([]);
     expect(checkNoDevPages(appRoot)).toEqual([]);
-    expect(checkNoHealthInRelease(appRoot, { RELEASE: '1' })).toEqual([]);
+    // Workstream G ships the dev-only health route, so a development check passes and a release check names it.
+    expect(checkNoHealthInRelease(appRoot, {})).toEqual([]);
     expect(checkBundleSecretsDir(appRoot)).toEqual([]);
+  });
+
+  it('a release build names the dev-only health route', () => {
+    expect(checkNoHealthInRelease(appRoot, { RELEASE: '1' }).join('\n')).toMatch(/app\/api\/health\/route\.ts/);
   });
 });

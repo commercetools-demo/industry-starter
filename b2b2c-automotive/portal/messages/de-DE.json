@@ -12,5 +12,185 @@
     "genericBody": "Bitte versuchen Sie es erneut.",
     "notFoundTitle": "Seite nicht gefunden",
     "notFoundBody": "Diese Adresse gibt es nicht."
+  },
+  "nav": {
+    "label": "Hauptnavigation",
+    "dashboard": "Übersicht",
+    "groups": {
+      "my-store": "Mein Shop",
+      "my-customers": "Meine Kunden",
+      "with-malva": "Mit Malva",
+      "company": "Unternehmen"
+    },
+    "items": {
+      "dashboard": "Übersicht",
+      "catalog": "Katalog & Preise",
+      "bundles": "Bundles",
+      "import": "Produktimport",
+      "store": "Shop & Kanäle",
+      "content": "Inhalte",
+      "marketing": "Marketing",
+      "email": "E-Mail",
+      "customers": "Kunden",
+      "subscriptions": "Abonnements",
+      "returns": "Retouren",
+      "reviews": "Bewertungen",
+      "partnership": "Markenpartnerschaft",
+      "company": "Unternehmen & Team",
+      "account": "Kontoeinstellungen"
+    }
+  },
+  "shell": {
+    "skipToContent": "Zum Inhalt springen",
+    "logoAlt": "Malva",
+    "brandName": "Malva",
+    "brandSuffix": "Partner-Portal",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "searchLabel": "Teile suchen",
+    "searchPlaceholder": "Teilenummer, OE-Nummer oder FIN",
+    "vinInfo": "Die Fahrzeugsuche ist in diesem Portal nicht aktiviert.",
+    "paletteButton": "Befehlspalette",
+    "notificationsButton": "Benachrichtigungen",
+    "themeButton": "Design umschalten",
+    "accountButton": "Konto",
+    "signOut": "Abmelden",
+    "switcherTitle": "Geschäftseinheit und Shop wechseln",
+    "switcherUnits": "Geschäftseinheit",
+    "switcherStores": "Shop",
+    "storeFromParent": "Von übergeordneter Einheit",
+    "storeExplicit": "Eigener Shop",
+    "unitCompany": "Unternehmen",
+    "unitDivision": "Abteilung",
+    "switched": "Gewechselt zu {name}",
+    "switchFailed": "Der Wechsel ist fehlgeschlagen. Bitte erneut versuchen.",
+    "role": {
+      "admin": "Admin",
+      "buyer": "Einkäufer"
+    },
+    "copilotLauncher": "Copilot",
+    "sidebarUser": "Angemeldet als"
+  },
+  "placeholderPage": {
+    "subtitle": "Diese Seite wird in einem späteren Schritt gebaut."
+  },
+  "forbidden": {
+    "title": "Sie haben keinen Zugriff auf diese Seite",
+    "body": "Keine Berechtigung für diese Aufgabe",
+    "back": "Zurück zur Übersicht"
+  },
+  "permissions": {
+    "insufficient": "Keine Berechtigung für diese Aufgabe"
+  },
+  "banner": {
+    "actingAs": "Sie kaufen als {customer} ein. Bestellungen werden in deren Namen aufgegeben.",
+    "exit": "Kundensitzung beenden"
+  },
+  "palette": {
+    "title": "Befehlspalette",
+    "placeholder": "Zu einer Seite springen oder Teilename oder -nummer eingeben",
+    "page": "Seite",
+    "part": "Teil",
+    "empty": "Keine Treffer.",
+    "close": "Schließen"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "unread": "{count} neu",
+    "empty": "Alles erledigt.",
+    "dismiss": "Ausblenden",
+    "orderShipped": "{order} versandt",
+    "orderShippedSub": "Bestellung",
+    "returnReceived": "Retoure {ref} eingegangen",
+    "returnReceivedSub": "Kundenretoure"
+  },
+  "copilot": {
+    "title": "Shop-Copilot",
+    "subtitle": "Änderungen werden immer erst nach Ihrer Bestätigung ausgeführt.",
+    "close": "Copilot schließen",
+    "open": "Den Copilot fragen",
+    "intro": "Fragen Sie, wo etwas ist, oder beauftragen Sie eine Änderung in Ihrem Shop.",
+    "placeholder": "Fragen oder Änderung anfordern",
+    "send": "Senden",
+    "confirmTitle": "Änderung bestätigen",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "cancelled": "Abgebrochen. Es wurde nichts geändert.",
+    "done": "Erledigt: {message}",
+    "failed": "Die Änderung konnte nicht ausgeführt werden: {message}",
+    "error": "Der Copilot konnte nicht antworten. Bitte erneut versuchen.",
+    "refused": "Dafür fehlt Ihnen die Berechtigung. Keine Berechtigung für diese Aufgabe",
+    "fallback": "Ich kann auf eine Seite verweisen (zum Beispiel \"Wo ist Retouren?\") oder nach Ihrer Bestätigung Dinge ändern. Mehr wird noch nicht unterstützt.",
+    "whereIs": "{page} finden Sie hier:"
+  },
+  "auth": {
+    "logoAlt": "Malva",
+    "fillAll": "Füllen Sie alle Felder aus, um fortzufahren.",
+    "invalid": "E-Mail oder Passwort ist falsch.",
+    "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "signIn": {
+      "title": "Anmelden",
+      "subtitle": "Zugang zu Ihrem Malva-Partnerkonto",
+      "submit": "Anmelden",
+      "submitting": "Anmeldung läuft"
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "subtitle": "Registrieren Sie Ihr Unternehmen für das Malva-Partnerprogramm",
+      "company": "Firmenname",
+      "name": "Ihr Name",
+      "email": "Geschäftliche E-Mail",
+      "submit": "Konto erstellen",
+      "submitting": "Konto wird erstellt",
+      "passwordRule": "Mindestens 12 Zeichen.",
+      "created": "Konto erstellt. Die Freigabe Ihres Unternehmens durch Malva steht noch aus.",
+      "failed": "Wir konnten dieses Konto nicht erstellen. Versuchen Sie sich anzumelden.",
+      "companyInvalid": "Geben Sie einen Firmennamen mit 2 bis 80 Zeichen ein.",
+      "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein.",
+      "passwordShort": "Das Passwort muss mindestens 12 Zeichen haben."
+    },
+    "reset": {
+      "title": "Passwort zurücksetzen",
+      "subtitle": "Geben Sie Ihre E-Mail ein, um ein neues Passwort zu wählen",
+      "submit": "Weiter",
+      "submitting": "Bitte warten",
+      "requested": "Falls das Konto existiert, fahren Sie unten fort, um ein neues Passwort zu wählen.",
+      "disabled": "Das Zurücksetzen des Passworts ist in dieser Umgebung nicht verfügbar.",
+      "newTitle": "Neues Passwort wählen",
+      "newSubtitle": "Verwenden Sie mindestens 12 Zeichen",
+      "newPassword": "Neues Passwort",
+      "confirmPassword": "Passwort bestätigen",
+      "save": "Neues Passwort speichern",
+      "saving": "Wird gespeichert",
+      "enter": "Neues Passwort eingeben",
+      "short": "Zu kurz",
+      "mismatch": "Passwörter stimmen nicht überein",
+      "good": "Sieht gut aus",
+      "invalidToken": "Dieser Link zum Zurücksetzen ist ungültig oder abgelaufen.",
+      "success": "Passwort aktualisiert. Melden Sie sich mit Ihrem neuen Passwort an."
+    },
+    "pending": {
+      "title": "Freigabe ausstehend",
+      "subtitle": "Ihr Unternehmen ist registriert",
+      "body": "Ein Malva-Mitarbeiter muss {business} noch freigeben. Sie können sich anmelden, sobald die Freigabe erfolgt ist.",
+      "bodyNoName": "Ein Malva-Mitarbeiter muss Ihr Unternehmen noch freigeben. Sie können sich anmelden, sobald die Freigabe erfolgt ist.",
+      "signOut": "Abmelden"
+    },
+    "links": {
+      "createAccount": "Konto erstellen",
+      "forgot": "Passwort vergessen?",
+      "backToSignIn": "Zurück zur Anmeldung"
+    },
+    "demoLogin": {
+      "label": "Demokonto",
+      "placeholder": "Demokonto auswählen",
+      "submit": "Als Demo-Nutzer anmelden",
+      "submitting": "Anmeldung läuft",
+      "loading": "Demokonten werden geladen",
+      "empty": "Keine Demokonten gefunden. Führen Sie den Seed aus.",
+      "error": "Demo-Anmeldung fehlgeschlagen. Bitte erneut versuchen."
+    }
   }
 }
