@@ -26,18 +26,21 @@ export interface LineDraftArgs {
   parentLineId?: string | undefined;
   /** An offer the plan includes: added at price 0 (an external price) so the cart shows it without charging for it. */
   free?: boolean;
+  /** Sales channel whose prices apply (the line's distribution channel); undefined = the default channel. */
+  channelKey?: string | null | undefined;
 }
 
 type AddLineItemAction = Extract<CartUpdateAction, { action: 'addLineItem' }>;
 
 /** `addLineItem` with `recurrenceInfo` for monthly lines (none for one-time lines) and the `malva-line-item` custom fields. */
-export function addLineItemAction({ offer, variant, quantity, parentLineId, free }: LineDraftArgs): AddLineItemAction {
+export function addLineItemAction({ offer, variant, quantity, parentLineId, free, channelKey }: LineDraftArgs): AddLineItemAction {
   const fields: Record<string, string> = { offerKey: offer.key };
   if (parentLineId) fields.parentLineItemId = parentLineId;
   return {
     action: 'addLineItem',
     sku: variant.sku,
     quantity,
+    ...(channelKey ? { distributionChannel: { typeId: 'channel' as const, key: channelKey } } : {}),
     ...(free ? { externalPrice: { currencyCode: (variant.recurringPrice ?? variant.oneTimePrice)?.currencyCode ?? 'USD', centAmount: 0 } } : {}),
     ...(isRecurringVariant(offer, variant) ? { recurrenceInfo: recurrenceInfoDraft(lineRecurrence(monthlyKind(offer), (variant.termMonths ?? 0) as TermMonths)) } : {}),
     custom: { type: { typeId: 'type', key: 'malva-line-item' }, fields },

@@ -286,6 +286,11 @@ export interface CandidateEntry {
 
 // ===== K: eligibility and exclusivity =====
 export type CustomerType = 'consumer' | 'small-business' | 'employee';
+/** Whose prices the catalog read selects: the buyer's customer groups and sales channel (null = the default online channel, which has no channel prices). */
+export interface PriceScope {
+  groupKeys: string[];
+  channelKey: string | null;
+}
 export interface ServiceLocation {
   postalCode: string;
   country: CountryCode;
@@ -310,6 +315,8 @@ export interface BuyerContext {
   isExistingCustomer: boolean;
   /** An anonymous visitor who has not said whether they are a customer: offers restricted to new customers are not shown either. */
   existingUnspecified?: boolean;
+  /** Customer Group keys the buyer's prices and discounts are selected for: the account's, or the declared audience of an anonymous visitor. */
+  groupKeys?: string[];
   channel: string;
   now: Date;
   location?: ServiceLocation;

@@ -46,6 +46,13 @@ beforeEach(() => {
 });
 
 describe('addOfferLine', () => {
+  it('a buyer in a channel with prices: every line carries the distribution channel; the default channel sets none', async () => {
+    await addOfferLine('cart-1', { offer: phoneUnlimited, variant: variantOf(phoneUnlimited, 'MLV-PHN-UNL-M2M'), quantity: 1, channelKey: 'call-center' });
+    expect(actionsOf(0)[0]).toMatchObject({ action: 'addLineItem', distributionChannel: { typeId: 'channel', key: 'call-center' } });
+    await addOfferLine('cart-1', { offer: phoneEssential, variant: variantOf(phoneEssential, 'MLV-PHN-ESS-M2M'), quantity: 1, channelKey: null });
+    expect(actionsOf(1)[0]).not.toHaveProperty('distributionChannel');
+  });
+
   it('lines the offer replaces are removed in the same update as the add', async () => {
     await addOfferLine('cart-1', { offer: cable500, variant: variantOf(cable500, 'MLV-CBL-500-24M'), quantity: 1 });
     const planId = h().cart.lineItems[0]?.id as string;

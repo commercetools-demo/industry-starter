@@ -7,6 +7,7 @@ import { checkQuantity } from '@/lib/cart/quantity';
 import { codeStateInfo, mapCart } from '@/lib/mappers/cart';
 import { removalPlan } from '@/lib/offers/addons';
 import { cartGroupKeyOf } from '@/lib/offers/declared';
+import { distributionChannelOf } from './price-scope';
 import { negatedLines } from '@/lib/offers/dependencies';
 import { refersTo } from '@/lib/offers/refs';
 import { toDateOnly } from '@/lib/pricing/dates';
@@ -194,7 +195,7 @@ export async function addToBundle(session: SessionData, market: Market, input: A
     const groupKey = cartGroupKeyOf(buyer);
     let ct = existing ? await setCartCustomerGroup(existing, groupKey) : await createCartForSession(session, market, groupKey);
     if (removeLineId) ct = await removeLine(ct.id, removeLineId, { cascade: true, locale: market.locale });
-    const updated = await addOfferLine(ct.id, { offer: candidate, variant, quantity: input.quantity, parentLineId: guard.parentLineId, equipment, included, removeLineIds: [...replacedIds] });
+    const updated = await addOfferLine(ct.id, { offer: candidate, variant, quantity: input.quantity, parentLineId: guard.parentLineId, equipment, included, removeLineIds: [...replacedIds], channelKey: distributionChannelOf(buyer) });
     const mapped = await mapForMarket(updated, market);
     const notices: CartNotice[] = negated.length > 0 ? [{ code: 'REPLACED', addedName: candidate.name, removedNames: negated.map((entry) => entry.offer.name) }] : [];
     return { ...outcome(mapped.cart), ...(notices.length > 0 ? { notices } : {}), ...(updated.anonymousId ? { anonymousId: updated.anonymousId } : {}) };

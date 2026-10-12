@@ -86,6 +86,16 @@ describe('getBuyerContext', () => {
     expect(withId).toHaveBeenCalledWith({ ID: 'c1' });
   });
 
+  it('the call-center group puts a signed-in customer in the call-center channel; a visitor is always online', async () => {
+    getCustomerGroupKeys.mockResolvedValue({ g1: 'employee', g2: 'existing-customer', g3: 'small-business', g4: 'call-center' });
+    getSession.mockResolvedValue({ customerId: 'c1' });
+    customerExecute.mockResolvedValue({ body: { customerGroup: { id: 'g4' } } });
+    expect(await getBuyerContext()).toMatchObject({ channel: 'call-center', groupKeys: ['call-center'], customerType: 'consumer' });
+    getSession.mockResolvedValue({});
+    declaredValue.mockReturnValue('employee:no');
+    expect(await getBuyerContext()).toMatchObject({ channel: 'online', groupKeys: ['employee'] });
+  });
+
   it('the existing-customer group sets existing', async () => {
     getSession.mockResolvedValue({ customerId: 'c1' });
     customerExecute.mockResolvedValue({ body: { customerGroup: { id: 'g2' } } });

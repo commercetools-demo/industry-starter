@@ -32,8 +32,8 @@
 ## 5. Buyer context, group and channel pricing
 
 - [x] 5.1 Declared-context cookie and `buyer-context.ts` resolution for anonymous sessions, enum validation, signed-in sessions ignore it; apply the declared audience as the anonymous cart's customer group [SKILL: commercetools-storefront]
-- [ ] 5.2 Resolve channel (`online`, or `call-center` by customer group) in `buyer-context.ts`; set `distributionChannel` on cart line items [SKILL: commercetools-storefront]
-- [ ] 5.3 Read catalog prices by group and channel, key the catalog cache by market, group and channel [SKILL: commercetools-commerce-patterns]
+- [x] 5.2 Resolve channel (`online`, or `call-center` by customer group) in `buyer-context.ts`; set `distributionChannel` on cart line items [SKILL: commercetools-storefront]
+- [x] 5.3 Read catalog prices by group and channel, key the catalog cache by market, group and channel [SKILL: commercetools-commerce-patterns]
 - [ ] 5.4 Card-vs-cart price parity test over every seeded offer, audience and channel against the fake engine
 
 ## 6. Pricing display fixes

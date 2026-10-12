@@ -30,7 +30,7 @@ import {
   attrStringSet,
   type RawAttribute,
 } from './attributes';
-import { selectFinancedOptions, selectPrices, selectRecurringPrices, type RawPrice } from './price';
+import { selectFinancedOptions, selectPrices, selectRecurringPrices, type RawPrice, type ScopeInput } from './price';
 
 type Attrs = ReadonlyArray<RawAttribute> | undefined;
 
@@ -154,6 +154,8 @@ export interface OfferContext {
   market: Market;
   categoryIdToKey: Record<string, string>;
   now: Date;
+  /** The buyer's price scope (customer group and channel); absent = standard prices. */
+  scope?: ScopeInput;
 }
 
 /** Drops `undefined` values so the result is plain JSON (the cache and the client boundary serialise it). */
@@ -165,7 +167,7 @@ function mapVariant(variant: ProductVariant, isMaster: boolean, kind: OfferKind,
   const attrs = variant.attributes;
   const sku = variant.sku ?? '';
   const prices = (variant.prices ?? []) as RawPrice[];
-  const selected = selectPrices(prices, ctx.market, ctx.now, sku);
+  const selected = selectPrices(prices, ctx.market, ctx.now, sku, ctx.scope);
   const term = oneOf(Object.keys(TERMS) as TermKey[], attrEnumKey(attrs, 'contract-term')) ?? null;
   const plain: OfferVariant['attributes'] = {};
   for (const name of ['color', 'memory-gb', 'contract-term', 'charge-type']) {

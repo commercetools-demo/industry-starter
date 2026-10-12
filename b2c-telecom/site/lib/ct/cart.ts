@@ -176,6 +176,8 @@ export interface AddOfferLineArgs {
   equipment?: { offer: Offer; variant: OfferVariant }[];
   /** Lines (and their dependents) the offer replaces: removed in the same cart update as the add (negated offers). */
   removeLineIds?: string[];
+  /** The buyer's sales channel when it has channel prices: set as the lines' distribution channel so the engine selects them. */
+  channelKey?: string | null | undefined;
   /** Plans: the offers the plan includes, added after it as child lines at price 0 (they go with the plan and cannot be removed alone). */
   included?: { offer: Offer; variant: OfferVariant }[];
 }
@@ -234,7 +236,7 @@ export async function addOfferLine(cartId: string, args: AddOfferLineArgs): Prom
     const known = new Set(fresh.lineItems.map((line) => line.id));
     const fee = isPlan(offer) ? activationFeeOf(offer, variant) : null;
     const removals: CartUpdateAction[] = (args.removeLineIds ?? []).filter((id) => fresh.lineItems.some((line) => line.id === id)).map((id) => ({ action: 'removeLineItem', lineItemId: id }));
-    const actions: CartUpdateAction[] = [...removals, addLineItemAction({ offer, variant, quantity: lineQuantity, parentLineId })];
+    const actions: CartUpdateAction[] = [...removals, addLineItemAction({ offer, variant, quantity: lineQuantity, parentLineId, channelKey: args.channelKey })];
     const feeExists = fresh.customLineItems.some((item) => item.slug === feeSlug(offer.key));
     if (fee && !feeExists) actions.push(addFeeAction(offer.key, lineQuantity, fee));
 
@@ -252,7 +254,7 @@ export async function addOfferLine(cartId: string, args: AddOfferLineArgs): Prom
       const before = new Set(cart.lineItems.map((line) => line.id));
       cart = await updateCart(
         cart,
-        equipment.map((entry) => addLineItemAction({ offer: entry.offer, variant: entry.variant, quantity: 1, parentLineId: added.id })),
+        equipment.map((entry) => addLineItemAction({ offer: entry.offer, variant: entry.variant, quantity: 1, parentLineId: added.id, channelKey: args.channelKey })),
       );
       const recurringSkus = new Set(equipment.filter((entry) => isRecurringVariant(entry.offer, entry.variant)).map((entry) => entry.variant.sku));
       const created = cart.lineItems.filter((line) => !before.has(line.id) && recurringSkus.has(line.variant.sku ?? ''));
@@ -266,7 +268,7 @@ export async function addOfferLine(cartId: string, args: AddOfferLineArgs): Prom
       try {
         cart = await updateCart(
           cart,
-          args.included.map((entry) => addLineItemAction({ offer: entry.offer, variant: entry.variant, quantity: lineQuantity, parentLineId: added.id, free: true })),
+          args.included.map((entry) => addLineItemAction({ offer: entry.offer, variant: entry.variant, quantity: lineQuantity, parentLineId: added.id, free: true, channelKey: args.channelKey })),
         );
       } catch (error) {
         // The plan itself is added and priced; a failed included line only means the cart does not list it yet.

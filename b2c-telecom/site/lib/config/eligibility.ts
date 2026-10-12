@@ -14,6 +14,9 @@ export const BUYER_CONTEXT_COOKIE_MAX_AGE = 2_592_000; // 30 days
 export const GROUP_EMPLOYEE = 'employee';
 export const GROUP_SMALL_BUSINESS = 'small-business';
 export const GROUP_EXISTING_CUSTOMER = 'existing-customer';
+/** Agents' customers: their group puts the buyer in the call-center sales channel (a visitor cannot choose a channel). */
+export const GROUP_CALL_CENTER = 'call-center';
+export const CHANNEL_CALL_CENTER = 'call-center';
 
 /** First match wins. */
 export const CUSTOMER_TYPE_PRIORITY: readonly CustomerType[] = ['employee', 'small-business', 'consumer'];
