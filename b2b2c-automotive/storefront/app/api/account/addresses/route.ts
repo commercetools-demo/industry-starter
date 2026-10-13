@@ -7,11 +7,15 @@ import { addressBody } from '@/lib/account/address-schema';
 import { parseJson } from '@/lib/api';
 import { addAddress, listAddresses } from '@/lib/ct/account-addresses';
 import { getStoreContext } from '@/lib/ct/stores';
+import { isImpersonating } from '@/lib/impersonation/state';
 
 const countriesOf = async (storeKey: string): Promise<string[]> => (await getStoreContext(storeKey))?.countries ?? [];
 
 export const GET = accountHandle(async () => {
-  const { storeKey, customerId } = await accountSession();
+  const session = await accountSession();
+  const { storeKey, customerId } = session;
+  // shop-as (C21): no addresses, and no read of them at all
+  if (isImpersonating(session)) return Response.json({ addresses: [], defaultShippingAddressId: null, countries: await countriesOf(storeKey) }, { headers: NO_STORE });
   const [book, countries] = await Promise.all([listAddresses(storeKey, customerId), countriesOf(storeKey)]);
   return Response.json({ ...book, countries }, { headers: NO_STORE });
 });

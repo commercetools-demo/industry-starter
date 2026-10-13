@@ -5,6 +5,9 @@
 import 'server-only';
 import type { Order } from '@commercetools/platform-sdk';
 import { getTranslations } from 'next-intl/server';
+import { maskOrderPage } from '@/lib/account/shop-as-mask';
+import { isImpersonating } from '@/lib/impersonation/state';
+import { getSession } from '@/lib/session';
 import { returnEligibility, type ReturnableOrder } from '@/lib/account/returns';
 import { getAccountOrder } from '@/lib/ct/account-orders';
 import { PICKUP_BRANCH_FIELD } from '@/lib/ct/delivery';
@@ -42,5 +45,7 @@ export async function loadAccountOrder(store: string, locale: string, customerId
     savingFallback: cartT('savingFallback'),
   });
   const eligibility = returnEligibility(order as unknown as ReturnableOrder, { locale, windowDays: ctx.settings.returnWindowDays });
-  return { order, view, ctx, eligibility, returns: mapReturns(order, locale) };
+  const page = { order, view, ctx, eligibility, returns: mapReturns(order, locale) };
+  // shop-as (Q-V25, C21): one place for the three order pages
+  return isImpersonating(await getSession()) ? maskOrderPage(page) : page;
 }

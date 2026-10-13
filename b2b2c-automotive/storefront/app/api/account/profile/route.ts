@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { accountHandle, accountSession, NO_STORE } from '@/lib/account/errors';
 import { parseJson } from '@/lib/api';
 import { getProfile, updateProfile } from '@/lib/ct/account-customer';
+import { isImpersonating, maskAccountProfile } from '@/lib/impersonation/state';
 
 const body = z.object({
   firstName: z.string().trim().max(100).optional(),
@@ -20,8 +21,9 @@ const body = z.object({
 });
 
 export const GET = accountHandle(async () => {
-  const { storeKey, customerId } = await accountSession();
-  return Response.json({ profile: await getProfile(storeKey, customerId) }, { headers: NO_STORE });
+  const session = await accountSession();
+  const profile = await getProfile(session.storeKey, session.customerId);
+  return Response.json({ profile: isImpersonating(session) ? maskAccountProfile(profile) : profile }, { headers: NO_STORE }); // shop-as: masked (C21)
 });
 
 export const PUT = accountHandle(async (request: Request) => {

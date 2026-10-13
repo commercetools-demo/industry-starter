@@ -52,6 +52,11 @@ export function maskAccountCustomer(customer: AccountCustomer): AccountCustomer 
   return { ...customer, email: maskEmail(customer.email), mobile: null, addresses: [], defaultShippingAddressId: null, defaultBillingAddressId: null };
 }
 
+/** The same rule for the profile read of the account area: masked e-mail and no phone. */
+export function maskAccountProfile<T extends { email: string; mobile: string | null }>(profile: T): T {
+  return { ...profile, email: maskEmail(profile.email), mobile: null };
+}
+
 /** `anna.beispiel@example.de` becomes `a***@e***.de` (same rule as the portal's lists). */
 export function maskEmail(email: string): string {
   const at = email.lastIndexOf('@');

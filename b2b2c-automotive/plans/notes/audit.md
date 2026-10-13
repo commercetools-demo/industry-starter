@@ -12,4 +12,6 @@
 
 The report lists 17 (portal) and 14 (storefront) vulnerabilities because `npm audit` counts every dependent of those two packages (the `@commercetools-demo/puck-*` family, `@commercetools/nimbus`); there is no safe upgrade to apply: `npm audit fix` offers nothing for these two, and forcing the suggested downgrades would break the Contentools managers. No lockfile was changed.
 
+Rerun 2026-10-12 (J25) with no lockfile change since: portal 17 (6 moderate, 11 high), storefront 14 (6 moderate, 8 high), same two root advisories, nothing critical.
+
 Gate G06 ("no high or critical") is therefore met with one documented high exception (`braces`, build-time only). Owner sign-off of the exception: part of M-X-03.

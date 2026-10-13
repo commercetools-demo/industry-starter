@@ -6,7 +6,9 @@
 //   public    no session needed (sign-in, registration, locale, catalogue helpers); the store comes from the session set by proxy.ts
 //   cart      anonymous or signed in, but only the cart of the session; no store session is a refusal, never another visitor's cart
 //   customer  a signed-in shopper of the session's store: 401 without a customer, every query scoped by customer id and store key
-//   token     a signed single-use token or a private link is the credential (shop-as hand-off, order claim)
+//             While a seller shops as the customer (`session.impersonatedBy`) every non-GET account route is 403 `impersonation-restricted`
+//             (guard in `accountHandle`) and the personal GET routes answer masked or empty data (Q-V25, attack C21).
+//   token   a signed single-use token or a private link is the credential (shop-as hand-off, order claim)
 //   dev       development helper: 404 in production (also checked by check-no-dev-pages and the build)
 // State-changing methods are additionally gated by the same-origin check of proxy.ts (`lib/security/api-gate.ts`); `/api/impersonate` is the one exemption.
 
@@ -22,16 +24,16 @@ export interface RoutePolicy {
 const p = (pattern: string, methods: RoutePolicy['methods'], extra: Pick<RoutePolicy, 'note'> = {}): RoutePolicy => ({ pattern, methods, ...extra });
 
 export const ROUTE_POLICY: readonly RoutePolicy[] = [
-  p('/api/account/addresses', { GET: 'customer', POST: 'customer' }),
+  p('/api/account/addresses', { GET: 'customer', POST: 'customer' }, { note: 'shop-as: GET answers an empty list, POST is 403' }),
   p('/api/account/addresses/[id]', { PUT: 'customer', PATCH: 'customer', DELETE: 'customer' }),
   p('/api/account/delete', { POST: 'customer' }),
   p('/api/account/email', { POST: 'customer' }),
   p('/api/account/orders/[orderNumber]/reorder', { POST: 'customer' }),
   p('/api/account/orders/[orderNumber]/return', { POST: 'customer' }),
   p('/api/account/password', { POST: 'customer' }),
-  p('/api/account/payment-methods', { GET: 'customer' }),
+  p('/api/account/payment-methods', { GET: 'customer' }, { note: 'shop-as: answers an empty list' }),
   p('/api/account/payment-methods/[id]', { DELETE: 'customer' }),
-  p('/api/account/profile', { GET: 'customer', PUT: 'customer' }),
+  p('/api/account/profile', { GET: 'customer', PUT: 'customer' }, { note: 'shop-as: GET masks e-mail and phone, PUT is 403' }),
   p('/api/account/subscriptions', { GET: 'customer' }),
   p('/api/account/subscriptions/[id]', { PUT: 'customer' }),
   p('/api/auth/demo-accounts', { GET: 'public' }, { note: '404 unless DEMO_LOGIN_ENABLED; never in production (check-no-demo-login)' }),

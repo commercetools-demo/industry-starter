@@ -3,6 +3,7 @@
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { ApiError, handle, parseJson } from '@/lib/api';
+import { clientIp } from '@/lib/auth/client-ip';
 import { getVehicleById } from '@/lib/ct/vehicles';
 import { getProvider, isLookupEnabled } from '@/lib/vehicles';
 import { PLATE_COUNTRIES, type LookupResult } from '@/lib/vehicles/provider';
@@ -19,7 +20,7 @@ const limiter = createRateLimiter({ limit: 10, windowMs: 60_000 });
 
 function callerKey(request: Request): string {
   const cookie = /(?:^|;\s*)malva_session=([^;]+)/.exec(request.headers.get('cookie') ?? '')?.[1];
-  const raw = cookie ?? request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local';
+  const raw = cookie ?? clientIp(request);
   return createHash('sha256').update(raw).digest('hex');
 }
 

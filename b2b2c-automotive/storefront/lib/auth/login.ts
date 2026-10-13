@@ -5,6 +5,7 @@
 // (garage merge). No password or token is stored. Throws `AuthError` for bad credentials (one failure for every reason).
 import 'server-only';
 import { runSignInHooks } from '@/lib/auth';
+import { clientIp } from '@/lib/auth/client-ip';
 import { signIn } from '@/lib/ct/auth';
 import { endedSession } from '@/lib/impersonation/state';
 import { mapCustomer } from '@/lib/mappers/customer';
@@ -17,7 +18,8 @@ export { AuthError } from '@/lib/ct/auth';
 // Per server instance and client address: ten attempts in fifteen minutes (protects the customer store, not a security boundary).
 export const loginLimiter = createRateLimiter({ limit: 10, windowMs: 15 * 60 * 1000 });
 
-export const clientKey = (request: Request): string => request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+/** The limiter key: the address the host's proxy vouches for, never the first (client-supplied) `x-forwarded-for` value (Q-X09). */
+export const clientKey = (request: Request): string => clientIp(request);
 
 export interface LoginResult {
   customer: AccountCustomer;

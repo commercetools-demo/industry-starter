@@ -57,7 +57,7 @@ Errors leave as `{ "error": "<safe message>" }` (401 `Not signed in`, 403, 404 `
 | `npm run dev` / `build` / `start` | Next.js |
 | `npm run lint` / `typecheck` / `test` | ESLint, `tsc --noEmit`, Vitest |
 | `npm run check` | the whole quality gate (below) |
-| `npm run verify:build` | `next build`, then route, health-route and bundle-secret checks |
+| `npm run verify:build` | `next build`, then route, health-route and bundle-secret checks. First it runs `scripts/check-build-env.mjs`: with `RELEASE=1` (or a production Netlify or Vercel context) `PORTAL_ORIGIN` and `CSP_IMG_HOSTS` must be set in the BUILD environment as https origins (next.config.ts bakes them into the headers); other builds are not checked |
 
 ## Gate (`npm run check`)
 
@@ -70,6 +70,8 @@ Errors leave as `{ "error": "<safe message>" }` (401 `Not signed in`, 403, 404 `
 - `check-messages`: only `de-DE.json` and `en-US.json`, same keys and placeholders, no empty values, every used key exists.
 - `check-routes`, `check-no-dev-pages`, `check-no-health-in-release`: release builds (`RELEASE=1`, or `NODE_ENV=production` with `CONTEXT=production`) contain no `/dev` route and no `app/api/health/route.ts`.
 - `check-bundle-secrets` (in `verify:build`): no secret value in `.next/static`.
+- `check-demo-reset`: `DEMO_ONSCREEN_RESET` is `true` or `false` (the one spelling of both apps, Q-X10; "on" fails); `true` in a production build also needs `DEMO_RESET_ACKNOWLEDGED=true`.
+- `check-build-env` (in `verify:build`): see the table above. Rate limiters take the client address from `CLIENT_IP_HEADER` or the rightmost `x-forwarded-for` entry (`TRUSTED_PROXY_HOPS`), never the first one (Q-X09; `.env.example`).
 
 ## Design tokens
 

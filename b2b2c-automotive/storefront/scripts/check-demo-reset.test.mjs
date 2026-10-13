@@ -20,6 +20,11 @@ describe('Gates and tests: on-screen reset in production', () => {
     expect(checkDemoReset({ NODE_ENV: 'development', DEMO_ONSCREEN_RESET: 'true' })).toEqual({ problems: [], notices: [] });
     expect(checkDemoReset({})).toEqual({ problems: [], notices: [] });
   });
+  it('Q-X10: one spelling in both apps: "on" or "yes" fails the check, " TRUE " counts as true like the app reads it', () => {
+    expect(checkDemoReset({ NODE_ENV: 'development', DEMO_ONSCREEN_RESET: 'on' }).problems.join('\n')).toContain('DEMO_ONSCREEN_RESET=true');
+    expect(checkDemoReset({ NODE_ENV: 'production', DEMO_ONSCREEN_RESET: 'yes' }).problems).toHaveLength(1);
+    expect(checkDemoReset({ NODE_ENV: 'production', DEMO_ONSCREEN_RESET: ' TRUE ' }).problems).toHaveLength(1);
+  });
   it('production without the flag passes silently', () => {
     expect(checkDemoReset({ NODE_ENV: 'production' })).toEqual({ problems: [], notices: [] });
     expect(checkDemoReset({ NODE_ENV: 'production', DEMO_ONSCREEN_RESET: 'false' })).toEqual({ problems: [], notices: [] });

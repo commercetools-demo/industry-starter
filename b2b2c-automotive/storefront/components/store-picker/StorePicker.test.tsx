@@ -96,6 +96,10 @@ function Outside() {
 }
 
 function renderPicker(initial = state.branches) {
+  // The SWR cache is seeded with `initial` and revalidates against the fetch mock as soon as it mounts. If the mock answered with different
+  // data (another `selectedKey`), the revalidation could land before the dialog opens and change the branch the picker focuses first: a race
+  // that made the arrow key test flaky under load. Both sides now serve the same response.
+  state.branches = initial;
   return renderWithProviders(
     <StorePickerHost initial={initial}>
       <StoreChip />
@@ -188,6 +192,7 @@ describe('Choose a store from list or map: list and map', () => {
   });
   it('arrow keys move the focused row and aria-activedescendant follows', async () => {
     renderPicker(branchesResponse({ chosen: true, selectedKey: 'mau-br-north-berlin' }));
+    await waitFor(() => expect(calls('/api/store-context/branches').length).toBeGreaterThan(0)); // the revalidation has landed before the dialog opens: the worst case of the old race
     const d = await openFromChip();
     const list = within(d).getByRole('listbox', { name: 'Branches' });
     list.focus();

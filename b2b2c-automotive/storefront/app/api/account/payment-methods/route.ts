@@ -5,10 +5,13 @@
 import { accountHandle, accountSession, NO_STORE } from '@/lib/account/errors';
 import { listPaymentMethods } from '@/lib/ct/account-payment-methods';
 import { listSubscriptions } from '@/lib/ct/account-subscriptions';
+import { isImpersonating } from '@/lib/impersonation/state';
 import { getLocale } from '@/lib/session';
 
 export const GET = accountHandle(async () => {
-  const { storeKey, customerId } = await accountSession();
+  const session = await accountSession();
+  const { storeKey, customerId } = session;
+  if (isImpersonating(session)) return Response.json({ methods: [], hasSubscriptions: false }, { headers: NO_STORE }); // shop-as (C21): no card data
   const { locale } = await getLocale();
   const [methods, subscriptions] = await Promise.all([listPaymentMethods(customerId, locale), listSubscriptions(storeKey, customerId, locale)]);
   return Response.json({ methods, hasSubscriptions: subscriptions.some((s) => s.status === 'active' || s.status === 'paused') }, { headers: NO_STORE });

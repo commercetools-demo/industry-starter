@@ -107,6 +107,18 @@ describe('C17 and C18: every account route refuses a visitor with no signed-in c
   });
 });
 
+describe('C21: the impersonated persona (a seller shopping as a customer)', () => {
+  it('every non-GET account route is 403 impersonation-restricted and commercetools is not called', async () => {
+    as({ ...asShopper('store-a'), impersonatedBy: 'seller-1', impJti: 'j', impAbs: 9e12, impImpExp: 9e12 });
+    for (const c of ofAccess('customer').filter((x) => x.policy.pattern.startsWith('/api/account/') && MUTATING.has(x.method))) {
+      const res = await run(c.policy.pattern, c.method);
+      expect(res.status, label(c)).toBe(403);
+      expect(await res.json(), label(c)).toMatchObject({ error: 'impersonation-restricted' });
+    }
+    expect(traps.touched).toBe(0);
+  });
+});
+
 describe('cart routes: a visitor with no store session gets no cart and commercetools is not called', () => {
   it.each(ofAccess('cart').map((c) => [label(c), c] as const))('%s', async (_name, c) => {
     const res = await run(c.policy.pattern, c.method);

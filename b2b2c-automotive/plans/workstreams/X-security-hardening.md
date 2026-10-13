@@ -340,7 +340,9 @@ References: OA-02 (Contentools), OA-05 (Stripe test account, connector, Checkout
 
 The table of every route, its guard and its test is generated into `plans/evidence/X/route-inventory.md` from `lib/authz/route-policy.ts` in both apps (portal 107 routes lines, storefront 44).
 
-## Deferred to after Q (apply only once J23's workstream Q is committed; re-read the files first)
+## Shop-as protection of the account area (C21, Q-V25): applied by J25 (2026-10-12)
+
+Built as the patch below, plus: `maskAccountProfile` in `lib/impersonation/state.ts`, `lib/account/shop-as-mask.ts` (order pages, applied in the shared loader `lib/ct/account-order-page.ts`), and the tests `lib/account/impersonation-guard.test.ts`, `shop-as-mask.test.ts` and the impersonated persona in `lib/authz/route-policy.test.ts`. The browser check is M-X-09. The text below is the original plan.
 
 Attack C21 and Q-V25: while `session.impersonatedBy` is set (a seller shops as a customer) the account routes must refuse writes and must not return personal data. All twelve account routes of the storefront (`app/api/account/**`) are wrapped by `accountHandle` in `lib/account/errors.ts`, so one guard covers the writes. Patch 1, in `accountHandle`, before `fn` runs:
 
@@ -353,7 +355,7 @@ if (request instanceof Request && request.method !== 'GET' && request.method !==
 }
 ```
 
-Patch 2 (reads), mask what `/api/auth/me` already masks: in `GET /api/account/profile` and `GET /api/account/addresses` return `maskAccountCustomer(customer)` (from `lib/impersonation/state.ts`) and an empty address list when `session.impersonatedBy` is set; `GET /api/account/payment-methods` returns `[]`. The server-rendered account pages under `(account)` must apply the same masking (they read through `lib/ct/account-*.ts`; put the check in the loader the pages share, not in each page). Tests to add next to `route-policy.test.ts`: for every non-GET account route, a session with `impersonatedBy` gets 403 `impersonation-restricted` and the commercetools trap count stays 0; the three GET routes above return no e-mail, phone, address or card data. Then tick M-X-08 and remove this section's "deferred" wording.
+Patch 2 (reads), mask what `/api/auth/me` already masks: in `GET /api/account/profile` and `GET /api/account/addresses` return `maskAccountCustomer(customer)` (from `lib/impersonation/state.ts`) and an empty address list when `session.impersonatedBy` is set; `GET /api/account/payment-methods` returns `[]`. The server-rendered account pages under `(account)` must apply the same masking (they read through `lib/ct/account-*.ts`; put the check in the loader the pages share, not in each page). Tests to add next to `route-policy.test.ts`: for every non-GET account route, a session with `impersonatedBy` gets 403 `impersonation-restricted` and the commercetools trap count stays 0; the three GET routes above return no e-mail, phone, address or card data. Then tick M-X-08 (done at unit level; M-X-09 is the browser half).
 
 ## Progress
 
@@ -375,3 +377,12 @@ J24, 2026-10-12. Gates: `npm run check` and `npm run verify:build` (dummy enviro
 - X-15: report text delivered in the hand-off (J24's final answer); the harness refused a report file.
 - New: `check-demo-reset.mjs` for the portal; `PORTAL_ORIGIN` for the storefront framing rule; `app/robots.ts`. Questions Q-X06 to Q-X15, manual items M-X-05 to M-X-08.
 - Open: C21 (patch above, one high finding), the browser, Stripe and live-data attacks.
+
+J25, 2026-10-12 (second pass, offline). Gates: `npm run check` green in both apps (storefront 245 files, 2242 tests, three more full runs identical; portal 268 files, 2057 tests); `npm run verify:build` green in scratchpad copies of both apps with dummy environment (a release build without the origins fails `check-build-env`, shown with `RELEASE=1`).
+- C21 closed offline: guard in `accountHandle` (403 `impersonation-restricted` for every non-GET account route, before any commercetools call), masked profile, empty addresses and payment methods, masked order, return and invoice pages through the shared loader. Tests per route in `lib/account/impersonation-guard.test.ts`; the impersonated persona is in `lib/authz/route-policy.test.ts`; route policy notes updated. Browser half: M-X-09. The "one high finding" of `security-review.md` is closed at unit level.
+- StorePicker flake: root cause was test data, not product code (SWR revalidation answered with a different `selectedKey` than the seeded `initial`, and it could land before the dialog opened); now one response on both sides, and the test waits for the revalidation first so the old worst case is the regular case. Also fixed a one in six flake in T's `discounts.test.ts` (random sortOrders).
+- Q-X08 done: `validateRule(rule, ctx)` refuses 100 percent (99.99 maximum), an absolute cart amount at or above its cart total condition (or without one), and an absolute product amount at or above the lowest store price in scope (`lowestShopperPrice` in `prices.ts`, read only); the activation check refuses 10000 permyriad except for the free-shipping target. Tests in `discount-rule.test.ts` and `discounts.test.ts`.
+- Q-X09 done: `lib/auth/client-ip.ts` (rightmost `x-forwarded-for` or `CLIENT_IP_HEADER`, `TRUSTED_PROXY_HOPS`), used by all limiters and the geocoder and vehicle lookup keys. Portal limiter: not built, D9 (recorded in Q-X17 and MISSED-FEATURES).
+- Q-X10 done: `DEMO_ONSCREEN_RESET=true|false` in both apps, gate scripts, tests, `.env.example`, READMEs.
+- Q-X11 done: `scripts/check-build-env.mjs` in both apps (first step of `verify:build` in the portal; after the demo checks in the storefront).
+- Partial items reviewed: X-13 gained a real gate fix (`verify:build` passed on a failed build because of `| tee`; `check-routes` now needs a route table). X-14: `npm audit --omit=dev` rerun, unchanged (portal 17, storefront 14; one documented high, `braces`, build-time). Still open and not closable offline: the `security-review` skill run (needs the lead's commit), X-09/X-10 as separate attack scripts (by design the attacks are tests), the Chrome and live halves (M-X-05, M-X-06, M-X-07, M-X-09, M-X-11), and the owner reviews (M-X-01, M-X-03, M-X-04, M-X-10). Questions Q-X16 to Q-X19.

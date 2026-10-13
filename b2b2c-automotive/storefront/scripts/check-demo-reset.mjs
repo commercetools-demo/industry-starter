@@ -7,7 +7,13 @@ import { isProductionBuild } from './check-no-demo-login.mjs';
 
 export function checkDemoReset(env = process.env) {
   const result = { problems: [], notices: [] };
-  if (env.DEMO_ONSCREEN_RESET !== 'true' || !isProductionBuild(env)) return result;
+  // One spelling in both apps (Q-X10): `true` or `false`; anything else fails the check instead of being guessed.
+  const flag = env.DEMO_ONSCREEN_RESET?.trim().toLowerCase(); // the app reads it the same way (lib/auth/demo-reset.ts)
+  if (flag !== undefined && flag !== '' && flag !== 'true' && flag !== 'false') {
+    result.problems.push(`DEMO_ONSCREEN_RESET=${flag} is not understood: use DEMO_ONSCREEN_RESET=true (or false)`);
+    return result;
+  }
+  if (flag !== 'true' || !isProductionBuild(env)) return result;
   if (env.DEMO_RESET_ACKNOWLEDGED !== 'true') {
     result.problems.push('DEMO_ONSCREEN_RESET=true in a production build lets anyone who knows an email address reset that password: set DEMO_RESET_ACKNOWLEDGED=true to accept this for a demo, or unset DEMO_ONSCREEN_RESET');
   } else {

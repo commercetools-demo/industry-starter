@@ -4,6 +4,7 @@
 // never an SDK message. Only the password rule name is added to the answer, so the form can say which rule failed.
 import 'server-only';
 import { ApiError, handle, requireCustomer } from '@/lib/api';
+import { isImpersonating } from '@/lib/impersonation/state';
 import { getSession } from '@/lib/session';
 import type { Session } from '@/lib/types';
 
@@ -27,6 +28,11 @@ export const NO_STORE = { 'Cache-Control': 'private, no-store' } as const;
 export function accountHandle<A extends unknown[]>(fn: (...a: A) => Promise<Response>): (...a: A) => Promise<Response> {
   return handle(async (...args: A) => {
     try {
+      // shop-as (Q-V25, workstream X C21): a seller shopping as a customer may look, never change the account.
+      const request = args[0];
+      if (request instanceof Request && request.method !== 'GET' && request.method !== 'HEAD') {
+        if (isImpersonating(await getSession())) throw new AccountError('impersonation-restricted', 403);
+      }
       return await fn(...args);
     } catch (error) {
       if (isAccountError(error)) return Response.json({ error: error.code, ...(error.detail ? { rule: error.detail } : {}) }, { status: error.status, headers: NO_STORE });

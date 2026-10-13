@@ -3,6 +3,7 @@
 import { cookies } from 'next/headers';
 import { isAppLocale } from '@/i18n/config';
 import { ApiError, handle } from '@/lib/api';
+import { clientIp } from '@/lib/auth/client-ip';
 import { getShellContext } from '@/lib/ct/shell';
 import { geocode } from '@/lib/geo/nominatim';
 import { createRateLimiter } from '@/lib/rate-limit';
@@ -20,7 +21,7 @@ export const GET = handle(async (request: Request) => {
   if (q.length < 3 || q.length > 100 || CONTROL.test(q)) throw new ApiError(400, 'Invalid query');
 
   const jar = await cookies();
-  const key = jar.get(SESSION_COOKIE)?.value ?? request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'anonymous';
+  const key = jar.get(SESSION_COOKIE)?.value ?? clientIp(request);
   if (!limiter.allow(key)) return Response.json({ error: 'Too many requests' }, { status: 429, headers: { 'Retry-After': '60' } });
 
   const session = await getSession();
