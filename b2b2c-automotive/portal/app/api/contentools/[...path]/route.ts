@@ -109,11 +109,14 @@ async function proxy(request: Request): Promise<Response> {
     headers.set('authorization', `Bearer ${jwt}`);
   }
 
-  if (process.env.CONTENTOOLS_PROXY_LOG === '1' && process.env.NODE_ENV !== 'production') console.info(`contentools-proxy ${request.method} ${first.upstreamPath}`);
+  // Development only: the full upstream URL and the answer's status (never headers or bodies). Silence with CONTENTOOLS_PROXY_LOG=0.
+  const logProxy = process.env.NODE_ENV !== 'production' && process.env.CONTENTOOLS_PROXY_LOG !== '0';
+  const upstreamUrl = `${CONTENTOOLS_ORIGIN}/${first.upstreamPath}${first.upstreamSearch}`;
+  if (logProxy) console.info(`contentools-proxy ${request.method} ${url.pathname}${url.search} -> ${upstreamUrl}`);
 
   let upstream: Response;
   try {
-    upstream = await fetch(`${CONTENTOOLS_ORIGIN}/${first.upstreamPath}${first.upstreamSearch}`, {
+    upstream = await fetch(upstreamUrl, {
       method: request.method === 'HEAD' ? 'GET' : request.method,
       headers,
       body: first.write ? body : undefined,
@@ -121,9 +124,11 @@ async function proxy(request: Request): Promise<Response> {
       cache: 'no-store',
       signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
     });
-  } catch {
+  } catch (error) {
+    if (logProxy) console.info(`contentools-proxy ${request.method} ${upstreamUrl} failed: ${error instanceof Error ? error.name : 'error'}`);
     return UPSTREAM_ERROR();
   }
+  if (logProxy) console.info(`contentools-proxy ${request.method} ${upstreamUrl} => ${upstream.status}`);
 
   // A redirect would send the browser (or us) somewhere we did not allow; a 5xx body may echo what we sent.
   if (upstream.status >= 300 && upstream.status < 400) return UPSTREAM_ERROR();
