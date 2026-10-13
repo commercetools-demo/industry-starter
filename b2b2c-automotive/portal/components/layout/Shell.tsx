@@ -16,7 +16,7 @@ import { MobileDrawer } from './MobileDrawer';
 import { SidebarRail } from './SidebarRail';
 import { TopBar } from './TopBar';
 
-function ShellFrame({ viewer, children }: { viewer: Viewer; children: ReactNode }) {
+function ShellFrame({ viewer, copilot, children }: { viewer: Viewer; copilot: boolean; children: ReactNode }) {
   const t = useTranslations('shell');
   const { roles } = usePermissions();
   useCommandPaletteShortcut();
@@ -35,20 +35,20 @@ function ShellFrame({ viewer, children }: { viewer: Viewer; children: ReactNode 
       </div>
       <MobileDrawer roles={roles} viewer={viewer} />
       <CommandPalette />
-      <CopilotPanel />
+      {copilot ? <CopilotPanel /> : null}
     </div>
   );
 }
 
 /** The portal shell: providers, dark top bar, floating sidebar rail (drawer on narrow screens), overlays and the page body. */
-export function Shell({ viewer, children }: { viewer: Viewer; children: ReactNode }) {
+export function Shell({ viewer, copilot = false, children }: { viewer: Viewer; copilot?: boolean; children: ReactNode }) {
   return (
     <ThemeProvider>
       <ToastProvider>
         <OverlayProvider>
           <PaletteProvider>
             <ViewerProvider viewer={viewer}>
-              <ShellFrame viewer={viewer}>{children}</ShellFrame>
+              <ShellFrame viewer={viewer} copilot={copilot}>{children}</ShellFrame>
             </ViewerProvider>
           </PaletteProvider>
         </OverlayProvider>

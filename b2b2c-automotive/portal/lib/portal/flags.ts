@@ -13,6 +13,11 @@ export function isOnscreenResetEnabled(env: NodeJS.ProcessEnv = process.env): bo
   return env.DEMO_ONSCREEN_RESET?.trim().toLowerCase() === 'true';
 }
 
+/** Store Copilot (panel and /api/copilot routes): off until `PORTAL_COPILOT_ENABLED=true`. */
+export function isCopilotEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.PORTAL_COPILOT_ENABLED?.trim().toLowerCase() === 'true';
+}
+
 /** A return path from `?next=` is accepted only when it is an in-app absolute path: one leading slash, no scheme, no `//`. */
 export function safeNextPath(value: string | null | undefined): string | null {
   if (!value || !value.startsWith('/') || value.startsWith('//') || value.includes('\\')) return null;

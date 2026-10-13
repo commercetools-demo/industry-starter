@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { LOCALES } from '@/i18n/config';
 import { plan } from '@/lib/portal/copilot';
 import '@/lib/portal/copilot-discounts'; // registers set-discount-active (workstream T)
+import { isCopilotEnabled } from '@/lib/portal/flags';
 import { ApiError, handle, json, parseJson, requireCustomer } from '@/lib/portal/route-kit';
 import { getPorts, readSession } from '@/lib/portal/seam';
 
@@ -13,6 +14,7 @@ const body = z.object({ text: z.string().trim().min(1).max(300), locale: z.enum(
 export const POST = handle(async (request: Request) => {
   const session = await readSession();
   requireCustomer(session);
+  if (!isCopilotEnabled()) throw new ApiError(404, 'Not found');
   if (!session.businessUnitKey || session.pending) throw new ApiError(400, 'No active business unit');
   const { text, locale } = await parseJson(request, body);
   const viewer = await getPorts().loadViewer(session);

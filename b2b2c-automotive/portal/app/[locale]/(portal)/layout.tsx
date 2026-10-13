@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { NoAccess } from '@/components/auth/NoAccess';
 import { Shell } from '@/components/layout/Shell';
 import { redirect } from '@/i18n/routing';
+import { isCopilotEnabled } from '@/lib/portal/flags';
 import { getPortalSession, getViewer, isSignedIn } from '@/lib/portal/viewer';
 
 // Every page of this group reads the session cookie, so it is rendered per request and never cached
@@ -16,5 +17,5 @@ export default async function PortalLayout({ children, params }: { children: Rea
   if (!isSignedIn(session) || !session.businessUnitKey) redirect({ href: '/pending-approval', locale });
   const viewer = await getViewer();
   if (!viewer || viewer.roles.length === 0) return <NoAccess />;
-  return <Shell viewer={viewer}>{children}</Shell>;
+  return <Shell viewer={viewer} copilot={isCopilotEnabled()}>{children}</Shell>;
 }

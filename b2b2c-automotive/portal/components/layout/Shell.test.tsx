@@ -44,7 +44,7 @@ afterEach(() => {
 });
 
 const renderShell = (v: Viewer, locale: 'en-US' | 'de-DE' = 'en-US') =>
-  renderWithProviders(<Shell viewer={v}><p>page body</p></Shell>, { locale, messages: locale === 'en-US' ? en : de });
+  renderWithProviders(<Shell viewer={v} copilot><p>page body</p></Shell>, { locale, messages: locale === 'en-US' ? en : de });
 const navLinks = () => within(screen.getByRole('navigation', { name: 'Main navigation' })).getAllByRole('link').map((a) => a.textContent);
 
 describe('Shell role matrix', () => {
@@ -115,6 +115,11 @@ describe('Shell overlays', () => {
     renderShell(viewer(['admin']));
     await user.click(screen.getByTestId('bell'));
     expect(await screen.findByText("You're all caught up.")).toBeInTheDocument();
+  });
+
+  it('has no Copilot launcher unless the shell is told the copilot is on', () => {
+    renderWithProviders(<Shell viewer={viewer(['admin'])}><p>page body</p></Shell>, { locale: 'en-US', messages: en });
+    expect(screen.queryByTestId('copilot-launcher')).not.toBeInTheDocument();
   });
 
   it('the Copilot launcher opens the panel and Escape closes it', async () => {

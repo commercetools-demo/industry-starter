@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { applyConfirmed } from '@/lib/portal/copilot';
 import '@/lib/portal/copilot-discounts'; // registers set-discount-active (workstream T)
+import { isCopilotEnabled } from '@/lib/portal/flags';
 import { ApiError, handle, json, parseJson, requireCustomer } from '@/lib/portal/route-kit';
 import { getPorts, readSession } from '@/lib/portal/seam';
 
@@ -11,6 +12,7 @@ const body = z.object({ actionId: z.string().min(1).max(100), params: z.record(z
 export const POST = handle(async (request: Request) => {
   const session = await readSession();
   requireCustomer(session);
+  if (!isCopilotEnabled()) throw new ApiError(404, 'Not found');
   if (!session.businessUnitKey || session.pending) throw new ApiError(400, 'No active business unit');
   const { actionId, params } = await parseJson(request, body);
   const viewer = await getPorts().loadViewer(session);

@@ -41,7 +41,7 @@ afterEach(() => {
 const catalogs = { 'en-US': en, 'de-DE': de } as const;
 const renderShell = (roles: Viewer['roles'], locale: 'en-US' | 'de-DE' = 'en-US') =>
   renderWithProviders(
-    <Shell viewer={viewer(roles)}>
+    <Shell viewer={viewer(roles)} copilot>
       <h1>Page title</h1>
     </Shell>,
     { locale, messages: catalogs[locale] },

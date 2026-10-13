@@ -18,6 +18,7 @@ const post = (json: unknown) => POST(makeRequest('/api/copilot/apply', { method:
 const viewer = (roles: ('admin' | 'buyer')[]) => ({ customerId: 'c1', name: 'N', email: 'e', roles, ctPermissions: [], businessUnitKey: 'bu', businessUnitName: 'x', storeKey: 's', storeName: 'y' });
 
 beforeEach(() => {
+  vi.stubEnv('PORTAL_COPILOT_ENABLED', 'true');
   m = createSeamMock({ customerId: 'c1', businessUnitKey: 'bu', storeKey: 's' });
   apply.mockClear();
   resetCopilotActions();
@@ -25,6 +26,14 @@ beforeEach(() => {
 });
 
 describe('POST /api/copilot/apply', () => {
+  it('both routes answer 404 until PORTAL_COPILOT_ENABLED=true', async () => {
+    vi.stubEnv('PORTAL_COPILOT_ENABLED', '');
+    m.ports.loadViewer.mockResolvedValue(viewer(['admin']));
+    expect((await post({ actionId: 'a', params: {} })).status).toBe(404);
+    expect((await PLAN(makeRequest('/api/copilot/plan', { method: 'POST', json: { text: 'hi', locale: 'en-US' } }))).status).toBe(404);
+    expect(apply).not.toHaveBeenCalled();
+  });
+
   it('an admin confirmation runs the action', async () => {
     m.ports.loadViewer.mockResolvedValue(viewer(['admin']));
     const res = await post({ actionId: 'a', params: { name: 'x' } });
