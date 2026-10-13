@@ -1,0 +1,152 @@
+== seed and sign in
+seed {"orders":["MA-QAAAA111","MA-QBBBB222","MA-QCCCC333","MA-QDDDD444","MA-QEEEE555","MA-QF000001","MA-QF000002","MA-QF000003","MA-QF000004","MA-QF000005","MA-QF000006","MA-QF000007","MA-QF000008","MA-QF000009","MA-QF000010","MA-QF000011","MA-QF000012","MA-QF000013","MA-QF000014","MA-QF000015","MA-QF000016","MA-QF000017","MA-QF000018","MA-QF000019","MA-QF000020","MA-QF000021","MA-QF000022","MA-QF000023","MA-QF000024","MA-QF000025"]}
+== guard: signed-out account redirects with next
+menu items Overview | Orders | Garage | Addresses | Payment methods | Subscriptions | Returns | Profile
+current page marked Orders
+== overview with pickup notice
+greeting true pickup notice true vehicle true
+h1 focused H1
+pickup text Collect it at Branch Hamburg, Teilestraße 1, 10000 Hamburg. Bring a photo ID.
+widths Q-03-overview {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+== orders list and pagination
+rows 18 page text Page 1 of 3
+widths Q-04-orders {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+click next true
+after next /en-US/mau-reseller-north/account/orders?page=2 Page 2 of 3
+== order detail, invoice, tracking
+detail true status true return cta true until until Nov 9, 2026.
+widths Q-05-order-detail {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+invoice true print button true
+print media: header hidden true footer hidden true
+widths Q-05-invoice {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+shipped order has no return button true true
+window closed order false true
+direct return page for closed order true
+widths Q-06-return-closed {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+== return flow
+needs line true
+needs reason true
+widths Q-06-return-form {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+success true Return RT-20261013-S0Z3H requested
+widths Q-06-return-done {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+returns list Tracking RT-20261013-S0Z3H · Requested on Oct 13, 2026 true
+widths Q-06-returns {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+fake order returnInfo [{"returnTrackingId":"RT-20261013-S0Z3H","returnDate":"2026-10-13T01:21:28.250Z","items":[{"id":"ri-0-0","type":"LineItemReturnItem","createdAt":"2026-10-13T01:21:28.250Z","lastModifiedAt":"2026-10-13T01:21:28.250Z","lineItemId":"li-1","quantity":1,"shipmentState":"Advised","custom":{"type":{"typeId":"type","key":"malva-return-item"},"fields":{"returnNumber":"RET-MA-QAAAA111-1","status":"requested","reason":"wrong-fit"}}}]}]
+second attempt: Wiper left, Brembo gone true false
+== reorder
+click true
+message 1 item was added to your cart. view cart link true
+widths Q-05-reorder {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+== garage
+list ["2019 Volkswagen Golf · 2.0 TDIActiveRenameRemove"]
+add vehicle via api 200
+widths Q-07-garage {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+rename click true
+renamed shows true
+set active true
+active chip count 1
+server garage 2019 Volkswagen Golf · 2.0 TDI
+remove first true
+confirm text true
+empty state true
+widths Q-07-garage-empty {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+overview with no vehicle true
+== addresses
+existing 1 true
+two addresses 2 true
+widths Q-08-addresses {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+make default true
+default chip count 1
+invalid postal 
+postal error Check the postal code.
+delete true
+confirm true
+after delete 1
+checkout default draft contract: default address "a11"
+== payment methods
+card true token leaked false warning true
+widths Q-09-payment {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+empty true
+widths Q-09-payment-empty {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+== profile and security
+values text:Anna | text:Schneider | tel:+49 170 1234567 | checkbox:on | email: | password: | text:anna@example.com | password: | password: | password: | text:anna@example.com | password: | text:
+saved true
+widths Q-10-profile {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+wrong password true
+email changed true
+short pw Use at least 10 characters.
+mismatch true
+password changed true
+widths Q-10-security {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+== subscriptions
+list Overview
+Orders
+Garage
+Addresses
+Payment methods
+Subscriptions
+Returns
+Profile
+Sign out
+Subscriptions
+Active
+From order MA-QEEEE555
+Delivery
+Every 3 months
+Next delivery
+Dec 13, 2026
+2 × Mann oil filter
+Skip next delivery
+Pause
+Change frequency
+Cancel subscription
+widths Q-11-subscriptions {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+Skip next delivery true
+  -> Your subscription was updated "Active"
+skip again disabled true
+Pause true
+  -> Your subscription was updated "Paused"
+Resume true
+  -> Your subscription was updated "Active"
+change freq open true
+options ["overview:Overview","orders:Orders","garage:Garage","addresses:Addresses","paymentMethods:Payment methods","subscriptions:Subscriptions","returns:Returns","profile:Profile","mau-rp-monthly:Every month","mau-rp-quarterly:Every 3 months","mau-rp-half-yearly:Every 6 months"]
+confirm text Change the frequency to Every month?
+widths Q-11-frequency-confirm {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+schedule in fake {"type":"standard","value":1,"intervalUnit":"Months"}
+failed state {"id":"b490e906-81b7-4253-93fb-7696dbba126e","version":5,"or
+failed shows true link true
+widths Q-11-subscription-failed {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+cancel confirm true
+cancelled true actions gone true
+widths Q-11-subscription-cancelled {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+== delete account (throwaway)
+confirm word needed age and saved details, and cancels your subscriptions. Your past orders stay with the shop, as its records rules require. This cannot be undone.
+
+YOUR PASSWORD
+TYPE DELETE TO CONFIRM
+Delete my account
+widths Q-10-delete {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+after delete /en-US/mau-reseller-north
+fake 1
+cannot sign in again true
+== de-DE spot checks
+de overview Übersicht / Bestellungen / Garage / Adressen / Zahlungsarten / Abos / Retouren / Profil / Abmelden / Hallo, Annika / Bestellung MA
+widths Q-12-de-overview {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+de orders Übersicht / Bestellungen / Garage / Adressen / Zahlungsarten / Abos / Retouren / Profil / Abmelden / Bestellungen / MA-QBBBB222 / Au
+de order Übersicht / Bestellungen / Garage / Adressen / Zahlungsarten / Abos / Retouren / Profil / Abmelden / Bestellung MA-QAAAA111 / ← Zu
+widths Q-12-de-order {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+de return Übersicht / Bestellungen / Garage / Adressen / Zahlungsarten / Abos / Retouren / Profil / Abmelden / Retoure anfordern / Wählen S
+de garage Übersicht / Bestellungen / Garage / Adressen / Zahlungsarten / Abos / Retouren / Profil / Abmelden / Garage / Fahrzeuge, die Sie 
+de addresses Übersicht / Bestellungen / Garage / Adressen / Zahlungsarten / Abos / Retouren / Profil / Abmelden / Adressen / Anna Schneider / Sta
+de subscriptions Übersicht / Bestellungen / Garage / Adressen / Zahlungsarten / Abos / Retouren / Profil / Abmelden / Abos / Gekündigt / Aus Bestellu
+widths Q-12-de-subscriptions {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+de profile Übersicht / Bestellungen / Garage / Adressen / Zahlungsarten / Abos / Retouren / Profil / Abmelden / Profil / Ihre Angaben / VORNAME
+de sign-in Anmelden / Melden Sie sich bei Ihrem Konto bei Küstenwerk Autoteile an. Die Artikel in Ihrem Warenkorb bleiben erhalten. / 
+widths Q-12-de-sign-in {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+de register Konto erstellen / Ihr Konto gehört zu Küstenwerk Autoteile. Der Inhalt Ihres Warenkorbs und Ihre Fahrzeuge bleiben erhalt
+widths Q-12-de-register {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+de forgot Passwort zurücksetzen / Geben Sie die E-Mail Ihres Kontos ein. / E-MAIL / Link zum Zurücksetzen anzeigen / Zurück zur Anmeldun
+widths Q-12-de-forgot {"375":{"noHScroll":true},"768":{"noHScroll":true},"1024":{"noHScroll":true},"1440":{"noHScroll":true}}
+== console and network
+console problems []
+FAILED STEPS: []

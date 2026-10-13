@@ -65,9 +65,21 @@ function devToken(): string {
   return `${part({ alg: 'none', typ: 'JWT' })}.${part({ sub: 'portal-dev-fixture', exp: Math.floor(Date.now() / 1000) + 3600 })}.dev`;
 }
 
+/**
+ * Workstream X-12: a greppable fake token for the leak attack (E01 to E09). Honoured outside production, or in production only with
+ * ATTACK_MODE=1 (scripts/check-no-attack-mode.mjs keeps both names out of every release configuration). Never a real token.
+ */
+export function canaryToken(env: NodeJS.ProcessEnv = process.env): string | null {
+  const canary = env.CONTENTOOLS_JWT_CANARY?.trim();
+  if (!canary) return null;
+  return env.NODE_ENV !== 'production' || env.ATTACK_MODE === '1' ? canary : null;
+}
+
 /** Uncached core of `getValidContentoolsJwt` (exported for tests). Returns null when absent or on any failure; never throws. */
 export async function resolveContentoolsJwt(): Promise<string | null> {
   try {
+    const canary = canaryToken();
+    if (canary) return canary;
     if (devFixturesEnabled()) return devToken();
     const stored = await readStored();
     if (!stored) return null;

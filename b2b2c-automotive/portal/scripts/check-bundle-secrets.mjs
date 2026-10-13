@@ -16,11 +16,15 @@ export function secretValues(env, envFileText = '') {
   return BUNDLE_SECRET_NAMES.map((n) => env[n] || fromFile[n]).filter((v) => v && v.length >= 8);
 }
 
+/** Three base64url parts that look like a JWT (workstream X-12): a leaked Contentools or session token is greppable. */
+export const JWT_SHAPE = /eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{8,}/;
+
 export function scanBundle(dir, secrets) {
   const problems = [];
   for (const file of walk(dir).filter((f) => /\.(js|css|html|json|map|txt)$/.test(f))) {
     const text = readFileSync(file, 'utf8');
     if (/client_secret/i.test(text)) problems.push(`${path.relative(dir, file)} contains "client_secret"`);
+    if (JWT_SHAPE.test(text)) problems.push(`${path.relative(dir, file)} contains a JWT-shaped string`);
     for (const s of secrets) if (text.includes(s)) problems.push(`${path.relative(dir, file)} contains a secret value`);
   }
   return problems;
@@ -30,7 +34,8 @@ runCli(
   import.meta.url,
   (root) => {
     const envFile = path.join(root, '.env.local');
-    return scanBundle(path.join(root, '.next', 'static'), secretValues(process.env, existsSync(envFile) ? readFileSync(envFile, 'utf8') : ''));
+    const secrets = secretValues(process.env, existsSync(envFile) ? readFileSync(envFile, 'utf8') : '');
+    return [...scanBundle(path.join(root, '.next', 'static'), secrets), ...scanBundle(path.join(root, 'public'), secrets).map((p) => 'public/' + p)];
   },
   'bundle secrets',
 );

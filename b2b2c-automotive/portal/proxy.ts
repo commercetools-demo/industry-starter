@@ -3,6 +3,7 @@ import { LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE, type AppLocale } from '@/i18n/con
 import { getSessionSecret } from '@/lib/env';
 import { decideLocale } from '@/lib/locale-redirect';
 import { isAuthRoute, sanitizeNext } from '@/lib/next-path';
+import { apiGate, methodGate } from '@/lib/security/api-gate';
 import { SESSION_COOKIE_NAME, verifySession } from '@/lib/session-core';
 
 /** `/de-DE/catalog/x?y=1` -> `/catalog/x?y=1`; the locale-less path the sign-in page returns to. */
@@ -20,6 +21,14 @@ function returnPath(pathname: string, search: string, locale: AppLocale): string
  */
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+  // Workstream X: every state-changing /api call must be same-origin JSON or multipart before any handler runs.
+  if (pathname.startsWith('/api/')) {
+    const refused = apiGate(request, pathname);
+    return refused ? new NextResponse(refused.body, refused) : NextResponse.next();
+  }
+  // G09: pages answer GET, HEAD and POST (Server Actions) only; TRACE, PUT, PATCH, DELETE are 405.
+  const badMethod = methodGate(request.method);
+  if (badMethod) return new NextResponse(null, badMethod);
   const decision = decideLocale({
     pathname,
     search,
@@ -62,4 +71,4 @@ export async function proxy(request: NextRequest) {
   }
 }
 
-export const config = { matcher: ['/((?!_next|api|.*\\..*).*)', '/'] };
+export const config = { matcher: ['/((?!_next|api|.*\\..*).*)', '/', '/api/:path*'] };

@@ -11,12 +11,12 @@ ready-for-pickup: Thanks, your order is in. | Order MA-0XFM720M | Your order is 
 payment pending wording: Order MA-0XFM720M / Ready when you are: collect it at Branch Berlin in Berlin. Bring photo ID. / Your payment is being confirmed. Reload this page in a moment to see the latest. / We don't send emails. Keep this page's link or create an account to find your order later.
 weak: Use at least 10 characters. | focus on alert: alert
 common: That password is too common. Choose a longer or less usual one.
-after account: buttons ["Continue shopping","Print","Copy link","Create account"] | copy link section: 1 | account form: 1
-note: We don't send emails. Keep this page's link or create an account to find your order later.
-/api/auth/me: {"customer":null}
-header shows signed in: still shows Sign in
-order.customerId equals new customer id: false | customer store: mau-reseller-north | custom type key: {"typeId":"type","key":"malva-customer"} | users with that email: 1
-claim again (order has an account): {"status":409,"body":{"error":"account-failed"}}
+after account: buttons ["Continue shopping","View order","Print"] | copy link section: 0 | account form: 0
+note: We don't send emails. You can find this order in your account at any time.
+/api/auth/me: {"customer":{"id":"...","email":"qa-p3-38926@example.com","firstName":null,"lastName":null,"mobile":null,"addresses":[{"id":"a1","firstName":null,"lastName":null,"streetName":"Torstraße","streetNumber":"1","postalCode":"10119","city":"Berlin","country":"DE"}],"defaultShippingAddressId":"a1","defaultBillingAddressId":null}}
+header shows signed in: no Sign in link
+order.customerId equals new customer id: true | customer store: mau-reseller-north | custom type key: {"typeId":"type","key":"malva-customer"} | users with that email: 1
+claim again (order has an account): {"status":429,"body":{"error":"Too many attempts. Try again later."}}
 login: 200
 anna pay: true
 owner landing without token: true | buttons: ["Weiter einkaufen","Bestellung ansehen","Drucken"] | note: Wir versenden keine E-Mails. Sie finden diese Bestellung jederzeit in Ihrem Konto.
@@ -29,4 +29,4 @@ de-DE: Danke, Ihre Bestellung ist eingegangen. | Bestellung MA-EC3CRTQF | Abholb
 print: follow-up actions display: inline-flex | hidden container: none
 dev completion landed: /en-US/mau-reseller-north/checkout/confirmation/MA-T8NAVD3M | payment: Pending | page: Thanks, your order is in. | Order MA-T8NAVD3M | Ready when you are: collect it at Branch Berlin in Berlin. Bring photo ID. | Your payment is being confirmed. Reload this page in a moment to see the latest. | We don't send emails. Keep this page's link or create an account to find your order later. |
 commercetools calls from the browser: 0 | mail-like: 0
-console (without intended 404s): ["error: Failed to load resource: the server responded with a status of 400 (Bad Request) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: Failed to load resource: the server responded with a status of 400 (Bad Request) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: Failed to load resource: the server responded with a status of 400 (Bad Request) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: Failed to load resource: the server responded with a status of 400 (Bad Request) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: Failed to load resource: the server responded with a status of 409 (Conflict) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: Failed to load resource: the server responded with a status of 409 (Conflict) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: %c%s%c [cart] default delivery failed with status 409 (ConcurrentModification) background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server  "]
+console (without intended 404s): ["error: Failed to load resource: the server responded with a status of 400 (Bad Request) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: Failed to load resource: the server responded with a status of 400 (Bad Request) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: Failed to load resource: the server responded with a status of 429 (Too Many Requests) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: %c%s%c [cart] default delivery failed with status 409 (ConcurrentModification) background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server  "]

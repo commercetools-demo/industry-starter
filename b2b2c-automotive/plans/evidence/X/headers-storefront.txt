@@ -1,0 +1,38 @@
+# storefront :3100 (production build, dummy env, PORTAL_ORIGIN unset at build). No commercetools call.
+## GET /api/locale
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), payment=(), usb=(), geolocation=(self)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+content-type: application/json
+Date: Tue, 13 Oct 2026 01:15:11 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+## GET /de-DE (no store segment: 404 page, no commercetools call)
+HTTP/1.1 404 Not Found
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), payment=(), usb=(), geolocation=(self)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+set-cookie: your-shop-country-locale=de-DE; Path=/; Expires=Wed, 13 Oct 2027 01:15:11 GMT; Max-Age=31536000; SameSite=lax
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+Link: </_next/static/media/47fe1b7cd6e6ed85-s.p.3bh2vc0w-r-ll.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/75affa71d1e2f6a7-s.p.17-aodiw50953.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/8e6fa89aa22d24ec-s.p.2o7m9ogm38dql.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/a218039a3287bcfd-s.p.43zbiuwnnoiok.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/e2334d715941921e-s.p.3o_v2fun1jzxk.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/fa0520225c6f3d07-s.p.33u8lzvd44aqk.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/chunks/3andjh8tm9v3g.css>; rel=preload; as="style"
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Content-Type: text/html; charset=utf-8
+Date: Tue, 13 Oct 2026 01:15:11 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+## GET /api/health (release build)
+{"error":"Not found"}
+HTTP 404
+## GET /api/account/profile with no cookie (C18)
+{"error":"Not signed in"}
+HTTP 401

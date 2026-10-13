@@ -174,7 +174,7 @@ describe('Contentools proxy', () => {
     expect(upstream).not.toHaveBeenCalled();
 
     const form2 = new FormData();
-    form2.set('file', new Blob(['abc'], { type: 'image/png' }), 'logo.png');
+    form2.set('file', new Blob([new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0])], { type: 'image/png' }), 'logo.png'); // real PNG signature (workstream X-07 checks the bytes)
     const upload = await call(route.POST, `service/${A}/upload-file`, { method: 'POST', body: form2 });
     expect(upload.status).toBe(200);
     expect(upstreamCall()[1].headers.get('content-type')).toMatch(/^multipart\/form-data; boundary=/);

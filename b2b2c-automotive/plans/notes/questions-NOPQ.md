@@ -62,6 +62,17 @@ Updated 2026-10-12 after the owner interview (`notes/owner-answers.md`, binding)
 | Q-O14 | Recurring order for a subscription cart: Checkout creates it after the first payment (docs). The dev helper cannot pay. | The dev helper creates the order and then, best effort, one Recurring Order from the ordered cart (`recurring-orders` POST with `cart` and `cartVersion`); a failure is logged and never rolls the order back. Q verifies subscription management against this; the live shape is confirmed at M-O01 | Q-12 before OA-05 |
 | Q-O15 | Stored Payment Methods (needed for a subscription's renewals) require a `customerId` on the cart, so a **guest** cannot start a subscription through Checkout. | The cart and the checkout still allow a guest with a subscription line (the plan does not forbid it); decide at the first live check (M-O05, with the real connector) whether to require sign-in before a subscription checkout (a redirect to the sign-in page with `next=/checkout`, N's `safeNext`) | Subscription purchase by guests, Q-12 |
 
+## Added by workstream P (J21, 2026-10-12; default taken, nothing waits)
+
+| Id | Question | Default taken | What it blocks |
+| --- | --- | --- | --- |
+| Q-P07 | `ORDER_ACCESS_SECRET` is now required by `validateEnv` (server start) like `SESSION_SECRET`: every running environment, `.env.local` and CI dummy env needs it (O's rehearsal scripts too). | Required, 32+ characters, in `.env.example`, `test/env.ts` and the README; the token uses audience `order-view` and claims `oid`, `sk` (D3) | Hosting settings (M-P08) |
+| Q-P08 | The claim route needs the store of the order, which is not in the path. | Body `{ store, password, token? }` (the page knows the store); the route rejects an order whose store differs; the email is always the order's | Nothing |
+| Q-P09 | The plan's alias `confirmation/page.tsx` (`?orderId=`) would need a locale-less redirect, which the locale-aware `redirect` rule forbids. | `confirmation/route.ts` answers 303 to `/checkout/return?orderId=` (or `orderNumber=`), so O's resolver, buyer rule and cart clearing run once, in one place | Nothing |
+| Q-P10 | A signed-in shopper who opens an unclaimed guest order (link holder) is not offered Create account. | Viewer `holder`: Continue shopping and Print only | Nothing |
+| Q-P11 | Hosting may override the `Cache-Control` of dynamic pages: the response showed `no-store` (Next's value), not `private, no-store` from `next.config.ts`. | Both are non-cacheable; accepted | Nothing |
+| Q-P12 | The page shows the order's email only inside the guest account form (read-only), never for link holders of an account order. | As built | Nothing |
+
 ## Removed as obsolete (owner answer Q-P01: no emails)
 
 | Id | Was | Why removed |

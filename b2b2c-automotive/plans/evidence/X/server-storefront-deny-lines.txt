@@ -1,0 +1,3 @@
+{"ts":"2026-10-13T01:14:56.239Z","rule":"origin","decision":"deny","route":"POST /api/cart/lines","reason":"CROSS_ORIGIN","actor":"unknown"}
+{"ts":"2026-10-13T01:14:56.260Z","rule":"origin","decision":"deny","route":"POST /api/cart/lines","reason":"UNSUPPORTED_MEDIA_TYPE","actor":"unknown"}
+{"ts":"2026-10-13T01:14:56.308Z","rule":"origin","decision":"deny","route":"POST /api/impersonate/exit","reason":"CROSS_ORIGIN","actor":"unknown"}

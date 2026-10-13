@@ -3,6 +3,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { checkNoDevPages } from './check-no-dev-pages.mjs';
+import { checkRoutePolicy } from './check-route-policy.mjs';
 import { walk } from './fs-utils.mjs';
 
 /** Routes listed in the table `next build` prints (`┌ ○ /path`, `├ ● /path`, `└ ƒ /path`). */
@@ -65,7 +66,7 @@ export function checkNavRoutes(root) {
 import { pathToFileURL } from 'node:url';
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   const arg = process.argv[2];
-  const problems = arg === '--static' || !arg ? [...checkNoDevPages(process.cwd()), ...checkNavRoutes(process.cwd())] : checkRoutes(readFileSync(arg, 'utf8'));
+  const problems = arg === '--static' || !arg ? [...checkNoDevPages(process.cwd()), ...checkNavRoutes(process.cwd()), ...checkRoutePolicy(process.cwd())] : checkRoutes(readFileSync(arg, 'utf8'));
   if (problems.length) {
     console.error(problems.join('\n'));
     process.exit(1);
