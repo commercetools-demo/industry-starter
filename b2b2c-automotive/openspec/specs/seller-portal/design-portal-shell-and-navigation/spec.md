@@ -101,12 +101,26 @@ The system SHALL show a warning banner "You are shopping as {customer}. Orders a
 
 ### Requirement: Copilot that asks before changing
 
-The system SHALL offer a Copilot panel for questions and requested changes, and SHALL require an explicit Confirm showing the exact change before anything is changed, with the outcome stated afterwards.
+The system SHALL offer a Copilot panel for questions and requested changes only when the environment variable `PORTAL_COPILOT_ENABLED` is `true` (see the next requirement), and SHALL require an explicit Confirm showing the exact change before anything is changed, with the outcome stated afterwards.
 
 #### Scenario: Pause a promotion
 - **GIVEN** the request "Pause the Brake season promo"
 - **WHEN** the Copilot responds
 - **THEN** it shows "Set 'Brake season promo' to inactive" with Confirm and Cancel, and only Confirm changes it
+
+### Requirement: Copilot is off until switched on
+
+The system SHALL keep the Copilot off by default. Unless `PORTAL_COPILOT_ENABLED` is `true`, the shell SHALL NOT render the Copilot panel or its launcher, and `POST /api/copilot/plan` and `POST /api/copilot/apply` SHALL answer 404 to a signed-in user (a request with no session still gets 401 first).
+
+#### Scenario: Variable not set
+- **GIVEN** `PORTAL_COPILOT_ENABLED` is absent or not `true`
+- **WHEN** a signed-in seller opens any portal page
+- **THEN** no Copilot launcher is shown and a call to either Copilot route answers 404
+
+#### Scenario: Variable set
+- **GIVEN** `PORTAL_COPILOT_ENABLED=true` and a restarted server
+- **WHEN** a signed-in seller opens any portal page
+- **THEN** the Copilot launcher is shown and the Copilot behaves as in the previous requirement
 
 ### Requirement: Light and dark
 

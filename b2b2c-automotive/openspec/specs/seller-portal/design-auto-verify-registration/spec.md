@@ -45,10 +45,29 @@ The seed SHALL create every demo associate verified and SHALL verify any that al
 - **WHEN** the seed runs
 - **THEN** the associate is verified and a second run changes nothing
 
+### Requirement: Approval gate is off until switched on
+
+The system SHALL NOT check a business unit's status at sign-in unless `PORTAL_REQUIRE_APPROVAL` is `true`. By default a user whose unit has a store signs in whatever the unit's status. With the variable `true`, a user whose units are all not Active sees the pending-approval screen. A unit without a store is never usable, so its users see the pending-approval screen with the variable on or off.
+
+#### Scenario: Default
+- **GIVEN** `PORTAL_REQUIRE_APPROVAL` is absent and the user's unit is Inactive but has a store
+- **WHEN** the user signs in
+- **THEN** the portal opens on that unit's store
+
+#### Scenario: Approval required
+- **GIVEN** `PORTAL_REQUIRE_APPROVAL=true` and the user's only unit is Inactive
+- **WHEN** the user signs in
+- **THEN** the pending-approval screen is shown
+
+### Requirement: Seeded units have stores
+
+The seed SHALL give every unit with an associate a store: each reseller its own store, Malva Global both stores, and the other units SHALL inherit from their parent. A unit that exists without them SHALL be repaired by the next seed run (mode and stores in one `setStoreMode` action).
+
+#### Scenario: Existing unit without a store
+- **GIVEN** a seeded reseller unit that has no store
+- **WHEN** the seed runs
+- **THEN** the unit has its store and a second run changes nothing
+
 ## Notes
 
 Known gap (accepted with the on-screen password reset, D4): an email address is not proven to belong to the person who typed it. Only a demo deployment should run this way.
-
-### Approval gate switch
-
-Waiting for a Malva operator to approve a registered business unit is OFF by default. The pending-approval screen appears only when `PORTAL_REQUIRE_APPROVAL=true`; otherwise a user whose unit has a store signs in whatever the unit's status. A unit without a store is never usable (the pending screen still shows).
