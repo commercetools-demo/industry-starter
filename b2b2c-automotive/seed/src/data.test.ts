@@ -391,7 +391,7 @@ describe('supporting data', () => {
     const names = (k: string) => t[k]?.fieldDefinitions?.map((f) => f.name) ?? [];
     expect(t[CONTRACT_TYPE_KEYS.storeSettings]?.resourceTypeIds).toEqual(['store']);
     expect(t[CONTRACT_TYPE_KEYS.branchInfo]?.resourceTypeIds).toEqual(['channel']);
-    expect(t[CONTRACT_TYPE_KEYS.checkout]?.resourceTypeIds).toEqual(['cart', 'order']); // one type, so cart fields copy to the order
+    expect(t[CONTRACT_TYPE_KEYS.checkout]?.resourceTypeIds).toEqual(['order']); // 'order' covers carts and orders, so cart fields copy to the order
     expect(t[CONTRACT_TYPE_KEYS.line]?.resourceTypeIds).toEqual(['line-item']);
     expect(t[CONTRACT_TYPE_KEYS.customer]?.resourceTypeIds).toEqual(['customer']);
     expect(t[CONTRACT_TYPE_KEYS.returnItem]?.resourceTypeIds).toEqual(['order-return-item']);
@@ -555,6 +555,13 @@ describe('demo login support', () => {
       const draft = customerDraft(c, 'x') as { custom?: { fields?: { isDemo?: boolean } } };
       expect(draft.custom?.fields?.isDemo, c.key).toBe(true);
     }
+  });
+});
+
+describe('custom type rules of the platform', () => {
+  it('every resourceTypeId is one the API knows (there is no "cart": the id "order" covers carts and orders)', () => {
+    const allowed = ['address', 'asset', 'approval-flow', 'approval-rule', 'associate-role', 'business-unit', 'cart-discount', 'category', 'channel', 'customer', 'customer-group', 'custom-line-item', 'discount-code', 'inventory-entry', 'line-item', 'order', 'order-edit', 'order-delivery', 'order-parcel', 'order-return-item', 'payment', 'payment-interface-interaction', 'payment-method', 'payment-method-info', 'product-price', 'product-selection', 'product-tailoring', 'quote', 'reservation', 'review', 'recurring-order', 'shipping', 'shipping-method', 'shopping-list', 'shopping-list-text-line-item', 'standalone-price', 'store', 'transaction'];
+    expect(typeDrafts.flatMap((t) => t.resourceTypeIds).filter((id) => !allowed.includes(id))).toEqual([]);
   });
 });
 

@@ -46,8 +46,8 @@ export const typeDrafts: TypeDraft[] = [
     ],
   },
   {
-    // Cart and order share ONE type so cart custom fields are copied to the order when it is created.
-    key: T.checkout, name: ls('Malva Checkout-Felder', 'Malva checkout fields'), resourceTypeIds: ['cart', 'order'],
+    // The resource type id 'order' covers both carts and orders (there is no 'cart' id), so cart fields are copied to the order.
+    key: T.checkout, name: ls('Malva Checkout-Felder', 'Malva checkout fields'), resourceTypeIds: ['order'],
     fieldDefinitions: [
       str('mobile', 'Handynummer (Abholhinweis)', 'Mobile number (pickup alerts)'), str('pickupBranchKey', 'Abholfiliale (Key)', 'Pickup branch key'), str('fitVehicleLabel', 'Fahrzeug (Anzeige)', 'Vehicle label'),
       bool('isTest', 'Testbestellung', 'Test order'), when('deliveredAt', 'Zugestellt/abgeholt am', 'Delivered or collected at'),
