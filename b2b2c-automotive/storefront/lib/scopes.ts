@@ -22,8 +22,11 @@ export const FRONTEND_SCOPES: readonly ScopeDoc[] = [
   { scope: 'view_discount_codes', reason: 'state of a promo code on the cart (applied or not applied, and why)' },
   { scope: 'view_types', reason: 'read custom type definitions (vehicle fitment, garage)' },
   { scope: 'view_key_value_documents', reason: 'read the vehicle table (custom objects, container mau-vehicles)' },
+  { scope: 'manage_key_value_documents', reason: 'shop as customer: mark the single-use handoff record (custom object, container malva-impersonation) active or ended' },
   { scope: 'create_anonymous_token', reason: 'anonymous sessions and carts' },
   { scope: 'manage_customers', reason: 'sign-in, registration, account area' },
   { scope: 'manage_orders', reason: "place and read the shopper's orders" },
   { scope: 'manage_sessions', reason: 'create Checkout sessions for the hosted checkout' },
+  { scope: 'manage_recurring_orders', reason: "the account's Subscriptions page (list, skip, pause, resume, change frequency, cancel) and the subscription line of an order" },
+  { scope: 'manage_payment_methods', reason: "the account's saved payment methods (list and delete)" },
 ];

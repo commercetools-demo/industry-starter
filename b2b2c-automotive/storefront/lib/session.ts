@@ -4,6 +4,7 @@ import 'server-only';
 import { cookies } from 'next/headers';
 import { isAppLocale, LOCALE_COOKIE, type AppLocale } from '@/i18n/config';
 import { getSessionSecret } from '@/lib/env';
+import { endedSession, impersonationState, isImpersonating, touchImpersonation } from '@/lib/impersonation/state';
 import { SESSION_COOKIE, sessionCookieOptions, signSession, verifySession } from '@/lib/session-core';
 import type { Session } from '@/lib/types';
 import { COUNTRY_CONFIG, DEFAULT_LOCALE } from '@/lib/utils';
@@ -22,9 +23,24 @@ function key(): Uint8Array {
   return secret;
 }
 
+/**
+ * The session of the request. A "shop as customer" session (V-06) is checked here: past its idle deadline (120 s) or its absolute cap (30 min)
+ * it reads as the signed-out session (no customer, cart or actor; the proxy writes that to the cookie on the next page request and ends the
+ * record). While active every read renews the idle deadline; the cookie is written best effort (a Server Component cannot set cookies).
+ */
 export async function getSession(): Promise<Session> {
   const jar = await cookies();
-  return verifySession(jar.get(SESSION_COOKIE)?.value, key());
+  const session = await verifySession(jar.get(SESSION_COOKIE)?.value, key());
+  if (!isImpersonating(session)) return session;
+  const now = new Date();
+  if (impersonationState(session, now) === 'expired') return endedSession(session);
+  const touched = touchImpersonation(session, now);
+  try {
+    jar.set(SESSION_COOKIE, await signSession(touched, key()), sessionCookieOptions());
+  } catch {
+    // Read only context: the proxy renews the deadline on page requests.
+  }
+  return touched;
 }
 
 export async function getLocale(): Promise<{ locale: AppLocale; currency: string; country: string }> {

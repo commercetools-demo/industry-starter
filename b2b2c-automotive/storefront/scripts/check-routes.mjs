@@ -5,6 +5,7 @@
 // A release build (RELEASE=1, or NODE_ENV=production with CONTEXT=production) must not contain a /dev route.
 import { existsSync, readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
+import { checkRoutePolicy } from './check-route-policy.mjs';
 import { isRelease } from './check-no-health-in-release.mjs';
 
 /** Routes from lines such as `┌ ○ /path`, `├ ● /path`, `└ ƒ /path`. */
@@ -27,7 +28,12 @@ export function checkRoutes(output, env = process.env) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const arg = process.argv[2];
   if (!arg || arg === '--static') {
-    console.log('check-routes: static mode, nothing to check');
+    const problems = checkRoutePolicy(process.cwd());
+    if (problems.length) {
+      console.error(problems.join('\n'));
+      process.exit(1);
+    }
+    console.log('check-routes: static mode, route policy OK');
   } else {
     if (!existsSync(arg)) {
       console.error(`${arg} not found; run npm run verify:build`);

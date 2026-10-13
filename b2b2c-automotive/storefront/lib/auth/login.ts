@@ -6,6 +6,7 @@
 import 'server-only';
 import { runSignInHooks } from '@/lib/auth';
 import { signIn } from '@/lib/ct/auth';
+import { endedSession } from '@/lib/impersonation/state';
 import { mapCustomer } from '@/lib/mappers/customer';
 import { createRateLimiter } from '@/lib/rate-limit';
 import { getSession, updateSession } from '@/lib/session';
@@ -28,7 +29,7 @@ export async function loginCustomer(input: { storeKey: string; email: string; pa
   const session = await getSession();
   const { customer, cart } = await signIn({ ...input, anonymousCartId: session.cartId, anonymousId: session.anonymousId });
   await updateSession((s) => {
-    const next = { ...s, customerId: customer.id };
+    const next = { ...endedSession(s), customerId: customer.id }; // a sign-in ends a shop-as session (V-06)
     if (cart) next.cartId = cart.id;
     else delete next.cartId;
     return next;

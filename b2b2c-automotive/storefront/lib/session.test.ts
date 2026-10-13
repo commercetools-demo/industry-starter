@@ -104,6 +104,55 @@ describe('Stateless session: cookie and helpers', () => {
   });
 });
 
+describe('Shop as customer: idle expiry in getSession (V-06)', () => {
+  const T0 = new Date('2026-10-12T10:00:00.000Z');
+  const sessionAt = (seconds: number) => new Date(T0.getTime() + seconds * 1000);
+  const start = async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(T0);
+    const { setSessionCookie } = await import('./session');
+    const { startImpersonation } = await import('./impersonation/state');
+    await setSessionCookie(startImpersonation({ storeKey: 'mau-reseller-north', anonymousId: 'anon-1' }, { customerId: 'cust-1', actorId: 'seller-1', jti: 'jti-1' }, T0));
+    jar.sets.length = 0;
+  };
+  afterEach(() => vi.useRealTimers());
+
+  it('idle 121 s ends the session: no customer, no actor, the store stays', async () => {
+    await start();
+    const { getSession } = await import('./session');
+    vi.setSystemTime(sessionAt(121));
+    expect(await getSession()).toEqual({ storeKey: 'mau-reseller-north', anonymousId: 'anon-1' });
+  });
+  it('activity within 120 s extends the deadline and writes the cookie again', async () => {
+    await start();
+    const { getSession } = await import('./session');
+    vi.setSystemTime(sessionAt(100));
+    expect(await getSession()).toMatchObject({ customerId: 'cust-1', impersonatedBy: 'seller-1' });
+    expect(sets()).toHaveLength(1);
+    vi.setSystemTime(sessionAt(200));
+    expect(await getSession()).toMatchObject({ customerId: 'cust-1' });
+    vi.setSystemTime(sessionAt(321));
+    expect(await getSession()).not.toHaveProperty('customerId');
+  });
+  it('the 30 minute absolute cap holds against steady activity', async () => {
+    await start();
+    const { getSession } = await import('./session');
+    for (let t = 100; t <= 1700; t += 100) {
+      vi.setSystemTime(sessionAt(t));
+      expect(await getSession(), `t=${t}`).toMatchObject({ customerId: 'cust-1' });
+    }
+    vi.setSystemTime(sessionAt(1801));
+    expect(await getSession()).not.toHaveProperty('customerId');
+  });
+  it('a normal session never writes a cookie on read', async () => {
+    const { setSessionCookie, getSession } = await import('./session');
+    await setSessionCookie({ customerId: 'c1' });
+    jar.sets.length = 0;
+    await getSession();
+    expect(sets()).toHaveLength(0);
+  });
+});
+
 describe('Stateless session: startup', () => {
   it('Weak secret', async () => {
     vi.stubEnv('NODE_ENV', 'development');

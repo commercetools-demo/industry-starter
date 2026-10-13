@@ -114,13 +114,13 @@ describe('Contentools reads and the same-origin proxy: forwarding', () => {
     const path = 'service/qa-green/configuration/theme';
     expect((await GET(req(path), ctx(path))).headers.has('set-cookie')).toBe(false);
   });
-  it('Redirect is not followed', async () => {
+  it('Redirect is not followed and is not handed to the visitor: 502 UPSTREAM_ERROR, no Location (workstream X, D12)', async () => {
     fetchMock.mockResolvedValue(new Response(null, { status: 302, headers: { location: 'https://elsewhere.example/' } }));
     const { GET } = await load();
     const path = 'service/qa-green/configuration/theme';
     const res = await GET(req(path), ctx(path));
-    expect(res.status).toBe(302);
-    expect(res.headers.get('location')).toBe('https://elsewhere.example/');
+    expect(res.status).toBe(502);
+    expect(res.headers.get('location')).toBeNull();
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
   it('Upstream failure is a 502 without detail', async () => {

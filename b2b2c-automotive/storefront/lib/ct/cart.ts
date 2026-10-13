@@ -6,6 +6,9 @@ import 'server-only';
 import type { Cart, CartUpdateAction, ProductProjection } from '@commercetools/platform-sdk';
 import type { AppLocale } from '@/i18n/config';
 import { ApiError } from '@/lib/api';
+import { parseBundleContents } from '@/lib/bundles/contents';
+import { getBundleView } from '@/lib/ct/bundles';
+import { addBundle, isBundleChild } from '@/lib/ct/cart-bundles';
 import { CART_EXPAND } from '@/lib/ct/cart-discounts';
 import { withCartRetry } from '@/lib/ct/cart-retry';
 import { apiRoot } from '@/lib/ct/client';
@@ -29,7 +32,7 @@ export async function getCartSummary(storeKey: string, cartId: string | undefine
   if (!cartId) return { count: 0 };
   try {
     const { body } = await inStore(storeKey).carts().withId({ ID: cartId }).get().execute();
-    return { count: (body.lineItems ?? []).reduce((sum, line) => sum + line.quantity, 0) };
+    return { count: (body.lineItems ?? []).filter((line) => !isBundleChild(line)).reduce((sum, line) => sum + line.quantity, 0) };
   } catch (error) {
     if (statusOf(error) === 404) return { count: 0 };
     throw error;
@@ -128,6 +131,7 @@ export function planRescope(
   const actions: CartUpdateAction[] = [];
   const unpriced: string[] = [];
   for (const line of cart.lineItems ?? []) {
+    if (isBundleChild(line)) continue; // a bundle's component lines carry the parent's price (external 0) and are never re-scoped alone
     const sku = line.variant.sku ?? '';
     const selected = selectStandalonePrice(prices.get(sku) ?? [], { currency, country, channelIds: [scope.branchChannelId, scope.retailChannelId] });
     if (!selected) {
@@ -242,14 +246,15 @@ async function resolveRecurrence(product: ProductProjection, policyKey: string) 
   return { recurrencePolicy: { typeId: 'recurrence-policy' as const, key: policyKey }, priceSelectionMode: SUBSCRIPTION_PRICE_MODE };
 }
 
-/** The `malva-line` fields, only with an active vehicle: its fitment key and the fit of this part (`fits`, `not-fit`, `unknown`). */
+/** The `malva-line` fields, only with an active vehicle: its fitment key, the vehicle as JSON (V-14, the portal's return detail reads it) and the fit of this part (`fits`, `not-fit`, `unknown`). */
 function lineFitCustom(product: ProductProjection, vehicle: NonNullable<AddLineInput['vehicle']>) {
   const keys = attributeOf(product, 'fitment-keys');
   const state = getFitState({ fitmentKeys: Array.isArray(keys) ? keys.filter((k): k is string => typeof k === 'string') : [], universalFit: attributeOf(product, 'universal-fit') === true }, vehicle);
   const fit = state === 'fits' ? 'fits' : state === 'does-not-fit' ? 'not-fit' : 'unknown';
-  return { type: { typeId: 'type' as const, key: 'malva-line' }, fields: { vehicleFitmentKey: vehicle.fitmentKey, fit } };
+  return { type: { typeId: 'type' as const, key: 'malva-line' }, fields: { vehicleFitmentKey: vehicle.fitmentKey, vehicle: JSON.stringify({ make: vehicle.make, model: vehicle.model, year: vehicle.year, engine: vehicle.engine }), fit } };
 }
-const unitsOf = (cart: Cart): number => (cart.lineItems ?? []).reduce((sum, line) => sum + line.quantity, 0);
+/** Units in the cart; a bundle counts as its own units, never its locked component lines (W-11). */
+const unitsOf = (cart: Cart): number => (cart.lineItems ?? []).filter((line) => !isBundleChild(line)).reduce((sum, line) => sum + line.quantity, 0);
 const hasMissingPrice = (error: unknown): boolean =>
   statusOf(error) === 400 && ((error as { body?: { errors?: { code?: string }[] } }).body?.errors ?? []).some((e) => e.code === 'MissingPrice');
 
@@ -273,8 +278,12 @@ export async function addLineToCart(
     .execute();
   const product = inAssortment.body.results[0];
   if (!product) throw new ApiError(404, 'Not found');
+  const components = parseBundleContents(product);
+  if (components && input.recurrencePolicyKey) throw new ApiError(422, 'not-subscribable');
   const recurrenceInfo = input.recurrencePolicyKey ? await resolveRecurrence(product, input.recurrencePolicyKey) : undefined;
   const lineCustom = input.vehicle ? lineFitCustom(product, input.vehicle) : undefined;
+  // W-11: a bundle is sold only while every component is in the store's selection and in stock (the bundles already in the cart count).
+  const bundleStock = components ? await getBundleView(ctx.storeKey, ctx.locale, components, ctx.scope.branchChannelId) : undefined;
 
   const channelIds = [ctx.scope.branchChannelId, ctx.scope.retailChannelId] as const;
   const prices = await getStandalonePrices([sku], { currency: ctx.currency, channelIds });
@@ -318,7 +327,12 @@ export async function addLineToCart(
     }
   };
 
-  let cart = (session.cartId ? await load(session.cartId) : null) ?? (await create());
+  const loaded = session.cartId ? await load(session.cartId) : null;
+  if (bundleStock) {
+    const inCart = (loaded?.lineItems ?? []).filter((l) => l.variant?.sku === sku && !isBundleChild(l)).reduce((sum, l) => sum + l.quantity, 0);
+    if (bundleStock.available < inCart + quantity) throw new ApiError(422, 'bundle-unavailable');
+  }
+  let cart = loaded ?? (await create());
   const action: CartUpdateAction = {
     action: 'addLineItem',
     sku,
@@ -328,20 +342,23 @@ export async function addLineToCart(
     ...(recurrenceInfo ? { recurrenceInfo } : {}),
     ...(lineCustom ? { custom: lineCustom } : {}),
   };
-  const push = async (current: Cart): Promise<Cart> => {
-    const { body } = await carts.withId({ ID: current.id }).post({ body: { version: current.version, actions: [action] } }).execute();
+  const push = async (current: Cart, actions: CartUpdateAction[]): Promise<Cart> => {
+    const { body } = await carts.withId({ ID: current.id }).post({ body: { version: current.version, actions } }).execute();
     return body;
   };
-  try {
+  const send = async (current: Cart, actions: CartUpdateAction[]): Promise<Cart> => {
     try {
-      cart = await push(cart);
+      return await push(current, actions);
     } catch (error) {
       if (statusOf(error) !== 409) throw error;
       // The cart changed under us (a second tab, a double click): one retry on the current version.
-      const fresh = await load(cart.id);
+      const fresh = await load(current.id);
       if (!fresh) throw error;
-      cart = await push(fresh);
+      return push(fresh, actions);
     }
+  };
+  try {
+    cart = components ? await addBundle(cart, sku, quantity, { components, parentAction: action, post: send }) : await send(cart, [action]);
   } catch (error) {
     if (hasMissingPrice(error)) throw new ApiError(422, 'price-unavailable');
     throw error;

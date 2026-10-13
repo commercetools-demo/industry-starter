@@ -21,35 +21,55 @@ export const CART_EXPAND = [
 
 export { collectSavings, mapPromoCodes };
 
-const CODE = /^[A-Za-z0-9_-]{1,64}$/;
+const CODE = /^[A-Z0-9_-]{1,40}$/;
 const rejected = (code: string, reason: PromoReason): PromoCodeState => ({ code, id: '', state: 'not-applied', reason });
 
+/** The typed code as the portal's campaigns write it: trimmed, upper case, at most 40 characters of `A-Z 0-9 _ -`; `null` when it cannot be a code. */
+export function normalizeCode(raw: string): string | null {
+  const code = raw.trim().toUpperCase();
+  return CODE.test(code) ? code : null;
+}
+
+/** W-02: the store's own campaign code `<CODE>-<STOREKEY upper>` first, then the plain code. The store key is the session's, never the request's. */
+export function codeCandidates(raw: string, storeKey: string): string[] {
+  const code = normalizeCode(raw);
+  return code ? [`${code}-${storeKey.toUpperCase()}`, code] : [];
+}
+
+type SdkFailure = { statusCode?: number; body?: { errors?: { code?: string; reason?: string }[] } };
+const nonApplicableReason = (error: unknown): string | undefined =>
+  typeof error === 'object' && error !== null ? (error as SdkFailure).body?.errors?.find((e) => e.code === 'DiscountCodeNonApplicable')?.reason : undefined;
+
 /**
- * Adds a discount code. A code that exists but does not match the cart stays on the cart with its state; a code that does not exist
- * (or is malformed) is refused by commercetools, so nothing changes and `cart` is null (the caller keeps the cart it has).
+ * Adds a discount code (the store-suffixed campaign code first, then the plain one). A code that exists but does not match the cart stays
+ * on the cart with its state; a code that does not exist (or is malformed) is refused by commercetools, so nothing changes and `cart` is null
+ * (the caller keeps the cart it has). A suffixed code that exists but cannot apply reports its own reason and the plain code is not tried.
  */
 export async function applyPromoCode(storeKey: string, cartId: string, rawCode: string): Promise<{ cart: CtCart | null; promo: PromoCodeState }> {
-  const code = rawCode.trim();
-  if (!CODE.test(code)) return { cart: null, promo: rejected(code, 'not-valid') };
-  try {
-    const cart = await withCartRetry(storeKey, cartId, async (current) => {
-      const { body } = await inStore(storeKey)
-        .carts()
-        .withId({ ID: cartId })
-        .post({ body: { version: current.version, actions: [{ action: 'addDiscountCode', code }] }, queryArgs: { expand: CART_EXPAND } })
-        .execute();
-      return body;
-    });
-    const entry = mapPromoCodes(cart).find((p) => p.code.toLowerCase() === code.toLowerCase());
-    return { cart, promo: entry ?? rejected(code, 'not-valid') };
-  } catch (error) {
-    const body = typeof error === 'object' && error !== null ? (error as { statusCode?: number; body?: { errors?: { code?: string; reason?: string }[] } }) : {};
-    if (body.statusCode === 400) {
-      const reason = body.body?.errors?.find((e) => e.code === 'DiscountCodeNonApplicable')?.reason;
-      return { cart: null, promo: rejected(code, (reason && STATE_REASON[reason]) || 'not-valid') };
+  const typed = rawCode.trim();
+  const candidates = codeCandidates(rawCode, storeKey);
+  if (candidates.length === 0) return { cart: null, promo: rejected(typed, 'not-valid') };
+  let last: PromoCodeState = rejected(typed, 'not-valid');
+  for (const code of candidates) {
+    try {
+      const cart = await withCartRetry(storeKey, cartId, async (current) => {
+        const { body } = await inStore(storeKey)
+          .carts()
+          .withId({ ID: cartId })
+          .post({ body: { version: current.version, actions: [{ action: 'addDiscountCode', code }] }, queryArgs: { expand: CART_EXPAND } })
+          .execute();
+        return body;
+      });
+      const entry = mapPromoCodes(cart).find((p) => p.code.toLowerCase() === code.toLowerCase());
+      return { cart, promo: entry ?? rejected(code, 'not-valid') };
+    } catch (error) {
+      if ((typeof error === 'object' && error !== null ? (error as SdkFailure).statusCode : undefined) !== 400) throw error;
+      const reason = nonApplicableReason(error);
+      last = rejected(typed, (reason && STATE_REASON[reason]) || 'not-valid');
+      if (reason && reason !== 'DoesNotExist') return { cart: null, promo: last };
     }
-    throw error;
   }
+  return { cart: null, promo: last };
 }
 
 export async function removePromoCode(storeKey: string, cartId: string, discountCodeId: string): Promise<CtCart> {

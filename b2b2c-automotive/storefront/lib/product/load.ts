@@ -8,6 +8,7 @@ import { cache } from 'react';
 import type { PdpBranch } from '@/components/product/detail/AvailabilityBlock';
 import type { ReviewFormState } from '@/components/product/detail/ReviewForm';
 import type { AppLocale } from '@/i18n/config';
+import { getBundleView } from '@/lib/ct/bundles';
 import { getProductBySlug, getRelatedSummaries } from '@/lib/ct/product-detail';
 import { getReviewEligibility, listReviews, reviewSubmissionEnabled } from '@/lib/ct/reviews';
 import { getShellContext } from '@/lib/ct/shell';
@@ -15,7 +16,7 @@ import { getSession } from '@/lib/session';
 import { getBranchScope } from '@/lib/store/branch-scope';
 import { buildBranchesResponse } from '@/lib/store/branches-view';
 import { subscriptionsPurchaseEnabled } from '@/lib/subscriptions/config';
-import type { ProductDetail, ProductSummary, ReviewItem } from '@/lib/types';
+import type { BundleView, ProductDetail, ProductSummary, ReviewItem } from '@/lib/types';
 import { getActiveVehicle } from '@/lib/vehicles/active';
 import { COUNTRY_CONFIG } from '@/lib/utils';
 
@@ -27,6 +28,8 @@ export interface ProductPageView {
   related: ProductSummary[];
   reviews: ReviewItem[];
   reviewForm: ReviewFormState | null;
+  /** Components and how many can be sold, for a bundle (W-11); null for a plain part. */
+  bundle: BundleView | null;
   branch: PdpBranch | null;
   canChangeStore: boolean;
   shipDays: { min: number; max: number };
@@ -58,10 +61,11 @@ async function loadProductPage(storeKey: string, locale: AppLocale, slug: string
   if (!product) return { kind: 'not-found' };
 
   const customerId = session.customerId;
-  const [related, reviews, reviewForm] = await Promise.all([
+  const [related, reviews, reviewForm, bundle] = await Promise.all([
     attempt(getRelatedSummaries(storeKey, product, ctx, { storeId: shell.storeId, fitKeys: vehicle ? vehicle.fitKeys : null }), [], 'related parts'),
     attempt(listReviews(product.id, storeKey), [], 'reviews'),
     reviewFormState(storeKey, customerId, product.id),
+    bundleState(storeKey, locale, product, scope.branchChannelId),
   ]);
 
   const branches = buildBranchesResponse(shell, session, new Date());
@@ -73,6 +77,7 @@ async function loadProductPage(storeKey: string, locale: AppLocale, slug: string
     related,
     reviews,
     reviewForm,
+    bundle,
     branch: selected ? { name: selected.name, address: selected.address, pickup: selected.pickup } : null,
     canChangeStore: !branches.single,
     shipDays: shell.settings.shipDays,
@@ -81,6 +86,17 @@ async function loadProductPage(storeKey: string, locale: AppLocale, slug: string
     subscriptionsEnabled: subscriptionsPurchaseEnabled(),
     alternativesHref: category ? `/${storeKey}/category/${category.slug}` : `/${storeKey}/parts`,
   };
+}
+
+/** A bundle's components for the page. A read that fails makes the bundle unavailable: it is never sold blind. */
+async function bundleState(storeKey: string, locale: AppLocale, product: ProductDetail, branchChannelId: string | undefined): Promise<BundleView | null> {
+  const components = product.bundleComponents;
+  if (!components) return null;
+  return attempt<BundleView>(
+    getBundleView(storeKey, locale, components, branchChannelId),
+    { components: components.map((c) => ({ ...c, name: c.sku, inStore: false })), available: 0 },
+    'bundle components',
+  );
 }
 
 async function reviewFormState(storeKey: string, customerId: string | undefined, productId: string): Promise<ReviewFormState | null> {

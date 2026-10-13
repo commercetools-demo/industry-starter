@@ -50,6 +50,7 @@ export async function ProductPage({ locale, store, slug, sku }: ProductPageProps
             sellerName={view.sellerName}
             subscriptionsEnabled={view.subscriptionsEnabled}
             alternativesHref={view.alternativesHref}
+            bundle={view.bundle}
           />
         </div>
       </div>

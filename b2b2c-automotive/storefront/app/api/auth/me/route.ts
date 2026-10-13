@@ -4,17 +4,20 @@
 // belong to the session's store (the in-store endpoint answers 404) is treated as signed out and removed from the session.
 import { handle } from '@/lib/api';
 import { inStore } from '@/lib/ct/in-store';
+import { maskAccountCustomer } from '@/lib/impersonation/state';
 import { mapCustomer } from '@/lib/mappers/customer';
 import { getSession, updateSession } from '@/lib/session';
 
 const NO_STORE = { 'Cache-Control': 'private, no-store' };
 
 export const GET = handle(async () => {
-  const { storeKey, customerId } = await getSession();
+  const { storeKey, customerId, impersonatedBy } = await getSession();
   if (!storeKey || !customerId) return Response.json({ customer: null }, { headers: NO_STORE });
   try {
     const { body } = await inStore(storeKey).customers().withId({ ID: customerId }).get().execute();
-    return Response.json({ customer: mapCustomer(body) }, { headers: NO_STORE });
+    const customer = mapCustomer(body);
+    // A seller shopping as the customer (V-06) sees the names only: masked e-mail, no phone, no addresses.
+    return Response.json({ customer: impersonatedBy ? maskAccountCustomer(customer) : customer }, { headers: NO_STORE });
   } catch (error) {
     const status = typeof error === 'object' && error !== null ? (error as { statusCode?: number }).statusCode : undefined;
     if (status !== 404) throw error;

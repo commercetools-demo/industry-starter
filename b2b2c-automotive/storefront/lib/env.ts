@@ -12,6 +12,8 @@ export interface CtConfig {
 export interface AppEnv {
   frontend: CtConfig;
   sessionSecret: string;
+  /** Signs the private link of a confirmation page (workstream P); never shared with the session. */
+  orderAccessSecret: string;
   contentoolsOrigin: string;
   geocoder: GeocoderEnv;
 }
@@ -37,9 +39,9 @@ function requiredUrl(env: Env, name: string): string {
   return value;
 }
 
-function secret(env: Env): string {
-  const value = required(env, 'SESSION_SECRET');
-  if (value.length < MIN_SECRET_LENGTH) throw new Error(`SESSION_SECRET must be at least ${MIN_SECRET_LENGTH} characters`);
+function secret(env: Env, name = 'SESSION_SECRET'): string {
+  const value = required(env, name);
+  if (value.length < MIN_SECRET_LENGTH) throw new Error(`${name} must be at least ${MIN_SECRET_LENGTH} characters`);
   return value;
 }
 
@@ -62,6 +64,7 @@ export function validateEnv(env: Env): AppEnv {
       scopes,
     },
     sessionSecret: secret(env),
+    orderAccessSecret: secret(env, 'ORDER_ACCESS_SECRET'),
     contentoolsOrigin: requiredUrl(env, 'CONTENTOOLS_ORIGIN').replace(/\/+$/, ''),
     geocoder: geocoderEnv(env),
   };
@@ -70,4 +73,18 @@ export function validateEnv(env: Env): AppEnv {
 /** The session signing key from `process.env.SESSION_SECRET`. Throws when missing or shorter than 32 characters. */
 export function getSessionSecret(): Uint8Array {
   return new TextEncoder().encode(secret(process.env));
+}
+
+/** The key of the order confirmation link from `process.env.ORDER_ACCESS_SECRET` (not the session secret). Throws when missing or shorter than 32 characters. */
+export function getOrderAccessSecret(): Uint8Array {
+  return new TextEncoder().encode(secret(process.env, 'ORDER_ACCESS_SECRET'));
+}
+
+/**
+ * The key shared with the portal for the "Shop as customer" handoff (`process.env.IMPERSONATION_SECRET`, V-06). `null` when it is missing or
+ * shorter than 32 characters: the feature is then off and `/api/impersonate` answers the generic not-found page. Never put it in a message.
+ */
+export function getImpersonationSecret(env: Env = process.env): Uint8Array | null {
+  const value = env.IMPERSONATION_SECRET?.trim();
+  return value && value.length >= MIN_SECRET_LENGTH ? new TextEncoder().encode(value) : null;
 }

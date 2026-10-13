@@ -73,6 +73,21 @@ Updated 2026-10-12 after the owner interview (`notes/owner-answers.md`, binding)
 | Q-P11 | Hosting may override the `Cache-Control` of dynamic pages: the response showed `no-store` (Next's value), not `private, no-store` from `next.config.ts`. | Both are non-cacheable; accepted | Nothing |
 | Q-P12 | The page shows the order's email only inside the guest account form (read-only), never for link holders of an account order. | As built | Nothing |
 
+## Added by workstream Q (J23, 2026-10-12; default taken, nothing waits)
+
+| Id | Question | Default taken | What it blocks |
+| --- | --- | --- | --- |
+| Q-Q01 | Return window: D6 says fall back to `lastModifiedAt` when `custom.deliveredAt` is missing, the portal contract says an order without `deliveredAt` is `NOT_DELIVERED`. | An order whose status is Delivered but has no `deliveredAt` uses `lastModifiedAt` (D6); a not-yet-delivered order is `NOT_DELIVERED`. Window days come from the store's `returnWindowDays`, else 30 | Whether the portal must always write `deliveredAt` (M-Q04) |
+| Q-Q02 | "Checkout preselects the default address" cannot be done in Q: Checkout is hosted and the storefront has no checkout state route. | `lib/ct/account-addresses.ts` exports `getDefaultShippingAddressDraft(storeKey, customerId)`; O may put it on the cart's `shippingAddress` when it creates the Checkout session. Row in MISSED-FEATURES | O adding the call |
+| Q-Q03 | A recurring order does not expose the payment method it renews with, so "deleting a payment method is blocked while a subscription uses it" (D9) cannot be enforced. | Deleting is allowed; the payment methods page shows a warning when the shopper has subscriptions, and the subscription shows "Payment failed" with a link back if a renewal fails | Decision at M-Q06 |
+| Q-Q04 | The real password-token shape is unknown until a live reset, so the decoy token (43 URL-safe characters, remembered from the last real one) may differ from a real one. | `decoyToken` copies the shape of the last real token it saw in this process and falls back to 43 characters | M-Q07 |
+| Q-Q05 | The account guard needs the request path; a server layout cannot read it. | `proxy.ts` sets an `x-pathname` request header (path and query) after it strips `x-store-key`; `lib/account/guard.ts` reads it to send a signed-out shopper to sign-in with `next` | Nothing |
+| Q-Q06 | The API client needs two more scopes: `manage_recurring_orders` (skip, pause, resume, cancel, change frequency) and `manage_payment_methods` (list and delete saved methods). | Added to `lib/scopes.ts`, its test and `.env.example`; the owner adds them to the API client at the live check | M-Q05, M-Q06 |
+| Q-Q07 | Invoice: no PDF is generated. | The invoice page is print-styled: an inline `@media print` rule hides header, footer and menu; the button calls `window.print()` ("Print or save as PDF") | Nothing |
+| Q-Q08 | Orders and Returns pages are server-rendered with a shared `error.tsx` and `loading.tsx`; the plan listed `GET /api/account/orders` and `/returns`. | No such routes (nothing in the browser needs them); the overview filters recent orders by status `ready-for-pickup` instead of a `lib/ct/states.ts` module | Nothing |
+| Q-Q09 | `next dev` of the shared storefront directory holds `.next/dev/lock`, so a second junior cannot run one there. | Browser checks ran on a copy of the app in the scratchpad (`next dev --webpack` on 3072) against a fake commercetools on 4071; `verify:build` also ran in that copy so J22's `.next` was not touched | Nothing |
+| Q-Q10 | Garage rename was not in J's API. | Added `renameVehicle` (garage module), `PATCH /api/garage` `{vehicleId, nickname}` and `useGarage().rename`, with tests; trimmed to 40 characters, empty removes the name | Nothing |
+
 ## Removed as obsolete (owner answer Q-P01: no emails)
 
 | Id | Was | Why removed |

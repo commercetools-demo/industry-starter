@@ -34,6 +34,17 @@ const projection = (over: Partial<ProductProjection> & { attrs?: ReturnType<type
 const master = projection();
 const price = (over: Partial<PriceCandidate>): PriceCandidate => ({ id: 'x', centAmount: 5000, currencyCode: 'USD', fractionDigits: 2, ...over });
 
+describe('mapProductDetail: bundles (W-11)', () => {
+  it('a bundle carries its components from the master; a plain part carries none', () => {
+    const bundle = projection({ attrs: [attr('component-skus', ['SK-1', 'SK-2']), attr('component-quantities', ['SK-1:2', 'SK-2:1'])] });
+    expect(mapProductDetail({ tailored: bundle, master: bundle }, [], ctx).bundleComponents).toEqual([
+      { sku: 'SK-1', qty: 2 },
+      { sku: 'SK-2', qty: 1 },
+    ]);
+    expect(mapProductDetail({ tailored: master, master }, [], ctx)).not.toHaveProperty('bundleComponents');
+  });
+});
+
 describe('mapProductDetail', () => {
   it('tailored name and description win', () => {
     const tailored = projection({ name: { 'en-US': 'Küstenwerk pads' }, description: { 'en-US': 'Reseller text' } });

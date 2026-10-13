@@ -8,6 +8,7 @@
 import 'server-only';
 import type { Cart as CtCart, CartUpdateAction } from '@commercetools/platform-sdk';
 import { postActions } from '@/lib/ct/cart';
+import { parentOf } from '@/lib/ct/cart-bundles';
 import { withCartRetry } from '@/lib/ct/cart-retry';
 import { CHECKOUT_TYPE_KEY } from '@/lib/ct/delivery';
 import { getLineStock } from '@/lib/ct/inventory';
@@ -44,6 +45,8 @@ export interface PrepareInput {
   vehicleLabel: string | null;
   /** Email of the signed-in customer, to prefill the hosted page. */
   customerEmail?: string;
+  /** The seller who shops as this customer (`session.impersonatedBy`, V-06): audit field on the cart and its order. Never a request value. */
+  placedOnBehalfBy?: string;
 }
 export interface PrepareEnv {
   production: boolean;
@@ -55,7 +58,8 @@ const defaultEnv = (): PrepareEnv => ({ production: process.env.NODE_ENV === 'pr
 
 /** Lines the branch and the warehouse together cannot cover at all (available 0): the cart already blocks its Checkout button for them. */
 async function unavailableLines(cart: CtCart, scope: BranchScope): Promise<string[]> {
-  const lines = cart.lineItems ?? [];
+  // A bundle line has no inventory entry of its own; its locked component lines are checked one by one (W-11).
+  const lines = (cart.lineItems ?? []).filter((line) => !(cart.lineItems ?? []).some((other) => parentOf(other) === line.id));
   const stock = await getLineStock(
     lines.map((l) => l.variant.sku).filter((s): s is string => Boolean(s)),
     scope.branchChannelId,
@@ -101,6 +105,7 @@ export async function prepareCartForCheckout(input: PrepareInput, env: PrepareEn
       fitVehicleLabel: input.vehicleLabel ?? undefined,
       isTest: env.production ? undefined : true,
       salesChannel: SALES_CHANNEL_WEB,
+      placedOnBehalfBy: input.placedOnBehalfBy,
     }),
   );
   return postActions(input.storeKey, input.cartId, actions);

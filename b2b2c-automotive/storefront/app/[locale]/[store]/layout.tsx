@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import { ImpersonationBanner } from '@/components/layout/ImpersonationBanner';
 import { CategoryNav } from '@/components/shell/CategoryNav';
 import { Footer } from '@/components/shell/Footer';
 import { Header } from '@/components/shell/Header';
@@ -12,6 +13,7 @@ import { GarageRoot } from '@/components/vehicle/GarageRoot';
 import { UtilityBar } from '@/components/shell/UtilityBar';
 import { StorePickerHost } from '@/components/store-picker/StorePickerHost';
 import { getNavCategories } from '@/lib/ct/categories';
+import { getImpersonatedName } from '@/lib/ct/impersonation';
 import { getShellContext } from '@/lib/ct/shell';
 import { getSession } from '@/lib/session';
 import { buildBranchesResponse } from '@/lib/store/branches-view';
@@ -44,6 +46,7 @@ export default async function StoreLayout({ children, params }: { children: Reac
     <StorePickerHost initial={branches}>
       <div className="flex min-h-screen flex-col">
         <SkipLink />
+        {session.impersonatedBy && session.customerId ? <ImpersonationBanner name={await getImpersonatedName(store, session.customerId).catch(() => null)} store={store} /> : null}
         <UtilityBar store={store} settings={ctx.settings} pickup={selected ? { option: selected.pickup, branchName: selected.name } : undefined} />
         <Header store={store} settings={ctx.settings} signedIn={Boolean(session.customerId)} />
         <CategoryNav store={store} categories={categories} />

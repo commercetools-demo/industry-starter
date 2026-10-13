@@ -11,19 +11,23 @@ const NOT_FOUND = () => new Response(null, { status: 404 });
 const MAX_BODY_BYTES = 16 * 1024; // the only POST is a page or content query
 const UPSTREAM_TIMEOUT_MS = 10_000;
 
-// Never forwarded upstream: the visitor's identity, our host, and the internal routing headers.
-const DROP_REQUEST = new Set(['host', 'cookie', 'authorization', 'proxy-authorization', 'connection', 'content-length', 'x-store-key', 'x-next-intl-locale']);
+// Only these request headers reach Contentools (workstream X, D07): never the visitor's cookie or Authorization, our host, x-forwarded-*,
+// a method override or an internal routing header. The project key is added below.
+const FORWARD_REQUEST = ['accept', 'accept-language', 'content-type', 'if-none-match'] as const;
+const NO_BODY_STATUS = new Set([204, 205, 304]);
+const UPSTREAM_ERROR = () => Response.json({ error: { code: 'UPSTREAM_ERROR' } }, { status: 502, headers: { 'Cache-Control': 'no-store' } });
 // Stripped from the answer: fetch already decoded the body, so these would describe the still-encoded payload.
-const DROP_RESPONSE = new Set(['content-encoding', 'content-length', 'transfer-encoding', 'connection', 'set-cookie']);
+const DROP_RESPONSE = new Set(['content-encoding', 'content-length', 'transfer-encoding', 'connection', 'set-cookie', 'location', 'www-authenticate', 'keep-alive']);
 
 async function handle(request: Request, context: { params: Promise<{ path: string[] }> }): Promise<Response> {
   const { path: segments } = await context.params;
   if (!isAllowed(request.method, segments)) return NOT_FOUND();
 
   const headers = new Headers();
-  request.headers.forEach((value, name) => {
-    if (!DROP_REQUEST.has(name.toLowerCase())) headers.set(name, value);
-  });
+  for (const name of FORWARD_REQUEST) {
+    const value = request.headers.get(name);
+    if (value) headers.set(name, value);
+  }
   headers.set('x-project-key', getProjectKey());
 
   let body: ArrayBuffer | undefined;
@@ -46,6 +50,9 @@ async function handle(request: Request, context: { params: Promise<{ path: strin
   } catch {
     return new Response(null, { status: 502 });
   }
+
+  // A redirect would send the visitor somewhere we did not allow (X, D12); a 5xx body may echo what we sent (X, D13).
+  if ((upstream.status >= 300 && upstream.status < 400 && !NO_BODY_STATUS.has(upstream.status)) || upstream.status >= 500) return UPSTREAM_ERROR();
 
   const responseHeaders = new Headers();
   upstream.headers.forEach((value, name) => {

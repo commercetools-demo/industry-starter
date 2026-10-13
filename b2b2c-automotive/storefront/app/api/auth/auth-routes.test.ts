@@ -125,6 +125,26 @@ describe('POST /api/auth/logout', () => {
     expect(state.session.anonymousId).not.toBe('anon-1');
     expect(state.session.storeKey).toBe('mau-reseller-north');
   });
+  it('signing out of a shop-as session also drops the impersonation fields (V-06)', async () => {
+    state.session = { storeKey: 'mau-reseller-north', customerId: 'cust-1', anonymousId: 'anon-1', impersonatedBy: 'seller-1', impJti: 'j', impImpExp: 5, impAbs: 9 };
+    const { POST } = await import('./logout/route');
+    await POST();
+    expect(state.session).not.toHaveProperty('impersonatedBy');
+    expect(state.session).not.toHaveProperty('impJti');
+    expect(state.session).not.toHaveProperty('impAbs');
+  });
+});
+
+describe('sign in during a shop-as session (V-06)', () => {
+  it('a sign-in ends the impersonation: the actor is never attached to another customer', async () => {
+    state.session = { storeKey: 'mau-reseller-north', customerId: 'cust-9', anonymousId: 'anon-1', impersonatedBy: 'seller-1', impJti: 'j', impImpExp: 5, impAbs: 9 };
+    const { POST } = await import('./login/route');
+    const res = await POST(post(good));
+    expect(res.status).toBe(200);
+    expect(state.session).toMatchObject({ customerId: 'cust-1' });
+    expect(state.session).not.toHaveProperty('impersonatedBy');
+    expect(state.session).not.toHaveProperty('impImpExp');
+  });
 });
 
 describe('GET /api/auth/me', () => {
@@ -141,6 +161,14 @@ describe('GET /api/auth/me', () => {
     expect(body.customer).toMatchObject({ id: 'cust-1', lastName: 'Schneider', defaultShippingAddressId: 'a1' });
     expect(body.customer.addresses).toHaveLength(1);
     expect(JSON.stringify(body)).not.toContain('never-shown');
+  });
+  it('shopping as the customer shows the names but a masked e-mail, no phone and no addresses (V-06)', async () => {
+    state.session = { storeKey: 'mau-reseller-north', customerId: 'cust-1', impersonatedBy: 'seller-1' };
+    customerGet.mockResolvedValue({ body: customer });
+    const { GET } = await import('./me/route');
+    const body = await (await GET()).json();
+    expect(body.customer).toMatchObject({ id: 'cust-1', firstName: 'Anna', lastName: 'Schneider', email: 'a***@e***.com', mobile: null, addresses: [] });
+    expect(JSON.stringify(body)).not.toContain('anna@example.com');
   });
   it('a customer of another store is signed out', async () => {
     state.session = { storeKey: 'mau-reseller-south', customerId: 'cust-1' };

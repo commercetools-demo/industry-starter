@@ -3,12 +3,13 @@
 // Orders as workstream O needs them. The order of a shopper is created by commercetools Checkout (O D5), never by this module; the only
 // writes here are the order number fallback, the pickup branch reconciliation and the dev-only helper (O-08, no Payment ever).
 import 'server-only';
-import type { Cart as CtCart, Order } from '@commercetools/platform-sdk';
+import type { Cart as CtCart, Order, RecurringOrder } from '@commercetools/platform-sdk';
 import { ORDER_NUMBER_FORMAT, deriveOrderNumber } from '@/lib/checkout/order-number';
 import { postActions } from '@/lib/ct/cart';
 import { apiRoot } from '@/lib/ct/client';
 import { CHECKOUT_TYPE_KEY, PICKUP_BRANCH_FIELD, SHIP_PICKUP_KEY } from '@/lib/ct/delivery';
 import { inStore } from '@/lib/ct/in-store';
+import { ORDER_CONFIRMATION_EXPAND } from '@/lib/mappers/order';
 
 const statusOf = (error: unknown): number | undefined =>
   typeof error === 'object' && error !== null ? (error as { statusCode?: number }).statusCode : undefined;
@@ -97,6 +98,58 @@ export async function reconcilePickupBranch(order: Order, branchKey: string | un
     // Best effort: a concurrent write (409) is not worth failing the shopper's confirmation for.
     if (statusOf(error) !== 409) throw error;
   }
+}
+
+/**
+ * The order of the confirmation page (workstream P): in-store read by number, shipping method, state, named discounts and subscription
+ * frequency expanded. `null` for a malformed number or a 404 (the page answers both with the same 404); any other failure throws.
+ * Server-rendered, never cached.
+ */
+export async function getOrderForConfirmation(storeKey: string, orderNumber: string): Promise<Order | null> {
+  if (!ORDER_NUMBER_FORMAT.test(orderNumber)) return null;
+  try {
+    const { body } = await inStore(storeKey).orders().withOrderNumber({ orderNumber }).get({ queryArgs: { expand: ORDER_CONFIRMATION_EXPAND } }).execute();
+    return body;
+  } catch (error) {
+    if (statusOf(error) === 404) return null;
+    throw error;
+  }
+}
+
+/**
+ * The Recurring Order commercetools creates (asynchronously) from the order, or `null` when there is none yet or the read fails: the
+ * confirmation then says "being set up" and shows no date (D10).
+ */
+export async function getRecurringOrderForOrder(orderId: string): Promise<RecurringOrder | null> {
+  if (!UUID.test(orderId)) return null;
+  try {
+    const { body } = await apiRoot.recurringOrders().get({ queryArgs: { where: `originOrder(id="${orderId}")`, limit: 1 } }).execute();
+    return body.results[0] ?? null;
+  } catch (error) {
+    console.error(`[order] recurring order read failed${statusOf(error) ? ` with status ${statusOf(error)}` : ''}`);
+    return null;
+  }
+}
+
+/** Attaches the order to a customer (`setCustomerId`), reloading and retrying on a version conflict (up to three attempts). */
+export async function claimOrder(storeKey: string, orderId: string, customerId: string): Promise<void> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const { body } = await inStore(storeKey).orders().withId({ ID: orderId }).get().execute();
+    if (body.customerId) throw new Error('The order already has a customer');
+    try {
+      await inStore(storeKey)
+        .orders()
+        .withId({ ID: orderId })
+        .post({ body: { version: body.version, actions: [{ action: 'setCustomerId', customerId }] } })
+        .execute();
+      return;
+    } catch (error) {
+      if (statusOf(error) !== 409) throw error;
+      lastError = error;
+    }
+  }
+  throw lastError;
 }
 
 export interface DevOrderInput {

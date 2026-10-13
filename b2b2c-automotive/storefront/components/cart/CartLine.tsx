@@ -22,6 +22,8 @@ interface Props {
   vehicleLabel?: string | null;
   /** The shopper reported a branch with no price for this part. */
   unpriced?: boolean;
+  /** The locked component lines of a bundle line (W-11), listed under it; they have no stepper, no remove and no price. */
+  components?: CartLineModel[];
   onQuantity: (lineId: string, quantity: number) => void;
   onRemove: (lineId: string) => void;
   alternativesHref: string;
@@ -40,7 +42,7 @@ function StockLine({ line }: { line: CartLineModel }) {
 }
 
 /** One cart line (workstream N, design view `cart`): image, brand, name, stock line, quantity stepper, Remove and the line total. */
-export function CartLine({ line, store, fit = line.fit, vehicleLabel = null, unpriced = false, onQuantity, onRemove, alternativesHref }: Props) {
+export function CartLine({ line, store, fit = line.fit, vehicleLabel = null, unpriced = false, components = [], onQuantity, onRemove, alternativesHref }: Props) {
   const t = useTranslations('cart');
   const locale = useLocale();
   const money = (m: { centAmount: number; currencyCode: string; fractionDigits: number }) => formatMoney(m.centAmount, m.currencyCode, locale, m.fractionDigits);
@@ -64,6 +66,16 @@ export function CartLine({ line, store, fit = line.fit, vehicleLabel = null, unp
         <span className="font-ui text-xs">
           <StockLine line={line} />
         </span>
+        {components.length > 0 ? (
+          <ul aria-label={t('bundleIncludes')} className="m-0 grid list-none gap-1 p-0 font-ui text-xs text-text-muted">
+            {components.map((component) => (
+              <li key={component.id}>
+                {t('bundleComponent', { count: component.quantity, name: component.name })}
+                {component.stock.available === 0 ? <span className="text-danger-600"> · {t('stockOut')}</span> : null}
+              </li>
+            ))}
+          </ul>
+        ) : null}
         {fit === 'does-not-fit' && vehicleLabel ? (
           <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <LineFitBadge vehicle={vehicleLabel} />

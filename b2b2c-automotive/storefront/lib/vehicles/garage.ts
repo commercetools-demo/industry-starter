@@ -47,6 +47,21 @@ export function removeVehicle(garage: Garage, id: VehicleId): Garage {
   return { vehicles, activeId };
 }
 
+/** Sets the optional nickname of a vehicle (trimmed, 40 characters); an empty name removes it. Added by workstream Q-08 (the garage page renames). */
+export function renameVehicle(garage: Garage, id: VehicleId, nickname: string): Garage {
+  const name = nickname.trim().slice(0, NICKNAME_MAX);
+  if (!garage.vehicles.some((v) => v.id === id)) return garage;
+  return {
+    ...garage,
+    vehicles: garage.vehicles.map((v) => {
+      if (v.id !== id) return v;
+      const { nickname: _old, ...rest } = v;
+      void _old;
+      return name ? { ...rest, nickname: name } : rest;
+    }),
+  };
+}
+
 export function setActive(garage: Garage, id: VehicleId): Garage {
   return garage.vehicles.some((v) => v.id === id) ? { ...garage, activeId: id } : garage;
 }

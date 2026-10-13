@@ -18,3 +18,11 @@ export const KEY_VEHICLE_OPTIONS = '/api/vehicles/options';
 /** Recurrence policies of "Subscribe and save" (workstream M); the locale is part of the key because policy names are localized. */
 export const KEY_SUBSCRIPTION_POLICIES = '/api/subscriptions/policies';
 export const keySubscriptionPolicies = (locale: string): string => `${KEY_SUBSCRIPTION_POLICIES}?locale=${encodeURIComponent(locale)}`;
+
+// Account area (workstream Q). Each key is the route that answers it.
+export const KEY_ACCOUNT_ADDRESSES = '/api/account/addresses';
+export const KEY_ACCOUNT_PAYMENT_METHODS = '/api/account/payment-methods';
+export const KEY_ACCOUNT_SUBSCRIPTIONS = '/api/account/subscriptions';
+export const KEY_ACCOUNT_PROFILE = '/api/account/profile';
+/** Demo shopper list of the sign-in page (workstream Q-13a). */
+export const KEY_DEMO_ACCOUNTS = '/api/auth/demo-accounts';

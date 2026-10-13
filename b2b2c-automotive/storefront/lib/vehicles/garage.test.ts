@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Garage, GarageVehicle } from '@/lib/types';
 import { findFitmentKeyFor } from './catalog';
-import { addVehicle, emptyGarage, GARAGE_MAX, mergeGarages, parseGarage, removeVehicle, setActive } from './garage';
+import { addVehicle, emptyGarage, GARAGE_MAX, mergeGarages, parseGarage, removeVehicle, renameVehicle, setActive } from './garage';
 import { buildVehicleId } from './id';
 import { VEHICLE_RECORDS } from './test-fixtures';
 
@@ -24,6 +24,21 @@ const clio = entry('Renault', 'Clio', 2021, '1.0 TCe');
 const focus = entry('Ford', 'Focus', 2020, '1.0 EcoBoost');
 const garageOf = (vehicles: GarageVehicle[], activeId: string | null = vehicles[0]?.id ?? null): Garage => ({ vehicles, activeId });
 const resolve = (e: { make: string; model: string; year: number; engine: string; fitmentKey?: string }) => findFitmentKeyFor(VEHICLE_RECORDS, e);
+
+describe('Garage: rename (workstream Q-08)', () => {
+  it('sets, trims and caps the nickname and keeps the rest', () => {
+    const g = garageOf([golf, a3], golf.id);
+    const named = renameVehicle(g, golf.id, `  ${'x'.repeat(50)}  `);
+    expect(named.vehicles[0].nickname).toHaveLength(40);
+    expect(named.vehicles[1]).toEqual(a3);
+    expect(named.activeId).toBe(golf.id);
+  });
+  it('an empty name removes the nickname; an unknown id changes nothing', () => {
+    const g = garageOf([entry('Volkswagen', 'Golf', 2016, '2.0 TDI', 'Daily')]);
+    expect('nickname' in renameVehicle(g, g.vehicles[0].id, '  ').vehicles[0]).toBe(false);
+    expect(renameVehicle(g, 'nope', 'X')).toBe(g);
+  });
+});
 
 describe('Garage: pure operations', () => {
   it('addVehicle makes it active', () => {

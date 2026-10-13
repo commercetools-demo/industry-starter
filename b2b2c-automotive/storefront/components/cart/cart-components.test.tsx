@@ -118,6 +118,17 @@ describe('CartLine', () => {
     expect(screen.getByRole('link', { name: 'View fitting alternatives' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Increase quantity of Brake pads front' })).toBeEnabled();
   });
+  it('a bundle line lists its locked components and shows their stock problem (W-11)', () => {
+    const parts = [
+      line({ id: 'k1', sku: 'SK-1', name: 'Brake disc', quantity: 4, parentLineItemId: 'li-1' }),
+      line({ id: 'k2', sku: 'SK-2', name: 'Brake pads', quantity: 2, parentLineItemId: 'li-1', stock: { fromStore: 0, shipsLater: 0, capped: false, available: 0, branchName: null } }),
+    ];
+    renderCart(<ul><CartLine line={line()} components={parts} {...lineProps} /></ul>);
+    const list = screen.getByRole('list', { name: 'Included in this bundle' });
+    expect(within(list).getAllByRole('listitem').map((li) => li.textContent)).toEqual(['4 × Brake disc', '2 × Brake pads · Currently not available']);
+    // only the bundle line has controls: one stepper and one remove button
+    expect(screen.getAllByRole('button', { name: /Remove/ })).toHaveLength(1);
+  });
   it('an unpriced line says so', () => {
     renderCart(<ul><CartLine line={line()} unpriced {...lineProps} /></ul>);
     expect(screen.getByRole('alert')).toHaveTextContent('No price for this part at your store');

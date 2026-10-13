@@ -4,6 +4,7 @@
 // description, images, stock) and `master` (the untailored one). Locked data (part number, OE numbers, fitment, specifications,
 // brand, quality, subscribable flag) is read from `master` ONLY, so product tailoring can never change it (D2).
 import type { Attribute, Category, Image, ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
+import { parseBundleContents } from '@/lib/bundles/contents';
 import { pickPrice } from '@/lib/mappers/product-summary';
 import { selectStandalonePrice } from '@/lib/store/standalone-price';
 import type { NavCategory, PriceCandidate, ProductDetail, ProductImage, SpecRow } from '@/lib/types';
@@ -83,6 +84,7 @@ export function mapProductDetail(
   const stats = tailored.reviewRatingStatistics ?? master.reviewRatingStatistics;
   const selected = selectStandalonePrice(prices, { currency: ctx.currency, country: ctx.country, channelIds: [ctx.branchChannelId, ctx.retailChannelId] });
   const fitment = strings(attr('fitment-keys'));
+  const bundleComponents = parseBundleContents(master);
   const specAttrs = (mVariant.attributes ?? []).concat((masterAttrs ?? []).filter((a) => !(mVariant.attributes ?? []).some((b) => b.name === a.name)));
 
   return {
@@ -104,6 +106,7 @@ export function mapProductDetail(
     universalFit: attr('universal-fit') === true,
     fitmentKeys: fitment,
     recurringEligible: attr('recurring-eligible') === true,
+    ...(bundleComponents ? { bundleComponents } : {}),
     relatedSkus: strings(attr('related-skus')),
     categoryTrail: categoryTrail(tailored, ctx.locale),
   };

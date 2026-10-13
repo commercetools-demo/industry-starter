@@ -46,6 +46,24 @@ describe('mapCart', () => {
     expect(totals.pricesIncludeTax).toBe(false);
     expect(totals.total.centAmount).toBe(totals.subtotal.centAmount + (totals.tax?.amount.centAmount ?? 0));
   });
+  it('a bundle counts as its own units: the locked component lines are listed but not counted (W-11)', () => {
+    const bundle = lineItem('p', 'BND-1', 2, { list: 15156 });
+    const child = (id: string, sku: string, qty: number) => ({ ...lineItem(id, sku, qty, { list: 0 }), custom: { type: { typeId: 'type', id: 't' }, fields: { parentLineItemId: 'p' } } });
+    const cart = ctCart({ lineItems: [bundle, child('k1', 'SK-1', 4), child('k2', 'SK-2', 2)] });
+    const mapped = mapCart(cart, ctx({ stock: { ...stock, 'SK-1': { branchQty: 9, masterQty: 0 }, 'SK-2': { branchQty: 9, masterQty: 0 } } }));
+    expect(mapped.itemCount).toBe(2);
+    expect(mapped.lines.map((l) => [l.id, l.parentLineItemId])).toEqual([['p', undefined], ['k1', 'p'], ['k2', 'p']]);
+    expect(mapped.lines[0]).not.toHaveProperty('parentLineItemId');
+    // the bundle has no inventory entry: its stock is what its components allow (4 x SK-1 and 2 x SK-2 for 2 bundles; 9 on the shelf each)
+    expect(mapped.lines[0].stock).toMatchObject({ available: 2, capped: false });
+  });
+  it('a bundle with a component out of stock is out of stock itself, so the cart blocks Checkout (W-11)', () => {
+    const bundle = lineItem('p', 'BND-1', 2, { list: 15156 });
+    const child = (id: string, sku: string, qty: number) => ({ ...lineItem(id, sku, qty, { list: 0 }), custom: { type: { typeId: 'type', id: 't' }, fields: { parentLineItemId: 'p' } } });
+    const mapped = mapCart(ctCart({ lineItems: [bundle, child('k1', 'SK-1', 4), child('k2', 'SK-2', 2)] }), ctx({ stock: { 'SK-1': { branchQty: 9, masterQty: 0 }, 'SK-2': { branchQty: 0, masterQty: 0 } } }));
+    expect(mapped.lines[0].stock.available).toBe(0);
+    expect(mapped.lines[2].stock.available).toBe(0);
+  });
   it('item count is the sum of quantities', () => {
     expect(mapCart(ctCart(), ctx()).itemCount).toBe(3);
   });

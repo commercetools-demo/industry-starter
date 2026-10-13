@@ -6,7 +6,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 // The `malva-checkout` type belongs to the seed (O D10); checkout only WRITES these fields, on the cart (copied to the order) or the order.
-const WRITTEN = ['fitVehicleLabel', 'isTest', 'salesChannel', 'pickupBranchKey'];
+const WRITTEN = ['fitVehicleLabel', 'isTest', 'salesChannel', 'pickupBranchKey', 'placedOnBehalfBy'];
 const root = path.resolve(import.meta.dirname, '..', '..');
 const read = (...parts: string[]) => readFileSync(path.join(root, ...parts), 'utf8');
 

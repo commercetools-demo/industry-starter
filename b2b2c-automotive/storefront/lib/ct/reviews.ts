@@ -9,6 +9,7 @@ import { ApiError } from '@/lib/api';
 import { apiRoot } from '@/lib/ct/client';
 import { inStore } from '@/lib/ct/in-store';
 import { mapReview, REVIEW_CUSTOM_TYPE, REVIEW_PUBLISHED_STATE } from '@/lib/mappers/review';
+import { createTtlCache } from '@/lib/ttl-cache';
 import type { ReviewItem } from '@/lib/types';
 
 const ID = /^[A-Za-z0-9_-]{1,64}$/;
@@ -21,9 +22,30 @@ export function reviewSubmissionEnabled(env: Record<string, string | undefined> 
 const statusOf = (error: unknown): number | undefined =>
   typeof error === 'object' && error !== null ? (error as { statusCode?: number }).statusCode : undefined;
 
-/** The newest reviews of a product that show in `storeKey` (hidden ones and other stores' reviews are left out). */
+/**
+ * Cache lifetime of a review list (V-15). The portal (another app) writes a reply or hides a review and cannot clear this cache, so a reply
+ * shows after at most this long (per server instance). The shopper's own new review clears the lists of this instance at once.
+ */
+export const REVIEWS_TTL_MS = 60_000;
+const reviewsCache = createTtlCache<ReviewItem[]>({ ttlMs: REVIEWS_TTL_MS, negativeTtlMs: REVIEWS_TTL_MS, now: () => Date.now() });
+let generation = 0;
+/** Forgets every cached list of this instance (a new review; tests). */
+export function clearReviewsCache(): void {
+  generation += 1;
+}
+
+/** The newest reviews of a product that show in `storeKey` (hidden ones and other stores' reviews are left out). Cached for `REVIEWS_TTL_MS`. */
 export async function listReviews(productId: string, storeKey: string): Promise<ReviewItem[]> {
   if (!ID.test(productId)) return [];
+  const key = `${generation}:${storeKey}:${productId}`;
+  const hit = reviewsCache.get(key);
+  if (hit?.value) return hit.value;
+  const reviews = await readReviews(productId, storeKey);
+  reviewsCache.set(key, reviews);
+  return reviews;
+}
+
+async function readReviews(productId: string, storeKey: string): Promise<ReviewItem[]> {
   const { body } = await apiRoot
     .reviews()
     .get({ queryArgs: { where: `target(id="${productId}")`, sort: ['createdAt desc'], limit: 50, expand: ['state'] } })
@@ -89,6 +111,7 @@ export async function createReview(storeKey: string, customerId: string, input: 
     statusOf(error) === 409 || ((error as { body?: { errors?: { code?: string }[] } }).body?.errors ?? []).some((e) => e.code === 'DuplicateField');
   try {
     const { body } = await apiRoot.reviews().post({ body: moderated }).execute();
+    clearReviewsCache();
     return { id: body.id };
   } catch (error) {
     if (isDuplicate(error)) throw new ApiError(409, 'already-reviewed');
@@ -97,6 +120,7 @@ export async function createReview(storeKey: string, customerId: string, input: 
   // The project has no `malva-review` type or review states yet: write a plain review (shown in every store).
   try {
     const { body } = await apiRoot.reviews().post({ body: plain }).execute();
+    clearReviewsCache();
     return { id: body.id };
   } catch (error) {
     if (isDuplicate(error)) throw new ApiError(409, 'already-reviewed');

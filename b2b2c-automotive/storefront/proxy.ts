@@ -3,13 +3,19 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE, type AppLocale } from '@/i18n/config';
 import { getSessionSecret } from '@/lib/env';
+import { apiGate, methodGate } from '@/lib/security/api-gate';
 import { decideLocale } from '@/lib/locale-redirect';
 import { applyStore, SESSION_COOKIE, sessionCookieOptions, setCookieHeader, signSession, verifySession } from '@/lib/session-core';
+import { endRecord, getRecordStatus } from '@/lib/ct/impersonation';
 import { getStoreContext } from '@/lib/ct/stores';
+import { endedSession, impersonationState, isImpersonating, touchImpersonation } from '@/lib/impersonation/state';
 import type { Session } from '@/lib/types';
 
 /** The payment return URL registered with the hosted Checkout has no locale and no store (workstream O). */
 const isCheckoutReturn = (pathname: string) => pathname === '/checkout/return' || pathname === '/checkout/return/';
+
+/** The portal posts the "Shop as customer" hand-off form across origins; its single-use signed token is the credential (workstream V-06). */
+const CROSS_ORIGIN_EXEMPT = ['/api/impersonate'] as const;
 
 const sameStoreFields = (a: Session, b: Session) =>
   a.storeKey === b.storeKey &&
@@ -23,6 +29,14 @@ const sameStoreFields = (a: Session, b: Session) =>
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   if (isCheckoutReturn(pathname)) return NextResponse.next();
+  // Workstream X: every state-changing /api call must be same-origin JSON or multipart before any handler runs.
+  if (pathname.startsWith('/api/')) {
+    const refused = apiGate(request, pathname, CROSS_ORIGIN_EXEMPT);
+    return refused ? new NextResponse(refused.body, refused) : NextResponse.next();
+  }
+  // G09: pages answer GET, HEAD and POST (Server Actions) only; TRACE, PUT, PATCH, DELETE are 405.
+  const badMethod = methodGate(request.method);
+  if (badMethod) return new NextResponse(null, badMethod);
 
   const decision = decideLocale({
     pathname,
@@ -41,6 +55,8 @@ export async function proxy(request: NextRequest) {
       const headers = new Headers(request.headers);
       headers.set('x-next-intl-locale', decision.locale);
       headers.delete('x-store-key'); // never trust a client supplied value
+      // The path of this request for server layouts, which do not know it (the account guard returns the shopper here after sign-in; `safeNext` checks it).
+      headers.set('x-pathname', `${pathname}${search}`);
       const finish = (response: NextResponse) => {
         if (decision.setCookie) {
           response.cookies.set(LOCALE_COOKIE, decision.locale, { maxAge: LOCALE_COOKIE_MAX_AGE, path: '/', sameSite: 'lax' });
@@ -70,10 +86,23 @@ async function resolveStore(request: NextRequest, locale: AppLocale, storeKey: s
   }
 
   const secret = getSessionSecret();
-  const session = await verifySession(request.cookies.get(SESSION_COOKIE)?.value, secret);
+  let session = await verifySession(request.cookies.get(SESSION_COOKIE)?.value, secret);
+  // "Shop as customer" (V-06): every page request renews the idle deadline, and an expired or revoked session ends here (the cookie is rewritten).
+  let impersonationChanged = false;
+  if (isImpersonating(session)) {
+    const now = new Date();
+    const state = impersonationState(session, now, session.impJti ? await getRecordStatus(session.impJti) : undefined);
+    if (state === 'expired') {
+      if (session.impJti) await endRecord(session.impJti);
+      session = endedSession(session, crypto.randomUUID());
+    } else {
+      session = touchImpersonation(session, now);
+    }
+    impersonationChanged = true;
+  }
   const next = applyStore(session, store);
   headers.set('x-store-key', store.storeKey);
-  const changed = !sameStoreFields(session, next);
+  const changed = impersonationChanged || !sameStoreFields(session, next);
   let token: string | undefined;
   if (changed) {
     token = await signSession(next, secret);
@@ -85,5 +114,5 @@ async function resolveStore(request: NextRequest, locale: AppLocale, storeKey: s
   return response;
 }
 
-// Skips Next internals, API routes, files with an extension, and the locale-less payment return URL.
-export const config = { matcher: ['/((?!_next|api|checkout/return|.*\\..*).*)', '/'] };
+// Skips Next internals, files with an extension and the locale-less payment return URL; API routes only get the origin gate (workstream X).
+export const config = { matcher: ['/((?!_next|api|checkout/return|.*\\..*).*)', '/', '/api/:path*'] };

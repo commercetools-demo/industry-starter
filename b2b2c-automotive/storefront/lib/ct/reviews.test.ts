@@ -16,10 +16,11 @@ vi.mock('./client', () => ({
   projectKey: 'p',
 }));
 
-import { createReview, getReviewEligibility, listReviews, reviewSubmissionEnabled } from './reviews';
+import { clearReviewsCache, createReview, getReviewEligibility, listReviews, reviewSubmissionEnabled, REVIEWS_TTL_MS } from './reviews';
 
 const input = { productId: 'prod1', rating: 5, title: 'Great', text: 'Fits', locale: 'en-US' };
 beforeEach(() => {
+  clearReviewsCache();
   for (const m of [reviewsGet, reviewsPost, ordersGet, customerGet]) m.mockReset();
   customerGet.mockResolvedValue({ body: { firstName: 'Anna', lastName: 'Meyer', email: 'anna@example.com' } });
 });
@@ -36,6 +37,30 @@ describe('listReviews', () => {
     });
     expect((await listReviews('prod1', 'mau-reseller-north')).map((r) => r.id)).toEqual(['b']);
     expect(reviewsGet.mock.calls[0][0].queryArgs.where).toBe('target(id="prod1")');
+  });
+  it('a reply written in the portal shows after the cache lifetime, not before (V-15)', async () => {
+    vi.useFakeTimers();
+    try {
+      const row = (replyText?: string) => ({ body: { results: [{ id: 'b', createdAt: 't', rating: 4, authorName: 'B', ...(replyText ? { custom: { fields: { replyText } } } : {}) }] } });
+      reviewsGet.mockResolvedValueOnce(row());
+      await listReviews('prod1', 'mau-reseller-north');
+      reviewsGet.mockResolvedValue(row('Thanks'));
+      await listReviews('prod1', 'mau-reseller-north');
+      expect(reviewsGet).toHaveBeenCalledTimes(1);
+      vi.advanceTimersByTime(REVIEWS_TTL_MS + 1);
+      await listReviews('prod1', 'mau-reseller-north');
+      expect(reviewsGet).toHaveBeenCalledTimes(2);
+      expect(REVIEWS_TTL_MS).toBeLessThanOrEqual(120_000);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+  it('lists are cached per store and product', async () => {
+    reviewsGet.mockResolvedValue({ body: { results: [] } });
+    await listReviews('prod1', 'mau-reseller-north');
+    await listReviews('prod1', 'mau-reseller-south');
+    await listReviews('prod2', 'mau-reseller-north');
+    expect(reviewsGet).toHaveBeenCalledTimes(3);
   });
   it('a malformed product id is not queried', async () => {
     expect(await listReviews('x" or 1=1', 'mau-reseller-north')).toEqual([]);

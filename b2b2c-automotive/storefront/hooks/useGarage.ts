@@ -8,7 +8,7 @@ import { GarageContext } from '@/context/GarageProvider';
 import { fetchJson, postJson } from '@/hooks/fetch-json';
 import { KEY_GARAGE } from '@/lib/cache-keys';
 import type { GarageState, Vehicle, VehicleId } from '@/lib/types';
-import { GARAGE_MAX, removeVehicle, setActive as activate, toGarageState } from '@/lib/vehicles/garage';
+import { GARAGE_MAX, removeVehicle, renameVehicle, setActive as activate, toGarageState } from '@/lib/vehicles/garage';
 
 export interface UseGarage {
   garage: GarageState['garage'] | undefined;
@@ -25,6 +25,8 @@ export interface UseGarage {
   setActive: (vehicleId: VehicleId) => Promise<void>;
   /** Optimistic; removing the active vehicle activates the newest remaining one. */
   remove: (vehicleId: VehicleId) => Promise<void>;
+  /** Sets the nickname (40 characters, empty clears it). Added by workstream Q-08 for the garage page. */
+  rename: (vehicleId: VehicleId, nickname: string) => Promise<void>;
 }
 
 /**
@@ -72,6 +74,19 @@ export function useGarage(): UseGarage {
     [data, mutate, onChange],
   );
 
+  const rename = useCallback(
+    async (vehicleId: VehicleId, nickname: string) => {
+      await mutate(fetchJson<GarageState>(KEY_GARAGE, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ vehicleId, nickname }) }), {
+        optimisticData: data ? toGarageState(renameVehicle(data.garage, vehicleId, nickname)) : undefined,
+        rollbackOnError: true,
+        populateCache: true,
+        revalidate: false,
+      });
+      onChange?.();
+    },
+    [data, mutate, onChange],
+  );
+
   return {
     garage: data?.garage,
     vehicles: data?.vehicles ?? [],
@@ -82,5 +97,6 @@ export function useGarage(): UseGarage {
     addVehicle,
     setActive,
     remove,
+    rename,
   };
 }

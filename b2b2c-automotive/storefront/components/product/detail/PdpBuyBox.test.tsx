@@ -83,6 +83,37 @@ afterEach(() => vi.unstubAllGlobals());
 
 const panel = () => screen.getByText(/added to your cart/).closest('[role="status"]') as HTMLElement;
 
+const bundleView = (available: number) => ({
+  components: [
+    { sku: 'SK-1', qty: 2, name: 'Brake disc', inStore: true },
+    { sku: 'SK-2', qty: 1, name: 'Brake pads', inStore: available > 0 },
+  ],
+  available,
+});
+
+describe('Buy box: bundles (W-11)', () => {
+  it('lists the components and adds the bundle like a part', async () => {
+    const h = install(stateOf(GOLF_2016));
+    render(boxProps({ bundle: bundleView(3) }));
+    const list = screen.getByRole('list');
+    expect(within(list).getAllByRole('listitem').map((li) => li.textContent)).toEqual(['2 × Brake disc', '1 × Brake pads']);
+    expect(screen.getByText('Available as a bundle')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Add to cart' }));
+    await waitFor(() => expect(h.posts).toEqual([{ sku: 'MLV-BP-41001', quantity: 1 }]));
+  });
+  it('with no bundle available it says Currently unavailable and disables Add', () => {
+    install(stateOf(GOLF_2016));
+    render(boxProps({ bundle: bundleView(0) }));
+    expect(screen.getByText('Currently unavailable')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add to cart' })).toBeDisabled();
+  });
+  it('a bundle is never offered as a subscription', async () => {
+    install(stateOf(GOLF_2016));
+    render(boxProps({ product: detail({ recurringEligible: true }), bundle: bundleView(2) }));
+    expect(screen.queryByText('Subscribe and save')).not.toBeInTheDocument();
+  });
+});
+
 describe('Buy box: quantity and add to cart', () => {
   it('add three posts quantity 3', async () => {
     const h = install(stateOf(GOLF_2016));

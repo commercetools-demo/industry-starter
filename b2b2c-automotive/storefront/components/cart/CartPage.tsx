@@ -25,7 +25,9 @@ export function CartPage({ store }: { store: string }) {
   const partsHref = `/${store}/parts`;
 
   const lines = cart?.lines ?? [];
-  const fits = getLineFit(lines, active);
+  // A bundle's locked component lines (W-11) are shown under their bundle line and do not count as lines of their own.
+  const topLines = lines.filter((line) => line.parentLineItemId === undefined);
+  const fits = getLineFit(topLines, active);
   const misfit = countMisfits(fits);
   const blocked = lines.some((line) => line.stock.available === 0);
 
@@ -48,10 +50,11 @@ export function CartPage({ store }: { store: string }) {
           <div className="grid min-w-0 gap-3 min-[42.5rem]:col-span-2">
             {active ? <FitWarning count={misfit} vehicle={active.label} alternativesHref={partsHref} /> : null}
             <ul aria-label={t('itemsLabel')} className="m-0 grid list-none gap-3 p-0">
-              {lines.map((line) => (
+              {topLines.map((line) => (
                 <CartLine
                   key={line.id}
                   line={line}
+                  components={lines.filter((component) => component.parentLineItemId === line.id)}
                   store={store}
                   fit={fits[line.id]}
                   vehicleLabel={active?.label ?? null}

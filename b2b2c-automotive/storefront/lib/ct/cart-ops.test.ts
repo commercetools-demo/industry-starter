@@ -183,12 +183,20 @@ describe('addLineToCart: subscriptions and vehicle', () => {
     expect(actionOf(0).custom).toBeUndefined();
     const vehicle = { fitmentKey: 'Volkswagen|Golf|2012|2019|2.0 TDI', make: 'Volkswagen', model: 'Golf', year: 2016, engine: '2.0 TDI' };
     await addLineToCart(ctx, {}, { sku: 'SKU-1', quantity: 1, vehicle });
-    expect(actionOf(1).custom).toEqual({ type: { typeId: 'type', key: 'malva-line' }, fields: { vehicleFitmentKey: vehicle.fitmentKey, fit: 'fits' } });
+    expect(actionOf(1).custom).toEqual({ type: { typeId: 'type', key: 'malva-line' }, fields: { vehicleFitmentKey: vehicle.fitmentKey, vehicle: JSON.stringify({ make: 'Volkswagen', model: 'Golf', year: 2016, engine: '2.0 TDI' }), fit: 'fits' } });
   });
   it('a part that does not fit the vehicle is recorded as not-fit, never blocked', async () => {
     const vehicle = { fitmentKey: 'BMW|X5|2010|2012|3.0d', make: 'BMW', model: 'X5', year: 2011, engine: '3.0d' };
     await addLineToCart(ctx, {}, { sku: 'SKU-1', quantity: 1, vehicle });
     expect((actionOf().custom as { fields: { fit: string } }).fields.fit).toBe('not-fit');
+  });
+  it('V-14: the vehicle JSON and fit come from the server side vehicle, a request body cannot carry them', async () => {
+    const vehicle = { fitmentKey: 'BMW|X5|2010|2012|3.0d', make: 'BMW', model: 'X5', year: 2011, engine: '3.0d' };
+    await addLineToCart(ctx, {}, { sku: 'SKU-1', quantity: 1, vehicle, custom: { fields: { fit: 'fits' } } } as never);
+    const fields = (actionOf().custom as { fields: Record<string, string> }).fields;
+    expect(JSON.parse(fields.vehicle)).toEqual({ make: 'BMW', model: 'X5', year: 2011, engine: '3.0d' });
+    expect(fields.fit).toBe('not-fit');
+    expect(Object.keys(fields).sort()).toEqual(['fit', 'vehicle', 'vehicleFitmentKey']);
   });
   it('MissingPrice maps to price-unavailable', async () => {
     cartUpdate.mockRejectedValue({ statusCode: 400, body: { errors: [{ code: 'MissingPrice' }] } });

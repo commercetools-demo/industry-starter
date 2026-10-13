@@ -103,6 +103,17 @@ describe('Garage BFF: anonymous (cookie)', () => {
     expect((await add('audi.a3.2018.1-4-tfsi', 'x'.repeat(41))).status).toBe(400);
   });
 
+  it('PATCH renames a vehicle (Q-08) and an empty name clears it', async () => {
+    await add('volkswagen.golf.2016.2-0-tdi');
+    const { root } = await routes();
+    const patch = (nickname: string) => root.PATCH(makeRequest('/api/garage', { method: 'PATCH', body: JSON.stringify({ vehicleId: 'volkswagen.golf.2016.2-0-tdi', nickname }), headers: { 'content-type': 'application/json' } }));
+    expect((await patch('Daily')).status).toBe(200);
+    expect(stored().vehicles[0].nickname).toBe('Daily');
+    await patch('');
+    expect(stored().vehicles[0].nickname).toBeUndefined();
+    expect((await patch('x'.repeat(41))).status).toBe(400);
+  });
+
   it('an invalid body is 400', async () => {
     const { root } = await routes();
     const res = await root.POST(makeRequest('/api/garage', { method: 'POST', body: '{"vehicleId":5}', headers: { 'content-type': 'application/json' } }));

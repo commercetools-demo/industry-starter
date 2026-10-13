@@ -45,7 +45,8 @@ export function buildCsp({
   imgHosts = [],
   checkoutRegion,
   checkoutDevOrigin,
-}: { dev?: boolean; imgHosts?: string[]; checkoutRegion?: string; checkoutDevOrigin?: string } = {}): string {
+  portalOrigin,
+}: { dev?: boolean; imgHosts?: string[]; checkoutRegion?: string; checkoutDevOrigin?: string; portalOrigin?: string } = {}): string {
   const real = checkoutRegion ? checkoutOrigins(checkoutRegion) : { script: [], connect: [], frame: [], img: [], font: [] };
   // A local stand-in for the hosted Checkout (development rehearsal only, see `checkoutDevHosts`): one more origin everywhere the app needs.
   const checkout = checkoutDevOrigin
@@ -60,7 +61,8 @@ export function buildCsp({
     'font-src': ["'self'", 'data:', ...checkout.font],
     'connect-src': ["'self'", ...(dev ? ['ws://localhost:*', 'ws://127.0.0.1:*'] : []), ...checkout.connect],
     ...(checkout.frame.length ? { 'frame-src': checkout.frame } : {}),
-    'frame-ancestors': ["'self'"],
+    // Workstream X (G01): only this site and, for the portal live preview, the portal origin (PORTAL_ORIGIN) may frame a page.
+    'frame-ancestors': ["'self'", ...(portalOrigin ? [portalOrigin] : [])],
     'base-uri': ["'self'"],
     'form-action': ["'self'"],
     'object-src': ["'none'"],
@@ -68,4 +70,15 @@ export function buildCsp({
   return Object.entries(directives)
     .map(([name, values]) => `${name} ${values.join(' ')}`)
     .join('; ');
+}
+
+/** A bare http(s) origin from a configured address (`PORTAL_ORIGIN`), else undefined. */
+export function portalOriginOf(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:' ? url.origin : undefined;
+  } catch {
+    return undefined;
+  }
 }

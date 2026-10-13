@@ -30,7 +30,12 @@ export const SESSION_KEYS = [
   'productSelectionId',
   'branchKey',
   'anonymousId',
+  'impersonatedBy',
+  'impJti',
 ] as const satisfies readonly (keyof Session)[];
+
+/** Numeric session keys (epoch seconds of an impersonation session). */
+export const SESSION_NUMBER_KEYS = ['impImpExp', 'impAbs'] as const satisfies readonly (keyof Session)[];
 
 const STRING_KEYS = SESSION_KEYS.filter((k) => k !== 'locale');
 
@@ -42,6 +47,10 @@ export function pickSession(input: unknown): Session {
   for (const key of STRING_KEYS) {
     const value = source[key];
     if (typeof value === 'string' && value.length > 0 && value.length <= 256) out[key] = value;
+  }
+  for (const key of SESSION_NUMBER_KEYS) {
+    const value = source[key];
+    if (typeof value === 'number' && Number.isSafeInteger(value) && value > 0) out[key] = value;
   }
   if (isAppLocale(source.locale)) out.locale = source.locale;
   return out;

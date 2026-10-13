@@ -23,7 +23,7 @@ const run = handle(async (request: Request) => {
   const { storeKey, cartId } = session;
   try {
     const vehicle = await getActiveVehicle().catch(() => null);
-    await prepareCartForCheckout({ storeKey, cartId, branchKey: session.branchKey, vehicleLabel: vehicle?.label ?? null });
+    await prepareCartForCheckout({ storeKey, cartId, branchKey: session.branchKey, vehicleLabel: vehicle?.label ?? null, ...(session.impersonatedBy ? { placedOnBehalfBy: session.impersonatedBy } : {}) });
     const order = await createDevOrderFromCart({ storeKey, cartId, customerEmail });
     return Response.json({ redirect: `/checkout/return?orderId=${order.id}` }, { headers: NO_STORE });
   } catch (error) {

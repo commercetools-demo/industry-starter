@@ -44,6 +44,7 @@ const ok = (over = {}): ProductPageResult => ({
   related: [summary()],
   reviews: [],
   reviewForm: null,
+  bundle: null,
   branch: { name: 'Küstenwerk Hamburg-Harburg', address: { street: 'Harburger Ring 1', postalCode: '21073', city: 'Hamburg' }, pickup: 'today' },
   canChangeStore: true,
   shipDays: { min: 2, max: 3 },

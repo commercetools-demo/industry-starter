@@ -16,8 +16,9 @@ vi.mock('./client', () => ({
   projectKey: 'p',
 }));
 
-import { applyPromoCode, collectSavings, mapPromoCodes, removePromoCode } from './cart-discounts';
+import { applyPromoCode, codeCandidates, collectSavings, mapPromoCodes, normalizeCode, removePromoCode } from './cart-discounts';
 
+const doesNotExist = { statusCode: 400, body: { errors: [{ code: 'DiscountCodeNonApplicable', reason: 'DoesNotExist' }] } };
 const codeEntry = (state: string, code = 'MALVA-WELCOME5') => ({ discountCode: { typeId: 'discount-code', id: 'dc-1', obj: { code } }, state });
 
 beforeEach(() => {
@@ -66,14 +67,16 @@ describe('collectSavings: named savings', () => {
 
 describe('promo codes', () => {
   it('code that matches is applied', async () => {
+    cartPost.mockRejectedValueOnce(doesNotExist);
     cartPost.mockResolvedValue({ body: ctCart({ discountCodes: [codeEntry('MatchesCart')] }) });
     const out = await applyPromoCode('mau-reseller-north', 'cart-1', ' MALVA-WELCOME5 ');
-    expect(cartPost.mock.calls[0][0].body.actions).toEqual([{ action: 'addDiscountCode', code: 'MALVA-WELCOME5' }]);
+    expect(cartPost.mock.calls[1][0].body.actions).toEqual([{ action: 'addDiscountCode', code: 'MALVA-WELCOME5' }]);
     expect(out.promo).toEqual({ code: 'MALVA-WELCOME5', id: 'dc-1', state: 'applied', reason: null });
     expect(out.cart).not.toBeNull();
   });
   it('code that does not match is not applied with reason and totals unchanged', async () => {
     const before = ctCart();
+    cartPost.mockRejectedValueOnce(doesNotExist);
     cartPost.mockResolvedValue({ body: ctCart({ discountCodes: [codeEntry('DoesNotMatchCart', 'SUEDKAMM-BRAKE5')] }) });
     const out = await applyPromoCode('mau-reseller-north', 'cart-1', 'SUEDKAMM-BRAKE5');
     expect(out.promo).toMatchObject({ state: 'not-applied', reason: 'does-not-match' });
@@ -99,6 +102,50 @@ describe('promo codes', () => {
     const out = await applyPromoCode('mau-reseller-north', 'cart-1', 'bad code!');
     expect(out.promo.reason).toBe('not-valid');
     expect(cartPost).not.toHaveBeenCalled();
+  });
+});
+
+describe('store-suffixed codes (W-02)', () => {
+  const North = 'mau-reseller-north';
+  const applied = (code: string) => ({ body: ctCart({ discountCodes: [codeEntry('MatchesCart', code)] }) });
+  const sent = () => cartPost.mock.calls.map((c) => c[0].body.actions[0].code);
+
+  it('BRAKE8 on store A applies BRAKE8-<A> and never BRAKE8-<B>', async () => {
+    cartPost.mockResolvedValue(applied('BRAKE8-MAU-RESELLER-NORTH'));
+    const out = await applyPromoCode(North, 'cart-1', 'brake8');
+    expect(sent()).toEqual(['BRAKE8-MAU-RESELLER-NORTH']);
+    expect(out.promo).toMatchObject({ state: 'applied' });
+    expect(sent().join()).not.toContain('SOUTH');
+  });
+  it('falls back to the plain code when the suffixed one does not exist', async () => {
+    cartPost.mockRejectedValueOnce(doesNotExist);
+    cartPost.mockResolvedValueOnce(applied('BRAKE8'));
+    const out = await applyPromoCode(North, 'cart-1', 'BRAKE8');
+    expect(sent()).toEqual(['BRAKE8-MAU-RESELLER-NORTH', 'BRAKE8']);
+    expect(out.promo).toMatchObject({ code: 'BRAKE8', state: 'applied' });
+  });
+  it('a suffixed code that exists but cannot apply reports its reason and does not try the plain code', async () => {
+    cartPost.mockRejectedValue({ statusCode: 400, body: { errors: [{ code: 'DiscountCodeNonApplicable', reason: 'NotActive' }] } });
+    const out = await applyPromoCode(North, 'cart-1', 'BRAKE8');
+    expect(sent()).toEqual(['BRAKE8-MAU-RESELLER-NORTH']);
+    expect(out.promo).toMatchObject({ state: 'not-applied', reason: 'not-active' });
+  });
+  it('the store key comes from the argument and is upper cased', async () => {
+    cartPost.mockResolvedValue(applied('X-MAU-RESELLER-SOUTH'));
+    await applyPromoCode('mau-reseller-south', 'cart-1', 'x');
+    expect(sent()).toEqual(['X-MAU-RESELLER-SOUTH']);
+  });
+  it('normalises: trims, upper cases, refuses more than 40 characters and characters outside A-Z 0-9 _ -', async () => {
+    expect(normalizeCode('  brake_8-x ')).toBe('BRAKE_8-X');
+    expect(normalizeCode('a'.repeat(41))).toBeNull();
+    expect(normalizeCode('a'.repeat(40))).toBe('A'.repeat(40));
+    expect(normalizeCode('bad code')).toBeNull();
+    expect(normalizeCode('x;y')).toBeNull();
+    expect(normalizeCode('')).toBeNull();
+  });
+  it('candidates are the suffixed code first, then the plain one', () => {
+    expect(codeCandidates('brake8', 'mau-reseller-north')).toEqual(['BRAKE8-MAU-RESELLER-NORTH', 'BRAKE8']);
+    expect(codeCandidates('no way', 'mau-reseller-north')).toEqual([]);
   });
 });
 

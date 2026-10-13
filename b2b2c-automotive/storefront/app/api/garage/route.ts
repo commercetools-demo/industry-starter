@@ -5,7 +5,7 @@ import { ApiError, handle, parseJson } from '@/lib/api';
 import { listVehicleRecords } from '@/lib/ct/vehicles';
 import type { Garage, GarageVehicle } from '@/lib/types';
 import { findFitmentKeyFor, vehicleFromId } from '@/lib/vehicles/catalog';
-import { addVehicle, NICKNAME_MAX, removeVehicle, toGarageState } from '@/lib/vehicles/garage';
+import { addVehicle, NICKNAME_MAX, removeVehicle, renameVehicle, toGarageState } from '@/lib/vehicles/garage';
 import { isVehicleId } from '@/lib/vehicles/id';
 import { mutateGarage, readGarage } from '@/lib/vehicles/service';
 
@@ -36,6 +36,17 @@ export const POST = handle(async (request: Request) => {
     ...(nickname ? { nickname } : {}),
   };
   return respond(await mutateGarage((garage) => addVehicle(garage, entry)));
+});
+
+const renameBody = z.object({
+  vehicleId: z.string().refine(isVehicleId, 'Invalid vehicle id'),
+  nickname: z.string().trim().max(NICKNAME_MAX, 'Nickname is too long'),
+});
+
+/** `PATCH /api/garage` `{ vehicleId, nickname }` renames a vehicle of the garage (an empty nickname removes it). Added by workstream Q-08. */
+export const PATCH = handle(async (request: Request) => {
+  const { vehicleId, nickname } = await parseJson(request, renameBody);
+  return respond(await mutateGarage((garage) => renameVehicle(garage, vehicleId, nickname)));
 });
 
 /** `DELETE /api/garage?vehicleId=...` removes a vehicle; removing the active one activates the newest remaining. */

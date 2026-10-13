@@ -3,6 +3,7 @@
 // commercetools cart (expanded, see `CART_EXPAND`) to the cart view model (workstream N-07). Prices are the cart's own standalone-price
 // selection; there is no price floor or minimum price logic (D17). Currency, tax label and rate come from the cart, never from literals.
 import type { Attribute, Cart as CtCart, LineItem } from '@commercetools/platform-sdk';
+import { bundleLineStock } from '@/lib/bundles/contents';
 import { collectSavings, mapPromoCodes } from '@/lib/mappers/cart-savings';
 import { mapMoney } from '@/lib/mappers/money';
 import { getFitState } from '@/lib/search/fitment';
@@ -67,6 +68,7 @@ function mapLine(line: LineItem, ctx: CartMapContext): CartLine {
   const split = splitStock(line.quantity, ctx.stock[sku] ?? { branchQty: 0, masterQty: 0 });
   const discounted = line.price.discounted?.value;
   const info = line.recurrenceInfo;
+  const parent = line.custom?.fields?.parentLineItemId;
   const policy = info?.recurrencePolicy as { id: string; obj?: { key?: string; name?: Record<string, string> } } | undefined;
   return {
     id: line.id,
@@ -85,6 +87,7 @@ function mapLine(line: LineItem, ctx: CartMapContext): CartLine {
     recurrence: info
       ? { policyKey: policy?.obj?.key ?? policy?.id ?? '', policyName: getLocalizedString(policy?.obj?.name, ctx.locale) || policy?.obj?.key || '', priceMode: info.priceSelectionMode === 'Fixed' ? 'Fixed' : 'Dynamic' }
       : null,
+    ...(typeof parent === 'string' && parent ? { parentLineItemId: parent } : {}),
   };
 }
 
@@ -100,8 +103,18 @@ function mapTax(cart: CtCart): Cart['totals']['tax'] {
   return { label: taxLabel(name, rate), rate, amount };
 }
 
+/** A bundle line has no inventory entry of its own: its stock is what its component lines allow (W-11). */
+function withBundleStock(lines: CartLine[], ctx: CartMapContext): CartLine[] {
+  return lines.map((line) => {
+    const components = lines.filter((l) => l.parentLineItemId === line.id).map((l) => ({ sku: l.sku, qty: Math.max(1, Math.round(l.quantity / line.quantity)) }));
+    if (components.length === 0) return line;
+    const split = splitStock(line.quantity, bundleLineStock(components, ctx.stock));
+    return { ...line, stock: { ...split, available: split.fromStore + split.shipsLater, branchName: ctx.branchName } };
+  });
+}
+
 export function mapCart(ct: CtCart, ctx: CartMapContext): Cart {
-  const lines = (ct.lineItems ?? []).map((line) => mapLine(line, ctx));
+  const lines = withBundleStock((ct.lineItems ?? []).map((line) => mapLine(line, ctx)), ctx);
   const currency = ct.totalPrice.currencyCode;
   const digits = ct.totalPrice.fractionDigits;
   const money = (centAmount: number): Money => ({ centAmount, currencyCode: currency, fractionDigits: digits });
@@ -110,7 +123,8 @@ export function mapCart(ct: CtCart, ctx: CartMapContext): Cart {
     id: ct.id,
     version: ct.version,
     lines,
-    itemCount: lines.reduce((sum, line) => sum + line.quantity, 0),
+    // A bundle's locked component lines are listed but not counted: the bundle is the unit (W-11).
+    itemCount: lines.filter((line) => line.parentLineItemId === undefined).reduce((sum, line) => sum + line.quantity, 0),
     delivery: { selected: selectedMode(ct), options: ctx.options },
     promoCodes: mapPromoCodes(ct),
     totals: {

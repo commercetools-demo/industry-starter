@@ -13,12 +13,14 @@ const m = vi.hoisted(() => ({
   reviews: vi.fn(),
   eligibility: vi.fn(),
   enabled: vi.fn(),
+  bundle: vi.fn(),
 }));
 vi.mock('react', async (orig) => ({ ...(await orig<typeof import('react')>()), cache: <T>(fn: T) => fn }));
 vi.mock('@/lib/ct/shell', () => ({ getShellContext: m.shell }));
 vi.mock('@/lib/session', () => ({ getSession: m.session }));
 vi.mock('@/lib/vehicles/active', () => ({ getActiveVehicle: m.vehicle }));
 vi.mock('@/lib/ct/product-detail', () => ({ getProductBySlug: m.product, getRelatedSummaries: m.related }));
+vi.mock('@/lib/ct/bundles', () => ({ getBundleView: m.bundle }));
 vi.mock('@/lib/ct/reviews', () => ({ listReviews: m.reviews, getReviewEligibility: m.eligibility, reviewSubmissionEnabled: m.enabled }));
 
 import { getProductPage } from './load';
@@ -51,6 +53,26 @@ beforeEach(() => {
   m.related.mockResolvedValue([summary()]);
   m.reviews.mockResolvedValue([]);
   m.enabled.mockReturnValue(false);
+});
+
+describe('getProductPage: bundles (W-11)', () => {
+  it('a plain part reads no bundle', async () => {
+    const view = await getProductPage(input);
+    expect(view).toMatchObject({ kind: 'ok', bundle: null });
+    expect(m.bundle).not.toHaveBeenCalled();
+  });
+  it('a bundle reads its components for the store and the branch of the session', async () => {
+    m.product.mockResolvedValue(detail({ bundleComponents: [{ sku: 'SK-1', qty: 2 }] }));
+    m.bundle.mockResolvedValue({ components: [{ sku: 'SK-1', qty: 2, name: 'Disc', inStore: true }], available: 3 });
+    const view = await getProductPage(input);
+    expect(view).toMatchObject({ kind: 'ok', bundle: { available: 3 } });
+    expect(m.bundle).toHaveBeenCalledWith('mau-reseller-north', 'en-US', [{ sku: 'SK-1', qty: 2 }], 'ch-b');
+  });
+  it('a failing component read makes the bundle unavailable instead of selling it blind', async () => {
+    m.product.mockResolvedValue(detail({ bundleComponents: [{ sku: 'SK-1', qty: 2 }] }));
+    m.bundle.mockRejectedValue(new Error('down'));
+    expect(await getProductPage(input)).toMatchObject({ kind: 'ok', bundle: { available: 0, components: [{ sku: 'SK-1', qty: 2 }] } });
+  });
 });
 
 describe('getProductPage', () => {

@@ -26,7 +26,7 @@ export const POST = handle(async () => {
       getActiveVehicle().catch(() => null),
       session.customerId ? getCheckoutCustomerEmail(storeKey, session.customerId) : Promise.resolve(undefined),
     ]);
-    await prepareCartForCheckout({ storeKey, cartId, branchKey: session.branchKey, vehicleLabel: vehicle?.label ?? null, ...(customerEmail ? { customerEmail } : {}) });
+    await prepareCartForCheckout({ storeKey, cartId, branchKey: session.branchKey, vehicleLabel: vehicle?.label ?? null, ...(customerEmail ? { customerEmail } : {}), ...(session.impersonatedBy ? { placedOnBehalfBy: session.impersonatedBy } : {}) });
     const created = await createCheckoutSession({ cartId, applicationKey });
     return Response.json(created, { headers: NO_STORE });
   } catch (error) {

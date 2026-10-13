@@ -11,12 +11,17 @@ function withLineDelta(cart: Cart, lineId: string, quantity: number): Cart {
   if (!line) return cart;
   const dq = quantity - line.quantity;
   const lineDelta = line.unitPrice.centAmount * dq;
-  const lines = quantity <= 0 ? cart.lines.filter((l) => l.id !== lineId) : cart.lines.map((l) => (l.id === lineId ? { ...l, quantity, total: plus(l.total, lineDelta) } : l));
+  // A bundle's locked component lines (W-11) go with it and keep their per bundle quantity; they carry no price of their own.
+  const perBundle = (child: Cart['lines'][number]) => Math.max(1, Math.round(child.quantity / line.quantity));
+  const lines =
+    quantity <= 0
+      ? cart.lines.filter((l) => l.id !== lineId && l.parentLineItemId !== lineId)
+      : cart.lines.map((l) => (l.id === lineId ? { ...l, quantity, total: plus(l.total, lineDelta) } : l.parentLineItemId === lineId ? { ...l, quantity: quantity * perBundle(l) } : l));
   const list = (line.listUnitPrice ?? line.unitPrice).centAmount * dq;
   return {
     ...cart,
     lines,
-    itemCount: lines.reduce((sum, l) => sum + l.quantity, 0),
+    itemCount: lines.filter((l) => l.parentLineItemId === undefined).reduce((sum, l) => sum + l.quantity, 0),
     hasSubscription: lines.some((l) => l.recurrence !== null),
     totals: { ...cart.totals, subtotal: plus(cart.totals.subtotal, list), total: plus(cart.totals.total, lineDelta) },
   };

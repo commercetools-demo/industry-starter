@@ -12,6 +12,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { AddToCartButton } from '@/components/product/detail/AddToCartButton';
 import { AvailabilityBlock, type PdpBranch } from '@/components/product/detail/AvailabilityBlock';
+import { BundleContents } from '@/components/product/detail/BundleContents';
 import { PriceBlock } from '@/components/product/detail/PriceBlock';
 import { PurchaseModeChoice, type PurchaseMode } from '@/components/product/detail/PurchaseModeChoice';
 import { QuantityStepper } from '@/components/product/detail/QuantityStepper';
@@ -22,7 +23,7 @@ import { useGarage } from '@/hooks/useGarage';
 import { useSubscriptionPolicies } from '@/hooks/useSubscriptionPolicies';
 import { usePathname, useRouter } from '@/i18n/routing';
 import { getFitState } from '@/lib/search/fitment';
-import type { ProductDetail } from '@/lib/types';
+import type { BundleView, ProductDetail } from '@/lib/types';
 
 export interface PdpBuyBoxProps {
   product: Pick<ProductDetail, 'sku' | 'variants' | 'price' | 'stock' | 'fitmentKeys' | 'universalFit' | 'recurringEligible'>;
@@ -37,9 +38,11 @@ export interface PdpBuyBoxProps {
   subscriptionsEnabled: boolean;
   /** Locale-less address of the listing of fitting alternatives. */
   alternativesHref: string;
+  /** Set for a bundle (W-11): its components and how many can be sold. With none available the buy box says "Currently unavailable" and disables Add. */
+  bundle?: BundleView | null;
 }
 
-export function PdpBuyBox({ product, branch, canChangeStore, shipDays, store, returnDays, sellerName, subscriptionsEnabled, alternativesHref }: PdpBuyBoxProps) {
+export function PdpBuyBox({ product, branch, canChangeStore, shipDays, store, returnDays, sellerName, subscriptionsEnabled, alternativesHref, bundle = null }: PdpBuyBoxProps) {
   const t = useTranslations('pdp');
   const router = useRouter();
   const pathname = usePathname();
@@ -48,7 +51,8 @@ export function PdpBuyBox({ product, branch, canChangeStore, shipDays, store, re
   const [mode, setMode] = useState<PurchaseMode>('one-time');
   const [policyChoice, setPolicyChoice] = useState<string | undefined>();
 
-  const offerSubscription = subscriptionsEnabled && product.recurringEligible;
+  const bundleBlocked = bundle !== null && bundle.available < 1;
+  const offerSubscription = subscriptionsEnabled && product.recurringEligible && bundle === null;
   const { policies } = useSubscriptionPolicies(offerSubscription);
   const showChoice = offerSubscription && policies.length > 0;
   const subscribing = showChoice && mode === 'subscribe';
@@ -62,7 +66,10 @@ export function PdpBuyBox({ product, branch, canChangeStore, shipDays, store, re
     <div className="grid gap-4">
       <FitBanner product={product} alternativesHref={alternativesHref} />
       <PriceBlock price={product.price} />
-      <AvailabilityBlock branch={branch} canChangeStore={canChangeStore} inStock={product.stock.atBranch} shipDays={shipDays} />
+      {bundle ? <BundleContents bundle={bundle} /> : null}
+      {bundle === null || !bundleBlocked ? (
+        <AvailabilityBlock branch={branch} canChangeStore={canChangeStore} inStock={bundle ? true : product.stock.atBranch} shipDays={shipDays} />
+      ) : null}
       {product.variants.length > 1 ? (
         <Select label={t('option')} value={product.sku} onChange={(event) => router.replace(`${pathname}?sku=${encodeURIComponent(event.target.value)}`)}>
           {product.variants.map((variant) => (
@@ -79,7 +86,7 @@ export function PdpBuyBox({ product, branch, canChangeStore, shipDays, store, re
         quantity={quantity}
         hasPrice={product.price !== null}
         subscription={subscribing && policy ? { key: policy.key, label: policy.label } : null}
-        disabled={subscribing && !policy}
+        disabled={(subscribing && !policy) || bundleBlocked}
         misfit={misfit}
         cartHref={`/${store}/cart`}
       />

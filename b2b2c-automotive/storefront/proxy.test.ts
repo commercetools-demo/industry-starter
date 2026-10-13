@@ -11,6 +11,9 @@ import { config, proxy } from './proxy';
 
 const getStoreContext = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/ct/stores', () => ({ getStoreContext }));
+const getRecordStatus = vi.hoisted(() => vi.fn());
+const endRecord = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/ct/impersonation', () => ({ getRecordStatus, endRecord }));
 
 const storeFor = (key: string, n: string): StoreSummary => ({
   key,
@@ -163,6 +166,59 @@ describe('Store resolved from the path: proxy', () => {
     const base = new NextRequest(makeRequest('/de-DE', { headers: { 'x-store-key': 'evil' } }));
     const res = await proxy(base);
     expect(res.headers.get('x-middleware-request-x-store-key')).toBeNull();
+  });
+});
+
+describe('Shop as customer: idle expiry in the proxy (V-06)', () => {
+  const nowS = () => Math.floor(Date.now() / 1000);
+  const shopAs = (over: Record<string, unknown> = {}) => ({
+    ...storeSession(),
+    customerId: 'cust-1',
+    cartId: 'cart-1',
+    impersonatedBy: 'seller-1',
+    impJti: 'jti-1',
+    impImpExp: nowS() + 60,
+    impAbs: nowS() + 1000,
+    ...over,
+  });
+  const storeSession = () => ({ storeKey: 'hartmann', distributionChannelId: 'dist-h', supplyChannelId: 'supply-h', productSelectionId: 'sel-h', cartId: 'cart-1' });
+
+  beforeEach(() => {
+    getRecordStatus.mockReset().mockResolvedValue('active');
+    endRecord.mockReset().mockResolvedValue(undefined);
+  });
+
+  it('an active session gets its idle deadline renewed on a page request', async () => {
+    const before = nowS() + 5;
+    const res = await proxy(req('/de-DE/hartmann', await sessionCookie(shopAs({ impImpExp: before }))));
+    const next = await decode(cookieOf(res));
+    expect(next.customerId).toBe('cust-1');
+    expect(next.impImpExp).toBeGreaterThan(nowS() + 100);
+    expect(next.impImpExp).toBeLessThanOrEqual(nowS() + 120);
+    expect(next.cartId).toBe('cart-1');
+    expect(endRecord).not.toHaveBeenCalled();
+  });
+  it('an idle session is signed out, loses the cart and the actor, and its record is ended', async () => {
+    const res = await proxy(req('/de-DE/hartmann', await sessionCookie(shopAs({ impImpExp: nowS() - 1 }))));
+    const next = await decode(cookieOf(res));
+    expect(next).toMatchObject({ storeKey: 'hartmann' });
+    for (const key of ['customerId', 'cartId', 'impersonatedBy', 'impJti', 'impImpExp', 'impAbs']) expect(next).not.toHaveProperty(key);
+    expect(next.anonymousId).toMatch(/^[0-9a-f-]{36}$/);
+    expect(endRecord).toHaveBeenCalledWith('jti-1');
+  });
+  it('the absolute cap ends it even when the idle deadline is open', async () => {
+    const res = await proxy(req('/de-DE/hartmann', await sessionCookie(shopAs({ impAbs: nowS() - 1 }))));
+    expect(await decode(cookieOf(res))).not.toHaveProperty('customerId');
+  });
+  it('a revoked record (ended in the portal) ends the session at the next page request', async () => {
+    getRecordStatus.mockResolvedValue('ended');
+    const res = await proxy(req('/de-DE/hartmann', await sessionCookie(shopAs())));
+    expect(await decode(cookieOf(res))).not.toHaveProperty('impersonatedBy');
+    expect(getRecordStatus).toHaveBeenCalledWith('jti-1');
+  });
+  it('a normal session makes no record lookup', async () => {
+    await proxy(req('/de-DE/hartmann', await sessionCookie({ ...storeSession(), customerId: 'cust-1' })));
+    expect(getRecordStatus).not.toHaveBeenCalled();
   });
 });
 

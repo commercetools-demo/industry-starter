@@ -219,11 +219,20 @@ For `plans/TODO-MANUAL-TESTING.md` (coordinator adds new rows):
 
 ## 13. Notes to fill in while working
 
-- Exact recurring-order action names and state values confirmed from the OAS, including the action (if any) that changes the recurrence policy or schedule: _(write them)_.
-- Which recurring order field exposes the payment method (for the delete-block rule in D9): _(write it)_.
-- J's garage API names used: _(list)_; anything added to J's module: _(list)_.
-- Steps of section 9 that could not run for lack of data (delivered or ready-for-pickup order): _(list)_.
+- Recurring-order actions (no in-store endpoint, so every read and write is scoped by `customer(id=...) and store(key=...)`): skip is `setOrderSkipConfiguration` with `{type: 'Counter', totalToSkip: 1}`; pause, resume and cancel are `setRecurringOrderState` with `paused`, `active`, `canceled`; change frequency is `setSchedule { recurrencePolicy: {typeId: 'recurrence-policy', key} }`. States read back: `Active`, `Paused`, `Canceled`, `Expired`, `Failed`. A busy order answers InvalidOperation, shown as 409 `busy`. Names come from the skill reference and the OAS; the live API check is M-Q05.
+- The recurring order does not expose the payment method it renews with, so the delete-block rule in D9 is not implemented (a warning replaces it, Q-Q03, M-Q06).
+- J's garage API used: `GET/POST/DELETE /api/garage`, `POST /api/garage/active`, `POST /api/garage/merge`, `useGarage()` (`vehicles`, `active`, `add`, `remove`, `setActive`), `lib/vehicles/garage.ts`. Added to J's module: `renameVehicle(garage, id, nickname)` plus tests, `PATCH /api/garage` `{vehicleId, nickname}` plus a test, `useGarage().rename` (optimistic). Also used J22's `MarketingConsentCheckbox` and `lib/contracts/return-item.ts`; added `customFields` to P's `NewStoreCustomer`.
+- Steps of section 9 that could not run for lack of data: none against the fake (the fake seeds delivered, ready-for-pickup, shipped, window-closed and subscription orders). Everything that needs the live project is left: the MCP read-backs of section 10 and the real return type, recurring orders, payment method fields, password token and first demo login (M-Q04 to M-Q08). Garage "add" in the browser used `POST /api/garage` because the add form is J's picker (plate, VIN, make/model tabs).
 
 ## 14. Evidence to leave
 
 `plans/evidence/Q/`: screenshots named above, `Q-mcp.txt` with excerpts, `Q-notes.md` only if you deviated, final `npm run check` summary line.
+
+## Progress
+
+- 2026-10-12 (J23): Q-01 to Q-13a built test first: account shell and menu, sign-in/register/forgot/reset (on-screen reset with decoy token, D4), overview with pickup notice and garage merge, orders list/detail/invoice, returns, garage (with rename), addresses, payment methods, profile and security (email, password, delete account), subscriptions, states and copy, demo login (`/api/auth/demo-accounts`, `/api/auth/demo-login`, `scripts/check-no-demo-login.mjs`, `scripts/check-demo-reset.mjs`).
+- Gates: `npm run check` green (241 test files, 2208 tests; tsc, eslint, all gate scripts). `npm run verify:build` green, run in a scratchpad copy of the app (J22's dev server holds `.next` in the shared directory); build, route policy, bundle secrets, no-demo-login and no-attack-mode all OK.
+- Browser (headless Chrome over the DevTools protocol, fake commercetools, 375/768/1024/1440, no horizontal scroll, console clean): `plans/evidence/Q/Q-run1.txt` (register incl. weak password and cart/garage merge, reseller binding with the same generic message, merge, on-screen reset known/unknown/real/used/decoy, demo login), `Q-run2.txt` (overview and pickup notice, orders pagination, detail, invoice in print media, return flow and second attempt, closed window, reorder, garage, addresses, payment methods, profile and security, subscriptions skip/pause/resume/frequency/failed/cancel, delete account, de-DE), `Q-run3.txt` (demo login flag off: control gone, `demo-accounts` 404). Screenshots `storefront-Q-*`.
+- Found and fixed by the browser run: address PATCH/DELETE/PUT answered without `countries`, so the form crashed after "Make default" (routes now return them, hook keeps them, test added); password forms now carry a hidden `username` field (HiddenUsername). Fake bugs fixed in the scratchpad only (UUID ids, `id=` regex).
+- Deviations: Q-Q01 to Q-Q10 in `plans/notes/questions-NOPQ.md`; MISSED-FEATURES rows for the checkout default address, delete-block rule, routes not built and the live checks; no `lib/ct/states.ts`; no `GET /api/account/orders` or `/returns`.
+- Left for the live project: the MCP read-backs (section 10) and M-Q02, M-Q04 to M-Q08 in `plans/TODO-MANUAL-TESTING.md`.

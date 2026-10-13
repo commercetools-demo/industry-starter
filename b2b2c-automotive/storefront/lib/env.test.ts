@@ -11,6 +11,7 @@ const good = (): Record<string, string> => ({
   CTP_CLIENT_SECRET: 'secret',
   CTP_SCOPES: 'view_stores  view_categories\nmanage_customers',
   SESSION_SECRET: 'y'.repeat(40),
+  ORDER_ACCESS_SECRET: 'z'.repeat(40),
   CONTENTOOLS_ORIGIN: 'https://contentools.example.test/',
   NOMINATIM_CONTACT: 'ops@example.test',
 });

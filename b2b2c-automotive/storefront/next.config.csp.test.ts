@@ -35,10 +35,15 @@ describe('Store picker CSP', () => {
     vi.stubEnv('CSP_IMG_HOSTS', '');
     const config = (await import('./next.config')).default;
     const rules = await config.headers?.();
-    expect(rules).toHaveLength(1);
     expect(rules?.[0].source).toBe('/:path*');
     const csp = rules?.[0].headers.find((h) => h.key === 'Content-Security-Policy')?.value ?? '';
     expect(directive(csp, 'img-src')).toContain('https://tile.openstreetmap.org');
     expect(directive(csp, 'object-src')).toEqual(["'none'"]);
+  });
+  it('the confirmation page is private: no referrer and no cache (workstream P)', async () => {
+    const config = (await import('./next.config')).default;
+    const rules = await config.headers?.();
+    const rule = rules?.find((r) => r.source.includes('/checkout/confirmation'));
+    expect(rule?.headers).toEqual(expect.arrayContaining([{ key: 'Referrer-Policy', value: 'no-referrer' }, { key: 'Cache-Control', value: 'private, no-store' }]));
   });
 });

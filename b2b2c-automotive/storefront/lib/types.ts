@@ -29,6 +29,13 @@ export interface Session {
   branchKey?: string;
   /** Random id of an anonymous shopper; set when the first cart is created (workstream L), carried by the cart for sign-in merge (N). */
   anonymousId?: string;
+  /** "Shop as customer" (V-06): the seller user (portal customer id) who started this session. Set only by `/api/impersonate`, never by a request value. */
+  impersonatedBy?: string;
+  /** The handoff record (`malva-impersonation/<jti>`) of the session, to end it. */
+  impJti?: string;
+  /** Idle deadline (epoch seconds, now + 120 s on every request) and absolute cap (start + 30 min) of an impersonation session. */
+  impImpExp?: number;
+  impAbs?: number;
 }
 
 /** The four store fields, always written to the session together. */
@@ -293,6 +300,8 @@ export interface ProductDetail {
   universalFit: boolean;
   fitmentKeys: string[];
   recurringEligible: boolean;
+  /** The components of a bundle (`component-skus` and `component-quantities` of the master, W-11); absent for a plain part. */
+  bundleComponents?: Array<{ sku: string; qty: number }>;
   /** `related-skus` of the master ("Often bought together"); empty when the part has none. */
   relatedSkus: string[];
   /** Root first, the product's deepest category last. */
@@ -308,6 +317,12 @@ export interface ReviewItem {
   text: string;
   createdAt: string;
   reply?: { text: string; by?: string };
+}
+
+/** What a bundle contains and how many can be sold (workstream W-11); `available` is 0 when a component is missing from the store or out of stock. */
+export interface BundleView {
+  components: Array<{ sku: string; qty: number; name: string; inStore: boolean }>;
+  available: number;
 }
 
 /** A recurrence policy offered by "Subscribe and save". */
@@ -343,6 +358,8 @@ export interface CartLine {
   fitment: FitmentProduct;
   /** Null for a one-time line. */
   recurrence: { policyKey: string; policyName: string; priceMode: 'Fixed' | 'Dynamic' } | null;
+  /** Set on a bundle's component line (W-11): the id of the bundle line it belongs to. Such a line is locked and carries no price of its own. */
+  parentLineItemId?: string;
 }
 
 /** A named discount; `amount` is positive, the UI shows the minus sign. */
@@ -429,4 +446,164 @@ export interface CheckoutPickup {
   branchName: string;
   address: { street: string; postalCode: string; city: string };
   hours: OpeningHours;
+}
+
+// ---- Order confirmation (workstream P) ----
+
+export type OrderStatus = 'placed' | 'ready-for-pickup' | 'shipped' | 'collected' | 'delivered' | 'cancelled';
+export type OrderPayment = 'paid' | 'pending' | 'failed';
+
+export interface OrderLineView {
+  id: string;
+  brand: string | null;
+  name: string;
+  imageUrl: string | null;
+  quantity: number;
+  total: Money;
+  /** Null for a one-time line; the policy name is the frequency ("Every 3 months"). */
+  recurrence: { policyName: string } | null;
+}
+
+export interface OrderSubscriptionView {
+  /** Frequency names of the subscription lines, in order, without duplicates. */
+  frequencies: string[];
+  /** `scheduled` once commercetools has created the Recurring Order (it does so asynchronously), else `setting-up` and no date. */
+  state: 'scheduled' | 'setting-up' | 'paused' | 'ended';
+  /** ISO date-time of the next delivery; only from the Recurring Order, never guessed. */
+  nextOrderAt: string | null;
+}
+
+/** The order of the confirmation page. The order number, totals, tax label and currency are the order's own. */
+export interface OrderView {
+  id: string;
+  number: string;
+  storeKey: string;
+  status: OrderStatus;
+  mode: 'pickup' | 'ship';
+  payment: OrderPayment;
+  /** Key of the shipping method; the express method has no delivery window of its own. */
+  shippingMethodKey: string | null;
+  email: string | null;
+  /** The order already belongs to a customer: no account offer. */
+  hasCustomer: boolean;
+  lines: OrderLineView[];
+  totals: {
+    subtotal: Money;
+    savings: CartSaving[];
+    delivery: Money;
+    tax: { label: string; rate: number | null; amount: Money } | null;
+    total: Money;
+    pricesIncludeTax: boolean;
+  };
+  pickup: { branchName: string; address: { street: string; postalCode: string; city: string }; hours: OpeningHours; phone?: string; timezone: string } | null;
+  shipTo: { name: string | null; street: string; postalCode: string; city: string; country: string } | null;
+  /** Store ship days; null when the store states none. */
+  shipWindow: { min: number; max: number } | null;
+  /** Name of the store that fulfils the order (store settings). */
+  storeName: string;
+  subscription: OrderSubscriptionView | null;
+  /** Time zone for dates on the page (the store's). */
+  timezone: string;
+}
+
+export type TimelineStepState = 'done' | 'current' | 'upcoming';
+export interface OrderTimeline {
+  steps: { key: 'received' | 'ready' | 'collected' | 'shipped' | 'delivered'; state: TimelineStepState }[];
+}
+
+// ---- Account area (workstream Q) ----
+
+/** The profile form: names, contact, the marketing consent the portal's audience rules read. */
+export interface AccountProfile {
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+  mobile: string | null;
+  marketingConsent: boolean;
+}
+
+export interface AccountAddress {
+  id: string;
+  firstName: string | null;
+  lastName: string | null;
+  streetName: string | null;
+  streetNumber: string | null;
+  postalCode: string | null;
+  city: string | null;
+  country: string;
+  phone: string | null;
+  isDefault: boolean;
+}
+
+export interface AddressInput {
+  firstName: string;
+  lastName: string;
+  streetName: string;
+  streetNumber?: string;
+  postalCode: string;
+  city: string;
+  country: string;
+  phone?: string;
+  makeDefault?: boolean;
+}
+
+export interface OrderListItem {
+  number: string;
+  createdAt: string;
+  status: OrderStatus;
+  total: Money;
+  itemCount: number;
+}
+
+export interface OrderListPage {
+  items: OrderListItem[];
+  page: number;
+  pageSize: number;
+  total: number;
+}
+
+/** Why a return cannot be requested: no delivery yet, window over, or every unit is already in a return. */
+export type ReturnProblem = 'not-delivered' | 'window-closed' | 'nothing-left';
+
+export interface ReturnEligibility {
+  eligible: boolean;
+  problem: ReturnProblem | null;
+  /** Last day a return may be requested (ISO), null when not delivered. */
+  deadline: string | null;
+  lines: Array<{ lineItemId: string; name: string; remaining: number }>;
+}
+
+export interface ReturnView {
+  returnNumber: string;
+  tracking: string;
+  orderNumber: string;
+  requestedAt: string | null;
+  /** The portal's status words (`requested` ... `rejected`). */
+  status: 'requested' | 'in-transit' | 'received' | 'inspected' | 'refunded' | 'rejected';
+  reason: string | null;
+  items: Array<{ lineItemId: string; name: string; quantity: number }>;
+}
+
+export interface PaymentMethodView {
+  id: string;
+  label: string;
+  last4: string | null;
+  expiry: string | null;
+  isDefault: boolean;
+}
+
+export type SubscriptionStatus = 'active' | 'paused' | 'canceled' | 'expired' | 'failed';
+export type SubscriptionAction = 'skip' | 'pause' | 'resume' | 'cancel' | 'change-frequency';
+
+export interface SubscriptionView {
+  id: string;
+  status: SubscriptionStatus;
+  /** Name of the recurrence policy of the lines ("Every 3 months"); empty when unknown. */
+  frequency: string;
+  policyKey: string | null;
+  nextOrderAt: string | null;
+  /** Upcoming renewals still to be skipped (`skipConfiguration.totalToSkip - skipped`). */
+  skipPending: number;
+  orderNumber: string | null;
+  lines: Array<{ name: string; quantity: number; imageUrl: string | null }>;
 }

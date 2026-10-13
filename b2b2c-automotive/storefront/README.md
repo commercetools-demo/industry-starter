@@ -13,7 +13,7 @@ npm ci
 npm run dev                  # http://localhost:3000/de-DE/<store>
 ```
 
-All eight variables in `.env.example` are required to start the server (`instrumentation.ts` validates them and a missing or weak one, for example `SESSION_SECRET` under 32 characters, stops the server with a message naming the variable, never its value). `npm run build` and `npm run verify:build` import the server modules too, so they need the variables as well: either `.env.local` or, for a credential-free gate run, dummy values (see `test/env.ts` for a set that works offline).
+All variables of the first block of `.env.example` (including `ORDER_ACCESS_SECRET`, the key of the confirmation page's private link, at least 32 characters and different from `SESSION_SECRET`) are required to start the server (`instrumentation.ts` validates them and a missing or weak one, for example `SESSION_SECRET` under 32 characters, stops the server with a message naming the variable, never its value). `npm run build` and `npm run verify:build` import the server modules too, so they need the variables as well: either `.env.local` or, for a credential-free gate run, dummy values (see `test/env.ts` for a set that works offline).
 
 ## Server layer (workstream G)
 

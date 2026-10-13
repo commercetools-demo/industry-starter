@@ -9,6 +9,7 @@ const defaults: Record<string, string> = {
   CTP_CLIENT_SECRET: 'test-client-secret',
   CTP_SCOPES: 'view_stores view_project_settings',
   SESSION_SECRET: 'x'.repeat(48),
+  ORDER_ACCESS_SECRET: 'o'.repeat(48),
   CONTENTOOLS_ORIGIN: 'https://contentools.example.test',
   NOMINATIM_CONTACT: 'ops@example.test',
 };

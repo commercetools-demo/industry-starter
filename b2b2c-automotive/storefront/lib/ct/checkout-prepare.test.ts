@@ -51,6 +51,49 @@ beforeEach(() => {
   postActions.mockResolvedValue(ctCart());
 });
 
+describe('bundles at checkout (W-11)', () => {
+  const lineOf = (id: string, sku: string, quantity: number, parent?: string) =>
+    ({ ...(ctCart().lineItems?.[0] as object), id, quantity, variant: { sku }, ...(parent ? { custom: { type: { typeId: 'type', id: 't' }, fields: { parentLineItemId: parent } } } : {}) }) as never;
+  const bundleCart = () => ({ ...ctCart(), lineItems: [lineOf('p', 'BND-1', 2), lineOf('c1', 'BRK-1', 4, 'p'), lineOf('c2', 'FLT-1', 2, 'p')] });
+  it('a bundle line is not read as out of stock for having no inventory entry; its components are what counts', async () => {
+    useCart(bundleCart());
+    await expect(prepareCartForCheckout(input, dev)).resolves.toBeDefined();
+    expect(getLineStock.mock.calls[0][0]).not.toContain('BND-1');
+  });
+  it('a component out of stock blocks the checkout and names the component line', async () => {
+    useCart(bundleCart());
+    getLineStock.mockResolvedValue(new Map([['BRK-1', { branchQty: 0, masterQty: 0 }], ['FLT-1', { branchQty: 0, masterQty: 9 }]]));
+    await expect(prepareCartForCheckout(input, dev)).rejects.toMatchObject({ lineItemIds: ['c1'] });
+  });
+});
+
+describe('placedOnBehalfBy (V-06 audit field)', () => {
+  it('a shop-as session writes the seller id into the malva-checkout fields', async () => {
+    useCart(noCustom());
+    await prepareCartForCheckout({ ...input, placedOnBehalfBy: 'seller-1' }, dev);
+    expect(written()).toMatchObject({ placedOnBehalfBy: 'seller-1', salesChannel: 'web' });
+    expect(actionsOf().filter((a) => a.action === 'setCustomType')).toHaveLength(1);
+  });
+  it('a normal shopper never gets the field', async () => {
+    useCart(noCustom());
+    await prepareCartForCheckout(input, dev);
+    expect(written()).not.toHaveProperty('placedOnBehalfBy');
+  });
+  it('the field is merged into the existing type, never a second type, and a stale value is removed when the session is not shop-as', async () => {
+    const cart = { ...ctCart(), custom: { type: { typeId: 'type', id: 't' }, fields: { placedOnBehalfBy: 'seller-1', salesChannel: 'web' } } };
+    useCart(cart);
+    await prepareCartForCheckout(input, dev);
+    expect(actionsOf().some((a) => a.action === 'setCustomType')).toBe(false);
+    expect(actionsOf()).toContainEqual({ action: 'setCustomField', name: 'placedOnBehalfBy' });
+  });
+  it('the routes pass the value from the session only', () => {
+    for (const file of [['app', 'api', 'checkout', 'session', 'route.ts'], ['app', 'api', 'dev', 'checkout', 'complete', 'route.ts']]) {
+      const text = readFileSync(path.join(process.cwd(), ...file), 'utf8');
+      expect(text, file.join('/')).toContain('placedOnBehalfBy: session.impersonatedBy');
+    }
+  });
+});
+
 describe('prepareCartForCheckout', () => {
   it('recalculates before the session', async () => {
     await prepareCartForCheckout(input, dev);

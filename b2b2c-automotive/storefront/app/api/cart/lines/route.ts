@@ -14,14 +14,17 @@ import { getLocale, getSession, updateSession } from '@/lib/session';
 import { getBranchScope } from '@/lib/store/branch-scope';
 import { readGarage } from '@/lib/vehicles/service';
 
-const body = z.object({
-  sku: z.string().min(1).max(64),
-  quantity: z.number().int().min(1).max(99),
-  recurrencePolicyKey: z
-    .string()
-    .regex(/^[A-Za-z0-9_-]{2,256}$/)
-    .optional(),
-});
+// Strict: a body never carries `externalPrice`, `custom` or any other field (a bundle's component lines are priced on the server, W-11).
+const body = z
+  .object({
+    sku: z.string().min(1).max(64),
+    quantity: z.number().int().min(1).max(99),
+    recurrencePolicyKey: z
+      .string()
+      .regex(/^[A-Za-z0-9_-]{2,256}$/)
+      .optional(),
+  })
+  .strict();
 
 export const POST = handle(async (request: Request) => {
   const input = await parseJson(request, body);
