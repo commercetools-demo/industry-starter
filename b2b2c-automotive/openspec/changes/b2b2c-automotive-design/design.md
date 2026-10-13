@@ -14,7 +14,7 @@ Names: the brief says "Malva Supplier" and "Malva Seller(s)"; the design calls t
 
 ## 2. Content and theme architecture (decided 2026-10-12)
 
-Contentools (`/Users/behnam/code/cms`) is the lightweight CMS for both sites' reseller-facing content.
+Contentools (`<contentools-repo>`) is the lightweight CMS for both sites' reseller-facing content.
 
 - **Storage:** everything is commercetools custom objects scoped by business unit key, written by the Contentools service API with the store key as namespace (`service/src/routes/configuration.route.ts`, `puck-page.route.ts`, `puck-content.route.ts`). Theme is `configuration` container, key `{businessUnitKey}-theme`.
 - **Editing:** the portal embeds Contentools' own React components (`ThemeManager`, `PageManager`, `ContentManager`). The portal builds no theme or page editor.
@@ -68,7 +68,7 @@ Installation (fitting) services are **out of scope** (decision 2026-10-12) and r
 
 | # | Item | Brief | Design | Treatment |
 | --- | --- | --- | --- | --- |
-| 1 | Brand per reseller | Own domain and branding | One brand "Autoline", many businesses in picker | Decision 6; store name and logo from store settings |
+| 1 | Brand per reseller | Own domain and branding | One brand "Brandline", many businesses in picker | Decision 6; store name and logo from store settings |
 | 2 | Fit visibility | Only fitting parts shown | Non-fitting shown unless filtered | Decision 5 |
 | 3 | Vehicle input | Plate, VIN or make/model/year | Year/make/model/engine only | Added to `consumer-storefront/design-vehicle-finder-and-garage` |
 | 4 | Commercial model | Reseller sets retail price | Earnings page pays commission | Resolved: margin; Earnings removed |
@@ -139,4 +139,4 @@ Answered by the owner on 2026-10-12: C (all prices are standalone, Q-003), D (no
 - Fit data quality drives returns; fit claims need one source and a clear error path.
 - (Withdrawn 2026-10-12: MAP and territory rules do not exist, decision 10 is void.) Server-side role, store-scope and order, return and review integrity checks stay mandatory (workstream X).
 - Theme freedom against legibility: there is no contrast checking by decision, so a reseller can pick hard-to-read colours.
-- Prototype data (parts, prices, names, "Hartmann") are placeholders and must not leak into seed or copy.
+- Prototype data (parts, prices, names, "Acme") are placeholders and must not leak into seed or copy.

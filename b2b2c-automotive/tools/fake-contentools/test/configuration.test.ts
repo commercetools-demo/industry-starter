@@ -2,7 +2,7 @@
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 //
 // Contract tests: each case states the real behaviour it mirrors
-// (/Users/behnam/code/cms/service/src/routes/configuration.route.ts and controllers/configuration.controller.ts).
+// (<contentools-repo>/service/src/routes/configuration.route.ts and controllers/configuration.controller.ts).
 import { describe, expect, it } from 'vitest';
 import { defaultTheme } from '../../../seed/src/data/content.ts';
 import { bearer, NORTH, projectHeader, SOUTH, useFake } from './helpers.ts';

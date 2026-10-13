@@ -5,7 +5,7 @@
 
 ## Purpose
 
-Every reseller runs a storefront on Malva's platform with its own domain, branding and retail prices, and adapts it from the seller portal. Decisions of 2026-10-12: **the theme is stored in Contentools** (the multi-tenant CMS service, `/Users/behnam/code/cms`), edited with Contentools' own `ThemeManager`, with theme history handled by Contentools; the storefront renders Puck pages with Contentools' renderers; and the storefront takes **only the theme** from Contentools configuration (header, footer and the other configuration documents are not used). This spec fixes how the theme document maps onto the automotive design system and which parts a reseller cannot change.
+Every reseller runs a storefront on Malva's platform with its own domain, branding and retail prices, and adapts it from the seller portal. Decisions of 2026-10-12: **the theme is stored in Contentools** (the multi-tenant CMS service, `<contentools-repo>`), edited with Contentools' own `ThemeManager`, with theme history handled by Contentools; the storefront renders Puck pages with Contentools' renderers; and the storefront takes **only the theme** from Contentools configuration (header, footer and the other configuration documents are not used). This spec fixes how the theme document maps onto the automotive design system and which parts a reseller cannot change.
 
 Design source: `design/export/tokens.automotive.css` (identical to `design-systems/automotive/tokens.css`), `design/export/Reseller Storefront.dc.html`. Contentools sources: `service/src/routes/configuration.route.ts`, `puck/packages/puck-types/src/theme-types.ts`, `puck/packages/puck-theme-manager/src/presets.ts`.
 

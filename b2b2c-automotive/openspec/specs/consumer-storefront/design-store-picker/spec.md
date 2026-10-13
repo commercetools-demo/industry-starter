@@ -67,7 +67,7 @@ Dialog up to 1100 × 680 px, two columns (list 300 px minimum, map), stacking on
 
 ## Gaps and decisions
 
-- The mock lists stores of different businesses (Northline, Lakeshore, Harbour, Maple Ridge, Capital) under one brand "Autoline". The brief says each reseller owns its domain and brand. Decision: the picker lists branches of the reseller that owns the domain. A cross-reseller locator, if wanted, is a separate Malva-level site (open question).
+- The mock lists stores of different businesses (Northline, Lakeshore, Harbour, Maple Ridge, Capital) under one brand "Brandline". The brief says each reseller owns its domain and brand. Decision: the picker lists branches of the reseller that owns the domain. A cross-reseller locator, if wanted, is a separate Malva-level site (open question).
 - Map is a placeholder; a map provider must be chosen.
 
 ## Platform notes

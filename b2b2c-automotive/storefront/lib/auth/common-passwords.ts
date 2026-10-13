@@ -20,7 +20,7 @@ export const COMMON_PASSWORDS: ReadonlySet<string> = new Set([
   'admin12345', 'admin123456', 'administrator', 'administrator1', 'adminadmin', 'adminadmin1', 'root123456', 'rootroot12', 'test123456', 'test1234567', 'testtest12',
   'testing123', 'testtest123', 'user123456', 'login12345', 'login123456', 'default123', 'changeme12', 'changeme123', 'changeme1234', 'change_me12', 'secret1234',
   'secret12345', 'secretsecret', 'qwerty!234', 'qwertz1234', 'qwertz12345', 'qwertzuiop', 'qwertzuiop1', 'qwertzui123', 'asdfghjkl9', 'yxcvbnm123', 'yxcvbnmasd',
-  'malva12345', 'malva123456', 'autoline12', 'autoline123', 'starter123', 'starter1234', 'commercetools', 'commercetools1', 'commercetools123', 'summer2024!', 'summer2025!',
+  'malva12345', 'malva123456', 'starter123', 'starter1234', 'commercetools', 'commercetools1', 'commercetools123', 'summer2024!', 'summer2025!',
   'winter2024!', 'winter2025!', 'spring2025!', 'autumn2025!', 'sommer2025!', 'winter2026!', 'summer2026!', 'sommer2026!', 'passwort2025', 'passwort2026', 'password2025', 'password2026',
 ]);
 

@@ -27,7 +27,7 @@ The system SHALL show, for a selected part, each price layer in the order applie
 #### Scenario: Source is named
 - **GIVEN** the contract discount line
 - **WHEN** it renders
-- **THEN** its source reads like "Hartmann 2026 H2 · customer group Distributor A"
+- **THEN** its source reads like "Acme 2026 H2 · customer group Distributor A"
 
 ### Requirement: Volume tiers
 

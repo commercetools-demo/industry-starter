@@ -4,7 +4,7 @@ import { K } from './base';
 
 /**
  * Default Contentools theme (Garage Maroon, from design/export/tokens.automotive.css).
- * Shape: `ThemeTokens` of /Users/behnam/code/cms/puck/packages/puck-types/src/theme-types.ts. Contentools stores it as the
+ * Shape: `ThemeTokens` of <contentools-repo>/puck/packages/puck-types/src/theme-types.ts. Contentools stores it as the
  * value of the commercetools custom object container `configuration`, key `{namespace}-theme`; namespace `default` is
  * the fallback for a store without a theme of its own (service/src/controllers/configuration.controller.ts).
  */

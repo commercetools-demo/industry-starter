@@ -79,7 +79,7 @@ Components use tokens only; see `scripts/check-tokens.mjs`. `app/tokens.css` is 
 
 ## Locales
 
-Exactly two: `de-DE` (default, EUR, DE) and `en-US` (USD, US), always in the URL: `/de-DE/<store>`. The choice is kept in the cookie `your-shop-country-locale`. A bare path (`/`, `/hartmann`) goes to the cookie locale or `de-DE`; there is no Accept-Language detection. `/fr-FR/...` is not found. `/de-DE` without a store is not found.
+Exactly two: `de-DE` (default, EUR, DE) and `en-US` (USD, US), always in the URL: `/de-DE/<store>`. The choice is kept in the cookie `your-shop-country-locale`. A bare path (`/`, `/acme`) goes to the cookie locale or `de-DE`; there is no Accept-Language detection. `/fr-FR/...` is not found. `/de-DE` without a store is not found.
 
 - A first path segment shaped like `xx-xx` is always read as a locale, so a store key of that shape is reserved.
 - Add a message key to **both** `messages/de-DE.json` and `messages/en-US.json` in the same commit; `check-messages` fails otherwise.

@@ -58,8 +58,8 @@ The system SHALL hide navigation items the signed-in user's role can never use a
 The system SHALL provide a top-bar switcher listing the company and its divisions plus the stores available, show the current choice in its label ("Hamburg · DACH Online"), and refresh all business-unit-scoped data on change.
 
 #### Scenario: Switch division
-- **GIVEN** the user is in Hartmann Hamburg
-- **WHEN** they choose Hartmann Berlin
+- **GIVEN** the user is in Acme Hamburg
+- **WHEN** they choose Acme Berlin
 - **THEN** a toast confirms, and lists, carts, price lists and approvals reload for Berlin
 
 #### Scenario: Store inherited

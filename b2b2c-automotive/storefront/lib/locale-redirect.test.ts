@@ -19,21 +19,21 @@ describe('Locale routing for two locales: decideLocale', () => {
     expect(decideLocale({ ...base, pathname: '/', search: '?a=1', cookieLocale: 'en-US' })).toEqual({ kind: 'redirect', location: '/en-US?a=1' });
   });
   it('Path without locale is prefixed', () => {
-    expect(decideLocale({ ...base, pathname: '/hartmann' })).toEqual({ kind: 'redirect', location: '/de-DE/hartmann' });
-    expect(decideLocale({ ...base, pathname: '/hartmann/cart', search: '?x=2', cookieLocale: 'en-US' })).toEqual({ kind: 'redirect', location: '/en-US/hartmann/cart?x=2' });
+    expect(decideLocale({ ...base, pathname: '/acme' })).toEqual({ kind: 'redirect', location: '/de-DE/acme' });
+    expect(decideLocale({ ...base, pathname: '/acme/cart', search: '?x=2', cookieLocale: 'en-US' })).toEqual({ kind: 'redirect', location: '/en-US/acme/cart?x=2' });
   });
   it('Wrong case is canonicalised', () => {
-    expect(decideLocale({ ...base, pathname: '/de-de/hartmann', search: '?q=1' })).toEqual({ kind: 'redirect', location: '/de-DE/hartmann?q=1' });
+    expect(decideLocale({ ...base, pathname: '/de-de/acme', search: '?q=1' })).toEqual({ kind: 'redirect', location: '/de-DE/acme?q=1' });
     expect(decideLocale({ ...base, pathname: '/EN-us' })).toEqual({ kind: 'redirect', location: '/en-US' });
   });
   it('Unsupported locale passes through', () => {
-    expect(decideLocale({ ...base, pathname: '/fr-FR/hartmann' })).toEqual({ kind: 'passUnsupported' });
+    expect(decideLocale({ ...base, pathname: '/fr-FR/acme' })).toEqual({ kind: 'passUnsupported' });
   });
   it('Supported prefixed path passes without a cookie write when the cookie matches', () => {
-    expect(decideLocale({ ...base, pathname: '/de-DE/hartmann', cookieLocale: 'de-DE' })).toEqual({ kind: 'pass', locale: 'de-DE', setCookie: false });
+    expect(decideLocale({ ...base, pathname: '/de-DE/acme', cookieLocale: 'de-DE' })).toEqual({ kind: 'pass', locale: 'de-DE', setCookie: false });
   });
   it('Prefixed path with a different cookie asks to set the cookie', () => {
-    expect(decideLocale({ ...base, pathname: '/en-US/hartmann', cookieLocale: 'de-DE' })).toEqual({ kind: 'pass', locale: 'en-US', setCookie: true });
+    expect(decideLocale({ ...base, pathname: '/en-US/acme', cookieLocale: 'de-DE' })).toEqual({ kind: 'pass', locale: 'en-US', setCookie: true });
     expect(decideLocale({ ...base, pathname: '/en-US' })).toEqual({ kind: 'pass', locale: 'en-US', setCookie: true });
   });
   it('API and static paths are skipped', () => {

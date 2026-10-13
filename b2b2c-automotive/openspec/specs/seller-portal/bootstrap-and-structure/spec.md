@@ -7,7 +7,7 @@
 
 The partner portal is a second Next.js application for resellers' staff: they run their store (assortment, prices, theme, content) and buy from Malva. It is a B2B surface: associates act for business units through the as-associate API chain and permissions come from associate roles. Seller-side administration (assortment, prices, discounts, store data) needs elevated access, so it runs through a separate server-only client behind an ownership check. The reseller's store is the **content and data namespace** (`storeKey`), as in the reference starter. There is no tenant or domain registry in the app: stores, domains and the Contentools connection are set up manually in the Merchant Center.
 
-Sources: skill `references/stack/nextjs/*`, `references/b2b/{overview,session-and-bu,permissions,dashboard,add-api}.md`, `references/core/ct-client.md`; `/Users/behnam/code/b2b2c-starter/.claude/skills/integrate-contentools/SKILL.md`; reference implementation `/Users/behnam/code/b2b2c-starter/dealer` (Next 15; port its shapes, upgrade to Next 16); repo precedent `b2b-manufacturing/site` (`lib/ct/associate.ts`, `ownership.ts`, `scopes.ts`, gate scripts).
+Sources: skill `references/stack/nextjs/*`, `references/b2b/{overview,session-and-bu,permissions,dashboard,add-api}.md`, `references/core/ct-client.md`; `<b2b2c-starter-repo>/.claude/skills/integrate-contentools/SKILL.md`; reference implementation `<b2b2c-starter-repo>/dealer` (Next 15; port its shapes, upgrade to Next 16); repo precedent `b2b-manufacturing/site` (`lib/ct/associate.ts`, `ownership.ts`, `scopes.ts`, gate scripts).
 
 ## Requirements
 

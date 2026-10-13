@@ -5,7 +5,7 @@
 
 A small, dependency-free fake of the Contentools HTTP API (the multitenant Puck CMS service). The storefront (workstream H, K), the portal (U, X) and the Chrome checks run against it when no commercetools project or Contentools deployment is available. It makes **no commercetools calls** and needs no credentials.
 
-Behaviour was written from the real service source (read only, `/Users/behnam/code/cms/service/src`): `routes/configuration.route.ts`, `puck-page.route.ts`, `puck-content.route.ts`, `file.route.ts`, `controllers/*`, `middleware/{jwt,project-key,project,error}.middleware.ts`, `app.ts`. The contract tests in `test/` name the real behaviour each case mirrors.
+Behaviour was written from the real service source (read only, `<contentools-repo>/service/src`): `routes/configuration.route.ts`, `puck-page.route.ts`, `puck-content.route.ts`, `file.route.ts`, `controllers/*`, `middleware/{jwt,project-key,project,error}.middleware.ts`, `app.ts`. The contract tests in `test/` name the real behaviour each case mirrors.
 
 ## Start
 

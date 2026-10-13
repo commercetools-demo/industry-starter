@@ -12,7 +12,7 @@ export function generateStaticParams() {
 
 export default async function LocaleLayout({ children, params }: { children: ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  // Unsupported locales (for example /fr-FR/hartmann) fall through to app/not-found.tsx.
+  // Unsupported locales (for example /fr-FR/acme) fall through to app/not-found.tsx.
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const messages = await getMessages();

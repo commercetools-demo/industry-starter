@@ -9,11 +9,11 @@ Run order: 1) `node plans/release-gates.mjs` (offline, dummy env), 2) the owner 
 
 ## A. Gates that run offline (no credentials, no commercetools)
 
-- [ ] `node plans/release-gates.mjs` is all PASS: plans (`verify-plan --sync --strict`, `verify-manual --structure`, `plans/*.test.mjs`, spec coverage refresh), seed `npm run check`, `tools/fake-contentools` `npm run check`, storefront and portal `npm run check` and `npm run verify:build` in a scratch copy. Result of the last run: `plans/evidence/Z/clean-clone.md`. For the release commit repeat it from a clean clone: `git clone --no-hardlinks <repo> <scratch>`, check out the commit, then `node plans/release-gates.mjs --install` (needs the npm registry).
-- [ ] `node plans/verify-manual.mjs` exits 0 (every owner row `DONE`, `PASS`, `ACCEPTED` or `WAIVED by <name> <date>: <reason>`). It fails while owner rows are open: that is gate G11.
-- [ ] `node plans/spec-coverage.mjs`: no unexplained `UNCOVERED` scenario (`plans/SPEC-COVERAGE.md`, `plans/evidence/Z/spec-coverage.md`).
-- [ ] `npm audit --omit=dev` shows no high or critical in storefront, portal and seed (needs the registry; `plans/evidence/X/npm-audit-*.txt` is the last run).
-- [ ] X attack harness (`npm run attack` in both apps on production builds with the stub) passes; results in `plans/evidence/Z/attack-rerun.json`.
+- [x] (2026-10-13, scratch copy of the working tree: 10 of 10 PASS, `plans/evidence/Z/clean-clone.md`; still repeat from a true clean clone on the release commit, Q-Z05) `node plans/release-gates.mjs` is all PASS: plans (`verify-plan --sync --strict`, `verify-manual --structure`, `plans/*.test.mjs`, spec coverage refresh), seed `npm run check`, `tools/fake-contentools` `npm run check`, storefront and portal `npm run check` and `npm run verify:build` in a scratch copy. Result of the last run: `plans/evidence/Z/clean-clone.md`. For the release commit repeat it from a clean clone: `git clone --no-hardlinks <repo> <scratch>`, check out the commit, then `node plans/release-gates.mjs --install` (needs the npm registry).
+- [ ] (2026-10-13: exits 1, 170 rows open, structure valid) `node plans/verify-manual.mjs` exits 0 (every owner row `DONE`, `PASS`, `ACCEPTED` or `WAIVED by <name> <date>: <reason>`). It fails while owner rows are open: that is gate G11.
+- [ ] (2026-10-13: runs; 51 of 252 scenarios UNCOVERED, not yet explained) `node plans/spec-coverage.mjs`: no unexplained `UNCOVERED` scenario (`plans/SPEC-COVERAGE.md`, `plans/evidence/Z/spec-coverage.md`).
+- [ ] (2026-10-13: seed 0 findings; storefront 8 high and portal 11 high, all via the Contentools/Puck packages (`braces` through nimbus, `uuid` through `@measured/puck`), no fix available upstream; owner accepts or waits) `npm audit --omit=dev` shows no high or critical in storefront, portal and seed (needs the registry; `plans/evidence/X/npm-audit-*.txt` is the last run).
+- [ ] (2026-10-13: no `attack` script exists; the attack suites are vitest tests that pass inside `check`; the production-build run with the stub is not built) X attack harness (`npm run attack` in both apps on production builds with the stub) passes; results in `plans/evidence/Z/attack-rerun.json`.
 
 ## B. ct-builders readiness (gates of the `ct-builders-readiness` skill)
 
@@ -26,10 +26,10 @@ The project stays in commercetools labs (owner answer Q-Z01, 2026-10-12). Verdic
 | 1b Files not ours (`design/export/`) | Open: owner decides whether it ships (M-Z-01); default excluded, no headers added. |
 | 2 "Unsupported" said out loud | Markdown headers carry it; `SUPPORT.md`, README banner, `CONTRIBUTING.md` come with the apply step (M-Z-01). |
 | 3 Credentials | Open until the sweep runs: `git ls-files` must show only `.env.example`; `check-secrets` and `check-bundle-secrets` are part of the gates in A. |
-| 4 Customer and internal information | Open: `Hartmann`, `Lindner`, `Autoline` and `/Users/...` paths must be scrubbed from kept files (D5, D6); fictional brand `Malva` stays (M-Z-07). |
+| 4 Customer and internal information | Partly done 2026-10-13: names and local paths scrubbed from specs, seed, storefront and tools. Still open: `design/export/` (M-Z-01) and `plans/` (excluded from any published tree). Original text: `Hartmann`, `Lindner`, `Autoline` and `/Users/...` paths must be scrubbed from kept files (D5, D6); fictional brand `Malva` stays (M-Z-07). |
 | 5 Internal tooling | `.claude/`, `CLAUDE.md`, `plans/`, `openspec/` are excluded from any published tree (D6). |
 | 6 History | Default: a published copy is a fresh single-commit export; owner confirms public or private (M-Z-02). |
-| 7 Proves it builds | Section A (gates) plus `npm view @commercetools-demo/puck-renderer version` (and `puck-editor`, `puck-types`, `puck-page-manager`, `puck-content-manager`, `puck-theme-manager`) resolve from the public registry. |
+| 7 Proves it builds | **Verified 2026-10-13:** all six `puck-*` packages resolve (renderer and editor 0.8.3, the other four 0.8.1) and the gates in A pass offline. Section A (gates) plus `npm view @commercetools-demo/puck-renderer version` (and `puck-editor`, `puck-types`, `puck-page-manager`, `puck-content-manager`, `puck-theme-manager`) resolve from the public registry. |
 | Shared change-set (org strings) | List `commercetools-demo` and `commercetools-labs` strings in `package.json`, README, `netlify.toml`, links; rewrite only if the destination changes (not by default). |
 
 Report location: `plans/evidence/Z/PUBLISH-READINESS.md` (internal, must not ship).

@@ -28,7 +28,7 @@ const dataDir = new URL('./data/', import.meta.url);
 const dataFiles = ['assortment', 'base', 'catalog', 'categories', 'content', 'custom-types', 'discounts', 'extras', 'items', 'org', 'parts', 'prices', 'pricing', 'product-types', 'reviews', 'states', 'tax-shipping', 'vehicles'];
 
 describe('no prototype placeholders leak into seed data', () => {
-  const banned = [/Autoline/i, /Hartmann/i, /Northline/i, /Lakeshore/i, /Harbour/i, /Maple Ridge/i, /Honda Civic/i, /Brembo/i, /\bBosch\b/i, /\bDenso\b/i, /\bMobil\b/i, /BP-2210-C/, /MLV-(OF-20233|BD-31201|AL-70441|WB-90015|SP-50108|BP-11874|TB-40517|SA-62290|HL-81120|EV-99001|CV-33102)/, /Toronto/i, /\bCAD\b/];
+  const banned = [/Auto[l]ine/i, /Hart[m]ann/i, /Northline/i, /Lakeshore/i, /Harbour/i, /Maple Ridge/i, /Honda Civic/i, /Brembo/i, /\bBosch\b/i, /\bDenso\b/i, /\bMobil\b/i, /BP-2210-C/, /MLV-(OF-20233|BD-31201|AL-70441|WB-90015|SP-50108|BP-11874|TB-40517|SA-62290|HL-81120|EV-99001|CV-33102)/, /Toronto/i, /\bCAD\b/];
   const everything = [
     ...dataFiles.map((f) => readFileSync(new URL(`${f}.ts`, dataDir), 'utf8')),
     JSON.stringify([allProductDrafts(), categoryDrafts, storeDrafts(), channelDrafts, BUSINESS_UNITS, CUSTOMERS, productDiscountDrafts, cartDiscountDrafts, typeDrafts]),

@@ -7,7 +7,7 @@
 
 The reseller storefront is one Next.js application that serves every reseller. The reseller is the commercetools **store** named in the URL path (`/[locale]/[store]/…`); there is no tenant registry in the app. Stores, product selections, channels and any domain routing are created and maintained by hand by an admin in the Merchant Center and at the hosting layer. This spec fixes how the project is created, laid out and gated, which commercetools and Contentools plumbing exists on day one, and what must work before feature work. It follows the `commercetools-storefront` skill (Next.js adapter, B2C surface), its `/nextjs-setup-project` command and the `integrate-contentools` skill; **Deviation** marks where this project differs.
 
-Sources: skill `references/stack/nextjs/*`, `references/core/ct-client.md`, `references/b2c/overview.md`; `/Users/behnam/code/b2b2c-starter/.claude/skills/integrate-contentools/SKILL.md`; reference implementation `/Users/behnam/code/b2b2c-starter/customer` (Next 15, store resolved by `[dealer]` path segment; port its shapes, upgrade to Next 16); repo precedent `b2b-manufacturing/site` (gate scripts, env template).
+Sources: skill `references/stack/nextjs/*`, `references/core/ct-client.md`, `references/b2c/overview.md`; `<b2b2c-starter-repo>/.claude/skills/integrate-contentools/SKILL.md`; reference implementation `<b2b2c-starter-repo>/customer` (Next 15, store resolved by `[dealer]` path segment; port its shapes, upgrade to Next 16); repo precedent `b2b-manufacturing/site` (gate scripts, env template).
 
 ## Requirements
 
@@ -102,8 +102,8 @@ The system SHALL support exactly two locales, `de-DE` (default; EUR, country DE)
 The system SHALL treat the first path segment after the locale as the commercetools store key, resolve it in `proxy.ts` and `lib/ct/stores.ts` by reading the store (with its distribution channel, supply channel and product selection) through a short TTL cache, write `storeKey`, `distributionChannelId`, `supplyChannelId` and `productSelectionId` into the session together, and return the not-found page for an unknown store. The app SHALL NOT hold a tenant registry, custom-domain table or host mapping; domains and any host-to-path rewrite are set up manually at the hosting layer by an admin.
 
 #### Scenario: Two resellers
-- **GIVEN** stores `hartmann` and `lindner` created in the Merchant Center
-- **WHEN** `/de-DE/hartmann` and `/de-DE/lindner` are opened
+- **GIVEN** stores `acme` and `bolt` created in the Merchant Center
+- **WHEN** `/de-DE/acme` and `/de-DE/bolt` are opened
 - **THEN** each shows its own assortment, prices, theme and published home page, and no data crosses
 
 #### Scenario: Unknown store
