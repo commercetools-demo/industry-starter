@@ -32,7 +32,7 @@ describe('createStoreCustomer', () => {
     const customer = await createStoreCustomer('mau-reseller-north', { email: 'qa-p1@example.com', password: 'correct horse battery', firstName: 'Ada', lastName: 'Test' });
     expect(customer.id).toBe('c-1');
     expect(stores).toEqual(['mau-reseller-north']);
-    expect(post.mock.calls[0][0].body).toMatchObject({ email: 'qa-p1@example.com', firstName: 'Ada', lastName: 'Test', custom: { type: { typeId: 'type', key: 'malva-customer' } } });
+    expect(post.mock.calls[0][0].body).toMatchObject({ email: 'qa-p1@example.com', isEmailVerified: true, firstName: 'Ada', lastName: 'Test', custom: { type: { typeId: 'type', key: 'malva-customer' } } });
   });
   it('sets none of the malva-customer fields (an empty garage is written only by the garage code)', async () => {
     post.mockResolvedValue({ body: { customer: { id: 'c-1', version: 1 } } });

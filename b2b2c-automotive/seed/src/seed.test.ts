@@ -36,6 +36,16 @@ describe('seed against the in-memory API', () => {
     expect(api.writes).toBe(writes);
   });
 
+  it('every demo account is email-verified, including accounts that already existed unverified', async () => {
+    const api = new FakeApi();
+    const first = CUSTOMERS[0] as (typeof CUSTOMERS)[number];
+    api.put('customers', { key: first.key, email: first.email, isEmailVerified: false });
+    await runSeed(opts(api));
+    const all = api.all('customers');
+    expect(all.length).toBeGreaterThanOrEqual(CUSTOMERS.length);
+    expect(all.filter((c) => c.isEmailVerified !== true).map((c) => c.key)).toEqual([]);
+  });
+
   it('a dry run on an empty project plans changes but writes nothing', async () => {
     const api = new FakeApi();
     const run = new Runner(true, quiet);

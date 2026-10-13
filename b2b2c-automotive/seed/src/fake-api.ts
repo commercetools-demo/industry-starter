@@ -228,6 +228,14 @@ export class FakeApi implements Api {
     this.writes += 1;
   }
 
+  async verifyCustomerEmail(res: { id: string; version: number }): Promise<void> {
+    const c = this.all('customers').find((x) => x.id === res.id);
+    if (!c) throw new ApiError(404, `customer ${res.id} not found`);
+    c.isEmailVerified = true;
+    c.version += 1;
+    this.writes += 1;
+  }
+
   async removeObject(container: string, key: string): Promise<void> {
     if (!this.objects.delete(`${container}/${key}`)) throw new ApiError(404, `custom object ${container}/${key} not found`);
     this.writes += 1;

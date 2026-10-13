@@ -245,6 +245,11 @@ export const STEPS: Step[] = [
     run: async (c) => {
       if (!c.run.dryRun && c.demoPassword.length < 10) throw new Error('SEED_DEMO_PASSWORD must be set and at least 10 characters');
       for (const cu of CUSTOMERS) await upsert(c, 'customers', `customer ${cu.email}`, customerDraft(cu, c.demoPassword || 'dry-run-placeholder'));
+      // Accounts created earlier (or by another tool) may still be unverified: every demo account is verified, so sign-in never asks for it.
+      for (const cu of CUSTOMERS) {
+        const existing = await c.api.getByKey('customers', cu.key);
+        if (existing && existing.isEmailVerified !== true) await c.run.act(`verify email ${cu.email}`, () => c.api.verifyCustomerEmail(existing));
+      }
     },
   },
   {

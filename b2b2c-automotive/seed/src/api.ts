@@ -31,6 +31,8 @@ export interface Api {
   listSelectionProducts(selectionId: string): Promise<string[]>;
   getObject(container: string, key: string): Promise<{ value: unknown; version: number } | undefined>;
   putObject(container: string, key: string, value: unknown): Promise<void>;
+  /** Marks a customer's email as verified (email token, then confirm); there is no update action for it. */
+  verifyCustomerEmail(res: { id: string; version: number }): Promise<void>;
   removeObject(container: string, key: string): Promise<void>;
   listObjects(container: string): Promise<{ key: string; value: unknown }[]>;
   getProject(): Promise<ProjectView>;
@@ -144,6 +146,10 @@ export function sdkApi(root: ByProjectKeyRequestBuilder): Api {
     },
     async putObject(container, key, value) {
       await root.customObjects().post({ body: { container, key, value: value as never } }).execute();
+    },
+    async verifyCustomerEmail(res) {
+      const { value } = (await root.customers().emailToken().post({ body: { id: res.id, version: res.version, ttlMinutes: 10 } }).execute()).body;
+      await root.customers().emailConfirm().post({ body: { tokenValue: value } }).execute();
     },
     async removeObject(container, key) {
       await root.customObjects().withContainerAndKey({ container, key }).delete().execute();

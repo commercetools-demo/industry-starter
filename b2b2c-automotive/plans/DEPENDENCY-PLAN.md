@@ -29,8 +29,8 @@ Spec ids are shortened: `cs/` = `openspec/specs/consumer-storefront/`, `sp/` = `
 | N | Cart | cs/design-cart-page | M | — | R |
 | O | Checkout | cs/design-checkout-page | N | OA-05 | R |
 | P | Order confirmation and emails | cs/design-order-confirmation-page | O | — | R, S |
-| Q | Shopper account area | cs/design-account-area, cs/design-demo-login | G, I, P | — | S, T |
-| R | Portal shell, navigation and auth | sp/design-portal-shell-and-navigation, sp/design-auth-screens, sp/design-demo-login | B, F, G | — | J–P |
+| Q | Shopper account area | cs/design-account-area, cs/design-demo-login, cs/design-auto-verify-registration | G, I, P | — | S, T |
+| R | Portal shell, navigation and auth | sp/design-portal-shell-and-navigation, sp/design-auth-screens, sp/design-demo-login, sp/design-auto-verify-registration | B, F, G | — | J–P |
 | S | Portal dashboard | sp/design-dashboard | R | — | P, Q, T, U |
 | T | Portal catalog: assortment, price overrides, tailoring, discounts | sp/design-catalog-assortment, sp/design-price-overrides-and-margin, sp/design-product-info-tailoring, sp/design-discounts-and-priority | E, F, R | — | Q, S, U |
 | U | Portal theme, content, store, channels, company | sp/design-storefront-theme-and-branding, sp/design-content-pages, sp/design-store-and-channels, sp/design-company-and-account | F, H, R | OA-02 | S, T, V, W |

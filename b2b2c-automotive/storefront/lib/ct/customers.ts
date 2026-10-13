@@ -40,6 +40,8 @@ export async function createStoreCustomer(storeKey: string, input: NewStoreCusto
         body: {
           email: input.email,
           password: input.password,
+          // No email is ever sent (Q-P01), so nobody could confirm an address: accounts are created verified.
+          isEmailVerified: true,
           ...(input.firstName ? { firstName: input.firstName } : {}),
           ...(input.lastName ? { lastName: input.lastName } : {}),
           custom: { type: { typeId: 'type', key: CUSTOMER_TYPE_KEY }, fields: input.customFields ?? {} },
