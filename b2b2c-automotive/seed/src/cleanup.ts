@@ -17,13 +17,13 @@ import { fail, getAdmin, isMainModule, parseArgs, Runner, sleep } from './lib';
  */
 type Allow = Record<string, readonly string[]>;
 
-export interface Entry { kind: Kind; res: Res; label: string; depth: number }
+export interface Entry { kind: Kind; res: Res; label: string; depth: number; detachChannels?: string[] }
 export interface Plan { entries: Entry[]; counts: { kind: string; listed: number; matched: number; left: number }[]; refused: string[] }
 
 /** Deletion order: dependants before what they reference; categories deepest first. */
 export const DELETE_ORDER: Kind[] = [
-  'carts', 'inventory', 'standalone-prices', 'products', 'product-discounts', 'cart-discounts', 'shipping-methods', 'tax-categories', 'zones',
-  'categories', 'product-types', 'recurrence-policies', 'channels',
+  'carts', 'orders', 'inventory', 'standalone-prices', 'products', 'product-discounts', 'discount-codes', 'cart-discounts', 'shipping-methods', 'tax-categories', 'zones',
+  'categories', 'product-types', 'recurrence-policies', 'stores', 'channels',
 ];
 
 export const isSeedOwned = (key: string | undefined): boolean => !!key && key.startsWith(PREFIX);
@@ -38,10 +38,19 @@ export async function planCleanup(api: Api, allow: Allow = SAMPLE_ALLOWLIST): Pr
   const entries: Entry[] = [];
   const counts: Plan['counts'] = [];
   const refused: string[] = [];
-  // Sample channels are referenced by sample carts, inventory entries and standalone prices; those have to go first.
-  const channelKeys = new Set<string>(allow.channels ?? []);
-  const channelIds = (await api.list('channels')).filter((c) => !!c.key && channelKeys.has(c.key) && !isSeedOwned(c.key)).map((c) => c.id);
-  const onChannel = (res: Res) => { const json = JSON.stringify(res); return channelIds.some((id) => json.includes(id)); };
+  // Ids of the allow-listed sample resources that other resources reference. What references them has to go (or be
+  // detached) first: sample carts and orders, inventory entries, prices, discount codes, store channel lists.
+  const idsOf = async (kind: Kind): Promise<string[]> => {
+    const keys = new Set<string>(allow[KIND_ALLOW[kind] as string] ?? []);
+    return (await api.list(kind)).filter((r) => !!r.key && keys.has(r.key) && !isSeedOwned(r.key)).map((r) => r.id);
+  };
+  const channelIds = await idsOf('channels');
+  const refIds = {
+    channel: channelIds,
+    order: [...channelIds, ...(await idsOf('shipping-methods')), ...(await idsOf('tax-categories')), ...(await idsOf('cart-discounts'))],
+    code: await idsOf('cart-discounts'),
+  };
+  const refers = (res: Res, ids: string[]) => { const json = JSON.stringify(res); return ids.some((id) => json.includes(id)); };
   const idList = channelIds.map((id) => `"${id}"`).join(',');
   const where: Partial<Record<Kind, string>> = {
     carts: `lineItems(supplyChannel(id in (${idList})) or distributionChannel(id in (${idList})))`,
@@ -54,8 +63,10 @@ export async function planCleanup(api: Api, allow: Allow = SAMPLE_ALLOWLIST): Pr
     const skus = new Set(kind === 'standalone-prices' ? (allow['standalone-price-skus'] ?? []) : []);
     let matched = 0;
     for (const res of listed) {
-      const hit = kind === 'carts' || kind === 'inventory' ? onChannel(res)
-        : kind === 'standalone-prices' ? skus.has(res.sku as string) || onChannel(res)
+      const hit = kind === 'carts' || kind === 'inventory' || kind === 'stores' ? refers(res, refIds.channel)
+        : kind === 'orders' ? refers(res, refIds.order)
+        : kind === 'discount-codes' ? refers(res, refIds.code)
+        : kind === 'standalone-prices' ? skus.has(res.sku as string) || refers(res, refIds.channel)
         : !!res.key && keys.has(res.key);
       if (!hit) continue;
       if (isSeedOwned(res.key) || isSeedOwned(res.sku as string | undefined)) {
@@ -63,7 +74,11 @@ export async function planCleanup(api: Api, allow: Allow = SAMPLE_ALLOWLIST): Pr
         continue;
       }
       matched += 1;
-      entries.push({ kind, res, label: `${kind} ${res.key ?? res.id}`, depth: kind === 'categories' ? ((res.ancestors as unknown[]) ?? []).length : 0 });
+      const detach = kind === 'stores';
+      entries.push({
+        kind, res, label: detach ? `detach sample channels from store ${res.key ?? res.id}` : `${kind} ${res.key ?? res.id}`,
+        depth: kind === 'categories' ? ((res.ancestors as unknown[]) ?? []).length : 0, ...(detach ? { detachChannels: channelIds } : {}),
+      });
     }
     counts.push({ kind, listed: listed.length, matched, left: listed.length - matched });
   }
@@ -98,7 +113,25 @@ async function removeFromSelections(api: Api, productId: string): Promise<void> 
   }
 }
 
+/** A store that lists a sample channel keeps its other channels; only the sample ones are removed from it. */
+async function detachChannels(api: Api, e: Entry): Promise<void> {
+  const store = await api.getById('stores', e.res.id);
+  if (!store) return;
+  const drop = new Set(e.detachChannels ?? []);
+  const keep = (field: string) => ((store[field] as { id?: string }[] | undefined) ?? []).filter((c) => c.id && !drop.has(c.id));
+  const had = (field: string) => ((store[field] as { id?: string }[] | undefined) ?? []).length;
+  const actions: Record<string, unknown>[] = [];
+  if (keep('distributionChannels').length !== had('distributionChannels')) {
+    actions.push({ action: 'setDistributionChannels', distributionChannels: keep('distributionChannels').map((c) => ({ typeId: 'channel', id: c.id })) });
+  }
+  if (keep('supplyChannels').length !== had('supplyChannels')) {
+    actions.push({ action: 'setSupplyChannels', supplyChannels: keep('supplyChannels').map((c) => ({ typeId: 'channel', id: c.id })) });
+  }
+  if (actions.length) await api.update('stores', store, actions);
+}
+
 async function remove(api: Api, e: Entry): Promise<void> {
+  if (e.kind === 'stores' && e.detachChannels) return detachChannels(api, e);
   if (e.kind === 'products') {
     // A published product must be unpublished before it can be deleted.
     const p = await api.getById('products', e.res.id);

@@ -94,6 +94,31 @@ describe('seed:cleanup (explicit allow-list, no wildcard)', () => {
     expect(api.all('channels')).toEqual([]);
   });
 
+  it('deletes sample orders and discount codes that reference sample resources, and detaches sample channels from stores', async () => {
+    const api = sampleProject();
+    const ch = api.all('channels').find((c) => c.key === 'default-channel') as Res;
+    const ship = api.all('shipping-methods').find((c) => c.key === 'standard-shipping-method') as Res;
+    const cd = api.all('cart-discounts').find((c) => c.key === 'tower-cranes-bogo') as Res;
+    const other = api.put('channels', { key: 'customer-own-channel' });
+    api.put('orders', { key: 'sample-order', shippingInfo: { shippingMethod: { typeId: 'shipping-method', id: ship.id } } });
+    api.put('orders', { key: 'own-order' });
+    api.put('discount-codes', { key: 'sample-code', cartDiscounts: [{ typeId: 'cart-discount', id: cd.id }] });
+    api.put('discount-codes', { key: 'own-code', cartDiscounts: [] });
+    const store = api.put('stores', { key: 'sample-store', distributionChannels: [{ typeId: 'channel', id: ch.id }, { typeId: 'channel', id: other.id }], supplyChannels: [{ typeId: 'channel', id: ch.id }] });
+    const plan = await planCleanup(api);
+    const labels = plan.entries.map((e) => e.label);
+    expect(labels).toEqual(expect.arrayContaining(['orders sample-order', 'discount-codes sample-code', 'detach sample channels from store sample-store']));
+    expect(labels).not.toContain('orders own-order');
+    expect(labels).not.toContain('discount-codes own-code');
+    expect(await executeCleanup(api, new Runner(false, quiet), plan)).toBe(0);
+    expect(api.all('orders').map((o) => o.key)).toEqual(['own-order']);
+    expect(api.all('discount-codes').map((o) => o.key)).toEqual(['own-code']);
+    const after = (await api.getById('stores', store.id)) as Res;
+    expect(after.distributionChannels).toEqual([{ typeId: 'channel', id: other.id }]);
+    expect(after.supplyChannels).toEqual([]);
+    expect(api.all('channels').map((c) => c.key)).toEqual(['customer-own-channel']);
+  });
+
   it('a dry run deletes nothing', async () => {
     const api = sampleProject();
     const plan = await planCleanup(api);
@@ -121,7 +146,7 @@ describe('seed:cleanup (explicit allow-list, no wildcard)', () => {
     expect(SAMPLE_ALLOWLIST['shipping-methods']).toEqual(['standard-shipping-method', 'premium-shipping-method']);
     expect(SAMPLE_ALLOWLIST.products).toHaveLength(72);
     expect(SAMPLE_ALLOWLIST.categories).toHaveLength(42);
-    expect(DELETE_ORDER.slice(0, 3)).toEqual(['carts', 'inventory', 'standalone-prices']);
+    expect(DELETE_ORDER.slice(0, 4)).toEqual(['carts', 'orders', 'inventory', 'standalone-prices']);
   });
 
   it('allow-list counts match the sample project read through the MCP (2026-10-12), keys are unique, and every listed kind is deleted', () => {
