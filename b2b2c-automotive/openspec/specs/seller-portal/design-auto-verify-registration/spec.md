@@ -48,3 +48,7 @@ The seed SHALL create every demo associate verified and SHALL verify any that al
 ## Notes
 
 Known gap (accepted with the on-screen password reset, D4): an email address is not proven to belong to the person who typed it. Only a demo deployment should run this way.
+
+### Approval gate switch
+
+Waiting for a Malva operator to approve a registered business unit is OFF by default. The pending-approval screen appears only when `PORTAL_REQUIRE_APPROVAL=true`; otherwise a user whose unit has a store signs in whatever the unit's status. A unit without a store is never usable (the pending screen still shows).

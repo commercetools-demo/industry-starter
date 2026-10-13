@@ -41,7 +41,10 @@ export async function listAssociateUnits(customerId: string): Promise<BusinessUn
   return body.results.map((u) => mapBusinessUnit(u, customerId));
 }
 
-const hasStore = (u: BusinessUnitView) => u.status === 'Active' && u.storeKeys.length > 0;
+/** Registered resellers wait for a Malva operator only when `PORTAL_REQUIRE_APPROVAL=true`; by default the unit status is not checked. */
+export const approvalRequired = (): boolean => process.env.PORTAL_REQUIRE_APPROVAL === 'true';
+
+const hasStore = (u: BusinessUnitView) => (!approvalRequired() || u.status === 'Active') && u.storeKeys.length > 0;
 
 /** First active unit with a store, preferring `preferredKey` (the last used unit) when it qualifies; `undefined` when none. */
 export function pickDefaultUnit(units: BusinessUnitView[], preferredKey?: string): BusinessUnitView | undefined {
@@ -85,6 +88,6 @@ export async function resolveSignInContext(input: { customerId: string; accountG
     const context = await contextFor(unit, undefined, input.accountGroupIds);
     return { kind: 'ready', context, unit };
   }
-  if (units.length > 0 && units.every((u) => u.status !== 'Active')) return { kind: 'pending' };
+  if (approvalRequired() && units.length > 0 && units.every((u) => u.status !== 'Active')) return { kind: 'pending' };
   return { kind: 'none' };
 }

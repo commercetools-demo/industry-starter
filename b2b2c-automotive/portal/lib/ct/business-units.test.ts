@@ -27,6 +27,7 @@ const unit = (over: Record<string, unknown>): BusinessUnit =>
 const storeData = (key: string) => ({ storeKey: key, distributionChannelId: `d-${key}`, supplyChannelId: `s-${key}`, productSelectionId: `p-${key}` });
 
 beforeEach(() => {
+  vi.stubEnv('PORTAL_REQUIRE_APPROVAL', 'true');
   sdk.query.mockReset();
   sdk.store.mockReset();
   sdk.store.mockImplementation(async (key: string) => storeData(key));
@@ -117,6 +118,22 @@ describe('Sign-in context', () => {
     sdk.query.mockResolvedValue({ body: { results: [] } });
     expect(await resolveSignInContext({ customerId: 'c1', accountGroupIds: [] })).toEqual({ kind: 'none' });
     sdk.query.mockResolvedValue({ body: { results: [unit({ stores: [] })] } });
+    expect(await resolveSignInContext({ customerId: 'c1', accountGroupIds: [] })).toEqual({ kind: 'none' });
+  });
+});
+
+describe('Approval switch (PORTAL_REQUIRE_APPROVAL)', () => {
+  it('Off by default: an inactive unit with a store signs in', async () => {
+    vi.stubEnv('PORTAL_REQUIRE_APPROVAL', '');
+    sdk.query.mockResolvedValue({ body: { results: [unit({ status: 'Inactive' })] } });
+    const { resolveSignInContext } = await import('./business-units');
+    expect(await resolveSignInContext({ customerId: 'c1', accountGroupIds: [] })).toMatchObject({ kind: 'ready', unit: { key: 'mau-bu-north' } });
+  });
+
+  it('Off: a unit without a store is still not usable', async () => {
+    vi.stubEnv('PORTAL_REQUIRE_APPROVAL', '');
+    sdk.query.mockResolvedValue({ body: { results: [unit({ status: 'Inactive', stores: [] })] } });
+    const { resolveSignInContext } = await import('./business-units');
     expect(await resolveSignInContext({ customerId: 'c1', accountGroupIds: [] })).toEqual({ kind: 'none' });
   });
 });
