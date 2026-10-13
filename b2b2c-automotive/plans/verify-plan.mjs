@@ -244,8 +244,14 @@ function handle(file, text, key, body, label2) {
 handle(planPath, planText, 'GRAPH', graph, 'DEPENDENCY-PLAN.md');
 handle(planPath, SYNC ? read(planPath) : planText, 'WAVES', waves, 'DEPENDENCY-PLAN.md');
 handle(statusPath, statusText, 'STATUS', statusBody, 'STATUS.md');
-if (SYNC) writeFileSync(covPath, coverage);
-else if (!existsSync(covPath) || read(covPath).trim() !== coverage.trim()) err('SPEC-COVERAGE.md is missing or stale; run with --sync');
+// The part of SPEC-COVERAGE.md from "## Test and evidence coverage" on is written by plans/spec-coverage.mjs and kept as is.
+const TAIL = '## Test and evidence coverage';
+const covExisting = existsSync(covPath) ? read(covPath) : '';
+const covTailAt = covExisting.indexOf(TAIL);
+const covTail = covTailAt >= 0 ? covExisting.slice(covTailAt) : '';
+const covHead = covTailAt >= 0 ? covExisting.slice(0, covTailAt) : covExisting;
+if (SYNC) writeFileSync(covPath, covTail ? `${coverage.replace(/\s*$/, '')}\n\n${covTail}` : coverage);
+else if (!existsSync(covPath) || covHead.trim() !== coverage.trim()) err('SPEC-COVERAGE.md is missing or stale; run with --sync');
 
 // ---------- report ----------
 if (warnings.length) console.warn(warnings.map((w) => `WARN  ${w}`).join('\n'));

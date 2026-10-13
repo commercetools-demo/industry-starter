@@ -172,6 +172,21 @@ All remaining `OA-*`, `SO-*` and `M-*` rows are Z's manual items. Z adds these r
 4. `plans/evidence/Z/PUBLISH-READINESS.md` exists with an honest verdict line; gate 0 is recorded as `not applicable (stays in labs, owner 2026-10-12)`, the other gates carry their real results; the words "publishable" or "ready to publish" never appear while a judgement item is open.
 5. `plans/evidence/Z/FINAL-REPORT.md` written.
 
+## Progress
+
+- 2026-10-12 (J28): offline half of Z built; nothing here needed credentials, a browser or the owner.
+  - Z-02 done: `plans/spec-coverage.mjs` (+ `spec-coverage.test.mjs`) writes `plans/evidence/Z/spec-coverage.md` and the COVERAGE block of `plans/SPEC-COVERAGE.md` (31 specs, 252 scenarios; five levels, see Q-Z04; the UNCOVERED and PLANNED rows are the honest gap list). `verify-plan.mjs --sync` keeps that block (it only regenerates the part above it).
+  - Z-03 script done: `plans/release-gates.mjs` runs every offline check of plans, seed, `tools/fake-contentools`, storefront and portal (`verify:build` in a fresh scratch copy, dummy env) and prints PASS or FAIL per gate; result table in `plans/evidence/Z/clean-clone.md`. A true clean clone (`--no-hardlinks`) plus `npm ci` run on the release commit is still to do (Q-Z05).
+  - Z-05 prepared: `plans/E2E-JOURNEYS.md` (J0 to J12, accounts, steps, expected results, read-backs). Running them is M-Z-08 (needs OA-01, OA-02, OA-05, Chrome MCP).
+  - Z-07 script done: `seed/src/purge-test-data.ts` (`npm run purge:test-data`, dry run by default, register driven, `TST-` re-check per record, never `mau-`), tests in `seed/src/purge-test-data.test.ts`, which also proves that `reset` removes everything the seed creates in every kind and container it writes (the existing cleanup and reset cover the seed; no new seed delete path was needed). The live dry run and `--apply` are M-Z-03 and M-Z-09.
+  - Z-09 partial: gate 0 recorded as not applicable (stays in labs); `plans/evidence/Z/PUBLISH-READINESS.md` is a partial report; the sweep needs M-Z-01, M-Z-02, M-Z-07.
+  - Z-11 prepared: `plans/RELEASE-CHECKLIST.md`.
+  - Z-12 done: `plans/verify-manual.mjs` (+ `verify-manual.test.mjs`): ids, columns, cell counts, status values, WAIVED shape, unmerged ids; prints open counts per owner and blocker; `--structure` for the gate script, strict mode (exit 1 while rows are open) is gate G11. Fixed two rows that did not parse (Q-Z07).
+  - Z-13 done: all workstream rows are in `TODO-MANUAL-TESTING.md`; M-Z-08 and M-Z-09 added. 170 rows, 2 closed at this date.
+  - Open items consolidated by who acts: `plans/open-items.mjs` writes `plans/OPEN-ITEMS.md` (TODO rows, questions, MISSED-FEATURES). Board of A to Z: `plans/ORCHESTRATION.md`.
+  - Not done (blocked on the owner or the live project): Z-01 partial (`plans/evidence/Z/consistency.md`: `verify-plan --strict` passes; `openspec validate` cannot validate the flat spec folders), Z-04, Z-05 execution, Z-06, Z-08, Z-09 sweep, Z-10 results, Z-14, Z-15.
+- Commands: `node plans/release-gates.mjs [--skip-build]`, `node plans/verify-manual.mjs [--structure|--list]`, `node plans/spec-coverage.mjs`, `node plans/open-items.mjs`, `node --test plans/*.test.mjs`.
+
 ## Evidence (all under `plans/evidence/Z/`)
 
 `consistency.md`, `spec-coverage.md`, `clean-clone.md`, `browser/*.png`, `journeys.md`, `data-sweep.md`, `purge-plan.txt`, `leftovers.md`, `attack-rerun.json`, `sweep.json`, `PUBLISH-READINESS.md`, `release-checklist.md`, `deployed/*`, `manual-rows-final.md` (every row: id, status, closer, date, quoted statement, evidence), `FINAL-REPORT.md`.

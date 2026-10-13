@@ -35,6 +35,7 @@ Idempotent scripts that put everything the Malva B2B2C automotive sites (reselle
 | `npm run seed:images` | record clean Pexels image URLs into `src/data/*-images.json` (no commercetools access) |
 | `npm run verify` | read-back checks, exit 1 on any mismatch |
 | `npm run reset` | delete the seed's own resources so `seed` can rebuild from nothing |
+| `npm run purge:test-data` | dry run by default: deletes only records listed in `plans/evidence/*/test-data.md` (rows `\| kind \| id \| note \|`) that still carry the `TST-` marker and not the `mau-` prefix; `-- --apply --confirm <projectKey>` to delete (workstream Z-07, M-Z-03). `src/purge-test-data.test.ts` also proves that `reset` removes everything the seed creates. |
 
 Seed steps (`--only a,b`): `settings tax-shipping product-types categories types states channels recurrence vehicles products prices inventory reviews stores selections roles customers business-units discounts tailoring content`. All prices are standalone prices (step `prices`, Q-003); there is no price floor, no wholesale store, no customer group, no territory rule and no email or outbox data.
 

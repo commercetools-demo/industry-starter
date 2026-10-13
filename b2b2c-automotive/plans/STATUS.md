@@ -31,11 +31,11 @@ Planning draft v2 (2026-10-12, owner interview folded in: workstream letters are
 | U | Portal theme, content, store, channels, company | 0/0 | Not started |
 | V | Portal customers, subscriptions, returns and reviews | 0/18 | Not started |
 | W | Portal marketing, bundles, product import, brand partnership | 17/20 | Not started |
-| X | Security hardening (roles, IDOR, CSRF, Contentools proxy, JWT leakage, order, return and review integrity) | 0/15 | Not started |
+| X | Security hardening (roles, IDOR, CSRF, Contentools proxy, JWT leakage, order, return and review integrity) | 8/15 | Not started |
 | Y | Accessibility, responsive and performance sweep | 0/11 | Not started |
 | Z | Release readiness and final verification | 0/15 | Not started |
 
-Workstream files: 26/26. Tasks done: 40/178. Specs owned by the plan: 31, listed by a workstream: 31, out of scope (marker): 4. Manual-testing rows: 124.
+Workstream files: 26/26. Tasks done: 48/178. Specs owned by the plan: 31, listed by a workstream: 31, out of scope (marker): 4. Manual-testing rows: 172.
 <!-- STATUS:END -->
 
 ## Environment status (2026-10-12)
