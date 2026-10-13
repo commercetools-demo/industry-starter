@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 // Environment validation. No `server-only` (the proxy imports it); no value is ever put in an error message.
+import { normalizeContentoolsOrigin } from '@/lib/contentools/origin';
+
 export interface CtConfig {
   projectKey: string;
   authUrl: string;
@@ -69,7 +71,7 @@ export function validateEnv(env: Env): AppEnv {
   return {
     frontend: config(env, ''),
     sessionSecret: secret(env),
-    contentoolsOrigin: requiredUrl(env, 'CONTENTOOLS_ORIGIN').replace(/\/+$/, ''),
+    contentoolsOrigin: normalizeContentoolsOrigin(requiredUrl(env, 'CONTENTOOLS_ORIGIN')),
   };
 }
 
