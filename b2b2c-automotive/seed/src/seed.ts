@@ -256,10 +256,11 @@ export const STEPS: Step[] = [
     name: 'business-units',
     run: async (c) => {
       await c.loadKeys('customer', 'customers');
+      await c.loadKeys('store', 'stores');
       // Parents first: BUSINESS_UNITS is ordered that way.
       for (const b of BUSINESS_UNITS) {
         const d = businessUnitDraft(b);
-        await upsert(c, 'business-units', `business unit ${b.key}`, d, (e) => S.planBusinessUnitUpdate(e, d as never, (id) => c.keyOf('customer', id)));
+        await upsert(c, 'business-units', `business unit ${b.key}`, d, (e) => S.planBusinessUnitUpdate(e, d as never, (id) => c.keyOf('customer', id), (id) => c.keyOf('store', id)));
       }
     },
   },

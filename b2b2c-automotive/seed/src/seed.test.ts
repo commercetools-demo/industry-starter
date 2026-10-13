@@ -36,6 +36,18 @@ describe('seed against the in-memory API', () => {
     expect(api.writes).toBe(writes);
   });
 
+  it('gives existing business units their stores back (units seeded without stores made every user "awaiting approval")', async () => {
+    const api = new FakeApi();
+    await runSeed(opts(api));
+    const north = (await api.getByKey('business-units', 'mau-bu-north')) as Res;
+    expect((north.stores as { key?: string; id?: string }[]).length).toBe(1);
+    await api.update('business-units', north, [{ action: 'setStores', stores: [] }]);
+    const run = new Runner(false, quiet);
+    expect(await runSeed({ ...opts(api), run })).toBe(1);
+    expect(run.lines[0]).toContain('mau-bu-north');
+    expect(await runSeed(opts(api))).toBe(0);
+  });
+
   it('every demo account is email-verified, including accounts that already existed unverified', async () => {
     const api = new FakeApi();
     const first = CUSTOMERS[0] as (typeof CUSTOMERS)[number];

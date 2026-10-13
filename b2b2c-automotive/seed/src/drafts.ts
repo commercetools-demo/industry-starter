@@ -46,6 +46,10 @@ export function businessUnitDraft(b: BuDef): Obj {
     },
   };
   if (b.parent) base.parentUnit = { typeId: 'business-unit', key: b.parent };
+  // The portal signs a user in only to a unit that has a store: resellers own theirs, Malva Global sees both, the rest inherit.
+  const stores = b.kind === 'malva-global' ? STORES.map((s) => s.key) : b.kind === 'reseller' && b.storeKey ? [b.storeKey] : [];
+  if (stores.length > 0) Object.assign(base, { storeMode: 'Explicit', stores: stores.map((key) => ({ typeId: 'store', key })) });
+  else if (b.parent) base.storeMode = 'FromParent';
   return base;
 }
 

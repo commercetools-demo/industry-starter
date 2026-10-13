@@ -507,6 +507,15 @@ describe('supporting data', () => {
     expect(localReviewObjects()).toEqual([{ container: 'malva-local-review', key: 'mau-reseller-south--mau-local-sk-2002', value: { state: 'pending', claimedVehicles: [] } }]);
   });
 
+  it('every business unit with an associate can reach a store (the portal signs in only to units with a store)', () => {
+    const keys = (key: string) => ((businessUnitDraft(BUSINESS_UNITS.find((b) => b.key === key)!).stores as { key: string }[]) ?? []).map((x) => x.key);
+    expect(keys('mau-bu-north')).toEqual([K.storeNorth]);
+    expect(keys('mau-bu-south')).toEqual([K.storeSouth]);
+    expect(keys('mau-bu-malva').sort()).toEqual([K.storeNorth, K.storeSouth].sort());
+    for (const b of BUSINESS_UNITS.filter((u) => u.associates.length > 0)) expect(keys(b.key).length, b.key).toBeGreaterThan(0);
+    expect(businessUnitDraft(BUSINESS_UNITS.find((b) => b.key === 'mau-bu-malva-dach')!).storeMode).toBe('FromParent');
+  });
+
   it('inventory covers the warehouse and branches, with some branch gaps so "ships in 2-3 days" shows', () => {
     const inv = inventoryDrafts();
     const dc = inv.filter((i) => (i.supplyChannel as { key?: string }).key === K.supplyMalva);
