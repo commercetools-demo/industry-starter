@@ -10,7 +10,7 @@ export function KpiCard({ id, label, note, value, state }: { id: string; label: 
   const locale = useLocale();
   return (
     <section data-testid={`kpi-${id}`} aria-label={label} className="flex flex-col gap-100 rounded-200 bg-bg-surface p-400 shadow-card">
-      <h3 className="text-caption-1 font-semibold text-text-subdued">{label}</h3>
+      <h2 className="text-caption-1 font-semibold text-text-subdued">{label}</h2>
       {state === 'loading' ? (
         <div role="status" aria-label={t('loading')} className="h-800 w-1/2 rounded-100 bg-bg-surface-subdued motion-safe:animate-pulse" />
       ) : state === 'unavailable' || value === null ? (

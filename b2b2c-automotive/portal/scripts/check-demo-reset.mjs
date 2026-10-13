@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
-// On-screen password reset of the portal (R-08, owner answer Q-X05, workstream X). With `DEMO_ONSCREEN_RESET=on` anyone who knows an email address
+// On-screen password reset of the portal (R-08, owner answer Q-X05, workstream X). With `DEMO_ONSCREEN_RESET=true` anyone who knows an email address
 // can reset that account's password. A production build with it on therefore also needs `DEMO_RESET_ACKNOWLEDGED=true` (the owner's
-// acknowledgement) and then prints a notice. Same rule as storefront/scripts/check-demo-reset.mjs (the storefront flag value is `true`).
+// acknowledgement) and then prints a notice. Same rule as storefront/scripts/check-demo-reset.mjs (the same single spelling `true`, Q-X10).
 import { pathToFileURL } from 'node:url';
 import { isRelease } from './release-env.mjs';
 
@@ -10,9 +10,15 @@ const isProduction = (env) => env.NODE_ENV === 'production' || isRelease(env);
 
 export function checkDemoReset(env = process.env) {
   const result = { problems: [], notices: [] };
-  if (env.DEMO_ONSCREEN_RESET !== 'on' || !isProduction(env)) return result;
+  // One spelling in both apps (Q-X10): `true` or `false`. Anything else would silently leave the reset off, so it fails the check.
+  const flag = env.DEMO_ONSCREEN_RESET?.trim().toLowerCase(); // the app reads it the same way (lib/portal/flags.ts)
+  if (flag !== undefined && flag !== '' && flag !== 'true' && flag !== 'false') {
+    result.problems.push(`DEMO_ONSCREEN_RESET=${flag} is not understood: use DEMO_ONSCREEN_RESET=true (or false); the old value "on" no longer enables the reset`);
+    return result;
+  }
+  if (flag !== 'true' || !isProduction(env)) return result;
   if (env.DEMO_RESET_ACKNOWLEDGED !== 'true') {
-    result.problems.push('DEMO_ONSCREEN_RESET=on in a production build lets anyone who knows an email address reset that password: set DEMO_RESET_ACKNOWLEDGED=true to accept this for a demo, or unset DEMO_ONSCREEN_RESET');
+    result.problems.push('DEMO_ONSCREEN_RESET=true in a production build lets anyone who knows an email address reset that password: set DEMO_RESET_ACKNOWLEDGED=true to accept this for a demo, or unset DEMO_ONSCREEN_RESET');
   } else {
     result.notices.push('NOTICE: the on-screen password reset is on in a production build (DEMO_RESET_ACKNOWLEDGED=true). It is for demos only: anyone who knows an email address can reset that password.');
   }

@@ -3,6 +3,7 @@ import { CustomersPage } from '@/components/customers/CustomersPage';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Forbidden } from '@/components/portal/Forbidden';
 import { viewerCan } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 // Customers (workstream V): the reseller's own shoppers. Admin only; every route checks the role and the store again on the server.
 export default async function CustomersRoute({ params }: { params: Promise<{ locale: string }> }) {
@@ -17,3 +18,5 @@ export default async function CustomersRoute({ params }: { params: Promise<{ loc
     </div>
   );
 }
+
+export const generateMetadata = titleOf(['nav.items', 'customers']);

@@ -1,0 +1,27 @@
+route                                                        files        gzip      budget  status
+/[locale]/[store]                                               14    359.8 KB    380.0 KB  ok
+/[locale]/[store]/p/[slug]                                      13    218.7 KB    220.0 KB  ok
+/[locale]/[store]/cart                                          13    218.1 KB    220.0 KB  ok
+/[locale]/[store]/account/orders/[orderNumber]                  14    217.3 KB    260.0 KB  ok
+/[locale]/[store]/account/profile                               14    216.9 KB    260.0 KB  ok
+/[locale]/[store]/checkout/confirmation/[orderNumber]           13    216.8 KB    260.0 KB  ok
+/[locale]/[store]/account/addresses                             14    216.8 KB    260.0 KB  ok
+/[locale]/[store]/account/subscriptions                         14    216.4 KB    260.0 KB  ok
+/[locale]/[store]/account/orders/[orderNumber]/return           14    216.4 KB    260.0 KB  ok
+/[locale]/[store]/category/[slug]                               13    216.2 KB    220.0 KB  ok
+/[locale]/[store]/parts                                         13    216.2 KB    220.0 KB  ok
+/[locale]/[store]/search                                        13    216.2 KB    220.0 KB  ok
+/[locale]/[store]/account                                       14    215.7 KB    260.0 KB  ok
+/[locale]/[store]/account/payment-methods                       14    215.5 KB    260.0 KB  ok
+/[locale]/[store]/account/garage                                14    215.4 KB    260.0 KB  ok
+/[locale]/[store]/account/orders                                14    215.3 KB    260.0 KB  ok
+/[locale]/[store]/account/returns                               14    215.2 KB    260.0 KB  ok
+/[locale]/[store]/checkout                                      13    215.1 KB    260.0 KB  ok
+/[locale]/[store]/account/orders/[orderNumber]/invoice          14    215.0 KB    260.0 KB  ok
+/[locale]/[store]/account/forgot-password                       13    214.8 KB    260.0 KB  ok
+/[locale]/[store]/account/register                              13    214.8 KB    260.0 KB  ok
+/[locale]/[store]/account/reset-password                        13    214.8 KB    260.0 KB  ok
+/[locale]/[store]/account/sign-in                               13    214.4 KB    260.0 KB  ok
+/[locale]/[store]/dev/vehicle                                   13    214.3 KB    260.0 KB  ok
+
+bundle-report: OK (24 routes within budget)

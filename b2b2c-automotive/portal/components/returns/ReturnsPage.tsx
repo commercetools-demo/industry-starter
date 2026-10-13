@@ -55,14 +55,15 @@ export function ReturnsPage() {
       ) : (
         <TableCard>
           <table className="w-full min-w-[calc(var(--space-6400)*2)] border-collapse">
+            <caption className="sr-only">{t('title')}</caption>
             <thead>
               <tr className="border-b border-border">
-                <th className={thClass}>{t('columns.number')}</th>
-                <th className={thClass}>{t('columns.order')}</th>
-                <th className={thClass}>{t('columns.customer')}</th>
-                <th className={thClass}>{t('columns.items')}</th>
-                <th className={thClass}>{t('columns.tracking')}</th>
-                <th className={thClass}>{t('columns.status')}</th>
+                <th scope="col" className={thClass}>{t('columns.number')}</th>
+                <th scope="col" className={thClass}>{t('columns.order')}</th>
+                <th scope="col" className={thClass}>{t('columns.customer')}</th>
+                <th scope="col" className={thClass}>{t('columns.items')}</th>
+                <th scope="col" className={thClass}>{t('columns.tracking')}</th>
+                <th scope="col" className={thClass}>{t('columns.status')}</th>
               </tr>
             </thead>
             <tbody>

@@ -33,7 +33,7 @@ function Switch({ checked, disabled, label, onChange }: { checked: boolean; disa
       aria-label={label}
       disabled={disabled}
       onClick={onChange}
-      className={`relative h-800 w-1500 flex-none rounded-full border border-border transition-colors disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-border-active ${checked ? 'bg-bg-success' : 'bg-bg-surface-subdued'}`}
+      className={`relative h-800 w-1500 flex-none rounded-full border border-border-input transition-colors disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-border-active ${checked ? 'bg-bg-success' : 'bg-bg-surface-subdued'}`}
     >
       <span aria-hidden="true" className={`absolute top-050 size-600 rounded-full bg-bg-surface shadow-button transition-all ${checked ? 'left-[calc(100%-var(--space-600)-var(--space-050))]' : 'left-050'}`} />
     </button>
@@ -106,7 +106,7 @@ export function DiscountList({ kind }: { kind: DiscountKind }) {
       {!canEdit ? <p role="note" className={infoNote}>{tp('insufficient')}</p> : null}
       {problem ? <p role="alert" className={errorNote}>{problem}</p> : null}
       {error ? <p role="alert" className={errorNote}>{t('errors.load')}</p> : null}
-      <div className={tableScroll}>
+      <div className={tableScroll} role="group" tabIndex={0} aria-label={t(`${kind}.title`)}>
         <table className={`w-full border-collapse ${tableMinWidth}`}>
           <caption className="sr-only">{t(`${kind}.title`)}</caption>
           <thead>
@@ -124,7 +124,7 @@ export function DiscountList({ kind }: { kind: DiscountKind }) {
               const locked = d.funded === 'malva';
               const name = getLocalizedString(d.name, locale);
               return (
-                <tr key={d.id} className={`border-b border-border-subdued last:border-0 ${locked ? 'opacity-80' : ''}`}>
+                <tr key={d.id} className="border-b border-border-subdued last:border-0">
                   <td className={tdClass}>
                     <span className="block font-semibold">{name}</span>
                     <span className="mt-050 flex flex-wrap items-center gap-150">

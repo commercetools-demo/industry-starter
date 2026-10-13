@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 import { act, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import en from '@/messages/en-US.json';
 import { renderWithProviders } from '@/test/render';
@@ -82,6 +83,27 @@ describe('ContentoolsWrapper', () => {
     if (tab !== 'theme') {
       expect(props.parentUrl).toBe(`/de-DE/x/${tab}`);
       expect(props.config).toBeDefined();
+    }
+  });
+});
+
+describe('a11y: ContentoolsWrapper states', () => {
+  it('the pick-a-store and not-connected states have no axe violations and announce through role=alert', async () => {
+    const a = show({ storeKey: null });
+    expect(await axe(a.container, { rules: { region: { enabled: false } } })).toHaveNoViolations();
+    a.unmount();
+    const b = show({ connected: false });
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(await axe(b.container, { rules: { region: { enabled: false } } })).toHaveNoViolations();
+  });
+
+  it('every message shown inside the always-light editor surface uses an absolute text colour, not a theme token (dark portal theme)', () => {
+    for (const props of [{ storeKey: null }, { connected: false }, {}]) {
+      const view = show(props);
+      const message = screen.getByText(/Pick a store|Contentools isn't connected|Loading the editor/);
+      expect(message.className).toContain('text-gray-15');
+      expect(message.className).not.toMatch(/text-text\b/);
+      view.unmount();
     }
   });
 });

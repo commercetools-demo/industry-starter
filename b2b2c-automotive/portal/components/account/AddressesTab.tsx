@@ -74,13 +74,13 @@ export function AddressesTab() {
           {t('loading')}
         </p>
       ) : (
-        <div className={tableScroll}>
-          <table className="w-full">
+        <div className={tableScroll} role="group" tabIndex={0} aria-labelledby="acc-addresses-title">
+          <table className="w-full" aria-labelledby="acc-addresses-title">
             <thead>
               <tr>
-                <th className={thClass}>{t('address')}</th>
-                <th className={thClass}>{t('default')}</th>
-                <th className={thClass}>
+                <th scope="col" className={thClass}>{t('address')}</th>
+                <th scope="col" className={thClass}>{t('default')}</th>
+                <th scope="col" className={thClass}>
                   <span className="sr-only">{t('actions')}</span>
                 </th>
               </tr>

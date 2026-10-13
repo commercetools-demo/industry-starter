@@ -161,8 +161,9 @@ export function CsvImport() {
             {report.issues.length === 0 ? (
               <p className={hintClass}>{t('csv.issuesNone')}</p>
             ) : (
-              <div className={tableScroll}>
+              <div className={tableScroll} role="group" tabIndex={0} aria-labelledby="csv-issues-title">
                 <table className={`w-full ${tableMinWidth}`}>
+                  <caption className="sr-only">{t('csv.issuesTitle')}</caption>
                   <thead>
                     <tr>
                       <th scope="col" className={thClass}>

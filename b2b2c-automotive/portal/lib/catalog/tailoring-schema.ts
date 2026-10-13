@@ -3,6 +3,8 @@
 import { z } from 'zod';
 
 export const MAX_IMAGES = 10;
+/** Longest alt text (the commercetools image label limit used by ImageInput). */
+export const ALT_MAX = 120;
 
 /** https, no credentials, no query string and no fragment (stored URLs are clean, JUNIOR-GUIDE rule 9). */
 export function isCleanHttpsUrl(value: string): boolean {
@@ -18,7 +20,7 @@ const localized = (max: number) => z.record(z.string().regex(/^[a-z]{2}-[A-Z]{2}
 
 export const ImageInput = z.object({
   url: z.string().max(2000).refine(isCleanHttpsUrl, 'Use an https image address without ? or #, and without a user name'),
-  label: z.string().max(120).optional(),
+  label: z.string().max(ALT_MAX).optional(),
 });
 
 export const TailoringInput = z

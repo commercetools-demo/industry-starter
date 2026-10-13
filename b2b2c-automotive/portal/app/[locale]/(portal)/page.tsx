@@ -5,6 +5,7 @@ import { Forbidden } from '@/components/portal/Forbidden';
 import { getDashboardPorts } from '@/lib/ct/seller/dashboard/ports';
 import { getLocalizedString } from '@/lib/utils';
 import { getViewer, viewerCan } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 /**
  * Dashboard (workstream S): the greeting and subtitle are rendered here on the server (Europe/Berlin clock, so server and browser
@@ -33,3 +34,5 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
     </>
   );
 }
+
+export const generateMetadata = titleOf(['nav.items', 'dashboard']);

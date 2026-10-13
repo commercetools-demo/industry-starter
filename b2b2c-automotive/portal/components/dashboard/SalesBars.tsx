@@ -48,6 +48,7 @@ export function SalesBars({ daily, currency, fractionDigits }: { daily: DailySal
       <details className="text-caption-1 text-text-subdued">
         <summary className="cursor-pointer font-semibold">{t('chartTable')}</summary>
         <table className="mt-200 w-full text-left">
+          <caption className="sr-only">{t('chartTable')}</caption>
           <thead>
             <tr>
               <th scope="col" className="font-semibold">{t('date')}</th>

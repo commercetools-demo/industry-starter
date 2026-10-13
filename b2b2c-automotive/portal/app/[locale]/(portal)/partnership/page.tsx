@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { PartnershipPage } from '@/components/partnership/PartnershipPage';
 import { Forbidden } from '@/components/portal/Forbidden';
 import { viewerCan } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 // Brand partnership (workstream W): the guardrails that still exist and what to fix. Admin only; the route checks again.
 export default async function PartnershipRoute({ params }: { params: Promise<{ locale: string }> }) {
@@ -17,3 +18,5 @@ export default async function PartnershipRoute({ params }: { params: Promise<{ l
     </div>
   );
 }
+
+export const generateMetadata = titleOf(['nav.items', 'partnership']);

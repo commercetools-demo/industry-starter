@@ -62,6 +62,19 @@ export async function listPricesBySku(storeKey: string, skus: readonly string[],
   return new Map(skus.map((sku) => [sku, index.base(sku, currency) ?? index.onChannel(sku, store.retailChannel.id, currency)]));
 }
 
+/**
+ * The lowest price a shopper of the store can meet for these SKUs (Malva base price, the store's retail override and its branch prices),
+ * in the store's first currency; `undefined` when none has a price. Used to refuse an absolute discount that would reach zero (Q-X08).
+ */
+export async function lowestShopperPrice(storeKey: string, skus: readonly string[]): Promise<number | undefined> {
+  if (skus.length === 0) return undefined;
+  const store = await getSellerStore(storeKey);
+  const currency = store.currencies[0];
+  const channelIds = new Set([store.retailChannel.id, ...store.branchChannels.map((c) => c.id)]);
+  const cents = (await readPrices(skus)).filter((p) => p.value.currencyCode === currency && (!p.channel || channelIds.has(p.channel.id))).map((p) => p.value.centAmount);
+  return cents.length ? Math.min(...cents) : undefined;
+}
+
 function requireCurrency(store: SellerStore, currency: Currency | undefined): Currency {
   const c = currency ?? 'EUR';
   if (!store.currencies.includes(c)) throw new CatalogError(400, 'CURRENCY_NOT_SOLD', 'This store does not sell in that currency');

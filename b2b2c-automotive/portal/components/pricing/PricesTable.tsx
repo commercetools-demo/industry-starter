@@ -135,7 +135,7 @@ export function PricesTable() {
           </p>
         ) : null}
 
-        <div className={tableScroll}>
+        <div className={tableScroll} role="group" tabIndex={0} aria-label={t('title')}>
           <table className={`w-full border-collapse ${tableMinWidth}`}>
             <caption className="sr-only">{t('title')}</caption>
             <thead>

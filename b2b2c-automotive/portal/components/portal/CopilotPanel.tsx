@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/ui/icons/Icon';
 import { Link } from '@/i18n/routing';
 import { useOverlay } from '@/context/OverlayContext';
@@ -31,7 +31,12 @@ export function CopilotPanel() {
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const end = useRef<HTMLDivElement>(null);
+  const field = useRef<HTMLInputElement>(null);
   const open = overlay.isOpen('cp');
+  // Focus moves into the panel when it opens (Escape and Close give it back to the launcher through the overlay stack).
+  useEffect(() => {
+    if (open) field.current?.focus();
+  }, [open]);
 
   const push = (...messages: Message[]) => {
     setLog((l) => [...l, ...messages]);
@@ -69,28 +74,30 @@ export function CopilotPanel() {
     push({ who: 'copilot', text: t('cancelled') });
   }
 
-  if (!open) {
-    return (
-      <button
-        type="button"
-        data-testid="copilot-launcher"
-        title={t('open')}
-        onClick={(e) => overlay.open('cp', e.currentTarget)}
-        className="fixed bottom-600 right-600 z-40 h-1200 rounded-full bg-bg-brand px-500 text-body-1 font-bold text-text-on shadow-popover hover:bg-bg-brand-hover"
-      >
-        {t('open')}
-      </button>
-    );
-  }
+  // The launcher stays mounted (hidden from assistive technology while the panel is open) so that closing the panel can give
+  // focus back to it; the panel is rendered before it in the same fragment so the launcher keeps its place in the tree.
+  const launcher = (
+    <button
+      type="button"
+      data-testid="copilot-launcher"
+      title={t('open')}
+      aria-hidden={open || undefined}
+      tabIndex={open ? -1 : undefined}
+      onClick={(e) => overlay.open('cp', e.currentTarget)}
+      className="fixed bottom-600 right-600 z-40 h-1200 rounded-full bg-bg-brand px-500 text-body-1 font-bold text-text-on shadow-popover hover:bg-bg-brand-hover"
+    >
+      {t('open')}
+    </button>
+  );
 
-  return (
+  const panel = (
     <section role="dialog" aria-label={t('title')} className="fixed bottom-600 right-600 z-60 flex max-h-[72vh] w-widget-desktop-4col max-w-[calc(100vw-var(--space-800))] flex-col gap-200 overflow-y-auto rounded-400 bg-bg-surface p-400 text-text shadow-popover narrow:inset-x-300 narrow:bottom-300 narrow:w-auto narrow:max-w-none">
       <div className="flex items-start justify-between gap-200">
         <div>
           <h2 className="text-title-2 font-semibold">{t('title')}</h2>
           <p className="text-caption-1 font-medium text-text-subdued">{t('subtitle')}</p>
         </div>
-        <button type="button" aria-label={t('close')} onClick={() => overlay.close('cp')} className="grid size-800 place-items-center rounded-full hover:bg-bg-surface-hover">
+        <button type="button" aria-label={t('close')} onClick={() => overlay.close('cp')} className="grid size-800 place-items-center rounded-full hover:bg-bg-surface-hover narrow:size-1100">
           <Icon name="close" size="sm" />
         </button>
       </div>
@@ -133,17 +140,25 @@ export function CopilotPanel() {
         }}
       >
         <input
+          ref={field}
           type="text"
           aria-label={t('placeholder')}
           placeholder={t('placeholder')}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="h-1100 min-w-0 flex-1 rounded-300 border border-border bg-bg-surface px-300 text-body-2 font-semibold text-text"
+          className="h-1100 min-w-0 flex-1 rounded-300 border border-border-input bg-bg-surface px-300 text-body-2 font-semibold text-text"
         />
         <button type="submit" disabled={busy || !text.trim()} className="h-1100 rounded-300 bg-bg-brand px-400 text-body-2 font-bold text-text-on hover:bg-bg-brand-hover disabled:bg-bg-brand-disabled">
           {t('send')}
         </button>
       </form>
     </section>
+  );
+
+  return (
+    <>
+      {open ? panel : null}
+      {launcher}
+    </>
   );
 }

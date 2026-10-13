@@ -4,13 +4,13 @@ import { useTranslations } from 'next-intl';
 import { useId, useState } from 'react';
 import { buttonSecondary, buttonSmall, errorNote, hintClass, inputClass, labelClass } from '@/components/catalog/ui';
 import { tailoringApi } from '@/hooks/catalogApi';
-import { MAX_IMAGES } from '@/lib/catalog/tailoring-schema';
+import { ALT_MAX, MAX_IMAGES } from '@/lib/catalog/tailoring-schema';
 import type { ImageRef } from '@/lib/catalog/types';
 
 function Thumb({ image, alt }: { image: ImageRef; alt: string }) {
   // Remote tailored images have no known host list, so the plain element is used (sizes are set by the tokens below).
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={image.url} alt={alt} className="size-1200 flex-none rounded-200 border border-border-subdued bg-bg-surface-subdued object-cover" />;
+  return <img src={image.url} alt={alt} loading="lazy" decoding="async" width={48} height={48} className="size-1200 flex-none rounded-200 border border-border-subdued bg-bg-surface-subdued object-cover" />;
 }
 
 /**
@@ -26,6 +26,7 @@ export function ImagePanel({
   value,
   onChange,
   canEdit,
+  showAltErrors = false,
 }: {
   storeKey: string;
   productId: string;
@@ -33,9 +34,12 @@ export function ImagePanel({
   value: ImageRef[];
   onChange: (images: ImageRef[]) => void;
   canEdit: boolean;
+  /** Set by the editor after a refused save: every image without alt text shows its error. */
+  showAltErrors?: boolean;
 }) {
   const t = useTranslations('catalog.productInfo.images');
   const tp = useTranslations('permissions');
+  const altBase = useId();
   const urlId = useId();
   const fileId = useId();
   const [url, setUrl] = useState('');
@@ -99,8 +103,8 @@ export function ImagePanel({
         {value.length === 0 ? <p className={`mt-100 ${hintClass}`}>{t('usingMaster')}</p> : null}
         <ol className="mt-200 flex flex-col gap-200">
           {value.map((image, i) => (
-            <li key={`${image.url}-${i}`} className="flex items-center gap-300 rounded-300 border border-border-subdued p-200">
-              <Thumb image={image} alt={t('yoursAlt', { n: i + 1 })} />
+            <li key={`${image.url}-${i}`} className="flex flex-wrap items-center gap-300 rounded-300 border border-border-subdued p-200">
+              <Thumb image={image} alt={image.label?.trim() || t('yoursAlt', { n: i + 1 })} />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-caption-1 font-medium text-text">{image.url}</p>
                 <p className={hintClass}>
@@ -118,6 +122,32 @@ export function ImagePanel({
                 <button type="button" className={buttonSmall} aria-label={t('remove', { n: i + 1 })} disabled={!canEdit} onClick={() => onChange(value.filter((_, j) => j !== i))}>
                   {t('removeShort')}
                 </button>
+              </div>
+              <div className="flex w-full flex-col gap-100">
+                <label htmlFor={`${altBase}-${i}`} className={labelClass}>
+                  {t('altLabel', { n: i + 1 })}
+                </label>
+                <input
+                  id={`${altBase}-${i}`}
+                  data-alt-input=""
+                  type="text"
+                  required
+                  maxLength={ALT_MAX}
+                  value={image.label ?? ''}
+                  disabled={!canEdit}
+                  aria-invalid={showAltErrors && !image.label?.trim() ? true : undefined}
+                  aria-describedby={`${altBase}-${i}-hint${showAltErrors && !image.label?.trim() ? ` ${altBase}-${i}-error` : ''}`}
+                  onChange={(e) => onChange(value.map((v, j) => (j === i ? { ...v, label: e.target.value } : v)))}
+                  className={inputClass}
+                />
+                <p id={`${altBase}-${i}-hint`} className={hintClass}>
+                  {t('altHint')}
+                </p>
+                {showAltErrors && !image.label?.trim() ? (
+                  <p id={`${altBase}-${i}-error`} className="text-caption-1 font-semibold text-text-critical">
+                    {t('altMissing', { n: i + 1 })}
+                  </p>
+                ) : null}
               </div>
             </li>
           ))}

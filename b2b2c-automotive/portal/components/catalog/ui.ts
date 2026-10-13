@@ -9,9 +9,9 @@ export const buttonSecondary =
 export const buttonSmall =
   'inline-flex h-1000 items-center justify-center rounded-200 border border-border bg-transparent px-300 text-caption-1 font-bold text-text hover:bg-bg-surface-hover disabled:cursor-not-allowed disabled:text-text-disabled focus-visible:outline-2 focus-visible:outline-border-active';
 export const inputClass =
-  'h-1100 w-full rounded-300 border border-border bg-bg-surface px-300 text-body-2 font-semibold text-text placeholder:text-text-disabled disabled:cursor-not-allowed disabled:bg-bg-surface-disabled focus-visible:outline-2 focus-visible:outline-border-active';
+  'h-1100 w-full rounded-300 border border-border-input bg-bg-surface px-300 text-body-2 font-semibold text-text placeholder:text-text-disabled disabled:cursor-not-allowed disabled:bg-bg-surface-disabled focus-visible:outline-2 focus-visible:outline-border-active';
 export const textareaClass =
-  'min-h-3200 w-full rounded-300 border border-border bg-bg-surface px-300 py-250 text-body-2 font-medium text-text placeholder:text-text-disabled focus-visible:outline-2 focus-visible:outline-border-active';
+  'min-h-3200 w-full rounded-300 border border-border-input bg-bg-surface px-300 py-250 text-body-2 font-medium text-text placeholder:text-text-disabled focus-visible:outline-2 focus-visible:outline-border-active';
 export const labelClass = 'text-body-2 font-semibold text-text';
 export const hintClass = 'text-caption-1 font-medium text-text-subdued';
 export const thClass = 'px-300 py-250 text-left text-caption-1 font-semibold uppercase tracking-wider text-text-subdued';

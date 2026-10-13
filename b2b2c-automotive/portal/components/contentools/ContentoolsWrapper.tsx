@@ -19,7 +19,7 @@ const MOUNT_DELAY_MS = 500;
 const Spinner = () => {
   const t = useTranslations('contentools');
   return (
-    <p role="status" className="p-600 text-body-2 font-semibold text-text-subdued">
+    <p role="status" className="p-600 text-body-2 font-semibold text-gray-15">
       {t('loading')}
     </p>
   );
@@ -51,10 +51,10 @@ export function ContentoolsWrapper({ tab, parentUrl, locale, storeKey, connected
     return () => clearTimeout(timer);
   }, [storeKey, connected]);
 
-  if (!storeKey) return <p className="p-600 text-body-1 font-semibold text-text">{t('pickStore')}</p>;
+  if (!storeKey) return <p className="p-600 text-body-1 font-semibold text-gray-15">{t('pickStore')}</p>;
   if (!connected) {
     return (
-      <p role="alert" className="m-400 rounded-300 bg-bg-warning-subdued p-400 text-body-2 font-semibold text-text">
+      <p role="alert" className="m-400 rounded-300 bg-bg-warning-subdued p-400 text-body-2 font-semibold text-gray-15">
         {t('notConnected')}
       </p>
     );

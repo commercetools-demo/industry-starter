@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { useRouter } from '@/i18n/routing';
 import { useOverlay } from '@/context/OverlayContext';
 import { usePalette } from '@/context/PaletteContext';
@@ -47,8 +48,10 @@ export function CommandPalette() {
   const { query, setQuery } = usePalette();
   const [active, setActive] = useState(0);
   const input = useRef<HTMLInputElement>(null);
+  const dialog = useRef<HTMLDivElement>(null);
   const listId = useId();
   const open = overlay.isOpen('cmd');
+  useFocusTrap(dialog, open);
   const parts = usePartSearch(open ? query : '', viewer.storeKey);
 
   const entries = useMemo<Entry[]>(() => {
@@ -79,6 +82,7 @@ export function CommandPalette() {
     <div className="fixed inset-0 z-50">
       <div aria-hidden="true" onClick={() => overlay.close('cmd')} className="absolute inset-0 bg-overlay" />
       <div
+        ref={dialog}
         role="dialog"
         aria-modal="true"
         aria-label={t('title')}
@@ -110,7 +114,7 @@ export function CommandPalette() {
               go(entries[current]);
             }
           }}
-          className="h-1100 w-full rounded-300 border border-border bg-bg-surface px-300 text-body-1 font-semibold text-text"
+          className="h-1100 w-full rounded-300 border border-border-input bg-bg-surface px-300 text-body-1 font-semibold text-text"
         />
         <ul id={listId} role="listbox" aria-label={t('title')} className="flex flex-col gap-050">
           {entries.map((entry, index) => (
@@ -127,8 +131,12 @@ export function CommandPalette() {
               <span className="text-caption-1 font-medium text-text-subdued">{entry.kind}</span>
             </li>
           ))}
-          {entries.length === 0 ? <li className="px-300 py-200 text-caption-1 text-text-subdued">{t('empty')}</li> : null}
         </ul>
+        {entries.length === 0 ? (
+          <p role="status" className="px-300 py-200 text-caption-1 text-text-subdued">
+            {t('empty')}
+          </p>
+        ) : null}
       </div>
     </div>
   );

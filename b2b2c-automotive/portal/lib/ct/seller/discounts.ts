@@ -17,9 +17,11 @@ import {
 } from '@/lib/catalog/discount-rule';
 import { allocateSortOrder, inBand, rankToSortOrders } from '@/lib/catalog/sort-order';
 import type { CategoryOption, DiscountKind, DiscountView } from '@/lib/catalog/types';
+import { assignedBySku } from './assortment-members';
 import { listCategories } from './catalog-data';
 import { catalogRoot } from './catalog-root';
 import { belongsToStoreCart, belongsToStoreProduct, isDraftKey, isMalvaFundedCart, isMalvaFundedProduct, isOwnCoopDiscount, malvaCartVisibleTo, type StoreScope } from './discount-access';
+import { lowestShopperPrice } from './prices';
 import { getSellerStore, type SellerStore } from './store-info';
 import { retryOnConflict } from './versioned';
 
@@ -202,8 +204,16 @@ async function heldSortOrders(kind: DiscountKind): Promise<Set<string>> {
   return new Set((await fetchAll(kind)).map((d) => d.sortOrder));
 }
 
-function assertRule(rule: ProductRule | CartRule): void {
-  const issues = validateRule(rule);
+/** Q-X08: an absolute product amount is checked against the lowest price of the SKUs it can hit (the SKU list, the category or the whole assortment). */
+async function lowestPriceInScope(storeKey: string, rule: ProductRule | CartRule): Promise<number | undefined> {
+  if ('condition' in rule || rule.effect.kind !== 'absolute') return undefined;
+  const scope = rule.scope;
+  const skus = scope.kind === 'skus' ? scope.skus : [...(await assignedBySku(storeKey)).values()].filter((i) => scope.kind === 'all' || i.categoryIds.includes(scope.categoryId)).map((i) => i.sku);
+  return lowestShopperPrice(storeKey, skus);
+}
+
+async function assertRule(storeKey: string, rule: ProductRule | CartRule): Promise<void> {
+  const issues = validateRule(rule, { lowestUnitCents: await lowestPriceInScope(storeKey, rule) });
   if (issues.length) throw new CatalogError(400, 'INVALID_RULE', issues[0].message, { issues });
 }
 
@@ -239,7 +249,7 @@ export async function createDiscountDraft(storeKey: string, kind: DiscountKind):
 
 /** Creates a complete discount, inactive. A cart rule with a code also creates the (unique) discount code. */
 export async function createDiscount(storeKey: string, kind: DiscountKind, rule: ProductRule | CartRule): Promise<DiscountDetail> {
-  assertRule(rule);
+  await assertRule(storeKey, rule);
   const store = await getSellerStore(storeKey);
   const root = await catalogRoot();
   const code = 'condition' in rule ? rule.code : undefined;
@@ -260,7 +270,7 @@ export async function createDiscount(storeKey: string, kind: DiscountKind, rule:
 export async function updateDiscount(storeKey: string, kind: DiscountKind, id: string, rule: ProductRule | CartRule): Promise<DiscountDetail> {
   const first = await loadForStore(storeKey, kind, id);
   if (first.malva) throw locked();
-  assertRule(rule);
+  await assertRule(storeKey, rule);
   const store = first.store;
   const root = await catalogRoot();
   const code = 'condition' in rule ? rule.code : undefined;
@@ -310,7 +320,9 @@ export async function setDiscountActive(storeKey: string, kind: DiscountKind, id
   if (isActive) {
     if (isDraftKey(first.discount.key)) throw new CatalogError(400, 'DRAFT_INCOMPLETE', 'Complete the rule before activating it');
     const value = first.discount.value;
-    const bad = value.type === 'relative' ? !(value.permyriad >= 1 && value.permyriad <= 10000) : value.type === 'absolute' ? value.money.some((m) => !(m.centAmount > 0)) : false;
+    // Q-X08: 100 percent (10000) is only the shipping target of "free shipping"; no line or cart discount may reach it
+    const freeShipping = (first.discount as CartDiscount).target?.type === 'shipping';
+    const bad = value.type === 'relative' ? !(value.permyriad >= 1 && value.permyriad <= (freeShipping ? 10000 : 9999)) : value.type === 'absolute' ? value.money.some((m) => !(m.centAmount > 0)) : false;
     if (bad) throw new CatalogError(400, 'INVALID_RULE', 'The discount value is out of range');
     const until = first.discount.validUntil ? Date.parse(first.discount.validUntil) : undefined;
     const from = first.discount.validFrom ? Date.parse(first.discount.validFrom) : undefined;

@@ -3,6 +3,7 @@ import { CustomerDetail } from '@/components/customers/CustomerDetail';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Forbidden } from '@/components/portal/Forbidden';
 import { viewerCan } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 // Customer detail (workstream V-05): Admin only, the customer is read through the store's own endpoint (another store's id is a 404).
 export default async function CustomerRoute({ params }: { params: Promise<{ locale: string; id: string }> }) {
@@ -17,3 +18,5 @@ export default async function CustomerRoute({ params }: { params: Promise<{ loca
     </div>
   );
 }
+
+export const generateMetadata = titleOf(['nav.items', 'customers']);

@@ -1,5 +1,5 @@
 // POST /api/auth/reset-request: on-screen password reset (R-08, owner Q-P01: no email is ever sent).
-// DEMO ONLY: anyone who knows an email can reset that account, so the whole flow is gated by DEMO_ONSCREEN_RESET=on
+// DEMO ONLY: anyone who knows an email can reset that account, so the whole flow is gated by DEMO_ONSCREEN_RESET=true
 // (404 otherwise). Known gap, cited by workstream X and recorded in Z: "on-screen password reset: anyone who knows an
 // email can reset that account; demo only". The response never reveals whether the email exists: same status, same body
 // shape, same length (a decoy token for unknown emails) and the same total response time.

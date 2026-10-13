@@ -15,6 +15,7 @@ export function OrdersList({ orders }: { orders: DashboardOrder[] }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left text-body-2">
+        <caption className="sr-only">{t('orders.title')}</caption>
         <thead>
           <tr className="text-caption-1 font-semibold text-text-subdued">
             <th scope="col" className="pb-200 pr-300 font-semibold">{t('orders.number')}</th>

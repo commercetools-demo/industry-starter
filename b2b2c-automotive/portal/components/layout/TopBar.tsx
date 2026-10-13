@@ -42,13 +42,13 @@ export function TopBar() {
         <BusinessUnitSwitcher />
         <button
           type="button"
-          aria-label={t('paletteButton')}
           title={t('paletteButton')}
           aria-keyshortcuts="Control+K Meta+K"
           onClick={(e) => overlay.toggle('cmd', e.currentTarget)}
           className="h-1100 flex-none rounded-300 border border-border-on px-300 text-body-2 font-semibold hover:bg-bg-brand-hover narrow:hidden"
         >
-          ⌘K
+          <span className="sr-only">{t('paletteButton')}</span>
+          <span aria-hidden="true">⌘K</span>
         </button>
         <NotificationBell />
         <ThemeToggle />

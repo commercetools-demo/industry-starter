@@ -26,7 +26,7 @@ const timed = async (email: string) => {
 beforeEach(() => {
   m = createSeamMock();
   m.ports.createPasswordToken.mockImplementation(async (email: string) => (email === 'known@example.com' ? KNOWN_TOKEN : null));
-  vi.stubEnv('DEMO_ONSCREEN_RESET', 'on');
+  vi.stubEnv('DEMO_ONSCREEN_RESET', 'true');
   vi.useFakeTimers();
 });
 afterEach(() => {
@@ -69,7 +69,7 @@ describe('POST /api/auth/reset-request', () => {
   });
 
   it('flag off gives 404 for the request and the reset', async () => {
-    vi.stubEnv('DEMO_ONSCREEN_RESET', 'off');
+    vi.stubEnv('DEMO_ONSCREEN_RESET', 'false');
     expect((await ask('known@example.com')).status).toBe(404);
     expect(m.ports.createPasswordToken).not.toHaveBeenCalled();
     const res = await reset(makeRequest('/api/auth/reset', { method: 'POST', json: { token: 'x'.repeat(32), password: 'a-long-new-password' } }));

@@ -150,6 +150,21 @@ describe('writes', () => {
     expect(fake.writes()).toHaveLength(0);
   });
 
+  it('Q-X08: 100%, an absolute amount at or above the lowest price in scope, and a cart amount at or above its threshold are 400 INVALID_RULE and nothing is written', async () => {
+    const absolute = (scope: ProductRule['scope'], centAmount: number): ProductRule => ({ name: { 'en-US': 'Abs', 'de-DE': 'Abs' }, scope, effect: { kind: 'absolute', centAmount } });
+    await expect(createDiscount(NORTH, 'product', productRule('x', 100))).rejects.toMatchObject({ status: 400, code: 'INVALID_RULE' });
+    await expect(createDiscount(NORTH, 'cart', cartRule('x', { effect: { kind: 'relative', percent: 100 } }))).rejects.toMatchObject({ code: 'INVALID_RULE' });
+    await expect(createDiscount(NORTH, 'product', absolute({ kind: 'skus', skus: ['MLV-OF-44001'] }, 1290))).rejects.toMatchObject({ status: 400, code: 'INVALID_RULE' }); // price 12.90
+    await expect(createDiscount(NORTH, 'product', absolute({ kind: 'skus', skus: ['MLV-OF-44001', 'MLV-BP-41001'] }, 5000))).rejects.toMatchObject({ code: 'INVALID_RULE' }); // below one price, above another
+    await expect(createDiscount(NORTH, 'product', absolute({ kind: 'all' }, 1290))).rejects.toMatchObject({ code: 'INVALID_RULE' });
+    await expect(createDiscount(NORTH, 'cart', cartRule('x', { effect: { kind: 'absolute', centAmount: 200000 } }))).rejects.toMatchObject({ code: 'INVALID_RULE' });
+    await expect(createDiscount(NORTH, 'cart', cartRule('x', { condition: { kind: 'always' }, effect: { kind: 'absolute', centAmount: 500 } }))).rejects.toMatchObject({ code: 'INVALID_RULE' });
+    expect(fake.writes()).toHaveLength(0);
+    const ok = await createDiscount(NORTH, 'product', absolute({ kind: 'skus', skus: ['MLV-OF-44001'] }, 1289));
+    expect(ok.isActive).toBe(false);
+    await expect(updateDiscount(NORTH, 'product', ok.id, absolute({ kind: 'skus', skus: ['MLV-OF-44001'] }, 1290))).rejects.toMatchObject({ code: 'INVALID_RULE' });
+  });
+
   it('delete removes a store discount', async () => {
     const created = await createDiscount(NORTH, 'cart', cartRule('Gone'));
     await deleteDiscount(NORTH, 'cart', created.id);
@@ -197,14 +212,18 @@ describe('priority', () => {
   it('priority writes sortOrder so rank 1 > rank 2 > rank 3, permuting the store own values', async () => {
     const { a, b, c } = await threeProducts();
     const before = [a, b, c].map((id) => fake.state.productDiscounts.get(id)!.sortOrder).sort();
-    const result = await reorderDiscounts(NORTH, 'product', [c, a, b]);
+    // New discounts get a random sortOrder in the band, so "c, a, b" was already the held order one run in six (flaky): ask for the
+    // opposite of what is held when that happens.
+    const held = (await listDiscounts(NORTH, 'product')).filter((d) => d.funded === 'store').map((d) => d.id);
+    const wanted = held.join() === [c, a, b].join() ? [b, a, c] : [c, a, b];
+    const result = await reorderDiscounts(NORTH, 'product', wanted);
     expect(result.changed).toBeGreaterThan(0);
-    const orders = [c, a, b].map((id) => fake.state.productDiscounts.get(id)!.sortOrder);
+    const orders = wanted.map((id) => fake.state.productDiscounts.get(id)!.sortOrder);
     expect(Number(orders[0])).toBeGreaterThan(Number(orders[1]));
     expect(Number(orders[1])).toBeGreaterThan(Number(orders[2]));
     expect([...orders].sort()).toEqual(before); // a permutation of the original values
     const listed = (await listDiscounts(NORTH, 'product')).filter((d) => d.funded === 'store');
-    expect(listed.map((d) => d.id)).toEqual([c, a, b]);
+    expect(listed.map((d) => d.id)).toEqual(wanted);
     expect(listed.map((d) => d.rank)).toEqual([1, 2, 3]);
     // the Malva-funded discount still outranks every reseller discount
     expect(bandProblems(await listDiscounts(NORTH, 'product'))).toEqual([]);

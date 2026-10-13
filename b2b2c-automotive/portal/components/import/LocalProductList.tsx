@@ -34,8 +34,9 @@ export function LocalProductList({ highlightKey }: { highlightKey?: string }) {
       {isLoading ? <p className={hintClass}>{t('local.loading')}</p> : null}
       {!isLoading && !error && rows.length === 0 ? <p className={hintClass}>{t('local.empty')}</p> : null}
       {rows.length > 0 ? (
-        <div className={tableScroll}>
+        <div className={tableScroll} role="group" tabIndex={0} aria-labelledby="local-list-title">
           <table className={`w-full ${tableMinWidth}`}>
+            <caption className="sr-only">{t('local.title')}</caption>
             <thead>
               <tr>
                 <th scope="col" className={thClass}>

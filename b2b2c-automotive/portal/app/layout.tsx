@@ -6,7 +6,8 @@ import { fontClassNames } from '@/lib/fonts';
 import { themeInitScript } from '@/lib/theme-init';
 import './globals.css';
 
-export const metadata: Metadata = { title: 'Malva Partner Portal' };
+// Every route sets its own title (lib/portal/page-title.ts); the template appends the product name.
+export const metadata: Metadata = { title: { default: 'Malva Partner Portal', template: '%s | Malva Partner Portal' } };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const locale = (await headers()).get('x-next-intl-locale');

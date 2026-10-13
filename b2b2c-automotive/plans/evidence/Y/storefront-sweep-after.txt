@@ -1,0 +1,130 @@
+=== axe violations
+
+=== horizontal overflow (scroll or clipped offenders)
+
+=== target size < 24 (unique)
+a "Passende Alternativen ansehen" 211x20 .font-utility underline underline-offset-2 | cart-empty,cart-items
+input "radio" 14x16 .mt-1 size-4 accent-action | cart-empty,cart-items
+input "radio" 13x16 .mt-1 size-4 accent-action | cart-empty,cart-items
+input "radio" 16x16 .mt-1 size-4 accent-action | cart-empty,cart-items
+a "Passende Alternativen ansehen" 168x16 .font-utility text-xs text-text-link underline | cart-empty,cart-items
+input "radio" 15x16 .mt-1 size-4 accent-action | cart-items
+
+=== 24..43 px controls at 375 (unique, informational)
+a "Küstenwerk Keramik-Belagsatz" h=42 | home,parts,category
+a "Kestrel Bremsbelagsatz vorn 5" h=42 | home,parts,category
+a "Vektra Bremsscheibe 1" h=42 | home,parts,category
+a "Alpendyn Bremsscheibe 2" h=42 | home,parts,category
+a "Voltaris Bremsscheibe 5" h=42 | home,parts,category
+a "Kestrel Ölfilter 1" h=42 | home,parts
+a "Vektra Ölfilter 3" h=42 | home,parts
+a "Alpendyn Motoröl 5W-30 3" h=42 | home,parts
+a "Küstenwerk ceramic pad set" h=42 | home,parts
+a "Kestrel Front brake pad set 5" h=42 | home,parts
+a "Vektra Brake disc 1" h=42 | home,parts
+a "Alpendyn Brake disc 2" h=42 | home,parts
+a "Voltaris Brake disc 5" h=42 | home,parts
+a "Kestrel Oil filter 1" h=42 | home,parts
+a "Vektra Oil filter 3" h=42 | home,parts
+a "Alpendyn Engine oil 5W-30 3" h=42 | home,parts
+a "Alpendyn Ölfilter 4" h=42 | parts
+a "Kestrel Batterie 12V 3" h=42 | parts
+a "Kestrel Luftfilter 4" h=42 | parts
+a "Vektra Batterie 12V 5" h=42 | parts
+a "Vektra Bremsbelagsatz (Vorserie)" h=42 | parts,category
+a "Vektra Motoröl 5W-30 2" h=42 | parts
+a "Alpendyn Oil filter 4" h=42 | parts
+a "Kestrel Air filter 4" h=42 | parts
+a "Kestrel Battery 12V 3" h=42 | parts
+a "Vektra Battery 12V 5" h=42 | parts
+a "Vektra Engine oil 5W-30 2" h=42 | parts
+a "Vektra Front brake pad set (pre-release)" h=42 | parts
+a "Startseite" h=32 | pdp
+a "Bremsen" h=32 | pdp
+a "Bremsbeläge" h=32 | pdp
+a "Bewertet mit 4.0 von 5 aus 2 Bewertungen" h=32 | pdp
+a "Malva Select Bremsbelagsatz vorn 2" h=32 | pdp
+a "Nordlicht Bremsbelagsatz vorn 3" h=32 | pdp
+a "Home" h=32 | pdp
+a "Brakes" h=32 | pdp
+a "Brake pads" h=32 | pdp
+a "Rated 4.0 out of 5 from 2 reviews" h=32 | pdp
+a "Malva Select Front brake pad set 2" h=32 | pdp
+a "Nordlicht Front brake pad set 3" h=32 | pdp
+a "Passende Alternativen ansehen" h=32 | cart-empty,cart-items
+a "Küstenwerk Keramik-Belagsatz" h=40 | cart-items
+a "Vektra Bremsscheibe 1" h=40 | cart-items
+a "Küstenwerk ceramic pad set" h=40 | cart-items
+a "Vektra Brake disc 1" h=32 | cart-items
+a "Bestellung MA-QBBBB222 ansehen" h=24 | account-orders
+a "Bestellung MA-QCCCC333 ansehen" h=24 | account-orders
+a "Bestellung MA-QAAAA111 ansehen" h=24 | account-orders
+a "Bestellung MA-QEEEE555 ansehen" h=24 | account-orders
+a "Bestellung MA-QDDDD444 ansehen" h=24 | account-orders
+
+=== console problems (unique)
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/terms | search,search-empty,search-prompt,cart-empty,cart-items,checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/privacy | search,search-empty,search-prompt,cart-empty,cart-items,checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/returns | search,search-empty,search-prompt,cart-empty,cart-items,checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/terms-4aCNHZflK | cart-items
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/privacy-4aCNHZflK | cart-items
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/returns-4aCNHZflK | cart-items
+error: Failed to load resource: the server responded with a status of 503 (Service Unavailable) http://localhost:3180/api/checkout/session | checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/terms-MY3 | checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/privacy-MY3 | checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/returns-MY3 | checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/terms-3wXYLAL | sign-in
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/privacy-3wXYLAL | sign-in
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/returns-3wXYLAL | sign-in
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/terms | sign-in,account-overview
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/privacy | sign-in,account-overview
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/returns | sign-in,account-overview
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/terms-luzB88 | forgot-password
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/privacy-luzB88 | forgot-password
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/returns-luzB88 | forgot-password
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/nope | not-found
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/terms-yxuwb | account-return
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/privacy-yxuwb | account-return
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/returns-yxuwb | account-return
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/terms-QFhfTmZSbD | account-payment-methods
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/privacy-QFhfTmZSbD | account-payment-methods
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/returns-QFhfTmZSbD | account-payment-methods
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/terms-iJPMwqQl | confirmation
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/privacy-iJPMwqQl | confirmation
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/returns-iJPMwqQl | confirmation
+
+=== final urls != requested / missing h1 / lang
+home de-DE /de-DE/mau-reseller-north h1=["Originalteile von Küstenwerk Autoteile, in Ihrer Nähe abholbereit."] lang=de-DE title=Küstenwerk Autoteile | Originalteile, passgenau
+home en-US /en-US/mau-reseller-north h1=["Genuine parts from Küstenwerk Auto Parts, ready near you."] lang=en-US title=Küstenwerk Auto Parts | OEM car parts, fit guaranteed
+parts de-DE /de-DE/mau-reseller-north/parts h1=["Alle Teile"] lang=de-DE title=Alle Teile | Küstenwerk Autoteile
+parts en-US /en-US/mau-reseller-north/parts h1=["All parts"] lang=en-US title=All parts | Küstenwerk Auto Parts
+category de-DE /de-DE/mau-reseller-north/category/bremsen h1=["Bremsen"] lang=de-DE title=Bremsen | Küstenwerk Autoteile
+search de-DE /de-DE/mau-reseller-north/search?q=bremse h1=["Ergebnisse für „bremse“"] lang=de-DE title=Ergebnisse für „bremse“ | Küstenwerk Autoteile
+search-empty de-DE /de-DE/mau-reseller-north/search?q=zzzzzzzz h1=["Ergebnisse für „zzzzzzzz“"] lang=de-DE title=Ergebnisse für „zzzzzzzz“ | Küstenwerk Autoteile
+search-prompt de-DE /de-DE/mau-reseller-north/search h1=["Teilename, Nummer oder Marke eingeben"] lang=de-DE title=Teilename, Nummer oder Marke eingeben | Küstenwerk Autoteile
+pdp de-DE /de-DE/mau-reseller-north/p/alpendyn-bp-41001 h1=["Küstenwerk Keramik-Belagsatz"] lang=de-DE title=Küstenwerk Keramik-Belagsatz (MLV-BP-41001) | Küstenwerk Autoteile
+pdp en-US /en-US/mau-reseller-north/p/alpendyn-bp-41001 h1=["Küstenwerk ceramic pad set"] lang=en-US title=Küstenwerk ceramic pad set (MLV-BP-41001) | Küstenwerk Auto Parts
+cart-empty de-DE /de-DE/mau-reseller-north/cart h1=["Ihr Warenkorb"] lang=de-DE title=Ihr Warenkorb | Küstenwerk Autoteile
+cart-items de-DE /de-DE/mau-reseller-north/cart h1=["Ihr Warenkorb"] lang=de-DE title=Ihr Warenkorb | Küstenwerk Autoteile
+cart-items en-US /en-US/mau-reseller-north/cart h1=["Your cart"] lang=en-US title=Your cart | Küstenwerk Auto Parts
+checkout de-DE /de-DE/mau-reseller-north/checkout h1=["Kasse"] lang=de-DE title=Kasse | Küstenwerk Autoteile
+checkout en-US /en-US/mau-reseller-north/checkout h1=["Checkout"] lang=en-US title=Checkout | Küstenwerk Auto Parts
+sign-in de-DE /de-DE/mau-reseller-north/account/sign-in h1=["Anmelden"] lang=de-DE title=Anmelden | Küstenwerk Autoteile
+sign-in en-US /en-US/mau-reseller-north/account/sign-in h1=["Sign in"] lang=en-US title=Sign in | Küstenwerk Auto Parts
+register de-DE /de-DE/mau-reseller-north/account/register h1=["Konto erstellen"] lang=de-DE title=Konto erstellen | Küstenwerk Autoteile
+forgot-password de-DE /de-DE/mau-reseller-north/account/forgot-password h1=["Passwort zurücksetzen"] lang=de-DE title=Passwort zurücksetzen | Küstenwerk Autoteile
+reset-password de-DE /de-DE/mau-reseller-north/account/reset-password?token=abc h1=["Neues Passwort wählen"] lang=de-DE title=Neues Passwort wählen | Küstenwerk Autoteile
+not-found de-DE /de-DE/mau-reseller-north/nope h1=["Seite nicht gefunden"] lang=de-DE title=Malva
+account-overview de-DE /de-DE/mau-reseller-north/account h1=["Hallo, Anna"] lang=de-DE title=Mein Konto | Küstenwerk Autoteile
+account-overview en-US /en-US/mau-reseller-north/account h1=["Hello, Anna"] lang=en-US title=My account | Küstenwerk Auto Parts
+account-orders de-DE /de-DE/mau-reseller-north/account/orders h1=["Bestellungen"] lang=de-DE title=Bestellungen
+account-order de-DE /de-DE/mau-reseller-north/account/orders/MA-QBBBB222 h1=["Bestellung MA-QBBBB222"] lang=de-DE title=Bestellung MA-QBBBB222
+account-return de-DE /de-DE/mau-reseller-north/account/orders/MA-QBBBB222/return h1=["Retoure anfordern"] lang=de-DE title=Retoure anfordern
+account-garage de-DE /de-DE/mau-reseller-north/account/garage h1=["Garage"] lang=de-DE title=Garage
+account-addresses de-DE /de-DE/mau-reseller-north/account/addresses h1=["Adressen"] lang=de-DE title=Adressen
+account-payment-methods de-DE /de-DE/mau-reseller-north/account/payment-methods h1=["Zahlungsarten"] lang=de-DE title=Zahlungsarten
+account-subscriptions de-DE /de-DE/mau-reseller-north/account/subscriptions h1=["Abos"] lang=de-DE title=Abos
+account-returns de-DE /de-DE/mau-reseller-north/account/returns h1=["Retouren"] lang=de-DE title=Retouren
+account-profile de-DE /de-DE/mau-reseller-north/account/profile h1=["Profil"] lang=de-DE title=Profil
+confirmation de-DE /de-DE/mau-reseller-north/checkout/confirmation/MA-QBBBB222 h1=["Danke, Ihre Bestellung ist eingegangen."] lang=de-DE title=Bestellbestätigung | Küstenwerk Autoteile
+confirmation en-US /en-US/mau-reseller-north/checkout/confirmation/MA-QBBBB222 h1=["Thanks, your order is in."] lang=en-US title=Order confirmation | Küstenwerk Auto Parts

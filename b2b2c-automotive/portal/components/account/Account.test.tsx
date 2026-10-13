@@ -3,6 +3,7 @@
 // Account settings screens (workstream U-10): live password messages, error mapping, units table, tabs.
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { axe } from 'jest-axe';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ViewerProvider } from '@/context/ViewerContext';
 import type { Viewer } from '@/lib/portal/types';
@@ -113,5 +114,17 @@ describe('Account tabs', () => {
     render(<AccountTabs />);
     expect(screen.getAllByRole('link').map((a) => a.textContent)).toEqual(['General', 'Security', 'Addresses', 'Business units']);
     expect(screen.getByRole('link', { name: 'Business units' })).toHaveAttribute('aria-current', 'page');
+  });
+});
+
+describe('a11y: account tabs', () => {
+  it('Security, General, Business units and the tab links have no axe violations', async () => {
+    pathname = '/account/general';
+    for (const ui of [<AccountTabs key="t" />, <SecurityTab key="s" />, <GeneralTab key="g" />, <BusinessUnitsTab key="b" />]) {
+      const { container, unmount } = render(ui);
+      await screen.findAllByText(/./);
+      expect(await axe(container, { rules: { region: { enabled: false } } })).toHaveNoViolations();
+      unmount();
+    }
   });
 });

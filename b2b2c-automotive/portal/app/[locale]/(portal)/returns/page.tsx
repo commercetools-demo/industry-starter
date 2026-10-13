@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Forbidden } from '@/components/portal/Forbidden';
 import { ReturnsPage } from '@/components/returns/ReturnsPage';
 import { viewerCan } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 // Returns (workstream V): both roles may read the list; recording, moving and refunding are Admin only (the routes check again).
 export default async function ReturnsRoute({ params }: { params: Promise<{ locale: string }> }) {
@@ -17,3 +18,5 @@ export default async function ReturnsRoute({ params }: { params: Promise<{ local
     </div>
   );
 }
+
+export const generateMetadata = titleOf(['nav.items', 'returns']);

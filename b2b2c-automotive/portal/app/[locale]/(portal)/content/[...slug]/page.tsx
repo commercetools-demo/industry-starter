@@ -1,8 +1,10 @@
+import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { ContentoolsWrapper } from '@/components/contentools/ContentoolsWrapper';
 import { EditorBoundary } from '@/components/contentools/EditorBoundary';
 import { getValidContentoolsJwt } from '@/lib/contentools/jwt';
 import { getProjectKey } from '@/lib/contentools/project-key';
+import { titleMetadata } from '@/lib/portal/page-title';
 import { getPortalSession } from '@/lib/portal/viewer';
 
 /**
@@ -28,4 +30,9 @@ export default async function ContentEditorPage({ params }: { params: Promise<{ 
       />
     </EditorBoundary>
   );
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string[] }> }): Promise<Metadata> {
+  const { locale, slug } = await params;
+  return titleMetadata(locale, ['content.tabs', slug[0] === 'blocks' ? 'blocks' : 'pages'], ['nav.items', 'content']);
 }

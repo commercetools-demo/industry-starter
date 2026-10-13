@@ -9,7 +9,7 @@ import { campaignApi } from '@/hooks/marketingApi';
 import { parsePriceCents } from '@/lib/import/local-product';
 
 const textareaClass =
-  'min-h-3200 w-full rounded-300 border border-border bg-bg-surface px-300 py-250 text-body-2 font-medium text-text placeholder:text-text-disabled focus-visible:outline-2 focus-visible:outline-border-active';
+  'min-h-3200 w-full rounded-300 border border-border-input bg-bg-surface px-300 py-250 text-body-2 font-medium text-text placeholder:text-text-disabled focus-visible:outline-2 focus-visible:outline-border-active';
 
 /** Proof of spend of a campaign: amount, invoice reference and note (no file upload, Q-W09). The server sets the status `submitted`. */
 export function ClaimDialog({ open, name, campaignKey, storeKey, onClose, onSent }: { open: boolean; name: string; campaignKey: string; storeKey: string; onClose: () => void; onSent: () => void }) {

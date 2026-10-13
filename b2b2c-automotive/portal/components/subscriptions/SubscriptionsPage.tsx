@@ -93,15 +93,16 @@ export function SubscriptionsPage() {
       ) : (
         <TableCard>
           <table className="w-full min-w-[calc(var(--space-6400)*3)] border-collapse">
+            <caption className="sr-only">{t('title')}</caption>
             <thead>
               <tr className="border-b border-border">
-                <th className={thClass}>{t('columns.customer')}</th>
-                <th className={thClass}>{t('columns.items')}</th>
-                <th className={thClass}>{t('columns.interval')}</th>
-                <th className={thClass}>{t('columns.next')}</th>
-                <th className={`${thClass} text-right`}>{t('columns.value')}</th>
-                <th className={thClass}>{t('columns.status')}</th>
-                <th className={thClass}>{t('columns.actions')}</th>
+                <th scope="col" className={thClass}>{t('columns.customer')}</th>
+                <th scope="col" className={thClass}>{t('columns.items')}</th>
+                <th scope="col" className={thClass}>{t('columns.interval')}</th>
+                <th scope="col" className={thClass}>{t('columns.next')}</th>
+                <th scope="col" className={`${thClass} text-right`}>{t('columns.value')}</th>
+                <th scope="col" className={thClass}>{t('columns.status')}</th>
+                <th scope="col" className={thClass}>{t('columns.actions')}</th>
               </tr>
             </thead>
             <tbody>

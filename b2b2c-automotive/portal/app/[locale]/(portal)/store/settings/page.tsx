@@ -1,6 +1,7 @@
 import { setRequestLocale } from 'next-intl/server';
 import { BranchesPanel } from '@/components/store/BranchesPanel';
 import { SettingsForm } from '@/components/store/SettingsForm';
+import { titleOf } from '@/lib/portal/page-title';
 
 // Tab "Settings": identity, location and branches (workstream U-05). The default branch time zone is the store's German market.
 const DEFAULT_BRANCH_TIMEZONE = 'Europe/Berlin';
@@ -15,3 +16,5 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
     </div>
   );
 }
+
+export const generateMetadata = titleOf(['store.tabs', 'settings'], ['nav.items', 'store']);

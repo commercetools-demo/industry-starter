@@ -35,7 +35,7 @@ function KindList({ kind, order, setOrder, rows, canEdit }: { kind: DiscountKind
       </h2>
       <ol className="flex flex-col gap-200">
         {malva.map((d) => (
-          <li key={d.id} data-testid="locked-row" className="flex items-center gap-300 rounded-300 border border-border-subdued bg-bg-surface-subdued px-300 py-250 opacity-70">
+          <li key={d.id} data-testid="locked-row" className="flex items-center gap-300 rounded-300 border border-border-subdued bg-bg-surface-subdued px-300 py-250">
             <span className="w-800 text-center text-body-2 font-bold text-text-subdued">{t('noRank')}</span>
             <span className="min-w-0 flex-1">
               <span className="block truncate text-body-2 font-semibold text-text">{getLocalizedString(d.name, locale)}</span>

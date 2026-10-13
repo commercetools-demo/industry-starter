@@ -8,6 +8,7 @@ import { TemplateEditor } from '@/components/email/TemplateEditor';
 import { Chip } from '@/components/portal/Chip';
 import { cardClass, errorNote, infoNote, sectionTitle } from '@/components/portal/kit';
 import { useViewer } from '@/context/ViewerContext';
+import { useTablist } from '@/hooks/useTablist';
 import { useEmailTemplates } from '@/hooks/marketingApi';
 
 export type EmailTab = 'templates' | 'campaigns';
@@ -22,22 +23,21 @@ export function EmailPage({ initialTab = 'templates' }: { initialTab?: EmailTab 
   const { storeKey } = useViewer();
   const { data, error } = useEmailTemplates(storeKey);
   const [tab, setTab] = useState<EmailTab>(initialTab);
+  const { listProps, tabProps } = useTablist<EmailTab>({ ids: TABS, value: tab, onChange: setTab, withPanel: false });
   const [selected, setSelected] = useState<(typeof TEMPLATE_KEYS)[number]>('order-confirmation');
   const template = data?.templates.find((x) => x.key === selected);
 
   return (
     <div className="flex flex-col gap-500">
       <p className={infoNote}>{t('note')}</p>
-      <div role="tablist" aria-label={t('tabs.label')} className="flex w-max gap-100 rounded-300 bg-bg-surface-subdued p-100">
+      <div role="tablist" aria-label={t('tabs.label')} {...listProps} className="flex w-max gap-100 rounded-300 bg-bg-surface-subdued p-100">
         {TABS.map((id) => (
           <button
             key={id}
             type="button"
-            role="tab"
+            {...tabProps(id)}
             id={`email-tab-${id}`}
-            aria-selected={tab === id}
             aria-controls={`email-panel-${id}`}
-            onClick={() => setTab(id)}
             className={`inline-flex h-1000 items-center rounded-200 px-400 text-body-2 font-semibold focus-visible:outline-2 focus-visible:outline-border-active ${tab === id ? 'bg-bg-surface text-text shadow-button' : 'text-text-subdued hover:text-text'}`}
           >
             {t(`tabs.${id}`)}

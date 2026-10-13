@@ -24,7 +24,7 @@ export function SubscriptionsRenewing() {
       onRetry={renewals.retry}
       action={
         can('subscriptions.view') ? (
-          <Link href="/subscriptions" className="text-button-2 font-bold text-text-active hover:underline">
+          <Link href="/subscriptions" className="inline-flex min-h-600 items-center text-button-2 font-bold text-text-active hover:underline">
             {t('headsUp.review')}
           </Link>
         ) : undefined

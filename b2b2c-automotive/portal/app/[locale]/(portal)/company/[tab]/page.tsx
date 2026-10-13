@@ -1,7 +1,9 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { AddressesTab } from '@/components/company/AddressesTab';
 import { COMPANY_TABS, type CompanyTabId } from '@/lib/company/tabs';
+import { titleMetadata } from '@/lib/portal/page-title';
 import { ProfileTab } from '@/components/company/ProfileTab';
 import { UsersTab } from '@/components/company/UsersTab';
 
@@ -18,4 +20,9 @@ export default async function CompanyTabPage({ params }: { params: Promise<{ loc
     case 'profile':
       return <ProfileTab />;
   }
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; tab: string }> }): Promise<Metadata> {
+  const { locale, tab } = await params;
+  return titleMetadata(locale, ['company.tabs', (COMPANY_TABS as readonly string[]).includes(tab) ? tab : 'users'], ['nav.items', 'company']);
 }

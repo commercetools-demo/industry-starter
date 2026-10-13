@@ -20,7 +20,7 @@ npm run dev                  # http://localhost:3000, or: npm run dev -- -p 3100
 | `npm run dev` / `build` / `start` | Next.js |
 | `npm run lint` / `typecheck` / `test` | ESLint, `tsc --noEmit`, Vitest |
 | `npm run check` | The quality gate: typecheck, lint, then the gate scripts below, then tests |
-| `npm run verify:build` | `next build`, then route, health-route and bundle-secret checks on the output |
+| `npm run verify:build` | `next build`, then route, health-route and bundle-secret checks on the output. First it runs `scripts/check-build-env.mjs`: with `RELEASE=1` (or a production Netlify context) `STOREFRONT_ORIGIN` must be set in the BUILD environment as a bare https origin (next.config.ts bakes it into the CSP); other builds are not checked |
 | `node scripts/ensure-w.mjs [--apply]` | W: verifies the seed types for marketing, bundles and local products; writes demo campaigns and e-mail templates only with `--apply` (see "Selling tools") |
 | `node scripts/ensure-v.mjs [--apply]` | V: verifies the seed types for customers, returns and checkout fields; creates the review type `malva-review` and the review states only with `--apply` (see "Customers, subscriptions, returns and reviews") |
 
@@ -32,7 +32,10 @@ npm run dev                  # http://localhost:3000, or: npm run dev -- -p 3100
 - `check-server-only`: `lib/ct/**`, `lib/session*.ts`, `lib/contentools/**` (except `origin.ts`) start with `import 'server-only'`; client code never imports them.
 - `check-tokens`: components use tokens only (see below).
 - `check-messages`: exactly `de-DE.json` and `en-US.json`, identical keys and ICU placeholders, no empty values, every `t('ns.key')` exists.
+- `check-demo-reset`: `DEMO_ONSCREEN_RESET` is `true` or `false` (the one spelling of both apps, Q-X10; the old "on" fails); `true` in a production build also needs `DEMO_RESET_ACKNOWLEDGED=true`. The portal has no rate limiter by decision D9 (Q-X03); see `plans/notes/questions-VWXYZ.md` Q-X09.
+- `check-build-env` (first step of `verify:build`): see the scripts table.
 - `check-routes`, `check-no-dev-pages`, `check-no-health-in-release`, `check-bundle-secrets`: release hygiene. Dev pages are named `page.dev.tsx` and only exist outside production builds (`next.config.ts` `pageExtensions`); the health route must not exist when `RELEASE=1` or on the production context.
+- Accessibility and performance (workstream Y): `contrast-report` (`node scripts/contrast-report.mjs`; the pairs of `scripts/contrast-pairs.json` in light and dark against WCAG AA, listed exceptions with reasons; it reads `app/tokens.css` and the AA text layer of `app/globals.css`), `check-reduced-motion` (one global `prefers-reduced-motion` rule, no unguarded animation or smooth scroll), `bundle-report` (after `next build`: first-load JavaScript per route, gzip, budgets 350 KB and 1.5 MB for the Content and Theme editor routes; part of `verify:build`). Tests: `components/**/*.a11y.test.*`, `components/tables.a11y.test.ts`, `lib/portal/page-title.test.ts` (every route has a locale-aware title). Browser evidence is in `plans/evidence/Y/portal-*`.
 - ESLint rules (`eslint.config.mjs`, tests in `eslint/rules.test.mjs`): `new ClientBuilder` only in `lib/ct/client.ts`; commercetools SDK only in `lib/ct/**` and `lib/mappers/**`; no `fetch('/api/...')` in components and pages (hooks only); locale-aware navigation only (`@/i18n/routing`); no Puck value imports in Server Components; admin client importable only from `app/api/seller/**`, `lib/ct/seller/**`, `lib/contentools/jwt.ts`, provisioning client only from `app/api/auth/register/**`.
 
 ## Design tokens

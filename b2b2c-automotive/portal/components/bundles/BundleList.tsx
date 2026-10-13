@@ -49,8 +49,8 @@ export function BundleList({ bundles, loading, failed, onChanged }: { bundles: B
       {loading ? <p className={hintClass}>{t('list.loading')}</p> : null}
       {!loading && !failed && bundles.length === 0 ? <p className={hintClass}>{t('list.empty')}</p> : null}
       {bundles.length > 0 ? (
-        <div className={tableScroll}>
-          <table className={`w-full ${tableMinWidth}`}>
+        <div className={tableScroll} role="group" tabIndex={0} aria-labelledby="bundle-list-title">
+          <table className={`w-full ${tableMinWidth}`} aria-labelledby="bundle-list-title">
             <thead>
               <tr>
                 <th scope="col" className={thClass}>

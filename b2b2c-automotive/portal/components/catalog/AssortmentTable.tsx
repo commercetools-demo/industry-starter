@@ -206,7 +206,7 @@ export function AssortmentTable() {
         </div>
       ) : null}
 
-      <div className={tableScroll}>
+      <div className={tableScroll} role="region" tabIndex={0} aria-label={t('tableLabel')}>
         <table className={`w-full border-collapse ${tableMinWidth}`}>
           <caption className="sr-only">{t('title')}</caption>
           <thead>

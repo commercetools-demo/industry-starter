@@ -13,7 +13,7 @@ import { money, shortDate } from '@/lib/v-format';
 import { NOTE_LIMIT } from './limits';
 
 const textareaClass =
-  'min-h-3200 w-full rounded-300 border border-border bg-bg-surface px-300 py-250 text-body-2 font-medium text-text placeholder:text-text-disabled focus-visible:outline-2 focus-visible:outline-border-active';
+  'min-h-3200 w-full rounded-300 border border-border-input bg-bg-surface px-300 py-250 text-body-2 font-medium text-text placeholder:text-text-disabled focus-visible:outline-2 focus-visible:outline-border-active';
 
 /** Posts the handoff token in a form body to the storefront in a new tab: the token is never part of a URL. */
 function submitHandoff(action: string, token: string) {
@@ -146,12 +146,13 @@ export function CustomerDetail({ id }: { id: string }) {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[calc(var(--space-6400)*2)] border-collapse">
+              <caption className="sr-only">{t('detail.orders.title')}</caption>
               <thead>
                 <tr className="border-b border-border">
-                  <th className={thClass}>{t('detail.orders.number')}</th>
-                  <th className={thClass}>{t('detail.orders.date')}</th>
-                  <th className={`${thClass} text-right`}>{t('detail.orders.total')}</th>
-                  <th className={thClass}>{t('detail.orders.delivered')}</th>
+                  <th scope="col" className={thClass}>{t('detail.orders.number')}</th>
+                  <th scope="col" className={thClass}>{t('detail.orders.date')}</th>
+                  <th scope="col" className={`${thClass} text-right`}>{t('detail.orders.total')}</th>
+                  <th scope="col" className={thClass}>{t('detail.orders.delivered')}</th>
                 </tr>
               </thead>
               <tbody>

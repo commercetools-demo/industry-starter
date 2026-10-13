@@ -27,14 +27,14 @@ export function BusinessUnitsTab() {
           {t('loading')}
         </p>
       ) : (
-        <div className={tableScroll}>
-          <table className="w-full">
+        <div className={tableScroll} role="group" tabIndex={0} aria-labelledby="units-title">
+          <table className="w-full" aria-labelledby="units-title">
             <thead>
               <tr>
-                <th className={thClass}>{t('name')}</th>
-                <th className={thClass}>{t('type')}</th>
-                <th className={thClass}>{t('roles')}</th>
-                <th className={thClass}>{t('store')}</th>
+                <th scope="col" className={thClass}>{t('name')}</th>
+                <th scope="col" className={thClass}>{t('type')}</th>
+                <th scope="col" className={thClass}>{t('roles')}</th>
+                <th scope="col" className={thClass}>{t('store')}</th>
               </tr>
             </thead>
             <tbody>

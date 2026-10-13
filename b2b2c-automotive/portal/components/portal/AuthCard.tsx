@@ -29,7 +29,7 @@ export function AuthCard({ title, subtitle, children, links }: { title: string; 
 }
 
 export const fieldClass =
-  'h-1100 w-full rounded-300 border border-border bg-bg-surface px-300 text-body-1 font-semibold text-text placeholder:text-text-disabled';
+  'h-1100 w-full rounded-300 border border-border-input bg-bg-surface px-300 text-body-1 font-semibold text-text placeholder:text-text-disabled';
 export const primaryButtonClass =
   'h-1200 w-full rounded-300 border border-border-on bg-bg-brand text-body-1 font-bold text-text-on shadow-button hover:bg-bg-brand-hover disabled:cursor-not-allowed disabled:bg-bg-brand-disabled';
 export const secondaryButtonClass =

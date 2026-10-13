@@ -353,6 +353,36 @@
   /* theme:end */
 }
 
+/* AA layer (workstream Y, Q-Y01). The kit's muted, link and status text colours are below 4.5:1 on its own surfaces
+   (see plans/evidence/Y/portal-contrast-before.txt). Components keep using the semantic text tokens; this layer maps them to
+   the next darker ramp step in light and the next lighter in dark, and adds the input border role (1.4.11).
+   app/tokens.css stays an exact copy of the design export. scripts/contrast-report.mjs reads this layer. */
+:root {
+  --color-text-subdued: var(--color-gray-13);
+  --color-text-active: var(--color-blue-13);
+  --color-text-info: var(--color-azure-13);
+  --color-text-success: var(--color-green-13);
+  --color-text-warning: var(--color-orange-13);
+  --color-text-critical: var(--color-red-13);
+  --color-border-input: var(--color-gray-12);
+}
+
+/* This block comes after the :root one on purpose and restates every token of it: both selectors weigh the same, so a token left out
+   here would take its light value in dark. contrast-report.test.mjs fails when the two lists differ. */
+[data-theme="dark"] {
+  --color-text-subdued: var(--color-gray-7);
+  --color-text-active: var(--color-blue-10);
+  --color-text-info: var(--color-azure-10);
+  --color-text-success: var(--color-green-10);
+  --color-text-warning: var(--color-orange-10);
+  --color-text-critical: var(--color-red-10);
+  --color-border-input: var(--color-gray-11);
+}
+
+@theme inline {
+  --color-border-input: var(--color-border-input);
+}
+
 /* Shell breakpoint (R-11): under 700 px (43.75rem) the sidebar rail becomes a drawer. The 1024 px icon-rail step is Tailwind's max-lg. */
 @custom-variant narrow {
   @media (width < 43.75rem) {
@@ -364,6 +394,24 @@ body {
   background: var(--color-bg-page);
   color: var(--color-text);
   font-family: var(--font-sans);
+}
+
+/* Reduced motion (workstream Y, scripts/check-reduced-motion.mjs): the one global rule for every transition, animation and scroll. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus not obscured (WCAG 2.4.11, workstream Y): the Copilot launcher is fixed bottom right (24 px offset, 48 px high); a focused control
+   scrolls into view above it. scripts/globals-a11y.test.mjs keeps this at least as large as the launcher's footprint. */
+html {
+  scroll-padding-bottom: var(--space-2300);
 }
 
 :focus-visible {

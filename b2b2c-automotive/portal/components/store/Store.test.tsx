@@ -4,6 +4,7 @@
 // share links with QR, the theme tab (save toast, reset dialog) and the preview.
 import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { axe } from 'jest-axe';
 import type { ReactElement } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ToastProvider } from '@/context/ToastContext';
@@ -202,13 +203,13 @@ describe('Branches', () => {
     expect(screen.getByText('2 days open, 08:00 to 18:00')).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Map of branches' })).toHaveAttribute('data-pins', '1');
     expect(screen.getByRole('button', { name: 'Add branch' })).toBeEnabled();
-    expect(screen.getByRole('button', { name: 'Stock and prices of Wandsbek EN' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Stock & prices of Wandsbek EN' })).toBeEnabled();
   });
 
   it('a Buyer cannot add, edit, remove or edit stock', async () => {
     render(<BranchesPanel timezone="Europe/Berlin" />, ['buyer']);
     expect(await screen.findByText('Wandsbek EN')).toBeInTheDocument();
-    for (const name of ['Add branch', 'Edit Wandsbek EN', 'Remove Wandsbek EN', 'Stock and prices of Wandsbek EN']) expect(screen.getByRole('button', { name })).toBeDisabled();
+    for (const name of ['Add branch', 'Edit Wandsbek EN', 'Remove Wandsbek EN', 'Stock & prices of Wandsbek EN']) expect(screen.getByRole('button', { name })).toBeDisabled();
     expect(screen.getByText('Only an administrator can change branches.')).toBeInTheDocument();
   });
 
@@ -277,6 +278,16 @@ describe('Channels', () => {
     expect(within(screen.getByRole('row', { name: /Web/ })).getByText('(indicative)')).toBeInTheDocument();
     expect(screen.getByText("Attribution comes from the order's sales-channel field and is indicative where absent.")).toBeInTheDocument();
   });
+
+  it('a11y: the scrolling table is a named, focusable region with a caption and column scopes, and has no axe violations', async () => {
+    const { container } = render(<ChannelsTable />);
+    await screen.findByRole('row', { name: /Instagram/ });
+    const region = screen.getByRole('region', { name: 'Channel figures table' });
+    expect(region).toHaveAttribute('tabindex', '0');
+    expect(within(region).getByRole('table', { name: 'Sales channels' })).toBeInTheDocument();
+    for (const th of within(region).getAllByRole('columnheader')) expect(th).toHaveAttribute('scope', 'col');
+    expect(await axe(container, { rules: { region: { enabled: false } } })).toHaveNoViolations();
+  });
 });
 
 describe('Share links', () => {
@@ -288,7 +299,7 @@ describe('Share links', () => {
     expect(input.value).toBe('https://shop.example.test/en-US/store-1?ch=instagram');
     const qr = await screen.findByAltText('QR code of the Instagram link');
     await waitFor(() => expect(qr.getAttribute('src')).toMatch(/^data:image\/svg\+xml/));
-    await userEvent.click(screen.getByRole('button', { name: 'Copy the storefront link for Instagram' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Copy link: storefront link for Instagram' }));
     expect(writeText).toHaveBeenCalledWith('https://shop.example.test/en-US/store-1?ch=instagram');
     expect(await screen.findByText('Link copied')).toBeInTheDocument();
     expect(screen.getAllByText(/slug \/link-in-bio/).length).toBeGreaterThan(0);

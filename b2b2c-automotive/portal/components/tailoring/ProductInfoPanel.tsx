@@ -31,14 +31,23 @@ function Editor({ detail, name, canEdit }: { detail: TailoringDetail; name: stri
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [problem, setProblem] = useState('');
+  const [altErrors, setAltErrors] = useState(false);
   const [resetting, setResetting] = useState(false);
 
   const nonEmpty = (texts: Texts) => Object.fromEntries(Object.entries(texts).filter(([, v]) => v.trim()));
 
   async function save() {
-    setBusy(true);
     setMessage('');
     setProblem('');
+    // WCAG 1.1.1: shoppers' screen readers need the alt text, so an image without one is not published.
+    const missing = images.findIndex((i) => !i.label?.trim());
+    if (missing >= 0) {
+      setAltErrors(true);
+      setProblem(t('images.altSummary'));
+      document.querySelectorAll<HTMLElement>('[data-alt-input]')[missing]?.focus();
+      return;
+    }
+    setBusy(true);
     const result = await tailoringApi.save(storeKey, detail.productId, {
       name: nonEmpty(nameText),
       description: nonEmpty(descText),
@@ -121,7 +130,7 @@ function Editor({ detail, name, canEdit }: { detail: TailoringDetail; name: stri
 
       <div className="flex flex-col gap-200">
         <h3 className="text-body-2 font-bold text-text">{t('imagesTitle')}</h3>
-        <ImagePanel storeKey={storeKey} productId={detail.productId} master={detail.master.images} value={images} onChange={setImages} canEdit={canEdit} />
+        <ImagePanel storeKey={storeKey} productId={detail.productId} master={detail.master.images} value={images} onChange={setImages} canEdit={canEdit} showAltErrors={altErrors} />
       </div>
 
       <aside aria-labelledby="master-title" className="flex flex-col gap-200 rounded-300 bg-bg-surface-subdued p-400">
@@ -206,7 +215,7 @@ export function ProductInfoPanel() {
               >
                 <span className="text-body-2 font-semibold text-text">{getLocalizedString(row.name, locale)}</span>
                 <span className="flex flex-wrap items-center gap-150">
-                  <span className="font-mono text-caption-1 text-text-subdued">{row.sku}</span>
+                  <span className={`font-mono text-caption-1 ${selected === row.productId ? "text-text" : "text-text-subdued"}`}>{row.sku}</span>
                   {row.tailored ? <Chip tone="info">{t('chips.tailored')}</Chip> : null}
                   {row.hasTailoredImages ? <Chip tone="success">{t('chips.images')}</Chip> : null}
                 </span>

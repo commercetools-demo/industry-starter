@@ -112,15 +112,16 @@ export function BranchStockDrawer({ branch, onClose }: { branch: Branch; onClose
       {isLoading && !data ? <p role="status" className={hintClass}>{t('loading')}</p> : null}
       {data && rows.length === 0 ? <p className={hintClass}>{t('empty')}</p> : null}
       {rows.length > 0 ? (
-        <div className={tableScroll}>
+        <div className={tableScroll} role="group" tabIndex={0} aria-label={t('title')}>
           <table className={`w-full ${tableMinWidth}`}>
+            <caption className="sr-only">{t('title')}</caption>
             <thead>
               <tr>
-                <th className={thClass}>{t('sku')}</th>
-                <th className={thClass}>{t('name')}</th>
-                <th className={thClass}>{t('stockColumn')}</th>
-                <th className={thClass}>{t('priceColumn', { currency })}</th>
-                <th className={thClass}>
+                <th scope="col" className={thClass}>{t('sku')}</th>
+                <th scope="col" className={thClass}>{t('name')}</th>
+                <th scope="col" className={thClass}>{t('stockColumn')}</th>
+                <th scope="col" className={thClass}>{t('priceColumn', { currency })}</th>
+                <th scope="col" className={thClass}>
                   <span className="sr-only">{t('actions')}</span>
                 </th>
               </tr>

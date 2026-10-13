@@ -3,6 +3,7 @@ import { MarketingPage } from '@/components/marketing/MarketingPage';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Forbidden } from '@/components/portal/Forbidden';
 import { viewerCan } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 // Marketing (workstream W): Malva co-op campaigns. A role that may not manage marketing gets the forbidden view; every route checks again.
 export default async function MarketingRoute({ params }: { params: Promise<{ locale: string }> }) {
@@ -17,3 +18,5 @@ export default async function MarketingRoute({ params }: { params: Promise<{ loc
     </div>
   );
 }
+
+export const generateMetadata = titleOf(['nav.items', 'marketing']);

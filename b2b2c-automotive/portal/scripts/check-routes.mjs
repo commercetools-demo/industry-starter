@@ -22,6 +22,15 @@ export function checkRoutes(output) {
     .map(({ route }) => `route ${route} must not be part of a build (dev routes are excluded from production)`);
 }
 
+/**
+ * `verify:build` runs `next build 2>&1 | tee file`, whose exit status is tee's: a failed build would pass. A successful build always prints a
+ * route table, so output without one is a failure (workstream X-13).
+ */
+export function checkBuildOutput(output) {
+  if (parseRoutes(output).length === 0) return ['no route table in the build output: `next build` failed or printed nothing (see .next-build-output.txt)'];
+  return checkRoutes(output);
+}
+
 /** Hrefs of `item('id', '/route', ...)` calls and the ROUTE_ALLOW_LIST literal of lib/portal/nav.ts. */
 export function navHrefs(source) {
   const hrefs = [...source.matchAll(/\bitem\(\s*'[^']+'\s*,\s*'(\/[^']*)'/g)].map((m) => m[1]);
@@ -66,7 +75,7 @@ export function checkNavRoutes(root) {
 import { pathToFileURL } from 'node:url';
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   const arg = process.argv[2];
-  const problems = arg === '--static' || !arg ? [...checkNoDevPages(process.cwd()), ...checkNavRoutes(process.cwd()), ...checkRoutePolicy(process.cwd())] : checkRoutes(readFileSync(arg, 'utf8'));
+  const problems = arg === '--static' || !arg ? [...checkNoDevPages(process.cwd()), ...checkNavRoutes(process.cwd()), ...checkRoutePolicy(process.cwd())] : checkBuildOutput(readFileSync(arg, 'utf8'));
   if (problems.length) {
     console.error(problems.join('\n'));
     process.exit(1);

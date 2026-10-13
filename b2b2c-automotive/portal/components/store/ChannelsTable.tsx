@@ -27,7 +27,7 @@ export function ChannelsTable() {
       {error ? <p role="alert" className={errorNote}>{t('loadFailed')}</p> : null}
       {isLoading && !data ? <p role="status" className={hintClass}>{t('loading')}</p> : null}
       {data ? (
-        <div className={tableScroll}>
+        <div className={tableScroll} role="region" tabIndex={0} aria-label={t('tableLabel')}>
           <table className={`w-full ${tableMinWidth}`}>
             <caption className="sr-only">{t('title')}</caption>
             <thead>

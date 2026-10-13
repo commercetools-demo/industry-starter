@@ -9,7 +9,7 @@ function Node({ title, detail, active }: { title: string; detail: string; active
   return (
     <li className={`flex min-w-0 flex-1 flex-col gap-050 rounded-300 border px-400 py-300 ${active ? 'border-border-active bg-bg-active-subdued' : 'border-border-subdued bg-bg-surface-subdued'}`} aria-current={active ? 'step' : undefined}>
       <span className="text-body-2 font-bold text-text">{title}</span>
-      <span className="text-caption-1 font-medium text-text-subdued">{detail}</span>
+      <span className={`text-caption-1 font-medium ${active ? "text-text" : "text-text-subdued"}`}>{detail}</span>
     </li>
   );
 }

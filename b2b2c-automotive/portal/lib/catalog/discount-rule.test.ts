@@ -97,16 +97,35 @@ describe('previewRule', () => {
 });
 
 describe('validateRule', () => {
-  it('validateRule rejects 0%, 101%, from after until', () => {
-    expect(validateRule({ ...cartRule, effect: { kind: 'relative', percent: 0 } })[0]?.field).toBe('effect');
+  it('validateRule rejects 0%, 101%, from after until', () => {    expect(validateRule({ ...cartRule, effect: { kind: 'relative', percent: 0 } })[0]?.field).toBe('effect');
     expect(validateRule({ ...cartRule, effect: { kind: 'relative', percent: 101 } })[0]?.field).toBe('effect');
     expect(validateRule({ ...cartRule, validFrom: '2026-12-01T00:00:00Z', validUntil: '2026-11-01T00:00:00Z' })[0]?.field).toBe('validUntil');
     expect(validateRule({ ...cartRule, effect: { kind: 'absolute', centAmount: 0 } })[0]?.field).toBe('effect');
   });
-  it('accepts 0.01 and 100 percent and has no floor or cost rule', () => {
+  it('accepts 0.01 and 99.99 percent and has no floor or cost rule', () => {
     expect(validateRule({ ...cartRule, effect: { kind: 'relative', percent: 0.01 } })).toEqual([]);
-    expect(validateRule({ ...cartRule, effect: { kind: 'relative', percent: 100 } })).toEqual([]);
+    expect(validateRule({ ...cartRule, effect: { kind: 'relative', percent: 99.99 } })).toEqual([]);
     expect(validateRule(productRule)).toEqual([]);
+  });
+  it('Q-X08: a 100 percent discount is refused (the result price must stay above zero), for product and cart rules', () => {
+    expect(validateRule({ ...productRule, effect: { kind: 'relative', percent: 100 } })[0]?.field).toBe('effect');
+    expect(validateRule({ ...cartRule, effect: { kind: 'relative', percent: 100 } })[0]?.field).toBe('effect');
+    expect(validateRule({ ...cartRule, effect: { kind: 'relative', percent: 99.999 } })[0]?.field).toBe('effect'); // rounds to 10000 permyriad
+  });
+  it('Q-X08: an absolute cart discount must stay below the cart total condition and needs one', () => {
+    const abs = (centAmount: number, condition: CartRule['condition'] = { kind: 'cartTotalAtLeast', centAmount: 200000 }): CartRule => ({ ...cartRule, condition, effect: { kind: 'absolute', centAmount } });
+    expect(validateRule(abs(199999))).toEqual([]);
+    expect(validateRule(abs(200000))[0]?.field).toBe('effect');
+    expect(validateRule(abs(300000))[0]?.field).toBe('effect');
+    expect(validateRule(abs(500, { kind: 'always' }))[0]?.field).toBe('effect');
+    expect(validateRule(abs(500, { kind: 'category', categoryId: 'cat-brakes' }))[0]?.field).toBe('effect');
+  });
+  it('Q-X08: an absolute product discount must stay below the lowest price in scope when the caller knows it', () => {
+    const abs = (centAmount: number): ProductRule => ({ ...productRule, effect: { kind: 'absolute', centAmount } });
+    expect(validateRule(abs(1290), { lowestUnitCents: 1290 })[0]?.field).toBe('effect');
+    expect(validateRule(abs(5000), { lowestUnitCents: 1290 })[0]?.field).toBe('effect');
+    expect(validateRule(abs(1289), { lowestUnitCents: 1290 })).toEqual([]);
+    expect(validateRule(abs(1289))).toEqual([]);
   });
   it('checks code format and sku lists', () => {
     expect(validateRule({ ...cartRule, code: 'a b' })[0]?.field).toBe('code');

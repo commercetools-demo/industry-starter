@@ -32,26 +32,25 @@ export function UserMenu() {
       <button
         type="button"
         data-testid="avatar"
-        aria-label={t('accountButton')}
         title={t('accountButton')}
         aria-expanded={open}
-        aria-haspopup="menu"
         onClick={(e) => overlay.toggle('user', e.currentTarget)}
-        className="grid place-items-center rounded-full"
+        className="grid min-h-1100 min-w-1100 place-items-center rounded-full"
       >
+        <span className="sr-only">{t('accountButton')}</span>
         <Avatar name={viewer.name} size="sm" />
       </button>
       {open ? (
-        <div role="menu" aria-label={t('accountButton')} className="absolute right-0 top-full z-60 mt-200 flex w-widget-desktop-4col max-w-[calc(100vw-var(--space-800))] flex-col gap-200 rounded-400 bg-bg-surface p-400 text-text shadow-popover">
+        <div role="group" aria-label={t('accountButton')} className="absolute right-0 top-full z-60 mt-200 flex w-widget-desktop-4col max-w-[calc(100vw-var(--space-800))] flex-col gap-200 rounded-400 bg-bg-surface p-400 text-text shadow-popover">
           <div className="px-200 pb-200">
             <p className="text-body-1 font-bold">{viewer.name}</p>
             <p className="truncate text-caption-1 font-medium text-text-subdued">{viewer.email}</p>
             <p className="text-caption-1 font-medium text-text-subdued">{roleLabel(viewer.roles)}</p>
           </div>
-          <Link role="menuitem" href="/account" onClick={() => overlay.close('user')} className="flex h-1100 items-center rounded-300 px-300 text-body-1 font-semibold hover:bg-bg-surface-hover">
+          <Link href="/account" onClick={() => overlay.close('user')} className="flex h-1100 items-center rounded-300 px-300 text-body-1 font-semibold hover:bg-bg-surface-hover">
             {nav('account')}
           </Link>
-          <button type="button" role="menuitem" disabled={busy} onClick={signOut} className="flex h-1100 items-center rounded-300 px-300 text-left text-body-1 font-semibold hover:bg-bg-surface-hover disabled:text-text-disabled">
+          <button type="button" disabled={busy} onClick={signOut} className="flex h-1100 items-center rounded-300 px-300 text-left text-body-1 font-semibold hover:bg-bg-surface-hover disabled:text-text-disabled">
             {t('signOut')}
           </button>
         </div>

@@ -10,6 +10,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { buttonSecondary, errorNote, hintClass, sectionTitle } from '@/components/portal/kit';
 import { usePreviewPages } from '@/hooks/storeApi';
+import { useTablist } from '@/hooks/useTablist';
 import { PREVIEW_WIDTHS, type PreviewPageId } from '@/lib/portal/storefront-urls';
 
 type Device = 'desktop' | 'phone';
@@ -35,6 +36,13 @@ export function StorefrontPreview({ reloadKey }: { reloadKey: number }) {
     return () => observer.disconnect();
   }, []);
 
+  const { listProps, tabProps } = useTablist<PreviewPageId>({
+    ids: (data?.pages ?? []).map((p) => p.id),
+    value: page,
+    onChange: setPage,
+    isDisabled: (id) => data?.pages.find((p) => p.id === id)?.available === false,
+    withPanel: false,
+  });
   const current = data?.pages.find((p) => p.id === page);
   const width = PREVIEW_WIDTHS[device];
   const height = FRAME_HEIGHT[device];
@@ -44,16 +52,14 @@ export function StorefrontPreview({ reloadKey }: { reloadKey: number }) {
     <div className="flex flex-col gap-300">
       <h2 className={sectionTitle}>{t('title')}</h2>
       <div className="flex flex-wrap items-center gap-200">
-        <div role="tablist" aria-label={t('pages')} className="flex flex-wrap gap-100 rounded-300 bg-bg-surface-subdued p-100">
+        <div role="tablist" aria-label={t('pages')} {...listProps} className="flex flex-wrap gap-100 rounded-300 bg-bg-surface-subdued p-100">
           {(data?.pages ?? []).map((p) => (
             <button
               key={p.id}
               type="button"
-              role="tab"
-              aria-selected={page === p.id}
+              {...tabProps(p.id)}
               disabled={!p.available}
               title={p.available ? undefined : t('unavailable')}
-              onClick={() => setPage(p.id)}
               className={`h-1000 rounded-200 px-300 text-body-2 font-semibold focus-visible:outline-2 focus-visible:outline-border-active disabled:cursor-not-allowed disabled:text-text-disabled ${
                 page === p.id ? 'bg-bg-surface text-text shadow-button' : 'text-text-subdued hover:text-text'
               }`}

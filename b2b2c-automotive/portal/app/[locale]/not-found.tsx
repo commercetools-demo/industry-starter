@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import { titleOf } from '@/lib/portal/page-title';
 
 export default function LocaleNotFound() {
   const t = useTranslations('errors');
@@ -16,3 +17,5 @@ export default function LocaleNotFound() {
     </main>
   );
 }
+
+export const generateMetadata = titleOf(['errors', 'notFoundTitle']);

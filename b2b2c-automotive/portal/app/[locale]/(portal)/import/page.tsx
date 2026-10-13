@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { ImportPage, type ImportTab } from '@/components/import/ImportPage';
 import { Forbidden } from '@/components/portal/Forbidden';
 import { viewerCan } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 const TABS: readonly string[] = ['add', 'csv', 'local'];
 
@@ -22,3 +23,5 @@ export default async function ImportRoute({ params, searchParams }: { params: Pr
     </div>
   );
 }
+
+export const generateMetadata = titleOf(['nav.items', 'import']);

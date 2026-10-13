@@ -16,7 +16,7 @@ import { oneDecimal, shortDate } from '@/lib/v-format';
 import type { ReviewRow, ReviewTab } from '@/lib/v-types';
 
 const textareaClass =
-  'min-h-3200 w-full rounded-300 border border-border bg-bg-surface px-300 py-250 text-body-2 font-medium text-text placeholder:text-text-disabled focus-visible:outline-2 focus-visible:outline-border-active';
+  'min-h-3200 w-full rounded-300 border border-border-input bg-bg-surface px-300 py-250 text-body-2 font-medium text-text placeholder:text-text-disabled focus-visible:outline-2 focus-visible:outline-border-active';
 
 /** Reviews (V-16): tabs Latest, Highest and Lowest, KPIs, a public reply and show or hide. */
 export function ReviewsPage() {

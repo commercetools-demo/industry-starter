@@ -124,7 +124,7 @@ export function TemplateEditor({ template, brand }: { template: TemplateView; br
             id="email-body"
             ref={bodyRef}
             rows={8}
-            className="w-full rounded-300 border border-border bg-bg-surface px-300 py-250 text-body-2 font-medium text-text focus-visible:outline-2 focus-visible:outline-border-active"
+            className="w-full rounded-300 border border-border-input bg-bg-surface px-300 py-250 text-body-2 font-medium text-text focus-visible:outline-2 focus-visible:outline-border-active"
             value={body[locale]}
             onFocus={() => (lastField.current = 'body')}
             onChange={(e) => setBody((prev) => ({ ...prev, [locale]: e.target.value }))}

@@ -73,15 +73,15 @@ export function BranchesPanel({ timezone }: { timezone: string }) {
       {data && branches.length === 0 ? <p className={hintClass}>{t('empty')}</p> : null}
       {branches.length > 0 ? (
         <div className="grid gap-400 xl:grid-cols-[1fr_1fr]">
-          <div className={tableScroll}>
-            <table className={`w-full ${tableMinWidth}`}>
+          <div className={tableScroll} role="group" tabIndex={0} aria-labelledby="store-branches">
+            <table className={`w-full ${tableMinWidth}`} aria-labelledby="store-branches">
               <thead>
                 <tr>
-                  <th className={thClass}>{t('name')}</th>
-                  <th className={thClass}>{t('address')}</th>
-                  <th className={thClass}>{t('pickupColumn')}</th>
-                  <th className={thClass}>{t('hoursColumn')}</th>
-                  <th className={thClass}>
+                  <th scope="col" className={thClass}>{t('name')}</th>
+                  <th scope="col" className={thClass}>{t('address')}</th>
+                  <th scope="col" className={thClass}>{t('pickupColumn')}</th>
+                  <th scope="col" className={thClass}>{t('hoursColumn')}</th>
+                  <th scope="col" className={thClass}>
                     <span className="sr-only">{t('actions')}</span>
                   </th>
                 </tr>

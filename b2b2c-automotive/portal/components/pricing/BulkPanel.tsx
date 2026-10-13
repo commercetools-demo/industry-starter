@@ -136,7 +136,7 @@ export function BulkPanel({ storeKey, currency, text, onDone }: { storeKey: stri
 
         {rows ? (
           <>
-            <div className={tableScroll}>
+            <div className={tableScroll} role="group" tabIndex={0} aria-label={t('previewTitle')}>
               <table className={`w-full border-collapse ${tableMinWidth}`}>
                 <caption className="sr-only">{t('previewTitle')}</caption>
                 <thead>

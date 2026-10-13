@@ -39,15 +39,15 @@ export function UsersTab() {
           {t('loading')}
         </p>
       ) : (
-        <div className={tableScroll}>
-          <table className="w-full">
+        <div className={tableScroll} role="group" tabIndex={0} aria-labelledby="users-title">
+          <table className="w-full" aria-labelledby="users-title">
             <thead>
               <tr>
-                <th className={thClass}>{t('name')}</th>
-                <th className={thClass}>{t('email')}</th>
-                <th className={thClass}>{t('role')}</th>
-                <th className={thClass}>{t('status')}</th>
-                <th className={thClass}>{t('lastActive')}</th>
+                <th scope="col" className={thClass}>{t('name')}</th>
+                <th scope="col" className={thClass}>{t('email')}</th>
+                <th scope="col" className={thClass}>{t('role')}</th>
+                <th scope="col" className={thClass}>{t('status')}</th>
+                <th scope="col" className={thClass}>{t('lastActive')}</th>
               </tr>
             </thead>
             <tbody>

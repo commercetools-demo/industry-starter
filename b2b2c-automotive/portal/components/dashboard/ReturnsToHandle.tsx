@@ -20,7 +20,7 @@ export function ReturnsToHandle() {
       errorMessage={t('returns.errorMessage')}
       onRetry={returns.retry}
       action={
-        <Link href="/returns" className="text-button-2 font-bold text-text-active hover:underline">
+        <Link href="/returns" className="inline-flex min-h-600 items-center text-button-2 font-bold text-text-active hover:underline">
           {t('headsUp.review')}
         </Link>
       }

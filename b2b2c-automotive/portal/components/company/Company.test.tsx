@@ -3,6 +3,7 @@
 // Company & team screens (workstream U-09): role matrix (a Buyer reads, only an Admin writes), the one-time invitation link, tabs.
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { axe } from 'jest-axe';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ViewerProvider } from '@/context/ViewerContext';
 import type { Viewer } from '@/lib/portal/types';
@@ -147,5 +148,18 @@ describe('Company tabs', () => {
     render(<CompanyTabs />, ['admin']);
     expect(screen.getAllByRole('link').map((a) => a.textContent)).toEqual(['Users', 'Addresses', 'Profile']);
     expect(screen.getByRole('link', { name: 'Addresses' })).toHaveAttribute('aria-current', 'page');
+  });
+});
+
+describe('a11y: company tabs', () => {
+  it('Users, Addresses, Profile and the tab links have no axe violations in both locales (admin and buyer)', async () => {
+    for (const [messages, roles] of [[en, ['admin']], [de, ['admin']], [en, ['buyer']]] as const) {
+      for (const ui of [<UsersTab key="u" />, <AddressesTab key="a" />, <ProfileTab key="p" />, <CompanyTabs key="t" />]) {
+        const { container, unmount } = render(ui, [...roles], messages);
+        await waitFor(() => expect(container.textContent?.length ?? 0).toBeGreaterThan(10));
+        expect(await axe(container, { rules: { region: { enabled: false } } })).toHaveNoViolations();
+        unmount();
+      }
+    }
   });
 });

@@ -1,6 +1,8 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { ACCOUNT_TABS, type AccountTabId } from '@/lib/company/tabs';
+import { titleMetadata } from '@/lib/portal/page-title';
 import { AddressesTab } from '@/components/account/AddressesTab';
 import { BusinessUnitsTab } from '@/components/account/BusinessUnitsTab';
 import { GeneralTab } from '@/components/account/GeneralTab';
@@ -21,4 +23,10 @@ export default async function AccountTabPage({ params }: { params: Promise<{ loc
     case 'business-units':
       return <BusinessUnitsTab />;
   }
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; tab: string }> }): Promise<Metadata> {
+  const { locale, tab } = await params;
+  const key = tab === 'business-units' ? 'businessUnits' : (ACCOUNT_TABS as readonly string[]).includes(tab) ? tab : 'general';
+  return titleMetadata(locale, ['account.tabs', key], ['nav.items', 'account']);
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { checkNavRoutes, checkRoutes, navHrefs, parseRoutes } from './check-routes.mjs';
+import { checkBuildOutput, checkNavRoutes, checkRoutes, navHrefs, parseRoutes } from './check-routes.mjs';
 import { tmp } from './test-utils.mjs';
 
 const NAV_SRC = `export const NAV = { top: item('dashboard', '/', 'home', 'a'), groups: [{ items: [item('catalog', '/catalog', 'tag', 'b')] }] };
@@ -45,5 +45,10 @@ describe('Route gate', () => {
   });
   it('passes on a clean table', () => {
     expect(checkRoutes('┌ ○ /_not-found\n└ ● /[locale]\n')).toEqual([]);
+  });
+  it('X-13: build output with no route table (a failed `next build` piped through tee still exits 0) is a problem', () => {
+    expect(checkBuildOutput('> Build error occurred\nError: boom\n')[0]).toMatch(/no route table/);
+    expect(checkBuildOutput('')).toHaveLength(1);
+    expect(checkBuildOutput('┌ ○ /_not-found\n└ ● /[locale]\n')).toEqual([]);
   });
 });

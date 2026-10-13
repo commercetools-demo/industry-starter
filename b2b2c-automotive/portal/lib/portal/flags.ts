@@ -7,10 +7,10 @@ export function isDemoLoginEnabled(env: NodeJS.ProcessEnv = process.env): boolea
 
 /**
  * On-screen password reset (owner Q-P01: nothing is mailed). Anyone who knows an email can reset that account, so this is
- * for demo and development only (known gap for Z and X): `DEMO_ONSCREEN_RESET=on`.
+ * for demo and development only (known gap for Z and X): `DEMO_ONSCREEN_RESET=true`, the one spelling of both apps (Q-X10).
  */
 export function isOnscreenResetEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
-  return env.DEMO_ONSCREEN_RESET === 'on';
+  return env.DEMO_ONSCREEN_RESET?.trim().toLowerCase() === 'true';
 }
 
 /** A return path from `?next=` is accepted only when it is an in-app absolute path: one leading slash, no scheme, no `//`. */

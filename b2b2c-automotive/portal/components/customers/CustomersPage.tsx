@@ -76,13 +76,14 @@ export function CustomersPage() {
       ) : (
         <TableCard caption={tab === 'guests' ? t('guestsCaption') : data.truncated ? t('truncated') : undefined}>
           <table className="w-full min-w-[calc(var(--space-6400)*2)] border-collapse">
+            <caption className="sr-only">{t('title')}</caption>
             <thead>
               <tr className="border-b border-border">
-                <th className={thClass}>{t('columns.name')}</th>
-                <th className={thClass}>{t('columns.type')}</th>
-                <th className={`${thClass} text-right`}>{t('columns.orders')}</th>
-                <th className={`${thClass} text-right`}>{t('columns.lifetime')}</th>
-                <th className={thClass}>{t('columns.last')}</th>
+                <th scope="col" className={thClass}>{t('columns.name')}</th>
+                <th scope="col" className={thClass}>{t('columns.type')}</th>
+                <th scope="col" className={`${thClass} text-right`}>{t('columns.orders')}</th>
+                <th scope="col" className={`${thClass} text-right`}>{t('columns.lifetime')}</th>
+                <th scope="col" className={thClass}>{t('columns.last')}</th>
               </tr>
             </thead>
             <tbody>
@@ -90,7 +91,7 @@ export function CustomersPage() {
                 <tr key={row.id ?? `${row.name}-${row.email}`} className="border-b border-border last:border-b-0">
                   <td className={tdClass}>
                     {row.id ? (
-                      <Link href={`/customers/${row.id}`} aria-label={t('open', { name: row.name })} className="font-semibold text-text underline focus-visible:outline-2 focus-visible:outline-border-active">
+                      <Link href={`/customers/${row.id}`} aria-label={t('open', { name: row.name })} className="inline-flex min-h-600 items-center font-semibold text-text underline focus-visible:outline-2 focus-visible:outline-border-active">
                         {row.name}
                       </Link>
                     ) : (

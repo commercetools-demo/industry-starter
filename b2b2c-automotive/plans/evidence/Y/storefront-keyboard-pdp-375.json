@@ -1,0 +1,464 @@
+[
+ {
+  "name": "Zum Inhalt springen",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Küstenwerk Autoteile",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Ihre FilialeFiliale Berlin, BerlinÄndern",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Suche",
+  "tag": "input",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Suchen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Fahrzeug auswählen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Anmelden",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Warenkorb · 2",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Alle Teile",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bremsen",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Filter",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Öle",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Elektrik",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Startseite",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bremsen",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bremsbeläge",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bild 1 anzeigen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bild 2 anzeigen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bewertet mit 4.0 von 5 aus 2 Bewertungen",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Fahrzeug auswählen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Filiale wechseln",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Menge",
+  "tag": "input",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Menge erhöhen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "In den Warenkorb",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Malva Select Bremsbelagsatz vorn 2",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Fahrzeug wählen, um die Passform zu prüf",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Hinzufügen: Malva Select Bremsbelagsatz ",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Nordlicht Bremsbelagsatz vorn 3",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Fahrzeug wählen, um die Passform zu prüf",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Hinzufügen: Nordlicht Bremsbelagsatz vor",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "AGB",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Datenschutz",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Rückgabe",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Zum Inhalt springen",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Küstenwerk Autoteile",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Ihre FilialeFiliale Berlin, BerlinÄndern",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Suche",
+  "tag": "input",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Suchen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Fahrzeug auswählen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Anmelden",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Warenkorb · 2",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Alle Teile",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bremsen",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Filter",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Öle",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Elektrik",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Startseite",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bremsen",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bremsbeläge",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bild 1 anzeigen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bild 2 anzeigen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Bewertet mit 4.0 von 5 aus 2 Bewertungen",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Fahrzeug auswählen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Filiale wechseln",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Menge",
+  "tag": "input",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Menge erhöhen",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "In den Warenkorb",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Malva Select Bremsbelagsatz vorn 2",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Fahrzeug wählen, um die Passform zu prüf",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Hinzufügen: Malva Select Bremsbelagsatz ",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Nordlicht Bremsbelagsatz vorn 3",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Fahrzeug wählen, um die Passform zu prüf",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Hinzufügen: Nordlicht Bremsbelagsatz vor",
+  "tag": "button",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "AGB",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Datenschutz",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ },
+ {
+  "name": "Rückgabe",
+  "tag": "a",
+  "covered": null,
+  "outline": "solid 3px rgb(130, 24, 16)",
+  "inView": true
+ }
+]

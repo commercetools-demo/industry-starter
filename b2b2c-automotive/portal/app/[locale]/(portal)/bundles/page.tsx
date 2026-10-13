@@ -3,6 +3,7 @@ import { BundlesPage } from '@/components/bundles/BundlesPage';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Forbidden } from '@/components/portal/Forbidden';
 import { viewerCan } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 // Bundles (workstream W): the server checks the role; every write is checked again by the seller routes.
 export default async function BundlesRoute({ params }: { params: Promise<{ locale: string }> }) {
@@ -17,3 +18,5 @@ export default async function BundlesRoute({ params }: { params: Promise<{ local
     </div>
   );
 }
+
+export const generateMetadata = titleOf(['nav.items', 'bundles']);

@@ -1,0 +1,158 @@
+[
+ {
+  "profile": "mobile",
+  "page": "home",
+  "lcp": 768,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 21.900000002235174,
+  "jsKB": 331.9619140625,
+  "totalKB": 477.0263671875,
+  "hosts": [
+   "localhost:3180"
+  ]
+ },
+ {
+  "profile": "mobile",
+  "page": "listing",
+  "lcp": 772,
+  "cls": 0.00013759130287073213,
+  "tbt": 0,
+  "ttfb": 8.600000001490116,
+  "jsKB": 191.3984375,
+  "totalKB": 341.859375,
+  "hosts": [
+   "localhost:3180"
+  ]
+ },
+ {
+  "profile": "mobile",
+  "page": "product",
+  "lcp": 772,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 19.399999998509884,
+  "jsKB": 191.4912109375,
+  "totalKB": 342.7841796875,
+  "hosts": [
+   "localhost:3180"
+  ]
+ },
+ {
+  "profile": "mobile",
+  "page": "cart",
+  "lcp": 744,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 21.299999997019768,
+  "jsKB": 190.8701171875,
+  "totalKB": 336.83203125,
+  "hosts": [
+   "localhost:3180"
+  ]
+ },
+ {
+  "profile": "mobile",
+  "page": "checkout",
+  "lcp": 736,
+  "cls": 0.00012466026838797348,
+  "tbt": 0,
+  "ttfb": 22.100000001490116,
+  "jsKB": 186.8984375,
+  "totalKB": 329.9912109375,
+  "hosts": [
+   "localhost:3180"
+  ]
+ },
+ {
+  "profile": "mobile",
+  "page": "account",
+  "lcp": 760,
+  "cls": 0.00005065034337159358,
+  "tbt": 0,
+  "ttfb": 14.800000000745058,
+  "jsKB": 187.583984375,
+  "totalKB": 332.1416015625,
+  "hosts": [
+   "localhost:3180"
+  ]
+ },
+ {
+  "profile": "desktop",
+  "page": "home",
+  "lcp": 52,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 19.199999999254942,
+  "jsKB": 332.8896484375,
+  "totalKB": 489.5595703125,
+  "hosts": [
+   "localhost:3180"
+  ]
+ },
+ {
+  "profile": "desktop",
+  "page": "listing",
+  "lcp": 348,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 7.900000002235174,
+  "jsKB": 191.3984375,
+  "totalKB": 355.08984375,
+  "hosts": [
+   "localhost:3180"
+  ]
+ },
+ {
+  "profile": "desktop",
+  "page": "product",
+  "lcp": 364,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 23.699999999254942,
+  "jsKB": 191.4912109375,
+  "totalKB": 342.775390625,
+  "hosts": [
+   "localhost:3180"
+  ]
+ },
+ {
+  "profile": "desktop",
+  "page": "cart",
+  "lcp": 68,
+  "cls": 0.00004845920138888889,
+  "tbt": 0,
+  "ttfb": 31.799999997019768,
+  "jsKB": 189.9423828125,
+  "totalKB": 337.49609375,
+  "hosts": [
+   "localhost:3180"
+  ]
+ },
+ {
+  "profile": "desktop",
+  "page": "checkout",
+  "lcp": 56,
+  "cls": 0.0118320987654321,
+  "tbt": 0,
+  "ttfb": 34,
+  "jsKB": 186.8984375,
+  "totalKB": 329.9921875,
+  "hosts": [
+   "localhost:3180"
+  ]
+ },
+ {
+  "profile": "desktop",
+  "page": "account",
+  "lcp": 340,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 14.5,
+  "jsKB": 187.583984375,
+  "totalKB": 344.400390625,
+  "hosts": [
+   "localhost:3180"
+  ]
+ }
+]

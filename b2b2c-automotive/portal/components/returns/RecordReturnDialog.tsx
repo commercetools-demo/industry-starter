@@ -12,7 +12,7 @@ import type { OrderForReturn } from '@/lib/v-types';
 import { returnsErrorKey } from './errors';
 
 const textareaClass =
-  'min-h-3200 w-full rounded-300 border border-border bg-bg-surface px-300 py-250 text-body-2 font-medium text-text placeholder:text-text-disabled focus-visible:outline-2 focus-visible:outline-border-active';
+  'min-h-3200 w-full rounded-300 border border-border-input bg-bg-surface px-300 py-250 text-body-2 font-medium text-text placeholder:text-text-disabled focus-visible:outline-2 focus-visible:outline-border-active';
 
 /** "Record a return": order number, the order's lines with quantities, reason and comment; shows the 30 day window and the delivery date. */
 export function RecordReturnDialog({ open, storeKey, onClose, onCreated }: { open: boolean; storeKey: string; onClose: () => void; onCreated: (result: { returnNumber: string; tracking: string }) => void }) {

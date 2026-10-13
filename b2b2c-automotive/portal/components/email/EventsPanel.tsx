@@ -13,8 +13,8 @@ export function EventsPanel({ events }: { events: EventView[] }) {
         {t('title')}
       </h2>
       <p className={infoNote}>{t('note')}</p>
-      <div className={tableScroll}>
-        <table className={`w-full ${tableMinWidth}`}>
+      <div className={tableScroll} role="group" tabIndex={0} aria-labelledby="events-title">
+        <table className={`w-full ${tableMinWidth}`} aria-labelledby="events-title">
           <thead>
             <tr>
               <th scope="col" className={thClass}>

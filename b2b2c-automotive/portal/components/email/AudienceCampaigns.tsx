@@ -70,7 +70,7 @@ export function AudienceCampaigns() {
         {campaigns.length === 0 ? (
           <p className={infoNote}>{t('empty')}</p>
         ) : (
-          <div className={tableScroll}>
+          <div className={tableScroll} role="group" tabIndex={0} aria-label={t('table')}>
             <table aria-label={t('table')} className={`w-full ${tableMinWidth}`}>
               <thead>
                 <tr>

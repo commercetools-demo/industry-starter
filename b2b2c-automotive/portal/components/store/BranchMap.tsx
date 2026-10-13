@@ -38,9 +38,10 @@ interface Props {
 const pin = (tone: 'focused' | 'idle' | 'edit') =>
   L.divIcon({
     className: '',
-    html: `<span class="block size-300 rounded-full border-2 border-border-on shadow-card ${tone === 'idle' ? 'bg-text-subdued' : 'bg-bg-brand'}"></span>`,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8],
+    // The marker element is the focus and pointer target: 24 px (WCAG 2.5.8) around a 12 px dot.
+    html: `<span class="grid size-600 place-items-center"><span class="block size-300 rounded-full border-2 border-border-on shadow-card ${tone === 'idle' ? 'bg-text-subdued' : 'bg-bg-brand'}"></span></span>`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
   });
 const ICONS = { focused: pin('focused'), idle: pin('idle'), edit: pin('edit') };
 

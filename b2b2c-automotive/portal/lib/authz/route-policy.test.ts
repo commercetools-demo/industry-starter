@@ -144,11 +144,11 @@ describe('demo login and on-screen reset production gates', () => {
     expect((await run('/api/auth/demo-accounts', 'GET', false)).status).toBe(404);
     expect(traps.touched).toBe(0);
   });
-  it('the on-screen reset is 404 unless DEMO_ONSCREEN_RESET=on; no commercetools call', async () => {
+  it('the on-screen reset is 404 unless DEMO_ONSCREEN_RESET=true (the old spelling "on" no longer opens it); no commercetools call', async () => {
     vi.stubEnv('DEMO_ONSCREEN_RESET', '');
     expect((await run('/api/auth/reset-request', 'POST', false)).status).toBe(404);
     expect((await run('/api/auth/reset', 'POST', false)).status).toBe(404);
-    vi.stubEnv('DEMO_ONSCREEN_RESET', 'true');
+    vi.stubEnv('DEMO_ONSCREEN_RESET', 'on');
     expect((await run('/api/auth/reset-request', 'POST', false)).status).toBe(404);
     expect(traps.touched).toBe(0);
   });

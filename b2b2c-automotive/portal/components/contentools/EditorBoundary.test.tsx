@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 import { act, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { axe } from 'jest-axe';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import en from '@/messages/en-US.json';
 import { renderWithProviders } from '@/test/render';
@@ -77,5 +79,32 @@ describe('EditorBoundary', () => {
       vi.advanceTimersByTime(5000);
     });
     expect(screen.queryByRole('note')).toBeNull();
+  });
+});
+
+describe('a11y: editor chrome around the Contentools managers', () => {
+  it('adds no focus trap and no tab stop of its own, so the editors can be left with Tab and Shift+Tab (K14)', async () => {
+    vi.useRealTimers();
+    const user = userEvent.setup();
+    const { container } = renderWithProviders(
+      <>
+        <button type="button">before</button>
+        <EditorBoundary>
+          <button type="button">inside</button>
+        </EditorBoundary>
+        <button type="button">after</button>
+      </>,
+      { locale: 'en-US', messages: en },
+    );
+    await user.tab();
+    expect(screen.getByText('before')).toHaveFocus();
+    await user.tab();
+    expect(screen.getByText('inside')).toHaveFocus();
+    await user.tab();
+    expect(screen.getByText('after')).toHaveFocus();
+    await user.tab({ shift: true });
+    expect(screen.getByText('inside')).toHaveFocus();
+    expect(container.querySelector('[data-theme="light"]')).not.toHaveAttribute('tabindex');
+    expect(await axe(container, { rules: { region: { enabled: false } } })).toHaveNoViolations();
   });
 });

@@ -216,13 +216,32 @@ export interface RuleIssue {
   message: string;
 }
 
-/** Empty list = valid. Relative percent 0.01 to 100, absolute amount above zero, `validFrom < validUntil`. There is no floor. */
-export function validateRule(rule: ProductRule | CartRule): RuleIssue[] {
+/** What the caller knows about the prices a rule would hit (workstream X, Q-X08). */
+export interface RuleContext {
+  /** Lowest unit price in the scope of a product rule, in cents; unknown when omitted. */
+  lowestUnitCents?: number;
+}
+
+/**
+ * Empty list = valid. Relative percent 0.01 to 99.99 (a result price is always above zero, so 100 percent is refused), absolute amount above
+ * zero and below the price it applies to (a cart rule needs a cart total condition larger than the amount; a product rule is checked against
+ * `ctx.lowestUnitCents`), `validFrom < validUntil`. There is no floor and no cost check.
+ */
+export function validateRule(rule: ProductRule | CartRule, ctx: RuleContext = {}): RuleIssue[] {
   const issues: RuleIssue[] = [];
   if (!Object.values(rule.name).some((v) => v.trim())) issues.push({ field: 'name', message: 'Enter a name' });
   const effect = rule.effect;
-  if (effect.kind === 'relative' && !(effect.percent >= 0.01 && effect.percent <= 100)) issues.push({ field: 'effect', message: 'The percentage must be between 0.01 and 100' });
+  if (effect.kind === 'relative' && !(effect.percent >= 0.01 && Math.round(effect.percent * 100) <= 9999)) issues.push({ field: 'effect', message: 'The percentage must be between 0.01 and 99.99' });
   if (effect.kind === 'absolute' && !(Number.isInteger(effect.centAmount) && effect.centAmount > 0)) issues.push({ field: 'effect', message: 'The amount must be above zero' });
+  else if (effect.kind === 'absolute') {
+    if ('condition' in rule) {
+      const c = rule.condition;
+      if (c.kind !== 'cartTotalAtLeast') issues.push({ field: 'effect', message: 'A fixed amount needs a minimum cart total above the amount' });
+      else if (effect.centAmount >= c.centAmount) issues.push({ field: 'effect', message: 'The amount must be below the minimum cart total' });
+    } else if (ctx.lowestUnitCents !== undefined && effect.centAmount >= ctx.lowestUnitCents) {
+      issues.push({ field: 'effect', message: 'The amount must be below the price of every part it applies to' });
+    }
+  }
   if ('condition' in rule) {
     const c = rule.condition;
     if (c.kind === 'cartTotalAtLeast' && !(Number.isInteger(c.centAmount) && c.centAmount > 0)) issues.push({ field: 'condition', message: 'The cart total must be above zero' });

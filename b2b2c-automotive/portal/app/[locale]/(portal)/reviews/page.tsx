@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Forbidden } from '@/components/portal/Forbidden';
 import { ReviewsPage } from '@/components/reviews/ReviewsPage';
 import { viewerCan } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 // Reviews (workstream V): both roles may read; replying and hiding are Admin only (the routes check again).
 export default async function ReviewsRoute({ params }: { params: Promise<{ locale: string }> }) {
@@ -17,3 +18,5 @@ export default async function ReviewsRoute({ params }: { params: Promise<{ local
     </div>
   );
 }
+
+export const generateMetadata = titleOf(['nav.items', 'reviews']);

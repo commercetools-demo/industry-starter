@@ -12,7 +12,7 @@ export function HeadsUpBanner() {
   return (
     <div role="status" data-testid="heads-up" className="flex items-center justify-between gap-400 rounded-200 border border-border bg-bg-warning-subdued px-400 py-300 text-text">
       <p className="text-body-2 font-semibold">{t('headsUp.text', { count: data.count })}</p>
-      <Link href={data.href} className="flex-none text-button-2 font-bold text-text underline">
+      <Link href={data.href} className="inline-flex min-h-600 flex-none items-center text-button-2 font-bold text-text underline">
         {t('headsUp.review')}
       </Link>
     </div>

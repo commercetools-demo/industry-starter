@@ -3,6 +3,7 @@ import { EmailPage, type EmailTab } from '@/components/email/EmailPage';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Forbidden } from '@/components/portal/Forbidden';
 import { viewerCan } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 // Email (workstream W): templates and campaigns by audience rule. They are stored and previewed only; nothing is ever sent (Q-P01).
 export default async function Page({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ tab?: string }> }) {
@@ -19,3 +20,5 @@ export default async function Page({ params, searchParams }: { params: Promise<{
     </div>
   );
 }
+
+export const generateMetadata = titleOf(['nav.items', 'email']);

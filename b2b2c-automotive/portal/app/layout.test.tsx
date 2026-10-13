@@ -1,4 +1,5 @@
 import { isValidElement, type ReactElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
 const headerValue = vi.hoisted(() => ({ value: null as string | null }));
@@ -6,7 +7,7 @@ vi.mock('next/headers', () => ({ headers: async () => new Headers(headerValue.va
 vi.mock('@/lib/fonts', () => ({ fontClassNames: '__inter' }));
 vi.mock('./globals.css', () => ({}));
 
-import RootLayout from './layout';
+import RootLayout, { metadata } from './layout';
 
 async function htmlProps(locale: string | null) {
   headerValue.value = locale;
@@ -28,5 +29,26 @@ describe('Root layout', () => {
     const props = await htmlProps(null);
     expect(props['data-theme']).toBe('light');
     expect(props.className).toBe('__inter');
+  });
+});
+
+describe('lang attribute follows locale (workstream Y, 3.1.1)', () => {
+  const markup = async (locale: string | null) => {
+    headerValue.value = locale;
+    return renderToStaticMarkup(await RootLayout({ children: <p>body</p> }));
+  };
+
+  it('renders lang="de-DE" and lang="en-US" on the html element', async () => {
+    expect(await markup('de-DE')).toContain('<html lang="de-DE"');
+    expect(await markup('en-US')).toContain('<html lang="en-US"');
+    expect(await markup('fr-FR')).toContain('<html lang="de-DE"');
+  });
+
+  it('applies the theme script before first paint (no flash, no layout shift from the theme)', async () => {
+    expect(await markup('en-US')).toMatch(/<head><script>/);
+  });
+
+  it('titles every route through one template (2.4.2)', () => {
+    expect(metadata.title).toEqual({ default: 'Malva Partner Portal', template: '%s | Malva Partner Portal' });
   });
 });

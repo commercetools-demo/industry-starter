@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Forbidden } from '@/components/portal/Forbidden';
 import { SubscriptionsPage } from '@/components/subscriptions/SubscriptionsPage';
 import { viewerCan } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 // Subscriptions (workstream V): recurring orders of the store with pause, resume, skip and cancel. Admin only.
 export default async function SubscriptionsRoute({ params }: { params: Promise<{ locale: string }> }) {
@@ -17,3 +18,5 @@ export default async function SubscriptionsRoute({ params }: { params: Promise<{
     </div>
   );
 }
+
+export const generateMetadata = titleOf(['nav.items', 'subscriptions']);

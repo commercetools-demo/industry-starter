@@ -1,5 +1,6 @@
 import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { axe } from 'jest-axe';
 import { useState, type ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AssortmentTable } from '@/components/catalog/AssortmentTable';
@@ -239,5 +240,75 @@ describe('ProductInfoPanel', () => {
     expect(await screen.findByRole('button', { name: 'Save and publish' })).toBeDisabled();
     expect(screen.getByLabelText(/^Name/)).toBeDisabled();
     expect(screen.getAllByText(INSUFFICIENT).length).toBeGreaterThan(0);
+  });
+});
+
+describe('tailoring image alt required', () => {
+  const withImage = (label?: string): TailoringDetail => ({
+    productId: 'p1', sku: 'SKU-1', languages: ['de-DE', 'en-US'],
+    master: { name: { 'de-DE': 'Bremsbelag', 'en-US': 'Brake pad' }, description: { 'de-DE': 'M', 'en-US': 'M' }, images: [] },
+    tailored: { name: { 'de-DE': 'Bremsbelag', 'en-US': 'Brake pad' }, description: { 'de-DE': 'M', 'en-US': 'M' }, images: [{ url: 'https://img.example.test/1.png', width: 800, height: 800, ...(label ? { label } : {}) }] },
+    tailoredLocales: [],
+  });
+  beforeEach(() => {
+    state.tailoringList = { rows: [{ productId: 'p1', sku: 'SKU-1', name: { 'en-US': 'Brake pad' }, tailored: true, hasTailoredImages: true }], total: 1 };
+  });
+
+  it('saving an image without alt text is refused with an error tied to the field, and nothing is sent', async () => {
+    state.tailoringDetail = withImage();
+    const user = userEvent.setup();
+    const { container } = screenOf(<ProductInfoPanel />);
+    await user.click(screen.getByRole('button', { name: /Brake pad/ }));
+    await user.click(await screen.findByRole('button', { name: 'Save and publish' }));
+    const field = screen.getByLabelText('Alt text for image 1 (required)');
+    expect(state.save).not.toHaveBeenCalled();
+    expect(field).toBeRequired();
+    expect(field).toHaveAttribute('aria-invalid', 'true');
+    expect(field).toHaveFocus();
+    expect(field).toHaveAccessibleDescription(/Enter alt text for image 1/);
+    expect(screen.getByRole('alert')).toHaveTextContent('Add alt text to every image before you save.');
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('with alt text the image is saved with its label and the thumbnail uses it as alt', async () => {
+    state.tailoringDetail = withImage();
+    state.save.mockResolvedValue({ ok: true, status: 200 });
+    const user = userEvent.setup();
+    screenOf(<ProductInfoPanel />);
+    await user.click(screen.getByRole('button', { name: /Brake pad/ }));
+    await user.type(await screen.findByLabelText('Alt text for image 1 (required)'), 'Front view of the brake pad');
+    expect(screen.getByRole('img', { name: 'Front view of the brake pad' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Save and publish' }));
+    await waitFor(() => expect(state.save).toHaveBeenCalledTimes(1));
+    expect(state.save.mock.calls[0][2].images).toEqual([{ url: 'https://img.example.test/1.png', label: 'Front view of the brake pad' }]);
+  });
+
+  it('an image added by address starts without alt text, so the field is offered at once', async () => {
+    state.checkUrl.mockResolvedValue({ ok: true, status: 200, data: { url: 'https://img.example.test/3.png', width: 900, height: 900 } });
+    const user = userEvent.setup();
+    screenOf(<ImageHarness initial={[]} onValue={() => undefined} />);
+    await user.type(screen.getByLabelText('Add by address'), 'https://img.example.test/3.png');
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+    expect(await screen.findByLabelText('Alt text for image 1 (required)')).toHaveValue('');
+  });
+
+  it('a buyer sees the alt text read-only', () => {
+    screenOf(<ImageHarness initial={[{ url: 'https://img.example.test/1.png', label: 'Front' }]} canEdit={false} onValue={() => undefined} />, 'buyer');
+    expect(screen.getByLabelText('Alt text for image 1 (required)')).toBeDisabled();
+  });
+});
+
+describe('a11y: catalog screens', () => {
+  it('AssortmentTable, PricesTable and PriorityLists have no axe violations (admin and buyer)', async () => {
+    state.assortment = { rows: [row()], total: 1, assigned: 1, totalMaster: 4 };
+    state.prices = { rows: [{ sku: 'SKU-1', productId: 'p1', name: { 'en-US': 'Brake pad' }, listCent: 5000, overrideCent: null, belowListPercent: null, own: false }], total: 1, currency: 'EUR', currencies: ['EUR'] };
+    state.discounts = { product: [], cart: [] };
+    for (const role of ['admin', 'buyer'] as const) {
+      for (const ui of [<AssortmentTable key="a" />, <PricesTable key="p" />, <PriorityLists key="l" />]) {
+        const { container, unmount } = screenOf(ui, role);
+        expect(await axe(container, { rules: { region: { enabled: false } } })).toHaveNoViolations();
+        unmount();
+      }
+    }
   });
 });

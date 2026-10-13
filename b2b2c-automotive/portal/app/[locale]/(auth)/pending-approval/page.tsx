@@ -3,6 +3,7 @@ import { PendingApproval } from '@/components/auth/PendingApproval';
 import { redirect } from '@/i18n/routing';
 import { getPorts } from '@/lib/portal/seam';
 import { getPortalSession } from '@/lib/portal/viewer';
+import { titleOf } from '@/lib/portal/page-title';
 
 // Status page of a registered business that is not active yet. Operators activate the unit and add its store in the
 // Merchant Center (manual item OA-11). Nothing is polled.
@@ -15,3 +16,5 @@ export default async function PendingApprovalPage({ params }: { params: Promise<
   const businessName = await getPorts().pendingBusinessName(session).catch(() => undefined);
   return <PendingApproval businessName={businessName} />;
 }
+
+export const generateMetadata = titleOf(['auth.pending', 'title']);
