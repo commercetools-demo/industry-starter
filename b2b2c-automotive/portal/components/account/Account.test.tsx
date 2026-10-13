@@ -53,9 +53,9 @@ describe('Security tab', () => {
     await userEvent.type(screen.getByLabelText('New password'), 'short');
     expect(screen.getByText('Too short')).toBeInTheDocument();
     await userEvent.clear(screen.getByLabelText('New password'));
-    await userEvent.type(screen.getByLabelText('New password'), 'a-long-enough-password');
+    await userEvent.type(screen.getByLabelText('New password'), 'dummy-long-enough-password');
     expect(screen.getByText("Passwords don't match")).toBeInTheDocument();
-    await userEvent.type(screen.getByLabelText('Repeat the new password'), 'a-long-enough-password');
+    await userEvent.type(screen.getByLabelText('Repeat the new password'), 'dummy-long-enough-password');
     expect(screen.getByText('Looks good')).toBeInTheDocument();
   });
 
@@ -72,8 +72,8 @@ describe('Security tab', () => {
     putResult = { status: 400, body: { error: 'Current password is incorrect.' } };
     render(<SecurityTab />);
     await userEvent.type(screen.getByLabelText('Current password'), 'wrong');
-    await userEvent.type(screen.getByLabelText('New password'), 'a-long-enough-password');
-    await userEvent.type(screen.getByLabelText('Repeat the new password'), 'a-long-enough-password');
+    await userEvent.type(screen.getByLabelText('New password'), 'dummy-long-enough-password');
+    await userEvent.type(screen.getByLabelText('Repeat the new password'), 'dummy-long-enough-password');
     await userEvent.click(screen.getByRole('button', { name: 'Update password' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Current password is incorrect.');
   });
@@ -81,8 +81,8 @@ describe('Security tab', () => {
   it('success clears the fields', async () => {
     render(<SecurityTab />);
     await userEvent.type(screen.getByLabelText('Current password'), 'old-password-12');
-    await userEvent.type(screen.getByLabelText('New password'), 'a-long-enough-password');
-    await userEvent.type(screen.getByLabelText('Repeat the new password'), 'a-long-enough-password');
+    await userEvent.type(screen.getByLabelText('New password'), 'dummy-long-enough-password');
+    await userEvent.type(screen.getByLabelText('Repeat the new password'), 'dummy-long-enough-password');
     await userEvent.click(screen.getByRole('button', { name: 'Update password' }));
     expect(await screen.findByText('Your password was changed')).toBeInTheDocument();
     expect(screen.getByLabelText('New password')).toHaveValue('');

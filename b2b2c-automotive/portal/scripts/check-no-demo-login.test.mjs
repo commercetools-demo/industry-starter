@@ -17,8 +17,8 @@ describe('check-no-demo-login', () => {
   });
 
   it('the demo password in .next/static fails the check', () => {
-    const root = tmp({ '.next/static/chunks/app.js': 'const x = "demo-password-value-1";' });
-    expect(checkNoDemoLogin(root, { DEMO_LOGIN_PASSWORD: 'demo-password-value-1' }).join('\n')).toMatch(/contains the demo password/);
-    expect(checkNoDemoLogin(tmp({ '.next/static/chunks/app.js': 'clean' }), { DEMO_LOGIN_PASSWORD: 'demo-password-value-1' })).toEqual([]);
+    const root = tmp({ '.next/static/chunks/app.js': 'const x = "dummy-demo-password-1";' });
+    expect(checkNoDemoLogin(root, { DEMO_LOGIN_PASSWORD: 'dummy-demo-password-1' }).join('\n')).toMatch(/contains the demo password/);
+    expect(checkNoDemoLogin(tmp({ '.next/static/chunks/app.js': 'clean' }), { DEMO_LOGIN_PASSWORD: 'dummy-demo-password-1' })).toEqual([]);
   });
 });

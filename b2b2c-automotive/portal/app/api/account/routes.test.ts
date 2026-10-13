@@ -71,11 +71,11 @@ describe('self service for every role', () => {
     expect((await passwordRoute.PUT(makeRequest('/api/account/password', { method: 'PUT', json: { currentPassword: 'old', newPassword: 'short' } }))).status).toBe(400);
     expect(account.changePassword).not.toHaveBeenCalled();
     account.changePassword.mockRejectedValueOnce(new ApiError(400, 'Current password is incorrect.', 'INVALID_CURRENT_PASSWORD'));
-    const res = await passwordRoute.PUT(makeRequest('/api/account/password', { method: 'PUT', json: { currentPassword: 'wrong', newPassword: 'a-long-enough-password' } }));
+    const res = await passwordRoute.PUT(makeRequest('/api/account/password', { method: 'PUT', json: { currentPassword: 'wrong', newPassword: 'dummy-long-enough-password' } }));
     expect(res.status).toBe(400);
     expect(await res.json()).toEqual({ error: 'Current password is incorrect.', code: 'INVALID_CURRENT_PASSWORD' });
-    expect((await passwordRoute.PUT(makeRequest('/api/account/password', { method: 'PUT', json: { currentPassword: 'old', newPassword: 'a-long-enough-password' } }))).status).toBe(200);
-    expect(account.changePassword).toHaveBeenLastCalledWith('cust-buyer-a', 'old', 'a-long-enough-password');
+    expect((await passwordRoute.PUT(makeRequest('/api/account/password', { method: 'PUT', json: { currentPassword: 'old', newPassword: 'dummy-long-enough-password' } }))).status).toBe(200);
+    expect(account.changePassword).toHaveBeenLastCalledWith('cust-buyer-a', 'old', 'dummy-long-enough-password');
   });
 
   it('addresses and business units use the session customer', async () => {
@@ -90,22 +90,22 @@ describe('self service for every role', () => {
   it('no session is 401', async () => {
     session = {};
     expect((await profileRoute.GET(makeRequest('/api/account/profile'))).status).toBe(401);
-    expect((await passwordRoute.PUT(makeRequest('/api/account/password', { method: 'PUT', json: { currentPassword: 'a', newPassword: 'a-long-enough-password' } }))).status).toBe(401);
+    expect((await passwordRoute.PUT(makeRequest('/api/account/password', { method: 'PUT', json: { currentPassword: 'a', newPassword: 'dummy-long-enough-password' } }))).status).toBe(401);
   });
 });
 
 describe('POST /api/auth/accept-invite', () => {
   it('a valid token sets the password; the response carries nothing', async () => {
-    const res = await acceptRoute.POST(makeRequest('/api/auth/accept-invite', { method: 'POST', json: { token: 'the-token', password: 'a-long-enough-password' } }));
+    const res = await acceptRoute.POST(makeRequest('/api/auth/accept-invite', { method: 'POST', json: { token: 'the-token', password: 'dummy-long-enough-password' } }));
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ status: 'accepted' });
-    expect(account.acceptInvite).toHaveBeenCalledWith('the-token', 'a-long-enough-password');
+    expect(account.acceptInvite).toHaveBeenCalledWith('the-token', 'dummy-long-enough-password');
   });
 
   it('invalid and expired tokens answer the same error; a short password is refused before the token is touched', async () => {
     account.acceptInvite.mockRejectedValue(new ApiError(400, 'This invitation link is invalid or has expired.', 'INVALID_TOKEN'));
-    const a = await acceptRoute.POST(makeRequest('/api/auth/accept-invite', { method: 'POST', json: { token: 'unknown', password: 'a-long-enough-password' } }));
-    const b = await acceptRoute.POST(makeRequest('/api/auth/accept-invite', { method: 'POST', json: { token: 'expired', password: 'a-long-enough-password' } }));
+    const a = await acceptRoute.POST(makeRequest('/api/auth/accept-invite', { method: 'POST', json: { token: 'unknown', password: 'dummy-long-enough-password' } }));
+    const b = await acceptRoute.POST(makeRequest('/api/auth/accept-invite', { method: 'POST', json: { token: 'expired', password: 'dummy-long-enough-password' } }));
     expect(a.status).toBe(400);
     expect(await a.json()).toEqual(await b.json());
     account.acceptInvite.mockClear();

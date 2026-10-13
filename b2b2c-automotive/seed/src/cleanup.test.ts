@@ -114,7 +114,7 @@ describe('seed:cleanup (explicit allow-list, no wildcard)', () => {
   it('cleanup then seed works on a project that has sample data (no slug or key clash)', async () => {
     const api = sampleProject();
     await executeCleanup(api, new Runner(false, quiet), await planCleanup(api));
-    await expect(runSeed({ api, run: new Runner(false, quiet), demoPassword: 'a-long-demo-password' })).resolves.toBeGreaterThan(300);
+    await expect(runSeed({ api, run: new Runner(false, quiet), demoPassword: 'dummy-long-demo-password' })).resolves.toBeGreaterThan(300);
     expect(api.all('products').some((p) => p.key === 'customer-own-product')).toBe(true);
   });
 });
@@ -122,7 +122,7 @@ describe('seed:cleanup (explicit allow-list, no wildcard)', () => {
 describe('reset (the seed own resources only)', () => {
   it('removes everything the seed created, in a valid order, and the seed can rebuild it', async () => {
     const api = sampleProject();
-    const opts = { api, run: new Runner(false, quiet), demoPassword: 'a-long-demo-password' };
+    const opts = { api, run: new Runner(false, quiet), demoPassword: 'dummy-long-demo-password' };
     await runSeed(opts);
     await api.putObject('configuration', 'default-theme', { colorPrimary: '#821810' });
     const plan = await planReset(api);

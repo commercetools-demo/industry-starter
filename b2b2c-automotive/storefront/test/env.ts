@@ -6,7 +6,7 @@ const defaults: Record<string, string> = {
   CTP_AUTH_URL: 'https://auth.example.test',
   CTP_API_URL: 'https://api.example.test',
   CTP_CLIENT_ID: 'test-client-id',
-  CTP_CLIENT_SECRET: 'test-client-secret',
+  CTP_CLIENT_SECRET: 'dummy-client-secret',
   CTP_SCOPES: 'view_stores view_project_settings',
   SESSION_SECRET: 'x'.repeat(48),
   ORDER_ACCESS_SECRET: 'o'.repeat(48),

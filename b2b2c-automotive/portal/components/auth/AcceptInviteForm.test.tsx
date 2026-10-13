@@ -33,7 +33,7 @@ describe('AcceptInviteForm', () => {
     await userEvent.type(screen.getByLabelText('Password'), 'short');
     expect(screen.getByText('Too short')).toBeInTheDocument();
     await userEvent.clear(screen.getByLabelText('Password'));
-    await fill('a-long-enough-password');
+    await fill('dummy-long-enough-password');
     expect(screen.getByText('Looks good')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Set password' })).toBeEnabled();
   });
@@ -41,17 +41,17 @@ describe('AcceptInviteForm', () => {
   it('posts the token and password, then offers sign-in', async () => {
     fetchMock.mockResolvedValue(Response.json({ status: 'accepted' }));
     renderWithProviders(<AcceptInviteForm token="tok" />, { messages: en, locale: 'en-US' });
-    await fill('a-long-enough-password');
+    await fill('dummy-long-enough-password');
     await userEvent.click(screen.getByRole('button', { name: 'Set password' }));
     expect(await screen.findByText('Your password is set. You can sign in now.')).toBeInTheDocument();
-    expect(JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string)).toEqual({ token: 'tok', password: 'a-long-enough-password' });
+    expect(JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string)).toEqual({ token: 'tok', password: 'dummy-long-enough-password' });
     expect(screen.getByRole('link', { name: 'Go to sign in' })).toBeInTheDocument();
   });
 
   it('an invalid or expired token shows one generic message', async () => {
     fetchMock.mockResolvedValue(Response.json({ error: 'x' }, { status: 400 }));
     renderWithProviders(<AcceptInviteForm token="tok" />, { messages: en, locale: 'en-US' });
-    await fill('a-long-enough-password');
+    await fill('dummy-long-enough-password');
     await userEvent.click(screen.getByRole('button', { name: 'Set password' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('This invitation link is invalid or has expired.');
   });

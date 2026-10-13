@@ -122,22 +122,22 @@ describe('business units', () => {
 
 describe('accept invite', () => {
   it('valid token sets the password and confirms the email', async () => {
-    await acceptInvite('the-token', 'a-long-enough-password');
-    expect(resetPosts[0]).toEqual({ tokenValue: 'the-token', newPassword: 'a-long-enough-password' });
+    await acceptInvite('the-token', 'dummy-long-enough-password');
+    expect(resetPosts[0]).toEqual({ tokenValue: 'the-token', newPassword: 'dummy-long-enough-password' });
     expect(emailTokenPosts[0]).toEqual({ id: 'cust-1', version: 3, ttlMinutes: 10 });
     expect(confirmPosts[0]).toEqual({ tokenValue: 'email-token' });
   });
   it('an already verified customer needs no email step', async () => {
     customer.isEmailVerified = true;
-    await acceptInvite('the-token', 'a-long-enough-password');
+    await acceptInvite('the-token', 'dummy-long-enough-password');
     expect(emailTokenPosts).toHaveLength(0);
   });
   it('invalid and expired tokens answer the same error', async () => {
     tokenLookupError = { statusCode: 404 };
-    const unknown = await acceptInvite('bad', 'a-long-enough-password').catch((e: unknown) => e);
+    const unknown = await acceptInvite('bad', 'dummy-long-enough-password').catch((e: unknown) => e);
     tokenLookupError = undefined;
     resetError = { statusCode: 400 };
-    const expired = await acceptInvite('old', 'a-long-enough-password').catch((e: unknown) => e);
+    const expired = await acceptInvite('old', 'dummy-long-enough-password').catch((e: unknown) => e);
     expect(unknown).toMatchObject({ status: 400, message: 'This invitation link is invalid or has expired.', code: 'INVALID_TOKEN' });
     expect(expired).toMatchObject({ status: 400, message: 'This invitation link is invalid or has expired.', code: 'INVALID_TOKEN' });
     expect(emailTokenPosts).toHaveLength(0);

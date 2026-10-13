@@ -97,7 +97,7 @@ describe('seed data sweep (reset covers everything the seed creates)', () => {
     const before = new Map(kinds.map((k) => [k, api.all(k).map((r) => r.id).sort()]));
     const objectsBefore = (await api.listObjects('configuration')).map((o) => o.key);
 
-    expect(await runSeed({ api, run: new Runner(false, quiet), demoPassword: 'a-long-demo-password' })).toBeGreaterThan(300);
+    expect(await runSeed({ api, run: new Runner(false, quiet), demoPassword: 'dummy-long-demo-password' })).toBeGreaterThan(300);
     const created = kinds.filter((k) => api.all(k).length > (before.get(k)?.length ?? 0));
     expect(created.length).toBeGreaterThan(10); // the seed really wrote many kinds
 

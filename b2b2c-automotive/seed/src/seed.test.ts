@@ -14,7 +14,7 @@ import { checkPrices, checkProduct, verifySeed } from './verify';
 import type { Res } from './api';
 
 const quiet = () => undefined;
-const opts = (api: FakeApi, dryRun = false) => ({ api, run: new Runner(dryRun, quiet), demoPassword: 'a-long-demo-password' });
+const opts = (api: FakeApi, dryRun = false) => ({ api, run: new Runner(dryRun, quiet), demoPassword: 'dummy-long-demo-password' });
 
 describe('seed against the in-memory API', () => {
   it('creates everything in dependency order (no unresolved reference) and verify finds no problem', async () => {
@@ -185,7 +185,7 @@ describe('seed against the in-memory API', () => {
     for (const c of CUSTOMERS) {
       const stored = await full.getByKey('customers', c.key);
       expect(stored).toBeDefined();
-      expect(JSON.stringify(stored)).not.toContain('a-long-demo-password');
+      expect(JSON.stringify(stored)).not.toContain('dummy-long-demo-password');
     }
   });
 
