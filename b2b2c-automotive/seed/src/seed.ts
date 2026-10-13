@@ -131,7 +131,8 @@ export const STEPS: Step[] = [
         const draft = { ...d, ...(images.length ? { assets: images.map((i, n) => ({ key: `image-${n + 1}`, name: ls('Bild', 'Image'), sources: [{ uri: i.url, dimensions: i.dimensions, contentType: 'image/jpeg' }], tags: ['image'] })) } : {}) };
         await upsert(c, 'categories', `category ${d.key}`, draft as unknown as Obj, (e) => [
           ...S.planCategoryUpdate(e, d),
-          ...(images.length && !((e.assets as unknown[]) ?? []).length ? [{ action: 'setAssets', assets: (draft as Obj).assets }] : []),
+          // The API has no setAssets for categories: one addAsset per image, only while the category has none.
+          ...(images.length && !((e.assets as unknown[]) ?? []).length ? ((draft as Obj).assets as Obj[]).map((asset) => ({ action: 'addAsset', asset })) : []),
         ]);
       }
     },

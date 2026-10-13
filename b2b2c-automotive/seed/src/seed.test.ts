@@ -152,6 +152,18 @@ describe('seed against the in-memory API', () => {
     expect(v2.banners[1]?.image.url).toMatch(/placehold\.co/);
   });
 
+  it('adds a recorded category image to an existing category with addAsset (the API has no setAssets for categories), once', async () => {
+    const api = new FakeApi();
+    await runSeed(opts(api));
+    const categoryImages = { 'mau-cat-brakes': [{ url: 'https://images.pexels.com/photos/5/pexels-photo-5.jpeg', dimensions: { w: 100, h: 80 } }] };
+    const run = new Runner(false, quiet);
+    expect(await runSeed({ ...opts(api), run, categoryImages })).toBe(1);
+    expect(run.lines[0]).toContain('addAsset');
+    expect(run.lines[0]).not.toContain('setAssets');
+    expect(((await api.getByKey('categories', 'mau-cat-brakes'))?.assets as unknown[]).length).toBe(1);
+    expect(await runSeed({ ...opts(api), categoryImages })).toBe(0);
+  });
+
   it('seeds the ready-for-pickup state, tailorings with images published at once, and no email or outbox object', async () => {
     const api = new FakeApi();
     await runSeed(opts(api));

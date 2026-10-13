@@ -192,7 +192,7 @@ export class FakeApi implements Api {
       }
       case 'standalone-prices:changeValue': set('value', a.value); return;
       case 'product-tailoring:publish': r.current = clone(r.staged); r.published = true; return;
-      case 'categories:setAssets': set('assets', a.assets); return;
+      case 'categories:addAsset': set('assets', [...((r.assets as unknown[]) ?? []), a.asset]); return;
       default: throw new Error(`FakeApi: unsupported action ${kind}:${act}`);
     }
   }
