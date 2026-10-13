@@ -68,7 +68,7 @@ The system SHALL show, for roles with store access, sales, orders, conversion an
 
 ## Layout
 
-Page body max width 1100 px beside the rail; KPI grid 200 px minimum; widget pairs 320 px minimum, stretch to equal height, 16 px gaps.
+Page body fills the width beside the rail (no 1100 px cap, owner request 2026-10-13: it expands on wider screens); KPI grid 200 px minimum; widget pairs 320 px minimum, stretch to equal height, 16 px gaps.
 
 ## Gaps
 

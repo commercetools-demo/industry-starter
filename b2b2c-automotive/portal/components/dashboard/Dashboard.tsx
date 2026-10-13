@@ -30,7 +30,7 @@ export function Dashboard({ performanceEnabled = true }: { performanceEnabled?: 
   const showStore = performanceEnabled && can('store.view-performance');
   const kpi = kpis.data;
   return (
-    <div data-testid="dashboard-body" className="flex w-full max-w-body-desktop flex-col gap-400">
+    <div data-testid="dashboard-body" className="flex w-full flex-col gap-400">
       <HeadsUpBanner />
       <div className="grid gap-400" style={{ gridTemplateColumns: KPI_GRID }}>
         <KpiCard id="open-orders" label={t('kpi.openOrders.label')} note={t('kpi.openOrders.note')} value={orders.data?.openCount ?? null} state={stateOf(orders.isLoading, orders.data?.openCount, Boolean(orders.error))} />

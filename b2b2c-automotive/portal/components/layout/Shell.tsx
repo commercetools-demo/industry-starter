@@ -29,7 +29,7 @@ function ShellFrame({ viewer, copilot, children }: { viewer: Viewer; copilot: bo
       <CustomerSessionBanner />
       <div className="flex flex-1 items-start">
         <SidebarRail roles={roles} viewer={viewer} />
-        <main id="main" tabIndex={-1} className="flex min-w-0 max-w-body-desktop flex-1 flex-col gap-400 pb-1500 pr-1000 pt-600 max-lg:pr-600 narrow:px-400">
+        <main id="main" tabIndex={-1} className="flex min-w-0 flex-1 flex-col gap-400 pb-1500 pr-1000 pt-600 max-lg:pr-600 narrow:px-400">
           {children}
         </main>
       </div>
