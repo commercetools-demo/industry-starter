@@ -90,4 +90,4 @@ export function visibleItems(roles: LogicalRole[]): NavItem[] {
 }
 
 /** Routes that exist but are not navigation items (locale prefix removed). */
-export const ROUTE_ALLOW_LIST: string[] = ['/sign-in', '/register', '/reset', '/reset/[token]', '/pending-approval', '/accept-invite/[token]', '/store/settings', '/store/channels', '/store/share', '/store/theme', '/store/theme/[...slug]', '/content/[...slug]', '/catalog/prices', '/catalog/product-info', '/catalog/product-discounts', '/catalog/cart-discounts', '/catalog/priority', '/catalog/discounts/[kind]/[id]','/company/[tab]', '/account/[tab]'];
+export const ROUTE_ALLOW_LIST: string[] = ['/sign-in', '/register', '/reset', '/reset/[token]', '/pending-approval', '/accept-invite/[token]', '/store/settings', '/store/channels', '/store/share', '/store/theme', '/store/theme/[...slug]', '/content/[...slug]', '/catalog/prices', '/catalog/product-info', '/catalog/product-discounts', '/catalog/cart-discounts', '/catalog/priority', '/catalog/discounts/[kind]/[id]','/company/[tab]', '/account/[tab]', '/customers/[id]'];

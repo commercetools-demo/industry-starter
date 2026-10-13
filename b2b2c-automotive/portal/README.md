@@ -22,6 +22,7 @@ npm run dev                  # http://localhost:3000, or: npm run dev -- -p 3100
 | `npm run check` | The quality gate: typecheck, lint, then the gate scripts below, then tests |
 | `npm run verify:build` | `next build`, then route, health-route and bundle-secret checks on the output |
 | `node scripts/ensure-w.mjs [--apply]` | W: verifies the seed types for marketing, bundles and local products; writes demo campaigns and e-mail templates only with `--apply` (see "Selling tools") |
+| `node scripts/ensure-v.mjs [--apply]` | V: verifies the seed types for customers, returns and checkout fields; creates the review type `malva-review` and the review states only with `--apply` (see "Customers, subscriptions, returns and reviews") |
 
 ## Gates (`scripts/`)
 
@@ -96,6 +97,16 @@ Marketing (`/marketing`), E-mail (`/email`), Bundles (`/bundles`), Product impor
 - Dev fixture mode (`PORTAL_DEV_FIXTURES=on`, never production): `lib/portal/w-fixture-root.ts` extends T's in-memory commercetools client with products, custom object lists, orders, customers and an in-memory Import API; demo campaigns, vehicles, six customers per store and one stored template are seeded.
 
 `node scripts/ensure-w.mjs [--apply] [--store <key>]` (needs `.env.local`; refuses any project but `spec-test-b2b2c-automotive`) verifies that the seed's custom types and the product types `mau-pt-local-part` and `mau-pt-bundle` exist with the attributes W uses, then (with `--apply`) writes only demo custom objects (`"demo": true`): two co-op campaigns and the default e-mail templates per store. It creates no type. Dry run without `--apply`.
+
+## Customers, subscriptions, returns and reviews (workstream V)
+
+- Pages `/customers` (+ `/customers/[id]`), `/subscriptions`, `/returns`, `/reviews`; routes under `app/api/seller/{customers,orders,subscriptions,returns,reviews}`; services in `lib/ct/seller/{customers,subscriptions,returns,reviews,impersonation}.ts` (pure parts in `lib/customers`, `lib/subscriptions`, `lib/contracts/return-item.ts`). Customers, Subscriptions, shop-as and Mark delivered are Admin only; Returns and Reviews can be read by a Buyer, every write is Admin only.
+- Every read and write is scoped by the checked `storeKey` (orders and customers in-store; recurring orders by `store(key=...)` in the predicate; reviews by `custom.fields.storeKey`). A resource of another store is a 404.
+- **Refunds go through commercetools Checkout and Stripe**: `lib/ct/checkout-payments.ts` posts the Payment Intents `refundPayment` action (one request token with the single scope `manage_checkout_payment_intents:<projectKey>`); the portal never writes a Payment transaction. A return becomes Refunded only when the Payment holds a matching Refund transaction in `Success` (checked when the list or the detail loads). No e-mail is sent anywhere.
+- **Shop as customer**: `IMPERSONATION_SECRET` (32+ characters, the same value in the storefront) signs a 60 second handoff token that the browser POSTs in a form body to `<STOREFRONT_ORIGIN>/api/impersonate`. The storefront landing is not built yet (`plans/MISSED-FEATURES.md`, V rows).
+- New admin scopes (`.env.example`, `lib/scopes.ts`): `manage_orders`, `view_payments`, `manage_checkout_payment_intents`, `manage_recurring_orders`, `view_states`.
+- `node scripts/ensure-v.mjs [--apply]` (needs `.env.local`; refuses any project but `spec-test-b2b2c-automotive`) verifies the seed types `malva-checkout`, `malva-line`, `malva-return-item`, `malva-customer` and creates only the type `malva-review` and the states `review-published`, `review-hidden` with `--apply`.
+- Dev fixture mode (`PORTAL_DEV_FIXTURES=on`, never production): `lib/portal/v-fixture-root.ts` is an in-memory client with shoppers, guests, orders (one undelivered, one past the window), returns, subscriptions and reviews per fixture store; a pending refund is confirmed on the second Payment read. Use `next dev --webpack` when other people change files under the repository root (Turbopack reloads the page on every foreign change).
 
 ## Deployment
 

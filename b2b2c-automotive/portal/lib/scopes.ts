@@ -43,6 +43,11 @@ export const ADMIN_SCOPES: readonly ScopeDoc[] = [
   { scope: 'manage_discount_codes', reason: 'catalog: codes of the store cart discounts and their redemption counts' },
   { scope: 'manage_import_containers', reason: 'W: CSV product import through the Import API (the Import API host is derived from CTP_API_URL)' },
   { scope: 'view_customers', reason: "W: audience rules read the marketing consent and the order history of the store's customers (counts only are shown)" },
+  { scope: 'manage_orders', reason: 'V: mark an order delivered and record and move returns (return info and return item fields)' },
+  { scope: 'view_payments', reason: 'V: read the Payment of an order to see the Charge and the Refund transactions Checkout added' },
+  { scope: 'manage_checkout_payment_intents', reason: 'V: ask commercetools Checkout to refund a payment (Payment Intents API, scope requested as manage_checkout_payment_intents:<projectKey>)' },
+  { scope: 'manage_recurring_orders', reason: 'V: pause, resume, skip and cancel recurring orders (subscriptions)' },
+  { scope: 'view_states', reason: 'V: resolve the review states review-published and review-hidden' },
 ];
 
 /** `CTP_PROVISION_SCOPES`: the provisioning client (registration endpoint only). No admin scopes and no project-wide manage scope. */

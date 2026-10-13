@@ -216,3 +216,16 @@ If a row blocks a task, mark that task `BLOCKED-ON-OWNER` in `plans/STATUS.md`, 
 ## Evidence (all under `plans/evidence/V/`)
 
 Screenshots `V-<task>-<viewport>.png`; `recipe-log.md`; `mcp-readback.md`; `network-shop-as.txt` (network list proving the token was in a POST body); `refund-payment-readback.json`; `lighthouse-a11y.json`; `test-data.md`.
+
+## Progress
+
+J19, 2026-10-12. Portal side only (names in `plans/notes/V-names.md`, findings from the docs tools there too). Gates: `npm run check` and `npm run verify:build` green in `portal/` (dummy environment).
+
+- V-00 done as a script, not run live: `portal/scripts/ensure-v.mjs` (+ test), live run is M-V-05. The seed already has `refundRequestedAt`.
+- V-01 to V-03, V-05 done: `lib/ct/seller/customers.ts`, `lib/customers/{aggregate,mask}.ts`, routes `customers`, `customers/[id]`, `customers/[id]/notes`, `orders/[number]` (+ `delivered`); tests incl. cross-store tests. V-04 done: Customers page and customer detail (`components/customers/*`).
+- V-06 portal side done: `lib/impersonation/token.ts`, `lib/ct/seller/impersonation.ts`, route `customers/[id]/shop-as`, R's exit route extended, `IMPERSONATION_SECRET` in `.env.example`/`app.config.mjs`. DEFERRED `[STOREFRONT]` steps 3 to 6 with exact contracts in `MISSED-FEATURES.md` (blocked on the storefront; live check M-V-11).
+- V-07 to V-09 done: `lib/subscriptions/model.ts`, `lib/ct/seller/subscriptions.ts` (actions `setRecurringOrderState` and `setOrderSkipConfiguration`, confirmed with the OAS tool; Failed can resume), 6 routes, `SubscriptionActions`, Subscriptions page with audit drawer.
+- V-10 portal copy done (`lib/contracts/return-item.ts`); storefront copy and `check-shared-copies.mjs` DEFERRED. V-11 to V-13 done: `lib/ct/seller/returns.ts`, `lib/ct/checkout-payments.ts` (Payment Intents `refundPayment`, OAS `checkout-PaymentIntent`), `ReturnActions`, `StatusChip`, Returns page (detail as a drawer). Storefront "request a return" (Q) DEFERRED. V-14 portal side done (wrong-fit chip, vehicle and fit result from `malva-line`); the storefront cart writes DEFERRED.
+- V-15 storefront reviews: M already built them; only the revalidation note is open. V-16 done: `lib/ct/seller/reviews.ts`, 3 routes, Reviews page.
+- V-17 done as far as the portal goes: every V route has an Admin or view action and a `route.cross-store.test.ts` (`check-routes` and `lib/authz/v-role-matrix.test.ts`), nav entries exist, new scopes in `lib/scopes.ts`. Role deviation: Q-V11 (Buyer reads Returns and Reviews, R's table). Questions Q-V11 to Q-V21 in `plans/notes/questions-VWXYZ.md`.
+- V-18 partly: browser recipe 1 to 6 run with a headless Chrome over the DevTools protocol in the portal fixture mode, evidence in `plans/evidence/V/` (the Chrome MCP did not answer, ENV-01); recipe 7 Lighthouse and everything against the live project are M-V-05 to M-V-12 (refund and renewal steps need OA-05 and OA-15).

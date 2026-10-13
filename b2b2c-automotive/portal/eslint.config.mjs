@@ -76,7 +76,7 @@ export default defineConfig([
     },
   },
   // The one place the ClientBuilder may live. The Import API host is not served by the SDK (W-14), so its one file may call fetch.
-  { files: ['lib/ct/client.ts', 'lib/import/import-api.ts'], rules: { 'no-restricted-syntax': 'off' } },
+  { files: ['lib/ct/client.ts', 'lib/import/import-api.ts', 'lib/ct/checkout-payments.ts'], rules: { 'no-restricted-syntax': 'off' } },
   // SDK allowed in the server layer (admin and provisioning stay fenced).
   { files: ['lib/ct/**', 'lib/mappers/**'], rules: { 'no-restricted-imports': restrict({ sdk: false }) } },
   { files: ['lib/ct/seller/**'], rules: { 'no-restricted-imports': restrict({ sdk: false, admin: false }) } },

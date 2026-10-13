@@ -1480,5 +1480,362 @@
       "awaiting": "Wartet auf Prüfung",
       "rejected": "Abgelehnt"
     }
+  },
+  "customers": {
+    "title": "Kunden",
+    "subtitle": "Die Käufer Ihres Shops.",
+    "loading": "Kunden werden geladen ...",
+    "error": "Die Kunden konnten nicht geladen werden.",
+    "empty": "Keine passenden Kunden.",
+    "search": "Nach Name oder E-Mail suchen",
+    "searchLabel": "Kunden durchsuchen",
+    "tabsLabel": "Kundenart",
+    "tabs": {
+      "all": "Alle",
+      "registered": "Registriert",
+      "guests": "Gäste"
+    },
+    "guestsCaption": "Ohne Konto bestellt",
+    "truncated": "Es werden nur die neuesten Datensätze angezeigt.",
+    "kpis": {
+      "registered": "Registriert",
+      "guests": "Gäste",
+      "repeat": "Wiederkaufrate"
+    },
+    "columns": {
+      "name": "Name",
+      "type": "Art",
+      "orders": "Bestellungen",
+      "lifetime": "Gesamtumsatz",
+      "last": "Letzte Bestellung"
+    },
+    "type": {
+      "Registered": "Registriert",
+      "Guest": "Gast"
+    },
+    "paging": {
+      "range": "{from} bis {to} von {total}",
+      "prev": "Zurück",
+      "next": "Weiter"
+    },
+    "open": "{name} öffnen",
+    "detail": {
+      "back": "Zurück zu den Kunden",
+      "email": "E-Mail",
+      "mobile": "Mobil",
+      "since": "Kunde seit",
+      "consent": "Marketing-Einwilligung",
+      "consentYes": "Erteilt am {date}",
+      "consentNo": "Nicht erteilt",
+      "consentUnknown": "Nicht erfasst",
+      "loading": "Kunde wird geladen ...",
+      "error": "Dieser Kunde konnte nicht geladen werden.",
+      "notFound": "Kunde nicht gefunden.",
+      "orders": {
+        "title": "Bestellungen",
+        "empty": "Noch keine Bestellungen.",
+        "number": "Bestellung",
+        "date": "Aufgegeben",
+        "total": "Summe",
+        "delivered": "Zugestellt",
+        "notDelivered": "Nicht zugestellt",
+        "markDelivered": "Als zugestellt markieren",
+        "marked": "Bestellung {number} als zugestellt markiert"
+      },
+      "garage": {
+        "title": "Garage",
+        "empty": "Keine Fahrzeuge gespeichert"
+      },
+      "subscriptions": {
+        "title": "Abos",
+        "empty": "Keine Abos."
+      },
+      "returns": {
+        "title": "Retouren",
+        "empty": "Keine Retouren."
+      },
+      "notes": {
+        "title": "Notizen",
+        "empty": "Noch keine Notizen.",
+        "label": "Neue Notiz",
+        "hint": "Nur Ihr Team sieht Notizen. Bis zu 1.000 Zeichen.",
+        "add": "Notiz hinzufügen",
+        "saved": "Notiz hinzugefügt"
+      },
+      "shopAs": {
+        "button": "Als Kunde einkaufen",
+        "hint": "Öffnet den Shop kurzzeitig als dieser Kunde. Bestellungen werden in seinem Auftrag aufgegeben.",
+        "started": "Der Shop wird als {name} geöffnet",
+        "notConfigured": "Einkaufen als Kunde ist noch nicht eingerichtet. Bitte den Inhaber um die Einrichtung.",
+        "failed": "Die Kundensitzung konnte nicht gestartet werden."
+      }
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "forbidden": "Dafür fehlt Ihnen die Berechtigung."
+    }
+  },
+  "subscriptions": {
+    "title": "Abos",
+    "subtitle": "Wiederkehrende Bestellungen Ihrer Käufer.",
+    "loading": "Abos werden geladen ...",
+    "error": "Die Abos konnten nicht geladen werden.",
+    "empty": "Keine Abos in dieser Ansicht.",
+    "tabsLabel": "Abo-Status",
+    "tabs": {
+      "active": "Aktiv",
+      "paused": "Pausiert",
+      "canceled": "Gekündigt"
+    },
+    "kpis": {
+      "monthly": "Monatlich wiederkehrend",
+      "active": "Aktiv",
+      "paused": "Pausiert",
+      "canceled": "Gekündigt"
+    },
+    "renewals": {
+      "title": "Verlängerungen in den nächsten 7 Tagen",
+      "empty": "Keine Verlängerungen in den nächsten 7 Tagen."
+    },
+    "columns": {
+      "customer": "Kunde",
+      "items": "Artikel",
+      "interval": "Intervall",
+      "next": "Nächste Verlängerung",
+      "value": "Wert",
+      "status": "Status",
+      "actions": "Aktionen"
+    },
+    "interval": {
+      "days": "{count, plural, one {Täglich} other {Alle # Tage}}",
+      "weeks": "{count, plural, one {Wöchentlich} other {Alle # Wochen}}",
+      "months": "{count, plural, one {Jeden Monat} other {Alle # Monate}}",
+      "dayOfMonth": "Monatlich am {day}. Tag"
+    },
+    "status": {
+      "Active": "Aktiv",
+      "Paused": "Pausiert",
+      "Canceled": "Gekündigt"
+    },
+    "attention": "Braucht Aufmerksamkeit",
+    "skipPending": "Nächste Verlängerung übersprungen",
+    "noRenewal": "-",
+    "actions": {
+      "label": "Abo-Aktionen",
+      "pause": "Pausieren",
+      "resume": "Fortsetzen",
+      "skip": "Nächste überspringen",
+      "cancel": "Kündigen",
+      "audit": "Verlauf"
+    },
+    "reasons": {
+      "final": "Ein gekündigtes Abo lässt sich nicht mehr ändern.",
+      "skipNotActive": "Nur ein aktives Abo kann eine Verlängerung überspringen.",
+      "skipPending": "Die nächste Verlängerung ist bereits übersprungen.",
+      "notAllowed": "In diesem Status nicht verfügbar."
+    },
+    "toasts": {
+      "pause": "Abo pausiert",
+      "resume": "Abo fortgesetzt",
+      "skip": "Nächste Verlängerung übersprungen",
+      "cancel": "Abo gekündigt"
+    },
+    "confirm": {
+      "title": "Dieses Abo kündigen?",
+      "body": "Die Kündigung ist endgültig. Es werden keine weiteren Verlängerungen erstellt.",
+      "keep": "Abo behalten",
+      "confirm": "Abo kündigen"
+    },
+    "audit": {
+      "title": "Verlauf",
+      "empty": "Noch keine Aktionen.",
+      "line": "{action}: {from} zu {to}",
+      "by": "von {by}",
+      "close": "Schließen"
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "forbidden": "Dafür fehlt Ihnen die Berechtigung.",
+      "notActive": "Nur ein aktives Abo kann eine Verlängerung überspringen.",
+      "busy": "Das Abo verarbeitet gerade eine Bestellung. Bitte gleich erneut versuchen.",
+      "invalid": "Diese Änderung ist im aktuellen Status nicht möglich."
+    }
+  },
+  "returns": {
+    "title": "Retouren",
+    "subtitle": "Retouren Ihrer Käufer und deren Erstattungen.",
+    "loading": "Retouren werden geladen ...",
+    "error": "Die Retouren konnten nicht geladen werden.",
+    "empty": "Keine Retouren in dieser Ansicht.",
+    "tabsLabel": "Retourenstatus",
+    "tabs": {
+      "open": "Offen",
+      "closed": "Abgeschlossen"
+    },
+    "kpis": {
+      "open": "Offene Retouren",
+      "rate": "Retourenquote",
+      "refunded": "Erstattet in diesem Monat",
+      "rateNote": "Letzte 90 Tage"
+    },
+    "columns": {
+      "number": "Retoure",
+      "order": "Bestellung",
+      "customer": "Kunde",
+      "items": "Artikel",
+      "tracking": "Sendungsnummer",
+      "status": "Status"
+    },
+    "status": {
+      "requested": "Angefragt",
+      "in-transit": "Unterwegs",
+      "received": "Eingegangen",
+      "inspected": "Geprüft",
+      "refunded": "Erstattet",
+      "rejected": "Abgelehnt"
+    },
+    "refund": {
+      "pending": "Erstattung ausstehend",
+      "failed": "Erstattung fehlgeschlagen"
+    },
+    "reasons": {
+      "wrong-fit": "Passt nicht",
+      "defective": "Defekt",
+      "no-longer-needed": "Nicht mehr benötigt",
+      "damaged-in-transit": "Auf dem Transport beschädigt",
+      "other": "Sonstiges"
+    },
+    "open": "Retoure {number} öffnen",
+    "record": {
+      "button": "Retoure erfassen",
+      "title": "Retoure erfassen",
+      "order": "Bestellnummer",
+      "lookup": "Bestellung suchen",
+      "lines": "Zurückzugebende Artikel",
+      "quantity": "Menge für {name}",
+      "available": "{count} verfügbar",
+      "reason": "Grund",
+      "comment": "Kommentar",
+      "window": "Retouren werden {days} Tage nach der Zustellung angenommen.",
+      "deliveredOn": "Zugestellt am {date}.",
+      "notDelivered": "Diese Bestellung ist noch nicht zugestellt. Markieren Sie sie zuerst auf der Kundenseite als zugestellt.",
+      "closed": "Die Rückgabefrist für diese Bestellung ist abgelaufen.",
+      "submit": "Retoure erfassen",
+      "cancel": "Abbrechen",
+      "created": "Retoure {number} erstellt, Sendungsnummer {tracking}",
+      "noLines": "Wählen Sie mindestens einen Artikel."
+    },
+    "detail": {
+      "close": "Schließen",
+      "customer": "Kunde",
+      "order": "Bestellung",
+      "tracking": "Sendungsnummer",
+      "reason": "Grund",
+      "comment": "Kommentar",
+      "items": "Artikel",
+      "refunded": "Erstatteter Betrag",
+      "rejectReason": "Ablehnungsgrund",
+      "maxRefund": "Höchstmögliche Erstattung: {amount}",
+      "loading": "Retoure wird geladen ...",
+      "error": "Diese Retoure konnte nicht geladen werden."
+    },
+    "actions": {
+      "label": "Retouren-Aktionen",
+      "in-transit": "Als unterwegs markieren",
+      "received": "Als eingegangen markieren",
+      "inspected": "Als geprüft markieren",
+      "refund": "Erstatten",
+      "retryRefund": "Erstattung wiederholen",
+      "rejected": "Ablehnen"
+    },
+    "disabled": {
+      "closed": "Diese Retoure ist abgeschlossen.",
+      "notFrom": "Nicht verfügbar, solange die Retoure {status} ist.",
+      "refundPending": "Eine Erstattung wartet auf die Bestätigung von Stripe."
+    },
+    "refundDialog": {
+      "title": "{number} erstatten",
+      "amount": "Erstattungsbetrag",
+      "hint": "Die Erstattung geht über commercetools Checkout an Stripe und ist endgültig, sobald Stripe sie bestätigt.",
+      "submit": "Erstattung anfordern",
+      "cancel": "Abbrechen",
+      "requested": "Erstattung angefordert. Sie ist endgültig, sobald Stripe sie bestätigt.",
+      "noPayment": "Keine Zahlung zu erstatten; bitte manuell abrechnen.",
+      "invalidAmount": "Geben Sie einen Betrag über null ein."
+    },
+    "rejectDialog": {
+      "title": "{number} ablehnen",
+      "reason": "Grund",
+      "submit": "Retoure ablehnen",
+      "cancel": "Abbrechen",
+      "required": "Ein Grund ist erforderlich."
+    },
+    "moved": "Retoure {number} ist jetzt {status}",
+    "wrongFit": {
+      "chip": "Passt nicht",
+      "vehicle": "Fahrzeug beim Kauf",
+      "fit": "Passform-Ergebnis damals",
+      "notRecorded": "Das Fahrzeug beim Kauf wurde nicht erfasst",
+      "fits": "Passt",
+      "not-fit": "Passt nicht",
+      "unknown": "Unbekannt"
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "forbidden": "Dafür fehlt Ihnen die Berechtigung.",
+      "ORDER_NOT_FOUND": "Bestellung nicht gefunden.",
+      "NOT_DELIVERED": "Diese Bestellung ist noch nicht zugestellt.",
+      "RETURN_WINDOW_CLOSED": "Die Rückgabefrist für diese Bestellung ist abgelaufen.",
+      "QUANTITY_EXCEEDS_PURCHASED": "Die Menge ist größer als gekauft und noch nicht zurückgegeben.",
+      "REFUND_EXCEEDS_PAID": "Die Erstattung ist höher als der Betrag für die zurückgegebenen Artikel.",
+      "CAPTURE_REQUIRED": "Buchen Sie die Zahlung zuerst ein.",
+      "NO_CAPTURE": "Die Zahlung hat keinen eingezogenen Betrag zum Erstatten.",
+      "REFUND_PENDING": "Eine Erstattung wartet bereits auf Bestätigung.",
+      "REFUND_REJECTED": "Der Zahlungsdienstleister hat die Erstattung abgelehnt.",
+      "REFUND_UNAVAILABLE": "Checkout konnte die Erstattung nicht annehmen. Bitte erneut versuchen.",
+      "INVALID_TRANSITION": "Dieser Schritt ist im aktuellen Status nicht möglich.",
+      "REASON_REQUIRED": "Ein Grund ist erforderlich."
+    }
+  },
+  "reviews": {
+    "title": "Bewertungen",
+    "subtitle": "Was Käufer über Ihre Produkte sagen.",
+    "loading": "Bewertungen werden geladen ...",
+    "error": "Die Bewertungen konnten nicht geladen werden.",
+    "empty": "Noch keine Bewertungen.",
+    "tabsLabel": "Reihenfolge der Bewertungen",
+    "tabs": {
+      "latest": "Neueste",
+      "highest": "Beste",
+      "lowest": "Schlechteste"
+    },
+    "kpis": {
+      "average": "Durchschnittliche Bewertung",
+      "month": "Diesen Monat",
+      "unanswered": "Unbeantwortet"
+    },
+    "stars": "{rating} von 5",
+    "by": "{author}, {date}",
+    "hiddenChip": "Ausgeblendet",
+    "reply": {
+      "button": "Antworten",
+      "edit": "Antwort bearbeiten",
+      "title": "Antwort auf {product}",
+      "label": "Öffentliche Antwort",
+      "hint": "Wird auf der Produktseite unter der Bewertung angezeigt. Bis zu 1.000 Zeichen.",
+      "submit": "Antwort senden",
+      "cancel": "Abbrechen",
+      "from": "Antwort von {store}",
+      "posted": "Antwort veröffentlicht"
+    },
+    "hide": "Ausblenden",
+    "show": "Einblenden",
+    "hidden": "Bewertung ausgeblendet",
+    "shown": "Bewertung eingeblendet",
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "forbidden": "Dafür fehlt Ihnen die Berechtigung.",
+      "REPLY_INVALID": "Schreiben Sie eine Antwort mit 1 bis 1.000 Zeichen."
+    }
   }
 }

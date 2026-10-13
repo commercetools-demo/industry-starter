@@ -1480,5 +1480,362 @@
       "awaiting": "Awaiting review",
       "rejected": "Rejected"
     }
+  },
+  "customers": {
+    "title": "Customers",
+    "subtitle": "The shoppers of your store.",
+    "loading": "Loading customers...",
+    "error": "Customers could not be loaded.",
+    "empty": "No customers match.",
+    "search": "Search by name or e-mail",
+    "searchLabel": "Search customers",
+    "tabsLabel": "Customer type",
+    "tabs": {
+      "all": "All",
+      "registered": "Registered",
+      "guests": "Guests"
+    },
+    "guestsCaption": "Checked out without an account",
+    "truncated": "Only the most recent records are shown.",
+    "kpis": {
+      "registered": "Registered",
+      "guests": "Guests",
+      "repeat": "Repeat rate"
+    },
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "orders": "Orders",
+      "lifetime": "Lifetime value",
+      "last": "Last order"
+    },
+    "type": {
+      "Registered": "Registered",
+      "Guest": "Guest"
+    },
+    "paging": {
+      "range": "{from} to {to} of {total}",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "open": "Open {name}",
+    "detail": {
+      "back": "Back to customers",
+      "email": "E-mail",
+      "mobile": "Mobile",
+      "since": "Customer since",
+      "consent": "Marketing consent",
+      "consentYes": "Given on {date}",
+      "consentNo": "Not given",
+      "consentUnknown": "Not recorded",
+      "loading": "Loading customer...",
+      "error": "This customer could not be loaded.",
+      "notFound": "Customer not found.",
+      "orders": {
+        "title": "Orders",
+        "empty": "No orders yet.",
+        "number": "Order",
+        "date": "Placed",
+        "total": "Total",
+        "delivered": "Delivered",
+        "notDelivered": "Not delivered",
+        "markDelivered": "Mark delivered",
+        "marked": "Order {number} marked delivered"
+      },
+      "garage": {
+        "title": "Garage",
+        "empty": "No vehicles saved"
+      },
+      "subscriptions": {
+        "title": "Subscriptions",
+        "empty": "No subscriptions."
+      },
+      "returns": {
+        "title": "Returns",
+        "empty": "No returns."
+      },
+      "notes": {
+        "title": "Notes",
+        "empty": "No notes yet.",
+        "label": "New note",
+        "hint": "Only your team sees notes. Up to 1,000 characters.",
+        "add": "Add note",
+        "saved": "Note added"
+      },
+      "shopAs": {
+        "button": "Shop as customer",
+        "hint": "Opens the storefront as this customer for a short time. Orders are placed on their behalf.",
+        "started": "Opening the storefront as {name}",
+        "notConfigured": "Shop as customer is not set up yet. Ask the owner to configure it.",
+        "failed": "Could not start the customer session."
+      }
+    },
+    "errors": {
+      "generic": "Something went wrong. Try again.",
+      "forbidden": "You do not have permission to do this."
+    }
+  },
+  "subscriptions": {
+    "title": "Subscriptions",
+    "subtitle": "Recurring orders of your shoppers.",
+    "loading": "Loading subscriptions...",
+    "error": "Subscriptions could not be loaded.",
+    "empty": "No subscriptions in this view.",
+    "tabsLabel": "Subscription status",
+    "tabs": {
+      "active": "Active",
+      "paused": "Paused",
+      "canceled": "Canceled"
+    },
+    "kpis": {
+      "monthly": "Monthly recurring",
+      "active": "Active",
+      "paused": "Paused",
+      "canceled": "Canceled"
+    },
+    "renewals": {
+      "title": "Renewals in the next 7 days",
+      "empty": "No renewals in the next 7 days."
+    },
+    "columns": {
+      "customer": "Customer",
+      "items": "Items",
+      "interval": "Interval",
+      "next": "Next renewal",
+      "value": "Value",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "interval": {
+      "days": "{count, plural, one {Every day} other {Every # days}}",
+      "weeks": "{count, plural, one {Every week} other {Every # weeks}}",
+      "months": "{count, plural, one {Every month} other {Every # months}}",
+      "dayOfMonth": "Monthly on day {day}"
+    },
+    "status": {
+      "Active": "Active",
+      "Paused": "Paused",
+      "Canceled": "Canceled"
+    },
+    "attention": "Needs attention",
+    "skipPending": "Next renewal skipped",
+    "noRenewal": "-",
+    "actions": {
+      "label": "Subscription actions",
+      "pause": "Pause",
+      "resume": "Resume",
+      "skip": "Skip next",
+      "cancel": "Cancel",
+      "audit": "History"
+    },
+    "reasons": {
+      "final": "A canceled subscription cannot change.",
+      "skipNotActive": "Only an active subscription can skip a renewal.",
+      "skipPending": "The next renewal is already skipped.",
+      "notAllowed": "Not available in this state."
+    },
+    "toasts": {
+      "pause": "Subscription paused",
+      "resume": "Subscription resumed",
+      "skip": "Next renewal skipped",
+      "cancel": "Subscription canceled"
+    },
+    "confirm": {
+      "title": "Cancel this subscription?",
+      "body": "Canceling is final. No further renewals are created.",
+      "keep": "Keep subscription",
+      "confirm": "Cancel subscription"
+    },
+    "audit": {
+      "title": "History",
+      "empty": "No management actions yet.",
+      "line": "{action}: {from} to {to}",
+      "by": "by {by}",
+      "close": "Close"
+    },
+    "errors": {
+      "generic": "Something went wrong. Try again.",
+      "forbidden": "You do not have permission to do this.",
+      "notActive": "Only an active subscription can skip a renewal.",
+      "busy": "The subscription is processing an order. Try again in a moment.",
+      "invalid": "This change is not possible in the current state."
+    }
+  },
+  "returns": {
+    "title": "Returns",
+    "subtitle": "Returns from your shoppers and their refunds.",
+    "loading": "Loading returns...",
+    "error": "Returns could not be loaded.",
+    "empty": "No returns in this view.",
+    "tabsLabel": "Return state",
+    "tabs": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "kpis": {
+      "open": "Open returns",
+      "rate": "Return rate",
+      "refunded": "Refunded this month",
+      "rateNote": "Last 90 days"
+    },
+    "columns": {
+      "number": "Return",
+      "order": "Order",
+      "customer": "Customer",
+      "items": "Items",
+      "tracking": "Tracking",
+      "status": "Status"
+    },
+    "status": {
+      "requested": "Requested",
+      "in-transit": "In transit",
+      "received": "Received",
+      "inspected": "Inspected",
+      "refunded": "Refunded",
+      "rejected": "Rejected"
+    },
+    "refund": {
+      "pending": "Refund pending",
+      "failed": "Refund failed"
+    },
+    "reasons": {
+      "wrong-fit": "Wrong fit",
+      "defective": "Defective",
+      "no-longer-needed": "No longer needed",
+      "damaged-in-transit": "Damaged in transit",
+      "other": "Other"
+    },
+    "open": "Open return {number}",
+    "record": {
+      "button": "Record a return",
+      "title": "Record a return",
+      "order": "Order number",
+      "lookup": "Find order",
+      "lines": "Items to return",
+      "quantity": "Quantity for {name}",
+      "available": "{count} available",
+      "reason": "Reason",
+      "comment": "Comment",
+      "window": "Returns are accepted for {days} days after delivery.",
+      "deliveredOn": "Delivered on {date}.",
+      "notDelivered": "This order has not been delivered yet. Mark it delivered on the customer page first.",
+      "closed": "The return window for this order has closed.",
+      "submit": "Record return",
+      "cancel": "Cancel",
+      "created": "Return {number} created, tracking {tracking}",
+      "noLines": "Choose at least one item."
+    },
+    "detail": {
+      "close": "Close",
+      "customer": "Customer",
+      "order": "Order",
+      "tracking": "Tracking",
+      "reason": "Reason",
+      "comment": "Comment",
+      "items": "Items",
+      "refunded": "Refunded amount",
+      "rejectReason": "Rejection reason",
+      "maxRefund": "Largest possible refund: {amount}",
+      "loading": "Loading return...",
+      "error": "This return could not be loaded."
+    },
+    "actions": {
+      "label": "Return actions",
+      "in-transit": "Mark in transit",
+      "received": "Mark received",
+      "inspected": "Mark inspected",
+      "refund": "Refund",
+      "retryRefund": "Retry refund",
+      "rejected": "Reject"
+    },
+    "disabled": {
+      "closed": "This return is closed.",
+      "notFrom": "Not available while the return is {status}.",
+      "refundPending": "A refund is waiting for Stripe's confirmation."
+    },
+    "refundDialog": {
+      "title": "Refund {number}",
+      "amount": "Refund amount",
+      "hint": "The refund is sent to Stripe through commercetools Checkout and is final when Stripe confirms.",
+      "submit": "Request refund",
+      "cancel": "Cancel",
+      "requested": "Refund requested. It is final when Stripe confirms.",
+      "noPayment": "No payment to refund; settle manually.",
+      "invalidAmount": "Enter an amount above zero."
+    },
+    "rejectDialog": {
+      "title": "Reject {number}",
+      "reason": "Reason",
+      "submit": "Reject return",
+      "cancel": "Cancel",
+      "required": "A reason is required."
+    },
+    "moved": "Return {number} is now {status}",
+    "wrongFit": {
+      "chip": "Wrong fit",
+      "vehicle": "Vehicle at purchase",
+      "fit": "Fit result then",
+      "notRecorded": "Vehicle at purchase was not recorded",
+      "fits": "Fits",
+      "not-fit": "Does not fit",
+      "unknown": "Unknown"
+    },
+    "errors": {
+      "generic": "Something went wrong. Try again.",
+      "forbidden": "You do not have permission to do this.",
+      "ORDER_NOT_FOUND": "Order not found.",
+      "NOT_DELIVERED": "This order has not been delivered yet.",
+      "RETURN_WINDOW_CLOSED": "The return window for this order has closed.",
+      "QUANTITY_EXCEEDS_PURCHASED": "The quantity is more than was purchased and not yet returned.",
+      "REFUND_EXCEEDS_PAID": "The refund is more than was paid for the returned items.",
+      "CAPTURE_REQUIRED": "Capture the payment first.",
+      "NO_CAPTURE": "The payment has no captured amount to refund.",
+      "REFUND_PENDING": "A refund is already waiting for confirmation.",
+      "REFUND_REJECTED": "The payment provider rejected the refund.",
+      "REFUND_UNAVAILABLE": "Checkout could not take the refund request. Try again.",
+      "INVALID_TRANSITION": "This move is not possible in the current state.",
+      "REASON_REQUIRED": "A reason is required."
+    }
+  },
+  "reviews": {
+    "title": "Reviews",
+    "subtitle": "What shoppers say about your products.",
+    "loading": "Loading reviews...",
+    "error": "Reviews could not be loaded.",
+    "empty": "No reviews yet.",
+    "tabsLabel": "Review order",
+    "tabs": {
+      "latest": "Latest",
+      "highest": "Highest",
+      "lowest": "Lowest"
+    },
+    "kpis": {
+      "average": "Average rating",
+      "month": "This month",
+      "unanswered": "Unanswered"
+    },
+    "stars": "{rating} of 5",
+    "by": "{author}, {date}",
+    "hiddenChip": "Hidden",
+    "reply": {
+      "button": "Reply",
+      "edit": "Edit reply",
+      "title": "Reply to {product}",
+      "label": "Public reply",
+      "hint": "Shown under the review on the product page. Up to 1,000 characters.",
+      "submit": "Post reply",
+      "cancel": "Cancel",
+      "from": "Reply from {store}",
+      "posted": "Reply posted"
+    },
+    "hide": "Hide",
+    "show": "Show",
+    "hidden": "Review hidden",
+    "shown": "Review shown",
+    "errors": {
+      "generic": "Something went wrong. Try again.",
+      "forbidden": "You do not have permission to do this.",
+      "REPLY_INVALID": "Write a reply of 1 to 1,000 characters."
+    }
   }
 }

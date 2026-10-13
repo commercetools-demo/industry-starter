@@ -17,6 +17,7 @@ export const SECRET_VARS = [
   'CTP_PROVISION_SCOPES',
   'SESSION_SECRET',
   'CONTENTOOLS_ORIGIN',
+  'IMPERSONATION_SECRET',
 ];
 
 /** Values that are scanned for in the client bundle. */
@@ -25,6 +26,7 @@ export const BUNDLE_SECRET_NAMES = [
   'CTP_ADMIN_CLIENT_SECRET',
   'CTP_PROVISION_CLIENT_SECRET',
   'SESSION_SECRET',
+  'IMPERSONATION_SECRET',
 ];
 
 /** Where the admin and provisioning clients may be imported (portal only; enforced by ESLint, see eslint/). */
