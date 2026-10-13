@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { SAMPLE_ALLOWLIST } from './data/sample-allowlist';
 import { DELETE_ORDER, executeCleanup, formatCounts, planCleanup } from './cleanup';
 import { FakeApi } from './fake-api';
+import type { Res } from './api';
 import { Runner } from './lib';
 import { isResettable, planReset, resetTargets } from './reset';
 import { runSeed } from './seed';
@@ -69,6 +70,30 @@ describe('seed:cleanup (explicit allow-list, no wildcard)', () => {
     expect(left('zones')).toEqual([]);
   });
 
+  it('takes products out of product selections, and deletes the carts, inventory and prices that reference a sample channel', async () => {
+    const api = sampleProject();
+    const product = api.all('products').find((p) => p.key === 'air-filter') as Res;
+    const own = api.all('products').find((p) => p.key === 'customer-own-product') as Res;
+    const ch = api.all('channels').find((c) => c.key === 'default-channel') as Res;
+    const sel = api.put('product-selections', { key: 'sample-selection' });
+    await api.update('product-selections', sel, [{ action: 'addProduct', product: { typeId: 'product', id: product.id } }, { action: 'addProduct', product: { typeId: 'product', id: own.id } }]);
+    api.put('carts', { key: 'sample-cart', lineItems: [{ supplyChannel: { typeId: 'channel', id: ch.id } }] });
+    api.put('carts', { key: 'other-cart', lineItems: [] });
+    api.put('inventory', { key: 'sample-stock', sku: 'sku-x', supplyChannel: { typeId: 'channel', id: ch.id } });
+    api.put('inventory', { key: 'other-stock', sku: 'sku-y' });
+    api.put('standalone-prices', { key: 'channel-price', sku: 'not-in-allowlist', channel: { typeId: 'channel', id: ch.id } });
+    const plan = await planCleanup(api);
+    const labels = plan.entries.map((e) => e.label);
+    expect(labels).toEqual(expect.arrayContaining(['carts sample-cart', 'inventory sample-stock', 'standalone-prices channel-price']));
+    expect(labels).not.toContain('carts other-cart');
+    expect(labels).not.toContain('inventory other-stock');
+    expect(await executeCleanup(api, new Runner(false, quiet), plan)).toBe(0);
+    expect(await api.listSelectionProducts(sel.id)).toEqual([own.id]);
+    expect(api.all('carts').map((c) => c.key)).toEqual(['other-cart']);
+    expect(api.all('inventory').map((c) => c.key)).toEqual(['other-stock']);
+    expect(api.all('channels')).toEqual([]);
+  });
+
   it('a dry run deletes nothing', async () => {
     const api = sampleProject();
     const plan = await planCleanup(api);
@@ -96,7 +121,7 @@ describe('seed:cleanup (explicit allow-list, no wildcard)', () => {
     expect(SAMPLE_ALLOWLIST['shipping-methods']).toEqual(['standard-shipping-method', 'premium-shipping-method']);
     expect(SAMPLE_ALLOWLIST.products).toHaveLength(72);
     expect(SAMPLE_ALLOWLIST.categories).toHaveLength(42);
-    expect(DELETE_ORDER[0]).toBe('standalone-prices');
+    expect(DELETE_ORDER.slice(0, 3)).toEqual(['carts', 'inventory', 'standalone-prices']);
   });
 
   it('allow-list counts match the sample project read through the MCP (2026-10-12), keys are unique, and every listed kind is deleted', () => {

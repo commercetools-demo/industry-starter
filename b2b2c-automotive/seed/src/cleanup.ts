@@ -22,7 +22,7 @@ export interface Plan { entries: Entry[]; counts: { kind: string; listed: number
 
 /** Deletion order: dependants before what they reference; categories deepest first. */
 export const DELETE_ORDER: Kind[] = [
-  'standalone-prices', 'products', 'product-discounts', 'cart-discounts', 'shipping-methods', 'tax-categories', 'zones',
+  'carts', 'inventory', 'standalone-prices', 'products', 'product-discounts', 'cart-discounts', 'shipping-methods', 'tax-categories', 'zones',
   'categories', 'product-types', 'recurrence-policies', 'channels',
 ];
 
@@ -38,13 +38,25 @@ export async function planCleanup(api: Api, allow: Allow = SAMPLE_ALLOWLIST): Pr
   const entries: Entry[] = [];
   const counts: Plan['counts'] = [];
   const refused: string[] = [];
+  // Sample channels are referenced by sample carts, inventory entries and standalone prices; those have to go first.
+  const channelKeys = new Set<string>(allow.channels ?? []);
+  const channelIds = (await api.list('channels')).filter((c) => !!c.key && channelKeys.has(c.key) && !isSeedOwned(c.key)).map((c) => c.id);
+  const onChannel = (res: Res) => { const json = JSON.stringify(res); return channelIds.some((id) => json.includes(id)); };
+  const idList = channelIds.map((id) => `"${id}"`).join(',');
+  const where: Partial<Record<Kind, string>> = {
+    carts: `lineItems(supplyChannel(id in (${idList})) or distributionChannel(id in (${idList})))`,
+    inventory: `supplyChannel(id in (${idList}))`,
+  };
   for (const kind of DELETE_ORDER) {
-    const listed = await api.list(kind);
+    if ((kind === 'carts' || kind === 'inventory') && channelIds.length === 0) { counts.push({ kind, listed: 0, matched: 0, left: 0 }); continue; }
+    const listed = await api.list(kind, where[kind] ? { where: where[kind] } : undefined);
     const keys = new Set(kind === 'standalone-prices' ? [] : (allow[KIND_ALLOW[kind] as string] ?? []));
     const skus = new Set(kind === 'standalone-prices' ? (allow['standalone-price-skus'] ?? []) : []);
     let matched = 0;
     for (const res of listed) {
-      const hit = kind === 'standalone-prices' ? skus.has(res.sku as string) : !!res.key && keys.has(res.key);
+      const hit = kind === 'carts' || kind === 'inventory' ? onChannel(res)
+        : kind === 'standalone-prices' ? skus.has(res.sku as string) || onChannel(res)
+        : !!res.key && keys.has(res.key);
       if (!hit) continue;
       if (isSeedOwned(res.key) || isSeedOwned(res.sku as string | undefined)) {
         refused.push(`${kind} ${res.key ?? res.id}: key has the seed prefix ${PREFIX}`);
@@ -68,11 +80,30 @@ export function formatCounts(plan: Plan): string[] {
   ];
 }
 
+const selectionMembers = new WeakMap<Api, Map<string, Set<string>>>();
+
+/** A product that is in a product selection cannot be deleted: take it out of every selection first. */
+async function removeFromSelections(api: Api, productId: string): Promise<void> {
+  let cache = selectionMembers.get(api);
+  if (!cache) {
+    cache = new Map();
+    for (const sel of await api.list('product-selections')) cache.set(sel.id, new Set(await api.listSelectionProducts(sel.id)));
+    selectionMembers.set(api, cache);
+  }
+  for (const [selectionId, members] of cache) {
+    if (!members.has(productId)) continue;
+    const sel = await api.getById('product-selections', selectionId);
+    if (sel) await api.update('product-selections', sel, [{ action: 'removeProduct', product: { typeId: 'product', id: productId } }]);
+    members.delete(productId);
+  }
+}
+
 async function remove(api: Api, e: Entry): Promise<void> {
   if (e.kind === 'products') {
     // A published product must be unpublished before it can be deleted.
     const p = await api.getById('products', e.res.id);
     if (!p) return;
+    await removeFromSelections(api, p.id);
     let version = p.version;
     if ((p.masterData as { published: boolean }).published) version = (await api.update('products', p, [{ action: 'unpublish' }])).version;
     await api.remove('products', { id: p.id, version });
