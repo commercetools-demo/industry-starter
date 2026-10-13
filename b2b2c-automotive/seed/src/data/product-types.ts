@@ -82,8 +82,8 @@ export const localPartAttributes: AttributeDefinitionDraft[] = [
 
 export const bundleAttributes: AttributeDefinitionDraft[] = [
   { ...text('part-number', 'Teilenummer', 'Part number'), isRequired: true },
-  { name: 'component-skus', label: ls('Komponenten (SKU)', 'Components (SKU)'), isRequired: true, isSearchable: true, attributeConstraint: 'None', inputHint: 'SingleLine', type: { name: 'set', elementType: { name: 'text' } } },
-  { name: 'component-quantities', label: ls('Komponentenmengen (sku:menge)', 'Component quantities (sku:qty)'), isRequired: true, isSearchable: false, attributeConstraint: 'None', inputHint: 'SingleLine', type: { name: 'set', elementType: { name: 'text' } } },
+  { name: 'component-skus', label: ls('Komponenten (SKU)', 'Components (SKU)'), isRequired: false, isSearchable: true, attributeConstraint: 'None', inputHint: 'SingleLine', type: { name: 'set', elementType: { name: 'text' } } },
+  { name: 'component-quantities', label: ls('Komponentenmengen (sku:menge)', 'Component quantities (sku:qty)'), isRequired: false, isSearchable: false, attributeConstraint: 'None', inputHint: 'SingleLine', type: { name: 'set', elementType: { name: 'text' } } },
   { name: 'bundle-discount-percent', label: ls('Set-Rabatt (%)', 'Bundle discount (%)'), isRequired: true, isSearchable: false, attributeConstraint: 'None', inputHint: 'SingleLine', type: { name: 'number' } },
   { name: 'owner-store', label: ls('Eigentümer-Shop (leer = Malva)', 'Owning store (empty = Malva)'), isRequired: false, isSearchable: true, attributeConstraint: 'None', inputHint: 'SingleLine', type: { name: 'text' } },
 ];

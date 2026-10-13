@@ -557,3 +557,10 @@ describe('demo login support', () => {
     }
   });
 });
+
+describe('product type rules of the platform', () => {
+  it('no set attribute is required (the API rejects isRequired=true on type set)', () => {
+    const bad = productTypeDrafts.flatMap((t) => (t.attributes ?? []).filter((a) => a.type.name === 'set' && a.isRequired).map((a) => `${t.key}.${a.name}`));
+    expect(bad).toEqual([]);
+  });
+});
