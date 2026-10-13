@@ -11,8 +11,11 @@ import { MAP_MAX_ZOOM, OSM_ATTRIBUTION, OSM_TILE_URL } from '@/components/store-
 import type { LatLng } from '@/lib/geo/distance';
 import type { BranchView } from '@/lib/types';
 
+/** What the map needs of a place: a `BranchView` fits, and so does a Malva reseller. */
+export type MapPlace = Pick<BranchView, 'key' | 'name' | 'geo'>;
+
 interface Props {
-  branches: BranchView[];
+  branches: MapPlace[];
   focusedKey: string | null;
   onFocus: (key: string) => void;
   /** A searched place or the shopper's position: the map recentres on it. */
@@ -47,7 +50,7 @@ function Controller({ points, focused, center }: { points: LatLng[]; focused: La
 }
 
 export default function BranchMap({ branches, focusedKey, onFocus, center }: Props) {
-  const located = useMemo(() => branches.filter((b): b is BranchView & { geo: LatLng } => Boolean(b.geo)), [branches]);
+  const located = useMemo(() => branches.filter((b): b is MapPlace & { geo: LatLng } => Boolean(b.geo)), [branches]);
   const points = useMemo(() => located.map((b) => b.geo), [located]);
   const focusedBranch = located.find((b) => b.key === focusedKey);
   const start = points[0] ?? { lat: 51.16, lng: 10.45 };

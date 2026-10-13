@@ -126,8 +126,8 @@ describe('Malva listing: searchMalvaProducts and mapMalvaSummary', () => {
     searchPost.mockResolvedValue({ body: { results: [{ id: 'a' }], total: 1, facets: [] } });
     projectionsGet.mockResolvedValue({ body: { results: [projection('a')] } });
     const { items } = await (await load()).searchMalvaProducts({ locale: 'en-US', params, categoryId: 'c', fitKeys: null });
-    expect(Object.keys(items[0]).sort()).toEqual(['brand', 'fitmentKeys', 'id', 'imageAlt', 'imageUrl', 'name', 'partNumber', 'sku', 'universalFit']);
-    expect(JSON.stringify(items)).not.toMatch(/4999|centAmount|availab|quantity|stock|slug/i);
+    expect(Object.keys(items[0]).sort()).toEqual(['brand', 'fitmentKeys', 'id', 'imageAlt', 'imageUrl', 'name', 'partNumber', 'sku', 'slug', 'universalFit']);
+    expect(JSON.stringify(items)).not.toMatch(/4999|centAmount|availab|quantity|stock|href|link/i);
   });
   it('maps part number, brand, image and fit data; the part number falls back to the sku', async () => {
     const { mapMalvaSummary } = await load();
@@ -136,6 +136,7 @@ describe('Malva listing: searchMalvaProducts and mapMalvaSummary', () => {
       sku: 'SKU-a',
       partNumber: 'MLV-BP-41001',
       name: 'Part a',
+      slug: 'part-a',
       brand: 'Vektra',
       imageUrl: 'https://images.example.test/p.jpg',
       imageAlt: 'Pad',

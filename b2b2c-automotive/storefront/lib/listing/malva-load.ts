@@ -9,7 +9,7 @@ import { getCategoryBySlug } from '@/lib/ct/categories';
 import { searchMalvaProducts } from '@/lib/ct/malva-catalog';
 import type { MalvaListingResult } from '@/lib/malva-types';
 import { parseListingParams, type ListingParams } from '@/lib/search/params';
-import type { ListingCategory } from '@/lib/types';
+import type { ListingCategory, Vehicle } from '@/lib/types';
 import { getActiveVehicle } from '@/lib/vehicles/active';
 
 type RawParams = Record<string, string | string[] | undefined>;
@@ -18,7 +18,7 @@ export type MalvaListingView =
   | { kind: 'not-found' }
   /** The page is past the last one: the caller redirects to `page`. */
   | { kind: 'redirect'; page: number; params: ListingParams }
-  | { kind: 'ok'; category: ListingCategory; params: ListingParams; result: MalvaListingResult; vehicleLabel?: string; fitScopeOn: boolean };
+  | { kind: 'ok'; category: ListingCategory; params: ListingParams; result: MalvaListingResult; vehicleLabel?: string; vehicle: Pick<Vehicle, 'make' | 'model' | 'year' | 'engine'> | null; fitScopeOn: boolean };
 
 export interface MalvaListingInput {
   locale: AppLocale;
@@ -34,7 +34,7 @@ export async function loadMalvaListing({ locale, slug, searchParams }: MalvaList
 
   const result = await searchMalvaProducts({ locale, params, categoryId: category.id, fitKeys: vehicle ? vehicle.fitKeys : null });
   if (params.page > result.totalPages) return { kind: 'redirect', page: result.totalPages, params };
-  return { kind: 'ok', category, params, result, vehicleLabel: vehicle?.label, fitScopeOn: vehicle !== null && params.fit };
+  return { kind: 'ok', category, params, result, vehicleLabel: vehicle?.label, vehicle: vehicle ? { make: vehicle.make, model: vehicle.model, year: vehicle.year, engine: vehicle.engine } : null, fitScopeOn: vehicle !== null && params.fit };
 }
 
 const loadOnce = cache((locale: AppLocale, slug: string, searchKey: string) => loadMalvaListing({ locale, slug, searchParams: JSON.parse(searchKey) as RawParams }));

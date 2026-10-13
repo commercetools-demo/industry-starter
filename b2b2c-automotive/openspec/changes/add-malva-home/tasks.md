@@ -20,18 +20,18 @@
 
 ## 4. Components
 
-- [ ] 4.1 `MalvaHeader` (wordmark, category nav, Find your reseller button, locale switch, no cart/account/store chip) and `MalvaFooter`
-- [ ] 4.2 `BannerCarousel` (server first slide, controls, pause on hover/focus, no autoplay under reduced motion, text-only fallback when an image is missing)
-- [ ] 4.3 `ResellerFinder` with `mode` and `productSlug`: search by postal code or city (diacritics-insensitive), Use my location on click only, distance sort, map via `BranchMap`, rows linking to `/{locale}/{store}` or `/{locale}/{store}/p/{slug}` with key and slug validated
-- [ ] 4.4 `FinderDrawerProvider` and drawer: focus trap, Escape, scrim, return focus, side transition off under reduced motion, full-width on narrow screens
-- [ ] 4.5 `MalvaProductCard` (image, brand, name, part number, fit badge, Select a reseller, no link, no price, no stock) and a Malva listing using `ProductGrid`, `Pagination`, `SortSelect`, `ResultHeader`, brand filter, loading, empty and error states
-- [ ] 4.6 Category tiles for the home page
-- [ ] 4.7 Component tests for each, including: card has no price/stock/Add to cart/link, drawer opens from a card with the slug and from the header without, Escape returns focus, reduced motion, location refused message
-- [ ] 4.8 Extend `no-direct-geocoder.test.ts` to cover `components/malva`
+- [x] 4.1 `MalvaHeader` (wordmark, category nav, Find your reseller button, locale switch, no cart/account/store chip) and `MalvaFooter`
+- [x] 4.2 `BannerCarousel` (server first slide, controls, pause on hover/focus, no autoplay under reduced motion, text-only fallback when an image is missing)
+- [x] 4.3 `ResellerFinder` with `mode` and `productSlug`: search by postal code or city (diacritics-insensitive), Use my location on click only, distance sort, map via `BranchMap`, rows linking to `/{locale}/{store}` or `/{locale}/{store}/p/{slug}` with key and slug validated
+- [x] 4.4 `FinderDrawerProvider` and drawer: focus trap, Escape, scrim, return focus, side transition off under reduced motion, full-width on narrow screens
+- [x] 4.5 `MalvaProductCard` (image, brand, name, part number, fit badge, Select a reseller, no link, no price, no stock) and a Malva listing using `ProductGrid`, `Pagination`, `SortSelect`, `ResultHeader`, brand filter, loading, empty and error states
+- [x] 4.6 Category tiles for the home page
+- [x] 4.7 Component tests for each, including: card has no price/stock/Add to cart/link, drawer opens from a card with the slug and from the header without, Escape returns focus, reduced motion, location refused message
+- [x] 4.8 Extend `no-direct-geocoder.test.ts` to cover `components/malva`
 
 ## 5. Messages and copy
 
-- [ ] 5.1 Add every new string to `en-US` and `de-DE` message files (header, banners, finder, drawer, card, listing states, not-found link) and keep the message parity test green
+- [x] 5.1 Add every new string to `en-US` and `de-DE` message files (header, banners, finder, drawer, card, listing states, not-found link) and keep the message parity test green
 
 ## 6. Seed
 
@@ -41,7 +41,7 @@
 
 ## 7. Specs, plans and checks
 
-- [ ] 7.1 Register the three new specs in `plans/DEPENDENCY-PLAN.md`, add workstream and manual-test rows (finder, drawer, listing, banners, keyboard), and run `node plans/verify-plan.mjs --sync --strict`
+- [x] 7.1 Register the three new specs in `plans/DEPENDENCY-PLAN.md`, add workstream and manual-test rows (finder, drawer, listing, banners, keyboard), and run `node plans/verify-plan.mjs --sync --strict`
 - [ ] 7.2 Run `npm run check` in `storefront` and `seed`, and `npm run build` in `storefront`
 - [ ] 7.3 Check in the browser (Chrome MCP, already running dev server): home, category listing, drawer from a card and from the header, both locales, narrow viewport; record results in the manual-test rows
 - [ ] 7.4 At archive: close the "cross-reseller locator" note in `design-store-picker` Gaps and update `plans/MISSED-FEATURES.md` row C

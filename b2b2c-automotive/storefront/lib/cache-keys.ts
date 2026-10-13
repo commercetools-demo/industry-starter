@@ -26,3 +26,7 @@ export const KEY_ACCOUNT_SUBSCRIPTIONS = '/api/account/subscriptions';
 export const KEY_ACCOUNT_PROFILE = '/api/account/profile';
 /** Demo shopper list of the sign-in page (workstream Q-13a). */
 export const KEY_DEMO_ACCOUNTS = '/api/auth/demo-accounts';
+
+/** The Malva reseller finder list (change add-malva-home); the locale is part of the key because branch names are localized. */
+export const KEY_RESELLERS = '/api/resellers';
+export const keyResellers = (locale: string): string => `${KEY_RESELLERS}?locale=${encodeURIComponent(locale)}`;

@@ -17,6 +17,7 @@ vi.mock('next/navigation', async (importOriginal) => ({ ...(await importOriginal
 vi.mock('next-intl/server', () => ({ setRequestLocale: vi.fn() }));
 vi.mock('@/i18n/routing', () => ({ redirect }));
 vi.mock('@/lib/listing/malva-load', () => ({ getMalvaListing }));
+vi.mock('@/components/malva/MalvaListing', () => ({ MalvaListing: ({ view }: { view: { category: { name: string } } }) => <h1>{view.category.name}</h1> }));
 
 import MalvaCategoryPage from './page';
 
@@ -44,7 +45,7 @@ describe('Malva category page', () => {
     expect(redirect).toHaveBeenCalledWith({ href: '/categories/brakes?page=2', locale: 'en-US' });
   });
   it('A category renders its name and count', async () => {
-    getMalvaListing.mockResolvedValue({ kind: 'ok', category: { id: 'c', slug: 'brakes', name: 'Brakes', ancestors: [] }, params, result: { items: [], total: 5, page: 1, totalPages: 1, facets: [] }, fitScopeOn: false });
+    getMalvaListing.mockResolvedValue({ kind: 'ok', category: { id: 'c', slug: 'brakes', name: 'Brakes', ancestors: [] }, params, result: { items: [], total: 5, page: 1, totalPages: 1, facets: [] }, vehicle: null, fitScopeOn: false });
     renderWithProviders((await MalvaCategoryPage(props('brakes'))) ?? <></>);
     expect(screen.getByRole('heading', { name: 'Brakes' })).toBeInTheDocument();
   });

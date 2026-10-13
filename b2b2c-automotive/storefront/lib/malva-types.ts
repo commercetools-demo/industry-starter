@@ -10,6 +10,8 @@ export interface MalvaProductSummary {
   /** Part number (`part-number` attribute); the sku when the product has none. */
   partNumber: string;
   name: string;
+  /** Localized product slug of the master catalog: only used to build `/{locale}/{store}/p/{slug}` at a reseller (it is not price or stock data). */
+  slug: string;
   /** The brand label; empty for products without one. */
   brand: string;
   imageUrl?: string;

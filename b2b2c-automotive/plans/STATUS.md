@@ -35,7 +35,7 @@ Planning draft v2 (2026-10-12, owner interview folded in: workstream letters are
 | Y | Accessibility, responsive and performance sweep | 0/11 | Not started |
 | Z | Release readiness and final verification | 0/15 | Not started |
 
-Workstream files: 26/26. Tasks done: 48/178. Specs owned by the plan: 33, listed by a workstream: 33, out of scope (marker): 4. Manual-testing rows: 172.
+Workstream files: 26/26. Tasks done: 48/178. Specs owned by the plan: 33, listed by a workstream: 33, out of scope (marker): 4. Manual-testing rows: 175.
 <!-- STATUS:END -->
 
 ## Environment status (2026-10-12)

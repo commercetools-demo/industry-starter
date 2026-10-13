@@ -83,6 +83,36 @@
     "tryAgain": "Erneut versuchen",
     "backHome": "Zur Startseite"
   },
+  "malva": {
+    "header": {
+      "homeLabel": "Malva Startseite",
+      "navLabel": "Kategorien",
+      "findReseller": "Händler finden",
+      "localeLabel": "Sprache"
+    },
+    "banner": {
+      "label": "Aktuelle Angebote",
+      "slideLabel": "Folie {current} von {total}",
+      "previous": "Vorherige Folie",
+      "next": "Nächste Folie",
+      "pause": "Folien anhalten",
+      "play": "Folien abspielen",
+      "cta": "Jetzt entdecken"
+    },
+    "finder": {
+      "title": "Händler finden",
+      "intro": "Suchen Sie nach Postleitzahl oder Ort und sehen Sie, wer Malva-Teile in Ihrer Nähe verkauft."
+    },
+    "categories": {
+      "title": "Nach Kategorie einkaufen",
+      "tileLabel": "{category} ansehen"
+    },
+    "footer": {
+      "label": "Malva",
+      "tagline": "Malva-Teile, verkauft von Händlern in Ihrer Nähe.",
+      "disclaimer": "Malva zeigt nur den Katalog. Preise, Verfügbarkeit und Bestellungen laufen über Ihren Händler."
+    }
+  },
   "home": {
     "eyebrow": "Originalteile · Passgenau",
     "headline": "Originalteile von {reseller}, in Ihrer Nähe abholbereit.",
@@ -171,6 +201,41 @@
     "genericBody": "Bitte versuchen Sie es erneut.",
     "notFoundTitle": "Seite nicht gefunden",
     "notFoundBody": "Diese Adresse gibt es nicht."
+  },
+  "malvaFinder": {
+    "title": "Händler finden",
+    "forProduct": "Wähle einen Händler für dieses Teil.",
+    "close": "Schließen",
+    "searchLabel": "Postleitzahl oder Ort",
+    "searchPlaceholder": "Zum Beispiel 21079 oder Hamburg",
+    "useLocation": "Meinen Standort verwenden",
+    "locationPending": "Dein Standort wird ermittelt",
+    "locationDenied": "Der Standortzugriff wurde abgelehnt. Gib stattdessen eine Postleitzahl oder einen Ort ein.",
+    "locationUnavailable": "Dein Standort ist nicht verfügbar. Gib stattdessen eine Postleitzahl oder einen Ort ein.",
+    "searching": "Suche läuft",
+    "geocodeUnavailable": "Die Ortssuche ist nicht verfügbar. Die Liste wird nach deiner Eingabe gefiltert.",
+    "mapLabel": "Karte der Händler",
+    "resultsLabel": "Händler",
+    "loading": "Händler werden geladen",
+    "error": "Die Händler konnten nicht geladen werden.",
+    "retry": "Erneut versuchen",
+    "empty": "Kein Händler gefunden",
+    "branches": "{count, plural, one {# Filiale} other {# Filialen}}",
+    "shop": "Bei diesem Händler einkaufen",
+    "shopAria": "Bei diesem Händler einkaufen: {name}",
+    "noPhoto": "Kein Foto",
+    "partNumber": "Teilenr. {number}",
+    "selectReseller": "Händler auswählen",
+    "selectResellerFor": "Händler auswählen für {name}",
+    "breadcrumb": "Brotkrümelnavigation",
+    "home": "Startseite",
+    "count": "{count, plural, one {# Teil} other {# Teile}}",
+    "listingLabel": "Teile",
+    "brandFilter": "Marke",
+    "emptyTitle": "Keine Teile in dieser Kategorie",
+    "emptyBody": "Probiere eine andere Marke oder Kategorie.",
+    "emptyFitBody": "Es werden nur Teile angezeigt, die zu {vehicle} passen.",
+    "emptyFitLink": "Teile anzeigen, die nicht passen"
   },
   "listing": {
     "breadcrumb": "Brotkrümelnavigation",

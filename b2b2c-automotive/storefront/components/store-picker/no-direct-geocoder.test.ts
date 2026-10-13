@@ -22,4 +22,17 @@ describe('Nominatim proxy: browser code', () => {
       expect(text, path.relative(root, file)).not.toMatch(/lib\/geo\/nominatim/);
     }
   });
+
+  it('scans components/malva too (the reseller finder geocodes through the app route only)', () => {
+    const malva = walk(path.join(root, 'components', 'malva')).filter((f) => /\.(ts|tsx)$/.test(f) && !/\.test\./.test(f));
+    expect(malva.length).toBeGreaterThan(3);
+    for (const file of malva) {
+      const text = readFileSync(file, 'utf8');
+      expect(text, path.relative(root, file)).not.toMatch(/nominatim/i);
+      expect(text, path.relative(root, file)).not.toMatch(/lib\/geo\/nominatim/);
+      expect(text, path.relative(root, file)).not.toMatch(/https?:\/\/[^'"`\s]*(geocod|openstreetmap\.org\/search)/i);
+    }
+    const finder = readFileSync(path.join(root, 'components', 'malva', 'ResellerFinder.tsx'), 'utf8');
+    expect(finder).toMatch(/useGeocode/);
+  });
 });

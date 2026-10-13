@@ -28,6 +28,7 @@ export function mapMalvaSummary(projection: ProductProjection, locale: string): 
     sku,
     partNumber: text(attribute(attrs, 'part-number')) ?? sku,
     name,
+    slug: getLocalizedString(projection.slug, locale),
     brand: enumLabel(attribute(attrs, 'brand')) ?? text(attribute(attrs, 'brand-name')) ?? '',
     imageUrl: image?.url,
     imageAlt: text(image?.label) ?? name,

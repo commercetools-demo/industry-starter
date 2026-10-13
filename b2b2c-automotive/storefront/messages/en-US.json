@@ -83,6 +83,36 @@
     "tryAgain": "Try again",
     "backHome": "Back to home"
   },
+  "malva": {
+    "header": {
+      "homeLabel": "Malva home",
+      "navLabel": "Categories",
+      "findReseller": "Find your reseller",
+      "localeLabel": "Language"
+    },
+    "banner": {
+      "label": "Featured offers",
+      "slideLabel": "Slide {current} of {total}",
+      "previous": "Previous slide",
+      "next": "Next slide",
+      "pause": "Pause slides",
+      "play": "Play slides",
+      "cta": "Shop now"
+    },
+    "finder": {
+      "title": "Find your reseller",
+      "intro": "Search by postal code or city to see who sells Malva parts near you."
+    },
+    "categories": {
+      "title": "Shop by category",
+      "tileLabel": "Shop {category}"
+    },
+    "footer": {
+      "label": "Malva",
+      "tagline": "Malva parts, sold by resellers near you.",
+      "disclaimer": "Malva shows the catalogue only. Prices, stock and orders are with your reseller."
+    }
+  },
   "home": {
     "eyebrow": "OEM parts · Fit guaranteed",
     "headline": "Genuine parts from {reseller}, ready near you.",
@@ -171,6 +201,41 @@
     "genericBody": "Please try again.",
     "notFoundTitle": "Page not found",
     "notFoundBody": "This address does not exist."
+  },
+  "malvaFinder": {
+    "title": "Find your reseller",
+    "forProduct": "Choose a reseller for this part.",
+    "close": "Close",
+    "searchLabel": "Postal code or city",
+    "searchPlaceholder": "For example 21079 or Hamburg",
+    "useLocation": "Use my location",
+    "locationPending": "Finding your location",
+    "locationDenied": "Location access was refused. Type a postal code or city instead.",
+    "locationUnavailable": "Your location is not available. Type a postal code or city instead.",
+    "searching": "Searching",
+    "geocodeUnavailable": "Place search is not available. The list is filtered by what you typed.",
+    "mapLabel": "Map of resellers",
+    "resultsLabel": "Resellers",
+    "loading": "Loading resellers",
+    "error": "The resellers could not be loaded.",
+    "retry": "Try again",
+    "empty": "No reseller found",
+    "branches": "{count, plural, one {# branch} other {# branches}}",
+    "shop": "Shop at this reseller",
+    "shopAria": "Shop at this reseller: {name}",
+    "noPhoto": "No photo",
+    "partNumber": "Part no. {number}",
+    "selectReseller": "Select a reseller",
+    "selectResellerFor": "Select a reseller for {name}",
+    "breadcrumb": "Breadcrumb",
+    "home": "Home",
+    "count": "{count, plural, one {# part} other {# parts}}",
+    "listingLabel": "Parts",
+    "brandFilter": "Brand",
+    "emptyTitle": "No parts in this category",
+    "emptyBody": "Try another brand or category.",
+    "emptyFitBody": "Only parts that fit {vehicle} are shown.",
+    "emptyFitLink": "Show parts that do not fit"
   },
   "listing": {
     "breadcrumb": "Breadcrumb",

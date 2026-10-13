@@ -34,16 +34,11 @@ describe('Locale routing for two locales: locale layout', () => {
     renderWithProviders(el);
     expect(screen.getByText('child')).toBeInTheDocument();
   });
-  it('No store segment is the Malva home', async () => {
-    const el = await MalvaHome({ params: Promise.resolve({ locale: 'de-DE' }) });
-    renderWithProviders(el);
-    expect(screen.getByRole('main')).toBeInTheDocument();
-  });
   it('The Malva home of an unsupported locale is not found', async () => {
     await expect(MalvaHome({ params: Promise.resolve({ locale: 'fr-FR' }) })).rejects.toThrow('NEXT_NOT_FOUND');
   });
   it('An unknown store is rewritten to a page that is not found', () => {
     expect(() => StoreNotFound()).toThrow('NEXT_NOT_FOUND');
   });
-  // The store home page is app/[locale]/[store]/page.test.tsx; the Malva layout and pages are in app/[locale]/(malva).
+  // The store home page is app/[locale]/[store]/page.test.tsx; the Malva layout and pages (home included) are tested in app/[locale]/(malva).
 });
