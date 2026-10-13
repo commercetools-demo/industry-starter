@@ -182,7 +182,7 @@ export class FakeApi implements Api {
       case 'product-types:addAttributeDefinition': set('attributes', [...((r.attributes as unknown[]) ?? []), a.attribute]); return;
       case 'product-tailoring:setName': (r.staged as Obj).name = a.name; return;
       case 'product-tailoring:setDescription': (r.staged as Obj).description = a.description; return;
-      case 'product-tailoring:setExternalImages': {
+      case 'product-tailoring:setImages': {
         const staged = r.staged as { variants?: { sku?: string; images?: unknown[] }[] };
         const variants = staged.variants ?? [];
         const v = variants.find((x) => x.sku === a.sku);

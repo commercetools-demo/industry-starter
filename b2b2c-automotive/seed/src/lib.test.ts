@@ -115,7 +115,7 @@ describe('sync planners', () => {
   it('planTailoringUpdate covers text and images and always publishes in the same request', () => {
     const existing = { id: '1', version: 1, staged: { name: { 'de-DE': 'a' }, variants: [{ sku: 'S', images: [{ url: 'https://x.test/1.jpg' }] }] } };
     expect(S.planTailoringUpdate(existing, { name: { 'de-DE': 'a' }, variants: [{ sku: 'S', images: [{ url: 'https://x.test/1.jpg' }] }] })).toEqual([]);
-    expect(S.planTailoringUpdate(existing, { name: { 'de-DE': 'b' }, variants: [{ sku: 'S', images: [{ url: 'https://x.test/2.jpg' }] }] }).map((a) => a.action)).toEqual(['setName', 'setExternalImages', 'publish']);
+    expect(S.planTailoringUpdate(existing, { name: { 'de-DE': 'b' }, variants: [{ sku: 'S', images: [{ url: 'https://x.test/2.jpg' }] }] }).map((a) => a.action)).toEqual(['setName', 'setImages', 'publish']);
   });
 
   it('planSelectionMembers adds the missing and removes the extra', () => {

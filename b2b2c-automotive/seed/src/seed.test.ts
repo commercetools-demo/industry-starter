@@ -151,7 +151,7 @@ describe('seed against the in-memory API', () => {
     const tailoringImages = { [key]: [{ url: 'https://images.pexels.com/photos/9/pexels-photo-9.jpeg', dimensions: { w: 100, h: 80 } }] };
     const run = new Runner(false, quiet);
     expect(await runSeed({ ...opts(api), run, tailoringImages })).toBe(1);
-    expect(run.lines[0]).toContain('setExternalImages');
+    expect(run.lines[0]).toContain('setImages');
     expect(run.lines[0]).toContain('publish');
     expect(await runSeed({ ...opts(api), tailoringImages })).toBe(0);
   });

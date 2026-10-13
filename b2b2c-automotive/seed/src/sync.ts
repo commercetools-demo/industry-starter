@@ -167,7 +167,7 @@ export function planTailoringUpdate(existing: Res, draft: { name?: LStr; descrip
     const haveUrls = (staged.variants?.find((x) => x.sku === v.sku)?.images ?? []).map((i) => i.url);
     const wantUrls = (v.images ?? []).map((i) => i.url);
     if (JSON.stringify(haveUrls) === JSON.stringify(wantUrls)) continue;
-    out.push({ action: 'setExternalImages', sku: v.sku, images: v.images ?? [] });
+    out.push({ action: 'setImages', sku: v.sku, images: v.images ?? [] });
   }
   if (out.length > 0) out.push({ action: 'publish' });
   return out;
