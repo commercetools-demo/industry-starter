@@ -175,7 +175,7 @@ export class FakeApi implements Api {
       case 'product-discounts:changePredicate': set('predicate', a.predicate); return;
       case 'cart-discounts:changeCartPredicate': set('cartPredicate', a.cartPredicate); return;
       case 'business-units:changeName': set('name', a.name); return;
-      case 'business-units:setStoreMode': set('storeMode', a.storeMode); return;
+      case 'business-units:setStoreMode': set('storeMode', a.storeMode); if (a.stores) set('stores', a.stores); return;
       case 'business-units:setStores': set('stores', a.stores); return;
       case 'business-units:addAssociate': set('associates', [...((r.associates as unknown[]) ?? []), a.associate]); return;
       case 'types:addFieldDefinition': set('fieldDefinitions', [...((r.fieldDefinitions as unknown[]) ?? []), a.fieldDefinition]); return;

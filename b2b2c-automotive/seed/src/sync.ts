@@ -176,11 +176,14 @@ export function planTailoringUpdate(existing: Res, draft: { name?: LStr; descrip
 export function planBusinessUnitUpdate(existing: Res, draft: { name: string; storeMode?: string; stores?: { key?: string }[]; associates?: { customer: { key?: string; id?: string }; associateRoleAssignments: unknown[] }[] }, keyOfCustomer: (id: string) => string | undefined, keyOfStore?: (id: string) => string | undefined): Action[] {
   const out: Action[] = [];
   if (existing.name !== draft.name) out.push({ action: 'changeName', name: draft.name });
-  if (draft.storeMode && existing.storeMode !== draft.storeMode) out.push({ action: 'setStoreMode', storeMode: draft.storeMode });
-  if (draft.stores) {
+  const want = (draft.stores ?? []).map((s) => s.key ?? '');
+  const wantStores = want.map((key) => ({ typeId: 'store', key }));
+  if (draft.storeMode && existing.storeMode !== draft.storeMode) {
+    // Switching mode is one action: Explicit carries its stores (a separate setStores after it is rejected).
+    out.push({ action: 'setStoreMode', storeMode: draft.storeMode, ...(draft.storeMode === 'Explicit' ? { stores: wantStores } : {}) });
+  } else if (draft.stores) {
     const haveStores = ((existing.stores as { key?: string; id?: string }[]) ?? []).map((s) => s.key ?? keyOfStore?.(s.id ?? '') ?? s.id ?? '');
-    const want = draft.stores.map((s) => s.key ?? '');
-    if (!sameSet(haveStores, want)) out.push({ action: 'setStores', stores: want.map((key) => ({ typeId: 'store', key })) });
+    if (!sameSet(haveStores, want)) out.push({ action: 'setStores', stores: wantStores });
   }
   const have = new Set(((existing.associates as { customer: { id: string } }[]) ?? []).map((a) => keyOfCustomer(a.customer.id) ?? a.customer.id));
   for (const a of draft.associates ?? []) {
