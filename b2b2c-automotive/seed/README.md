@@ -57,7 +57,7 @@ No credentials? `npm run seed -- --dry-run --offline` runs the whole seed agains
 
 ## Images
 
-`seed:images` sends exactly `GET https://www.pexels.com/_next/data/<buildId>/en-US/search/<query>.json?query=<query>` (default build id `TSxLVMk9Ys4d-PNTCVPu-`, override with `PEXELS_BUILD_ID` or `--build-id`; the id changes whenever pexels.com deploys). It stores **clean** URLs (no query, no fragment) for products, categories and banners. It never uses a browser and never tries to get around Cloudflare: on HTTP 403 or a "Just a moment" page it stops with a message that points to OA-03 in `plans/TODO-MANUAL-TESTING.md`. Options: `--dry-run` (print requests, no network), `--only <key[,key]>`, `--count <1-6>`. `seed` uses the recorded JSON when present and leaves images empty otherwise; re-running `seed` after recording images adds them to existing products.
+`seed:images` sends exactly `GET https://www.pexels.com/_next/data/<buildId>/en-US/search.json?q=<query>` (default build id `8mTEncX7SLQB15n9Vvhgq`, override with `PEXELS_BUILD_ID` or `--build-id`; the id changes whenever pexels.com deploys). It stores **clean** URLs (no query, no fragment) for products, categories and banners, landscape photos first, with the original photo's width and height. It never uses a browser and never tries to get around Cloudflare: on HTTP 403 or a "Just a moment" page it stops with a message that points to OA-03 in `plans/TODO-MANUAL-TESTING.md`. Options: `--dry-run` (print requests, no network), `--only <key[,key]>`, `--count <1-6>`. `seed` uses the recorded JSON when present and leaves images empty otherwise; re-running `seed` after recording images adds them to existing products.
 
 ## Demo users (password `SEED_DEMO_PASSWORD`, at least 10 characters)
 

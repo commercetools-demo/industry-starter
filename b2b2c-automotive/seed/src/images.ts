@@ -12,13 +12,16 @@ import { DATA_DIR, fail, isMainModule, parseArgs, sleep } from './lib';
  * Records free stock photos for products, categories and banners. No browser, no cookie, no Cloudflare bypass.
  *
  * The request, exactly as the owner specified:
- *   GET https://www.pexels.com/_next/data/<buildId>/en-US/search/<query>.json?query=<query>
+ *   GET https://www.pexels.com/_next/data/<buildId>/en-US/search.json?q=<query>
  * `<buildId>` is the Next.js build id of pexels.com (default below; override with PEXELS_BUILD_ID or --build-id, it
  * changes whenever pexels.com deploys, and a wrong one answers 404).
  *
- * Assumed (documented, NOT yet verified live) response shape, which the unit test fixture mirrors:
- *   { pageProps: { initialData: { data: [ { attributes: { width, height, image: { large, medium, small, download_link } } } ] } } }
- * `pickImages` reads exactly that, preferring large > medium > small > download_link; when it finds nothing it falls
+ * Response shape (checked against a real answer on 2026-10-13; `fixtures/pexels-search-real.json` is a trimmed copy):
+ *   { pageProps: { initialData: { data: [ { attributes: { width, height, aspect_ratio, image: { large, medium, small, download_link } } } ] } } }
+ * `width` and `height` are those of the original photo. A clean URL (no query) serves that original, so they are the
+ * stored dimensions. `meta.related_searches[*].image` and the ad block also hold pexels URLs and are never read.
+ * `pickImages` reads `data`, landscape photos first (cards and banners are landscape), preferring large > medium > small >
+ * download_link; when it finds nothing it falls
  * back to a deep search for any string that looks like an images.pexels.com photo URL. Stored URLs are CLEAN (query and
  * fragment stripped). If the shape changed and nothing is found, the job fails loudly instead of recording junk.
  *
@@ -33,7 +36,7 @@ import { DATA_DIR, fail, isMainModule, parseArgs, sleep } from './lib';
  * Output (merged into the existing files): src/data/product-images.json, category-images.json, banner-images.json.
  * `npm run seed` uses them when present and leaves images empty otherwise.
  */
-export const DEFAULT_BUILD_ID = 'TSxLVMk9Ys4d-PNTCVPu-';
+export const DEFAULT_BUILD_ID = '8mTEncX7SLQB15n9Vvhgq';
 export const OA03_MESSAGE =
   'pexels.com refused the request (HTTP 403 / "Just a moment" challenge). This is the Cloudflare check; the script does not bypass it. ' +
   'See OA-03 in plans/TODO-MANUAL-TESTING.md: run `npm run seed:images` once from a machine that can reach pexels.com, or supply the recorded JSON files.';
@@ -49,8 +52,7 @@ export interface PickedImage { url: string; dimensions: { w: number; h: number }
 export const FALLBACK_SIZE = { w: 1280, h: 853 };
 
 export function searchUrl(buildId: string, query: string): string {
-  const q = encodeURIComponent(query);
-  return `https://www.pexels.com/_next/data/${buildId}/en-US/search/${q}.json?query=${q}`;
+  return `https://www.pexels.com/_next/data/${buildId}/en-US/search.json?q=${encodeURIComponent(query)}`;
 }
 
 /** `https://host/a/b.jpg?s=612&k=20` becomes `https://host/a/b.jpg`. */
@@ -91,9 +93,12 @@ function deepPicks(node: unknown, out: PickedImage[] = [], depth = 0): PickedIma
   return out;
 }
 
+/** Landscape and square photos before portrait ones (stable, so Pexels' own order is kept inside each group). */
+const landscapeFirst = (list: PickedImage[]): PickedImage[] => [...list.filter((i) => i.dimensions.w >= i.dimensions.h), ...list.filter((i) => i.dimensions.w < i.dimensions.h)];
+
 /** The first `count` distinct clean images of a search response (documented shape first, deep search as fallback). */
 export function pickImages(response: unknown, count: number): PickedImage[] {
-  const all = documentedPicks(response);
+  const all = landscapeFirst(documentedPicks(response));
   const found = all.length > 0 ? all : deepPicks(response);
   const seen = new Set<string>();
   const out: PickedImage[] = [];

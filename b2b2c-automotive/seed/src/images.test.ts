@@ -14,9 +14,9 @@ const tmp = () => mkdtempSync(path.join(tmpdir(), 'seed-images-'));
 const quiet = () => undefined;
 
 describe('request', () => {
-  it('is exactly GET https://www.pexels.com/_next/data/<buildId>/en-US/search/<query>.json?query=<query>', () => {
-    expect(searchUrl('BUILD123', 'brake pad')).toBe('https://www.pexels.com/_next/data/BUILD123/en-US/search/brake%20pad.json?query=brake%20pad');
-    expect(DEFAULT_BUILD_ID).toBe('TSxLVMk9Ys4d-PNTCVPu-');
+  it('is exactly GET https://www.pexels.com/_next/data/<buildId>/en-US/search.json?q=<query>', () => {
+    expect(searchUrl('BUILD123', 'brake pad')).toBe('https://www.pexels.com/_next/data/BUILD123/en-US/search.json?q=brake%20pad');
+    expect(DEFAULT_BUILD_ID).toBe('8mTEncX7SLQB15n9Vvhgq');
   });
 
   it('sends no cookie or browser headers', async () => {
@@ -42,6 +42,16 @@ describe('pickImages (documented shape, fixture)', () => {
     ]);
     expect(picked[0]?.dimensions).toEqual({ w: 4000, h: 2667 });
     expect(picked[2]?.dimensions).toEqual({ w: 1280, h: 853 }); // no width/height in the response: fallback
+  });
+
+  it('reads a real answer: landscape first, original dimensions, clean large URLs, related-search and ad images ignored', () => {
+    const real = JSON.parse(readFileSync(new URL('./fixtures/pexels-search-real.json', import.meta.url), 'utf8')) as unknown;
+    expect(pickImages(real, 5)).toEqual([
+      { url: 'https://images.pexels.com/photos/10827691/pexels-photo-10827691.jpeg', dimensions: { w: 8256, h: 5504 } },
+      { url: 'https://images.pexels.com/photos/10959176/pexels-photo-10959176.jpeg', dimensions: { w: 3840, h: 2160 } },
+      { url: 'https://images.pexels.com/photos/31558500/pexels-photo-31558500.jpeg', dimensions: { w: 3762, h: 5643 } },
+    ]);
+    expect(pickImages(real, 1)[0]?.url).not.toContain('?');
   });
 
   it('honours count', () => {
@@ -83,7 +93,7 @@ describe('runImages', () => {
     const r = await runImages({ dryRun: true, count: 2, buildId: 'B', dir, log: (l) => lines.push(l), fetcher: async () => { throw new Error('network used'); } });
     expect(r).toEqual({ ok: 0, failed: 0, blocked: false });
     expect(lines.length).toBe(buildJobs().length + 1);
-    expect(lines[0]).toContain('would GET https://www.pexels.com/_next/data/B/en-US/search/');
+    expect(lines[0]).toContain('would GET https://www.pexels.com/_next/data/B/en-US/search.json?q=');
     expect(loadImages('product-images.json', dir)).toEqual({});
   });
 
