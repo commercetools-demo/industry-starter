@@ -6,7 +6,7 @@ import { assortmentKeys, localReviewObjects, masterKeys } from './data/assortmen
 import { reviewDrafts } from './data/reviews';
 import { allProductDrafts, loadImages } from './data/catalog';
 import { ALL_GROUP_PATHS, categoryDrafts, categoryKeyOf } from './data/categories';
-import { THEME_CONTAINER, THEME_KEY, TAILORINGS } from './data/content';
+import { THEME_CONTAINER, THEME_KEY, TAILORINGS, MALVA_BANNERS_KEY, MALVA_BANNER_SLOTS } from './data/content';
 import { typeDrafts } from './data/custom-types';
 import { PRODUCT_DISCOUNT_CHANNEL, cartDiscountDrafts, discountCodeDrafts, productDiscountDrafts } from './data/discounts';
 import { inventoryDrafts, recurrencePolicyDrafts } from './data/extras';
@@ -217,6 +217,12 @@ export async function verifySeed(api: Api): Promise<string[]> {
   if (vehicles.length !== VEHICLES.length) problems.push(`custom objects ${K.cVehicles}: ${vehicles.length}, expected ${VEHICLES.length}`);
   for (const v of VEHICLES.slice(0, 1)) if (!vehicles.some((o) => o.key === vehicleObjectKey(v))) problems.push(`custom object ${K.cVehicles}/${vehicleObjectKey(v)}: missing`);
   if (!(await api.getObject(THEME_CONTAINER, THEME_KEY))) problems.push(`custom object ${THEME_CONTAINER}/${THEME_KEY}: missing (Contentools default theme)`);
+  const banners = (await api.getObject(K.cMalvaSite, MALVA_BANNERS_KEY))?.value as { banners?: { image?: { url?: string } }[] } | undefined;
+  if (!banners) problems.push(`custom object ${K.cMalvaSite}/${MALVA_BANNERS_KEY}: missing`);
+  else {
+    if ((banners.banners ?? []).length < MALVA_BANNER_SLOTS.length) problems.push(`custom object ${K.cMalvaSite}/${MALVA_BANNERS_KEY}: fewer than ${MALVA_BANNER_SLOTS.length} banners`);
+    for (const b of banners.banners ?? []) if (!isCleanUrl(b.image?.url ?? '')) problems.push(`${K.cMalvaSite}/${MALVA_BANNERS_KEY}: image URL is not clean: ${b.image?.url}`);
+  }
   for (const s of STORES) if (!(await api.getObject(K.cAssortment, s.key))) problems.push(`custom object ${K.cAssortment}/${s.key}: missing`);
   return problems;
 }

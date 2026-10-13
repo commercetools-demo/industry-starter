@@ -5,7 +5,7 @@ import { K, ls } from './data/base';
 import { assortmentKeys, assortmentObject, localReviewObjects, masterKeys } from './data/assortment';
 import { allProductDrafts, loadImages, type ImageMap } from './data/catalog';
 import { categoryDrafts } from './data/categories';
-import { THEME_CONTAINER, THEME_KEY, defaultTheme, TAILORINGS } from './data/content';
+import { THEME_CONTAINER, THEME_KEY, defaultTheme, TAILORINGS, MALVA_BANNERS_KEY, malvaBannersObject } from './data/content';
 import { typeDrafts } from './data/custom-types';
 import { PRODUCT_DISCOUNT_CHANNEL, cartDiscountDrafts, channelClause, discountCodeDrafts, productDiscountDrafts } from './data/discounts';
 import { reviewDrafts } from './data/reviews';
@@ -296,6 +296,7 @@ export const STEPS: Step[] = [
       for (const o of localReviewObjects()) await putObject(c, o.container, o.key, o.value, { onlyIfMissing: true });
       // The default Contentools theme is only created when missing: resellers and the ThemeManager own it afterwards.
       await putObject(c, THEME_CONTAINER, THEME_KEY, defaultTheme, { onlyIfMissing: true });
+      await putObject(c, K.cMalvaSite, MALVA_BANNERS_KEY, malvaBannersObject(c.bannerImages));
       if (Object.keys(c.bannerImages).length > 0) await putObject(c, K.cSite, 'banner-images', c.bannerImages);
     },
   },

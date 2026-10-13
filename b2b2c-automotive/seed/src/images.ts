@@ -2,7 +2,7 @@
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { BANNER_SLOTS, CATEGORY_IMAGE_QUERIES, TAILORINGS, tailoringImageKey } from './data/content';
+import { BANNER_SLOTS, MALVA_BANNER_SLOTS, CATEGORY_IMAGE_QUERIES, TAILORINGS, tailoringImageKey } from './data/content';
 import { systemKey } from './data/categories';
 import { PARTS, partBySku, partKey } from './data/parts';
 import { BUNDLES, LOCAL_PARTS, keyOfSku } from './data/items';
@@ -141,6 +141,7 @@ export function buildJobs(): Job[] {
     ...Object.entries(CATEGORY_IMAGE_QUERIES).map(([system, query]) => ({ file: 'category-images.json', key: systemKey(system), query })),
     ...TAILORINGS.filter((t) => (t.images ?? []).length > 0).map((t) => ({ file: 'tailoring-images.json', key: tailoringImageKey(t.store, t.sku), query: queryFor(partBySku(t.sku).en) })),
     ...BANNER_SLOTS.map((b) => ({ file: 'banner-images.json', key: b.key, query: b.query })),
+    ...MALVA_BANNER_SLOTS.map((b) => ({ file: 'banner-images.json', key: b.imageKey, query: b.query })),
   ];
   return jobs;
 }

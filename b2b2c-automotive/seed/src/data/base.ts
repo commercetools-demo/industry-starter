@@ -29,13 +29,15 @@ export const K = {
   selMaster: 'mau-sel-malva-master', selNorth: 'mau-sel-north', selSouth: 'mau-sel-south',
   // custom object containers
   cVehicles: 'mau-vehicles', cAssortment: 'mau-assortment', cSite: 'mau-site',
+  // Malva-level (no reseller) site content; the storefront Malva home reads `home-banners` (key without the mau- prefix: contract name)
+  cMalvaSite: 'malva-site',
   cConfiguration: 'configuration',
   // root category
   catRoot: 'mau-cat-parts',
 } as const;
 
 /** Every custom object container the seed OWNS completely (reset empties these). */
-export const OWNED_CONTAINERS = [K.cVehicles, K.cAssortment, K.cSite] as const;
+export const OWNED_CONTAINERS = [K.cVehicles, K.cAssortment, K.cSite, K.cMalvaSite] as const;
 
 /**
  * Contract container the portal also writes into (workstream W, review of reseller-created local parts): the seed owns

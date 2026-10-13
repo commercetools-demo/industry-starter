@@ -45,11 +45,16 @@ describe('keys and names', () => {
       ...storeDrafts().map((s) => s.key), ...roleDrafts.map((r) => r.key), ...BUSINESS_UNITS.map((b) => b.key), ...CUSTOMERS.map((c) => c.key),
       ...allProductDrafts().map((p) => p.key), ...inventoryDrafts().map((i) => i.key), ...productDiscountDrafts.map((d) => d.key), ...cartDiscountDrafts.map((d) => d.key),
       ...discountCodeDrafts.map((d) => d.key), ...recurrencePolicyDrafts.map((r) => r.key), ...shippingMethodDrafts.map((s) => s.key), ...zoneDrafts.map((z) => z.key),
-      taxCategoryDraft.key, ...stateDrafts.map((s) => s.key), ...OWNED_CONTAINERS,
+      taxCategoryDraft.key, ...stateDrafts.map((s) => s.key), ...OWNED_CONTAINERS.filter((c) => c !== K.cMalvaSite), // malva-site is a storefront contract name (no mau- prefix)
     ];
     // Only the contract keys other workstreams hard-code (custom types, order state) may lack the prefix.
     expect(keys.filter((k) => !k?.startsWith('mau-') && !CONTRACT_KEYS.includes(k as string))).toEqual([]);
     expect(CONTRACT_KEYS.every((k) => typeDrafts.some((t) => t.key === k) || stateDrafts.some((s) => s.key === k))).toBe(true);
+  });
+
+  it('no store key is the reserved Malva segment `categories`', () => {
+    // `/{locale}/categories/{slug}` is the Malva listing; a store with that key would be unreachable (proxy.ts reserves it).
+    expect(storeDrafts().map((s) => s.key)).not.toContain('categories');
   });
 
   it('standalone price keys follow the scheme and are unique', () => {

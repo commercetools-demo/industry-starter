@@ -179,10 +179,12 @@ describe('reset (the seed own resources only)', () => {
     expect(plan.refused).toEqual([]);
     expect(plan.entries.length).toBeGreaterThan(300);
     expect(plan.objects.some((o) => o.container === 'malva-local-review')).toBe(true);
+    expect(plan.objects).toContainEqual({ container: 'malva-site', key: 'home-banners' });
     const failed = await executeCleanup(api, new Runner(false, quiet), plan);
     expect(failed).toBe(0);
     expect(api.all('reviews')).toEqual([]);
     for (const o of plan.objects) await api.removeObject(o.container, o.key);
+    expect(await api.getObject('malva-site', 'home-banners')).toBeUndefined();
     for (const kind of ['products', 'categories', 'stores', 'customers', 'business-units', 'channels', 'inventory'] as const) {
       expect(api.all(kind).filter((r) => r.key?.startsWith('mau-'))).toEqual([]);
     }

@@ -92,3 +92,30 @@ export const CATEGORY_IMAGE_QUERIES: Record<string, string> = {
   exhaust: 'car exhaust pipe',
   care: 'car engine oil',
 };
+
+// ---------- Malva home banners (container malva-site, key home-banners) ----------
+export const MALVA_BANNERS_KEY = 'home-banners';
+
+/** Slots of the Malva home carousel. `imageKey` keys banner-images.json; `query` feeds `npm run seed:images`. `categorySlug` are real slugs of categories.ts (system level). */
+export const MALVA_BANNER_SLOTS = [
+  { imageKey: 'malva-home-1', query: 'car brake disc', hex: '821810', headline: { de: 'Bremsen für sicheres Fahren', en: 'Brakes for safe driving' }, subline: { de: 'Beläge und Scheiben der Top-Marken bei Ihrem Händler.', en: 'Pads and discs from top brands at your reseller.' }, categorySlug: { de: 'bremsen', en: 'brakes' } },
+  { imageKey: 'malva-home-2', query: 'car oil change', hex: '191c1f', headline: { de: 'Filter und Öl für lange Laufzeit', en: 'Filters and oil for the long haul' }, subline: { de: 'Alles für den nächsten Service.', en: 'Everything for your next service.' }, categorySlug: { de: 'filter', en: 'filters' } },
+  { imageKey: 'malva-home-3', query: 'car battery', hex: 'd1a04a', headline: { de: 'Starke Batterien, startklar', en: 'Strong batteries, ready to go' }, subline: { de: 'Elektrik und Licht für jede Jahreszeit.', en: 'Electrical and lighting for every season.' }, categorySlug: { de: 'elektrik-und-licht', en: 'electrical-and-lighting' } },
+] as const;
+
+export interface MalvaBanner {
+  headline: { de: string; en: string };
+  subline: { de: string; en: string };
+  categorySlug: { de: string; en: string };
+  image: { url: string; dimensions: { w: number; h: number } };
+}
+
+/** Recorded Pexels image (first of the slot) wins; else a placehold.co placeholder. */
+export function malvaBannersObject(recorded: Record<string, { url: string; dimensions: { w: number; h: number } }[]> = {}): { banners: MalvaBanner[] } {
+  return {
+    banners: MALVA_BANNER_SLOTS.map((b) => ({
+      headline: { ...b.headline }, subline: { ...b.subline }, categorySlug: { ...b.categorySlug },
+      image: recorded[b.imageKey]?.[0] ?? { url: `https://placehold.co/1600x600/${b.hex}/ffffff.jpg`, dimensions: { w: 1600, h: 600 } },
+    })),
+  };
+}

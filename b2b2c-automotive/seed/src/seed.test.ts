@@ -8,7 +8,8 @@ import { TAILORINGS, tailoringImageKey } from './data/content';
 import { CUSTOMERS } from './data/org';
 import { priceDefs, standalonePriceDrafts, type PriceDef } from './data/prices';
 import { FakeApi } from './fake-api';
-import { Runner } from './lib';
+import { Runner, isCleanUrl } from './lib';
+import { categoryDrafts } from './data/categories';
 import { STEP_NAMES, runSeed, selectSteps } from './seed';
 import { checkPrices, checkProduct, verifySeed } from './verify';
 import type { Res } from './api';
@@ -128,6 +129,27 @@ describe('seed against the in-memory API', () => {
     expect(await runSeed({ ...opts(api), run })).toBe(2);
     expect(await verifySeed(api)).toEqual([]);
     expect(await api.getObject('malva-local-review', 'mau-reseller-south--mau-local-sk-2002')).toMatchObject({ value: { state: 'approved' } });
+  });
+
+  it('seeds the Malva home banners, idempotently, with recorded images winning over placeholders', async () => {
+    const api = new FakeApi();
+    await runSeed(opts(api));
+    const v = (await api.getObject('malva-site', 'home-banners'))?.value as { banners: { headline: { de: string; en: string }; subline: { de: string; en: string }; categorySlug: { de: string; en: string }; image: { url: string; dimensions: { w: number; h: number } } }[] };
+    expect(v.banners.length).toBeGreaterThanOrEqual(3);
+    const slugs = new Set(categoryDrafts.flatMap((c) => [(c.slug as Record<string, string>)['de-DE'], (c.slug as Record<string, string>)['en-US']]));
+    for (const b of v.banners) {
+      expect(b.headline.de && b.headline.en && b.subline.de && b.subline.en).toBeTruthy();
+      expect(slugs.has(b.categorySlug.de) && slugs.has(b.categorySlug.en)).toBe(true);
+      expect(b.image.url).toMatch(/^https:\/\/placehold\.co\//);
+      expect(isCleanUrl(b.image.url)).toBe(true);
+    }
+    expect(await runSeed(opts(api))).toBe(0);
+    expect(await verifySeed(api)).toEqual([]);
+    const rec = { 'malva-home-1': [{ url: 'https://images.pexels.com/photos/1/x.jpeg', dimensions: { w: 1200, h: 800 } }] };
+    expect(await runSeed({ ...opts(api), bannerImages: rec })).toBe(2); // home-banners and the existing mau-site/banner-images map
+    const v2 = (await api.getObject('malva-site', 'home-banners'))?.value as typeof v;
+    expect(v2.banners[0]?.image.url).toBe('https://images.pexels.com/photos/1/x.jpeg');
+    expect(v2.banners[1]?.image.url).toMatch(/placehold\.co/);
   });
 
   it('seeds the ready-for-pickup state, tailorings with images published at once, and no email or outbox object', async () => {
