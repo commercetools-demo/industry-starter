@@ -33,7 +33,7 @@ export function AutomotiveHero(raw: Record<string, unknown>) {
   return (
     <section className="relative isolate overflow-hidden bg-surface-brand-deep px-5 py-7 text-text-on-brand">
       {imageUrl ? <div aria-hidden="true" className="absolute inset-0 -z-10 bg-cover bg-center opacity-30" style={{ backgroundImage: `url("${encodeURI(imageUrl)}")` }} /> : null}
-      <div className="mx-auto grid max-w-content grid-cols-[repeat(auto-fit,minmax(18.75rem,1fr))] items-center gap-6">
+      <div className="mx-auto grid max-w-content grid-cols-[repeat(auto-fit,minmax(min(18.75rem,100%),1fr))] items-center gap-6">
         <div>
           {props.eyebrow ? <p className="font-ui text-xs font-bold uppercase tracking-label text-accent-300">{props.eyebrow}</p> : null}
           <h1 className="my-3 font-display text-4xl font-semibold leading-tight text-text-on-brand">{fillTemplate(props.headline, values)}</h1>

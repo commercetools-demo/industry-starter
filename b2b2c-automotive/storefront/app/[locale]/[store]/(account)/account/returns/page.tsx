@@ -8,10 +8,13 @@ import { isAppLocale } from '@/i18n/config';
 import { listReturns } from '@/lib/ct/account-orders';
 import { getShellContext } from '@/lib/ct/shell';
 import { getSession } from '@/lib/session';
+import { accountPageTitle } from '@/lib/account/page-title';
 
 export const dynamic = 'force-dynamic';
 
 type Props = { params: Promise<{ locale: string; store: string }> };
+
+export const generateMetadata = accountPageTitle('returns');
 
 /** Returns (workstream Q-07): the returns of this customer's orders with the status the reseller has set in the portal. */
 export default async function ReturnsPage({ params }: Props) {

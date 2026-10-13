@@ -55,7 +55,7 @@ export function CartLine({ line, store, fit = line.fit, vehicleLabel = null, unp
       </Link>
       <div className="grid min-w-0 gap-1">
         {line.brand ? <span className="font-ui text-xs font-bold uppercase tracking-label text-text-subtle">{line.brand}</span> : null}
-        <Link href={href} className="font-display text-sm font-medium text-text hover:text-text-link">
+        <Link href={href} className="min-h-6 font-display text-sm font-medium text-text hover:text-text-link">
           {line.name}
         </Link>
         {line.recurrence ? (
@@ -79,7 +79,7 @@ export function CartLine({ line, store, fit = line.fit, vehicleLabel = null, unp
         {fit === 'does-not-fit' && vehicleLabel ? (
           <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <LineFitBadge vehicle={vehicleLabel} />
-            <Link href={alternativesHref} className="font-utility text-xs text-text-link underline underline-offset-2">
+            <Link href={alternativesHref} className="inline-flex min-h-6 items-center font-utility text-xs text-text-link underline underline-offset-2">
               {t('fit.alternatives')}
             </Link>
           </span>

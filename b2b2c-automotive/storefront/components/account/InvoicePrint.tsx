@@ -32,7 +32,7 @@ export function InvoicePrint({ view, store, createdAt, seller, buyer }: Props) {
       {/* The shop's header, footer and the account menu are not part of the invoice on paper. */}
       <style>{'@media print { header:not(article header), footer, nav:not(article nav) { display: none !important; } }'}</style>
       <div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link href={`/${store}/account/orders/${view.number}`} className="font-utility text-sm text-text-link underline-offset-2 hover:underline">
+        <Link href={`/${store}/account/orders/${view.number}`} className="inline-flex min-h-7 items-center font-utility text-sm text-text-link underline-offset-2 hover:underline">
           ← {t('back')}
         </Link>
         <Button variant="primary" onClick={() => window.print()}>

@@ -5,8 +5,11 @@ import { setRequestLocale } from 'next-intl/server';
 import { SubscriptionList } from '@/components/account/SubscriptionList';
 import { isAppLocale } from '@/i18n/config';
 import { getShellContext } from '@/lib/ct/shell';
+import { accountPageTitle } from '@/lib/account/page-title';
 
 type Props = { params: Promise<{ locale: string; store: string }> };
+
+export const generateMetadata = accountPageTitle('subscriptions');
 
 /** Subscriptions (workstream Q-12): skip, pause, resume, change frequency, cancel. */
 export default async function SubscriptionsPage({ params }: Props) {

@@ -1,0 +1,17 @@
+/* AA layer (workstream Y, WCAG 1.4.3 and 1.4.11). The automotive kit's status, subtle and rating text colours measure below 4.5:1
+   on its own surfaces (see plans/evidence/Y/storefront-contrast-before.txt). Components keep using the semantic tokens; this layer
+   moves those few tokens one step darker and adds the input border role. app/tokens.css stays an exact copy of the design export.
+   scripts/contrast-report.mjs reads this file; scripts/check-tokens.mjs exempts it from the raw-colour rule (like tokens.css). */
+:root {
+  --color-success-600: #1c7316;
+  --color-danger-600: #b23a3a;
+  --color-info-600: #1f6fa3;
+  --color-text-subtle: var(--color-neutral-600);
+  --color-text-price-old: var(--color-neutral-600);
+  --color-rating: var(--color-accent-700);
+  --color-border-input: var(--color-neutral-500);
+}
+
+@theme inline {
+  --color-border-input: var(--color-border-input);
+}

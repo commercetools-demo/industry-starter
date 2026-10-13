@@ -63,7 +63,7 @@
     "active": "Active",
     "setActive": "Set active",
     "remove": "Remove",
-    "setActiveLabel": "Set {vehicle} as active",
+    "setActiveLabel": "Set active: {vehicle}",
     "removeLabel": "Remove {vehicle} from your garage",
     "full": "Your garage holds five vehicles. Adding another removes the oldest one that is not active."
   },
@@ -206,7 +206,7 @@
   "filters": {
     "title": "Filters",
     "open": "Filters",
-    "openWithCount": "Filters ({count} active)",
+    "openWithCount": "Filters {count} active",
     "apply": "Apply",
     "close": "Close",
     "pickup": "Pickup today at {city}",
@@ -761,7 +761,7 @@
       "full": "Your garage is full. Remove a vehicle to add another.",
       "active": "Active",
       "setActive": "Set active",
-      "setActiveLabel": "Set {vehicle} as active",
+      "setActiveLabel": "Set active: {vehicle}",
       "rename": "Rename",
       "renameLabel": "Rename {vehicle}",
       "nickname": "Nickname",

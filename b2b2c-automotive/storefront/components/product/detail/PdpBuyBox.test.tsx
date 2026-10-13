@@ -206,7 +206,7 @@ describe('Buy box: quantity and add to cart', () => {
     expect(screen.getByText(/does not fit your 2022/)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Change vehicle' }));
     const dialog = await screen.findByRole('dialog', { name: 'Your vehicles' });
-    await user.click(within(dialog).getByRole('button', { name: /Set 2016 Volkswagen Golf · 2.0 TDI as active/ }));
+    await user.click(within(dialog).getByRole('button', { name: /Set active: 2016 Volkswagen Golf · 2.0 TDI/ }));
     await waitFor(() => expect(screen.getByText(/Fits your 2016 Volkswagen Golf/)).toBeInTheDocument());
     expect(screen.getByRole('textbox', { name: 'Quantity' })).toBe(quantity);
     expect((quantity as HTMLInputElement).value).toBe('5');

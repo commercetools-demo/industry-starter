@@ -40,7 +40,7 @@ export default async function SignInPage({ params, searchParams }: Props) {
   const next = safeNext(typeof raw === 'string' ? raw : null, DEFAULT_NEXT);
   const [t, ta] = await Promise.all([getTranslations({ locale, namespace: 'auth.signIn' }), getTranslations({ locale, namespace: 'account.auth' })]);
   const nextQuery = next === DEFAULT_NEXT ? '' : `?next=${encodeURIComponent(next)}`;
-  const link = 'font-utility text-sm text-text-link underline-offset-2 hover:underline';
+  const link = 'inline-flex min-h-7 items-center font-utility text-sm text-text-link underline-offset-2 hover:underline';
 
   return (
     <div className="mx-auto grid max-w-content gap-5 p-4 min-[64rem]:p-5">

@@ -16,7 +16,7 @@ export function MarketingConsentCheckbox({ checked, onChange, disabled = false, 
   const id = useId();
   return (
     <div className="flex items-start gap-3">
-      <input id={id} type="checkbox" checked={checked} disabled={disabled} onChange={(e) => onChange(e.target.checked)} aria-describedby={`${id}-hint`} className="mt-1 size-5 accent-action" />
+      <input id={id} type="checkbox" checked={checked} disabled={disabled} onChange={(e) => onChange(e.target.checked)} aria-describedby={`${id}-hint`} className="mt-1 size-5 shrink-0 accent-action" />
       <div className="grid gap-1">
         <label htmlFor={id} className="font-ui text-sm text-text">
           {t('label')}

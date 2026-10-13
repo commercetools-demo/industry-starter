@@ -93,7 +93,7 @@ export function AddressForm({ address, countries, onSubmit, onCancel }: Props) {
         <Field label={t('phone')} name="tel" type="tel" autoComplete="tel" value={form.phone} onChange={set('phone')} />
       </div>
       <label className="flex min-h-7 items-center gap-3 font-ui text-sm text-text">
-        <input type="checkbox" checked={form.makeDefault} onChange={(e) => setForm((f) => ({ ...f, makeDefault: e.target.checked }))} className="size-5 accent-action" />
+        <input type="checkbox" checked={form.makeDefault} onChange={(e) => setForm((f) => ({ ...f, makeDefault: e.target.checked }))} className="size-5 shrink-0 accent-action" />
         {t('defaultCheckbox')}
       </label>
       <div ref={errorRef} tabIndex={-1}>

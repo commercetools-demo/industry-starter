@@ -24,7 +24,7 @@ export function CategoryTiles(raw: Record<string, unknown>) {
           {fillTemplate(props.title, { reseller: data.storeName, city: data.branch?.city })}
         </h2>
         {props.viewAllLabel ? (
-          <BlockLink href="/parts" store={data.storeKey} className="font-utility text-sm font-medium text-text-link hover:underline">
+          <BlockLink href="/parts" store={data.storeKey} className="inline-flex min-h-7 items-center font-utility text-sm font-medium text-text-link hover:underline">
             {props.viewAllLabel}
           </BlockLink>
         ) : null}

@@ -96,7 +96,7 @@ export function SubscriptionList({ store, timeZone }: { store: string; timeZone?
                 {sub.status === 'failed' ? (
                   <div role="alert" className="grid gap-2 rounded-sm bg-danger-50 p-3">
                     <p className="m-0 font-ui text-sm text-danger-600">{t('failedMessage')}</p>
-                    <Link href={`/${store}/account/payment-methods`} className="font-utility text-sm text-text-link underline-offset-2 hover:underline">
+                    <Link href={`/${store}/account/payment-methods`} className="inline-flex min-h-7 items-center font-utility text-sm text-text-link underline-offset-2 hover:underline">
                       {t('paymentLink')}
                     </Link>
                   </div>

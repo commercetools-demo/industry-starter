@@ -8,6 +8,7 @@ import { isAppLocale } from '@/i18n/config';
 import { listOrders } from '@/lib/ct/account-orders';
 import { getShellContext } from '@/lib/ct/shell';
 import { getSession } from '@/lib/session';
+import { accountPageTitle } from '@/lib/account/page-title';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,6 +16,8 @@ type Props = {
   params: Promise<{ locale: string; store: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
+
+export const generateMetadata = accountPageTitle('orders');
 
 /** Orders (workstream Q-06): this customer's orders in this store, newest first, ten a page. */
 export default async function OrdersPage({ params, searchParams }: Props) {

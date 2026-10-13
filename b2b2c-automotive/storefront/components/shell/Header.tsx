@@ -17,7 +17,7 @@ export function Header({ store, settings, signedIn }: { store: string; settings:
   return (
     <header className="border-b border-border bg-surface">
       <div className="mx-auto flex max-w-page flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3 xl:flex-nowrap">
-        <div className="order-1 min-w-0 flex-1 xl:order-none xl:flex-none">
+        <div className="order-1 w-full min-w-0 min-[34rem]:w-auto min-[34rem]:flex-1 xl:order-none xl:flex-none">
           <Wordmark store={store} settings={settings} />
         </div>
         <div className="order-4 w-full xl:order-none xl:w-auto">

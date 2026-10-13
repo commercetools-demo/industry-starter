@@ -46,7 +46,7 @@ export function FitBanner({ product, alternativesHref }: FitBannerProps) {
           <span>
             <span aria-hidden="true">✕</span> {t('bannerNo', { vehicle: active.label })}
           </span>
-          <Link href={alternativesHref} className="font-utility underline underline-offset-2">
+          <Link href={alternativesHref} className="inline-flex min-h-6 items-center font-utility underline underline-offset-2">
             {t('alternatives')}
           </Link>
         </>

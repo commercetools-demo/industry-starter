@@ -23,7 +23,7 @@ export function PopularProducts(raw: Record<string, unknown>) {
         <h2 id="home-popular-title" className="font-display text-2xl font-semibold text-text-strong">
           {fillTemplate(props.title, { reseller: data.storeName, city: data.branch?.city })}
         </h2>
-        <BlockLink href="/parts" store={data.storeKey} className="font-utility text-sm font-medium text-text-link hover:underline">
+        <BlockLink href="/parts" store={data.storeKey} className="inline-flex min-h-7 items-center font-utility text-sm font-medium text-text-link hover:underline">
           {props.viewAllLabel}
         </BlockLink>
       </div>

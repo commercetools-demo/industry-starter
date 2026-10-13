@@ -36,7 +36,7 @@ export function QuantityStepper({ value, onChange }: Props) {
       <label htmlFor={id} className="sr-only">
         {t('quantity')}
       </label>
-      <div className="flex items-center overflow-hidden rounded-sm border border-border-strong bg-surface">
+      <div className="flex items-center overflow-hidden rounded-sm border border-border-input bg-surface">
         <button type="button" className={button} aria-label={t('decrease')} disabled={value <= QUANTITY_MIN} onClick={() => commit(value - 1)}>
           <span aria-hidden="true">−</span>
         </button>
@@ -54,7 +54,7 @@ export function QuantityStepper({ value, onChange }: Props) {
             if (event.target.value !== '' && Number.isInteger(n) && n >= QUANTITY_MIN) onChange(clampQuantity(n));
           }}
           onBlur={() => commit(Number(shown))}
-          className="min-h-7 w-7 border-x border-border-strong bg-surface text-center font-display text-md font-semibold text-text"
+          className="min-h-7 w-7 border-x border-border-input bg-surface text-center font-display text-md font-semibold text-text"
         />
         <button type="button" className={button} aria-label={t('increase')} disabled={value >= QUANTITY_MAX} onClick={() => commit(value + 1)}>
           <span aria-hidden="true">+</span>

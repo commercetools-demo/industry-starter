@@ -43,9 +43,9 @@ export function StateMessage({ kind, title, hint, action, onRetry }: { kind: 'lo
     return (
       <div role="status" aria-live="polite" className="grid gap-3" data-state="loading">
         <span className="sr-only">{t('loading')}</span>
-        <span aria-hidden className="block h-5 w-1/3 animate-pulse rounded-xs bg-surface-subtle" />
-        <span aria-hidden className="block h-7 w-full animate-pulse rounded-xs bg-surface-subtle" />
-        <span aria-hidden className="block h-7 w-2/3 animate-pulse rounded-xs bg-surface-subtle" />
+        <span aria-hidden className="block h-5 w-1/3 motion-safe:animate-pulse rounded-xs bg-surface-subtle" />
+        <span aria-hidden className="block h-7 w-full motion-safe:animate-pulse rounded-xs bg-surface-subtle" />
+        <span aria-hidden className="block h-7 w-2/3 motion-safe:animate-pulse rounded-xs bg-surface-subtle" />
       </div>
     );
   }

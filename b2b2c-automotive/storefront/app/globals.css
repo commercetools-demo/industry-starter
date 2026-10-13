@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './tokens.css';
+@import './aa-layer.css';
 
 /* fonts:begin (values come from next/font, see lib/fonts.ts) */
 :root {
@@ -138,6 +139,18 @@ body {
   background: var(--color-surface-page);
   color: var(--color-text);
   font-family: var(--font-body);
+}
+
+/* Reduced motion (workstream Y, scripts/check-reduced-motion.mjs): the one global rule for every transition, animation and scroll. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Visible keyboard focus everywhere, in the theme's focus colour (workstream I). */

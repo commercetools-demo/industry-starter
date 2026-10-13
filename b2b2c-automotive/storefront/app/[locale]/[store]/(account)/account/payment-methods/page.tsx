@@ -4,8 +4,11 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { PaymentMethodsPanel } from '@/components/account/PaymentMethodsPanel';
 import { isAppLocale } from '@/i18n/config';
+import { accountPageTitle } from '@/lib/account/page-title';
 
 type Props = { params: Promise<{ locale: string; store: string }> };
+
+export const generateMetadata = accountPageTitle('payment');
 
 /** Saved payment methods (workstream Q-10): tokenised, delete only; methods are saved inside the hosted Checkout. */
 export default async function PaymentMethodsPage({ params }: Props) {

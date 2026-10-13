@@ -67,7 +67,7 @@ describe('Fit banner (product page)', () => {
 
     await user.click(screen.getByRole('button', { name: 'Change vehicle' }));
     const dialog = await screen.findByRole('dialog', { name: 'Your vehicles' });
-    await user.click(within(dialog).getByRole('button', { name: /Set 2016 Volkswagen Golf · 2.0 TDI as active/ }));
+    await user.click(within(dialog).getByRole('button', { name: /Set active: 2016 Volkswagen Golf · 2.0 TDI/ }));
     await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('✓ Fits your 2016 Volkswagen Golf'));
     expect(api.state().active?.id).toBe(GOLF);
     expect((screen.getByRole('textbox', { name: 'Quantity' }) as HTMLInputElement).value).toBe('3');

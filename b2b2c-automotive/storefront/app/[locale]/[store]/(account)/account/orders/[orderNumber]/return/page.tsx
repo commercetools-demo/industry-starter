@@ -9,10 +9,13 @@ import { Link } from '@/i18n/routing';
 import { isAppLocale } from '@/i18n/config';
 import { loadAccountOrder } from '@/lib/ct/account-order-page';
 import { getSession } from '@/lib/session';
+import { accountPageTitle } from '@/lib/account/page-title';
 
 export const dynamic = 'force-dynamic';
 
 type Props = { params: Promise<{ locale: string; store: string; orderNumber: string }> };
+
+export const generateMetadata = accountPageTitle('return');
 
 /** Request a return (workstream Q-07). When the order is not eligible the page says why instead of showing the form. */
 export default async function ReturnPage({ params }: Props) {

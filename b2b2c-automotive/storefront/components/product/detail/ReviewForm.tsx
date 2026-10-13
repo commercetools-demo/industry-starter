@@ -64,7 +64,7 @@ export function ReviewForm({ productId, state, store }: Props) {
       <fieldset className="m-0 flex flex-wrap items-center gap-2 border-0 p-0">
         <legend className="mb-1 p-0 font-ui text-xs font-bold uppercase tracking-label text-text-muted">{t('reviewRating')}</legend>
         {[1, 2, 3, 4, 5].map((n) => (
-          <label key={n} className={`flex min-h-7 min-w-7 cursor-pointer items-center justify-center gap-1 rounded-sm border px-3 font-ui text-sm ${rating === n ? 'border-border-brand bg-surface-brand-subtle text-text' : 'border-border-strong bg-surface text-text-muted'}`}>
+          <label key={n} className={`flex min-h-7 min-w-7 cursor-pointer items-center justify-center gap-1 rounded-sm border px-3 font-ui text-sm ${rating === n ? 'border-border-brand bg-surface-brand-subtle text-text' : 'border-border-input bg-surface text-text-muted'}`}>
             <input type="radio" name={ratingName} value={n} checked={rating === n} onChange={() => setRating(n)} className="sr-only" />
             <span aria-hidden="true">★</span>
             <span>{t('starsLabel', { rating: n })}</span>

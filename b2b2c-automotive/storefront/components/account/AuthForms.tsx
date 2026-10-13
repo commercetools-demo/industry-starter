@@ -95,7 +95,7 @@ export function RegisterForm({ store, storeName, next }: { store: string; storeN
       </div>
       <ErrorLine problem={problem} />
       <SubmitButton pending={pending} idle={t('submit')} busy={t('submitting')} disabled={form.email.trim() === '' || form.password === ''} />
-      <Link href={`/${store}/account/sign-in${next === '/' ? '' : `?next=${encodeURIComponent(next)}`}`} className="font-utility text-sm text-text-link underline-offset-2 hover:underline">
+      <Link href={`/${store}/account/sign-in${next === '/' ? '' : `?next=${encodeURIComponent(next)}`}`} className="inline-flex min-h-7 items-center font-utility text-sm text-text-link underline-offset-2 hover:underline">
         {t('haveAccount')}
       </Link>
     </form>
@@ -127,7 +127,7 @@ export function ForgotPasswordForm({ store }: { store: string }) {
   }
 
   const signIn = (
-    <Link href={`/${store}/account/sign-in`} className="font-utility text-sm text-text-link underline-offset-2 hover:underline">
+    <Link href={`/${store}/account/sign-in`} className="inline-flex min-h-7 items-center font-utility text-sm text-text-link underline-offset-2 hover:underline">
       {t('backToSignIn')}
     </Link>
   );
@@ -199,7 +199,7 @@ export function ResetPasswordForm({ store, token }: { store: string; token: stri
   }
 
   const again = (
-    <Link href={`/${store}/account/forgot-password`} className="font-utility text-sm text-text-link underline-offset-2 hover:underline">
+    <Link href={`/${store}/account/forgot-password`} className="inline-flex min-h-7 items-center font-utility text-sm text-text-link underline-offset-2 hover:underline">
       {t('resetAskAgain')}
     </Link>
   );

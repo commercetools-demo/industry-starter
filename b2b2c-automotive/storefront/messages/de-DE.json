@@ -206,7 +206,7 @@
   "filters": {
     "title": "Filter",
     "open": "Filter",
-    "openWithCount": "Filter ({count} aktiv)",
+    "openWithCount": "Filter {count} aktiv",
     "apply": "Anwenden",
     "close": "Schließen",
     "pickup": "Abholung heute in {city}",
@@ -322,7 +322,7 @@
     "vehicleRow": "{make} {model} · {from}–{to} · {engines}",
     "related": "Wird oft zusammen gekauft",
     "relatedAdd": "Hinzufügen",
-    "addNamed": "{name} in den Warenkorb legen",
+    "addNamed": "Hinzufügen: {name} in den Warenkorb",
     "reviews": "Kundenbewertungen",
     "reviewsSummary": "{count, plural, one {# Bewertung} other {# Bewertungen}}",
     "noReviews": "Noch keine Bewertungen.",

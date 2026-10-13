@@ -2,7 +2,7 @@
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 import { useId, type InputHTMLAttributes } from 'react';
 
-export const INPUT_CLASS = 'min-h-7 w-full rounded-xs border border-border-strong bg-surface px-3 font-ui text-sm text-text placeholder:text-text-subtle';
+export const INPUT_CLASS = 'min-h-7 w-full rounded-xs border border-border-input bg-surface px-3 font-ui text-sm text-text placeholder:text-text-subtle';
 
 interface FieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id'> {
   label: string;

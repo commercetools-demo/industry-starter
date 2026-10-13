@@ -57,7 +57,7 @@ export function OrderDetail({ view, store, createdAt, eligibility, returns }: Pr
 
   return (
     <div className="grid gap-5">
-      <Link href={`/${store}/account/orders`} className="font-utility text-sm text-text-link underline-offset-2 hover:underline">
+      <Link href={`/${store}/account/orders`} className="inline-flex min-h-7 items-center font-utility text-sm text-text-link underline-offset-2 hover:underline">
         ← {t('back')}
       </Link>
       <Panel>
@@ -84,7 +84,7 @@ export function OrderDetail({ view, store, createdAt, eligibility, returns }: Pr
         {result && result !== 'failed' && result.skipped > 0 ? <Notice tone="error">{t('reorderedSkipped', { skipped: result.skipped })}</Notice> : null}
         {result && result !== 'failed' && result.added > 0 ? (
           <div>
-            <Link href={`/${store}/cart`} className="font-utility text-sm text-text-link underline-offset-2 hover:underline">
+            <Link href={`/${store}/cart`} className="inline-flex min-h-7 items-center font-utility text-sm text-text-link underline-offset-2 hover:underline">
               {t('viewCart')}
             </Link>
           </div>
@@ -94,7 +94,7 @@ export function OrderDetail({ view, store, createdAt, eligibility, returns }: Pr
       <OrderSummaryCard view={view} />
       {returns.length > 0 ? (
         <Panel title={t('returnsTitle')} titleId="order-returns-title">
-          <Link href={`/${store}/account/returns`} className="font-utility text-sm text-text-link underline-offset-2 hover:underline">
+          <Link href={`/${store}/account/returns`} className="inline-flex min-h-7 items-center font-utility text-sm text-text-link underline-offset-2 hover:underline">
             {t('returnsOpen')} ({returns.length})
           </Link>
         </Panel>

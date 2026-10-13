@@ -57,7 +57,7 @@ export function ReturnList({ store, returns, timeZone }: { store: string; return
                 {t('reasonLabel')}: {tr(`reasons.${r.reason}` as 'reasons.other')}
               </p>
             ) : null}
-            <Link href={`/${store}/account/orders/${r.orderNumber}`} className="font-utility text-sm text-text-link underline-offset-2 hover:underline">
+            <Link href={`/${store}/account/orders/${r.orderNumber}`} className="inline-flex min-h-7 items-center font-utility text-sm text-text-link underline-offset-2 hover:underline">
               {t('order', { number: r.orderNumber })}
             </Link>
           </li>

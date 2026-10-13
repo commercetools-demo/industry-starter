@@ -21,7 +21,7 @@ export function Identity({ name, brand, qualityLabel, partNumber, rating }: Iden
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-ui text-sm text-text-muted">
         <span>{t('partNo', { partNumber })}</span>
         {rating ? (
-          <a href="#reviews" aria-label={t('rating', { average: rating.average.toFixed(1), count: rating.count })} className="text-rating hover:underline">
+          <a href="#reviews" aria-label={t('rating', { average: rating.average.toFixed(1), count: rating.count })} className="inline-flex min-h-6 items-center text-rating hover:underline">
             <span aria-hidden="true">
               ★ {rating.average.toFixed(1)} <span className="text-text-subtle">({rating.count})</span>
             </span>

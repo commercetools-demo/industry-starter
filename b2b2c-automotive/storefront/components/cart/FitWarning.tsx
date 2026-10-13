@@ -17,7 +17,7 @@ export function FitWarning({ count, vehicle, alternativesHref }: { count: number
       <span>
         <span aria-hidden="true">✕</span> {t('banner', { count, vehicle })}
       </span>
-      <Link href={alternativesHref} className="font-utility underline underline-offset-2">
+      <Link href={alternativesHref} className="inline-flex min-h-6 items-center font-utility underline underline-offset-2">
         {t('alternatives')}
       </Link>
     </div>

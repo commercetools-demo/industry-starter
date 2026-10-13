@@ -102,7 +102,7 @@ export function ReturnForm({ store, orderNumber, lines, deadline, timeZone }: Pr
             return (
               <div key={line.lineItemId} className="flex flex-wrap items-center gap-3 rounded-sm border border-border p-3">
                 <label className="flex min-h-7 flex-1 items-center gap-3 font-ui text-sm text-text">
-                  <input type="checkbox" checked={checked} onChange={(e) => toggle(line.lineItemId, e.target.checked)} aria-label={t('include', { name: line.name })} className="size-5 accent-action" />
+                  <input type="checkbox" checked={checked} onChange={(e) => toggle(line.lineItemId, e.target.checked)} aria-label={t('include', { name: line.name })} className="size-5 shrink-0 accent-action" />
                   <span>{line.name}</span>
                 </label>
                 {checked ? (

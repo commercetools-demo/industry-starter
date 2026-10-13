@@ -6,8 +6,11 @@ import { DeleteAccountPanel } from '@/components/account/DeleteAccountPanel';
 import { PasswordForm } from '@/components/account/PasswordForm';
 import { ProfileForm } from '@/components/account/ProfileForm';
 import { isAppLocale } from '@/i18n/config';
+import { accountPageTitle } from '@/lib/account/page-title';
 
 type Props = { params: Promise<{ locale: string; store: string }> };
+
+export const generateMetadata = accountPageTitle('profile');
 
 /** Profile and security (workstream Q-11): details, consent, email, password and delete account. */
 export default async function ProfilePage({ params }: Props) {

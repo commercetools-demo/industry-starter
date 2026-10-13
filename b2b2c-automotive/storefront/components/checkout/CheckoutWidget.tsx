@@ -76,9 +76,9 @@ export function CheckoutWidget({ cartHref, navigate = (path) => window.location.
       {state.status === 'loading' ? (
         <div role="status" className="grid gap-3 rounded-md border border-border bg-surface p-5">
           <span className="font-ui text-sm text-text-muted">{t('loading')}</span>
-          <span aria-hidden="true" className="block h-5 animate-pulse rounded-sm bg-surface-quiet" />
-          <span aria-hidden="true" className="block h-5 animate-pulse rounded-sm bg-surface-quiet" />
-          <span aria-hidden="true" className="block h-9 animate-pulse rounded-sm bg-surface-quiet" />
+          <span aria-hidden="true" className="block h-5 motion-safe:animate-pulse rounded-sm bg-surface-quiet" />
+          <span aria-hidden="true" className="block h-5 motion-safe:animate-pulse rounded-sm bg-surface-quiet" />
+          <span aria-hidden="true" className="block h-9 motion-safe:animate-pulse rounded-sm bg-surface-quiet" />
         </div>
       ) : null}
       {problem ? (

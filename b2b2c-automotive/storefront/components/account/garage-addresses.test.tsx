@@ -72,7 +72,7 @@ describe('GaragePanel', () => {
     const polo = state([entry('a', 'Golf', 'Daily'), entry('b', 'Polo')], 'b');
     const calls = stubFetch({ 'GET /api/garage': two, 'POST /api/garage/active': polo });
     renderAccount(<GaragePanel />);
-    await userEvent.click(await screen.findByRole('button', { name: /Set 2016 Volkswagen Polo · 2.0 TDI as active/ }));
+    await userEvent.click(await screen.findByRole('button', { name: /Set active: 2016 Volkswagen Polo · 2.0 TDI/ }));
     await waitFor(() => expect(calls.some((c) => c.key === 'POST /api/garage/active')).toBe(true));
     expect(calls.find((c) => c.key === 'POST /api/garage/active')?.body).toEqual({ vehicleId: 'b' });
     await waitFor(() => {
@@ -114,7 +114,7 @@ describe('GaragePanel', () => {
   it('a failed change is announced', async () => {
     stubFetch({ 'GET /api/garage': two, 'POST /api/garage/active': new Response('{}', { status: 500 }) });
     renderAccount(<GaragePanel />);
-    await userEvent.click(await screen.findByRole('button', { name: /Set 2016 Volkswagen Polo/ }));
+    await userEvent.click(await screen.findByRole('button', { name: /Set active: 2016 Volkswagen Polo/ }));
     expect(await screen.findByText('We could not update your garage. Please try again.')).toBeInTheDocument();
   });
 });

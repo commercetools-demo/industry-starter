@@ -45,7 +45,7 @@ describe('Vehicle finder card (home page)', () => {
     renderVehicle(<VehicleFinderCard partsHref="/store/parts" />, { garage });
     const list = screen.getByRole('list', { name: 'Vehicles in your garage' });
     expect(within(list).getAllByRole('listitem')).toHaveLength(2);
-    await user.click(within(list).getByRole('button', { name: /Set 2016 Volkswagen Golf · 2.0 TDI as active/ }));
+    await user.click(within(list).getByRole('button', { name: /Set active: 2016 Volkswagen Golf · 2.0 TDI/ }));
     await waitFor(() => expect(api.state().active?.id).toBe(GOLF));
     await user.click(within(list).getByRole('button', { name: /Remove 2018 Audi A3/ }));
     await waitFor(() => expect(api.state().vehicles).toHaveLength(1));

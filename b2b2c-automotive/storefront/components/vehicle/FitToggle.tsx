@@ -34,7 +34,7 @@ export function FitToggle() {
 
   return (
     <label htmlFor={id} className="flex min-h-7 cursor-pointer items-center gap-3 font-ui text-sm text-text">
-      <input id={id} type="checkbox" checked={on} onChange={toggle} className="size-5 accent-action" />
+      <input id={id} type="checkbox" checked={on} onChange={toggle} className="size-5 shrink-0 accent-action" />
       {t('toggle')}
     </label>
   );

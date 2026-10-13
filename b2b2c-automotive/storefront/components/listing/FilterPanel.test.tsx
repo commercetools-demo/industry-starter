@@ -153,6 +153,6 @@ describe('Mobile filter sheet: components/listing/FilterSheet', () => {
   it('shows how many filters are active on the button', () => {
     search.value = 'pickup=1';
     renderVehicle(<FilterSheet groups={groups({ brandSelected: ['vektra'] })} city="Hamburg" pickupAvailable />, { locale: 'en-US' });
-    expect(screen.getByRole('button', { name: 'Filters (2 active)' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Filters 2 active' })).toBeInTheDocument();
   });
 });
