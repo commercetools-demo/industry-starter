@@ -62,6 +62,7 @@ export const ROUTE_POLICY: readonly RoutePolicy[] = [
   p('/api/impersonate/exit', { POST: 'public' }, { note: 'only an impersonation session is touched' }),
   p('/api/locale', { GET: 'public', POST: 'public' }),
   p('/api/orders/[orderNumber]/claim', { POST: 'token' }, { note: 'the owner browser or the holder of the private link; every other case is one 404; rate limited per client' }),
+  p('/api/resellers', { GET: 'public' }, { note: 'the Malva finder list: no session, no ids, rate limited per client' }),
   p('/api/reviews', { POST: 'customer' }, { note: 'verified buyers only (403 NOT_A_BUYER)' }),
   p('/api/store-context/branch', { POST: 'public' }),
   p('/api/store-context/branches', { GET: 'public' }),

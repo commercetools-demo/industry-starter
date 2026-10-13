@@ -83,7 +83,8 @@ describe('Store resolved from the path: proxy', () => {
   it('Unknown store', async () => {
     const res = await proxy(req('/de-DE/nope'));
     expect(res.status).toBe(404);
-    expect(res.headers.get('x-middleware-rewrite')).toMatch(/\/de-DE$/);
+    // Not `/de-DE`: that is the Malva home now.
+    expect(res.headers.get('x-middleware-rewrite')).toMatch(/\/de-DE\/store-not-found$/);
     expect(getStoreContext).toHaveBeenCalledTimes(1);
     expect(cookieOf(res)).toBeUndefined();
     expect(res.headers.get('x-middleware-request-x-store-key')).toBeNull();
@@ -92,6 +93,22 @@ describe('Store resolved from the path: proxy', () => {
   it('No store segment', async () => {
     const res = await proxy(req('/de-DE'));
     expect(res.status).toBe(200);
+    expect(getStoreContext).not.toHaveBeenCalled();
+    expect(cookieOf(res)).toBeUndefined();
+  });
+
+  it('Malva listing is not a store', async () => {
+    const cookie = await sessionCookie({ cartId: 'cart-1', ...STORES.acme });
+    const res = await proxy(req('/de-DE/categories/brakes', cookie));
+    expect(res.status).toBe(200);
+    expect(getStoreContext).not.toHaveBeenCalled();
+    expect(cookieOf(res)).toBeUndefined(); // the session is not touched
+    expect(res.headers.get('x-middleware-request-x-store-key')).toBeNull();
+    expect(res.headers.get('x-middleware-rewrite')).toBeNull();
+  });
+
+  it('Malva listing without a session leaves none behind', async () => {
+    const res = await proxy(req('/en-US/categories/brakes'));
     expect(getStoreContext).not.toHaveBeenCalled();
     expect(cookieOf(res)).toBeUndefined();
   });

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 import { describe, expect, it } from 'vitest';
-import { buildExactPartRequest, buildSearchRequest, isPartNumberLike, type SearchContext, type SearchExpression } from './build';
+import { buildExactPartRequest, buildMalvaSearchRequest, buildSearchRequest, isPartNumberLike, type SearchContext, type SearchExpression } from './build';
 import { fitExpression } from './fitment';
 import { parseListingParams } from './params';
 
@@ -183,5 +183,38 @@ describe('Search results: text and part numbers', () => {
 
   it('exact part request is null for words', () => {
     expect(buildExactPartRequest(ctx, 'brake pads')).toBeNull();
+  });
+});
+
+describe('Malva listing query: the whole catalog without commerce data', () => {
+  const malva = { locale: 'en-US', fitKeys: null };
+  const everything = (sp: Record<string, string | string[]> = {}) => json(buildMalvaSearchRequest(malva, { categoryId: 'cat-1' }, params({ pickup: '1', ...sp })));
+
+  it('has no stores clause', () => {
+    expect(everything()).not.toContain('stores');
+  });
+  it('has no price, availability or inventory field, even for a price sort or the pickup filter', () => {
+    for (const sort of ['popular', 'price-asc', 'price-desc', 'rated']) {
+      expect(everything({ sort }), sort).not.toMatch(/price|availability|isOnStock|inventory/i);
+    }
+  });
+  it('a price sort is ordered as popular', () => {
+    expect(buildMalvaSearchRequest(malva, {}, params({ sort: 'price-asc' })).sort).toEqual(buildMalvaSearchRequest(malva, {}, params()).sort);
+  });
+  it('scopes to the category subtree and keeps the brand filter and the offset', () => {
+    const r = buildMalvaSearchRequest(malva, { categoryId: 'cat-1' }, params({ brand: 'vektra', page: '2' }));
+    expect(r.query).toEqual({ and: [{ exact: { field: 'categoriesSubTree', value: 'cat-1' } }] });
+    expect(r.postFilter).toEqual({ exact: { field: 'variants.attributes.brand.key', fieldType: 'enum', values: ['vektra'] } });
+    expect(r.offset).toBe(24);
+  });
+  it('without any scope the query is absent rather than empty', () => {
+    expect(buildMalvaSearchRequest(malva, {}, params()).query).toBeUndefined();
+  });
+  it('a vehicle adds the fit scope', () => {
+    const keys = ['VW|Golf|2012|2019|2.0 TDI'];
+    expect(clauses(buildMalvaSearchRequest({ ...malva, fitKeys: keys }, {}, params()).query ?? { and: [] })).toContainEqual(fitExpression(keys));
+  });
+  it('the store query still carries its stores clause', () => {
+    expect(json(buildSearchRequest(ctx, {}, params()).query)).toContain('stores');
   });
 });

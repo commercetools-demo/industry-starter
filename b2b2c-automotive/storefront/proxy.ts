@@ -17,6 +17,9 @@ const isCheckoutReturn = (pathname: string) => pathname === '/checkout/return' |
 /** The portal posts the "Shop as customer" hand-off form across origins; its single-use signed token is the credential (workstream V-06). */
 const CROSS_ORIGIN_EXEMPT = ['/api/impersonate'] as const;
 
+/** Segments after the locale that are Malva pages, never a store key (a seed test pins that no store uses one). */
+const RESERVED_SEGMENTS: ReadonlySet<string> = new Set(['categories']);
+
 const sameStoreFields = (a: Session, b: Session) =>
   a.storeKey === b.storeKey &&
   a.distributionChannelId === b.distributionChannelId &&
@@ -65,8 +68,8 @@ export async function proxy(request: NextRequest) {
       };
 
       const storeKey = pathname.split('/')[2];
-      // `/de-DE` alone: the locale page answers 404 (no dealer locator), no lookup.
-      if (!storeKey) return finish(NextResponse.next({ request: { headers } }));
+      // `/de-DE` alone is the Malva home and `/de-DE/categories/...` a Malva listing: no store lookup, no session write.
+      if (!storeKey || RESERVED_SEGMENTS.has(storeKey)) return finish(NextResponse.next({ request: { headers } }));
       return finish(await resolveStore(request, decision.locale, storeKey, headers));
     }
   }
@@ -81,8 +84,8 @@ async function resolveStore(request: NextRequest, locale: AppLocale, storeKey: s
     return new NextResponse('Service unavailable', { status: 503 });
   }
   if (!store) {
-    // The locale page calls notFound(), so no catalogue data is touched.
-    return NextResponse.rewrite(new URL(`/${locale}`, request.url), { status: 404, request: { headers } });
+    // The store-not-found page calls notFound(), so no catalogue data is touched (`/{locale}` is the Malva home now).
+    return NextResponse.rewrite(new URL(`/${locale}/store-not-found`, request.url), { status: 404, request: { headers } });
   }
 
   const secret = getSessionSecret();

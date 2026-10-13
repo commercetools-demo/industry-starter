@@ -1,22 +1,22 @@
 ## 1. Routing and layout
 
-- [ ] 1.1 Add `categories` to the reserved segments in `storefront/proxy.ts` (no store resolution, no session write) and a test that `/{locale}/categories/x` leaves the session untouched
-- [ ] 1.2 Create route group `app/[locale]/(malva)/` with its own layout (Malva header, footer, drawer host, default theme, no store/cart/garage/impersonation) and move `app/[locale]/page.tsx` into it as the Malva home
-- [ ] 1.3 Add `app/[locale]/(malva)/categories/[slug]/page.tsx` with `loading.tsx` and `error.tsx`; unknown slug answers not-found
-- [ ] 1.4 Point the not-found page's home link at `/{locale}`; update its test
-- [ ] 1.5 Seed test: no store key equals `categories`
+- [x] 1.1 Add `categories` to the reserved segments in `storefront/proxy.ts` (no store resolution, no session write) and a test that `/{locale}/categories/x` leaves the session untouched
+- [x] 1.2 Create route group `app/[locale]/(malva)/` with its own layout (Malva header, footer, drawer host, default theme, no store/cart/garage/impersonation) and move `app/[locale]/page.tsx` into it as the Malva home
+- [x] 1.3 Add `app/[locale]/(malva)/categories/[slug]/page.tsx` with `loading.tsx` and `error.tsx`; unknown slug answers not-found
+- [x] 1.4 Point the not-found page's home link at `/{locale}`; update its test
+- [x] 1.5 Seed test: no store key equals `categories`
 
 ## 2. Whole-catalog data
 
-- [ ] 2.1 Make the store scope optional in `lib/search/build.ts` and add tests that a Malva query has no `stores`, price or inventory clause [SKILL: commercetools-storefront]
-- [ ] 2.2 Add `lib/ct/malva-catalog.ts`: `getMalvaNavCategories(locale)` (facet, then search fallback, 5 minute cache, stale on error) and `searchMalvaProducts(params)` with `mapMalvaSummary` (no price, no availability) [SKILL: commercetools-storefront]
-- [ ] 2.3 Unit tests for both functions with the SDK mocked: empty category dropped, outage serves stale, summary has no price field
+- [x] 2.1 Make the store scope optional in `lib/search/build.ts` and add tests that a Malva query has no `stores`, price or inventory clause [SKILL: commercetools-storefront]
+- [x] 2.2 Add `lib/ct/malva-catalog.ts`: `getMalvaNavCategories(locale)` (facet, then search fallback, 5 minute cache, stale on error) and `searchMalvaProducts(params)` with `mapMalvaSummary` (no price, no availability) [SKILL: commercetools-storefront]
+- [x] 2.3 Unit tests for both functions with the SDK mocked: empty category dropped, outage serves stale, summary has no price field
 
 ## 3. Reseller finder data
 
-- [ ] 3.1 Add `lib/ct/resellers.ts` `listResellers()` (active stores with a distribution channel, store-settings address fields, branch channels, 60 second cache, no ids in the result) [SKILL: commercetools-storefront]
-- [ ] 3.2 Add `GET /api/resellers` (no session, same public-GET rate limit and method gate as other public routes) and register it in the route policy
-- [ ] 3.3 Tests: store without distribution channel is dropped, payload has only the listed fields, route answers 405 for POST
+- [x] 3.1 Add `lib/ct/resellers.ts` `listResellers()` (active stores with a distribution channel, store-settings address fields, branch channels, 60 second cache, no ids in the result) [SKILL: commercetools-storefront]
+- [x] 3.2 Add `GET /api/resellers` (no session, same public-GET rate limit and method gate as other public routes) and register it in the route policy
+- [x] 3.3 Tests: store without distribution channel is dropped, payload has only the listed fields, route answers 405 for POST
 
 ## 4. Components
 

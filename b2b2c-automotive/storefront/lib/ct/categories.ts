@@ -9,7 +9,7 @@ import { getLocalizedString } from '@/lib/utils';
 
 const cache = createTtlCache<NavCategory[]>({ ttlMs: 300_000, negativeTtlMs: 30_000 });
 
-async function rootCategories(): Promise<Category[]> {
+export async function rootCategories(): Promise<Category[]> {
   const { body } = await apiRoot.categories().get({ queryArgs: { where: 'parent is not defined', sort: 'orderHint asc', limit: 50 } }).execute();
   return body.results;
 }

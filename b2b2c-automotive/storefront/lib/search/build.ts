@@ -132,8 +132,9 @@ function postFilterFor(ctx: SearchContext, p: ListingParams): SearchExpression |
   return parts.length === 1 ? parts[0] : { and: parts };
 }
 
-export function buildSearchRequest(ctx: SearchContext, scope: ListingScope, p: ListingParams): SearchRequest {
-  const and: SearchExpression[] = [exact('stores', ctx.storeId)];
+/** The clauses every listing query shares: category, text and fit. The store clause is added by the caller that has a store. */
+function scopeClauses(ctx: Pick<SearchContext, 'locale' | 'fitKeys'>, scope: ListingScope, p: ListingParams): SearchExpression[] {
+  const and: SearchExpression[] = [];
   if (scope.categoryId) and.push(exact('categoriesSubTree', scope.categoryId));
   if (p.q) {
     and.push({ or: [{ fullText: { field: 'name', language: ctx.locale, value: p.q, caseInsensitive: true } }, ...partNumberClauses(p.q)] });
@@ -141,12 +142,43 @@ export function buildSearchRequest(ctx: SearchContext, scope: ListingScope, p: L
   // Range keys, not a vehicle id (J): in `query` so facet counts reflect fit.
   const fit = fitScope(ctx.fitKeys, p.fit ? 'fit-only' : 'all');
   if (fit) and.push(fit);
+  return and;
+}
 
+export function buildSearchRequest(ctx: SearchContext, scope: ListingScope, p: ListingParams): SearchRequest {
   return {
-    query: { and },
+    query: { and: [exact('stores', ctx.storeId), ...scopeClauses(ctx, scope, p)] },
     postFilter: postFilterFor(ctx, p),
     facets: FACETS.map((f) => ({ distinct: { name: f.name, field: f.field, fieldType: f.fieldType, limit: 50 } })),
     sort: sortFor(ctx, p),
+    limit: PAGE_SIZE,
+    offset: (p.page - 1) * PAGE_SIZE,
+  };
+}
+
+/** Scope of the Malva listing: the text language and the active vehicle's range keys. No store, market, branch or channel. */
+export interface MalvaSearchContext {
+  locale: string;
+  fitKeys: string[] | null;
+}
+/** Like `SearchRequest`, but `query` is absent when nothing narrows the whole catalog (the API allows a request without a query). */
+export type MalvaSearchRequest = Omit<SearchRequest, 'query'> & { query?: SearchExpression };
+
+/**
+ * The Malva listing query: the whole master catalog (no `stores` clause) and nothing about price or stock. A price sort falls
+ * back to `popular` and the pickup filter is off, so no `variants.prices` or availability field can enter the request.
+ */
+export function buildMalvaSearchRequest(ctx: MalvaSearchContext, scope: ListingScope, p: ListingParams): MalvaSearchRequest {
+  const and = scopeClauses(ctx, scope, p);
+  const sort = p.sort === 'price-asc' || p.sort === 'price-desc' ? 'popular' : p.sort;
+  const params: ListingParams = { ...p, sort, pickup: false };
+  // No store, market or channel: the unused fields stay empty (price sorts and pickup are the only readers, and both are off).
+  const open: SearchContext = { ...ctx, storeId: '', currency: '', country: '', branchChannelId: undefined, retailChannelId: undefined };
+  return {
+    query: and.length > 0 ? { and } : undefined,
+    postFilter: postFilterFor(open, params),
+    facets: FACETS.map((f) => ({ distinct: { name: f.name, field: f.field, fieldType: f.fieldType, limit: 50 } })),
+    sort: sortFor(open, params),
     limit: PAGE_SIZE,
     offset: (p.page - 1) * PAGE_SIZE,
   };
