@@ -10,7 +10,7 @@ Nothing. Chrome checks C-I-1 … C-I-16 were not run by me. C-I-13/14/15 wait fo
 
 ## Questions for the owner
 - The session cookie holds no first name (E stores references only), so the header greeting needs a customer read. I added `lib/ct/account-name.ts` (`getAccountFirstName(customerId)`, id from the signed session only, uncached, request-deduplicated with React `cache`, any failure gives "My account"). Costs one commercetools GET per page for signed-in buyers. Alternative: R puts `firstName` into the session; then drop this helper.
-- Footer credit says "Photos from Pexels" (G's wording); G asked whether to change it (images are iStock).
+- Footer credit says "Photos from Image source" (G's wording); G asked whether to change it (images are iStock).
 
 ## Missed features and deviations
 - **Server reads live in `app/[locale]/_shell/`, not in `components/layout`**: B's lint and `check:boundaries` forbid anything under `components/` from reaching `lib/ct`. So `AccountLink`, `SiteHeader`, `SiteFooter`, `ErrorView` are presentational (props: `signedIn/firstName`, `items: NavItem[]`, `categories`), and the async readers are `_shell/AccountSlot.tsx` (session + name), `_shell/loadNavItems.ts` (cached category tree, try/catch, logs `[shell] category tree unavailable`). Tests for the "tree failure" case are in `loadNavItems.test.ts` and `SiteHeader/SiteFooter` with empty items.
@@ -45,4 +45,4 @@ None.
 - Mobile drawer: right slide-in panel (88vw, max-w-sm, rounded left edge), dimmed backdrop, wordmark + close button on top, one full-width pill per category, hairline, account link, language switch; body scroll lock; focus trap.
 - Toast: bottom-right on md+, bottom full-width on mobile, dark (success) / danger (error), pauses on hover/focus.
 - Not-found page: search field and button, secondary small buttons per root category, home button; server page: retry + home; unauthorized: account + support buttons.
-- Footer: Pexels credit link under the row (D-055 contract from G).
+- Footer: Image source credit link under the row (D-055 contract from G).

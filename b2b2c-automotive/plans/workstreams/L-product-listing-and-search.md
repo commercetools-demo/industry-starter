@@ -142,7 +142,7 @@ Viewports 375×812, 768×1024, 1024×768, 1440×900.
 | --- | --- | --- | --- |
 | M-L-1 | Owner | Compare listing screenshots (1440 and 375) with `Reseller Storefront.dc.html` view `plp` | continue; differences become tasks |
 | SO-01 | Owner | Sign off pagination, mobile filter sheet, skeleton and "no vehicle" states (missing from the design) | as built |
-| OA-03 | Owner | Run `seed:images` from a machine that can reach Pexels (images appear on cards) | placeholder image slot with `alt` and fixed aspect ratio |
+| OA-03 | Owner | Run `seed:images` from a machine that can reach Image source (images appear on cards) | placeholder image slot with `alt` and fixed aspect ratio |
 
 Never wait silently: add the row, continue on the default, mention it in the PR description.
 
@@ -172,7 +172,7 @@ Where the build differs from the plan, and why. Evidence in `plans/evidence/L/`.
 - **Params**: `ListingParams` has `sortGiven` (a search without an explicit `sort` is ordered by relevance and its select offers "Best match" first; a listing keeps the four options). `page` is capped at 400 (Product Search `offset + limit` limit 10000).
 - **Part number search**: the exact request ignores the fit scope but honours brand, part and pickup filters; on page 1 its ids come first. The total counts an exact match once when the fit scope is on and the main result fits one page; with more than 24 text matches an exact match beyond page 1 may be listed twice across pages (rare, accepted).
 - **Add to cart**: `addLineToCart` also checks the sku against the store's assortment (404 when withdrawn) before the price (422) and reads inventory for the branch supply channel. `anonymousId` was added to the session (`Session`, `SESSION_KEYS`); it is minted on the first cart and N's `ensureAnonymousId` can build on it. `recurrencePolicyKey` is validated and passed to `addLineToCart` but not applied (N-03).
-- **Images**: cards use `next/image` with a render-time loader (`components/listing/image-loader.ts`, Pexels sized with `?auto=compress&cs=tinysrgb&w=`), so no optimizer host config; the browser loads from the image host, therefore `CSP_IMG_HOSTS` must list it (`.env.example` says which). A card without a photo keeps the 4:3 slot with "No photo" (OA-03).
+- **Images**: cards use `next/image` with a render-time loader (`components/listing/image-loader.ts`, Image source sized with `?auto=compress&cs=tinysrgb&w=`), so no optimizer host config; the browser loads from the image host, therefore `CSP_IMG_HOSTS` must list it (`.env.example` says which). A card without a photo keeps the 4:3 slot with "No photo" (OA-03).
 - **Layout**: page padding and gap are 16 px below 1024 px (24 px above); with the 24 px values only one 451 px column fitted beside the 230 px panel at 768.
 - **Messages** are two-level namespaces `listing`, `filters`, `card`, `pagination` (Q-J07). Quality and position labels come from the catalogues (the seed's enum labels are English only); brand labels come from the product type through `lib/ct/attribute-labels.ts` (TTL cache one hour, like G).
 - **Scopes added**: `view_products`, `view_standalone_prices` (`lib/scopes.ts`, `.env.example`); the frontend API client needs both (OA-01).

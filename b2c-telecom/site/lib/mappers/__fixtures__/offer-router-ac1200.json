@@ -65,7 +65,7 @@
     "images": [
       {
         "url": "https://media.istockphoto.com/id/91692641/photo/a-cable-modem-and-router-isolated-on-a-white-background.jpg",
-        "label": "Photo via Pexels",
+        "label": "Photo via Image source",
         "dimensions": {
           "w": 612,
           "h": 407
@@ -174,7 +174,7 @@
       "images": [
         {
           "url": "https://media.istockphoto.com/id/91692641/photo/a-cable-modem-and-router-isolated-on-a-white-background.jpg",
-          "label": "Photo via Pexels",
+          "label": "Photo via Image source",
           "dimensions": {
             "w": 612,
             "h": 407

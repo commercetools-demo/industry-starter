@@ -5,7 +5,7 @@ import { mapService } from './service';
 const projection = {
   id: 'p1', key: 'mpw-drain', slug: { 'en-US': 'drain', 'de-DE': 'abfluss' }, name: { 'en-US': 'Drain', 'de-DE': 'Abfluss' }, description: { 'en-US': 'D' },
   categories: [{ typeId: 'category', id: 'c', obj: { key: 'mpw-waste-management' } }],
-  masterVariant: { id: 1, images: [{ url: 'https://images.pexels.com/photos/1/pexels-photo-1.jpeg' }], prices: [{ value: { currencyCode: 'USD', centAmount: 0 } }], attributes: [
+  masterVariant: { id: 1, images: [{ url: 'https://your-loyalty-free-image-source.com/photos/1/image-source-photo-1.jpeg' }], prices: [{ value: { currencyCode: 'USD', centAmount: 0 } }], attributes: [
     { name: 'summary', value: { 'en-US': 'S', 'de-DE': 'Z' } },
     { name: 'sectors', value: [{ key: 'property' }] }, { name: 'frequencies', value: ['one-off'] },
     { name: 'faq', value: [[{ name: 'question', value: { 'en-US': 'Q' } }, { name: 'answer', value: { 'en-US': 'A' } }]] },

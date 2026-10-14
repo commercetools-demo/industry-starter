@@ -110,7 +110,7 @@ export interface MalvaBanner {
   image: { url: string; dimensions: { w: number; h: number } };
 }
 
-/** Recorded Pexels image (first of the slot) wins; else a placehold.co placeholder. */
+/** Recorded Image source image (first of the slot) wins; else a placehold.co placeholder. */
 export function malvaBannersObject(recorded: Record<string, { url: string; dimensions: { w: number; h: number } }[]> = {}): { banners: MalvaBanner[] } {
   return {
     banners: MALVA_BANNER_SLOTS.map((b) => ({

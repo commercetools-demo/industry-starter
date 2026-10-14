@@ -1,0 +1,73 @@
+{
+  "pageProps": {
+    "initialData": {
+      "data": [
+        {
+          "id": "31558500",
+          "type": "photo",
+          "attributes": {
+            "id": 31558500,
+            "width": 3762,
+            "height": 5643,
+            "aspect_ratio": 0.6666666666666666,
+            "title": "Close-up of Dual Chrome Exhaust Pipes",
+            "image": {
+              "small": "https://your-loyalty-free-image-source.com/photos/31558500/image-source-photo-31558500.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://your-loyalty-free-image-source.com/photos/31558500/image-source-photo-31558500.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://your-loyalty-free-image-source.com/photos/31558500/image-source-photo-31558500.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://your-loyalty-free-image-source.com/photo/31558500/download/",
+              "download_link": "https://your-loyalty-free-image-source.com/photos/31558500/image-source-photo-31558500.jpeg?cs=srgb&dl=image-source-31558500.jpg&fm=jpg"
+            }
+          },
+          "meta": { "searchable": true }
+        },
+        {
+          "id": "10827691",
+          "type": "photo",
+          "attributes": {
+            "id": 10827691,
+            "width": 8256,
+            "height": 5504,
+            "aspect_ratio": 1.5,
+            "title": "Close Up Shot of a Car Muffler",
+            "image": {
+              "small": "https://your-loyalty-free-image-source.com/photos/10827691/image-source-photo-10827691.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://your-loyalty-free-image-source.com/photos/10827691/image-source-photo-10827691.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://your-loyalty-free-image-source.com/photos/10827691/image-source-photo-10827691.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://your-loyalty-free-image-source.com/photo/10827691/download/",
+              "download_link": "https://your-loyalty-free-image-source.com/photos/10827691/image-source-photo-10827691.jpeg?cs=srgb&dl=image-source-10827691.jpg&fm=jpg"
+            }
+          },
+          "meta": { "searchable": true }
+        },
+        {
+          "id": "10959176",
+          "type": "photo",
+          "attributes": {
+            "id": 10959176,
+            "width": 3840,
+            "height": 2160,
+            "aspect_ratio": 1.7777777777777777,
+            "title": "Close Up Shot of Motor Vehicle",
+            "image": {
+              "small": "https://your-loyalty-free-image-source.com/photos/10959176/image-source-photo-10959176.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://your-loyalty-free-image-source.com/photos/10959176/image-source-photo-10959176.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://your-loyalty-free-image-source.com/photos/10959176/image-source-photo-10959176.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://your-loyalty-free-image-source.com/photo/10959176/download/",
+              "download_link": "https://your-loyalty-free-image-source.com/photos/10959176/image-source-photo-10959176.jpeg?cs=srgb&dl=image-source-10959176.jpg&fm=jpg"
+            }
+          },
+          "meta": { "searchable": true }
+        }
+      ],
+      "meta": {
+        "raw_query": "exhust",
+        "related_searches": [{ "term": "exhaust", "image": "https://your-loyalty-free-image-source.com/photos/33474404/image-source-photo-33474404.jpeg" }]
+      },
+      "pagination": { "current_page": 1, "total_pages": 138, "total_results": 3304 }
+    },
+    "mode": "photos",
+    "searchQuery": "exhust",
+    "adPreloadData": { "aigcResult": { "imageUrls": ["https://content.your-loyalty-free-image-source.com/aigc-bundle/images/50cc7397-cab5-4c0c-8867-825d49740c09.jpg"] } }
+  }
+}

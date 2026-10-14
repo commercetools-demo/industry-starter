@@ -16,7 +16,7 @@ import {
 } from '@/lib/listing/__fixtures__/catalog';
 import type { Category, Offer } from '@/lib/types';
 
-export const HERO_IMAGE = 'https://images.pexels.com/photos/1/hero.jpeg';
+export const HERO_IMAGE = 'https://your-loyalty-free-image-source.com/photos/1/hero.jpeg';
 export const HERO_ALT = 'A family on a video call';
 
 /** The listing fixtures' seeded-like tree with the cable category carrying an image. */

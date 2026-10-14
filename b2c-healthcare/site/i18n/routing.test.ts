@@ -28,7 +28,7 @@ describe('storefront-locale-routing: routing configuration', () => {
   it('next.config: unoptimized images and the remote image hosts', () => {
     expect(nextConfig.images?.unoptimized).toBe(true);
     expect(nextConfig.images?.remotePatterns?.map((pattern) => (pattern as { hostname: string }).hostname)).toEqual([
-      'images.pexels.com',
+      'your-loyalty-free-image-source.com',
       'media.istockphoto.com',
       'storage.googleapis.com',
     ]);

@@ -52,7 +52,7 @@ describe('netlify.toml', () => {
     expect(csp).toMatch(/script-src[^;]*https:\/\/js\.stripe\.com/);
     expect(csp).toMatch(/frame-src[^;]*https:\/\/\*\.commercetools\.com/);
     expect(csp).toMatch(/connect-src[^;]*https:\/\/\*\.commercetools\.com/);
-    expect(csp).toMatch(/img-src[^;]*https:\/\/images\.pexels\.com/);
+    expect(csp).toMatch(/img-src[^;]*https:\/\/your-loyalty-free-image-source\.com/);
     expect(csp).toMatch(/img-src[^;]*https:\/\/media\.istockphoto\.com/);
     expect(csp).toContain("object-src 'none'");
     expect(csp).toContain("frame-ancestors 'none'");

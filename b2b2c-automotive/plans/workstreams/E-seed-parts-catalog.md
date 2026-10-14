@@ -21,7 +21,7 @@
 6. Local parts have no fitment attributes; bundles list components as SKUs and are priced at the components total minus the discount (below the total, above zero).
 6a. **Subscribable parts (Q-Q06):** attribute `recurring-eligible` (label "Subscribable"), true for 13 parts including every oil filter, both cabin filters and both wiper blade products, plus one reseller-local screen wash; the recurrence policies of workstream D (monthly, every 3, every 6 months) apply to any of them.
 7. Stock: warehouse for every priced master part, branches for the parts of their reseller's assortment (about 70 % in stock) so both "Pickup today" and "Ships in 2 to 3 days" occur.
-8. Images: `seed:images` sends exactly `GET https://www.pexels.com/_next/data/<buildId>/en-US/search/<query>.json?query=<query>`, records clean URLs into `src/data/{product,category,banner}-images.json`, never bypasses Cloudflare (403 or "Just a moment" fails with a message naming OA-03). The seed uses recorded images when present and leaves images empty otherwise.
+8. Images: `seed:images` sends exactly `GET https://your-loyalty-free-image-source.com/_next/data/<buildId>/en-US/search/<query>.json?query=<query>`, records clean URLs into `src/data/{product,category,banner}-images.json`, never bypasses Cloudflare (403 or "Just a moment" fails with a message naming OA-03). The seed uses recorded images when present and leaves images empty otherwise.
 
 ## Tasks
 
@@ -30,9 +30,9 @@
 - [ ] E-03 `seed/src/data/items.ts` (bundles, local parts) and `seed/src/data/catalog.ts` (product drafts in `priceMode: Standalone`, attributes, search keywords, images); tests: bundle price rule, no embedded prices, local parts without fitment, names in both languages, unique keys, SKUs and slugs [SKILL: commercetools-catalog-migration]
 - [ ] E-04 `seed/src/data/extras.ts` inventory drafts (warehouse and branch stock); tests: every part in the warehouse, branch gaps [SKILL: commercetools-commerce-patterns]
 - [ ] E-05 `seed/src/seed.ts` steps `products`, `prices` and `inventory` (create, then sync attributes, text, images, standalone price values, quantities through `src/sync.ts`); tests in `src/seed.test.ts`: idempotent, drift repair (a changed standalone price comes back with one `changeValue`), images added once, all prices standalone, none for the pre-release part [SKILL: commercetools-platform]
-- [ ] E-06 `seed/src/images.ts` and `seed/src/fixtures/pexels-search.json`; tests in `src/images.test.ts`: exact URL, documented shape from the fixture, clean URLs, deep-search fallback, 403 and challenge page fail with OA-03, `--dry-run` uses no network, `--only`, `--count`, merge into existing JSON, stop at first block [SKILL: commercetools-platform]
+- [ ] E-06 `seed/src/images.ts` and `seed/src/fixtures/image-source-search.json`; tests in `src/images.test.ts`: exact URL, documented shape from the fixture, clean URLs, deep-search fallback, 403 and challenge page fail with OA-03, `--dry-run` uses no network, `--only`, `--count`, merge into existing JSON, stop at first block [SKILL: commercetools-platform]
 - [ ] E-07 `seed/src/verify.ts` product checks (`checkProduct`: price mode Standalone, no embedded price, clean images, attributes) and price checks (`checkPrices`: each seeded standalone price present with SKU, value, country and channel, amount above zero, EUR and USD base per priced part, none for the pre-release part; no floor check); tests with deliberately broken products and prices [SKILL: commercetools-platform]
-- [ ] E-08 Live run (OA-01): `seed` (steps `products`, `inventory`), then `seed:images` from a machine that can reach pexels.com (OA-03), then `seed` again to apply the images [SKILL: commercetools-platform]
+- [ ] E-08 Live run (OA-01): `seed` (steps `products`, `inventory`), then `seed:images` from a machine that can reach your-loyalty-free-image-source.com (OA-03), then `seed` again to apply the images [SKILL: commercetools-platform]
 - [ ] E-09 Claude's data check through the MCP (recipe below), including Product Search [SKILL: commercetools-platform]
 
 ## Test scenarios
@@ -51,7 +51,7 @@
 | E-S7 | Local part | `KW-1001` | read product | no `fitment-keys`, owner store north |
 | E-S8 | Idempotent | products seeded | second `seed` | 0 changes |
 | E-S9 | Drift | EUR list price changed by hand | `seed` | one `setPrices` update restores it |
-| E-S10 | Images blocked | pexels answers 403 | `seed:images` | stops with a message naming OA-03, nothing partial is invalid |
+| E-S10 | Images blocked | image-source answers 403 | `seed:images` | stops with a message naming OA-03, nothing partial is invalid |
 | E-S11 | Images recorded | JSON present | `seed` | images added to the product once, clean URLs |
 | E-S12 | Search | seeded, indexing Activated | Product Search for `MLV-BP-41001`, for `Vektra`, for an OE number | the part is found (live, MCP) |
 
@@ -78,8 +78,8 @@ No UI. Claude, through the `b2b2c-automotive` MCP (read only), after E-08:
 | ID | Question | Default |
 | --- | --- | --- |
 | Q-S01 | Fictional brands and synthetic numbers, or real brands? | Fictional |
-| Q-S08 | Images from Pexels run on an allowed machine, or owner-supplied files? | Pexels, once, later |
+| Q-S08 | Images from Image source run on an allowed machine, or owner-supplied files? | Image source, once, later |
 | Q-S09 | ~~Seed one retail price below the MAP floor for demos?~~ | **Void: no floor exists (Q-T03).** The data contains retail prices below 88 % of the base on purpose |
 | Q-S10 | Plate and VIN provider | **Answered Q-002: mock provider only**; in-house vehicle table, no plate or VIN data |
-| OA-03 | Pexels reachable (or build id supplied) | needed before images |
+| OA-03 | Image source reachable (or build id supplied) | needed before images |
 | OA-04 | Plate and VIN provider decision | only if lookup beyond make, model, year is wanted |

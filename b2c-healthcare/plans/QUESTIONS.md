@@ -76,7 +76,7 @@ Q-005 = BFF only, Q-008 = no email (auto-verify), Q-009 = Netlify, Q-060…Q-065
 - **Q-014** *Pharmacist review.* **Default:** order **States** `received → pharmacist-review → packed-shipped → delivered` (+ cancelled); the timeline reads the order state; a QA script `advance-order.ts` moves states (no pharmacist UI). **Blocking:** E, S.
 - **Q-015** *Reviews.* **Default:** real commercetools Review objects, seeded, shown only when `authorIsVerified`-style custom flag is true; rating average and count from product rating statistics. **Blocking:** E, L.
 - **Q-016** *Home statistics.* **Default:** keep only what is computed (live doctor count, average rating from reviews, "available now" count); remove "2M+ consultations" and "15 min median wait" (no source). **Blocking:** M.
-- **Q-035 — Answered 2026-10-08: ALSO doctor portraits from Pexels** (overrules D9 default); medicines and banners as proposed. *Imagery.* **Default:** medications, hero, CTA band, delivery block and journal covers from Pexels via `update-images.ts` (clean URLs); doctors keep initials on peach (D9). Alternative: Pexels portraits for doctors (fictional people with stock photos of real strangers — we advise against). **Blocking:** E.
+- **Q-035 — Answered 2026-10-08: ALSO doctor portraits from Image source** (overrules D9 default); medicines and banners as proposed. *Imagery.* **Default:** medications, hero, CTA band, delivery block and journal covers from Image source via `update-images.ts` (clean URLs); doctors keep initials on peach (D9). Alternative: Image source portraits for doctors (fictional people with stock photos of real strangers — we advise against). **Blocking:** E.
 
 ## Round 3 — behaviour per spec (asked when that workstream is designed)
 **Shell / home (H, M)**
@@ -118,7 +118,7 @@ Q-005 = BFF only, Q-008 = no email (auto-verify), Q-009 = Netlify, Q-060…Q-065
 - **Q-049** Verification before purchase: **default** an unverified patient can browse and book as a guest but cannot place a medication order.
 
 **Static content (V)**
-- **Q-050** Journal: **default** 3 seeded articles as files in the repo (`content/journal/*.md`) with Pexels covers; block hidden if none; articles at `/journal/<slug>`.
+- **Q-050** Journal: **default** 3 seeded articles as files in the repo (`content/journal/*.md`) with Image source covers; block hidden if none; articles at `/journal/<slug>`.
 - **Q-051** Contact form: **default** form validated and sent through the Mailer (Q-008); until OA-05 the dev outbox records it; no free text stored in commercetools.
 - **Q-052** About/policy/FAQ copy: **default** Claude drafts neutral placeholder copy marked "draft"; legal copy needs SO-03/SO-04.
 

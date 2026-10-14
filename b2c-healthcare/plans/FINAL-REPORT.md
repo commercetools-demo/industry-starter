@@ -10,7 +10,7 @@ All 26 workstreams (A–Z) of the plan were implemented by junior agents and mer
 | B | Verbatim design tokens + parity check, self-hosted fonts, design lint, contrast tests |
 | C | `en-US` routing, `proxy.ts`, messages, `COUNTRY_CONFIG`, locale-aware navigation |
 | D | commercetools client singleton, signed cookie session (ids only), BFF route shape, dev-only health route |
-| E | Seed scripts: sample-data cleanup, product types/types/states/tax/shipping, 8 doctors, 20 medicines, Pexels image script (clean URLs), verify/reset |
+| E | Seed scripts: sample-data cleanup, product types/types/states/tax/shipping, 8 doctors, 20 medicines, Image source image script (clean URLs), verify/reset |
 | F | Scheduling (time-zone safe, create-once slot claim), bookings, reviews, rate limit, clinical stand-in (Custom Objects), demo patients |
 | G | Data-loading rules, cached public reads, atomic locale write, Product Search wrappers, mappers |
 | H | UI primitives, header/footer/mobile menu, sign-in prompt, smoke page |

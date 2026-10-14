@@ -14,7 +14,7 @@ describe('next.config', () => {
     const config = await loadConfig('production');
     expect(config.images?.unoptimized).toBe(true);
     const hostnames = (config.images?.remotePatterns ?? []).map((pattern) => (pattern instanceof URL ? pattern.hostname : pattern.hostname));
-    expect(hostnames).toEqual(['images.pexels.com', 'media.istockphoto.com', 'storage.googleapis.com']);
+    expect(hostnames).toEqual(['your-loyalty-free-image-source.com', 'media.istockphoto.com', 'storage.googleapis.com']);
     expect(hostnames.some((hostname) => hostname.includes('**'))).toBe(false);
   });
 

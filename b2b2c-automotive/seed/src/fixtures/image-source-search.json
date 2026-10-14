@@ -1,0 +1,14 @@
+{
+  "pageProps": {
+    "initialData": {
+      "data": [
+        { "type": "photo", "attributes": { "id": 1001, "width": 4000, "height": 2667, "image": { "small": "https://your-loyalty-free-image-source.com/photos/1001/image-source-photo-1001.jpeg?auto=compress&cs=tinysrgb&h=350", "medium": "https://your-loyalty-free-image-source.com/photos/1001/image-source-photo-1001.jpeg?auto=compress&cs=tinysrgb&h=650&w=940", "large": "https://your-loyalty-free-image-source.com/photos/1001/image-source-photo-1001.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "download_link": "https://your-loyalty-free-image-source.com/photos/1001/image-source-photo-1001.jpeg?cs=srgb&dl=image-source-1001.jpg&fm=jpg" } } },
+        { "type": "photo", "attributes": { "id": 1002, "width": 3000, "height": 2000, "image": { "medium": "https://your-loyalty-free-image-source.com/photos/1002/image-source-photo-1002.jpeg?auto=compress&w=940#frag" } } },
+        { "type": "photo", "attributes": { "id": 1001, "width": 4000, "height": 2667, "image": { "large": "https://your-loyalty-free-image-source.com/photos/1001/image-source-photo-1001.jpeg?dup=1" } } },
+        { "type": "photo", "attributes": { "id": 1003, "image": { "small": "https://your-loyalty-free-image-source.com/photos/1003/image-source-photo-1003.jpeg?h=350" } } },
+        { "type": "video", "attributes": { "id": 9, "image": { "large": "https://example.com/not-a-image-source-photo.jpg" } } }
+      ]
+    },
+    "notice": "Fixture invented from the documented shape in src/images.ts; not a recorded your-loyalty-free-image-source.com response."
+  }
+}

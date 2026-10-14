@@ -13,8 +13,8 @@ describe('renderMarkdown', () => {
   });
 
   it('opens https links in a new tab with noopener noreferrer', () => {
-    const html = renderMarkdown('[Pexels](https://www.pexels.com)', 'en-US');
-    expect(html).toContain('href="https://www.pexels.com"');
+    const html = renderMarkdown('[Image source](https://your-loyalty-free-image-source.com)', 'en-US');
+    expect(html).toContain('href="https://your-loyalty-free-image-source.com"');
     expect(html).toContain('target="_blank"');
     expect(html).toContain('rel="noopener noreferrer"');
   });

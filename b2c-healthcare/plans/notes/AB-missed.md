@@ -5,4 +5,4 @@
 - The short-dated price is read from the `mlv-short-dated` price channel; the seed has none (N-todos 7), so short-dated stock currently shows as "Unavailable for now".
 - Sitemap does not list medicine pages (no catalog enumeration there).
 - Stock is read from inventory without a supply channel (the same single worst-case date as N).
-- Medicine images in fixtures mode are always the placeholder (no Pexels URLs in the seed data until AC adds them).
+- Medicine images in fixtures mode are always the placeholder (no Image source URLs in the seed data until AC adds them).

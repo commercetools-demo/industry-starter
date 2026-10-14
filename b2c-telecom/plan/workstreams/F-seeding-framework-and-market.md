@@ -348,7 +348,7 @@ None. (The owner actions OA-03 and OA-04 are in `TODO-MANUAL-TESTING.md`; F stop
 ## Excluded
 - Spec components `Store` `malva-us` and `ProductSelection` `malva-all-offers` (and the matching dependency-order entry "stores and product selections"): not built, **D-058** (no Stores). The behaviour they were meant to give is checked as described in the table row for the "intended assortment" scenario.
 - Spec component "Market configuration: one `COUNTRY_CONFIG` entry in `site/`": belongs to workstream D (market config); F only tests that its `MARKETS` agree with `routing.locales`.
-- Spec requirement text about the Pexels key being a seeding credential: the image method is D-055 (no key); see workstream G.
+- Spec requirement text about the Image source key being a seeding credential: the image method is D-055 (no key); see workstream G.
 - Import API usage: not used (spec modeling note; tens of resources, synchronous API chosen).
 
 ## Definition of done

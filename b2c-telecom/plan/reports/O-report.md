@@ -9,7 +9,7 @@ O-01 .. O-07 (ticked). `npm run verify` passes. All three scenario rows have tes
 Nothing blocked. C-O-5 (static shell) cannot be met, see Findings.
 
 ## Questions for the owner
-- Hero alt text is the category asset name ("Cable internet"), not "Photo: ... via Pexels" (see Deviations). Should the seed put the photographer into the asset name?
+- Hero alt text is the category asset name ("Cable internet"), not "Photo: ... via Image source" (see Deviations). Should the seed put the photographer into the asset name?
 
 ## Missed features and deviations
 - Real APIs differed from the plan's assumed names: `categoryHref/categoryPath/offerPath(key|offer, locale, tree)` take locale and tree; `listingKindForCategory(key, offers)`; there is no `isListable`, so `lib/home/derive.ts` has `listableOffers` (K's `filterEligible` for the anonymous consumer plus `dedupeByAnchors`) and `anonymousBuyer`. `Category` has no `description` and `image` is a string: blurbs come from `plp.blurb.*` through `BLURB_KEY_BY_CATEGORY` only.
@@ -19,7 +19,7 @@ Nothing blocked. C-O-5 (static shell) cannot be met, see Findings.
 - Hero speed text uses message keys `home.hero.speed.gbps|mbps` with an ICU number (de-DE "Gbit/s"). Extra keys: `home.hero.imageAlt`, `home.promo.phone.titleNoPrice`, `home.promo.addons.titleNoNames`.
 - Add-on tiles link to the offer's canonical card (`/shop/streaming-entertainment?offer=...`), not `/shop/add-ons?offer=` (C-O-4 expectation is outdated; D-052 canonical link wins).
 - Live: the wireless "From" price is $45 (matches C-O-3); de-DE prices are whole euros (`40 €`, not `39,99 €`; H finding), so C-O-6 expects "ab 40 €/Monat".
-- Hero image host is `media.istockphoto.com` live (allowed by `IMAGE_HOSTS`), not only `images.pexels.com`.
+- Hero image host is `media.istockphoto.com` live (allowed by `IMAGE_HOSTS`), not only `your-loyalty-free-image-source.com`.
 
 ## TODOs for other workstreams
 - I: `/[locale]` is `ƒ` because the layout's `AccountSlot` reads cookies. For ISR/static home, resolve the account link on the client (D-050 intent).

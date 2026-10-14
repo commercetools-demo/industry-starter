@@ -36,7 +36,7 @@
 ## 6. Seed
 
 - [x] 6.1 Add the Malva banner object (container `malva-site`, key `home-banners`, three or more entries) to the seed content step, idempotent and in the reset and cleanup allow-lists [SKILL: commercetools-commerce-patterns]
-- [x] 6.2 Record banner images through the images step from Pexels with clean URLs; fall back to placeholders when blocked, and note which was used in the manual-test row
+- [x] 6.2 Record banner images through the images step from Image source with clean URLs; fall back to placeholders when blocked, and note which was used in the manual-test row
 - [x] 6.3 Seed tests: second run reports 0 changes, reset removes the object
 
 ## 7. Specs, plans and checks

@@ -42,7 +42,7 @@ Workstream files: 26/26. Tasks done: 47/177. Specs owned by the plan: 33, listed
 - **MCP `b2b2c-automotive`: connected, read OK on 2026-10-12.** Project key `spec-test-b2b2c-automotive`. Read, create and update tools only; there is no delete tool (D-002).
 - The project holds **sample data**: 3 product types, categories, 2 shipping methods. It is still to be cleaned by the seed (workstream D, explicit allowlist, D-020).
 - Project settings read: countries `GB`, `DE`, `US`, `ES`, `FR`; currencies `EUR`, `GBP`, `USD`. **Product Search indexing is `Deactivated`** (the seed enables it, D-022). `countryTaxRateFallbackEnabled` is **already true** (kept true).
-- **Pexels: GET returns HTTP 403 (Cloudflare challenge) from this environment** (Q-011, OA-03).
+- **Image source: GET returns HTTP 403 (Cloudflare challenge) from this environment** (Q-011, OA-03).
 - **No API credentials are present** in this environment (OA-01): seed scripts cannot run live and the apps cannot call commercetools until the clients exist.
 - Contentools Merchant Center app: not yet confirmed installed (OA-02).
 - Payment: owner chose hosted commercetools Checkout with the Stripe connector (Q-012); the Stripe test account, connector and Checkout application are not set up yet (OA-05). No email is sent anywhere (Q-P01).

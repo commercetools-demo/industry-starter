@@ -210,11 +210,11 @@ Consolidation of `plans/notes/<A..X>-questions.md` (workstreams Y and Z had no n
 - **Recommendation:** H reports zero warnings; switch to `--max-warnings 0`.
 
 ### QR-027 Photographer credits
-- **Question:** Pexels credits from `site-images.json` are not displayed anywhere; the hero alt text is empty (decorative); the `home-cta` slot is seeded but unused.
+- **Question:** Image source credits from `site-images.json` are not displayed anywhere; the hero alt text is empty (decorative); the `home-cta` slot is seeded but unused.
 - **Default:** none shown.
 - **Workstreams:** M, E (`notes/M-missed.md#b7`, `#b8`).
 - **Needs owner:** yes.
-- **Recommendation:** show credits in the footer or an images page if Pexels terms require it; otherwise ignore.
+- **Recommendation:** show credits in the footer or an images page if Image source terms require it; otherwise ignore.
 
 ### QR-028 Short-dated stock demo (seed change)
 - **Question:** The plan wants short-dated stock priced on a channel `mlv-short-dated`, but the seed has no such channel or price; stock below its shelf-life promise is excluded, not offered.
@@ -366,7 +366,7 @@ Every entry here has `Needs owner: no`. "Live" means the only open part is a ver
 - **QR-073 Custom type field types (E).** Default: Money for `allowanceApplied`, `restrictedApplied`, `coveredAmount`; String for `fundingScheme`, `rxNumber`, `rxLineRef`, `credentialRef`, `patientRef`; Number `prescribedQty`; Booleans; field types cannot change later without recreating the type (`notes/E-questions.md#8`). Recommendation: if any Q/R/T/U writer disagrees, change before the first live seed.
 - **QR-074 Inventory expiry type (E).** Default: type `mlv-inventory-meta` with `expiryDate` (Date); fixed `2026-11-15` on `MED-famotidine-20-mg` (`notes/E-questions.md#9`).
 - **QR-075 Catalog shape (E).** Default: 20 medications; `controlClass` enum `none`/`schedule-iv` (Alprazolam, Tramadol); 19 of 20 have `maxQtyPerOrder` (acetaminophen none); doctors have both channels (code supports one-mode); attribute constraint `None`; plain `enum` labels; ratings from Reviews; banner slots only the six named (`notes/E-questions.md#10`-`#16`, `#19`).
-- **QR-076 Seed tooling exceptions (E, F).** Default: file-level eslint-disable for SDK use in `scripts/seed/lib.ts`; seed scripts not scanned by X; `PEXELS_CLIENT_ID` read from the shell only (`notes/E-questions.md#17`, `notes/E-missed.md#b9`).
+- **QR-076 Seed tooling exceptions (E, F).** Default: file-level eslint-disable for SDK use in `scripts/seed/lib.ts`; seed scripts not scanned by X; `IMAGE_SOURCE_CLIENT_ID` read from the shell only (`notes/E-questions.md#17`, `notes/E-missed.md#b9`).
 - **QR-077 Seed scopes (E).** Default: best guess in `.env.seed.example` (QR-004 covers storefront; OA-01 the seed client) (`notes/E-questions.md#18`).
 - **QR-078 Custom Object keys and create-only semantics (F).** Default: slot-claim key `<doctorKey>.<mode>.<YYYYMMDDTHHmmssZ>`; `POST custom-objects` with `version: 0`, 409 means exists; unverified until `smoke-slots.ts` (`notes/F-questions.md#2`, `#3`). Live.
 - **QR-079 Slot rules (F).** Default: `listFreeSlots(doctorKey, mode, now, days)`, slots earlier than now + 2 h hidden; claims found by `value(doctorKey and mode)` and filtered in memory; exactly 2 h before is cancellable; request-id idempotency via SHA-256 reference `BK-...`; non-offered slot is `SlotUnavailableError`; date maths with `Intl` only (`notes/F-questions.md#6`, `#7`, `#9`-`#11`, `#22`).
@@ -472,9 +472,9 @@ Every entry here has `Needs owner: no`. "Live" means the only open part is a ver
 | Y, Z | no notes yet |
 
 ## Owner answers (2026-10-09)
-QR-001: full commercetools Checkout connected to the PSP (D-034). QR-002: Checkout handles the payment lifecycle (D-035; the message was cut off, interpretation recorded). QR-004: B2C storefront scopes + recurring policies and prices + key_value_documents (D-036). QR-013: build the medicine PDP (D-037). QR-014: full cleanup with a full seeding (D-038). QR-017: make `clinicName` searchable (D-039). QR-027: all images from Pexels, no credits (D-040). All unanswered items: the default (D-041).
+QR-001: full commercetools Checkout connected to the PSP (D-034). QR-002: Checkout handles the payment lifecycle (D-035; the message was cut off, interpretation recorded). QR-004: B2C storefront scopes + recurring policies and prices + key_value_documents (D-036). QR-013: build the medicine PDP (D-037). QR-014: full cleanup with a full seeding (D-038). QR-017: make `clinicName` searchable (D-039). QR-027: all images from Image source, no credits (D-040). All unanswered items: the default (D-041).
 
 ## Follow-up AA-AC results (2026-10-09) — needs your decision
-- **Image licence (resolved 2026-10-09):** the owner asked to use the pexels.com search data route (`/_next/data/<buildId>/en-US/search/<q>.json`) for the one-off seeding. `update-images.ts` now does that (multi-word queries read the same JSON from the search page); all 62 stored photos are `license: "Pexels"` on `images.pexels.com`, clean URLs, HTTP 200. The iStock note in `notes/AC-*.md` is outdated.
+- **Image licence (resolved 2026-10-09):** the owner asked to use the your-loyalty-free-image-source.com search data route (`/_next/data/<buildId>/en-US/search/<q>.json`) for the one-off seeding. `update-images.ts` now does that (multi-word queries read the same JSON from the search page); all 62 stored photos are `license: "Image source"` on `your-loyalty-free-image-source.com`, clean URLs, HTTP 200. The iStock note in `notes/AC-*.md` is outdated.
 - **AA-L4 (biggest risk):** does Checkout charge only the card remainder when allowance/health-account Payments are on the cart? See `notes/AA-todos.md`.
 - Details: `notes/AA-*.md`, `AB-*.md`, `AC-*.md`.

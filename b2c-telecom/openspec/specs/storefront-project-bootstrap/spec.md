@@ -74,7 +74,7 @@ The system SHALL provide a storefront application under `site/` that installs an
 
 - The commercetools skill pins `@commercetools/platform-sdk` to `^8` and `@commercetools/ts-client` to `^4`. The registry's latest majors at the time of writing are 9.6.0 and 5.1.0. Bootstrap installs the pinned majors; moving to a newer major is a separate, explicit change checked against the skill's client and login patterns, not a side effect of `npm install`.
 - The storefront API client must be the restricted Frontend-style client with no admin scopes. The seeding credential is a different, broader client and must never be configured for `site/`.
-- Next.js image optimisation query parameters are rejected by the commercetools image CDN, so `images.unoptimized` stays `true`. The skill's default `remotePatterns` wildcard is narrowed here to the hosts actually used (the commercetools CDN and `images.pexels.com`).
+- Next.js image optimisation query parameters are rejected by the commercetools image CDN, so `images.unoptimized` stays `true`. The skill's default `remotePatterns` wildcard is narrowed here to the hosts actually used (the commercetools CDN and `your-loyalty-free-image-source.com`).
 
 **Modeling notes**
 

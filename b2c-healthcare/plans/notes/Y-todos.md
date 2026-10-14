@@ -6,7 +6,7 @@ Y-05 is NOT done and not ticked: it needs OA-06 (Netlify account and site).
 1. Netlify > Add new site > Import from Git. Base directory `b2c-healthcare/site`; build command, Node 22 and functions directory come from `site/netlify.toml` (`npm run verify:build`). Do not set a publish directory by hand.
 2. Site configuration > Environment variables (Production); names and notes in `site/docs/deploy.md` section 2:
    `CTP_PROJECT_KEY`, `CTP_AUTH_URL`, `CTP_API_URL`, `CTP_CLIENT_ID`, `CTP_CLIENT_SECRET` (secret), `CTP_SCOPES` (from `.env.example`; Frontend client, no `manage_project`, no `manage_my_*`), `SESSION_SECRET` (secret, `openssl rand -base64 48`), `CTP_CHECKOUT_APP_KEY`, `SITE_URL`, `AUTO_REFILL_ENABLED` (optional), `AUTO_REFILL_RUN_SECRET`, `RELOAD_ALLOWANCES_SECRET`, `RETENTION_SECRET` (secrets, 16+ chars, `openssl rand -base64 32`, three different values).
-   Must NOT be set: `MALVA_FIXTURES`, `SAME_DAY_NOW_OVERRIDE`, `RESOLVER_FORCE_FAIL`, `MALVA_RELEASE_BUILD`, any `SEED_*`, `PEXELS_CLIENT_ID`, any admin credential.
+   Must NOT be set: `MALVA_FIXTURES`, `SAME_DAY_NOW_OVERRIDE`, `RESOLVER_FORCE_FAIL`, `MALVA_RELEASE_BUILD`, any `SEED_*`, `IMAGE_SOURCE_CLIENT_ID`, any admin credential.
 3. Deploy Previews context: the same dev project (synthetic data only) with its own secret values.
 4. Trigger the first deploy. The log must show the prune line (`removed app/api/health, ...`), `bundle scan: ok` and `health check guard: ok`. Functions tab lists `auto-refill-run`, `reload-allowances`, `reload-allowances-scheduled`, `retention`, `retention-scheduled`; the three crons are 0 5 * * *, 10 0 1 * *, 30 3 * * *.
 5. Make sure the storefront API client has the scopes the functions need (see Y-missed on `manage_key_value_documents`).

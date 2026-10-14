@@ -33,7 +33,7 @@ From `plans/TODO-MANUAL-TESTING.md` section 1 (status `TODO` unless noted). Do t
 
 | OA | Needed by | Action | Output | Blocks steps |
 | --- | --- | --- | --- | --- |
-| OA-01 | E, F, N, O, Q, S, T, U, X | In Merchant Center for project `spec-test-b2c-healthcare`, create an **admin API client for seeding** (scopes: section 3.2). Put the values in `site/.env.seed.local` (git-ignored): `SEED_CTP_PROJECT_KEY`, `SEED_CTP_AUTH_URL`, `SEED_CTP_API_URL`, `SEED_CTP_CLIENT_ID`, `SEED_CTP_CLIENT_SECRET`, `SEED_CTP_SCOPES`, `SEED_PATIENT_PASSWORD`. Optional `PEXELS_CLIENT_ID` in the shell for `seed:images` (read from the shell only, `notes/E-missed.md#b9`). | `.env.seed.local` | LT-02 to LT-20, LT-118+, LT-135+ |
+| OA-01 | E, F, N, O, Q, S, T, U, X | In Merchant Center for project `spec-test-b2c-healthcare`, create an **admin API client for seeding** (scopes: section 3.2). Put the values in `site/.env.seed.local` (git-ignored): `SEED_CTP_PROJECT_KEY`, `SEED_CTP_AUTH_URL`, `SEED_CTP_API_URL`, `SEED_CTP_CLIENT_ID`, `SEED_CTP_CLIENT_SECRET`, `SEED_CTP_SCOPES`, `SEED_PATIENT_PASSWORD`. Optional `IMAGE_SOURCE_CLIENT_ID` in the shell for `seed:images` (read from the shell only, `notes/E-missed.md#b9`). | `.env.seed.local` | LT-02 to LT-20, LT-118+, LT-135+ |
 | OA-02 | D and every storefront check | Create the **Frontend API client** (B2C template + `manage_sessions`, `manage_orders`; no admin scopes), widened per section 3.1. Put `CTP_*` in `site/.env.local`. | `.env.local` | LT-21 onward |
 | OA-03 | D | `SESSION_SECRET` of at least 32 random characters: `openssl rand -base64 48` into `.env.local`. | `.env.local` | LT-21 onward |
 | OA-04 | Q, T, U (S for real voids) | Create the commercetools **Checkout Application in Payment Only mode** with a **Stripe sandbox** connector (Stripe test keys stay in Merchant Center, not the repo), enable stored payment methods for T; put the Application key in `CTP_CHECKOUT_APP_KEY`. | `CTP_CHECKOUT_APP_KEY` | Phase E, H (cards), LT-76, LT-110 to LT-117 |
@@ -78,7 +78,7 @@ Storefront variables go in `site/.env.local` (local) and in Netlify site setting
 | `SEED_CTP_PROJECT_KEY` | yes | all `scripts/seed/*`, `allowances:reload`, `privacy:*` | scripts refuse unless exactly `spec-test-b2c-healthcare` and the API reports the same key (`notes/E-todos.md`) |
 | `SEED_CTP_AUTH_URL`, `SEED_CTP_API_URL`, `SEED_CTP_CLIENT_ID`, `SEED_CTP_CLIENT_SECRET`, `SEED_CTP_SCOPES` | yes | same | scopes in section 3.2 |
 | `SEED_PATIENT_PASSWORD` | yes for F | `seed` (3 synthetic customers), sign-in tests | missing: seed skips customers and `seed:verify` fails "exactly three example.com patients" (`notes/F-questions.md#17`) |
-| `PEXELS_CLIENT_ID`, `PEXELS_API_KEY` | optional | `seed:images`, `seed:images:json` | shell only; `PEXELS_API_KEY` (free, pexels.com/api) selects the official Pexels API, else the undocumented public endpoint (`notes/E-missed.md#b9`, `notes/AC-questions.md`) |
+| `IMAGE_SOURCE_CLIENT_ID`, `IMAGE_SOURCE_API_KEY` | optional | `seed:images`, `seed:images:json` | shell only; `IMAGE_SOURCE_API_KEY` (free, your-loyalty-free-image-source.com/api) selects the official Image source API, else the undocumented public endpoint (`notes/E-missed.md#b9`, `notes/AC-questions.md`) |
 
 ---
 
@@ -137,7 +137,7 @@ Dependency order: seed, verify, wait for the search index, then storefront check
 | LT-08 | Check the seed UPDATES an existing type (adds field definitions) rather than skipping it: with a project that already has `mlv-rx-line`, confirm the three Q fields and `lastSeenUnitPrice` appear; otherwise add them in the Merchant Center | fields present in `read_types` | O: `notes/O-todos.md#1`, Q: `notes/Q-todos.md#L8` |
 | LT-09 | `npm run seed` again | prints `0 change(s) in N step(s)` | E, F: `notes/E-todos.md`, `notes/F-todos.md#1` |
 | LT-10 | `npm run seed:wait` | polls Product Search until 28 products indexed (5 min timeout). If `prefix` on `key` is rejected, switch to `exists` on `key`; if `fullText` language `en-US` returns 0 for "Okafor", try `en` | E: `notes/E-todos.md`, `notes/E-questions.md#7`, `#7b` |
-| LT-11 | the photos are committed (`data/product-images.json`, `site-images.json`, D-040) and `seed:full` / `seed` apply them; re-pick only if wanted: `npm run seed:images:json` (no credentials, writes the JSON) or `npm run seed:images` (live). `PEXELS_API_KEY` in the shell switches to the official Pexels API | picks reviewed; images replaced and products republished; `scripts/seed/data/product-images.json` and `site-images.json` written; confirm URLs have no `?` | E: `notes/E-todos.md`, M: `notes/M-todos.md#2` |
+| LT-11 | the photos are committed (`data/product-images.json`, `site-images.json`, D-040) and `seed:full` / `seed` apply them; re-pick only if wanted: `npm run seed:images:json` (no credentials, writes the JSON) or `npm run seed:images` (live). `IMAGE_SOURCE_API_KEY` in the shell switches to the official Image source API | picks reviewed; images replaced and products republished; `scripts/seed/data/product-images.json` and `site-images.json` written; confirm URLs have no `?` | E: `notes/E-todos.md`, M: `notes/M-todos.md#2` |
 | LT-12 | `git diff scripts/seed/data/*.json` and commit the generated JSON | both files no longer `{}` | E: `notes/E-todos.md` |
 | LT-13 | `npm run seed` | still 0 changes (images are not compared) | E: `notes/E-todos.md` |
 | LT-14 | `npm run seed:verify` | all checks PASS, including clinical block, "every product has images", and the Messages-disabled check (`project.messages.enabled` false). If only "product rating statistics are non-zero" fails, wait a few seconds and re-run (async roll-up) | E, F, X: `notes/E-todos.md`, `notes/F-todos.md#2`, `notes/X-todos.md#6` |
@@ -428,7 +428,7 @@ Every assumption written from documentation or memory and never run. "Depends" l
 | Netlify scheduled functions can call the app with a secret header; a public GET starts nothing | `netlify/functions/*` | LT-107, LT-124, LT-142 | `notes/T-questions.md#10`, `notes/U-todos.md`, `notes/X-todos.md#5` |
 | `URL` (Netlify) or `SITE_URL` gives the origin the functions call | `auto-refill-run.ts`, `reload-allowances-scheduled.ts`, `retention-scheduled.ts` | LT-107 | `notes/U-todos.md` |
 | `outputFileTracingIncludes` for `./content/**/*` makes runtime file reads work on Netlify | `next.config.ts`, `lib/content.ts` | LT-127 | `notes/V-questions.md#9` |
-| `seed:images` Pexels endpoint (undocumented) still answers | `scripts/seed/update-images.ts` | LT-11 | `notes/E-todos.md`, `notes/E-questions.md` |
+| `seed:images` Image source endpoint (undocumented) still answers | `scripts/seed/update-images.ts` | LT-11 | `notes/E-todos.md`, `notes/E-questions.md` |
 | Messages disabled and Subscriptions not needing them | `seed:verify` | LT-14 | `notes/X-questions.md#13` |
 | The Chrome DevTools connector allows screenshots to repo paths (it refused) | evidence capture | LT-126 | `notes/B-todos.md`, `notes/H-todos.md` |
 

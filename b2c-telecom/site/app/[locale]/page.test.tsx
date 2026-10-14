@@ -65,7 +65,7 @@ describe('[locale] home page', () => {
     const metadata = await generateMetadata({ params: Promise.resolve({ locale: 'en-US' }) });
     expect(metadata.title).toBe('Malva Telecom: phone, wireless and cable internet');
     expect(metadata.alternates).toEqual({ canonical: '/en-US', languages: { 'en-US': '/en-US', 'de-DE': '/de-DE' } });
-    expect(metadata.openGraph?.images).toEqual(['https://images.pexels.com/photos/1/hero.jpeg']);
+    expect(metadata.openGraph?.images).toEqual(['https://your-loyalty-free-image-source.com/photos/1/hero.jpeg']);
   });
 
   it('renders German copy for de-DE', async () => {

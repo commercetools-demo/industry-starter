@@ -12,7 +12,7 @@ Letters are in a valid **build order**: every workstream depends only on earlier
 | D | Locale routing, messages, region and language switch | switching-region-or-language | A, B | — | H, I, W, Z |
 | E | BFF core: commercetools client, session, env guards, identity core | authentication-and-identity (core) | A, B | OA-02 | F, H, I, K, L, R, U, Z |
 | F | Seeding framework, project settings, market and shipping | seeding-framework, seed-shipping-and-market-settings | A, E | OA-03, OA-04 | G, X, Z |
-| G | Catalog model, seed data and images | telecom-catalog-model, seed-catalog-data, seed-product-images-pexels | F | — | H, J, L, X, Z |
+| G | Catalog model, seed data and images | telecom-catalog-model, seed-catalog-data, seed-product-images-image-source | F | — | H, J, L, X, Z |
 | H | Data-loading foundation: types, mappers, catalog and search reads | discovery-and-browse | D, E, G | — | I, J, K, L, M, N, O, P, Z |
 | I | Design system primitives, shell and error pages | storefront-shell, error-pages | C, D, E, H | — | M, N, O, P, R, W, Y, Z |
 | J | Offer rules: compatibility, add-ons, required equipment | configurable-offers-and-compatibility, offer-compatible-addons | G, H | — | K, M, N, X, Y, Z |

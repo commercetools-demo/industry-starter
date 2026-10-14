@@ -38,7 +38,7 @@ export function getLocalizedString(field: Record<string, string> | null | undefi
 export function sizedImage(url: string, width: number): string {
   try {
     const u = new URL(url);
-    if (u.hostname !== 'images.pexels.com') return url;
+    if (u.hostname !== 'your-loyalty-free-image-source.com') return url;
     return `${u.origin}${u.pathname}?auto=compress&cs=tinysrgb&w=${width}`;
   } catch {
     return url;

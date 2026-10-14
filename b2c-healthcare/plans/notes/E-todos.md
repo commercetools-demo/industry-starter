@@ -17,7 +17,7 @@ npm run seed -- --dry-run                    # review
 npm run seed                                 # must finish without STOP
 npm run seed                                 # second run must print "0 change(s) in N step(s)"
 npm run seed:wait                            # polls Product Search until 28 products are indexed (5 min timeout)
-npm run seed:images -- --dry-run             # review the picks (needs internet, no credentials used for pexels)
+npm run seed:images -- --dry-run             # review the picks (needs internet, no credentials used for image-source)
 npm run seed:images                          # replaces images, republishes, writes data/product-images.json + data/site-images.json
 git diff scripts/seed/data/*.json            # commit the generated JSON (currently `{}` placeholders)
 npm run seed                                 # still 0 changes? (images are not compared, products exist)

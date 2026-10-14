@@ -9,7 +9,7 @@ Idempotent scripts that put everything the Malva B2B2C automotive sites (reselle
 
 ## Quick start
 
-1. **Env.** `cp .env.example .env.local` and fill in `SEED_CTP_PROJECT_KEY`, `SEED_CTP_AUTH_URL`, `SEED_CTP_API_URL`, `SEED_CTP_CLIENT_ID`, `SEED_CTP_CLIENT_SECRET`, `SEED_CTP_SCOPES` (an API client with manage scopes for the project, OA-01), `EXPECTED_PROJECT_KEY` (the project key typed again, must be `spec-test-b2b2c-automotive`) and `SEED_DEMO_PASSWORD` (at least 10 characters; the demo login password of the apps, `DEMO_LOGIN_PASSWORD` there). Optional `PEXELS_BUILD_ID`. Never commit or paste these.
+1. **Env.** `cp .env.example .env.local` and fill in `SEED_CTP_PROJECT_KEY`, `SEED_CTP_AUTH_URL`, `SEED_CTP_API_URL`, `SEED_CTP_CLIENT_ID`, `SEED_CTP_CLIENT_SECRET`, `SEED_CTP_SCOPES` (an API client with manage scopes for the project, OA-01), `EXPECTED_PROJECT_KEY` (the project key typed again, must be `spec-test-b2b2c-automotive`) and `SEED_DEMO_PASSWORD` (at least 10 characters; the demo login password of the apps, `DEMO_LOGIN_PASSWORD` there). Optional `IMAGE_SOURCE_BUILD_ID`. Never commit or paste these.
 2. **Check offline.** `npm ci && npm run check` (type check and all tests, no network) then `npm run seed -- --dry-run --offline` (full plan against an in-memory API, 645 changes).
 3. **Order against the project:** `seed:cleanup -- --dry-run`, `seed:cleanup -- --confirm <projectKey>`, `seed:settings`, `seed -- --dry-run`, `seed`, `seed` again (must say `0 change(s)`), `verify`. Images last: `seed:images` (OA-03), then `seed` once more.
 4. **Start over:** `npm run reset -- --confirm <projectKey>` then `npm run seed`.
@@ -32,7 +32,7 @@ Idempotent scripts that put everything the Malva B2B2C automotive sites (reselle
 | `npm run seed:settings` | Product Search indexing on (waits for `Activated`), `countryTaxRateFallbackEnabled` kept true |
 | `npm run seed:cleanup` | delete the known sample data (order: standalone prices, products, discounts, shipping, tax, zones, categories deepest first, product types, recurrence policies, channels) |
 | `npm run seed` | idempotent upsert of everything, in dependency order (steps below) |
-| `npm run seed:images` | record clean Pexels image URLs into `src/data/*-images.json` (no commercetools access) |
+| `npm run seed:images` | record clean Image source image URLs into `src/data/*-images.json` (no commercetools access) |
 | `npm run verify` | read-back checks, exit 1 on any mismatch |
 | `npm run reset` | delete the seed's own resources so `seed` can rebuild from nothing |
 | `npm run purge:test-data` | dry run by default: deletes only records listed in `plans/evidence/*/test-data.md` (rows `\| kind \| id \| note \|`) that still carry the `TST-` marker and not the `mau-` prefix; `-- --apply --confirm <projectKey>` to delete (workstream Z-07, M-Z-03). `src/purge-test-data.test.ts` also proves that `reset` removes everything the seed creates. |
@@ -49,7 +49,7 @@ npm run seed:cleanup -- --confirm spec-test-b2b2c-automotive
 npm run seed:settings -- --dry-run && npm run seed:settings
 npm run seed -- --dry-run && npm run seed
 npm run seed                                  # second run must report 0 change(s)
-npm run seed:images                           # needs OA-03 (pexels.com reachable), then: npm run seed
+npm run seed:images                           # needs OA-03 (your-loyalty-free-image-source.com reachable), then: npm run seed
 npm run verify
 ```
 
@@ -57,7 +57,7 @@ No credentials? `npm run seed -- --dry-run --offline` runs the whole seed agains
 
 ## Images
 
-`seed:images` sends exactly `GET https://www.pexels.com/_next/data/<buildId>/en-US/search.json?q=<query>` (default build id `8mTEncX7SLQB15n9Vvhgq`, override with `PEXELS_BUILD_ID` or `--build-id`; the id changes whenever pexels.com deploys). It stores **clean** URLs (no query, no fragment) for products, categories and banners, landscape photos first, with the original photo's width and height. It never uses a browser and never tries to get around Cloudflare: on HTTP 403 or a "Just a moment" page it stops with a message that points to OA-03 in `plans/TODO-MANUAL-TESTING.md`. Options: `--dry-run` (print requests, no network), `--only <key[,key]>`, `--count <1-6>`. `seed` uses the recorded JSON when present and leaves images empty otherwise; re-running `seed` after recording images adds them to existing products.
+`seed:images` sends exactly `GET https://your-loyalty-free-image-source.com/_next/data/<buildId>/en-US/search.json?q=<query>` (default build id `8mTEncX7SLQB15n9Vvhgq`, override with `IMAGE_SOURCE_BUILD_ID` or `--build-id`; the id changes whenever your-loyalty-free-image-source.com deploys). It stores **clean** URLs (no query, no fragment) for products, categories and banners, landscape photos first, with the original photo's width and height. It never uses a browser and never tries to get around Cloudflare: on HTTP 403 or a "Just a moment" page it stops with a message that points to OA-03 in `plans/TODO-MANUAL-TESTING.md`. Options: `--dry-run` (print requests, no network), `--only <key[,key]>`, `--count <1-6>`. `seed` uses the recorded JSON when present and leaves images empty otherwise; re-running `seed` after recording images adds them to existing products.
 
 ## Demo users (password `SEED_DEMO_PASSWORD`, at least 10 characters)
 
@@ -65,4 +65,4 @@ Shoppers (store-bound): `anna.schneider@example.com`, `jonas.weber@example.com` 
 
 ## Files
 
-`src/lib.ts` env, guards, runner · `src/api.ts` thin API layer over the SDK · `src/fake-api.ts` in-memory API for tests and `--offline` · `src/sync.ts` pure "what differs" planners · `src/seed.ts` · `src/settings.ts` · `src/cleanup.ts` · `src/reset.ts` · `src/verify.ts` · `src/images.ts` · `src/drafts.ts` · `src/data/*` the data (`sample-allowlist.ts` is the cleanup allow-list) · tests next to the code · `src/fixtures/pexels-search.json` invented fixture of the documented Pexels shape.
+`src/lib.ts` env, guards, runner · `src/api.ts` thin API layer over the SDK · `src/fake-api.ts` in-memory API for tests and `--offline` · `src/sync.ts` pure "what differs" planners · `src/seed.ts` · `src/settings.ts` · `src/cleanup.ts` · `src/reset.ts` · `src/verify.ts` · `src/images.ts` · `src/drafts.ts` · `src/data/*` the data (`sample-allowlist.ts` is the cleanup allow-list) · tests next to the code · `src/fixtures/image-source-search.json` invented fixture of the documented Image source shape.

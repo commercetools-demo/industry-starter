@@ -117,8 +117,8 @@ Verified live on 2026-10-07 against `spec-test-b2c-telecom` through the dev wind
 - ReserveOnOrder experiments consumed stock; a re-seed restored it.
 
 ### G: image hosts
-- All 35 lock entries / 70 URLs are on `media.istockphoto.com`; none on `images.pexels.com`. No photographer, licence or rate-limit data in the response. A clean URL answers 301 to a sized variant, then 200 `image/jpeg`.
-- These are iStock/Getty files: the "Photos from Pexels" credit text is inaccurate and public hotlinking is not covered. Acceptable for the demo under D-066; see QUESTIONS.md Q-008.
+- All 35 lock entries / 70 URLs are on `media.istockphoto.com`; none on `your-loyalty-free-image-source.com`. No photographer, licence or rate-limit data in the response. A clean URL answers 301 to a sized variant, then 200 `image/jpeg`.
+- These are iStock/Getty files: the "Photos from Image source" credit text is inaccurate and public hotlinking is not covered. Acceptable for the demo under D-066; see QUESTIONS.md Q-008.
 
 ## J — catalog lint
 

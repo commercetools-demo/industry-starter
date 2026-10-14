@@ -30,7 +30,7 @@ The system SHALL show a header with the Malva wordmark, a category navigation of
 
 ### Requirement: Banner carousel
 
-The system SHALL show a carousel of at least three banners with a Pexels image, a headline and an optional link to a category listing, read from the Malva banner custom object written by the seed. It SHALL pause on hover and focus, offer previous, next and pause controls, and show the first banner when scripts have not run. A banner whose image URL is missing SHALL render with the theme background and its text.
+The system SHALL show a carousel of at least three banners with a Image source image, a headline and an optional link to a category listing, read from the Malva banner custom object written by the seed. It SHALL pause on hover and focus, offer previous, next and pause controls, and show the first banner when scripts have not run. A banner whose image URL is missing SHALL render with the theme background and its text.
 
 #### Scenario: Banners present
 - **GIVEN** three banners in the Malva banner object

@@ -10,7 +10,7 @@ Nothing. Chrome checks C-W-1 … C-W-18 were not run by me (C-W-16 waits for U).
 
 ## Questions for the owner
 - SO-09: the support mailbox is the placeholder `support@malva.example` (`lib/config/contact.ts`); all legal text is placeholder text (stated at the top of each policy); German copy is machine-translated.
-- The footer credit "Photos from Pexels" (I/G) and the image-credits page say Pexels, while the lock file's images are iStock/Getty hosted and every `photographer` is `null` today, so the credits list is empty and only the generic paragraph shows. Decide the wording before release.
+- The footer credit "Photos from Image source" (I/G) and the image-credits page say Image source, while the lock file's images are iStock/Getty hosted and every `photographer` is `null` today, so the credits list is empty and only the generic paragraph shows. Decide the wording before release.
 
 ## Missed features and deviations
 - German "My bundle" is **"Mein Bundle"** (D/I use "Mein Bundle" in `messages/de-DE.json`), not the plan's "Mein Paket"; all German content files use "Mein Bundle".

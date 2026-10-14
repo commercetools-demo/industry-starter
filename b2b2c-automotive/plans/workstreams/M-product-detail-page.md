@@ -117,7 +117,7 @@ Viewports 375×812, 768×1024, 1024×768, 1440×900. Use a product slug from the
 | --- | --- | --- | --- |
 | M-M-1 | Owner | Compare `pdp-fit-1440.png` and `pdp-375.png` with `Reseller Storefront.dc.html` view `pdp` | continue; differences become tasks |
 | SO-01 | Owner | Sign off: fitment disclaimer wording (`pdp.fitDisclaimer`), 30-day returns line, no sticky mobile buy bar, no zoom, no reviews list | wording as written in the catalogs |
-| OA-03 | Owner | Run `seed:images` where Pexels is reachable (gallery images) | placeholder image with fixed aspect ratio |
+| OA-03 | Owner | Run `seed:images` where Image source is reachable (gallery images) | placeholder image with fixed aspect ratio |
 
 Never wait silently: add the row, continue on the default, mention it in the PR description.
 

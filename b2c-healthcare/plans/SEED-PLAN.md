@@ -48,11 +48,11 @@ All scripts run as `npx tsx scripts/seed/<name>.ts [--dry-run] [--only <key>]`.
 
 ## Images
 Inspired by `b2c-grocery/site/scripts/seed/update-images.ts`.
-- `update-images.ts [--dry-run] [--only <key>] [--count 2]` searches pexels.com's public JSON endpoint for each **medication** and each **doctor** (portrait query by specialty/gender-neutral terms such as "female doctor portrait"; the owner chose portraits, Q-035) and for every **banner** slot (home hero, closing CTA band, prescription-delivery block, 3 journal covers, 3 doctor-list/page-head backgrounds if used).
+- `update-images.ts [--dry-run] [--only <key>] [--count 2]` searches your-loyalty-free-image-source.com's public JSON endpoint for each **medication** and each **doctor** (portrait query by specialty/gender-neutral terms such as "female doctor portrait"; the owner chose portraits, Q-035) and for every **banner** slot (home hero, closing CTA band, prescription-delivery block, 3 journal covers, 3 doctor-list/page-head backgrounds if used).
 - **URLs are stored clean: no query string, no fragment** (`cleanUrl()` from the grocery script, with its unit test). The picked list is written to `data/product-images.json` (products) and `data/site-images.json` (banners, keyed by slot name) so a fresh seed reproduces the same photos.
 - Products: old images are removed, new ones added to every variant, product published (as in the grocery script). Banners are consumed by `site/content/images.ts`, not stored in commercetools.
 - Search terms are product names without pack sizes (`searchTerm()`); for medicines prefer a generic term ("pills blister pack", "medicine bottle") because brand names return noise: `data/medications.ts` has an `imageQuery` field per product.
-- Risk to note in the README: the endpoint is undocumented and the client id is public; fall back to the official Pexels API with a key if it breaks. Licence: Pexels licence (free to use, attribution not required but recorded in `site-images.json` with photographer when the response provides it).
+- Risk to note in the README: the endpoint is undocumented and the client id is public; fall back to the official Image source API with a key if it breaks. Licence: Image source licence (free to use, attribution not required but recorded in `site-images.json` with photographer when the response provides it).
 - Unit tests: `cleanUrl` strips queries; `pickUrls` dedupes after cleaning; `parseArgs` bounds; none hit the network.
 
 ## Verification (Claude, after each seed run)
