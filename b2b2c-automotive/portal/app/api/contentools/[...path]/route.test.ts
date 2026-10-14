@@ -174,13 +174,26 @@ describe('Contentools proxy', () => {
     expect(upstream).not.toHaveBeenCalled();
 
     const form2 = new FormData();
-    form2.set('file', new Blob([new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0])], { type: 'image/png' }), 'logo.png'); // real PNG signature (workstream X-07 checks the bytes)
+    form2.set('file', new Blob([new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0])], { type: 'image/png' }), 'logo.png');
     const upload = await call(route.POST, `service/${A}/upload-file`, { method: 'POST', body: form2 });
     expect(upload.status).toBe(200);
     expect(upstreamCall()[1].headers.get('content-type')).toMatch(/^multipart\/form-data; boundary=/);
 
     const jsonOnUpload = await call(route.POST, `service/${A}/upload-file`, { method: 'POST', json: { a: 1 } });
     expect(jsonOnUpload.status).toBe(415);
+  });
+
+  it('an upload is forwarded byte for byte, whatever the file type (Contentools decides what it accepts)', async () => {
+    const bytes = new TextEncoder().encode('<svg onload="x()"/>');
+    const form = new FormData();
+    form.set('file', new Blob([bytes], { type: 'image/avif' }), 'cone.avif');
+    form.set('title', 'cone.avif');
+    const res = await call(route.POST, `service/${A}/upload-file`, { method: 'POST', body: form });
+    expect(res.status).toBe(200);
+    const sent = await new Response(upstreamCall()[1].body as BodyInit, { headers: { 'content-type': upstreamCall()[1].headers.get('content-type') ?? '' } }).formData();
+    const file = sent.get('file') as File;
+    expect(file.name).toBe('cone.avif');
+    expect(new Uint8Array(await file.arrayBuffer())).toEqual(bytes);
   });
 
   it('a 11 MB multipart upload is 413', async () => {

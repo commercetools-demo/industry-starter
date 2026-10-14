@@ -8,7 +8,6 @@
 import { authorizeStore } from '@/lib/authz/authorize-store';
 import { errorResponse, handle } from '@/lib/api';
 import { getValidContentoolsJwt } from '@/lib/contentools/jwt';
-import { checkUploadBody, MAX_UPLOAD_REQUEST_BYTES } from '@/lib/contentools/upload-check';
 import { CONTENTOOLS_ORIGIN } from '@/lib/contentools/origin';
 import { getProjectKey } from '@/lib/contentools/project-key';
 import { evaluateProxyRequest } from '@/lib/contentools/proxy-policy';
@@ -21,7 +20,7 @@ export const runtime = 'nodejs';
 
 const PREFIX = '/api/contentools/';
 const MAX_JSON_BYTES = 2 * 1024 * 1024;
-const MAX_MULTIPART_BYTES = MAX_UPLOAD_REQUEST_BYTES; // 5 MB file plus envelope (workstream X-07)
+const MAX_MULTIPART_BYTES = 5 * 1024 * 1024 + 64 * 1024; // 5 MB file plus multipart envelope; the file itself is forwarded untouched
 const UPSTREAM_TIMEOUT_MS = 15_000;
 /** Request headers that may reach Contentools; everything else (cookie, authorization, x-forwarded-*, host, ...) is dropped. */
 const FORWARD_REQUEST = ['accept', 'accept-language', 'content-type', 'if-none-match'] as const;
@@ -84,11 +83,6 @@ async function proxy(request: Request): Promise<Response> {
     if (body.byteLength > limit) return errorResponse(413, 'Request body too large', 'PAYLOAD_TOO_LARGE');
     if (body.byteLength === 0) body = undefined;
     else if (first.multipart ? !isMultipart : !isJson) return errorResponse(415, 'Unsupported content type', 'UNSUPPORTED_MEDIA_TYPE');
-    if (body && first.multipart) {
-      // Images only, judged by their bytes (workstream X-07, D14): no HTML, script, executable or SVG reaches the object store.
-      const verdict = await checkUploadBody(body, contentType);
-      if (!verdict.ok) return errorResponse(verdict.status, verdict.status === 413 ? 'Request body too large' : verdict.status === 415 ? 'Unsupported file type' : 'Invalid upload', verdict.code);
-    }
     if (body && isJson) {
       let parsed: unknown;
       try {

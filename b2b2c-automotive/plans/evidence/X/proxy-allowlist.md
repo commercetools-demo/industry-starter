@@ -18,7 +18,7 @@ Source of the data: `portal/lib/contentools/allowlist.ts` (written by U, hardene
 | `:store/published/puck-pages/:key`, `:store/preview/puck-pages/:key` (and `puck-contents`) | GET POST | GET | no (project key only) |
 | `:store/published/puck-pages/query`, `:store/preview/puck-pages/query` (and `puck-contents`) | GET POST | POST | no: a read-only query POST needs the project key, not the JWT |
 | `:store/puck-templates`, `:store/puck-templates/:key` | GET POST PUT DELETE | GET, POST, DELETE | on writes |
-| `:store/upload-file` | POST, multipart only | POST multipart | yes; images only by magic bytes (PNG, JPEG, WebP, GIF), 5 MB (X, `lib/contentools/upload-check.ts`) |
+| `:store/upload-file` | POST, multipart only | POST multipart | yes; the file is forwarded as is (no portal-side type check), request at most 5 MB plus envelope |
 | `:store/media-library` | GET | GET | no |
 | `products/search` (no store segment) | GET POST | GET `/products/search` | no (read query) |
 
