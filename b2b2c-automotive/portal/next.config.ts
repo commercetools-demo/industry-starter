@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   // Dev-only pages are named page.dev.tsx and are registered outside production builds only (scripts/check-no-dev-pages.mjs).
   pageExtensions: process.env.NODE_ENV === 'production' ? ['tsx', 'ts'] : ['tsx', 'ts', 'dev.tsx', 'dev.ts'],
   // Workstream X (G03, E07): no framework banner, no source maps in the browser bundle.
+  images: { remotePatterns: [{ protocol: 'https', hostname: '**' }] },
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   async headers() {

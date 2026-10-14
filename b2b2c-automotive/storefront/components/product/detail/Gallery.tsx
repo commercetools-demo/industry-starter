@@ -5,7 +5,6 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useRef, useState, type KeyboardEvent } from 'react';
-import { productImageLoader } from '@/components/listing/image-loader';
 import type { ProductImage } from '@/lib/types';
 
 /**
@@ -31,7 +30,7 @@ export function Gallery({ images }: { images: ProductImage[] }) {
     <section aria-label={t('galleryLabel')} className="grid content-start gap-3">
       <div className="relative aspect-[4/3] overflow-hidden rounded-md border border-border bg-surface-subtle">
         {current ? (
-          <Image key={current.url} loader={productImageLoader} src={current.url} alt={current.alt} fill priority={index === 0} sizes="(min-width: 42.5rem) 50vw, 100vw" className="object-contain" />
+          <Image key={current.url} src={current.url} alt={current.alt} fill priority={index === 0} sizes="(min-width: 42.5rem) 50vw, 100vw" className="object-contain" />
         ) : (
           <span className="flex size-full items-center justify-center font-ui text-sm text-text-subtle">{t('noPhoto')}</span>
         )}
@@ -51,7 +50,7 @@ export function Gallery({ images }: { images: ProductImage[] }) {
                 onKeyDown={(event) => onKeyDown(event, i)}
                 className={`relative block aspect-[4/3] w-full overflow-hidden rounded-md border bg-surface-subtle ${i === index ? 'border-border-brand' : 'border-border'}`}
               >
-                <Image loader={productImageLoader} src={image.url} alt="" fill sizes="25vw" className="object-contain" />
+                <Image src={image.url} alt="" fill sizes="25vw" className="object-contain" />
               </button>
             </li>
           ))}

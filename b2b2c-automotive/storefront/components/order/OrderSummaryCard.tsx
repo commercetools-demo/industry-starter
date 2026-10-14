@@ -4,7 +4,6 @@
 
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
-import { productImageLoader } from '@/components/listing/image-loader';
 import { Badge } from '@/components/ui/Badge';
 import type { Money, OrderView } from '@/lib/types';
 import { formatMoney } from '@/lib/utils';
@@ -32,7 +31,7 @@ export function OrderSummaryCard({ view }: { view: OrderView }) {
         {view.lines.map((line) => (
           <li key={line.id} className="grid grid-cols-[4rem_1fr_auto] items-start gap-3">
             <span className="relative block aspect-square overflow-hidden rounded-sm bg-surface-subtle">
-              {line.imageUrl ? <Image loader={productImageLoader} src={line.imageUrl} alt="" fill sizes="4rem" className="object-contain" /> : null}
+              {line.imageUrl ? <Image src={line.imageUrl} alt="" fill sizes="4rem" className="object-contain" /> : null}
             </span>
             <span className="grid min-w-0 gap-1">
               {line.brand ? <span className="font-ui text-xs font-bold uppercase tracking-label text-text-subtle">{line.brand}</span> : null}

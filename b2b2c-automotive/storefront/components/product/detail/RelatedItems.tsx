@@ -4,7 +4,6 @@
 
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
-import { productImageLoader } from '@/components/listing/image-loader';
 import { buttonClass } from '@/components/ui/Button';
 import { FitBadge } from '@/components/vehicle/FitBadge';
 import { useAddToCart } from '@/hooks/useAddToCart';
@@ -24,7 +23,7 @@ function RelatedCard({ product, store }: { product: ProductSummary; store: strin
   return (
     <li className="grid content-start gap-2 rounded-md border border-border bg-surface p-3">
       <Link href={href} tabIndex={-1} aria-hidden="true" className="relative block aspect-[4/3] overflow-hidden rounded-md bg-surface-subtle">
-        {product.imageUrl ? <Image loader={productImageLoader} src={product.imageUrl} alt="" fill sizes="220px" className="object-contain" /> : <span className="flex size-full items-center justify-center font-ui text-xs text-text-subtle">{t('noPhoto')}</span>}
+        {product.imageUrl ? <Image src={product.imageUrl} alt="" fill sizes="220px" className="object-contain" /> : <span className="flex size-full items-center justify-center font-ui text-xs text-text-subtle">{t('noPhoto')}</span>}
       </Link>
       <div className="font-ui text-xs font-bold uppercase tracking-label text-text-subtle">{product.brand}</div>
       <Link href={href} className="line-clamp-2 min-h-6 font-display text-sm font-medium text-text hover:text-text-link">

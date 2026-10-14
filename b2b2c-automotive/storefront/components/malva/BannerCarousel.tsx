@@ -7,7 +7,6 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { productImageLoader } from '@/components/listing/image-loader';
 import { Link } from '@/i18n/routing';
 import type { MalvaBannerView } from '@/lib/malva-banners';
 
@@ -60,7 +59,7 @@ export function BannerCarousel({ banners }: { banners: MalvaBannerView[] }) {
         {banner.image ? (
           <Image
             key={banner.image.url}
-            loader={productImageLoader}
+           
             src={banner.image.url}
             alt=""
             fill

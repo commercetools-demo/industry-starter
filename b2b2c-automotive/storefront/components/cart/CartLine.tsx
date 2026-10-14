@@ -4,7 +4,6 @@
 
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
-import { productImageLoader } from '@/components/listing/image-loader';
 import { LineFitBadge } from '@/components/cart/FitWarning';
 import { QuantityStepper } from '@/components/cart/QuantityStepper';
 import { Badge } from '@/components/ui/Badge';
@@ -51,7 +50,7 @@ export function CartLine({ line, store, fit = line.fit, vehicleLabel = null, unp
   return (
     <li className="grid grid-cols-[6rem_1fr_auto] items-center gap-4 rounded-md border border-border bg-surface p-3">
       <Link href={href} tabIndex={-1} aria-hidden="true" className="relative block aspect-square overflow-hidden rounded-md bg-surface-subtle">
-        {line.imageUrl ? <Image loader={productImageLoader} src={line.imageUrl} alt="" fill sizes="6rem" className="object-contain" /> : null}
+        {line.imageUrl ? <Image src={line.imageUrl} alt="" fill sizes="6rem" className="object-contain" /> : null}
       </Link>
       <div className="grid min-w-0 gap-1">
         {line.brand ? <span className="font-ui text-xs font-bold uppercase tracking-label text-text-subtle">{line.brand}</span> : null}

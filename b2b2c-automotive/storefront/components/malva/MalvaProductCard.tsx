@@ -4,7 +4,6 @@
 
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { productImageLoader } from '@/components/listing/image-loader';
 import { useFinderDrawer } from '@/components/malva/FinderDrawerProvider';
 import { buttonClass } from '@/components/ui/Button';
 import { FitBadge } from '@/components/vehicle/FitBadge';
@@ -23,7 +22,7 @@ export function MalvaProductCard({ product, fit }: { product: MalvaProductSummar
     <article className="grid content-start gap-2 rounded-md border border-border bg-surface p-3 shadow-card">
       <div className="relative block aspect-[4/3] overflow-hidden rounded-md bg-surface-subtle">
         {product.imageUrl ? (
-          <Image loader={productImageLoader} src={product.imageUrl} alt={product.imageAlt} fill sizes="(min-width: 700px) 220px, 50vw" className="object-contain" />
+          <Image src={product.imageUrl} alt={product.imageAlt} fill sizes="(min-width: 700px) 220px, 50vw" className="object-contain" />
         ) : (
           <span className="flex size-full items-center justify-center font-ui text-xs text-text-subtle">{t('noPhoto')}</span>
         )}
