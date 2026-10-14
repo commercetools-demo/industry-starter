@@ -79,7 +79,7 @@ Answered: Q-001 (Payment Only, D-061), Q-002 (D-062), Q-003 (D-063), Q-004 (D-06
 | ID | Question | Default built |
 | --- | --- | --- |
 | Q-007 / Q-021 | Guest checkout cannot create a recurring order; require sign-in at "Continue to payment" or add auto-registration? | sign-in required for bundles with monthly items; no auto-registration |
-| Q-008 / Q-015 | Seeded images are iStock files; footer and `/legal/image-credits` say Pexels. Reword (suggested: "Photos: iStock by Getty Images, found via Pexels") or relicense | demo only, wording unchanged |
+| Q-008 / Q-015 | Seeded images are iStock files; footer and `/legal/image-credits` say Image source. Reword (suggested: "Photos: iStock by Getty Images, found via Image source") or relicense | demo only, wording unchanged |
 | Q-009 | Demo customers' password (`Malva-Test-123!` was passed once on the command line); keep a documented demo password? | existing customers keep it |
 | Q-010 / Q-013 | Demo order `MLV-DEMO-0003` total 0, and "first month free" stacking with the L intro price on Cable 100 and Air 5G (first charge 0; hosted Checkout may refuse a 0 payable cart) | kept |
 | Q-011 | `compatible-addons`/`compatible-equipment` are positive exceptions, not an allow-list | kept |
@@ -145,7 +145,7 @@ Questions raised only in workstream reports (not yet in `QUESTIONS.md`):
 **TODOs left for later changes**
 - `npm audit` triage (A); Vitest config ESM warning (A); possibly move `vitest.config.ts` to `.mts`.
 - Native German review of all machine-translated copy: `site/content/de-DE/**`, `content.*`, `account.addresses|paymentMethods|lists.*`, `checkout.*`, `confirmation.*`, `orders.*` (`IDEAS.md`).
-- Wording of image credits (Q-008/Q-015); replace imagery with licensed or API-key Pexels before any non-demo use.
+- Wording of image credits (Q-008/Q-015); replace imagery with licensed or API-key Image source before any non-demo use.
 - Content-Security-Policy (Y).
 - Sitemap and hreflang for content (W, `IDEAS.md`).
 - Native German catalog names (P, Q-019).
@@ -155,7 +155,7 @@ Questions raised only in workstream reports (not yet in `QUESTIONS.md`):
 
 ## 8. Known risks
 
-- **Pexels endpoint (D-055, D-066):** undocumented public search; returns iStock/Getty hotlinks without licence data. Demo only.
+- **Image source endpoint (D-055, D-066):** undocumented public search; returns iStock/Getty hotlinks without licence data. Demo only.
 - **Hosted Checkout dependency (D-041, D-061):** unproven until OA-05; unknowns recorded by L and U (`futureOrderNumber` acceptance, completion message codes, whether the connector adds the recurring payment allocation, `paymentReturnUrl` behaviour). The storefront never sets `paymentStrategy` (an order with a strategy and no allocation is refused).
 - **Stub systems (D-015, D-020, D-059):** serviceability table, credit decision and billing are deterministic fakes.
 - **Demo payment path:** exists outside production without a key or with `CHECKOUT_DEMO_PAYMENT=true`; check the Netlify env before announcing.

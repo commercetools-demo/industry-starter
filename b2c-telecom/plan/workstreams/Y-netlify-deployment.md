@@ -51,7 +51,7 @@ Notes:
 - `[[plugins]]` declares the Netlify Next.js runtime explicitly (it is also applied automatically for Next 16); declaring it makes the plugin version visible in build logs. Docs: https://docs.netlify.com/build/frameworks/framework-setup-guides/nextjs/overview/ . Do not add any other plugin without asking.
 - `SECRETS_SCAN_OMIT_KEYS` lists only **non-secret** variable names, because Netlify's secrets scanner fails a build when a variable value appears in build output or static files, and values such as the project key legitimately appear in image URLs and logs. `CTP_CLIENT_SECRET` and `SESSION_SECRET` must **never** be in this list (a test enforces it).
 - `ignore` skips a deploy when only `design/`, `plan/` or `openspec/` changed (paths relative to `site/`, same pattern as the grocery project).
-- Security headers: Netlify `[[headers]]` apply to static assets, while pages served by the Next.js runtime take their headers from `next.config.ts`, so the **same five headers are defined in both**, sourced from `site/config/security-headers.json`, and a test fails if the two differ. **Planner default:** no `Content-Security-Policy` in v1 (the hosted Checkout, Adyen and Pexels images make a policy risky to ship untested; parked in `plan/IDEAS.md` as "CSP"). `X-Frame-Options: DENY` is safe because the storefront is never framed (the Checkout iframe is embedded by us, not the other way round).
+- Security headers: Netlify `[[headers]]` apply to static assets, while pages served by the Next.js runtime take their headers from `next.config.ts`, so the **same five headers are defined in both**, sourced from `site/config/security-headers.json`, and a test fails if the two differ. **Planner default:** no `Content-Security-Policy` in v1 (the hosted Checkout, Adyen and Image source images make a policy risky to ship untested; parked in `plan/IDEAS.md` as "CSP"). `X-Frame-Options: DENY` is safe because the storefront is never framed (the Checkout iframe is embedded by us, not the other way round).
 - No `vercel.json` anywhere (D-002).
 
 `site/config/security-headers.json`:
@@ -90,7 +90,7 @@ Notes:
 | `SERVICEABILITY_STUB` | optional | same | leave unset (stub is the default, D-020) unless a workstream K file says otherwise |
 | `SITE_URL` | optional | same | forces the canonical origin (used by W for canonical links and JSON-LD); when unset W uses Netlify's own `URL` |
 
-**Never** set in Netlify: `CTP_SEED_CLIENT_ID`, `CTP_SEED_CLIENT_SECRET`, `CTP_SEED_SCOPES`, `PEXELS_API_KEY` (seed-only, `site/.env.seed`; D-054, spec `storefront-project-bootstrap`: the seeding credential is never configured for `site/`). No variable name may start with `NEXT_PUBLIC_` and contain `SECRET`, `KEY` or `TOKEN` (E's check; Y adds the `.env.example` rule below).
+**Never** set in Netlify: `CTP_SEED_CLIENT_ID`, `CTP_SEED_CLIENT_SECRET`, `CTP_SEED_SCOPES`, `IMAGE_SOURCE_API_KEY` (seed-only, `site/.env.seed`; D-054, spec `storefront-project-bootstrap`: the seeding credential is never configured for `site/`). No variable name may start with `NEXT_PUBLIC_` and contain `SECRET`, `KEY` or `TOKEN` (E's check; Y adds the `.env.example` rule below).
 
 ### `scripts/check-release.mjs` (port of the grocery script; exports `NETLIFY_TEMPLATE` and `checkRelease(siteDir): string[]`)
 `checkRelease(rootDir)` takes `site/`; the repository root is `path.resolve(rootDir, '..')`. It returns a list of problems (empty = releasable); the CLI prints them as `Release check failed:\n…` and exits 1. Rules and **exact messages** (tests assert these strings):

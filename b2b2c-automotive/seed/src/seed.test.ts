@@ -145,17 +145,17 @@ describe('seed against the in-memory API', () => {
     }
     expect(await runSeed(opts(api))).toBe(0);
     expect(await verifySeed(api)).toEqual([]);
-    const rec = { 'malva-home-1': [{ url: 'https://images.pexels.com/photos/1/x.jpeg', dimensions: { w: 1200, h: 800 } }] };
+    const rec = { 'malva-home-1': [{ url: 'https://your-loyalty-free-image-source.com/photos/1/x.jpeg', dimensions: { w: 1200, h: 800 } }] };
     expect(await runSeed({ ...opts(api), bannerImages: rec })).toBe(2); // home-banners and the existing mau-site/banner-images map
     const v2 = (await api.getObject('malva-site', 'home-banners'))?.value as typeof v;
-    expect(v2.banners[0]?.image.url).toBe('https://images.pexels.com/photos/1/x.jpeg');
+    expect(v2.banners[0]?.image.url).toBe('https://your-loyalty-free-image-source.com/photos/1/x.jpeg');
     expect(v2.banners[1]?.image.url).toMatch(/placehold\.co/);
   });
 
   it('adds a recorded category image to an existing category with addAsset (the API has no setAssets for categories), once', async () => {
     const api = new FakeApi();
     await runSeed(opts(api));
-    const categoryImages = { 'mau-cat-brakes': [{ url: 'https://images.pexels.com/photos/5/pexels-photo-5.jpeg', dimensions: { w: 100, h: 80 } }] };
+    const categoryImages = { 'mau-cat-brakes': [{ url: 'https://your-loyalty-free-image-source.com/photos/5/image-source-photo-5.jpeg', dimensions: { w: 100, h: 80 } }] };
     const run = new Runner(false, quiet);
     expect(await runSeed({ ...opts(api), run, categoryImages })).toBe(1);
     expect(run.lines[0]).toContain('addAsset');
@@ -182,7 +182,7 @@ describe('seed against the in-memory API', () => {
     const api = new FakeApi();
     await runSeed(opts(api));
     const key = tailoringImageKey(K.storeNorth, 'MLV-BP-41001');
-    const tailoringImages = { [key]: [{ url: 'https://images.pexels.com/photos/9/pexels-photo-9.jpeg', dimensions: { w: 100, h: 80 } }] };
+    const tailoringImages = { [key]: [{ url: 'https://your-loyalty-free-image-source.com/photos/9/image-source-photo-9.jpeg', dimensions: { w: 100, h: 80 } }] };
     const run = new Runner(false, quiet);
     expect(await runSeed({ ...opts(api), run, tailoringImages })).toBe(1);
     expect(run.lines[0]).toContain('setImages');
@@ -193,7 +193,7 @@ describe('seed against the in-memory API', () => {
   it('uses recorded images, republishes the product once and then stays idempotent', async () => {
     const api = new FakeApi();
     await runSeed(opts(api));
-    const images = { 'mau-part-mlv-bp-41001': [{ url: 'https://images.pexels.com/photos/1/pexels-photo-1.jpeg', dimensions: { w: 100, h: 80 } }] };
+    const images = { 'mau-part-mlv-bp-41001': [{ url: 'https://your-loyalty-free-image-source.com/photos/1/image-source-photo-1.jpeg', dimensions: { w: 100, h: 80 } }] };
     const run = new Runner(false, quiet);
     expect(await runSeed({ ...opts(api), run, images })).toBe(1);
     expect(run.lines[0]).toContain('addExternalImage');

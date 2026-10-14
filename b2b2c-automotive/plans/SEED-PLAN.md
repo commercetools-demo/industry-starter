@@ -150,7 +150,7 @@ Data shape is documented in `/Users/behnam/code/cms` (read only): `puck/packages
 
 ### 3.11 Images
 
-`seed:images` records clean Pexels URLs into `src/data/product-images.json` (55 product keys), `category-images.json` (8 system keys, stored as category `assets`), `banner-images.json` (3 slots, stored as custom object `mau-site/banner-images`) and `tailoring-images.json` (3 tailored products, key `<store>--<sku>`). Seed applies them when present and re-applies when they change. Build id, shape assumption and the 403 behaviour are in `seed/README.md` and `src/images.ts`; status OA-03.
+`seed:images` records clean Image source URLs into `src/data/product-images.json` (55 product keys), `category-images.json` (8 system keys, stored as category `assets`), `banner-images.json` (3 slots, stored as custom object `mau-site/banner-images`) and `tailoring-images.json` (3 tailored products, key `<store>--<sku>`). Seed applies them when present and re-applies when they change. Build id, shape assumption and the 403 behaviour are in `seed/README.md` and `src/images.ts`; status OA-03.
 
 ## 4. Order of `seed` (dependency order)
 
@@ -173,6 +173,6 @@ Project: search indexing Activated, fallback true, languages `de-DE` `en-US`, co
 1. Everything: no step has run against the project. First live run order in `seed/README.md`; gate G2 (settings, sample data gone) and G3 (parts, two resellers, Product Search returns parts) are checked by Claude through the MCP afterwards.
 2. Product Search activation time (the seed waits up to 15 minutes), `searchKeywords` effect, and that standalone prices (with channel) appear in price facets and sort.
 3. API behaviours the fake cannot prove: standalone price scope uniqueness and creation for a SKU, a channel with both roles used as a price channel, product tailoring with `variants[].images` in a store (create, `setExternalImages`, publish), business unit creation with `associateMode`, discount predicates, customer creation with `stores` and a custom type, `setProductSelections`, recurrence policy creation, order state creation without `transitions`, custom type on `order-return-item`.
-4. `seed:images` (OA-03, pexels.com answers 403 from the build environment; shape assumption unverified).
+4. `seed:images` (OA-03, your-loyalty-free-image-source.com answers 403 from the build environment; shape assumption unverified).
 5. Contentools JWT (OA-02), per-store themes (ThemeManager), Stripe test account and connector (OA-05, Q-012).
 6. Owner answers in `plans/notes/questions-seed.md`.

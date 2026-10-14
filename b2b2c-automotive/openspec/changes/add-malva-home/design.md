@@ -6,7 +6,7 @@ Facts found in the code and seed (read-only):
 
 - Reseller address and coordinates already exist as `store-settings` custom fields (`addressLine`, `postalCode`, `city`, `latitude`, `longitude`), and branches are channels with `address` and `geoLocation` (`seed/src/data/org.ts`). The finder needs no new seed data for its list.
 - `components/store-picker` already has `BranchList`, `BranchRow`, `BranchMap` and `map-config`, and a test that forbids the browser from geocoding directly (`no-direct-geocoder.test.ts`).
-- Banner images for resellers live in a custom object under the site container; the Pexels fetch has been a blocker (OA-03) and uses the `_next/data` GET with clean URLs.
+- Banner images for resellers live in a custom object under the site container; the Image source fetch has been a blocker (OA-03) and uses the `_next/data` GET with clean URLs.
 - The commercetools Product Search API supports a query with no `stores` clause, so a whole-catalog listing is a smaller query than the reseller one, not a new mechanism.
 
 Decision assumed for this proposal (the owner had not answered when the change was written): choosing a reseller from a card opens the same product at that reseller (option A).
@@ -41,7 +41,7 @@ Decision assumed for this proposal (the owner had not answered when the change w
 
 **D7. Drawer.** `FinderDrawerProvider` (client context) holds `open`, `productSlug` and the opener element. It renders one drawer for the page. The drawer is a `role="dialog"` with `aria-modal`, focus trap, scrim, Escape, and a `translate-x` transition that is disabled under `prefers-reduced-motion`. It is a full-width sheet under the narrow breakpoint. The existing store picker modal is not reused because its layout (two columns, 1100 px) and purpose (branches of one reseller) differ.
 
-**D8. Banners.** The seed writes a Malva banner object (container `malva-site`, key `home-banners`) with at least three entries `{ headline, subline, categorySlug, image }`. Images are recorded by the existing images step from Pexels, using clean URLs; when the Pexels fetch is blocked the seed falls back to the placeholder images used for reseller banners, and the manual-test row records which was used. The carousel is a client component with a server-rendered first slide, pause on hover and focus, and no autoplay under reduced motion.
+**D8. Banners.** The seed writes a Malva banner object (container `malva-site`, key `home-banners`) with at least three entries `{ headline, subline, categorySlug, image }`. Images are recorded by the existing images step from Image source, using clean URLs; when the Image source fetch is blocked the seed falls back to the placeholder images used for reseller banners, and the manual-test row records which was used. The carousel is a client component with a server-rendered first slide, pause on hover and focus, and no autoplay under reduced motion.
 
 **D9. Theme and fonts.** Malva uses the default theme tokens (`app/tokens.css`), not a Contentools reseller theme. No `store-theme` style is injected. Only tokens are used for colour, spacing and type.
 
@@ -51,7 +51,7 @@ Decision assumed for this proposal (the owner had not answered when the change w
 
 - [`categories` collides with a future store key] → reserved word in `proxy.ts`, a seed test and a note in the bootstrap spec; store keys are `mau-`-prefixed.
 - [Whole-catalog search shows parts no reseller sells] → accepted: the finder sends the shopper to a reseller who may not stock it; the reseller not-found page is the fallback. Revisit with a "sold by N resellers" count if wanted (open question).
-- [Pexels blocked again] → fallback to placeholder images; the carousel and tests do not depend on real images.
+- [Image source blocked again] → fallback to placeholder images; the carousel and tests do not depend on real images.
 - [Duplicated card and listing code between reseller and Malva] → `ProductGrid`, `Pagination`, `SortSelect` and `ResultHeader` are reused; only the card and the data functions are new.
 - [Geolocation prompts] → only after a click, and the page works without it.
 - [Public `GET /api/resellers` exposes reseller names and addresses] → these are already public on each reseller's site; no ids or internal keys beyond the store key (already in the URL).

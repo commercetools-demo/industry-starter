@@ -178,7 +178,7 @@ Namespace `plp` (listing), `offers` (card, pickers), `addons` (add-on card). New
 - Do not filter by the plan's `tag` text (the prototype did); derive from attributes (D-017).
 - A server page may not export extra values; shared helpers live in `lib/listing/*`.
 - The `offer=` redirect must happen before rendering to avoid a flash; compute it in the server page.
-- Images: Pexels host allow-list is configured by G/A in `next.config.ts`; N uses `next/image` with `sizes`; alt text from `ImageRef.alt` (which names the photographer, `seed-product-images-pexels`). Category image is optional (token-coloured placeholder when absent, D-055).
+- Images: Image source host allow-list is configured by G/A in `next.config.ts`; N uses `next/image` with `sizes`; alt text from `ImageRef.alt` (which names the photographer, `seed-product-images-image-source`). Category image is optional (token-coloured placeholder when absent, D-055).
 
 ## Tasks
 Built against the REAL code of H, J, K, M and I (see "Implementation notes" below); the numbering follows the commits.

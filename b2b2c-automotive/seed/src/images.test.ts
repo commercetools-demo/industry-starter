@@ -5,17 +5,17 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadImages } from './data/catalog';
-import { DEFAULT_BUILD_ID, PexelsBlockedError, buildJobs, cleanUrl, pickImages, queryFor, runImages, search, searchUrl, selectJobs } from './images';
+import { DEFAULT_BUILD_ID, ImageSourceBlockedError, buildJobs, cleanUrl, pickImages, queryFor, runImages, search, searchUrl, selectJobs } from './images';
 import { parseArgs } from './lib';
 
-const fixture = JSON.parse(readFileSync(new URL('./fixtures/pexels-search.json', import.meta.url), 'utf8')) as unknown;
+const fixture = JSON.parse(readFileSync(new URL('./fixtures/image-source-search.json', import.meta.url), 'utf8')) as unknown;
 const reply = (status: number, body: string) => async () => ({ status, ok: status >= 200 && status < 300, text: async () => body });
 const tmp = () => mkdtempSync(path.join(tmpdir(), 'seed-images-'));
 const quiet = () => undefined;
 
 describe('request', () => {
-  it('is exactly GET https://www.pexels.com/_next/data/<buildId>/en-US/search.json?q=<query>', () => {
-    expect(searchUrl('BUILD123', 'brake pad')).toBe('https://www.pexels.com/_next/data/BUILD123/en-US/search.json?q=brake%20pad');
+  it('is exactly GET https://your-loyalty-free-image-source.com/_next/data/<buildId>/en-US/search.json?q=<query>', () => {
+    expect(searchUrl('BUILD123', 'brake pad')).toBe('https://your-loyalty-free-image-source.com/_next/data/BUILD123/en-US/search.json?q=brake%20pad');
     expect(DEFAULT_BUILD_ID).toBe('8mTEncX7SLQB15n9Vvhgq');
   });
 
@@ -33,23 +33,23 @@ describe('request', () => {
 });
 
 describe('pickImages (documented shape, fixture)', () => {
-  it('prefers large over medium over small, strips query and fragment, dedupes and ignores non-pexels hosts', () => {
+  it('prefers large over medium over small, strips query and fragment, dedupes and ignores non-image-source hosts', () => {
     const picked = pickImages(fixture, 5);
     expect(picked.map((p) => p.url)).toEqual([
-      'https://images.pexels.com/photos/1001/pexels-photo-1001.jpeg',
-      'https://images.pexels.com/photos/1002/pexels-photo-1002.jpeg',
-      'https://images.pexels.com/photos/1003/pexels-photo-1003.jpeg',
+      'https://your-loyalty-free-image-source.com/photos/1001/image-source-photo-1001.jpeg',
+      'https://your-loyalty-free-image-source.com/photos/1002/image-source-photo-1002.jpeg',
+      'https://your-loyalty-free-image-source.com/photos/1003/image-source-photo-1003.jpeg',
     ]);
     expect(picked[0]?.dimensions).toEqual({ w: 4000, h: 2667 });
     expect(picked[2]?.dimensions).toEqual({ w: 1280, h: 853 }); // no width/height in the response: fallback
   });
 
   it('reads a real answer: landscape first, original dimensions, clean large URLs, related-search and ad images ignored', () => {
-    const real = JSON.parse(readFileSync(new URL('./fixtures/pexels-search-real.json', import.meta.url), 'utf8')) as unknown;
+    const real = JSON.parse(readFileSync(new URL('./fixtures/image-source-search-real.json', import.meta.url), 'utf8')) as unknown;
     expect(pickImages(real, 5)).toEqual([
-      { url: 'https://images.pexels.com/photos/10827691/pexels-photo-10827691.jpeg', dimensions: { w: 8256, h: 5504 } },
-      { url: 'https://images.pexels.com/photos/10959176/pexels-photo-10959176.jpeg', dimensions: { w: 3840, h: 2160 } },
-      { url: 'https://images.pexels.com/photos/31558500/pexels-photo-31558500.jpeg', dimensions: { w: 3762, h: 5643 } },
+      { url: 'https://your-loyalty-free-image-source.com/photos/10827691/image-source-photo-10827691.jpeg', dimensions: { w: 8256, h: 5504 } },
+      { url: 'https://your-loyalty-free-image-source.com/photos/10959176/image-source-photo-10959176.jpeg', dimensions: { w: 3840, h: 2160 } },
+      { url: 'https://your-loyalty-free-image-source.com/photos/31558500/image-source-photo-31558500.jpeg', dimensions: { w: 3762, h: 5643 } },
     ]);
     expect(pickImages(real, 1)[0]?.url).not.toContain('?');
   });
@@ -59,8 +59,8 @@ describe('pickImages (documented shape, fixture)', () => {
   });
 
   it('falls back to a deep search when the shape differs', () => {
-    const other = { a: { b: [{ src: { large: 'https://images.pexels.com/photos/77/pexels-photo-77.jpeg?w=1#x' } }, 'https://example.com/x.jpg'] } };
-    expect(pickImages(other, 3).map((p) => p.url)).toEqual(['https://images.pexels.com/photos/77/pexels-photo-77.jpeg']);
+    const other = { a: { b: [{ src: { large: 'https://your-loyalty-free-image-source.com/photos/77/image-source-photo-77.jpeg?w=1#x' } }, 'https://example.com/x.jpg'] } };
+    expect(pickImages(other, 3).map((p) => p.url)).toEqual(['https://your-loyalty-free-image-source.com/photos/77/image-source-photo-77.jpeg']);
     expect(pickImages({ nothing: true }, 3)).toEqual([]);
   });
 
@@ -72,7 +72,7 @@ describe('pickImages (documented shape, fixture)', () => {
 describe('blocked or broken answers', () => {
   it('HTTP 403 fails with a message that names OA-03', async () => {
     await expect(search('q', 'B', 2, reply(403, '<html>Forbidden</html>'))).rejects.toThrow(/OA-03 in plans\/TODO-MANUAL-TESTING\.md/);
-    await expect(search('q', 'B', 2, reply(403, ''))).rejects.toBeInstanceOf(PexelsBlockedError);
+    await expect(search('q', 'B', 2, reply(403, ''))).rejects.toBeInstanceOf(ImageSourceBlockedError);
   });
 
   it('a "Just a moment" Cloudflare page is a block even with HTTP 200', async () => {
@@ -93,7 +93,7 @@ describe('runImages', () => {
     const r = await runImages({ dryRun: true, count: 2, buildId: 'B', dir, log: (l) => lines.push(l), fetcher: async () => { throw new Error('network used'); } });
     expect(r).toEqual({ ok: 0, failed: 0, blocked: false });
     expect(lines.length).toBe(buildJobs().length + 1);
-    expect(lines[0]).toContain('would GET https://www.pexels.com/_next/data/B/en-US/search.json?q=');
+    expect(lines[0]).toContain('would GET https://your-loyalty-free-image-source.com/_next/data/B/en-US/search.json?q=');
     expect(loadImages('product-images.json', dir)).toEqual({});
   });
 
@@ -104,7 +104,7 @@ describe('runImages', () => {
 
   it('records clean URLs into product, category and banner files, merging with what exists', async () => {
     const dir = tmp();
-    writeFileSync(path.join(dir, 'product-images.json'), JSON.stringify({ 'mau-part-old': [{ url: 'https://images.pexels.com/photos/5/pexels-photo-5.jpeg', dimensions: { w: 1, h: 1 } }] }));
+    writeFileSync(path.join(dir, 'product-images.json'), JSON.stringify({ 'mau-part-old': [{ url: 'https://your-loyalty-free-image-source.com/photos/5/image-source-photo-5.jpeg', dimensions: { w: 1, h: 1 } }] }));
     const r = await runImages({ dryRun: false, count: 2, buildId: 'B', dir, delayMs: 0, log: quiet, fetcher: reply(200, JSON.stringify(fixture)) });
     expect(r.failed).toBe(0);
     const products = loadImages('product-images.json', dir);

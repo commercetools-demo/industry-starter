@@ -40,7 +40,7 @@ describe('malva-homepage › Homepage performance and discoverability (images)',
     for (const slot of IMAGE_SLOTS) {
       const image = getSiteImage(slot);
       expect(image, slot).toBeDefined();
-      expect(image!.url).toMatch(/^https:\/\/images\.pexels\.com\//);
+      expect(image!.url).toMatch(/^https:\/\/your-loyalty-free-image-source\.com\//);
       expect(image!.url).not.toMatch(/[?#]/);
       expect(image!.width).toBeGreaterThan(0);
       expect(image!.height).toBeGreaterThan(0);

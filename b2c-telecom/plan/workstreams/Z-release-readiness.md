@@ -24,7 +24,7 @@ Specs are the contract, and several were narrowed by owner decisions (see `DECIS
 | `account-dashboard`, `order-history`, `account-and-self-service`, `cart-page`, `checkout-page`, `home-landing-page`, `address-book`, `saved-lists` | B2B-only parts excluded (D-005): list them |
 | `post-purchase-order-management` | Cancel before service start + 30-day device return request only (D-040) |
 | `coordinated-offer-release` | Seeder-applied release manifests, no approval UI (D-057) |
-| `seed-product-images-pexels` | Method per D-055 |
+| `seed-product-images-image-source` | Method per D-055 |
 | `storefront-shell` | Terms and mobile decisions D-050, D-051 |
 | `telecom-catalog-model` | Attributes added by G beyond the spec's table (`end-time`, `offer-family`, `intro-free-months`, `price-steps`, `addon-tag`, `label-plan-id`, `bundle-discount-text`, `activation-fee`, plan facts copied onto offers); extra recurrence policies `malva-device-installment-12/24/36`, `malva-device-lease-24`; customer-group keys are not `malva-` prefixed (D-058) |
 | `seeding-framework`, `seed-shipping-and-market-settings` | Seed code lives in `site/scripts/seed/` (not a sibling `seed/` package); zones `usa` and `europe` adopted, not created; sample shipping methods cannot be deleted so the BFF keeps only `malva-*` methods |
@@ -46,7 +46,7 @@ Specs are the contract, and several were narrowed by owner decisions (see `DECIS
 - [x] Z-03 Run `npm run verify:release` from a clean clone (`rm -rf node_modules .next && npm ci`); fix only release-config problems here, file anything else in `QUESTIONS.md`.
 - [ ] Z-04 Run the code-review skill (`/code-review high`) and the security-review skill on the whole `site/` tree; record findings in `plan/FINAL-REPORT.md`; fix only findings approved by the owner; each fix is its own commit with a test.
 - [ ] Z-05 Re-run Lighthouse on the five pages above (mobile + desktop) and record scores in `FINAL-REPORT.md`; any score below target becomes a fix task in the owning workstream file (append `<LETTER>-NN`, do not renumber).
-- [ ] Z-06 Write `plan/FINAL-REPORT.md` (what was built per workstream, deferred items with decisions, known risks: Pexels endpoint D-055, stub systems D-020/D-015, hosted Checkout dependency D-041) and update `plan/STATUS.md` to `Verified` for Z when Claude has run C-Z-1…C-Z-9.
+- [ ] Z-06 Write `plan/FINAL-REPORT.md` (what was built per workstream, deferred items with decisions, known risks: Image source endpoint D-055, stub systems D-020/D-015, hosted Checkout dependency D-041) and update `plan/STATUS.md` to `Verified` for Z when Claude has run C-Z-1…C-Z-9.
 - [ ] Z-07 Report M-Z-1 and M-Z-2 for the owner; set Z to `Ready for review`.
 
 ## Unit tests (scenario → test)

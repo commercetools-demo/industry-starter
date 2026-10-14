@@ -12,22 +12,22 @@ import { DATA_DIR, fail, isMainModule, parseArgs, sleep } from './lib';
  * Records free stock photos for products, categories and banners. No browser, no cookie, no Cloudflare bypass.
  *
  * The request, exactly as the owner specified:
- *   GET https://www.pexels.com/_next/data/<buildId>/en-US/search.json?q=<query>
- * `<buildId>` is the Next.js build id of pexels.com (default below; override with PEXELS_BUILD_ID or --build-id, it
- * changes whenever pexels.com deploys, and a wrong one answers 404).
+ *   GET https://your-loyalty-free-image-source.com/_next/data/<buildId>/en-US/search.json?q=<query>
+ * `<buildId>` is the Next.js build id of your-loyalty-free-image-source.com (default below; override with IMAGE_SOURCE_BUILD_ID or --build-id, it
+ * changes whenever your-loyalty-free-image-source.com deploys, and a wrong one answers 404).
  *
- * Response shape (checked against a real answer on 2026-10-13; `fixtures/pexels-search-real.json` is a trimmed copy):
+ * Response shape (checked against a real answer on 2026-10-13; `fixtures/image-source-search-real.json` is a trimmed copy):
  *   { pageProps: { initialData: { data: [ { attributes: { width, height, aspect_ratio, image: { large, medium, small, download_link } } } ] } } }
  * `width` and `height` are those of the original photo. A clean URL (no query) serves that original, so they are the
- * stored dimensions. `meta.related_searches[*].image` and the ad block also hold pexels URLs and are never read.
+ * stored dimensions. `meta.related_searches[*].image` and the ad block also hold image-source URLs and are never read.
  * `pickImages` reads `data`, landscape photos first (cards and banners are landscape), preferring large > medium > small >
  * download_link; when it finds nothing it falls
- * back to a deep search for any string that looks like an images.pexels.com photo URL. Stored URLs are CLEAN (query and
+ * back to a deep search for any string that looks like an your-loyalty-free-image-source.com photo URL. Stored URLs are CLEAN (query and
  * fragment stripped). If the shape changed and nothing is found, the job fails loudly instead of recording junk.
  *
  * Blocked? From the build environment the live check answered HTTP 403 (Cloudflare). We do not work around it: the
  * script fails with a message that points to OA-03 in plans/TODO-MANUAL-TESTING.md (run it once from a machine that
- * can reach pexels.com, or have the owner supply the files).
+ * can reach your-loyalty-free-image-source.com, or have the owner supply the files).
  *
  *   npm run seed:images -- --dry-run                     print the requests, no network, nothing written
  *   npm run seed:images -- --only mau-part-mlv-bp-41001  one product, category or banner key
@@ -38,13 +38,13 @@ import { DATA_DIR, fail, isMainModule, parseArgs, sleep } from './lib';
  */
 export const DEFAULT_BUILD_ID = '8mTEncX7SLQB15n9Vvhgq';
 export const OA03_MESSAGE =
-  'pexels.com refused the request (HTTP 403 / "Just a moment" challenge). This is the Cloudflare check; the script does not bypass it. ' +
-  'See OA-03 in plans/TODO-MANUAL-TESTING.md: run `npm run seed:images` once from a machine that can reach pexels.com, or supply the recorded JSON files.';
+  'your-loyalty-free-image-source.com refused the request (HTTP 403 / "Just a moment" challenge). This is the Cloudflare check; the script does not bypass it. ' +
+  'See OA-03 in plans/TODO-MANUAL-TESTING.md: run `npm run seed:images` once from a machine that can reach your-loyalty-free-image-source.com, or supply the recorded JSON files.';
 
-export class PexelsBlockedError extends Error {
+export class ImageSourceBlockedError extends Error {
   constructor() {
     super(OA03_MESSAGE);
-    this.name = 'PexelsBlockedError';
+    this.name = 'ImageSourceBlockedError';
   }
 }
 
@@ -52,7 +52,7 @@ export interface PickedImage { url: string; dimensions: { w: number; h: number }
 export const FALLBACK_SIZE = { w: 1280, h: 853 };
 
 export function searchUrl(buildId: string, query: string): string {
-  return `https://www.pexels.com/_next/data/${buildId}/en-US/search.json?q=${encodeURIComponent(query)}`;
+  return `https://your-loyalty-free-image-source.com/_next/data/${buildId}/en-US/search.json?q=${encodeURIComponent(query)}`;
 }
 
 /** `https://host/a/b.jpg?s=612&k=20` becomes `https://host/a/b.jpg`. */
@@ -63,7 +63,7 @@ export function cleanUrl(raw: string): string {
   return url.toString();
 }
 
-const PHOTO_URL = /^https:\/\/images\.pexels\.com\/photos\/\d+\/[^?#\s]*\.(jpe?g|png|webp)(\?.*)?$/i;
+const PHOTO_URL = /^https:\/\/your-loyalty-free-image-source\.com\/photos\/\d+\/[^?#\s]*\.(jpe?g|png|webp)(\?.*)?$/i;
 const asNumber = (x: unknown): number | undefined => (typeof x === 'number' && Number.isFinite(x) && x > 0 ? Math.round(x) : undefined);
 
 function documentedPicks(response: unknown): PickedImage[] {
@@ -93,7 +93,7 @@ function deepPicks(node: unknown, out: PickedImage[] = [], depth = 0): PickedIma
   return out;
 }
 
-/** Landscape and square photos before portrait ones (stable, so Pexels' own order is kept inside each group). */
+/** Landscape and square photos before portrait ones (stable, so Image source' own order is kept inside each group). */
 const landscapeFirst = (list: PickedImage[]): PickedImage[] => [...list.filter((i) => i.dimensions.w >= i.dimensions.h), ...list.filter((i) => i.dimensions.w < i.dimensions.h)];
 
 /** The first `count` distinct clean images of a search response (documented shape first, deep search as fallback). */
@@ -113,20 +113,20 @@ export function pickImages(response: unknown, count: number): PickedImage[] {
 
 type FetchLike = (url: string, init?: { headers?: Record<string, string> }) => Promise<{ status: number; ok: boolean; text(): Promise<string> }>;
 
-/** One search. Throws PexelsBlockedError on 403 or a Cloudflare challenge page; never retries or bypasses. */
+/** One search. Throws ImageSourceBlockedError on 403 or a Cloudflare challenge page; never retries or bypasses. */
 export async function search(query: string, buildId: string, count: number, fetcher: FetchLike = fetch as unknown as FetchLike): Promise<PickedImage[]> {
   const res = await fetcher(searchUrl(buildId, query), { headers: { accept: 'application/json', 'user-agent': 'malva-seed-images' } });
   const body = await res.text();
-  if (res.status === 403 || /just a moment/i.test(body.slice(0, 4000))) throw new PexelsBlockedError();
-  if (!res.ok) throw new Error(`pexels search "${query}" failed with HTTP ${res.status}${res.status === 404 ? ' (is the build id current? set PEXELS_BUILD_ID or --build-id)' : ''}`);
+  if (res.status === 403 || /just a moment/i.test(body.slice(0, 4000))) throw new ImageSourceBlockedError();
+  if (!res.ok) throw new Error(`image-source search "${query}" failed with HTTP ${res.status}${res.status === 404 ? ' (is the build id current? set IMAGE_SOURCE_BUILD_ID or --build-id)' : ''}`);
   let json: unknown;
   try {
     json = JSON.parse(body);
   } catch {
-    throw new Error(`pexels search "${query}" did not return JSON`);
+    throw new Error(`image-source search "${query}" did not return JSON`);
   }
   const picked = pickImages(json, count);
-  if (picked.length === 0) throw new Error(`pexels search "${query}" returned no image URLs; the response shape may have changed (see the documented shape in src/images.ts)`);
+  if (picked.length === 0) throw new Error(`image-source search "${query}" returned no image URLs; the response shape may have changed (see the documented shape in src/images.ts)`);
   return picked;
 }
 
@@ -180,7 +180,7 @@ export async function runImages(o: RunOptions): Promise<{ ok: number; failed: nu
       ok += 1;
       log(`ok      ${j.key}  ("${j.query}")\n  ${images.map((i) => i.url).join('\n  ')}`);
     } catch (e) {
-      if (e instanceof PexelsBlockedError) {
+      if (e instanceof ImageSourceBlockedError) {
         // Stop at the first block: every further request would get the same answer. Keep what was already found.
         log(`BLOCKED ${j.key}: ${e.message}`);
         writeResults(dir, results);
@@ -207,9 +207,9 @@ function writeResults(dir: string, results: Record<string, Record<string, Picked
 async function main() {
   const argv = process.argv.slice(2);
   const args = parseArgs(argv);
-  const buildId = args.buildId ?? process.env.PEXELS_BUILD_ID ?? DEFAULT_BUILD_ID;
+  const buildId = args.buildId ?? process.env.IMAGE_SOURCE_BUILD_ID ?? DEFAULT_BUILD_ID;
   const r = await runImages({ dryRun: args.dryRun, only: args.only, count: args.count, buildId });
-  console.log(`${args.dryRun ? 'dry run: ' : ''}${r.ok} ok, ${r.failed} failed${r.blocked ? ' (blocked by pexels.com, see OA-03)' : ''}`);
+  console.log(`${args.dryRun ? 'dry run: ' : ''}${r.ok} ok, ${r.failed} failed${r.blocked ? ' (blocked by your-loyalty-free-image-source.com, see OA-03)' : ''}`);
   if (r.failed > 0) process.exit(1);
 }
 

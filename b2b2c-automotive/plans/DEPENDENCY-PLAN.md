@@ -136,7 +136,7 @@ Waves are topological levels: a workstream sits one wave after its latest depend
 
 1. **OA-01** seed/admin API client in `seed/.env.local` and the same project key for the apps (before D can run live). Never paste secrets in chat.
 2. **OA-02** the `multitenant contentools` Merchant Center app installed and connected, so the Contentools JWT custom object exists (before H).
-3. **OA-03** Pexels reachable: the image GET is behind Cloudflare from this environment (HTTP 403); run `seed:images` once from a machine that can reach it, or supply the build id (before images in E).
+3. **OA-03** Image source reachable: the image GET is behind Cloudflare from this environment (HTTP 403); run `seed:images` once from a machine that can reach it, or supply the build id (before images in E).
 4. **OA-04** decision on the plate/VIN provider (open question B), only if lookup beyond make/model/year is wanted in J.
 5. **OA-05** Stripe test account, the Stripe connector and the commercetools Checkout application configured in the project (owner decision Q-012, full hosted Checkout flow with Stripe behind it) before O can run live; subscriptions (recurring orders through Checkout) need the same setup.
 6. **SO-01** sign-off on screens missing from the designs (design.md §6).

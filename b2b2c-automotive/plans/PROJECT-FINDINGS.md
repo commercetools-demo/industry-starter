@@ -17,13 +17,13 @@ Facts discovered about the commercetools project, the platform and the environme
 | F-7 | The commercetools `commerce-mcp` plugin server failed to connect in the planning session (cached failure); the knowledge MCP works. The project MCP `b2b2c-automotive` is the one to use. |
 | F-8 | Contentools source lives outside this repository; its service routes (`configuration.route.ts`, `puck-page.route.ts`, `puck-content.route.ts`) define the storage contract in `design.md` section 2. |
 
-## Pexels (images)
+## Image source (images)
 | # | Fact |
 | --- | --- |
-| F-10 | The sibling Pexels image script is recoverable from git history: `git show c4c4e40^:b2c-grocery/site/scripts/seed/update-images.ts` (the commit `c4c4e40` removed it from the grocery project). Other sibling projects removed Pexels later. Use it as a reference for the request shape, search query handling and `cleanUrl()`; do not copy dependencies. |
-| F-11 | The script reads Pexels' internal Next.js data route `GET https://www.pexels.com/_next/data/<buildId>/en-US/search/<query>.json?query=<query>`. The `buildId` changes whenever Pexels deploys, so it must be discovered at run time (fetch the search HTML and read `buildId`) or supplied (OA-03). |
-| F-12 | From the planning environment this GET returns **HTTP 403 with a Cloudflare challenge page**. It is not an auth problem we can fix in code; run from a machine that reaches Pexels or supply the data (OA-03, Q-011). |
-| F-13 | Licensing caveat: the Pexels licence allows free use, but the internal `_next/data` route is not a public API, hotlinked URLs can break when Pexels changes, and the owner should decide whether hotlinking is acceptable beyond a demo (Q-011). Store clean URLs only (D-021); apply width or compression parameters at render time. |
+| F-10 | The sibling Image source image script is recoverable from git history: `git show c4c4e40^:b2c-grocery/site/scripts/seed/update-images.ts` (the commit `c4c4e40` removed it from the grocery project). Other sibling projects removed Image source later. Use it as a reference for the request shape, search query handling and `cleanUrl()`; do not copy dependencies. |
+| F-11 | The script reads Image source' internal Next.js data route `GET https://your-loyalty-free-image-source.com/_next/data/<buildId>/en-US/search/<query>.json?query=<query>`. The `buildId` changes whenever Image source deploys, so it must be discovered at run time (fetch the search HTML and read `buildId`) or supplied (OA-03). |
+| F-12 | From the planning environment this GET returns **HTTP 403 with a Cloudflare challenge page**. It is not an auth problem we can fix in code; run from a machine that reaches Image source or supply the data (OA-03, Q-011). |
+| F-13 | Licensing caveat: the Image source licence allows free use, but the internal `_next/data` route is not a public API, hotlinked URLs can break when Image source changes, and the owner should decide whether hotlinking is acceptable beyond a demo (Q-011). Store clean URLs only (D-021); apply width or compression parameters at render time. |
 
 ## Platform facts to verify early (carried over from the sibling projects, re-check here)
 | # | Fact | Where it matters |

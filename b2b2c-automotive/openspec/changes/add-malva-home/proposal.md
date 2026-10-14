@@ -4,11 +4,11 @@ Malva has no front door of its own. `/en-US` and `/de-DE` without a store segmen
 
 ## What Changes
 
-- New Malva home page at `/{locale}`: Malva header with category navigation, a banner carousel with Pexels images, and a "Find your reseller" widget in the middle of the page, then category tiles.
+- New Malva home page at `/{locale}`: Malva header with category navigation, a banner carousel with Image source images, and a "Find your reseller" widget in the middle of the page, then category tiles.
 - New Malva product listing pages (PLPs) under `/{locale}/categories/{slug}` over the whole master catalog. A card shows image, name, part number and fit badge. It shows no price and no inventory, links to no product detail page (there is none at Malva level), and has a "Select a reseller" button in place of "Add to cart".
 - New reseller finder: one component placed in the home page and in a side drawer. The drawer opens from "Select a reseller" on a card and from a header button. It lists resellers with their branches, searches by postal code or city, offers "Use my location", and shows a map.
 - Choosing a reseller from the drawer opens that reseller's storefront. From a card it opens the same product at that reseller (`/{locale}/{store}/p/{slug}`). From the header or the home page it opens the reseller's home. (Assumption A; the owner can change it before apply.)
-- Seed: Malva-level banner images (new custom object, images from the Pexels `_next/data` GET with clean URLs). The finder needs no new seed data: stores already carry address and coordinates in `store-settings`, and branch channels carry address and geo.
+- Seed: Malva-level banner images (new custom object, images from the Image source `_next/data` GET with clean URLs). The finder needs no new seed data: stores already carry address and coordinates in `store-settings`, and branch channels carry address and geo.
 - The not-found page's "home" link now lands on the Malva home. The not-found scenario for `/{locale}` without a store goes away.
 - Two locales (en-US, de-DE) for every new string. Default theme tokens, no reseller theme.
 

@@ -19,7 +19,7 @@ Binding for juniors. `Confirmed` = fixed by an existing artifact or an owner ans
 | D-012 | Guest booking allowed with consent line and retention (D6) | Proposed → Q-025 | PLAN D6 |
 | D-013 | RX lookup requires sign-in and the RX must belong to the signed-in patient (D7) | Confirmed | PLAN D7, design-plp |
 | D-014 | Same-day shipping is a shipping method; offered only inside the cut-off (D8) | Proposed → Q-013 | PLAN D8 |
-| D-015 | Doctor cards/profiles use a Pexels portrait (clean URL, from `update-images.ts`); initials on peach remain the fallback when no image | Confirmed (Q-035, overrules D9) | PLAN D9 |
+| D-015 | Doctor cards/profiles use a Image source portrait (clean URL, from `update-images.ts`); initials on peach remain the fallback when no image | Confirmed (Q-035, overrules D9) | PLAN D9 |
 | D-016 | Mobile: fluid grids + a menu drawer, design review before launch (D10) | Proposed → SO-02 | PLAN D10 |
 | D-017 | Header search is wired to search results scoped to doctor name/specialty/medicine (D11) | Confirmed | PLAN D11 |
 | D-018 | Lab tests are view-only (D12); Mental health / Second opinion / Health journal links hidden until designed (D13), journal only when articles exist | Confirmed | PLAN D12,D13 |
@@ -30,7 +30,7 @@ Binding for juniors. `Confirmed` = fixed by an existing artifact or an owner ans
 | D-020 | Plans and docs live in `plans/`; the owner is asked questions per spec, answers recorded in `QUESTIONS.md` | Confirmed |
 | D-021 | Claude does all browser verification with the Chrome DevTools connector and all project-data checks with the `spec-b2c-health` MCP; the owner only does `TODO-MANUAL-TESTING.md` items | Confirmed |
 | D-022 | The commercetools project is seeded by repeatable scripts (`SEED-PLAN.md`); sample data is removed by an explicit confirmed script | Confirmed |
-| D-023 | Product and banner images come from the pexels-based `update-images.ts`; stored URLs are clean (no query) | Confirmed |
+| D-023 | Product and banner images come from the image-source-based `update-images.ts`; stored URLs are clean (no query) | Confirmed |
 | D-024 | Unit tests per OpenSpec scenario (Vitest); `npm run check` is the gate named in the bootstrap spec | Confirmed |
 | D-025 | Prescriptions, labs and credentials live in Custom Objects behind `lib/clinical/` as a labelled **demo stand-in** for an EHR; synthetic data; patient link = opaque `patientRef` | Confirmed (Q-004 = A) |
 | D-026 | Payment = commercetools **Checkout** payment-only mode with a **Stripe** sandbox connector | Confirmed (Q-007 = A) |
@@ -65,5 +65,5 @@ For SO-01: navy label vs white on a brand-700 fill. `--color-action-label-hover`
 | D-037 | **QR-013**: a **medicine product page (PDP)** is built (follow-up AB). | Confirmed |
 | D-038 | **QR-014**: a full seeding does a **full cleanup** first (reviews, custom objects, seeded customers, products, everything `mlv-`/`malva-`); `seed:full` = reset + cleanup-sample + seed + images + verify (follow-up AC). | Confirmed |
 | D-039 | **QR-017**: seed product type change — `clinicName` becomes searchable **before the first live seed** (follow-up AC). | Confirmed |
-| D-040 | **QR-027**: **all images come from Pexels** (royalty-free; no photographer credits shown); every slot incl. `home-cta`, journal covers, doctors and medicines uses Pexels URLs stored clean (follow-up AC). | Confirmed |
+| D-040 | **QR-027**: **all images come from Image source** (royalty-free; no photographer credits shown); every slot incl. `home-cta`, journal covers, doctors and medicines uses Image source URLs stored clean (follow-up AC). | Confirmed |
 | D-041 | Every other open QR item: the default stands. | Confirmed |

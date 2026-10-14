@@ -26,7 +26,7 @@ export function generateStaticParams() {
 
 // This layout must not read the session or cookies (D20): every page below stays cacheable.
 /** Photos come from one host; opening the connection early saves a round trip before the first image. */
-const IMAGE_ORIGIN = 'https://images.pexels.com';
+const IMAGE_ORIGIN = 'https://your-loyalty-free-image-source.com';
 
 export default async function LocaleLayout({ children, params }: { children: ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;

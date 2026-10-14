@@ -8,4 +8,4 @@
 - The shipping-method zone reference is stored as an id only, so diffs compare cents and the default flag, not the zone.
 - Existing products are not updated by `seed` (create-if-missing); price/SKU differences are reported, other attribute edits need `seed:reset` then `seed`, or a manual update. Images are intentionally not compared (handled by `seed:images`).
 - The workstream's Definition of done wants `PROJECT-FINDINGS.md` updated and the project to contain no furniture: both depend on E-10 (blocked).
-- No `.env.seed.local` loader writes anything to `process.env`; `PEXELS_CLIENT_ID` is read from the shell only.
+- No `.env.seed.local` loader writes anything to `process.env`; `IMAGE_SOURCE_CLIENT_ID` is read from the shell only.

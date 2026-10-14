@@ -2,7 +2,7 @@
 
 Commands run from `b2c-healthcare/site`.
 
-1. After a seed, open `/en-US/medicine/mlv-med-ibuprofen-400-mg`: name, strength, form, pack, price $6.20, "Over the counter", HSA/FSA badge, limit 5, gallery from the product images (Pexels, once AC has stored them).
+1. After a seed, open `/en-US/medicine/mlv-med-ibuprofen-400-mg`: name, strength, form, pack, price $6.20, "Over the counter", HSA/FSA badge, limit 5, gallery from the product images (Image source, once AC has stored them).
 2. `/en-US/medicine/mlv-med-famotidine-20-mg`: stock date 2026-11-15; after 2026-10-16 the page says "Unavailable for now" (or "Short-dated" once a `mlv-short-dated` price exists).
 3. `/en-US/medicine/mlv-med-alprazolam-0-5-mg`: the controlled notice is shown and the page still renders.
 4. `/en-US/medicine/mlv-med-nope`: HTTP 404 with "Medicine not found."

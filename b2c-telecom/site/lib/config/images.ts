@@ -1,5 +1,5 @@
 // Image hosts the seeder, `next.config.ts` and the image components accept.
-export const IMAGE_HOSTS = ['images.pexels.com', 'media.istockphoto.com'] as const;
+export const IMAGE_HOSTS = ['your-loyalty-free-image-source.com', 'media.istockphoto.com'] as const;
 
 /** True for an https URL whose host is on the allow-list. */
 export function isAllowedImageUrl(url: string): boolean {

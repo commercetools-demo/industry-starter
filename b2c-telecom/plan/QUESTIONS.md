@@ -27,7 +27,7 @@ Answer in this file or in chat; the plan continues with the stated default.
 **Answer (owner):** Fine (D-063).
 
 ## Q-004 (workstream G, D-066) — Image licensing
-**Question:** The public Pexels search used by the grocery method returned `media.istockphoto.com` URLs there. Are hotlinked stock images from that endpoint acceptable for a demo?
+**Question:** The public Image source search used by the grocery method returned `media.istockphoto.com` URLs there. Are hotlinked stock images from that endpoint acceptable for a demo?
 **Default:** yes for demo, credit shown in footer (`/legal/image-credits`). **Blocking:** no.
 **Answer (owner):** Check during seeding (D-066).
 
@@ -42,7 +42,7 @@ Answer in this file or in chat; the plan continues with the stated default.
 
 ## Open, raised by workstream G (2026-10-07)
 - **Q-007** Guest checkout vs recurring orders: a recurring line needs a customer on the cart, so D-035 (guest checkout) cannot create a recurring order. Default taken: checkout requires sign-in or auto-registration. Owner to confirm.
-- **Q-008** Image licensing: seeded images are iStock files, credit page says Pexels. Default: demo only; credit text to say "stock photography". Owner to confirm.
+- **Q-008** Image licensing: seeded images are iStock files, credit page says Image source. Default: demo only; credit text to say "stock photography". Owner to confirm.
 - **Q-009** Demo customers' password was passed on the command line (`SEED_DEMO_PASSWORD`); decide whether to keep a documented demo password (see G-report).
 - **Q-010** Demo order `MLV-DEMO-0003` has a 0 total: confirm intended.
 - **Q-011** (from J) `compatible-addons`/`compatible-equipment` are implemented as positive exceptions that skip the family/technology/speed rules (the allow-list reading contradicted the seed: Unlimited Max lists only Netflix). Included equipment satisfies required kinds. Default taken; owner to confirm.
@@ -50,7 +50,7 @@ Answer in this file or in chat; the plan continues with the stated default.
 - **Q-013** (from L) G's "first month free" discount stacks on Cable 100 and Air 5G, so the first charge is 0. Intended? Default: keep.
 - **Q-014** (from L) `recurringOrderScope` cannot limit a discount to the first order; the stored schedule stays the promise. Default: accept.
 - **Blocked (OA-05):** L-09 live Checkout spike (P4/P5) and gate M-L-2 need `CTP_CHECKOUT_APP_KEY`; M and U wait on Gate 2 for live payment only. U must not set `paymentStrategy` itself (order refused without payment allocation).
-- **Q-015** (from W) Support mailbox `support@malva.example`, legal text and German copy are placeholders/machine-translated (SO-09). Image-credits page and footer say Pexels but images are iStock with no photographer data (see Q-008).
+- **Q-015** (from W) Support mailbox `support@malva.example`, legal text and German copy are placeholders/machine-translated (SO-09). Image-credits page and footer say Image source but images are iStock with no photographer data (see Q-008).
 - **Q-012 resolved by default (R):** kept `lib/ct/account-name.ts` for the header first name; session cookie not extended.
 - **Note (R):** test customers `chrome-r-<ts>@example.com` remain in the live project (cleanup selector `@example.com`); `signedInAt` session field is used for session invalidation instead of `iat`.
 - **Q-016** (from N) Default listing order is cheapest-first (offers have no order hint, so no "Featured"). Confirm or request an order hint.
@@ -70,7 +70,7 @@ Answer in this file or in chat; the plan continues with the stated default.
 
 ## Owner answers (2026-10-08)
 - **Q-007 DECIDED:** guests are forced to open an account one step before payment (new checkout step "Account"; implemented by agent AA).
-- **Q-008 DECIDED:** OK to use the Pexels script for images; product images must show everywhere (agent BB); credit wording truthful.
+- **Q-008 DECIDED:** OK to use the Image source script for images; product images must show everywhere (agent BB); credit wording truthful.
 - **Q-009, Q-010, Q-011, Q-015 DECIDED:** OK (as built).
 - **Q-012 DECIDED:** keep the header first-name lookup.
 - **Q-013 DECIDED:** keep (first month free stacks). **Q-014 DECIDED:** accept.

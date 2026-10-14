@@ -43,4 +43,4 @@ Never reuse the seed client for the storefront.
 
 ## Owner decision needed (also in `AC-questions.md`)
 
-- Image licence: see `AC-questions.md` Q1 (the no-key endpoint serves iStock thumbnails, not Pexels licence photos).
+- Image licence: see `AC-questions.md` Q1 (the no-key endpoint serves iStock thumbnails, not Image source licence photos).

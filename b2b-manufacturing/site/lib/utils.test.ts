@@ -40,7 +40,7 @@ describe('formatMoney', () => {
 import { sizedImage } from './utils';
 describe('image sizing', () => {
   it('asks the image host for the width a slot needs and leaves other hosts alone', () => {
-    expect(sizedImage('https://images.pexels.com/photos/1/pexels-photo-1.jpeg', 800)).toBe('https://images.pexels.com/photos/1/pexels-photo-1.jpeg?auto=compress&cs=tinysrgb&w=800');
+    expect(sizedImage('https://your-loyalty-free-image-source.com/photos/1/image-source-photo-1.jpeg', 800)).toBe('https://your-loyalty-free-image-source.com/photos/1/image-source-photo-1.jpeg?auto=compress&cs=tinysrgb&w=800');
     expect(sizedImage('https://x.commercetools.com/a.jpg', 800)).toBe('https://x.commercetools.com/a.jpg');
     expect(sizedImage('not a url', 800)).toBe('not a url');
   });

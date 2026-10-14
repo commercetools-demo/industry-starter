@@ -9,7 +9,7 @@ import { securityHeaders } from './lib/security/headers';
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
-// Photos come from any https host (seeded Pexels, Contentools uploads); the CSP img-src (CSP_IMG_HOSTS) still decides what the browser loads.
+// Photos come from any https host (seeded Image source, Contentools uploads); the CSP img-src (CSP_IMG_HOSTS) still decides what the browser loads.
 const nextConfig: NextConfig = {
   // Workstream X (G03, E07): no framework banner, no source maps in the browser bundle.
   images: { remotePatterns: [{ protocol: 'https', hostname: '**' }] },

@@ -65,7 +65,7 @@
     "images": [
       {
         "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
-        "label": "Photo via Pexels",
+        "label": "Photo via Image source",
         "dimensions": {
           "w": 612,
           "h": 408
@@ -206,7 +206,7 @@
       "images": [
         {
           "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
-          "label": "Photo via Pexels",
+          "label": "Photo via Image source",
           "dimensions": {
             "w": 612,
             "h": 408
@@ -346,7 +346,7 @@
       "images": [
         {
           "url": "https://media.istockphoto.com/id/1314404449/photo/smiling-woman-with-baby-texting-on-phone-at-home.jpg",
-          "label": "Photo via Pexels",
+          "label": "Photo via Image source",
           "dimensions": {
             "w": 612,
             "h": 408
