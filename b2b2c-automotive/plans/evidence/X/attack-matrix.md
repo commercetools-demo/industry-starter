@@ -3,7 +3,7 @@
 
 # Attack matrix (workstream X)
 
-Proof kinds. P1 status and code, P3 the commercetools clients were never called (trapped SDK or mocked service) and, for the proxy, the fake Contentools request log is empty or free of the attacker's values. P2 (a live read-back of versions) needs the real project and is M-X-06. `T` = automated test run by `npm run check`; `C` = curl against a production build (files in this folder); `L` = needs the live project or Chrome (not run here); `D` = deferred. Tests live in `portal/` unless prefixed `sf:`.
+Proof kinds. P1 status and code, P3 the commercetools clients were never called (trapped SDK or mocked service) and, for the proxy, no upstream call carried the attacker's values. P2 (a live read-back of versions) needs the real project and is M-X-06. `T` = automated test run by `npm run check`; `C` = curl against a production build (files in this folder); `L` = needs the live project or Chrome (not run here); `D` = deferred. Tests live in `portal/` unless prefixed `sf:`.
 
 | ID | Result | Proof |
 | --- | --- | --- |
@@ -32,15 +32,15 @@ Proof kinds. P1 status and code, P3 the commercetools clients were never called 
 | C19 CSRF | T and C pass | `lib/security/origin.test.ts`, `proxy.api-gate.test.ts`, `csrf-curl.txt` (403 CROSS_ORIGIN, 415 for text/plain, deny lines in `server-*-deny-lines.txt`); L: the evil page in Chrome |
 | C20 shop-as misuse | T (V's tests) | `sf:app/api/impersonate/route.test.ts`, `lib/impersonation/token.test.ts`; storefront cross-origin hand-off is the one exempt route |
 | C21 impersonated session abuse | D | patch in the workstream file, M-X-08 |
-| D01 to D08, D10 to D14 proxy | T pass against the fake Contentools request log | `app/api/contentools/[...path]/route.attacks.test.ts`, `route.test.ts` |
-| D09, D11, D12, D13, D14 storefront proxy | T pass | `sf:app/api/contentools/[...path]/route.attacks.test.ts` |
+| D01 to D08, D10 to D14 proxy | T pass (route handler tests) | `route.test.ts` |
+| D09, D11, D12, D13, D14 storefront proxy | T pass | `sf:app/api/contentools/[...path]/route.test.ts` |
 | E01 client bundle | T and C pass | `check-bundle-secrets.jwt.test.mjs`, `methods-and-leaks-curl.txt` (0 files with the canary in `.next/static`, 0 source maps) |
 | E02 to E04 HTML, RSC, network, storage | E02 C pass for the sign-in page; the rest L | `methods-and-leaks-curl.txt`; M-X-05, M-X-02 |
-| E05 error paths | T pass | `route.attacks.test.ts` (D13: no token, no upstream text) |
+| E05 error paths | T pass | `route.test.ts` |
 | E06 server logs | T pass | `origin.test.ts` (audit log drops token, authorization, cookie, password, email, jwt keys); `server-*-deny-lines.txt` |
 | E07 source maps | C pass | 0 `.map` files, `productionBrowserSourceMaps: false` |
 | E08 placeholder token constant | T pass | `components/contentools/placeholder.ts` is a literal; `jwt.canary.test.ts` for the canary rule |
-| E09 storefront holds no JWT | T pass | `sf:route.attacks.test.ts` (no authorization is ever sent), no JWT code in the storefront |
+| E09 storefront holds no JWT | T pass | no JWT code in the storefront |
 | F01 to F05 cart integrity | T (L's and M's tests) | `sf:app/api/cart/*` tests: strict schema `{ sku, quantity 1..99, recurrencePolicyKey }`, ids from the session |
 | F06 and F07 returns, refunds | T (V's tests) | `lib/ct/seller/returns.test.ts` |
 | F08 reviews | T (V's and M's tests) | `lib/ct/seller/reviews.test.ts`, `sf:lib/ct/reviews.test.ts` |

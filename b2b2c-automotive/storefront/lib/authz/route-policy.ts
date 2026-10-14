@@ -52,7 +52,7 @@ export const ROUTE_POLICY: readonly RoutePolicy[] = [
   p('/api/cart/lines', { POST: 'cart' }),
   p('/api/cart/summary', { GET: 'cart' }),
   p('/api/checkout/session', { POST: 'cart' }, { note: 'the amount, currency and address come from the persisted cart, never from the body' }),
-  p('/api/contentools/[...path]', { GET: 'public', POST: 'public', PUT: 'public', PATCH: 'public', DELETE: 'public', HEAD: 'public', OPTIONS: 'public' }, { note: 'read-only proxy: every write method is 404 (route.attacks.test.ts)' }),
+  p('/api/contentools/[...path]', { GET: 'public', POST: 'public', PUT: 'public', PATCH: 'public', DELETE: 'public', HEAD: 'public', OPTIONS: 'public' }, { note: 'read-only proxy: every write method is 404' }),
   p('/api/dev/checkout/complete', { POST: 'dev' }, { note: '404 in production and without CHECKOUT_DEV_COMPLETE' }),
   p('/api/garage', { GET: 'public', POST: 'public', PATCH: 'public', DELETE: 'public' }, { note: 'a cookie garage for visitors, a custom field of the signed-in customer' }),
   p('/api/garage/active', { POST: 'public' }),

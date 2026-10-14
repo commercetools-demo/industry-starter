@@ -12,7 +12,6 @@ Run 2026-10-13T03:42:44.200Z on darwin, Node v22.21.1, dummy environment, offlin
 | plans | plans/*.test.mjs | PASS | 0 | # skipped 0 / # todo 0 / # duration_ms 54.707375 |
 | plans | spec-coverage (refresh) | PASS | 0 | spec-coverage: 31 specs; TEST 82, MAPPED 73, EVIDENCE 1, PLANNED 45, UNCOVERED 51 |
 | seed | npm run check | PASS | 2 |       Tests  130 passed (130) /    Start at  23:40:58 /    Duration  1.03s (transform 158ms, setup 0ms, collect 451ms, tests 869ms, environment 0ms, prepare 151ms) |
-| fake-contentools | npm run check | PASS | 2 |       Tests  106 passed (106) /    Start at  23:41:00 /    Duration  900ms (transform 91ms, setup 0ms, collect 181ms, tests 841ms, environment 0ms, prepare 149ms) |
 | storefront | npm run check | PASS | 25 | Environment  jsdom was created 256 times · 102.97s total, 47% of tracked time /              create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files) /        |
 | storefront | npm run verify:build (scratch copy) | PASS | 9 | bundle-report: OK (24 routes within budget) / no-demo-login: OK / no-attack-mode: OK |
 | portal | npm run check | PASS | 29 | Environment  jsdom was created 280 times · 140.58s total, 56% of tracked time /              create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files) /        |

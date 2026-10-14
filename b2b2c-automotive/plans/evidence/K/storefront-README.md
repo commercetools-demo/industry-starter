@@ -3,7 +3,7 @@
 
 # Workstream K storefront evidence (against fakes, no live calls)
 
-Setup: `tools/fake-contentools` on 4010 (fixtures), a throw-away stand-in for the commercetools endpoints on 4020 (kept outside the repo: stores with branches, categories, 10 ranked parts, standalone prices, vehicle table), `next dev -p 3015` with env pointing at both. All servers stopped afterwards. Chrome could not go below 500 px wide, so the "375" shot is 500 px wide (single column).
+Setup: a throw-away stand-in for the commercetools endpoints on 4020 (kept outside the repo: stores with branches, categories, 10 ranked parts, standalone prices, vehicle table), `next dev -p 3015` with env pointing at both. All servers stopped afterwards. Chrome could not go below 500 px wide, so the "375" shot is 500 px wide (single column).
 
 | File | Proves |
 | --- | --- |

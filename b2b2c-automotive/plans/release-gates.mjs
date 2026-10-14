@@ -7,7 +7,7 @@
 // no step talks to commercetools. Nothing here writes to a commercetools project.
 //
 //   node plans/release-gates.mjs                      all gates, build gates in a scratch copy of this working tree
-//   node plans/release-gates.mjs --only seed,portal   some packages (plans, seed, fake-contentools, storefront, portal)
+//   node plans/release-gates.mjs --only seed,portal   some packages (plans, seed, storefront, portal)
 //   node plans/release-gates.mjs --skip-build         skip the `verify:build` gates (they take minutes)
 //   node plans/release-gates.mjs --scratch <dir>      scratch directory (default: <os tmpdir>/malva-release-gates)
 //   node plans/release-gates.mjs --reuse-scratch      keep the scratch copy (and its build cache) of the previous run
@@ -17,7 +17,6 @@
 // Gates per package (the in-place gates run in this working tree, with its installed node_modules):
 //   plans             verify-plan --sync --strict (regenerates the generated blocks), verify-manual --structure, plans/*.test.mjs, spec-coverage refresh
 //   seed              npm run check                      (tsc + vitest, FakeApi; includes the reset and purge tests)
-//   fake-contentools  npm run check
 //   storefront        npm run check, then verify:build in the scratch copy (build + route, secret and bundle gates)
 //   portal            npm run check, then verify:build in the scratch copy
 // A clean-clone run (`git clone --no-hardlinks`, check out the commit, then this script with --install) proves the same gates
@@ -32,7 +31,7 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const argv = process.argv.slice(2);
 const flag = (n) => argv.includes(n);
 const opt = (n) => (argv.includes(n) ? argv[argv.indexOf(n) + 1] : undefined);
-const ALL = ['plans', 'seed', 'fake-contentools', 'storefront', 'portal'];
+const ALL = ['plans', 'seed', 'storefront', 'portal'];
 const only = (opt('--only') ?? ALL.join(',')).split(',').map((s) => s.trim()).filter(Boolean);
 const scratch = path.resolve(opt('--scratch') ?? path.join(os.tmpdir(), 'malva-release-gates'));
 const logs = path.join(scratch, 'logs');
@@ -113,7 +112,6 @@ if (wants('plans')) {
   gate('plans', 'spec-coverage (refresh)', ROOT, 'node plans/spec-coverage.mjs');
 }
 if (wants('seed')) gate('seed', 'npm run check', path.join(ROOT, 'seed'), 'npm run check');
-if (wants('fake-contentools')) gate('fake-contentools', 'npm run check', path.join(ROOT, 'tools/fake-contentools'), 'npm run check');
 for (const app of ['storefront', 'portal']) {
   if (!wants(app)) continue;
   gate(app, 'npm run check', path.join(ROOT, app), 'npm run check');

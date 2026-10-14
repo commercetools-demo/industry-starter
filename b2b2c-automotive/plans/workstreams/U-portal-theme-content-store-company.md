@@ -42,7 +42,7 @@ The Contentools editors are embedded through a **hardened same-origin proxy**: t
 | OA-02 | Contentools connected (JWT custom object `contentools-configuration` / `contentools-jwt-token` exists) | MCP `read_custom_objects` container `contentools-configuration` |
 | K, L, M, N, O (soft) | Storefront routes for the preview and the attribution contract (section 6) | `plans/workstreams/*.md`; if not done, the step is deferred with a TODO row, never blocked |
 
-If the OA-02 JWT does not exist when U starts, build and test everything against a fake Contentools server (section 9, U-04), add the TODO row and continue; Claude re-runs the live steps when OA-02 is done.
+If the OA-02 JWT does not exist when U starts, build and test everything with the proxy stubbed in tests, add the TODO row and continue; Claude re-runs the live steps when OA-02 is done.
 
 ## 3. Specs and requirement ids implemented
 
@@ -193,10 +193,6 @@ Files `lib/contentools/allowlist.ts` (section 7 patterns), `lib/contentools/prox
 - Placeholder token check (decision 2, Q-U02): first try `"server-managed"`. If a manager rejects or decodes it (console error, blank editor), use an unsigned JWT-shaped placeholder `header.payload.signature` whose payload has `exp` far in the future (helper `placeholderJwt()` in `lib/contentools/placeholder.ts`, no real claims, test asserts it contains no `sub`). If both fail, apply the fallback in Q-U02 (JWT to the browser plus the store check) and note it in Notes; do not silently choose.
 - Server pages (RSC) compute `connected = (await getValidContentoolsJwt()) !== null` and pass booleans only; the token string never leaves the server.
 
-### U-04 Fake Contentools server for tests [SKILL: commercetools-connect]
-
-`scripts/fake-contentools.mjs` (Node `http`, port 4011; workstream X has its own recording stub `scripts/attack/stub-contentools.mjs` on 4010, do not reuse or rename it): implements the allow-listed routes in memory per store (GET and PUT theme, pages list, upload-file returning `{ url }`), requires `x-project-key`, requires `Authorization: Bearer` for writes (401 otherwise), and logs received headers. `CONTENTOOLS_ORIGIN=http://localhost:4011` for the proxy tests and for local runs before OA-02. Not shipped to production (excluded in `netlify.toml` and not imported).
-
 ### U-05 Store & channels pages [SKILL: commercetools-storefront]
 
 Routes under `app/[locale]/(portal)/store/`: `layout.tsx` (page header and tabs Settings, Channels, Share, Theme), `settings/page.tsx`, `channels/page.tsx`, `share/page.tsx`, `theme/[[...slug]]/page.tsx`. `store/page.tsx` redirects to `store/settings`. Replace R's placeholder; add `store/*` to the allow-list in `lib/portal/nav.ts` if R did not.
@@ -298,7 +294,7 @@ Run the Chrome recipe (section 10), the MCP read-backs (section 12), store evide
 
 ## 9. Test-first scenarios (vitest unless noted)
 
-Run: `cd portal && npx vitest run lib/contentools lib/ct/seller lib/company lib/account lib/portal app/api` and, for the fake server, `node scripts/fake-contentools.mjs &` is started by the test setup (`vitest.setup.ts`) on port 4011.
+Run: `cd portal && npx vitest run lib/contentools lib/ct/seller lib/company lib/account lib/portal app/api`.
 
 | File › test name | Asserts |
 | --- | --- |
@@ -347,7 +343,7 @@ Run: `cd portal && npx vitest run lib/contentools lib/ct/seller lib/company lib/
 
 ## 10. Chrome DevTools MCP recipe
 
-Preconditions: portal on `http://localhost:3001`; storefront on `http://localhost:3000` if built; Contentools connected (OA-02) or `scripts/fake-contentools.mjs` with `CONTENTOOLS_ORIGIN=http://localhost:4011`; two seeded resellers `<storeA>` and `<storeB>`; demo users from `seed/README.md`. Screenshots to `plans/evidence/U/<nn>-<name>.png`. After each page `list_console_messages` shows no errors (Contentools manager warnings are listed in Notes if unavoidable, never errors).
+Preconditions: portal on `http://localhost:3001`; storefront on `http://localhost:3000` if built; Contentools connected (OA-02); two seeded resellers `<storeA>` and `<storeB>`; demo users from `seed/README.md`. Screenshots to `plans/evidence/U/<nn>-<name>.png`. After each page `list_console_messages` shows no errors (Contentools manager warnings are listed in Notes if unavoidable, never errors).
 
 **A. Store and branches**
 
@@ -451,4 +447,4 @@ Contracts for later workstreams: `lib/contentools/{origin,jwt,allowlist,proxy-po
 - 2026-10-12 J12: server layer done and tested: proxy (151 policy tests, 19 route tests), JWT, theme loader, store settings, branches, branch stock and price, channel stats, geocode, branding upload, company and account routes, accept-invite; every `app/api/seller/**` route has a cross-store test.
 - 2026-10-12 J12: UI done: Store (Settings with map, Branches with form and stock drawer, Channels, Share with QR, Theme with preview, save toast and Reset), Content (Pages and Content blocks), Company, Account, accept-invite; en-US and de-DE messages with identical keys.
 - 2026-10-12 J12: `npm run check` green for U (one failing test belongs to T: `lib/ct/seller/discounts.test.ts` priority, in progress by J11); `verify:build` green with the dummy env.
-- 2026-10-12 J12: HTTP smoke of every page and read route in fixture mode with the fake Contentools passed (found and fixed a server-side use of tab constants exported from a client file). Chrome DevTools pass NOT done: the Chrome MCP hung; see M-U-5.
+- 2026-10-12 J12: HTTP smoke of every page and read route in fixture mode passed (found and fixed a server-side use of tab constants exported from a client file). Chrome DevTools pass NOT done: the Chrome MCP hung; see M-U-5.

@@ -12,7 +12,7 @@ Dev fixture mode (`PORTAL_DEV_FIXTURES=on`, never production). Sign-in for the b
 | `/catalog`, `/catalog/prices`, `/catalog/product-info`, `/catalog/product-discounts`, `/catalog/cart-discounts`, `/catalog/priority`, `/catalog/discounts/[kind]/[id]` | Catalog and pricing tabs (tailoring and image alt text in `product-info`) | fixture assortment | adminA, buyerA |
 | `/bundles`, `/import` | Bundles, product import (three tabs) | fixture products | adminA (buyerA: Forbidden) |
 | `/store/settings`, `/store/channels`, `/store/share`, `/store/theme[/...]` | Store and channels (branch list and editor with the Leaflet map and the address fields) | fixture store | adminA, buyerA |
-| `/content/pages`, `/content/blocks` | Contentools Pages and Content blocks (third-party editors, surrounding chrome only) | fake Contentools not connected | adminA |
+| `/content/pages`, `/content/blocks` | Contentools Pages and Content blocks (third-party editors, surrounding chrome only) | Contentools not connected | adminA |
 | `/marketing`, `/email`, `/partnership` | Marketing, e-mail (stores content, never sends), brand partnership | fixture campaigns and templates | adminA |
 | `/customers`, `/customers/[id]` | Customers and detail | six fixture customers per store | adminA |
 | `/subscriptions`, `/returns`, `/reviews` | Subscriptions, returns (record dialog, refund dialog), reviews | fixture records | adminA (returns and reviews also buyerA read-only) |

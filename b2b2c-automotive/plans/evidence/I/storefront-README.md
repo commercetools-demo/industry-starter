@@ -3,7 +3,7 @@
 
 # Evidence I (offline run, `storefront-` prefix)
 
-Setup: production build (`next build` and `next start -p 3012`, so the real CSP applied, no dev eval), `tools/fake-contentools` on 4031 (navy theme for north, green for south), a throw-away local fake of commercetools auth, `stores/key=`, categories, product search and in-store carts, and a local fake Nominatim (it logs each request). No live commercetools call, no secret. Servers stopped afterwards.
+Setup: production build (`next build` and `next start -p 3012`, so the real CSP applied, no dev eval), a throw-away local fake of commercetools auth, `stores/key=`, categories, product search and in-store carts, and a local fake Nominatim (it logs each request). No live commercetools call, no secret. Servers stopped afterwards.
 
 | File | Proves |
 | --- | --- |

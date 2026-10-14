@@ -137,4 +137,4 @@ Never wait silently: add the row, continue on the default, mention it in the PR 
 - K-09: done (`DefaultHome`, `app/[locale]/[store]/page.tsx` with metadata; removed the placeholder test in `app/[locale]/layout.test.tsx`)
 - K-10: done (hand-off comments at the top of both `lib/puck/` files, Q-K01)
 - K-11: done (`home.*` messages in both catalogs; `npm run check` and `verify:build` green, home route is dynamic)
-- Browser recipe run against fakes (commercetools stand-in plus fake Contentools): `plans/evidence/K/`; live rows M-K-2, M-K-3
+- Browser recipe run against a commercetools stand-in: `plans/evidence/K/`; live rows M-K-2, M-K-3

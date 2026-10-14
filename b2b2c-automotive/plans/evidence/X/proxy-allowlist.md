@@ -26,7 +26,7 @@ Finding: the allow-list is a superset of the CMS in the method column (it allows
 
 Everything else is 404 without an upstream call: `health`, `refresh-jwt`, `authenticate-project`, `proxy-script`, `compile-upload`, `datasource`, `content-types`, the legacy `pages`, `page-*`, `content-item*`, `product` (other than search) routes, the other `configuration/<slice>` keys (`header`, `footer`, `facet`, `site-metadata`, `category-listing`, `translations`, `b2b-account-menu-links`) and the configuration lists. Path hygiene (`lib/contentools/proxy-policy.ts`): any `%`, `\`, `..`, control character or empty or `.` segment is 400 `INVALID_PATH`; case differences, trailing dots and slashes do not match the allow-list (404).
 
-Proof: `portal/app/api/contentools/[...path]/route.attacks.test.ts` (attacks D01 to D08, D10 to D14, E01 to E05, F11 against the real route handler and the real fake Contentools server, judged by its request log) and `route.test.ts`.
+Proof: `route.test.ts` (portal proxy route handler).
 
 ## Storefront proxy (`/api/contentools/service/...`, public reads)
 
@@ -35,4 +35,4 @@ Proof: `portal/app/api/contentools/[...path]/route.attacks.test.ts` (attacks D01
 | GET | `<store>/configuration/theme`, `<store>/published/{puck-pages,puck-contents}/<key>`, `datasource`, `datasource/<key>`, `products/search` | read only, no JWT exists in the storefront |
 | POST | `<store>/published/{puck-pages,puck-contents}/query` | the only POST, body at most 16 KB |
 
-Every other method (POST, PUT, PATCH, DELETE, HEAD, OPTIONS) on every other route is 404 with no upstream request. Request headers are an allow-list (`accept`, `accept-language`, `content-type`, `if-none-match`) plus the proxy's own `x-project-key`; the answer drops `set-cookie`, `location`, `www-authenticate` and hop headers; an upstream 3xx or 5xx is `502 { error: { code: 'UPSTREAM_ERROR' } }`. The store segment is any valid store key because published pages and themes are public content of public stores; see Q-X06 for the decision not to bind it to the session. Proof: `storefront/app/api/contentools/[...path]/route.attacks.test.ts`, `route.test.ts`.
+Every other method (POST, PUT, PATCH, DELETE, HEAD, OPTIONS) on every other route is 404 with no upstream request. Request headers are an allow-list (`accept`, `accept-language`, `content-type`, `if-none-match`) plus the proxy's own `x-project-key`; the answer drops `set-cookie`, `location`, `www-authenticate` and hop headers; an upstream 3xx or 5xx is `502 { error: { code: 'UPSTREAM_ERROR' } }`. The store segment is any valid store key because published pages and themes are public content of public stores; see Q-X06 for the decision not to bind it to the session. Proof: `route.test.ts`.

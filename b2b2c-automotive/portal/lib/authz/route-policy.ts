@@ -50,7 +50,7 @@ export const ROUTE_POLICY: readonly RoutePolicy[] = [
   p(
     '/api/contentools/[...path]',
     { GET: 'content.edit', POST: 'content.edit', PUT: 'content.edit', PATCH: 'content.edit', DELETE: 'content.edit', HEAD: 'content.edit', OPTIONS: 'public' },
-    { note: 'hardened proxy: allow-list, strict store, server-held JWT on writes (route.attacks.test.ts)' },
+    { note: 'hardened proxy: allow-list, strict store, server-held JWT on writes' },
   ),
   p('/api/copilot/apply', { POST: 'session' }, { note: 'applyConfirmed re-checks the permission of the chosen action (403 otherwise)' }),
   p('/api/copilot/plan', { POST: 'session' }),

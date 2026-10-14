@@ -3,7 +3,7 @@
 
 # Workstream H storefront evidence (against fakes, no live calls)
 
-Setup: `tools/fake-contentools` on 4010 (fixtures), a throw-away local stand-in for commercetools auth and `stores/key=` on 4020 (kept outside the repo, only so G's proxy can resolve the stores), `next dev -p 3011` with env pointing at both. Everything stopped afterwards.
+Setup: a throw-away local stand-in for commercetools auth and `stores/key=` on 4020 (kept outside the repo, only so G's proxy can resolve the stores), `next dev -p 3011` with env pointing at both. Everything stopped afterwards.
 
 | File | Proves |
 | --- | --- |

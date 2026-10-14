@@ -59,7 +59,7 @@ async function refreshToken(old: string): Promise<string | null> {
   return typeof body.token === 'string' && isJwtValid(body.token) ? body.token : null;
 }
 
-/** Development fixtures only (PORTAL_DEV_FIXTURES=on, never production): an unsigned token the fake Contentools accepts. */
+/** Development fixtures only (PORTAL_DEV_FIXTURES=on, never production): an unsigned token for a local stand-in Contentools. */
 function devToken(): string {
   const part = (value: unknown) => Buffer.from(JSON.stringify(value)).toString('base64url');
   return `${part({ alg: 'none', typ: 'JWT' })}.${part({ sub: 'portal-dev-fixture', exp: Math.floor(Date.now() / 1000) + 3600 })}.dev`;

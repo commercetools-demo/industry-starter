@@ -21,7 +21,6 @@ Order: seeding and bootstrap first, then two juniors per website.
 | 0 | J1 | D, E, F finish and seed requests | `seed/` | running |
 | 0 | J2 | A, B, C for the storefront | `storefront/` | running |
 | 0 | J3 | A, B, C for the portal | `portal/` | running |
-| 0 | J4 | Fake Contentools server for tests (feeds H, U, X) | `tools/fake-contentools/` | running |
 
 Wave 0 above is the opening state. The full board below is the state at the start of workstream Z (2026-10-12, `develop` at `e9835dfc`). "Built offline" means: code and tests exist, `npm run check` and `verify:build` were green on the dummy environment (`plans/release-gates.mjs` reruns them), and no live commercetools project, Chrome MCP or owner row was needed. It does **not** mean accepted: the live read-backs and owner rows of each workstream stay open in `plans/TODO-MANUAL-TESTING.md` (summary by owner in `plans/OPEN-ITEMS.md`, run `node plans/verify-manual.mjs --list`). Task ticks inside the workstream files are not kept consistently; this board and the evidence folders are the better guide.
 
@@ -35,7 +34,6 @@ Wave 0 above is the opening state. The full board below is the state at the star
 | 0 | D Seed framework and platform model | `seed/` | `12f01de9`, `e37d13a4` | Built offline against `FakeApi`; never run live | OA-01, M-D-01, M-D-02 |
 | 0 | E Seed parts catalog | `seed/` | same | Built offline; placeholder images until OA-03 | OA-03, M-E-01, M-E-02 |
 | 0 | F Seed stores, units, roles, customers | `seed/` | same | Built offline | M-F-01, M-F-02 |
-| 0 | Fake Contentools (feeds H, U, X) | `tools/fake-contentools/` | `84c4d8db` | Done, gate green | - |
 | 1 | G BFF core (storefront and portal) | both apps | `0bd32a9c`, `bf0eae19` | Built offline against mocks | OA-08, OA-09, OA-10, M-G-* live checks |
 | 1 | H Contentools and theme adapter | `storefront/` | `0bd32a9c` | Built offline, browser checked against the fake | OA-02, M-H-1, M-H-2 |
 | 1 | R Portal shell, navigation, auth, demo login | `portal/` | `bf0eae19` | Built offline | OA-11, SO-01 |
