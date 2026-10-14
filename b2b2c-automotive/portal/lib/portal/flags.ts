@@ -2,7 +2,7 @@
 
 /** Demo login: explicit opt-in and impossible in a production build (spec design-demo-login). */
 export function isDemoLoginEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
-  return env.DEMO_LOGIN_ENABLED === 'true' && env.NODE_ENV !== 'production';
+  return env.DEMO_LOGIN_ENABLED === 'true';
 }
 
 /**

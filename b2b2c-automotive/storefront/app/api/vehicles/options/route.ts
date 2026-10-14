@@ -17,7 +17,8 @@ const query = z
   .refine((q) => !q.year || q.model, 'year needs model');
 
 // Same for every shopper (the vehicle table is shared master data; `market` is part of the URL), so shared caches may keep it for 5 minutes.
-const CACHE = { 'Cache-Control': 'public, max-age=300' };
+// Netlify's CDN keys a cached response by path only; Netlify-Vary adds the query string (market, make, model, year) to the key.
+const CACHE = { 'Cache-Control': 'public, max-age=300', 'Netlify-Vary': 'query' };
 const unknown = () => new ApiError(404, 'unknown-option');
 
 /**

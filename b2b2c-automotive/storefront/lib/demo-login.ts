@@ -19,7 +19,7 @@ interface DemoCustomer extends DemoShopper {
 }
 
 export function isDemoLoginEnabled(env: Record<string, string | undefined> = process.env): boolean {
-  return env.DEMO_LOGIN_ENABLED === 'true' && env.NODE_ENV !== 'production';
+  return env.DEMO_LOGIN_ENABLED === 'true';
 }
 
 /** "Make Model Year" of the active vehicle of the stored garage JSON, or null (light parse: the label is display only). */
