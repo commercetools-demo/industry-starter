@@ -1,0 +1,21 @@
+# G03 to G10 and C18, portal :3101
+## x-powered-by present? (expect none)
+(none above means absent)
+## TRACE on a page
+HTTP 500
+## PUT on a page (with same-origin headers)
+HTTP 200
+## GET /api/seller/prices?storeKey=x, no cookie (C18)
+{"error":"Not signed in"}
+HTTP 401
+## GET /api/contentools/service/x/configuration/theme, no cookie (D10)
+{"error":"Not signed in"}
+HTTP 401
+## stub log after those calls (must be empty: nothing reached Contentools)
+[{"id":1,"at":"2026-10-13T01:15:11.870Z","method":"GET","url":"/service/default/configuration/theme","path":"/service/default/configuration/theme","headers":{"host":"127.0.0.1:4110","connection":"keep-alive","x-project-key":"test-project","accept":"*/*","accept-language":"*","sec-fetch-mode":"cors","user-agent":"node","pragma":"no-cache","cache-control":"no-cache","accept-encoding":"gzip, deflate"},"status":200,"handledBy":"stub"}]
+## forged session cookie (C08: changed claims, bad signature) on an API route
+{"error":"Not signed in"}
+HTTP 401
+## header spoofing (C09) on an admin route with no session
+{"error":"Not signed in"}
+HTTP 401

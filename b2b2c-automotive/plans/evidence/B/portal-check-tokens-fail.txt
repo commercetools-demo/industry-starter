@@ -1,0 +1,5 @@
+components/TmpBad.tsx: raw colour #303030; use var(--color-bg-brand)
+components/TmpBad.tsx: font "Poppins" is not allowed here; use var(--font-sans) (Inter only)
+components/TmpBad.tsx: raw size 14px; use var(--text-body-2) or var(--space-350)
+components/TmpBad.tsx: Tailwind default palette class bg-white; use a token colour (bg-bg-surface, text-text, border-border, ...)
+exit 1

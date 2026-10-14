@@ -1,0 +1,7 @@
+/ 307 http://localhost:3010/de-DE
+/ (cookie en-US) 307 http://localhost:3010/en-US
+/fr-FR/hartmann 404
+/de-DE 404
+/de-DE/hartmann 200
+/en-US/hartmann 200
+/dev/tokens 200

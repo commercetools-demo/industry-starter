@@ -1,0 +1,42 @@
+## 1.4.4 resize text 200 percent and 1.4.12 text spacing (horizontal scroll, clipped offenders)
+home 375: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+parts 375: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+pdp 375: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+cart 375: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+sign-in 375: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+checkout 375: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+home 1440: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+parts 1440: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+pdp 1440: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+cart 1440: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+sign-in 1440: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+checkout 1440: 200% scroll=no clipped=0; spacing scroll=no clipped=0 
+
+## 1.3.4 orientation: landscape 812x375
+home landscape: scroll=no
+parts landscape: scroll=no
+pdp landscape: scroll=no
+cart landscape: scroll=no
+sign-in landscape: scroll=no
+checkout landscape: scroll=no
+
+## 2.4.7 / 2.4.11 keyboard walk at 375 (PDP): every stop visible focus indicator and not covered
+stops 66 first: Zum Inhalt springen
+covered []
+no outline []
+
+## K1: store picker opens from the header chip, focus moves in, Escape returns focus
+chip Ihre FilialeFiliale Berlin, BerlinÄndern | dialog {"open":true,"focusInside":true,"active":"BUTTON:Schließen"} | after Escape {"open":false,"active":"Ihre FilialeFiliale Berlin, BerlinÄndern"}
+picker at 375: scroll=no {"w":351,"h":655,"vh":812}
+picker at 768: scroll=no {"w":744,"h":690,"vh":812}
+
+## filters sheet at 375 on the listing: opens, focus inside, Escape returns
+sheet {"open":true,"focusInside":true,"fits":true}
+after Escape active Filter
+
+## garage dialog (header "Fahrzeug wählen")
+garage dialog {"open":true,"focusInside":true}
+after Escape {"open":false,"active":"Fahrzeug auswählen"}
+
+## reduced motion: the global rule is in the CSS
+["@media (prefers-reduced-motion: reduce) {\n  *, ::before, ::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;"]

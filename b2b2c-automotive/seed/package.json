@@ -1,0 +1,31 @@
+{
+  "name": "malva-automotive-seed",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Idempotent seed, cleanup and verify scripts for the Malva B2B2C automotive commercetools project.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "check": "tsc --noEmit && vitest run",
+    "test": "vitest run",
+    "lint": "tsc --noEmit",
+    "seed": "tsx src/seed.ts",
+    "seed:settings": "tsx src/settings.ts",
+    "seed:cleanup": "tsx src/cleanup.ts",
+    "seed:images": "tsx src/images.ts",
+    "verify": "tsx src/verify.ts",
+    "reset": "tsx src/reset.ts",
+    "purge:test-data": "tsx src/purge-test-data.ts"
+  },
+  "dependencies": {
+    "@commercetools/platform-sdk": "^8.0.0",
+    "@commercetools/ts-client": "^4.0.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

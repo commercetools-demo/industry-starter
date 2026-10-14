@@ -1,0 +1,7 @@
+url /en-US/mau-reseller-north/checkout
+alert: "Subscriptions cannot be purchased right now. Remove the subscription items or try again later.\n\nBack to cart"
+retry button present (must be false): false
+back link: /en-US/mau-reseller-north/cart
+widget absent: 0
+session api status: ["POST 422"]
+fake sessions created: 9

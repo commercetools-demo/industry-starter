@@ -1,0 +1,39 @@
+route                                                files        gzip      budget  status
+/[locale]/store/theme/[...slug]                         16    532.8 KB   1500.0 KB  ok
+/[locale]/store/theme                                   16    532.8 KB   1500.0 KB  ok
+/[locale]/content/[...slug]                             16    529.3 KB   1500.0 KB  ok
+/[locale]/store/settings                                13    207.8 KB    350.0 KB  ok
+/[locale]/catalog/product-info                          12    203.8 KB    350.0 KB  ok
+/[locale]/company/[tab]                                 12    202.5 KB    350.0 KB  ok
+/[locale]/store/share                                   12    177.6 KB    350.0 KB  ok
+/[locale]/catalog/discounts/[kind]/[id]                 11    175.8 KB    350.0 KB  ok
+/[locale]/catalog/priority                              11    173.9 KB    350.0 KB  ok
+/[locale]/import                                        10    173.4 KB    350.0 KB  ok
+/[locale]/returns                                       10    173.0 KB    350.0 KB  ok
+/[locale]/catalog/prices                                11    172.8 KB    350.0 KB  ok
+/[locale]/catalog/cart-discounts                        11    172.8 KB    350.0 KB  ok
+/[locale]/catalog/product-discounts                     11    172.8 KB    350.0 KB  ok
+/[locale]/catalog                                       11    172.3 KB    350.0 KB  ok
+/[locale]/email                                         10    171.9 KB    350.0 KB  ok
+/[locale]/bundles                                       10    171.5 KB    350.0 KB  ok
+/[locale]/subscriptions                                 10    171.3 KB    350.0 KB  ok
+/[locale]/marketing                                     10    171.2 KB    350.0 KB  ok
+/[locale]/account/[tab]                                 11    170.7 KB    350.0 KB  ok
+/[locale]/reviews                                       10    170.6 KB    350.0 KB  ok
+/[locale]/customers/[id]                                10    170.2 KB    350.0 KB  ok
+/[locale]                                               10    170.1 KB    350.0 KB  ok
+/[locale]/customers                                     10    170.0 KB    350.0 KB  ok
+/[locale]/partnership                                   10    168.9 KB    350.0 KB  ok
+/[locale]/store/channels                                11    168.8 KB    350.0 KB  ok
+/[locale]/account                                       10    166.4 KB    350.0 KB  ok
+/[locale]/company                                       10    166.3 KB    350.0 KB  ok
+/[locale]/content                                       10    166.3 KB   1500.0 KB  ok
+/[locale]/store                                         10    166.3 KB    350.0 KB  ok
+/[locale]/sign-in                                        9    157.4 KB    350.0 KB  ok
+/[locale]/accept-invite/[token]                          9    157.4 KB    350.0 KB  ok
+/[locale]/register                                       9    157.0 KB    350.0 KB  ok
+/[locale]/reset/[token]                                  9    156.9 KB    350.0 KB  ok
+/[locale]/reset                                          9    156.9 KB    350.0 KB  ok
+/[locale]/pending-approval                               9    155.5 KB    350.0 KB  ok
+
+bundle-report: OK (36 routes within budget)

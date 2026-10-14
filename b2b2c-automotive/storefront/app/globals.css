@@ -1,0 +1,160 @@
+@import 'tailwindcss';
+@import './tokens.css';
+@import './aa-layer.css';
+
+/* fonts:begin (values come from next/font, see lib/fonts.ts) */
+:root {
+  --font-display: var(--font-poppins), system-ui, sans-serif;
+  --font-body: var(--font-poppins), system-ui, sans-serif;
+  --font-utility: var(--font-archivo), system-ui, sans-serif;
+  --font-ui: var(--font-public-sans), system-ui, sans-serif;
+  --font-button-alt: var(--font-inter), system-ui, sans-serif;
+}
+/* fonts:end */
+
+@theme inline {
+  /* theme:begin */
+  --color-*: initial; /* the default Tailwind palette is removed */
+  --color-brand-50: var(--color-brand-50);
+  --color-brand-100: var(--color-brand-100);
+  --color-brand-200: var(--color-brand-200);
+  --color-brand-300: var(--color-brand-300);
+  --color-brand-400: var(--color-brand-400);
+  --color-brand-500: var(--color-brand-500);
+  --color-brand-600: var(--color-brand-600);
+  --color-brand-700: var(--color-brand-700);
+  --color-brand-800: var(--color-brand-800);
+  --color-brand-900: var(--color-brand-900);
+  --color-brand-950: var(--color-brand-950);
+  --color-brand-deep: var(--color-brand-deep);
+  --color-accent-50: var(--color-accent-50);
+  --color-accent-100: var(--color-accent-100);
+  --color-accent-200: var(--color-accent-200);
+  --color-accent-300: var(--color-accent-300);
+  --color-accent-400: var(--color-accent-400);
+  --color-accent-500: var(--color-accent-500);
+  --color-accent-600: var(--color-accent-600);
+  --color-accent-700: var(--color-accent-700);
+  --color-accent-800: var(--color-accent-800);
+  --color-accent-900: var(--color-accent-900);
+  --color-neutral-0: var(--color-neutral-0);
+  --color-neutral-25: var(--color-neutral-25);
+  --color-neutral-50: var(--color-neutral-50);
+  --color-neutral-75: var(--color-neutral-75);
+  --color-neutral-100: var(--color-neutral-100);
+  --color-neutral-200: var(--color-neutral-200);
+  --color-neutral-300: var(--color-neutral-300);
+  --color-neutral-400: var(--color-neutral-400);
+  --color-neutral-500: var(--color-neutral-500);
+  --color-neutral-600: var(--color-neutral-600);
+  --color-neutral-700: var(--color-neutral-700);
+  --color-neutral-800: var(--color-neutral-800);
+  --color-neutral-900: var(--color-neutral-900);
+  --color-neutral-1000: var(--color-neutral-1000);
+  --color-success-50: var(--color-success-50);
+  --color-success-100: var(--color-success-100);
+  --color-success-500: var(--color-success-500);
+  --color-success-600: var(--color-success-600);
+  --color-danger-50: var(--color-danger-50);
+  --color-danger-100: var(--color-danger-100);
+  --color-danger-500: var(--color-danger-500);
+  --color-danger-600: var(--color-danger-600);
+  --color-warning-50: var(--color-warning-50);
+  --color-warning-100: var(--color-warning-100);
+  --color-warning-400: var(--color-warning-400);
+  --color-warning-500: var(--color-warning-500);
+  --color-info-50: var(--color-info-50);
+  --color-info-100: var(--color-info-100);
+  --color-info-500: var(--color-info-500);
+  --color-info-600: var(--color-info-600);
+  --color-text: var(--color-text);
+  --color-text-strong: var(--color-text-strong);
+  --color-text-body: var(--color-text-body);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-subtle: var(--color-text-subtle);
+  --color-text-on-brand: var(--color-text-on-brand);
+  --color-text-on-dark: var(--color-text-on-dark);
+  --color-text-link: var(--color-text-link);
+  --color-text-price: var(--color-text-price);
+  --color-text-price-old: var(--color-text-price-old);
+  --color-surface-page: var(--color-surface-page);
+  --color-surface: var(--color-surface);
+  --color-surface-subtle: var(--color-surface-subtle);
+  --color-surface-quiet: var(--color-surface-quiet);
+  --color-surface-brand: var(--color-surface-brand);
+  --color-surface-brand-deep: var(--color-surface-brand-deep);
+  --color-surface-brand-subtle: var(--color-surface-brand-subtle);
+  --color-surface-utility: var(--color-surface-utility);
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+  --color-border-brand: var(--color-border-brand);
+  --color-action: var(--color-action);
+  --color-action-hover: var(--color-action-hover);
+  --color-action-active: var(--color-action-active);
+  --color-action-subtle: var(--color-action-subtle);
+  --color-focus: var(--color-focus);
+  --color-rating: var(--color-rating);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-utility: var(--font-utility);
+  --font-ui: var(--font-ui);
+  --font-button-alt: var(--font-button-alt);
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-md: var(--text-md);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-2xl: var(--text-2xl);
+  --text-3xl: var(--text-3xl);
+  --text-4xl: var(--text-4xl);
+  --text-5xl: var(--text-5xl);
+  --leading-tight: var(--leading-tight);
+  --leading-normal: var(--leading-normal);
+  --tracking-label: var(--tracking-label);
+  --spacing-1: var(--space-1);
+  --spacing-2: var(--space-2);
+  --spacing-3: var(--space-3);
+  --spacing-4: var(--space-4);
+  --spacing-5: var(--space-5);
+  --spacing-6: var(--space-6);
+  --spacing-7: var(--space-7);
+  --spacing-8: var(--space-8);
+  --spacing-9: var(--space-9);
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-pill: var(--radius-pill);
+  --radius-full: var(--radius-full);
+  --shadow-hairline: var(--shadow-hairline);
+  --shadow-card: var(--shadow-card);
+  --shadow-dropdown: var(--shadow-dropdown);
+  --container-page: var(--container-width);
+  --container-content: var(--content-width);
+  /* theme:end */
+}
+
+body {
+  background: var(--color-surface-page);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+/* Reduced motion (workstream Y, scripts/check-reduced-motion.mjs): the one global rule for every transition, animation and scroll. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Visible keyboard focus everywhere, in the theme's focus colour (workstream I). */
+:focus-visible {
+  outline: medium solid var(--color-focus);
+  outline-offset: 0.125rem;
+}

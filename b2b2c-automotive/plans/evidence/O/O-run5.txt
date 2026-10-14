@@ -1,0 +1,5 @@
+alert: "Checkout is not set up yet. Please try again later.\n\nBack to cart"
+session api statuses: [503]
+dev panel present without ?dev=1 (key missing): 1
+dev order via return route: /en-US/mau-reseller-north/checkout/confirmation/MA-NFNKX9TM Pending Open isTest true
+payments created: none (the fake has no payments endpoint and the code never calls one)

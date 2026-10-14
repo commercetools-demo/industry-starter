@@ -1,0 +1,15 @@
+┌ ƒ /_not-found
+├ ƒ /[locale]
+├ ƒ /[locale]/[store]
+├ ƒ /dev/tokens
+└ ○ /icon.svg
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+check-routes: OK
+no-health-in-release: OK
+bundle secrets: OK

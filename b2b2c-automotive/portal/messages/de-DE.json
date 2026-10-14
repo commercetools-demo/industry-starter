@@ -1,0 +1,1847 @@
+{
+  "common": {
+    "appName": "Malva Partner-Portal",
+    "placeholder": "Partner-Portal",
+    "signedOut": "Sie sind nicht angemeldet.",
+    "loading": "Wird geladen",
+    "tryAgain": "Erneut versuchen",
+    "backHome": "Zur Startseite"
+  },
+  "errors": {
+    "genericTitle": "Etwas ist schiefgelaufen",
+    "genericBody": "Bitte versuchen Sie es erneut.",
+    "notFoundTitle": "Seite nicht gefunden",
+    "notFoundBody": "Diese Adresse gibt es nicht."
+  },
+  "nav": {
+    "label": "Hauptnavigation",
+    "dashboard": "Übersicht",
+    "groups": {
+      "my-store": "Mein Shop",
+      "my-customers": "Meine Kunden",
+      "with-malva": "Mit Malva",
+      "company": "Unternehmen"
+    },
+    "items": {
+      "dashboard": "Übersicht",
+      "catalog": "Katalog & Preise",
+      "bundles": "Bundles",
+      "import": "Produktimport",
+      "store": "Shop & Kanäle",
+      "content": "Inhalte",
+      "marketing": "Marketing",
+      "email": "E-Mail",
+      "customers": "Kunden",
+      "subscriptions": "Abonnements",
+      "returns": "Retouren",
+      "reviews": "Bewertungen",
+      "partnership": "Markenpartnerschaft",
+      "company": "Unternehmen & Team",
+      "account": "Kontoeinstellungen"
+    }
+  },
+  "shell": {
+    "skipToContent": "Zum Inhalt springen",
+    "logoAlt": "Malva",
+    "brandName": "Malva",
+    "brandSuffix": "Partner-Portal",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "searchLabel": "Teile suchen",
+    "searchPlaceholder": "Teilenummer, OE-Nummer oder FIN",
+    "vinInfo": "Die Fahrzeugsuche ist in diesem Portal nicht aktiviert.",
+    "paletteButton": "Befehlspalette",
+    "notificationsButton": "Benachrichtigungen",
+    "themeButton": "Design umschalten",
+    "accountButton": "Konto",
+    "signOut": "Abmelden",
+    "switcherTitle": "Geschäftseinheit und Shop wechseln",
+    "switcherUnits": "Geschäftseinheit",
+    "switcherStores": "Shop",
+    "storeFromParent": "Von übergeordneter Einheit",
+    "storeExplicit": "Eigener Shop",
+    "unitCompany": "Unternehmen",
+    "unitDivision": "Abteilung",
+    "switched": "Gewechselt zu {name}",
+    "switchFailed": "Der Wechsel ist fehlgeschlagen. Bitte erneut versuchen.",
+    "role": {
+      "admin": "Admin",
+      "buyer": "Einkäufer"
+    },
+    "copilotLauncher": "Copilot",
+    "sidebarUser": "Angemeldet als"
+  },
+  "placeholderPage": {
+    "subtitle": "Diese Seite wird in einem späteren Schritt gebaut."
+  },
+  "forbidden": {
+    "title": "Sie haben keinen Zugriff auf diese Seite",
+    "body": "Keine Berechtigung für diese Aufgabe",
+    "back": "Zurück zur Übersicht"
+  },
+  "permissions": {
+    "insufficient": "Keine Berechtigung für diese Aufgabe"
+  },
+  "banner": {
+    "actingAs": "Sie kaufen als {customer} ein. Bestellungen werden in deren Namen aufgegeben.",
+    "exit": "Kundensitzung beenden"
+  },
+  "catalog": {
+    "title": "Katalog & Preise",
+    "subtitle": "Legen Sie fest, was Ihr Shop verkauft, setzen Sie Ihre Preise und starten Sie Ihre Aktionen.",
+    "tabs": {
+      "label": "Katalogbereiche",
+      "assigned": "Zugewiesene Produkte",
+      "prices": "Preisanpassungen",
+      "productInfo": "Produktinfos",
+      "productDiscounts": "Produktrabatte",
+      "cartDiscounts": "Warenkorbrabatte",
+      "priority": "Rabattreihenfolge"
+    },
+    "chain": {
+      "title": "Wer das Sortiment steuert",
+      "global": "Malva Global",
+      "dach": "Malva DACH",
+      "masterPool": "{count} Stammprodukte",
+      "approved": "{count} für DACH freigegeben",
+      "youEdit": "Sie · bearbeiten diese Ebene",
+      "inStore": "{count} in Ihrem Shop",
+      "branches": "Filialen",
+      "inherit": "Erben von Ihnen",
+      "branchCount": "{count, plural, one {# Filiale} other {# Filialen}}",
+      "note": "Jede Ebene kann einschränken oder ergänzen, aber nie erweitern, was die übergeordnete Ebene entfernt hat."
+    },
+    "assortment": {
+      "title": "Zugewiesene Produkte",
+      "counter": "{assigned} von {total} Stammprodukten zugewiesen",
+      "tableLabel": "Tabelle der zugewiesenen Produkte",
+      "filters": {
+        "label": "Nach Status filtern",
+        "all": "Alle",
+        "assigned": "Zugewiesen",
+        "available": "Verfügbar",
+        "blocked": "Von Malva gesperrt"
+      },
+      "search": "Nach Name oder Teilenummer suchen",
+      "category": "Nach Kategorie filtern",
+      "allCategories": "Alle Kategorien",
+      "errors": {
+        "blocked": "Dieses Teil ist von Malva gesperrt und kann nicht hinzugefügt werden.",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+        "load": "Die Produkte konnten nicht geladen werden."
+      },
+      "assigned": "{count, plural, one {# Produkt zugewiesen} other {# Produkte zugewiesen}}",
+      "withdrawn": "{count, plural, one {# Produkt entfernt} other {# Produkte entfernt}}",
+      "bulk": {
+        "label": "Sammelaktionen",
+        "allMatching": "Alle {count} passenden Produkte ausgewählt",
+        "selected": "{count} ausgewählt",
+        "selectAll": "Alle {count} Treffer des Filters auswählen",
+        "assign": "Zuweisen",
+        "withdraw": "Entfernen",
+        "clear": "Auswahl aufheben"
+      },
+      "selectPage": "Alle Zeilen dieser Seite auswählen",
+      "selectRow": "{name} auswählen",
+      "columns": {
+        "product": "Produkt",
+        "part": "Teilenummer",
+        "list": "Listenpreis",
+        "status": "Status",
+        "reason": "Grund",
+        "action": "Aktion"
+      },
+      "pricePending": "Preis folgt",
+      "chips": {
+        "inherited": "Übernommen",
+        "local": "Eigene Ergänzung",
+        "available": "Verfügbar",
+        "withdrawn": "Von Ihnen entfernt",
+        "preRelease": "Vorabversion",
+        "blocked": "Von Malva gesperrt",
+        "pendingReview": "Wartet auf Malva-Prüfung"
+      },
+      "reasons": {
+        "inherited": "Von Malva DACH übernommen",
+        "local": "Von Ihrem Shop ergänzt",
+        "available": "Ihrem Shop nicht zugewiesen",
+        "withdrawn": "Von Ihnen entfernt",
+        "preRelease": "Noch ohne Preis. Wenn Sie es zuweisen, zeigt der Shop „Preis folgt“.",
+        "pendingReview": "Wartet auf Malva-Prüfung"
+      },
+      "actions": {
+        "withdraw": "Hier entfernen",
+        "assign": "Zuweisen",
+        "reinstate": "Wieder aufnehmen",
+        "cantReadd": "Nicht erneut möglich"
+      },
+      "empty": "Keine passenden Produkte.",
+      "capped": "Es werden nur die ersten 5.000 Produkte angezeigt.",
+      "range": "{from} bis {to} von {total}",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "withdrawDialog": {
+        "title": "{count, plural, one {# Produkt entfernen} other {# Produkte entfernen}}",
+        "confirm": "Entfernen",
+        "cancel": "Abbrechen",
+        "body": "{label}: {count, plural, one {# Produkt verlässt} other {# Produkte verlassen}} Ihr Sortiment.",
+        "openCarts": "{count, plural, one {# offener Warenkorb ist betroffen.} other {# offene Warenkörbe sind betroffen.}}",
+        "branches": "Auch die Filialen verlieren es, und die Shop-Listen zeigen es nicht mehr an."
+      }
+    },
+    "prices": {
+      "title": "Preisanpassungen",
+      "layers": "Malva-Preis → Ihre Anpassung → Produktrabatte → Warenkorbrabatte",
+      "currency": "Währung",
+      "search": "Nach Name oder Teilenummer suchen",
+      "errors": {
+        "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+        "load": "Die Preise konnten nicht geladen werden."
+      },
+      "invalid": "Geben Sie einen Preis über null mit höchstens zwei Nachkommastellen ein",
+      "published": "Preise veröffentlicht",
+      "atList": "Entspricht dem Malva-Listenpreis",
+      "below": "{percent} % unter dem Malva-Listenpreis",
+      "above": "{percent} % über dem Malva-Listenpreis",
+      "columns": {
+        "product": "Produkt",
+        "list": "Malva-Liste",
+        "yours": "Ihr Preis"
+      },
+      "pricePending": "Preis folgt",
+      "own": "Ihr eigenes Produkt",
+      "inputLabel": "Ihr Preis für {name}",
+      "empty": "Keine Produkte zum Bepreisen.",
+      "range": "{from} bis {to} von {total}",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "publish": "{count, plural, =0 {Preise veröffentlichen} one {# Preis veröffentlichen} other {# Preise veröffentlichen}}",
+      "confirm": {
+        "title": "{count, plural, one {# Teil geändert} other {# Teile geändert}}",
+        "confirm": "Veröffentlichen",
+        "cancel": "Abbrechen",
+        "body": "{count, plural, one {# Preis ändert sich} other {# Preise ändern sich}} in Ihrem Shop. Ein leerer Preis verwendet den Malva-Listenpreis.",
+        "remove": "zurück zum Malva-Listenpreis"
+      },
+      "bulk": {
+        "title": "Sammelbearbeitung und CSV-Import",
+        "modeLabel": "Art der Sammelbearbeitung",
+        "modes": {
+          "percentOfList": "Prozent vom Listenpreis",
+          "setTo": "Auf einen Preis setzen",
+          "csv": "CSV-Import"
+        },
+        "csvLabel": "CSV mit Teilenummer und Preis",
+        "csvPlaceholder": "sku;price",
+        "csvFile": "CSV-Datei wählen",
+        "csvHint": "Ein Teil pro Zeile, sku;price oder sku,price. Höchstens 2.000 Zeilen.",
+        "csvLine": "Zeile {line}: {message}",
+        "percentLabel": "Prozent des Malva-Listenpreises",
+        "setToLabel": "Preis für jedes Teil",
+        "percentHint": "108 setzt jeden Preis auf den Listenpreis plus 8 %.",
+        "setToHint": "Ein Preis mit höchstens zwei Nachkommastellen.",
+        "preview": "Vorschau",
+        "previewTitle": "Vorschau der neuen Preise",
+        "columns": {
+          "sku": "Teilenummer",
+          "list": "Malva-Liste",
+          "new": "Neuer Preis",
+          "distance": "Abstand zur Liste"
+        },
+        "remove": "Entfernt",
+        "below": "{percent} % unter dem Malva-Listenpreis",
+        "above": "{percent} % über dem Malva-Listenpreis",
+        "atList": "Entspricht dem Malva-Listenpreis",
+        "none": "Keine passenden Teile.",
+        "blocked": "{count, plural, one {# Zeile ist ungültig.} other {# Zeilen sind ungültig.}} Es wird nichts veröffentlicht, bis sie korrigiert sind.",
+        "publish": "{count, plural, one {# Preis veröffentlichen} other {# Preise veröffentlichen}}",
+        "published": "Preise veröffentlicht",
+        "errors": {
+          "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+          "value": "Geben Sie zuerst eine Zahl ein.",
+          "invalid": "Ein Ergebnis ist nicht größer als null, daher wurde nichts veröffentlicht."
+        },
+        "problems": {
+          "INVALID_MONEY": "Nicht über null",
+          "NOT_IN_ASSORTMENT": "Nicht in Ihrem Sortiment",
+          "PRICE_PENDING": "Noch kein Malva-Listenpreis",
+          "DUPLICATE_SKU": "Kommt doppelt vor"
+        },
+        "confirm": {
+          "title": "{count, plural, one {# Teil geändert} other {# Teile geändert}}",
+          "confirm": "Veröffentlichen",
+          "cancel": "Abbrechen",
+          "body": "{count, plural, one {# Preis ändert sich} other {# Preise ändern sich}} in Ihrem Shop."
+        }
+      }
+    },
+    "productInfo": {
+      "title": "Produkte",
+      "search": "Nach Name oder Teilenummer suchen",
+      "errors": {
+        "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+        "load": "Die Produkte konnten nicht geladen werden."
+      },
+      "empty": "Keine passenden Produkte.",
+      "pick": "Wählen Sie ein Produkt, um zu ändern, wie es in Ihrem Shop aussieht.",
+      "chips": {
+        "tailored": "Angepasst",
+        "images": "Bilder"
+      },
+      "yourPresentation": "Ihre Darstellung",
+      "language": "Sprache",
+      "tailoredShort": "angepasst",
+      "name": "Name",
+      "description": "Beschreibung",
+      "masterValue": "Stammdaten: {value}",
+      "imagesTitle": "Bilder",
+      "masterRecord": "Stammdatensatz",
+      "masterNote": "Nicht angepasste Felder übernehmen die Stammdaten. Anpassungen ändern, wie ein Produkt aussieht, nie ob es verfügbar ist. SKU, Fahrzeugzuordnung und Spezifikationen bleiben gesperrt.",
+      "locked": {
+        "sku": "SKU",
+        "fitment": "Fahrzeugzuordnung",
+        "specs": "Spezifikationen",
+        "value": "Gesperrt"
+      },
+      "published": "Veröffentlicht. Kunden sehen es innerhalb einer Minute.",
+      "resetDone": "Auf Stammtext und Stammbilder zurückgesetzt.",
+      "save": "Speichern und veröffentlichen",
+      "reset": "Auf Stammdaten zurücksetzen",
+      "resetDialog": {
+        "title": "Auf Stammdaten zurücksetzen?",
+        "confirm": "Zurücksetzen",
+        "cancel": "Abbrechen",
+        "body": "Ihr Name, Ihre Beschreibung und Ihre Bilder für dieses Produkt werden entfernt, und die Stammdaten werden wieder angezeigt."
+      },
+      "images": {
+        "master": "Stammbilder",
+        "masterAlt": "Stammbild {n}",
+        "noMaster": "Der Stammdatensatz hat keine Bilder.",
+        "yours": "Ihre Bilder",
+        "yoursAlt": "Ihr Bild {n}",
+        "altLabel": "Alternativtext für Bild {n} (Pflichtfeld)",
+        "altHint": "Beschreiben Sie, was das Bild zeigt, für Personen, die es nicht sehen können.",
+        "altMissing": "Geben Sie einen Alternativtext für Bild {n} ein.",
+        "altSummary": "Fügen Sie vor dem Speichern jedem Bild einen Alternativtext hinzu.",
+        "useMaster": "Stammbilder verwenden",
+        "usingMaster": "Kunden sehen die Stammbilder.",
+        "primary": "Hauptbild",
+        "position": "Bild {n}",
+        "moveUp": "Bild {n} nach oben",
+        "moveDown": "Bild {n} nach unten",
+        "remove": "Bild {n} entfernen",
+        "removeShort": "Entfernen",
+        "addByUrl": "Per Adresse hinzufügen",
+        "add": "Hinzufügen",
+        "upload": "Bild hochladen",
+        "limits": "JPG, PNG oder WebP, mindestens 600 x 600 px, höchstens 10 MB.",
+        "full": "Höchstens {max} Bilder.",
+        "errors": {
+          "generic": "Das Bild konnte nicht hinzugefügt werden."
+        }
+      }
+    },
+    "discounts": {
+      "product": {
+        "title": "Produktrabatte",
+        "new": "Neuer Produktrabatt"
+      },
+      "cart": {
+        "title": "Warenkorbrabatte",
+        "new": "Neuer Warenkorbrabatt"
+      },
+      "errors": {
+        "locked": "Von Malva finanzierte Rabatte können nicht geändert werden.",
+        "draft": "Vervollständigen Sie die Regel, bevor Sie sie aktivieren.",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+        "load": "Die Rabatte konnten nicht geladen werden."
+      },
+      "deleted": "Rabatt gelöscht",
+      "noSchedule": "Nicht terminiert",
+      "open": "offen",
+      "columns": {
+        "name": "Name",
+        "scope": "Geltungsbereich",
+        "effect": "Wirkung",
+        "runs": "Laufzeit",
+        "active": "Aktiv",
+        "actions": "Aktionen"
+      },
+      "malvaFunded": "Von Malva finanziert",
+      "draft": "Entwurf",
+      "toggle": "Aktiv: {name}",
+      "locked": "Gesperrt",
+      "edit": "Bearbeiten",
+      "view": "Ansehen",
+      "delete": "Löschen",
+      "empty": "Noch keine Rabatte.",
+      "deleteDialog": {
+        "title": "Diesen Rabatt löschen?",
+        "confirm": "Löschen",
+        "cancel": "Abbrechen",
+        "body": "{name} wird entfernt und gilt nicht mehr für Warenkörbe."
+      }
+    },
+    "editor": {
+      "product": {
+        "newTitle": "Neuer Produktrabatt",
+        "editTitle": "Produktrabatt bearbeiten"
+      },
+      "cart": {
+        "newTitle": "Neuer Warenkorbrabatt",
+        "editTitle": "Warenkorbrabatt bearbeiten"
+      },
+      "inactiveNote": "Ein neuer Rabatt bleibt inaktiv, bis Sie ihn in der Liste einschalten.",
+      "name": "Name",
+      "target": "Gilt für",
+      "scope": {
+        "all": "Alle Produkte",
+        "category": "Eine Kategorie",
+        "skus": "Bestimmte Teilenummern"
+      },
+      "category": "Kategorie",
+      "chooseCategory": "Kategorie wählen",
+      "skus": "Teilenummern",
+      "skusHint": "Teilenummern durch Kommas trennen.",
+      "condition": "Bedingung",
+      "conditions": {
+        "always": "Jeder Warenkorb",
+        "cartTotalAtLeast": "Warenkorbwert mindestens",
+        "category": "Warenkorb enthält eine Kategorie"
+      },
+      "cartTotal": "Warenkorbwert",
+      "moneyHint": "Ein Betrag über null mit höchstens zwei Nachkommastellen.",
+      "effect": "Wirkung",
+      "effects": {
+        "relative": "Prozent Rabatt",
+        "absolute": "Betrag Rabatt",
+        "freeShipping": "Versandkostenfrei"
+      },
+      "percent": "Prozent",
+      "amount": "Betrag",
+      "percentHint": "Zwischen 0,01 und 100.",
+      "validFrom": "Beginn",
+      "validUntil": "Ende",
+      "stacking": "Kombination",
+      "stackingHint": "Warenkorbrabatte werden kombiniert, außer einer stoppt die anderen.",
+      "stackingOptions": {
+        "Stacking": "Wird mit anderen Rabatten kombiniert",
+        "StopAfterThisDiscount": "Stoppt die nachfolgenden Rabatte"
+      },
+      "code": "Aktionscode",
+      "codeHint": "Optional. Mit Code gilt der Rabatt nur, wenn ein Kunde ihn eingibt.",
+      "save": "Regel speichern",
+      "saved": "Rabatt gespeichert",
+      "back": "Zurück zur Liste",
+      "errors": {
+        "codeTaken": "Dieser Code wird bereits verwendet.",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+        "notFound": "Dieser Rabatt wurde nicht gefunden."
+      },
+      "lockedMalva": "Von Malva finanzierte Rabatte gelten in jedem Shop und können hier nicht geändert werden.",
+      "readOnlyRule": "Diese Regel wurde außerhalb des Portals angelegt, daher kann der Editor sie nicht anzeigen. In der Liste können Sie sie weiterhin ein- und ausschalten.",
+      "summary": "Zusammenfassung",
+      "predicate": "Regel",
+      "incomplete": "Vervollständigen Sie die Regel, um die Zusammenfassung zu sehen.",
+      "preview": {
+        "title": "Vorschau",
+        "sample": "Beispiel-Warenkorbwert",
+        "inCategory": "Die Beispielposition gehört zur gewählten Kategorie",
+        "cart": "Warenkorb",
+        "shipping": "Versand",
+        "total": "Summe",
+        "none": "Die Regel gilt nicht für diesen Warenkorb.",
+        "incomplete": "Korrigieren Sie die Regel, um die Vorschau zu sehen.",
+        "note": "Eine lokale Berechnung für eine Position. Beträge in Euro."
+      }
+    },
+    "priority": {
+      "product": {
+        "title": "Produktrabatte"
+      },
+      "cart": {
+        "title": "Warenkorbrabatte"
+      },
+      "layers": "Malva-Preis → Ihre Anpassung → Produktrabatte → Warenkorbrabatte",
+      "rule": "Es gilt nur der am höchsten eingestufte passende Produktrabatt; Warenkorbrabatte werden kombiniert, außer einer stoppt.",
+      "noRank": "—",
+      "malva": "Malva",
+      "locked": "Gesperrt",
+      "yours": "Ihrer",
+      "moveUp": "{name} nach oben",
+      "moveDown": "{name} nach unten",
+      "empty": "Noch keine Rabatte.",
+      "save": "Reihenfolge speichern",
+      "saved": "Reihenfolge gespeichert",
+      "errors": {
+        "stale": "Die Liste hat sich geändert und wurde neu geladen. Bitte prüfen Sie die Reihenfolge und speichern Sie erneut.",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+      }
+    },
+    "codeStatus": {
+      "MatchesCart": "Angewendet",
+      "DoesNotMatchCart": "Nicht angewendet: Warenkorb passt nicht",
+      "NotActive": "Nicht angewendet: Der Code ist nicht aktiv",
+      "NotValid": "Nicht angewendet: Der Code ist nicht gültig",
+      "MaxApplicationReached": "Nicht angewendet: Der Code hat seine maximale Nutzungszahl erreicht",
+      "ApplicationStoppedByPreviousDiscount": "Nicht angewendet: Von einem höher eingestuften Rabatt gestoppt"
+    }
+  },
+  "palette": {
+    "title": "Befehlspalette",
+    "placeholder": "Zu einer Seite springen oder Teilename oder -nummer eingeben",
+    "page": "Seite",
+    "part": "Teil",
+    "empty": "Keine Treffer.",
+    "close": "Schließen"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "unread": "{count} neu",
+    "empty": "Alles erledigt.",
+    "dismiss": "Ausblenden",
+    "orderShipped": "{order} versandt",
+    "orderShippedSub": "Bestellung",
+    "returnReceived": "Retoure {ref} eingegangen",
+    "returnReceivedSub": "Kundenretoure"
+  },
+  "copilot": {
+    "title": "Shop-Copilot",
+    "subtitle": "Änderungen werden immer erst nach Ihrer Bestätigung ausgeführt.",
+    "close": "Copilot schließen",
+    "open": "Den Copilot fragen",
+    "intro": "Fragen Sie, wo etwas ist, oder beauftragen Sie eine Änderung in Ihrem Shop.",
+    "placeholder": "Fragen oder Änderung anfordern",
+    "send": "Senden",
+    "confirmTitle": "Änderung bestätigen",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "cancelled": "Abgebrochen. Es wurde nichts geändert.",
+    "done": "Erledigt: {message}",
+    "failed": "Die Änderung konnte nicht ausgeführt werden: {message}",
+    "error": "Der Copilot konnte nicht antworten. Bitte erneut versuchen.",
+    "refused": "Dafür fehlt Ihnen die Berechtigung. Keine Berechtigung für diese Aufgabe",
+    "fallback": "Ich kann auf eine Seite verweisen (zum Beispiel \"Wo ist Retouren?\") oder nach Ihrer Bestätigung Dinge ändern. Mehr wird noch nicht unterstützt.",
+    "whereIs": "{page} finden Sie hier:"
+  },
+  "auth": {
+    "logoAlt": "Malva",
+    "fillAll": "Füllen Sie alle Felder aus, um fortzufahren.",
+    "invalid": "E-Mail oder Passwort ist falsch.",
+    "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "signIn": {
+      "title": "Anmelden",
+      "subtitle": "Zugang zu Ihrem Malva-Partnerkonto",
+      "submit": "Anmelden",
+      "submitting": "Anmeldung läuft"
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "subtitle": "Registrieren Sie Ihr Unternehmen für das Malva-Partnerprogramm",
+      "company": "Firmenname",
+      "name": "Ihr Name",
+      "email": "Geschäftliche E-Mail",
+      "submit": "Konto erstellen",
+      "submitting": "Konto wird erstellt",
+      "passwordRule": "Mindestens 12 Zeichen.",
+      "created": "Konto erstellt. Die Freigabe Ihres Unternehmens durch Malva steht noch aus.",
+      "failed": "Wir konnten dieses Konto nicht erstellen. Versuchen Sie sich anzumelden.",
+      "companyInvalid": "Geben Sie einen Firmennamen mit 2 bis 80 Zeichen ein.",
+      "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein.",
+      "passwordShort": "Das Passwort muss mindestens 12 Zeichen haben."
+    },
+    "reset": {
+      "title": "Passwort zurücksetzen",
+      "subtitle": "Geben Sie Ihre E-Mail ein, um ein neues Passwort zu wählen",
+      "submit": "Weiter",
+      "submitting": "Bitte warten",
+      "requested": "Falls das Konto existiert, fahren Sie unten fort, um ein neues Passwort zu wählen.",
+      "disabled": "Das Zurücksetzen des Passworts ist in dieser Umgebung nicht verfügbar.",
+      "newTitle": "Neues Passwort wählen",
+      "newSubtitle": "Verwenden Sie mindestens 12 Zeichen",
+      "newPassword": "Neues Passwort",
+      "confirmPassword": "Passwort bestätigen",
+      "save": "Neues Passwort speichern",
+      "saving": "Wird gespeichert",
+      "enter": "Neues Passwort eingeben",
+      "short": "Zu kurz",
+      "mismatch": "Passwörter stimmen nicht überein",
+      "good": "Sieht gut aus",
+      "invalidToken": "Dieser Link zum Zurücksetzen ist ungültig oder abgelaufen.",
+      "success": "Passwort aktualisiert. Melden Sie sich mit Ihrem neuen Passwort an."
+    },
+    "pending": {
+      "title": "Freigabe ausstehend",
+      "subtitle": "Ihr Unternehmen ist registriert",
+      "body": "Ein Malva-Mitarbeiter muss {business} noch freigeben. Sie können sich anmelden, sobald die Freigabe erfolgt ist.",
+      "bodyNoName": "Ein Malva-Mitarbeiter muss Ihr Unternehmen noch freigeben. Sie können sich anmelden, sobald die Freigabe erfolgt ist.",
+      "signOut": "Abmelden"
+    },
+    "links": {
+      "createAccount": "Konto erstellen",
+      "forgot": "Passwort vergessen?",
+      "backToSignIn": "Zurück zur Anmeldung"
+    },
+    "demoLogin": {
+      "label": "Demokonto",
+      "placeholder": "Demokonto auswählen",
+      "submit": "Als Demo-Nutzer anmelden",
+      "submitting": "Anmeldung läuft",
+      "loading": "Demokonten werden geladen",
+      "empty": "Keine Demokonten gefunden. Führen Sie den Seed aus.",
+      "error": "Demo-Anmeldung fehlgeschlagen. Bitte erneut versuchen."
+    }
+  },
+  "contentools": {
+    "pickStore": "Wählen Sie einen Shop, um dessen Storefront zu bearbeiten.",
+    "notConnected": "Contentools ist nicht verbunden — installieren Sie die Merchant-Center-App und klicken Sie auf Verbinden",
+    "loading": "Der Editor wird geladen",
+    "unsupportedSuffix": " (Auf Ihrem Shop nicht unterstützt)",
+    "presetNotice": "Die Vorlagen konnten in diesem Editor nicht gefiltert werden. Diese Vorlagen werden von Ihrem Shop nicht unterstützt: {list}."
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Guten Morgen, {name}",
+      "afternoon": "Guten Tag, {name}",
+      "evening": "Guten Abend, {name}"
+    },
+    "subtitle": "{store} · {region} · {currency}",
+    "title": "Dashboard",
+    "retry": "Erneut versuchen",
+    "unavailable": "Nicht verfügbar",
+    "loading": "Wird geladen",
+    "headsUp": {
+      "text": "{count, plural, one {# Teil in Ihrem Sortiment ist in jeder Filiale nicht auf Lager.} other {# Teile in Ihrem Sortiment sind in jeder Filiale nicht auf Lager.}}",
+      "review": "Prüfen"
+    },
+    "kpi": {
+      "openOrders": {
+        "label": "Offene Bestellungen",
+        "note": "In Ihrem Shop aufgegeben"
+      },
+      "openReturns": {
+        "label": "Offene Retouren",
+        "note": "Von angefragt bis geprüft"
+      },
+      "activeSubscriptions": {
+        "label": "Aktive Abos",
+        "note": "Wiederkehrende Bestellungen"
+      },
+      "unansweredReviews": {
+        "label": "Unbeantwortete Bewertungen",
+        "note": "Antworten Sie auf der Seite Bewertungen"
+      }
+    },
+    "orders": {
+      "title": "Letzte Bestellungen",
+      "empty": "Noch keine Bestellungen.",
+      "number": "Bestellung",
+      "date": "Datum",
+      "customer": "Kunde",
+      "total": "Summe",
+      "status": "Status",
+      "errorTitle": "Bestellungen nicht verfügbar",
+      "errorMessage": "Ihre Shop-Bestellungen konnten nicht geladen werden. Der Rest Ihres Dashboards ist nicht betroffen."
+    },
+    "chip": {
+      "shipped": "Versendet",
+      "processing": "In Bearbeitung",
+      "payment-pending": "Zahlung offen",
+      "cancelled": "Storniert"
+    },
+    "returns": {
+      "title": "Retouren zu bearbeiten",
+      "empty": "Keine Retouren warten auf Sie.",
+      "item": "{quantity}x {name}",
+      "order": "Bestellung {order}",
+      "status": {
+        "requested": "Angefragt",
+        "in-transit": "Unterwegs",
+        "received": "Eingegangen",
+        "inspected": "Geprüft",
+        "refunded": "Erstattet",
+        "rejected": "Abgelehnt"
+      },
+      "errorTitle": "Retouren nicht verfügbar",
+      "errorMessage": "Ihre Retouren konnten nicht geladen werden. Der Rest Ihres Dashboards ist nicht betroffen."
+    },
+    "stock": {
+      "title": "Niedriger Bestand je Filiale",
+      "empty": "Alle Filialen sind ausreichend bestückt.",
+      "available": "{count} übrig",
+      "noneInBranch": "Nichts knapp",
+      "errorTitle": "Bestand nicht verfügbar",
+      "errorMessage": "Der Filialbestand konnte nicht geladen werden. Der Rest Ihres Dashboards ist nicht betroffen."
+    },
+    "renewals": {
+      "title": "Abos vor der Verlängerung",
+      "empty": "Keine Verlängerungen in den nächsten 7 Tagen.",
+      "more": "{count, plural, one {+ # weiteres Teil} other {+ # weitere Teile}}",
+      "errorTitle": "Verlängerungen nicht verfügbar",
+      "errorMessage": "Ihre Abos konnten nicht geladen werden. Der Rest Ihres Dashboards ist nicht betroffen."
+    },
+    "store": {
+      "group": "Ihr Shop",
+      "title": "Shop-Leistung",
+      "period": "Letzte 30 Tage",
+      "sales": "Umsatz",
+      "orders": "Bestellungen",
+      "average": "Durchschnittlicher Bestellwert",
+      "topProducts": "Top-Produkte",
+      "units": "{count, plural, one {# Stück} other {# Stück}}",
+      "chartTitle": "Tagesumsatz",
+      "chartSummary": "Tagesumsatz der letzten 30 Tage, gesamt {total}",
+      "chartTable": "Tagesumsatz als Tabelle",
+      "date": "Datum",
+      "truncated": "Basiert auf den letzten 2.500 Bestellungen des Zeitraums.",
+      "empty": "Keine Bestellungen in den letzten 30 Tagen.",
+      "errorTitle": "Shop-Leistung nicht verfügbar",
+      "errorMessage": "Ihre Shop-Leistung konnte nicht geladen werden. Der Rest Ihres Dashboards ist nicht betroffen."
+    }
+  },
+  "company": {
+    "title": "Unternehmen & Team",
+    "subtitle": "Personen, Adressen und Angaben Ihres Unternehmens.",
+    "tabs": {
+      "label": "Bereiche des Unternehmens",
+      "users": "Benutzer",
+      "addresses": "Adressen",
+      "profile": "Profil"
+    },
+    "users": {
+      "title": "Benutzer",
+      "subtitle": "Alle Personen, die sich für dieses Unternehmen anmelden können.",
+      "invite": "Benutzer einladen",
+      "loading": "Benutzer werden geladen",
+      "loadFailed": "Die Benutzer konnten nicht geladen werden.",
+      "name": "Name",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "status": "Status",
+      "lastActive": "Zuletzt aktiv",
+      "active": "Aktiv",
+      "invited": "Eingeladen",
+      "never": "—",
+      "empty": "Noch keine Benutzer."
+    },
+    "invite": {
+      "title": "Benutzer einladen",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "cancel": "Abbrechen",
+      "submit": "Einladung erstellen",
+      "sending": "Wird erstellt",
+      "required": "Füllen Sie alle Felder aus, um fortzufahren.",
+      "exists": "Diese E-Mail-Adresse wird bereits verwendet.",
+      "failed": "Die Einladung konnte nicht erstellt werden.",
+      "linkTitle": "Einladung erstellt",
+      "created": "Einladung für {email} erstellt.",
+      "linkLabel": "Einladungslink",
+      "copy": "Kopieren",
+      "copied": "Link kopiert",
+      "note": "Senden Sie diesen Link selbst an die eingeladene Person. Er wird nur einmal angezeigt.",
+      "done": "Fertig"
+    },
+    "addresses": {
+      "title": "Adressen",
+      "subtitle": "Liefer- und Rechnungsadressen des Unternehmens. Die Standardadresse wird an der Kasse vorausgefüllt.",
+      "add": "Adresse hinzufügen",
+      "addTitle": "Adresse hinzufügen",
+      "loading": "Adressen werden geladen",
+      "loadFailed": "Die Adressen konnten nicht geladen werden.",
+      "label": "Bezeichnung",
+      "address": "Adresse",
+      "type": "Art",
+      "default": "Standard",
+      "defaultChip": "Standard",
+      "makeDefault": "Als Standard festlegen",
+      "makeDefaultCheck": "Als Standardadresse festlegen",
+      "street": "Straße",
+      "number": "Hausnummer",
+      "postalCode": "Postleitzahl",
+      "city": "Ort",
+      "country": "Land",
+      "countryHint": "Zweibuchstabiger Code, zum Beispiel DE.",
+      "types": {
+        "delivery": "Lieferung",
+        "both": "Lieferung & Rechnung",
+        "billing": "Rechnung"
+      },
+      "cancel": "Abbrechen",
+      "save": "Adresse speichern",
+      "saving": "Wird gespeichert",
+      "required": "Füllen Sie Bezeichnung, Straße, Postleitzahl und Ort aus.",
+      "failed": "Die Adresse konnte nicht gespeichert werden.",
+      "empty": "Noch keine Adressen."
+    },
+    "profile": {
+      "title": "Unternehmensprofil",
+      "subtitle": "So erscheint Ihr Unternehmen im Portal.",
+      "loading": "Profil wird geladen",
+      "loadFailed": "Das Profil konnte nicht geladen werden.",
+      "name": "Unternehmensname",
+      "contactEmail": "Kontakt-E-Mail",
+      "kind": "Einheitstyp",
+      "store": "Shop",
+      "region": "Region",
+      "currency": "Währung",
+      "managed": "Wird von Malva verwaltet",
+      "contactAdmin": "Wenden Sie sich an eine Administratorin oder einen Administrator, um diese Angaben zu ändern.",
+      "save": "Änderungen speichern",
+      "saving": "Wird gespeichert",
+      "saved": "Profil gespeichert",
+      "failed": "Das Profil konnte nicht gespeichert werden."
+    }
+  },
+  "account": {
+    "title": "Kontoeinstellungen",
+    "subtitle": "Ihre eigenen Angaben, Ihr Passwort und Ihre Adressen.",
+    "tabs": {
+      "label": "Bereiche des Kontos",
+      "general": "Allgemein",
+      "security": "Sicherheit",
+      "addresses": "Adressen",
+      "businessUnits": "Geschäftseinheiten"
+    },
+    "general": {
+      "title": "Allgemein",
+      "loading": "Ihre Angaben werden geladen",
+      "loadFailed": "Ihre Angaben konnten nicht geladen werden.",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "save": "Änderungen speichern",
+      "saving": "Wird gespeichert",
+      "saved": "Ihre Angaben wurden gespeichert",
+      "emailInUse": "Diese E-Mail-Adresse wird bereits verwendet.",
+      "failed": "Ihre Angaben konnten nicht gespeichert werden."
+    },
+    "security": {
+      "title": "Sicherheit",
+      "subtitle": "Ändern Sie Ihr Passwort. Verwenden Sie mindestens 12 Zeichen.",
+      "current": "Aktuelles Passwort",
+      "new": "Neues Passwort",
+      "repeat": "Neues Passwort wiederholen",
+      "state": {
+        "enter": "Geben Sie ein neues Passwort ein",
+        "tooShort": "Zu kurz",
+        "mismatch": "Die Passwörter stimmen nicht überein",
+        "ok": "Sieht gut aus"
+      },
+      "update": "Passwort aktualisieren",
+      "updating": "Wird aktualisiert",
+      "fixFirst": "Korrigieren Sie zuerst das Passwort",
+      "currentRequired": "Geben Sie Ihr aktuelles Passwort ein",
+      "wrongCurrent": "Das aktuelle Passwort ist falsch.",
+      "changed": "Ihr Passwort wurde geändert",
+      "failed": "Das Passwort konnte nicht geändert werden."
+    },
+    "addresses": {
+      "title": "Adressen",
+      "subtitle": "Ihre persönlichen Adressen.",
+      "add": "Adresse hinzufügen",
+      "addTitle": "Adresse hinzufügen",
+      "loading": "Adressen werden geladen",
+      "loadFailed": "Die Adressen konnten nicht geladen werden.",
+      "address": "Adresse",
+      "default": "Standard",
+      "defaultChip": "Standard",
+      "makeDefault": "Als Standard festlegen",
+      "makeDefaultCheck": "Als Standardadresse festlegen",
+      "remove": "Entfernen",
+      "actions": "Aktionen",
+      "street": "Straße",
+      "number": "Hausnummer",
+      "postalCode": "Postleitzahl",
+      "city": "Ort",
+      "country": "Land",
+      "countryHint": "Zweibuchstabiger Code, zum Beispiel DE.",
+      "cancel": "Abbrechen",
+      "save": "Adresse speichern",
+      "saving": "Wird gespeichert",
+      "required": "Füllen Sie Straße, Postleitzahl und Ort aus.",
+      "failed": "Die Adresse konnte nicht gespeichert werden.",
+      "empty": "Noch keine Adressen."
+    },
+    "units": {
+      "title": "Geschäftseinheiten",
+      "subtitle": "Die Einheiten, zu denen Sie gehören, und Ihre Rolle in jeder.",
+      "loading": "Geschäftseinheiten werden geladen",
+      "loadFailed": "Die Geschäftseinheiten konnten nicht geladen werden.",
+      "name": "Einheit",
+      "type": "Art",
+      "roles": "Rolle",
+      "store": "Shop",
+      "explicit": "Eigener Shop",
+      "fromParent": "Von übergeordneter Einheit",
+      "empty": "Sie sind in keiner Geschäftseinheit Mitglied."
+    }
+  },
+  "acceptInvite": {
+    "title": "Einladung annehmen",
+    "subtitle": "Wählen Sie ein Passwort, um Ihr Konto einzurichten.",
+    "password": "Passwort",
+    "confirm": "Passwort wiederholen",
+    "state": {
+      "enter": "Geben Sie ein neues Passwort ein",
+      "tooShort": "Zu kurz",
+      "mismatch": "Die Passwörter stimmen nicht überein",
+      "ok": "Sieht gut aus"
+    },
+    "submit": "Passwort festlegen",
+    "saving": "Wird gespeichert",
+    "success": "Ihr Passwort ist festgelegt. Sie können sich jetzt anmelden.",
+    "invalid": "Dieser Einladungslink ist ungültig oder abgelaufen.",
+    "generic": "Etwas ist schiefgelaufen. Versuchen Sie es erneut.",
+    "toSignIn": "Zur Anmeldung"
+  },
+  "store": {
+    "title": "Shop & Kanäle",
+    "subtitle": "Identität Ihres Shops, Filialen, Verkaufskanäle, Teilen-Links und Design.",
+    "tabs": {
+      "label": "Bereiche des Shops",
+      "settings": "Einstellungen",
+      "channels": "Kanäle",
+      "share": "Teilen",
+      "theme": "Design"
+    },
+    "map": {
+      "loading": "Karte wird geladen"
+    },
+    "settings": {
+      "loading": "Shop-Einstellungen werden geladen",
+      "loadFailed": "Die Shop-Einstellungen konnten nicht geladen werden. Versuchen Sie es gleich noch einmal.",
+      "identity": "Identität des Shops",
+      "name": "Shop-Name ({language})",
+      "logo": "Logo",
+      "favicon": "Favicon",
+      "logoAlt": "Aktuelles Shop-Logo",
+      "faviconAlt": "Aktuelles Favicon",
+      "noImage": "Kein Bild",
+      "logoHint": "JPG, PNG oder WebP, mindestens 600 px breit, höchstens 5 MB.",
+      "faviconHint": "JPG, PNG oder WebP, mindestens 128 x 128 px, höchstens 5 MB.",
+      "uploading": "Wird hochgeladen",
+      "uploadFailed": "Das Bild konnte nicht hochgeladen werden.",
+      "logoSaved": "Logo gespeichert",
+      "faviconSaved": "Favicon gespeichert",
+      "address": "Shop-Adresse",
+      "addressHint": "Wird von Malva verwaltet",
+      "managedByMalva": "Wird von Malva verwaltet",
+      "currency": "Währung",
+      "country": "Land",
+      "location": "Standort",
+      "addressLine": "Straße und Hausnummer",
+      "postalCode": "Postleitzahl",
+      "city": "Ort",
+      "countryCode": "Ländercode",
+      "latitude": "Breitengrad",
+      "longitude": "Längengrad",
+      "findCoordinates": "Koordinaten suchen",
+      "geocodeFailed": "Die Koordinaten konnten nicht ermittelt werden. Geben Sie sie von Hand ein.",
+      "geocodeUnavailable": "Die Adresssuche ist gerade nicht verfügbar. Geben Sie die Koordinaten von Hand ein.",
+      "geocodeNone": "Zu dieser Adresse wurde kein Ort gefunden. Prüfen Sie sie oder geben Sie die Koordinaten von Hand ein.",
+      "geocodeFound": "Gefunden: {label}",
+      "mapLabel": "Karte des Shop-Standorts",
+      "pinName": "Shop-Standort",
+      "mapHint": "Klicken Sie auf die Karte oder ziehen Sie die Markierung, um die Position zu setzen, oder tippen Sie Breiten- und Längengrad ein.",
+      "save": "Speichern",
+      "saving": "Wird gespeichert",
+      "saved": "Standort gespeichert",
+      "saveFailed": "Die Einstellungen konnten nicht gespeichert werden.",
+      "readOnly": "Nur ein Administrator kann diese Einstellungen ändern."
+    },
+    "branches": {
+      "title": "Filialen",
+      "subtitle": "Filialen erscheinen in der Filialauswahl Ihres Shops.",
+      "add": "Filiale hinzufügen",
+      "loading": "Filialen werden geladen",
+      "loadFailed": "Die Filialen konnten nicht geladen werden.",
+      "empty": "Noch keine Filialen. Fügen Sie Ihre erste Filiale hinzu.",
+      "name": "Filiale",
+      "address": "Adresse",
+      "pickupColumn": "Abholung",
+      "hoursColumn": "Öffnungszeiten",
+      "actions": "Aktionen",
+      "hoursSummary": "{days, plural, one {# Tag} other {# Tage}} geöffnet, {from} bis {to}",
+      "closedAllWeek": "Geschlossen",
+      "stockButton": "Bestand & Preise",
+      "stockFor": "Bestand & Preise von {name}",
+      "edit": "Bearbeiten",
+      "editFor": "{name} bearbeiten",
+      "remove": "Entfernen",
+      "removeFor": "{name} entfernen",
+      "readOnly": "Nur ein Administrator kann Filialen ändern.",
+      "mapLabel": "Karte der Filialen",
+      "removeTitle": "{name} entfernen?",
+      "removeBody": "Die Filiale verschwindet aus der Filialauswahl Ihres Shops. Bestand und Preise bleiben in commercetools erhalten, werden von Ihrem Shop aber nicht mehr verwendet.",
+      "confirmRemove": "Filiale entfernen",
+      "cancel": "Abbrechen",
+      "removed": "{name} entfernt",
+      "removeFailed": "Die Filiale konnte nicht entfernt werden.",
+      "days": {
+        "mon": "Montag",
+        "tue": "Dienstag",
+        "wed": "Mittwoch",
+        "thu": "Donnerstag",
+        "fri": "Freitag",
+        "sat": "Samstag",
+        "sun": "Sonntag"
+      },
+      "pickup": {
+        "same-day": "Am selben Tag",
+        "next-day": "Am nächsten Tag",
+        "ship-to-store": "Lieferung in die Filiale"
+      },
+      "form": {
+        "addTitle": "Filiale hinzufügen",
+        "editTitle": "{name} bearbeiten",
+        "name": "Name der Filiale ({language})",
+        "shortName": "Kurzname",
+        "shortNameHint": "Kleinbuchstaben, Ziffern und Bindestriche. Er wird Teil des Filialschlüssels und kann später nicht geändert werden.",
+        "street": "Straße",
+        "number": "Nummer",
+        "postalCode": "Postleitzahl",
+        "city": "Ort",
+        "country": "Ländercode",
+        "latitude": "Breitengrad",
+        "longitude": "Längengrad",
+        "findCoordinates": "Koordinaten suchen",
+        "geocodeFailed": "Die Koordinaten konnten nicht ermittelt werden. Geben Sie sie von Hand ein.",
+        "geocodeUnavailable": "Die Adresssuche ist gerade nicht verfügbar. Geben Sie die Koordinaten von Hand ein.",
+        "geocodeNone": "Zu dieser Adresse wurde kein Ort gefunden. Prüfen Sie sie oder geben Sie die Koordinaten von Hand ein.",
+        "mapLabel": "Karte für die Position der Filiale",
+        "pinName": "Position der Filiale",
+        "mapHint": "Klicken Sie auf die Karte oder ziehen Sie die Markierung, um die Position zu setzen, oder tippen Sie Breiten- und Längengrad ein.",
+        "coordinates": "Geben Sie Breiten- und Längengrad als Zahlen ein oder lassen Sie beide leer.",
+        "pickupMode": "Abholversprechen",
+        "phone": "Telefon",
+        "timezone": "Zeitzone",
+        "hours": "Öffnungszeiten",
+        "opens": "{day} öffnet",
+        "closes": "{day} schließt",
+        "closed": "Geschlossen",
+        "cancel": "Abbrechen",
+        "save": "Filiale speichern",
+        "saving": "Wird gespeichert",
+        "saveFailed": "Die Filiale konnte nicht gespeichert werden."
+      },
+      "stock": {
+        "title": "Bestand und Preise: {name}",
+        "hint": "Bestand je Teil in dieser Filiale. Ein Filialpreis ({currency}) ersetzt den Shop-Preis; lassen Sie ihn leer, gilt der Shop-Preis.",
+        "search": "Nach Artikelnummer oder Name suchen",
+        "loading": "Teile werden geladen",
+        "loadFailed": "Die Teile konnten nicht geladen werden.",
+        "empty": "Kein Teil Ihres Sortiments passt.",
+        "sku": "Artikelnummer",
+        "name": "Teil",
+        "stockColumn": "Bestand",
+        "priceColumn": "Filialpreis ({currency})",
+        "actions": "Aktionen",
+        "stockFor": "Bestand von {sku}",
+        "priceFor": "Filialpreis von {sku}",
+        "noEntry": "Nicht geführt",
+        "storePrice": "Shop-Preis gilt",
+        "save": "Speichern",
+        "saving": "Wird gespeichert",
+        "saved": "{sku} gespeichert",
+        "saveFailed": "Die Änderung konnte nicht gespeichert werden.",
+        "badStock": "Der Bestand muss eine ganze Zahl von 0 bis {max} sein.",
+        "badPrice": "Geben Sie einen Preis über 0 mit höchstens 2 Nachkommastellen ein oder lassen Sie das Feld leer.",
+        "previous": "Zurück",
+        "next": "Weiter",
+        "range": "{from} bis {to} von {total}",
+        "close": "Schließen"
+      }
+    },
+    "channels": {
+      "title": "Verkaufskanäle",
+      "subtitle": "Bestellungen der letzten {days} Tage nach dem Kanal, über den der Kunde kam.",
+      "loading": "Kanalzahlen werden geladen",
+      "tableLabel": "Tabelle der Kanalzahlen",
+      "loadFailed": "Die Kanalzahlen konnten nicht geladen werden.",
+      "channel": "Kanal",
+      "status": "Status",
+      "orders": "Bestellungen",
+      "revenue": "Umsatz",
+      "share": "Umsatzanteil",
+      "live": "Live",
+      "demo": "Demo",
+      "demoData": "Demodaten",
+      "noShare": "-",
+      "indicative": "(Richtwert)",
+      "note": "Die Zuordnung stammt aus dem Verkaufskanal-Feld der Bestellung und ist ein Richtwert, wo es fehlt.",
+      "truncated": "Es wurden nur die neuesten Bestellungen gezählt, die Zahlen sind daher eine Untergrenze.",
+      "names": {
+        "web": "Web",
+        "instagram": "Instagram",
+        "facebook": "Facebook",
+        "whatsapp": "WhatsApp",
+        "tiktok": "TikTok",
+        "in-store": "In der Filiale"
+      }
+    },
+    "share": {
+      "title": "Teilen-Links",
+      "subtitle": "Jeder Link schreibt die Bestellungen, die ihm folgen, seinem Kanal gut.",
+      "storeLink": "Shop-Link",
+      "bioLink": "Link-in-Bio-Seite",
+      "copy": "Link kopieren",
+      "copyFor": "Link kopieren: Shop-Link für {name}",
+      "copyBioFor": "Link kopieren: Link-in-Bio für {name}",
+      "copied": "Link kopiert",
+      "copyFailed": "Der Link konnte nicht kopiert werden. Markieren Sie ihn und kopieren Sie von Hand.",
+      "qrAlt": "QR-Code des Links für {name}",
+      "qrLoading": "QR-Code",
+      "bioNotice": "Legen Sie unter Inhalte eine Seite mit dem Slug /link-in-bio an und veröffentlichen Sie sie, um den Link-in-Bio-Link zu nutzen."
+    },
+    "theme": {
+      "title": "Design",
+      "reset": "Auf Malva-Standard zurücksetzen",
+      "resetTitle": "Auf Malva-Standard zurücksetzen?",
+      "resetBody": "Dadurch wird Ihr Design gelöscht. Ihr Shop verwendet nach Ablauf des Zwischenspeichers den Malva-Standard.",
+      "confirmReset": "Mein Design löschen",
+      "cancel": "Abbrechen",
+      "resetDone": "Design gelöscht. Der Malva-Standard erscheint innerhalb von {seconds} Sekunden.",
+      "resetFailed": "Das Design konnte nicht zurückgesetzt werden.",
+      "saved": "Gespeichert. {host} zeigt die Änderung innerhalb von {seconds} Sekunden.",
+      "preview": {
+        "title": "Shop-Vorschau",
+        "pages": "Vorschauseite",
+        "device": "Gerät",
+        "desktop": "Desktop",
+        "phone": "Smartphone",
+        "refresh": "Vorschau aktualisieren",
+        "loading": "Vorschauseiten werden geladen",
+        "loadFailed": "Die Vorschauseiten konnten nicht geladen werden.",
+        "unavailable": "Shop-Seite noch nicht verfügbar",
+        "unavailableNote": "Seiten, die Ihr Shop noch nicht ausliefert, sind deaktiviert.",
+        "savedOnly": "Die Vorschau zeigt das gespeicherte Design. Sie lädt nach jedem Speichern neu.",
+        "frameTitle": "Shop-Vorschau: {page}",
+        "pageNames": {
+          "home": "Startseite",
+          "listing": "Teileliste",
+          "product": "Produkt",
+          "cart": "Warenkorb",
+          "checkout": "Kasse"
+        }
+      }
+    }
+  },
+  "content": {
+    "title": "Inhalte",
+    "subtitle": "Ihre eigenen Seiten und Inhaltsblöcke für den Shop.",
+    "tabs": {
+      "label": "Bereiche der Inhalte",
+      "pages": "Seiten",
+      "blocks": "Inhaltsblöcke"
+    }
+  },
+  "email": {
+    "subtitle": "Schreiben Sie die E-Mails Ihres Shops und planen Sie Kampagnen nach Zielgruppe.",
+    "note": "Der E-Mail-Versand ist in dieser Version nicht angebunden; Vorlagen werden nur gespeichert.",
+    "tabs": {
+      "label": "E-Mail-Bereiche",
+      "templates": "Vorlagen",
+      "campaigns": "Kampagnen"
+    },
+    "templates": {
+      "title": "Vorlagen",
+      "list": "E-Mail-Vorlagen",
+      "names": {
+        "order-confirmation": "Bestellbestätigung",
+        "shipment-update": "Versandmeldung",
+        "win-back": "Rückgewinnung"
+      },
+      "defaultText": "Standardtext",
+      "savedText": "Gespeichert",
+      "disabledText": "Aus"
+    },
+    "editor": {
+      "language": "Sprache",
+      "subject": "Betreff",
+      "body": "Text",
+      "enabled": "Vorlage aktiv",
+      "save": "Vorlage speichern",
+      "saving": "Wird gespeichert",
+      "saved": "Vorlage gespeichert",
+      "insertVariable": "Variable einfügen",
+      "insertHint": "Klicken Sie in ein Feld und dann auf eine Variable, um sie an der Schreibmarke einzufügen.",
+      "variableButton": "{name} einfügen"
+    },
+    "preview": {
+      "title": "Vorschau mit einer Beispielbestellung",
+      "subject": "Betreff",
+      "loading": "Vorschau wird aktualisiert",
+      "logoAlt": "Logo von {store}"
+    },
+    "errors": {
+      "unknownVariable": "Unbekannte Variable {variable}. Verwenden Sie nur order_number und customer_name.",
+      "unbalanced": "Eine Variable ist nicht geschlossen. Schreiben Sie Variablen mit doppelten geschweiften Klammern um den Namen.",
+      "tooLong": "Der Text ist zu lang.",
+      "forbidden": "Keine ausreichende Berechtigung für diese Aufgabe",
+      "generic": "Das hat nicht geklappt. Bitte versuchen Sie es erneut."
+    },
+    "events": {
+      "title": "Bestellereignisse",
+      "note": "Der E-Mail-Versand ist in dieser Version nicht angebunden.",
+      "event": "Ereignis",
+      "template": "Vorlage",
+      "state": "Status",
+      "none": "Keine Vorlage",
+      "names": {
+        "order-placed": "Bestellung aufgegeben",
+        "order-shipped": "Bestellung versendet",
+        "order-delivered": "Bestellung zugestellt"
+      },
+      "states": {
+        "stored-not-sent": "Gespeichert, nicht gesendet",
+        "not-set-up": "Nicht eingerichtet"
+      }
+    },
+    "campaigns": {
+      "title": "Kampagnen",
+      "empty": "Noch keine Kampagnen. Beschreiben Sie eine Zielgruppe, um zu beginnen.",
+      "table": "E-Mail-Kampagnen",
+      "name": "Name",
+      "rule": "Zielgruppe",
+      "status": "Status",
+      "recipients": "Empfänger",
+      "openRate": "Öffnungsrate",
+      "actions": "Aktionen",
+      "statuses": {
+        "Draft": "Entwurf",
+        "Ready": "Bereit"
+      },
+      "dash": "—",
+      "newTitle": "Neue Kampagne",
+      "nameLabel": "Name der Kampagne",
+      "templateLabel": "Vorlage",
+      "descriptionLabel": "Beschreiben Sie die Zielgruppe",
+      "descriptionHint": "Zum Beispiel: Kunden, die Bremsscheiben gekauft haben, aber keine Beläge",
+      "suggest": "Regel vorschlagen",
+      "suggesting": "Regel wird gesucht",
+      "suggestion": "Regel: {text} — {count} Kunden",
+      "suggestionNote": "Gezählt werden nur Kunden, die Angeboten per E-Mail zugestimmt haben. Die Regel wird gespeichert, wenn Sie auf Regel verwenden drücken.",
+      "useRule": "Regel verwenden",
+      "ruleStored": "Kampagne als Entwurf gespeichert",
+      "unknownAudience": "Diese Beschreibung wird nicht verstanden.",
+      "categoriesTitle": "Kategorien, die Sie nutzen können",
+      "markReady": "Als bereit markieren",
+      "markedReady": "Kampagne als bereit markiert",
+      "send": "Senden",
+      "sendNote": "Der Versand ist in dieser Version nicht angebunden"
+    }
+  },
+  "marketing": {
+    "title": "Marketing",
+    "subtitle": "Co-op-Kampagnen, die Malva teilweise finanziert, mit freigegebenen Texten zur direkten Verwendung.",
+    "loading": "Kampagnen werden geladen",
+    "error": "Die Kampagnen konnten nicht geladen werden.",
+    "empty": "Im Moment gibt es keine Kampagnen.",
+    "fundsShare": "Malva übernimmt {share} % der Werbekosten",
+    "captionLabel": "Freigegebener Text",
+    "brandFunded": "Von der Marke finanziert, nicht bearbeitbar",
+    "codeLabel": "Aktionscode",
+    "channelsLabel": "Empfohlene Kanäle",
+    "datesLabel": "Laufzeit",
+    "dates": "{from} bis {to}",
+    "eligibleLabel": "Berechtigte Produkte",
+    "eligibleMore": "+{count} weitere",
+    "claimLabel": "Förderantrag",
+    "claimStatus": {
+      "none": "Kein Antrag",
+      "submitted": "Eingereicht",
+      "approved": "Genehmigt",
+      "rejected": "Abgelehnt"
+    },
+    "ended": "Beendet",
+    "copyCaption": "Text kopieren",
+    "copied": "Text kopiert",
+    "copyFailed": "Der Text konnte nicht kopiert werden. Markieren Sie ihn und kopieren Sie ihn von Hand.",
+    "createDiscount": "Rabatt anlegen",
+    "creating": "Rabatt wird angelegt",
+    "discountCreated": "Rabattentwurf {code} angelegt. Er bleibt inaktiv, bis Sie ihn aktivieren.",
+    "discountDraft": "Rabatt {code}: inaktiv",
+    "discountActive": "Rabatt {code}: aktiv",
+    "openDiscount": "Rabatt öffnen",
+    "submitClaim": "Antrag stellen",
+    "claimDialog": {
+      "title": "Förderantrag für {name}",
+      "amount": "Ausgegebener Betrag (EUR)",
+      "amountHint": "Mit Punkt als Dezimaltrenner, zum Beispiel 120.50.",
+      "reference": "Rechnungsnummer",
+      "note": "Hinweis",
+      "submit": "Antrag senden",
+      "cancel": "Abbrechen"
+    },
+    "claimSent": "Antrag eingereicht. Malva prüft ihn.",
+    "errors": {
+      "invalidAmount": "Geben Sie einen Betrag über null mit höchstens zwei Nachkommastellen ein.",
+      "referenceRequired": "Geben Sie die Rechnungsnummer ein.",
+      "referenceTooLong": "Die Rechnungsnummer hat höchstens 80 Zeichen.",
+      "noteTooLong": "Der Hinweis hat höchstens 500 Zeichen.",
+      "generic": "Das hat nicht geklappt. Versuchen Sie es erneut.",
+      "forbidden": "Keine Berechtigung für diese Aufgabe",
+      "campaignEnded": "Diese Kampagne ist beendet.",
+      "discountExists": "Für diese Kampagne haben Sie bereits einen Rabatt.",
+      "codeTaken": "Dieser Code wird bereits verwendet.",
+      "claimPending": "Ein Antrag für diese Kampagne wartet bereits auf Malva.",
+      "claimClosed": "Dieser Antrag wurde bereits genehmigt."
+    }
+  },
+  "partnership": {
+    "title": "Markenpartnerschaft",
+    "subtitle": "Die Leitplanken, die Malva einhält, und was Sie korrigieren müssen.",
+    "loading": "Markenpartnerschaft wird geladen",
+    "error": "Die Daten zur Markenpartnerschaft konnten nicht geladen werden.",
+    "rulesTitle": "Leitplanken",
+    "rules": {
+      "fitment": {
+        "title": "Passgenauigkeitsangaben werden geprüft",
+        "text": "Ein lokales Produkt, das eine Fahrzeugpassung behauptet, wird nie von Ihnen veröffentlicht. Malva prüft die Angabe zuerst."
+      },
+      "price": {
+        "title": "Ihre Preise",
+        "text": "Legen Sie einen beliebigen Preis über null fest; der Malva-Listenpreis dient als Referenz."
+      }
+    },
+    "states": {
+      "Enforced": "Durchgesetzt",
+      "Informational": "Zur Information"
+    },
+    "kpi": {
+      "compliance": "Regelkonformität",
+      "openFlags": "{count, plural, one {# offener Hinweis} other {# offene Hinweise}}",
+      "noScore": "—",
+      "claimsPending": "Offene lokale Angaben",
+      "claimsHint": "Warten auf Malva"
+    },
+    "flagsTitle": "Für Sie markiert",
+    "flagReason": "Wartet auf Prüfung durch Malva",
+    "claimedVehicles": "Angegebene Fahrzeuge: {vehicles}",
+    "view": "Ansehen",
+    "viewPart": "{sku} ansehen",
+    "empty": "Nichts zu beheben"
+  },
+  "bundles": {
+    "subtitle": "Verkaufen Sie Teile aus Ihrem Sortiment gemeinsam zu einem Set-Preis.",
+    "form": {
+      "title": "Set erstellen",
+      "name": "Name des Sets",
+      "discount": "Rabatt (%)",
+      "discountHint": "1 bis 50 Prozent Rabatt auf die Summe der Komponenten",
+      "search": "Teil suchen",
+      "searchPlaceholder": "Name oder Teilenummer",
+      "pickerTitle": "Teile in Ihrem Sortiment",
+      "add": "Hinzufügen",
+      "added": "Hinzugefügt",
+      "addAria": "{name} hinzufügen",
+      "remove": "{name} entfernen",
+      "quantity": "Menge von {name}",
+      "components": "Komponenten",
+      "noneSelected": "Fügen Sie 2 bis 8 Teile aus Ihrem Sortiment hinzu.",
+      "noResults": "Kein zugewiesenes Teil mit Preis gefunden.",
+      "loading": "Teile werden geladen",
+      "create": "Set erstellen",
+      "creating": "Wird erstellt",
+      "created": "Set als Entwurf erstellt."
+    },
+    "summary": {
+      "title": "Live-Preis",
+      "total": "Summe der Komponenten",
+      "price": "Set-Preis",
+      "saving": "Ersparnis für Kunden"
+    },
+    "errors": {
+      "NAME_LENGTH": "Der Name braucht {min} bis {max} Zeichen.",
+      "COMPONENT_COUNT": "Ein Set hat {min} bis {max} Komponenten.",
+      "COMPONENT_DUPLICATE": "Jedes Teil kann nur einmal Komponente sein.",
+      "QUANTITY_RANGE": "Die Menge liegt zwischen {min} und {max}.",
+      "DISCOUNT_RANGE": "Der Rabatt liegt zwischen {min} und {max} Prozent.",
+      "COMPONENT_PRICE": "Eine Komponente hat keinen Preis über null.",
+      "BUNDLE_PRICE": "Der Set-Preis muss über null liegen.",
+      "COMPONENT_NOT_ASSIGNED": "{sku} ist nicht in Ihrem Sortiment.",
+      "BUNDLE_EXISTS": "Ein Set mit diesem Namen gibt es bereits.",
+      "forbidden": "Insufficient permissions to perform this task",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    },
+    "list": {
+      "title": "Ihre Sets",
+      "empty": "Sie haben noch keine Sets.",
+      "loading": "Sets werden geladen",
+      "error": "Die Sets konnten nicht geladen werden.",
+      "bundle": "Set",
+      "components": "Komponenten",
+      "componentsPrice": "Komponentenpreis",
+      "bundlePrice": "Set-Preis",
+      "saving": "Ersparnis",
+      "status": "Status",
+      "live": "Live",
+      "draft": "Entwurf",
+      "hidden": "Ausgeblendet: {sku} zurückgezogen",
+      "noPrice": "Kein Preis",
+      "publish": "Veröffentlichen",
+      "publishAria": "{name} veröffentlichen",
+      "published": "Set veröffentlicht."
+    }
+  },
+  "importPage": {
+    "subtitle": "Fügen Sie eigene lokale Produkte einzeln hinzu oder importieren Sie sie aus einer CSV-Datei.",
+    "tabsLabel": "Bereiche des Produktimports",
+    "tabs": {
+      "add": "Einzeln hinzufügen",
+      "csv": "CSV-Import",
+      "local": "Lokale Produkte"
+    },
+    "form": {
+      "title": "Lokales Produkt hinzufügen",
+      "nameDe": "Name (Deutsch)",
+      "nameEn": "Name (English)",
+      "sku": "SKU",
+      "skuHint": "3 bis 40 Großbuchstaben, Ziffern, Punkte, Bindestriche oder Unterstriche. MLV- ist reserviert.",
+      "price": "Preis (EUR)",
+      "priceHint": "Über null, höchstens zwei Dezimalstellen, zum Beispiel 12.50",
+      "type": "Produkttyp",
+      "typeLocal": "Lokales Teil",
+      "typeBundle": "Set",
+      "bundleLink": "Sets erstellen Sie auf der Seite Sets",
+      "category": "Kategorie",
+      "categoryPlaceholder": "Kategorie wählen",
+      "brand": "Marke (optional)",
+      "fitment": "Passt zu diesen Fahrzeugen (optional)",
+      "fitmentHint": "Eine Fahrzeugzuordnung prüft Malva, bevor das Teil in Listen erscheint.",
+      "fitmentSearch": "Fahrzeuge suchen",
+      "fitmentNone": "Kein Fahrzeug gefunden.",
+      "save": "Produkt speichern",
+      "saving": "Wird gespeichert",
+      "live": "Gespeichert. Es ist in Ihrem Shop live.",
+      "pending": "Wartet auf die Prüfung durch Malva; es erscheint nach der Freigabe in den Listen"
+    },
+    "errors": {
+      "name": "Der Name braucht 2 bis 120 Zeichen.",
+      "sku": "3 bis 40 Großbuchstaben, Ziffern, Punkte, Bindestriche oder Unterstriche. MLV- ist reserviert.",
+      "skuInUse": "SKU bereits vergeben",
+      "price": "Geben Sie einen Preis über null mit höchstens zwei Dezimalstellen ein.",
+      "category": "Wählen Sie eine Kategorie.",
+      "type": "Sets erstellen Sie auf der Seite Sets.",
+      "fitment": "Wählen Sie Fahrzeuge aus der Liste.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    },
+    "csv": {
+      "title": "Produkte aus einer CSV-Datei importieren",
+      "intro": "Die Datei wird zuerst geprüft. Erst mit dem Import-Button wird etwas importiert.",
+      "file": "CSV-Datei",
+      "validate": "Datei prüfen",
+      "validating": "Wird geprüft",
+      "readError": "Die Datei konnte nicht gelesen werden.",
+      "summaryLabel": "Zusammenfassung der Prüfung",
+      "rows": "Zeilen",
+      "valid": "Gültig",
+      "warnings": "Warnungen",
+      "errors": "Fehler",
+      "mappingTitle": "Spalten",
+      "mapped": "Zugeordnet",
+      "unmapped": "Nicht zugeordnet",
+      "mappedTo": "Zugeordnet zu {target}",
+      "ignore": "Ignorieren",
+      "mapColumn": "Spalte {header} zuordnen",
+      "issuesTitle": "Probleme je Zeile",
+      "issuesNone": "Keine Probleme.",
+      "colRow": "Zeile",
+      "colColumn": "Spalte",
+      "colMessage": "Grund",
+      "colEffect": "Auswirkung",
+      "skipped": "Übersprungen",
+      "defaultUsed": "Standard verwendet",
+      "import": "{count} Zeilen importieren",
+      "importing": "Wird importiert",
+      "result": "{imported} importiert, {failed} fehlgeschlagen",
+      "skippedRows": "{count} Zeilen wurden wegen Fehlern übersprungen.",
+      "failedTitle": "Fehlgeschlagene Zeilen",
+      "errorCodes": {
+        "EMPTY": "Die Datei ist leer.",
+        "TOO_LARGE": "Die Datei ist größer als 1 MB.",
+        "TOO_MANY_ROWS": "Die Datei hat mehr als 2.000 Zeilen.",
+        "UNTERMINATED_QUOTE": "Eine Zelle in Anführungszeichen ist nicht geschlossen.",
+        "NO_HEADER": "Die erste Zeile muss die Spalten benennen.",
+        "NOTHING_TO_IMPORT": "Keine Zeile kann importiert werden."
+      }
+    },
+    "local": {
+      "title": "Ihre lokalen Produkte",
+      "loading": "Produkte werden geladen",
+      "error": "Die Produkte konnten nicht geladen werden.",
+      "empty": "Sie haben noch keine lokalen Produkte.",
+      "name": "Name",
+      "sku": "SKU",
+      "price": "Preis",
+      "status": "Status",
+      "vehicles": "Zugeordnete Fahrzeuge",
+      "none": "Keine",
+      "live": "Live",
+      "awaiting": "Wartet auf Prüfung",
+      "rejected": "Abgelehnt"
+    }
+  },
+  "customers": {
+    "title": "Kunden",
+    "subtitle": "Die Käufer Ihres Shops.",
+    "loading": "Kunden werden geladen ...",
+    "error": "Die Kunden konnten nicht geladen werden.",
+    "empty": "Keine passenden Kunden.",
+    "search": "Nach Name oder E-Mail suchen",
+    "searchLabel": "Kunden durchsuchen",
+    "tabsLabel": "Kundenart",
+    "tabs": {
+      "all": "Alle",
+      "registered": "Registriert",
+      "guests": "Gäste"
+    },
+    "guestsCaption": "Ohne Konto bestellt",
+    "truncated": "Es werden nur die neuesten Datensätze angezeigt.",
+    "kpis": {
+      "registered": "Registriert",
+      "guests": "Gäste",
+      "repeat": "Wiederkaufrate"
+    },
+    "columns": {
+      "name": "Name",
+      "type": "Art",
+      "orders": "Bestellungen",
+      "lifetime": "Gesamtumsatz",
+      "last": "Letzte Bestellung"
+    },
+    "type": {
+      "Registered": "Registriert",
+      "Guest": "Gast"
+    },
+    "paging": {
+      "range": "{from} bis {to} von {total}",
+      "prev": "Zurück",
+      "next": "Weiter"
+    },
+    "open": "{name} öffnen",
+    "detail": {
+      "back": "Zurück zu den Kunden",
+      "email": "E-Mail",
+      "mobile": "Mobil",
+      "since": "Kunde seit",
+      "consent": "Marketing-Einwilligung",
+      "consentYes": "Erteilt am {date}",
+      "consentNo": "Nicht erteilt",
+      "consentUnknown": "Nicht erfasst",
+      "loading": "Kunde wird geladen ...",
+      "error": "Dieser Kunde konnte nicht geladen werden.",
+      "notFound": "Kunde nicht gefunden.",
+      "orders": {
+        "title": "Bestellungen",
+        "empty": "Noch keine Bestellungen.",
+        "number": "Bestellung",
+        "date": "Aufgegeben",
+        "total": "Summe",
+        "delivered": "Zugestellt",
+        "notDelivered": "Nicht zugestellt",
+        "markDelivered": "Als zugestellt markieren",
+        "marked": "Bestellung {number} als zugestellt markiert"
+      },
+      "garage": {
+        "title": "Garage",
+        "empty": "Keine Fahrzeuge gespeichert"
+      },
+      "subscriptions": {
+        "title": "Abos",
+        "empty": "Keine Abos."
+      },
+      "returns": {
+        "title": "Retouren",
+        "empty": "Keine Retouren."
+      },
+      "notes": {
+        "title": "Notizen",
+        "empty": "Noch keine Notizen.",
+        "label": "Neue Notiz",
+        "hint": "Nur Ihr Team sieht Notizen. Bis zu 1.000 Zeichen.",
+        "add": "Notiz hinzufügen",
+        "saved": "Notiz hinzugefügt"
+      },
+      "shopAs": {
+        "button": "Als Kunde einkaufen",
+        "hint": "Öffnet den Shop kurzzeitig als dieser Kunde. Bestellungen werden in seinem Auftrag aufgegeben.",
+        "started": "Der Shop wird als {name} geöffnet",
+        "notConfigured": "Einkaufen als Kunde ist noch nicht eingerichtet. Bitte den Inhaber um die Einrichtung.",
+        "failed": "Die Kundensitzung konnte nicht gestartet werden."
+      }
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "forbidden": "Dafür fehlt Ihnen die Berechtigung."
+    }
+  },
+  "subscriptions": {
+    "title": "Abos",
+    "subtitle": "Wiederkehrende Bestellungen Ihrer Käufer.",
+    "loading": "Abos werden geladen ...",
+    "error": "Die Abos konnten nicht geladen werden.",
+    "empty": "Keine Abos in dieser Ansicht.",
+    "tabsLabel": "Abo-Status",
+    "tabs": {
+      "active": "Aktiv",
+      "paused": "Pausiert",
+      "canceled": "Gekündigt"
+    },
+    "kpis": {
+      "monthly": "Monatlich wiederkehrend",
+      "active": "Aktiv",
+      "paused": "Pausiert",
+      "canceled": "Gekündigt"
+    },
+    "renewals": {
+      "title": "Verlängerungen in den nächsten 7 Tagen",
+      "empty": "Keine Verlängerungen in den nächsten 7 Tagen."
+    },
+    "columns": {
+      "customer": "Kunde",
+      "items": "Artikel",
+      "interval": "Intervall",
+      "next": "Nächste Verlängerung",
+      "value": "Wert",
+      "status": "Status",
+      "actions": "Aktionen"
+    },
+    "interval": {
+      "days": "{count, plural, one {Täglich} other {Alle # Tage}}",
+      "weeks": "{count, plural, one {Wöchentlich} other {Alle # Wochen}}",
+      "months": "{count, plural, one {Jeden Monat} other {Alle # Monate}}",
+      "dayOfMonth": "Monatlich am {day}. Tag"
+    },
+    "status": {
+      "Active": "Aktiv",
+      "Paused": "Pausiert",
+      "Canceled": "Gekündigt"
+    },
+    "attention": "Braucht Aufmerksamkeit",
+    "skipPending": "Nächste Verlängerung übersprungen",
+    "noRenewal": "-",
+    "actions": {
+      "label": "Abo-Aktionen",
+      "pause": "Pausieren",
+      "resume": "Fortsetzen",
+      "skip": "Nächste überspringen",
+      "cancel": "Kündigen",
+      "audit": "Verlauf"
+    },
+    "reasons": {
+      "final": "Ein gekündigtes Abo lässt sich nicht mehr ändern.",
+      "skipNotActive": "Nur ein aktives Abo kann eine Verlängerung überspringen.",
+      "skipPending": "Die nächste Verlängerung ist bereits übersprungen.",
+      "notAllowed": "In diesem Status nicht verfügbar."
+    },
+    "toasts": {
+      "pause": "Abo pausiert",
+      "resume": "Abo fortgesetzt",
+      "skip": "Nächste Verlängerung übersprungen",
+      "cancel": "Abo gekündigt"
+    },
+    "confirm": {
+      "title": "Dieses Abo kündigen?",
+      "body": "Die Kündigung ist endgültig. Es werden keine weiteren Verlängerungen erstellt.",
+      "keep": "Abo behalten",
+      "confirm": "Abo kündigen"
+    },
+    "audit": {
+      "title": "Verlauf",
+      "empty": "Noch keine Aktionen.",
+      "line": "{action}: {from} zu {to}",
+      "by": "von {by}",
+      "close": "Schließen"
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "forbidden": "Dafür fehlt Ihnen die Berechtigung.",
+      "notActive": "Nur ein aktives Abo kann eine Verlängerung überspringen.",
+      "busy": "Das Abo verarbeitet gerade eine Bestellung. Bitte gleich erneut versuchen.",
+      "invalid": "Diese Änderung ist im aktuellen Status nicht möglich."
+    }
+  },
+  "returns": {
+    "title": "Retouren",
+    "subtitle": "Retouren Ihrer Käufer und deren Erstattungen.",
+    "loading": "Retouren werden geladen ...",
+    "error": "Die Retouren konnten nicht geladen werden.",
+    "empty": "Keine Retouren in dieser Ansicht.",
+    "tabsLabel": "Retourenstatus",
+    "tabs": {
+      "open": "Offen",
+      "closed": "Abgeschlossen"
+    },
+    "kpis": {
+      "open": "Offene Retouren",
+      "rate": "Retourenquote",
+      "refunded": "Erstattet in diesem Monat",
+      "rateNote": "Letzte 90 Tage"
+    },
+    "columns": {
+      "number": "Retoure",
+      "order": "Bestellung",
+      "customer": "Kunde",
+      "items": "Artikel",
+      "tracking": "Sendungsnummer",
+      "status": "Status"
+    },
+    "status": {
+      "requested": "Angefragt",
+      "in-transit": "Unterwegs",
+      "received": "Eingegangen",
+      "inspected": "Geprüft",
+      "refunded": "Erstattet",
+      "rejected": "Abgelehnt"
+    },
+    "refund": {
+      "pending": "Erstattung ausstehend",
+      "failed": "Erstattung fehlgeschlagen"
+    },
+    "reasons": {
+      "wrong-fit": "Passt nicht",
+      "defective": "Defekt",
+      "no-longer-needed": "Nicht mehr benötigt",
+      "damaged-in-transit": "Auf dem Transport beschädigt",
+      "other": "Sonstiges"
+    },
+    "open": "Retoure {number} öffnen",
+    "record": {
+      "button": "Retoure erfassen",
+      "title": "Retoure erfassen",
+      "order": "Bestellnummer",
+      "lookup": "Bestellung suchen",
+      "lines": "Zurückzugebende Artikel",
+      "quantity": "Menge für {name}",
+      "available": "{count} verfügbar",
+      "reason": "Grund",
+      "comment": "Kommentar",
+      "window": "Retouren werden {days} Tage nach der Zustellung angenommen.",
+      "deliveredOn": "Zugestellt am {date}.",
+      "notDelivered": "Diese Bestellung ist noch nicht zugestellt. Markieren Sie sie zuerst auf der Kundenseite als zugestellt.",
+      "closed": "Die Rückgabefrist für diese Bestellung ist abgelaufen.",
+      "submit": "Retoure erfassen",
+      "cancel": "Abbrechen",
+      "created": "Retoure {number} erstellt, Sendungsnummer {tracking}",
+      "noLines": "Wählen Sie mindestens einen Artikel."
+    },
+    "detail": {
+      "close": "Schließen",
+      "customer": "Kunde",
+      "order": "Bestellung",
+      "tracking": "Sendungsnummer",
+      "reason": "Grund",
+      "comment": "Kommentar",
+      "items": "Artikel",
+      "refunded": "Erstatteter Betrag",
+      "rejectReason": "Ablehnungsgrund",
+      "maxRefund": "Höchstmögliche Erstattung: {amount}",
+      "loading": "Retoure wird geladen ...",
+      "error": "Diese Retoure konnte nicht geladen werden."
+    },
+    "actions": {
+      "label": "Retouren-Aktionen",
+      "in-transit": "Als unterwegs markieren",
+      "received": "Als eingegangen markieren",
+      "inspected": "Als geprüft markieren",
+      "refund": "Erstatten",
+      "retryRefund": "Erstattung wiederholen",
+      "rejected": "Ablehnen"
+    },
+    "disabled": {
+      "closed": "Diese Retoure ist abgeschlossen.",
+      "notFrom": "Nicht verfügbar, solange die Retoure {status} ist.",
+      "refundPending": "Eine Erstattung wartet auf die Bestätigung von Stripe."
+    },
+    "refundDialog": {
+      "title": "{number} erstatten",
+      "amount": "Erstattungsbetrag",
+      "hint": "Die Erstattung geht über commercetools Checkout an Stripe und ist endgültig, sobald Stripe sie bestätigt.",
+      "submit": "Erstattung anfordern",
+      "cancel": "Abbrechen",
+      "requested": "Erstattung angefordert. Sie ist endgültig, sobald Stripe sie bestätigt.",
+      "noPayment": "Keine Zahlung zu erstatten; bitte manuell abrechnen.",
+      "invalidAmount": "Geben Sie einen Betrag über null ein."
+    },
+    "rejectDialog": {
+      "title": "{number} ablehnen",
+      "reason": "Grund",
+      "submit": "Retoure ablehnen",
+      "cancel": "Abbrechen",
+      "required": "Ein Grund ist erforderlich."
+    },
+    "moved": "Retoure {number} ist jetzt {status}",
+    "wrongFit": {
+      "chip": "Passt nicht",
+      "vehicle": "Fahrzeug beim Kauf",
+      "fit": "Passform-Ergebnis damals",
+      "notRecorded": "Das Fahrzeug beim Kauf wurde nicht erfasst",
+      "fits": "Passt",
+      "not-fit": "Passt nicht",
+      "unknown": "Unbekannt"
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "forbidden": "Dafür fehlt Ihnen die Berechtigung.",
+      "ORDER_NOT_FOUND": "Bestellung nicht gefunden.",
+      "NOT_DELIVERED": "Diese Bestellung ist noch nicht zugestellt.",
+      "RETURN_WINDOW_CLOSED": "Die Rückgabefrist für diese Bestellung ist abgelaufen.",
+      "QUANTITY_EXCEEDS_PURCHASED": "Die Menge ist größer als gekauft und noch nicht zurückgegeben.",
+      "REFUND_EXCEEDS_PAID": "Die Erstattung ist höher als der Betrag für die zurückgegebenen Artikel.",
+      "CAPTURE_REQUIRED": "Buchen Sie die Zahlung zuerst ein.",
+      "NO_CAPTURE": "Die Zahlung hat keinen eingezogenen Betrag zum Erstatten.",
+      "REFUND_PENDING": "Eine Erstattung wartet bereits auf Bestätigung.",
+      "REFUND_REJECTED": "Der Zahlungsdienstleister hat die Erstattung abgelehnt.",
+      "REFUND_UNAVAILABLE": "Checkout konnte die Erstattung nicht annehmen. Bitte erneut versuchen.",
+      "INVALID_TRANSITION": "Dieser Schritt ist im aktuellen Status nicht möglich.",
+      "REASON_REQUIRED": "Ein Grund ist erforderlich."
+    }
+  },
+  "reviews": {
+    "title": "Bewertungen",
+    "subtitle": "Was Käufer über Ihre Produkte sagen.",
+    "loading": "Bewertungen werden geladen ...",
+    "error": "Die Bewertungen konnten nicht geladen werden.",
+    "empty": "Noch keine Bewertungen.",
+    "tabsLabel": "Reihenfolge der Bewertungen",
+    "tabs": {
+      "latest": "Neueste",
+      "highest": "Beste",
+      "lowest": "Schlechteste"
+    },
+    "kpis": {
+      "average": "Durchschnittliche Bewertung",
+      "month": "Diesen Monat",
+      "unanswered": "Unbeantwortet"
+    },
+    "stars": "{rating} von 5",
+    "by": "{author}, {date}",
+    "hiddenChip": "Ausgeblendet",
+    "reply": {
+      "button": "Antworten",
+      "edit": "Antwort bearbeiten",
+      "title": "Antwort auf {product}",
+      "label": "Öffentliche Antwort",
+      "hint": "Wird auf der Produktseite unter der Bewertung angezeigt. Bis zu 1.000 Zeichen.",
+      "submit": "Antwort senden",
+      "cancel": "Abbrechen",
+      "from": "Antwort von {store}",
+      "posted": "Antwort veröffentlicht"
+    },
+    "hide": "Ausblenden",
+    "show": "Einblenden",
+    "hidden": "Bewertung ausgeblendet",
+    "shown": "Bewertung eingeblendet",
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "forbidden": "Dafür fehlt Ihnen die Berechtigung.",
+      "REPLY_INVALID": "Schreiben Sie eine Antwort mit 1 bis 1.000 Zeichen."
+    }
+  }
+}

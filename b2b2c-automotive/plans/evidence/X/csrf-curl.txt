@@ -1,0 +1,32 @@
+# C19 CSRF and content type, curl against the production builds (portal :3101, storefront :3100). status line, then body.
+## portal: POST /api/locale, Origin http://evil.test
+{"error":"Cross-origin request refused","code":"CROSS_ORIGIN"}
+HTTP 403
+## portal: POST /api/locale, no Origin and no Sec-Fetch-Site
+{"error":"Cross-origin request refused","code":"CROSS_ORIGIN"}
+HTTP 403
+## portal: POST /api/locale, text/plain from the same origin
+{"error":"Unsupported content type","code":"UNSUPPORTED_MEDIA_TYPE"}
+HTTP 415
+## portal: POST /api/locale, Sec-Fetch-Site cross-site
+{"error":"Cross-origin request refused","code":"CROSS_ORIGIN"}
+HTTP 403
+## portal: POST /api/seller/prices/bulk (a real mutating seller route), Origin http://evil.test
+{"error":"Cross-origin request refused","code":"CROSS_ORIGIN"}
+HTTP 403
+## portal: POST /api/locale, same origin JSON (control, expect 200 and the locale cookie)
+HTTP/1.1 200 OK
+set-cookie: malva_portal_session=<redacted>; Path=/; Expires=Thu, 12 Nov 2026 01:14:56 GMT; Max-Age=2592000; Secure; HttpOnly; SameSite=lax
+set-cookie: your-shop-country-locale=en-US; Path=/; Expires=Wed, 13 Oct 2027 01:14:56 GMT; Max-Age=31536000; SameSite=lax
+{"locale":"en-US","currency":"USD","country":"US"}
+## storefront: POST /api/cart/lines, Origin http://localhost:4020 (evil page)
+{"error":"Cross-origin request refused","code":"CROSS_ORIGIN"}
+HTTP 403
+## storefront: POST /api/cart/lines, text/plain same origin
+{"error":"Unsupported content type","code":"UNSUPPORTED_MEDIA_TYPE"}
+HTTP 415
+## storefront: POST /api/impersonate cross-origin form post (the one exemption: token is the credential; a forged token is the generic 404)
+HTTP 404
+## storefront: POST /api/impersonate/exit, Origin http://localhost:3101 (not exempt)
+{"error":"Cross-origin request refused","code":"CROSS_ORIGIN"}
+HTTP 403

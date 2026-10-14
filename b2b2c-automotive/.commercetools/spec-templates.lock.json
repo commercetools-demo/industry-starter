@@ -1,0 +1,414 @@
+{
+  "receipt_version": 3,
+  "tool": "commercetools-spec-templates",
+  "content_version": "0.2.0",
+  "applied_at": "2026-10-09T19:07:39.764Z",
+  "framework": "openspec",
+  "industry": "automotive",
+  "model": "B2B2C",
+  "sides": [
+    "seller-portal",
+    "consumer-storefront"
+  ],
+  "placement": "specs",
+  "scope": "all",
+  "plan_hash": "a2e1b2b1bcea319d28ab469b3f0da4d2fbdad76438fad37d6d847d205a5af657",
+  "files": [
+    {
+      "path": "openspec/specs/consumer-storefront/about-us/spec.md",
+      "sha256": "364cb4fcaa8b58b305fcb8d2e8098548b56e38a5a3adee0d80dbd213a737f185"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/account-and-self-service/spec.md",
+      "sha256": "d3f6331b9a6ef288a04eda152165549786f1ab531db24d64e86d419786c0c0b4"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/account-dashboard/spec.md",
+      "sha256": "623eeb712c3c51965f594591fd3f8eaffb25a8767ec6ba1506e98b8cb1c300fb"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/account-registration-request/spec.md",
+      "sha256": "b3755a8b4997786a7a704cfe16e403086d4aa1c19b393a42205f2b4af8fcb28a"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/account-sign-in/spec.md",
+      "sha256": "ef5d5c6a1d8c750c1aa0d1d0502907d10d846247dc18eb3affa78a209abee642"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/address-book/spec.md",
+      "sha256": "b46e830c8a7a6175a1147ceff260d596d03058961281b035da9debdb5816776d"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/authentication-and-identity/spec.md",
+      "sha256": "8a64836a529790c26b8ba6aae017d5af585c2a4f8be218873eadffa665925881"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/blog-resources/spec.md",
+      "sha256": "264defd2017b1db1553112640ba1f4997576028b823e391e1f7b223f845a4e4a"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/cart-management/spec.md",
+      "sha256": "d7137f438289a8aee093976f82a7edd50a18c9818ff6030c212d0154b3c79864"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/cart-page/spec.md",
+      "sha256": "92ff97301eeba83ca8e1f46d61c146f84b7af3811f1d92fb285b4b029bbed8f9"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/checkout-page/spec.md",
+      "sha256": "bc6491a1af482561691ddfc038e6bb611b4cb2b38f4a0b5274b038be0fec8ad4"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/checkout/spec.md",
+      "sha256": "7550e6ae05431702011a104170288b924ea7d917e095ec720807c581e73e552b"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/contact-us/spec.md",
+      "sha256": "ad8e2bff1feada6976300a2d52c6fa5e1458f22b78189c9920be9351fe6f84c2"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/discovery-and-browse/spec.md",
+      "sha256": "7d36feef43b1ba316a848546103f401eaf6bc87853aa223cfc4bf210c505c31c"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/email-verification/spec.md",
+      "sha256": "6012023fc4d3b93a675b6913232081d067555ecd5316a2430df5255d8b8c356f"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/entitlement-bound-to-the-unit/spec.md",
+      "sha256": "d2437f58118a963df1cf1f4c2a8ec5a564671d180a90f8bbbfd00b3337142b84"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/error-pages/spec.md",
+      "sha256": "499fda6c2ef2ec440e791c608dac01cabd748576cf8ad45d2bd538cd561bf016"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/faq/spec.md",
+      "sha256": "79a0220c255578228a7bc4de84b4c5eae8d11678559e968de0e7c71b8c8dfcfc"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/handover-to-external-underwriting/spec.md",
+      "sha256": "6a12700ce38c3f2aaa4e9538d2053beb002f3ed8bbf8e39fcfbd831890ad66b7"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/hierarchical-catalog-inheritance/spec.md",
+      "sha256": "45f6f5c03fe70eb994ad0870004e80081fb1b538634ffb1c5341210d603a26f2"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/home-landing-page/spec.md",
+      "sha256": "6b41e1a49fe30abb82384b17522585030af29e80ada5b9c475b4087df69b2a5c"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/latent-capability-activation/spec.md",
+      "sha256": "c88f17a98b9ca5a0d18b5058a0d1c0ca8a14af5f597d85d2b948158300b891d5"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/layered-price-and-discount-stack/spec.md",
+      "sha256": "941ba0d9b563199181128d9908b480e9af50a683dbd611c57e13ad78fccad9bc"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/line-bound-installation-service/spec.md",
+      "sha256": "5bf54725df88edc022409353967aba63edfd1024f7bd3e1d2ba632469caca50a"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/one-of-one-unit-inventory/spec.md",
+      "sha256": "f8bf321212af7f2a9d6ad36e4d06875be42a08eb04ba97d96127dbe4a28d4029"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/order-confirmation-page/spec.md",
+      "sha256": "9cb50857c865feb5669f670199f02915069812e0a0118c094cecc20e9cdd01cb"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/order-history/spec.md",
+      "sha256": "bcf32aeadd4436598c2ad05bb8a00428aa16398badfd2ac773c5bf6901a05812"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/password-reset/spec.md",
+      "sha256": "e6beb9d71abe75f745ca0d77a6e8fb41e7e6a0e8407891b9be544d56932250cf"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/payment-methods/spec.md",
+      "sha256": "b271974b0bfd10a86c4c0a979c6e0dee9435a31eef5f5b9ab7fe58d35be93452"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/policy-pages/spec.md",
+      "sha256": "993c9412087040439f558825ef84ff9cad37691b0c53da462b78939809724830"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/post-purchase-order-management/spec.md",
+      "sha256": "d9655cc75d5f9262c3b66f32dd7e150aeaa1ccd9afe5264408666bed3f6b92df"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/product-detail-page/spec.md",
+      "sha256": "0a706fc9cef2fa6451e4c4ad6e239a69da8c485bf72629fd684e9ca18a018559"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/product-listing-page/spec.md",
+      "sha256": "839fd82a63bf8dbb20989ff5a08158c7cfa2d48997d7bc614640db623e5816c8"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/registration-duty-and-buyer-relief/spec.md",
+      "sha256": "a92ca938206108e50a85228b5571da441d050c5d45935088cf888a8644941680"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/reservation-deposit-on-a-unit/spec.md",
+      "sha256": "24248df2caeab843f87782fb33a202fa79df2dcfedd911644236bb9d3dfa28d0"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/rule-constrained-configuration/spec.md",
+      "sha256": "025755d713c33fc877b55745bfb99bea22a5555b1a3fcf6c125203884decbabc"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/saved-lists/spec.md",
+      "sha256": "885d70c38bdac5a0a671e2298c1021120fe755b0e7368b48957ef37c109e8e80"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/search-results-page/spec.md",
+      "sha256": "b9a873517b70b03a266c63d1df4316baf6ab89203b842b0894902ea27c32c66b"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/subscriptions-and-recurring-orders/spec.md",
+      "sha256": "813d5d7d061a9f2cec4849801ae96879b798ee2716695763e84499cdf87062a1"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/switching-region-or-language/spec.md",
+      "sha256": "7af20a54183b4614b98a8beb34e5f73bcbe5c9abd795d84bcf71a143d3719c68"
+    },
+    {
+      "path": "openspec/specs/consumer-storefront/unit-first-catalog-entry/spec.md",
+      "sha256": "14e3917ad36675148d9af5b2a6011c2b139c78684ddd8e32a608006a0a3ec4c8"
+    },
+    {
+      "path": "openspec/specs/seller-portal/about-us/spec.md",
+      "sha256": "364cb4fcaa8b58b305fcb8d2e8098548b56e38a5a3adee0d80dbd213a737f185"
+    },
+    {
+      "path": "openspec/specs/seller-portal/account-and-self-service/spec.md",
+      "sha256": "d71446a1bcafa19209a880f878dd85fcb14b8b55db2732396295d0a680901697"
+    },
+    {
+      "path": "openspec/specs/seller-portal/account-dashboard/spec.md",
+      "sha256": "14dcb73e1379cc392e3ddfe87928fe0ce2dfdc0767a1e9df81d9e962c9e931bd"
+    },
+    {
+      "path": "openspec/specs/seller-portal/account-level-order-history/spec.md",
+      "sha256": "e051822308bb8ad91abe7107c31b88b5aa8ec44ffce2bf7eb7eba4907b1d5281"
+    },
+    {
+      "path": "openspec/specs/seller-portal/account-registration-request/spec.md",
+      "sha256": "64fc383ce6c231aa508425b5526f929b222206026718bb22f0affbf6ded5379a"
+    },
+    {
+      "path": "openspec/specs/seller-portal/account-sign-in/spec.md",
+      "sha256": "ef5d5c6a1d8c750c1aa0d1d0502907d10d846247dc18eb3affa78a209abee642"
+    },
+    {
+      "path": "openspec/specs/seller-portal/address-book/spec.md",
+      "sha256": "ff6358259e390d23e15be2d52d3828ab816fad795bfd2b60c20ad1e6e2395c3e"
+    },
+    {
+      "path": "openspec/specs/seller-portal/approval-workflows/spec.md",
+      "sha256": "a3c6f6e727db050c170857463e016162c178ca5f9a9691151cc86fd5c3ffc01f"
+    },
+    {
+      "path": "openspec/specs/seller-portal/authentication-and-identity/spec.md",
+      "sha256": "8a64836a529790c26b8ba6aae017d5af585c2a4f8be218873eadffa665925881"
+    },
+    {
+      "path": "openspec/specs/seller-portal/blog-resources/spec.md",
+      "sha256": "264defd2017b1db1553112640ba1f4997576028b823e391e1f7b223f845a4e4a"
+    },
+    {
+      "path": "openspec/specs/seller-portal/budget-and-spending-limits/spec.md",
+      "sha256": "537d2a262880231fa6b363b67324017644d17ff55593427813fc2fc7c2442493"
+    },
+    {
+      "path": "openspec/specs/seller-portal/bulk-and-repeat-ordering/spec.md",
+      "sha256": "458dd8c4163aac0202c19e5e37d89e2c97fc863b5a2bfd3b60127cfba3863568"
+    },
+    {
+      "path": "openspec/specs/seller-portal/cart-management/spec.md",
+      "sha256": "d7137f438289a8aee093976f82a7edd50a18c9818ff6030c212d0154b3c79864"
+    },
+    {
+      "path": "openspec/specs/seller-portal/cart-page/spec.md",
+      "sha256": "cceef85317d1c8ac1f910fa9a7577e168cadfa6acb232b21f767b71e17a4e603"
+    },
+    {
+      "path": "openspec/specs/seller-portal/checkout-page/spec.md",
+      "sha256": "1aa68162d760dc8b58bb494a859b41caa223839a8dad69dffa00fe5a8b5b7d51"
+    },
+    {
+      "path": "openspec/specs/seller-portal/checkout/spec.md",
+      "sha256": "4a060f9153f4c019508a256dee24d5a7e7defa043a15908afd7b32c5bb768020"
+    },
+    {
+      "path": "openspec/specs/seller-portal/company-account-setup/spec.md",
+      "sha256": "78c124d37b018c1bcef1cd1bc5bcd3ce842721027c3e0a89f1c5b58dd899afda"
+    },
+    {
+      "path": "openspec/specs/seller-portal/company-profile/spec.md",
+      "sha256": "c88185070fa19d60d5fbe4387850ea9811a11a2d2602cf2cefc3a1eaac41db1a"
+    },
+    {
+      "path": "openspec/specs/seller-portal/contact-us/spec.md",
+      "sha256": "ad8e2bff1feada6976300a2d52c6fa5e1458f22b78189c9920be9351fe6f84c2"
+    },
+    {
+      "path": "openspec/specs/seller-portal/contract-and-account-pricing/spec.md",
+      "sha256": "95a53cff60007808e76ca1268f87d0226a9768f94386038b8642fcd39d0542bd"
+    },
+    {
+      "path": "openspec/specs/seller-portal/contract-pricing/spec.md",
+      "sha256": "0a4b878fa3888e79f568cca7f5fde1183374461c007884257e51dc4276836853"
+    },
+    {
+      "path": "openspec/specs/seller-portal/cost-center-management/spec.md",
+      "sha256": "a1e2e0283425fdaed6834ec24f51740c0eb015ec57279ac2a7e8d4e19a96be6c"
+    },
+    {
+      "path": "openspec/specs/seller-portal/discovery-and-browse/spec.md",
+      "sha256": "27c0718b0f9f38ef5c3f34414db25da156b87e556bae0bf1fb5129acc89627d3"
+    },
+    {
+      "path": "openspec/specs/seller-portal/email-verification/spec.md",
+      "sha256": "6012023fc4d3b93a675b6913232081d067555ecd5316a2430df5255d8b8c356f"
+    },
+    {
+      "path": "openspec/specs/seller-portal/entitlement-bound-to-the-unit/spec.md",
+      "sha256": "d2437f58118a963df1cf1f4c2a8ec5a564671d180a90f8bbbfd00b3337142b84"
+    },
+    {
+      "path": "openspec/specs/seller-portal/error-pages/spec.md",
+      "sha256": "b1bc9005fe62d944fffed21637a58040275bba6ce7827cd77d063d19223fd7ec"
+    },
+    {
+      "path": "openspec/specs/seller-portal/faq/spec.md",
+      "sha256": "79a0220c255578228a7bc4de84b4c5eae8d11678559e968de0e7c71b8c8dfcfc"
+    },
+    {
+      "path": "openspec/specs/seller-portal/hierarchical-catalog-inheritance/spec.md",
+      "sha256": "146d05788653565e058f49ba8cdfd6b6127a4a8cc39ca81df6fd100947990500"
+    },
+    {
+      "path": "openspec/specs/seller-portal/home-landing-page/spec.md",
+      "sha256": "0210e621ff9a6abf9307aada111309adab0ee1213b825d5e1bd4b881caab0dc0"
+    },
+    {
+      "path": "openspec/specs/seller-portal/invoice-and-billing-history/spec.md",
+      "sha256": "73d04c9bc5c4ce8905e89c47e16955827dc12a9bc377c2e1dc9fc21834c88711"
+    },
+    {
+      "path": "openspec/specs/seller-portal/latent-capability-activation/spec.md",
+      "sha256": "a5ed61298fd14034466fd155e99597e5a715cb667c6e413f49e250f0e2fb68c1"
+    },
+    {
+      "path": "openspec/specs/seller-portal/layered-price-and-discount-stack/spec.md",
+      "sha256": "255a07f6cbae05bd3caaadbc62ea8ea86bfbddd8da6775b3fb7057e85a9545aa"
+    },
+    {
+      "path": "openspec/specs/seller-portal/line-bound-installation-service/spec.md",
+      "sha256": "5b2830cc3fea7363aac446d1f37a7326dd24e030a6bfe1b91e7703505ebf463c"
+    },
+    {
+      "path": "openspec/specs/seller-portal/one-of-one-unit-inventory/spec.md",
+      "sha256": "ac7f5d90a483f43fc2d5916e4ec6e1b5aa1483e9dda7ee72d1d92e2fb55ece79"
+    },
+    {
+      "path": "openspec/specs/seller-portal/order-approval/spec.md",
+      "sha256": "888f7fb0b7405f50ec14f1c9e265905cd41c9609dc1b905e9ddb07ccb663885c"
+    },
+    {
+      "path": "openspec/specs/seller-portal/order-confirmation-page/spec.md",
+      "sha256": "c3044967909b4045bbdd08038fb04ba22734e6404a85ebc2295740f76cad4a8e"
+    },
+    {
+      "path": "openspec/specs/seller-portal/order-history/spec.md",
+      "sha256": "4bd6d1f36519b4df17c63e332d4f86b858dcd0d9b29a08304f1daa26aed7c570"
+    },
+    {
+      "path": "openspec/specs/seller-portal/password-reset/spec.md",
+      "sha256": "e6beb9d71abe75f745ca0d77a6e8fb41e7e6a0e8407891b9be544d56932250cf"
+    },
+    {
+      "path": "openspec/specs/seller-portal/payment-methods/spec.md",
+      "sha256": "f94da7f3b29927942b12b394eb3b6e2cc8a55d0593722eabfb0ddae149f6e624"
+    },
+    {
+      "path": "openspec/specs/seller-portal/policy-pages/spec.md",
+      "sha256": "993c9412087040439f558825ef84ff9cad37691b0c53da462b78939809724830"
+    },
+    {
+      "path": "openspec/specs/seller-portal/post-purchase-order-management/spec.md",
+      "sha256": "d9655cc75d5f9262c3b66f32dd7e150aeaa1ccd9afe5264408666bed3f6b92df"
+    },
+    {
+      "path": "openspec/specs/seller-portal/price-change-impact-simulation/spec.md",
+      "sha256": "858c4f16b23339f43261958e96b81ad76ca190ce9d06d8a3793f6134ffb554c2"
+    },
+    {
+      "path": "openspec/specs/seller-portal/product-detail-page/spec.md",
+      "sha256": "6aff6bab46aaf9a5279b302f1adb42d576d99f38ae537c6cf4a0bb6928111800"
+    },
+    {
+      "path": "openspec/specs/seller-portal/product-listing-page/spec.md",
+      "sha256": "839fd82a63bf8dbb20989ff5a08158c7cfa2d48997d7bc614640db623e5816c8"
+    },
+    {
+      "path": "openspec/specs/seller-portal/purchase-order-and-payment-terms/spec.md",
+      "sha256": "26512297cce447f7ff5e7af100715cac7cc9ef542a6e9777ad3d1757b23c4efb"
+    },
+    {
+      "path": "openspec/specs/seller-portal/quick-order-entry/spec.md",
+      "sha256": "2b3686181bef8f6d85a8cba7236be25e3f3ea8586fbadca483f799e9f7aff645"
+    },
+    {
+      "path": "openspec/specs/seller-portal/quote-negotiation/spec.md",
+      "sha256": "7b53e48d87aae8aee4c60ed6624d039a2e014a5c2884d6e629192b5b06723b10"
+    },
+    {
+      "path": "openspec/specs/seller-portal/quote-request-and-negotiation/spec.md",
+      "sha256": "5385c9689f6eea0e62980b401086845e6f92ffcc4a9f698212cb35b2739e5cbe"
+    },
+    {
+      "path": "openspec/specs/seller-portal/registration-duty-and-buyer-relief/spec.md",
+      "sha256": "a92ca938206108e50a85228b5571da441d050c5d45935088cf888a8644941680"
+    },
+    {
+      "path": "openspec/specs/seller-portal/requisition-and-shopping-lists/spec.md",
+      "sha256": "31e6c3f2f2382ffc9814e9340c7ee8033c7d6ef340da7b5959ca2513dc9df357"
+    },
+    {
+      "path": "openspec/specs/seller-portal/rule-constrained-configuration/spec.md",
+      "sha256": "025755d713c33fc877b55745bfb99bea22a5555b1a3fcf6c125203884decbabc"
+    },
+    {
+      "path": "openspec/specs/seller-portal/saved-lists/spec.md",
+      "sha256": "f6d10debf5c0c676fbd618e4da8bd76d4a565273b64ec5e58f1aea926105b615"
+    },
+    {
+      "path": "openspec/specs/seller-portal/search-results-page/spec.md",
+      "sha256": "b9a873517b70b03a266c63d1df4316baf6ab89203b842b0894902ea27c32c66b"
+    },
+    {
+      "path": "openspec/specs/seller-portal/subscriptions-and-recurring-orders/spec.md",
+      "sha256": "813d5d7d061a9f2cec4849801ae96879b798ee2716695763e84499cdf87062a1"
+    },
+    {
+      "path": "openspec/specs/seller-portal/switching-region-or-language/spec.md",
+      "sha256": "7af20a54183b4614b98a8beb34e5f73bcbe5c9abd795d84bcf71a143d3719c68"
+    },
+    {
+      "path": "openspec/specs/seller-portal/team-members-and-access/spec.md",
+      "sha256": "c85b2e76537ccc3a0fbca9e39fe130edfed2654f1d86d97d63fdb5b49663b461"
+    },
+    {
+      "path": "openspec/specs/seller-portal/unit-first-catalog-entry/spec.md",
+      "sha256": "04ffe0a881b24b5c72117328a80636cee84f0da4e8557b707b1da4fe51c4b5a0"
+    },
+    {
+      "path": "openspec/specs/seller-portal/user-and-role-management/spec.md",
+      "sha256": "792773bc8eb8f80caed3d6b3f7ad38151d51fcab7a3fae45347536c468b8ef43"
+    }
+  ]
+}

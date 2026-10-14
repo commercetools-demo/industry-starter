@@ -1,0 +1,231 @@
+/* Admin design system tokens — extracted from "Bredar - Seller Dashboard - UI Design Kit (Community).fig" */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  /* ── Primitive palette (16-step ramps; 11 = the saturated "base" for blue/green/azure/red) ── */
+  --color-gray-1: #ffffff;  --color-gray-2: #fdfdfd;  --color-gray-3: #fafafa;  --color-gray-4: #f7f7f7;
+  --color-gray-5: #f3f3f3;  --color-gray-6: #f1f1f1;  --color-gray-7: #ebebeb;  --color-gray-8: #e3e3e3;
+  --color-gray-9: #d4d4d4;  --color-gray-10: #cccccc; --color-gray-11: #b5b5b5; --color-gray-12: #8a8a8a;
+  --color-gray-13: #616161; --color-gray-14: #4a4a4a; --color-gray-15: #303030; --color-gray-16: #1a1a1a;
+
+  --color-blue-1: #fcfdff;  --color-blue-2: #f6f8ff;  --color-blue-3: #f0f2ff;  --color-blue-4: #eaedff;
+  --color-blue-5: #e2e7ff;  --color-blue-6: #dbe1ff;  --color-blue-7: #d5dcff;  --color-blue-8: #c5d0ff;
+  --color-blue-9: #bac7ff;  --color-blue-10: #97adff; --color-blue-11: #4188ff; --color-blue-12: #0071e9;
+  --color-blue-13: #005bd3; --color-blue-14: #004299; --color-blue-15: #002e6a; --color-blue-16: #001633;
+
+  --color-green-1: #f8fffb;  --color-green-2: #e3ffed;  --color-green-3: #cdfee1;  --color-green-4: #b4fed2;
+  --color-green-5: #92fec2;  --color-green-6: #63fdb0;  --color-green-7: #38faa3;  --color-green-8: #35ee9b;
+  --color-green-9: #32e193;  --color-green-10: #2ed389; --color-green-11: #32a06e; --color-green-12: #29845a;
+  --color-green-13: #136f45; --color-green-14: #0c5132; --color-green-15: #083d25; --color-green-16: #092a1b;
+
+  --color-azure-1: #fbfdff;  --color-azure-2: #f2f9ff;  --color-azure-3: #eaf4ff;  --color-azure-4: #e0f0ff;
+  --color-azure-5: #d5ebff;  --color-azure-6: #cae6ff;  --color-azure-7: #c0e1ff;  --color-azure-8: #a8d8ff;
+  --color-azure-9: #91d0ff;  --color-azure-10: #51c0ff; --color-azure-11: #0094d5; --color-azure-12: #007cb4;
+  --color-azure-13: #00679b; --color-azure-14: #00527c; --color-azure-15: #003a5a; --color-azure-16: #002133;
+
+  --color-purple-1: #fdfdff;  --color-purple-2: #f8f7ff;  --color-purple-3: #f3f1ff;  --color-purple-4: #efecff;
+  --color-purple-5: #e9e5ff;  --color-purple-6: #e4deff;  --color-purple-7: #dfd9ff;  --color-purple-8: #d4ccff;
+  --color-purple-9: #c7bcff;  --color-purple-10: #aa95ff; --color-purple-11: #9474ff; --color-purple-12: #8051ff;
+  --color-purple-13: #7126ff; --color-purple-14: #5700d1; --color-purple-15: #3b0093; --color-purple-16: #1c004f;
+
+  --color-red-1: #fffbfb;  --color-red-2: #fff6f6;  --color-red-3: #ffedec;  --color-red-4: #fee9e8;
+  --color-red-5: #fee2e1;  --color-red-6: #fedad9;  --color-red-7: #fed3d1;  --color-red-8: #fec3c1;
+  --color-red-9: #fdb0ac;  --color-red-10: #fd817a; --color-red-11: #ef4d2f; --color-red-12: #e51c00;
+  --color-red-13: #b5260b; --color-red-14: #8e1f0b; --color-red-15: #5f1507; --color-red-16: #2f0a04;
+
+  --color-orange-1: #fffdfa;  --color-orange-2: #fff7ee;  --color-orange-3: #fff1e3;  --color-orange-4: #ffebd5;
+  --color-orange-5: #ffe4c6;  --color-orange-6: #ffddb6;  --color-orange-7: #ffd6a4;  --color-orange-8: #ffc879;
+  --color-orange-9: #ffb800;  --color-orange-10: #e5a500; --color-orange-11: #b28400; --color-orange-12: #956f00;
+  --color-orange-13: #7c5800; --color-orange-14: #5e4200; --color-orange-15: #412d00; --color-orange-16: #251a00;
+
+  --color-yellow-1: #fffdf6;  --color-yellow-2: #fff8db;  --color-yellow-3: #fff4bf;  --color-yellow-4: #ffef9d;
+  --color-yellow-5: #ffeb78;  --color-yellow-6: #ffe600;  --color-yellow-7: #f7df00;  --color-yellow-8: #ead300;
+  --color-yellow-9: #e1cb00;  --color-yellow-10: #c5b200; --color-yellow-11: #998a00; --color-yellow-12: #827500;
+  --color-yellow-13: #695f00; --color-yellow-14: #4f4700; --color-yellow-15: #332e00; --color-yellow-16: #1f1c00;
+
+  /* Black alpha (overlays, disabled fills, hover washes) */
+  --color-black-alpha-2: #00000003;  --color-black-alpha-3: #00000005;  --color-black-alpha-4: #00000008;
+  --color-black-alpha-5: #0000000d;  --color-black-alpha-6: #0000000f;  --color-black-alpha-7: #00000014;
+  --color-black-alpha-8: #0000001c;  --color-black-alpha-9: #0000002b;  --color-black-alpha-10: #00000033;
+  --color-black-alpha-11: #00000047; --color-black-alpha-12: #00000075; --color-black-alpha-13: #0000009e;
+  --color-black-alpha-14: #000000b5; --color-black-alpha-15: #000000cf; --color-black-alpha-16: #000000e5;
+
+  /* ── Semantic colors · LIGHT (default). Names mirror the Figma "[ Theme ]" variable collection ── */
+  /* Surfaces */
+  --color-bg-page: #f7f7f7;            /* page canvas behind widgets */
+  --color-bg-surface: #ffffff;         /* widgets, cards, inputs, modals */
+  --color-bg-surface-hover: #f1f1f1;
+  --color-bg-surface-pressed: #cccccc;
+  --color-bg-surface-disabled: #00000014;
+  --color-bg-surface-subdued: #ebebeb; /* sidebar rail, wells, request-info panels */
+
+  /* Brand (near-black action fill) */
+  --color-bg-brand: #303030;
+  --color-bg-brand-hover: #1a1a1a;
+  --color-bg-brand-pressed: #303030;
+  --color-bg-brand-disabled: #0000002b;
+
+  /* Status fills — default / hover / pressed / subdued (tint) */
+  --color-bg-info: #51c0ff;      --color-bg-info-hover: #0094d5;      --color-bg-info-pressed: #007cb4;      --color-bg-info-subdued: #eaf4ff;
+  --color-bg-success: #32a06e;   --color-bg-success-hover: #29845a;   --color-bg-success-pressed: #136f45;   --color-bg-success-subdued: #e3ffed;
+  --color-bg-warning: #ffb800;   --color-bg-warning-hover: #e5a500;   --color-bg-warning-pressed: #b28400;   --color-bg-warning-subdued: #fff1e3;
+  --color-bg-critical: #ef4d2f;  --color-bg-critical-hover: #e51c00;  --color-bg-critical-pressed: #b5260b;  --color-bg-critical-subdued: #fed3d1;
+  --color-bg-active: #4188ff;    --color-bg-active-hover: #0071e9;    --color-bg-active-pressed: #005bd3;    --color-bg-active-subdued: #bac7ff;
+
+  /* Chart series */
+  --color-chart-1: #97adff; --color-chart-2: #ffc879; --color-chart-3: #91d0ff;
+  --color-chart-4: #35ee9b; --color-chart-5: #aa95ff; --color-chart-6: #fdb0ac;
+
+  --color-overlay: #0000009e;
+
+  /* Text & icon */
+  --color-text: #303030;
+  --color-text-subdued: #8a8a8a;
+  --color-text-disabled: #b5b5b5;
+  --color-text-active: #4188ff;
+  --color-text-info: #0094d5;
+  --color-text-success: #32a06e;
+  --color-text-warning: #e5a500;
+  --color-text-critical: #ef4d2f;
+
+  /* Text & icon placed ON a filled background */
+  --color-text-on: #ffffff;
+  --color-text-on-hover: #e3e3e3;
+  --color-text-on-pressed: #cccccc;
+  --color-text-on-active: #fcfdff;
+  --color-text-on-info: #002133;
+  --color-text-on-success: #f8fffb;
+  --color-text-on-warning: #251a00;
+  --color-text-on-critical: #fffbfb;
+
+  /* Borders */
+  --color-border: #d4d4d4;
+  --color-border-hover: #303030;
+  --color-border-pressed: #cccccc;
+  --color-border-subdued: #f1f1f1;
+  --color-border-critical: #e51c00;
+  --color-border-active: #4188ff;
+  --color-border-exclude: #ffffff;     /* ring that separates stacked avatars / dots from their backdrop */
+
+  /* Borders on a dark/brand fill */
+  --color-border-on: #616161;
+  --color-border-on-hover: #8a8a8a;
+  --color-border-on-pressed: #616161;
+  --color-border-on-subdued: #4a4a4a;
+  --color-border-on-critical: #ef4d2f;
+  --color-border-on-exclude: #1a1a1a;
+
+  /* Top bar is dark in BOTH themes */
+  --color-bg-topbar: #303030;
+
+  /* ── Typography ── */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-chart: "SF Pro Text", "Inter", system-ui, sans-serif;   /* chart axis, legend, tooltip labels */
+  --font-mono: "Andale Mono", ui-monospace, Menlo, monospace;    /* spec annotations only */
+
+  /* size / line-height / tracking — tracking is negative on every Inter style in the kit */
+  --text-h1: 64px;      --leading-h1: 64px;      --tracking-h1: -0.03em;
+  --text-h2: 48px;      --leading-h2: 48px;      --tracking-h2: -0.03em;
+  --text-h3: 40px;      --leading-h3: 48px;      --tracking-h3: -0.02em;
+  --text-h4: 32px;      --leading-h4: 40px;      --tracking-h4: -0.03em;
+  --text-h5: 24px;      --leading-h5: 32px;      --tracking-h5: -0.02em;
+  --text-title-1: 20px; --leading-title-1: 32px; --tracking-title-1: -0.02em;
+  --text-title-2: 18px; --leading-title-2: 24px; --tracking-title-2: -0.02em;
+  --text-body-1: 15px;  --leading-body-1: 24px;  --tracking-body-1: -0.01em;
+  --text-body-2: 14px;  --leading-body-2: 24px;  --tracking-body-2: -0.01em;
+  --text-caption-1: 13px; --leading-caption-1: 16px; --tracking-caption-1: -0.01em;
+  --text-caption-2: 12px; --leading-caption-2: 16px; --tracking-caption-2: -0.01em;
+  --text-button-1: 15px;  --leading-button-1: 24px;  --tracking-button-1: -0.01em;
+  --text-button-2: 13px;  --leading-button-2: 20px;  --tracking-button-2: -0.01em;
+  --text-input-2: 13px;   --leading-input-2: 20px;   --tracking-input-2: -0.01em;
+  --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+
+  /* ── Spacing (Figma "space" collection; 4px base) ── */
+  --space-0: 0;     --space-025: 1px;  --space-050: 2px;  --space-100: 4px;  --space-150: 6px;
+  --space-200: 8px; --space-250: 10px; --space-300: 12px; --space-350: 14px; --space-400: 16px;
+  --space-450: 18px; --space-500: 20px; --space-600: 24px; --space-700: 28px; --space-800: 32px;
+  --space-1000: 40px; --space-1100: 44px; --space-1200: 48px; --space-1500: 60px; --space-1600: 64px;
+  --space-2300: 92px; --space-2400: 96px; --space-3200: 128px; --space-6400: 256px;
+
+  /* ── Radius (Figma "border radius" collection) ── */
+  --radius-050: 2px;   /* indicator bars, text caret */
+  --radius-100: 4px;   /* tooltip, calendar time row, status chip */
+  --radius-150: 6px;   /* badges, checkbox, radio */
+  --radius-200: 8px;   /* widget card, small button, tab, tag, toast, thumbnail */
+  --radius-300: 12px;  /* button, input, nav item, table row, dropdown, notification card */
+  --radius-400: 16px;  /* modal, popover, dropdown menu */
+  --radius-500: 20px;  --radius-600: 24px;
+  --radius-900: 36px;  --radius-1200: 48px;
+  --radius-sidebar: 32px;  /* floating sidebar rail */
+  --radius-full: 9999px;   /* avatar, icon button, toggle, pagination */
+
+  /* ── Elevation ── */
+  --shadow-button: inset 0 -1px 0 rgba(0,0,0,.2), 0 1px 0 rgba(0,0,0,.08);        /* [day]/inner/button-default */
+  --shadow-button-pressed: inset 0 2px 0 rgba(0,0,0,.05);                          /* [day]/inner/button-depressed */
+  --shadow-card: 0 1px 2px rgba(0,0,0,.15), 0 0 5px rgba(0,0,0,.05);
+  --shadow-tooltip: 0 8px 20px -4px rgba(23,24,24,.12), 0 3px 6px -3px rgba(23,24,24,.08);
+  --shadow-dropdown: 0 8px 32px -8px rgba(0,0,0,.16), 0 0 16px -4px rgba(0,0,0,.05);   /* Figma "modal" effect */
+  --shadow-modal: 0 8px 32px -8px rgba(0,0,0,.16), 0 0 16px -4px rgba(0,0,0,.05);
+  --shadow-popover: 0 32px 48px -8px rgba(0,0,0,.10), 0 0 14px -4px rgba(0,0,0,.05), 0 40px 64px -12px rgba(0,0,0,.08);
+  --shadow-focus: 0 0 0 2px #458fff;
+  --blur-surface: 32px;   /* backdrop-filter on modal / popover */
+
+  /* ── Layout ── */
+  --page-desktop: 1440px; --page-tablet: 1024px; --page-mobile: 375px;
+  --body-desktop: 1100px; --body-tablet: 940px;  --body-mobile: 375px;
+  --widget-desktop-12col: 1020px; --widget-desktop-8col: 675px; --widget-desktop-4col: 329px;
+  --widget-tablet-8col: 892px;    --widget-tablet-5col: 552px;  --widget-tablet-3col: 324px;
+  --widget-mobile-6col: 343px;
+  --sidebar-width: 340px;           /* expanded (24px outer pad + 316px rail) */
+  --sidebar-width-collapsed: 84px;  /* tablet: 12px outer pad + 60px rail */
+  --topbar-height: 84px;
+  --widget-padding-y: 24px;         /* desktop/tablet; mobile uses 16px all round */
+  --widget-gap: 32px;               /* desktop/tablet; mobile uses 24px */
+}
+
+/* ── Semantic colors · DARK. Apply with <html data-theme="dark"> or any wrapper ── */
+[data-theme="dark"] {
+  --color-bg-page: #1a1a1a;            /* Figma has #4a4a4a, which equals the hover/brand fills and makes them vanish; darkened to gray-16 */
+  --color-bg-surface: #303030;
+  --color-bg-surface-hover: #4a4a4a;
+  --color-bg-surface-pressed: #616161;
+  --color-bg-surface-disabled: #0000002b;
+  --color-bg-surface-subdued: #616161;
+
+  --color-bg-brand: #4a4a4a;
+  --color-bg-brand-hover: #616161;
+  --color-bg-brand-pressed: #4a4a4a;
+  --color-bg-brand-disabled: #00000014;
+
+  --color-bg-info: #91d0ff;      --color-bg-info-hover: #51c0ff;      --color-bg-info-pressed: #0094d5;      --color-bg-info-subdued: #0000002b;
+  --color-bg-success: #2ed389;   --color-bg-success-hover: #32a06e;   --color-bg-success-pressed: #29845a;   --color-bg-success-subdued: #0000002b;
+  --color-bg-warning: #ffb800;   --color-bg-warning-hover: #e5a500;   --color-bg-warning-pressed: #b28400;   --color-bg-warning-subdued: #0000002b;
+  --color-bg-critical: #ef4d2f;  --color-bg-critical-hover: #e51c00;  --color-bg-critical-pressed: #b5260b;  --color-bg-critical-subdued: #0000002b;
+  --color-bg-active: #4188ff;    --color-bg-active-hover: #0071e9;    --color-bg-active-pressed: #005bd3;    --color-bg-active-subdued: #0000002b;
+
+  --color-overlay: #000000cf;
+
+  --color-text: #ffffff;
+  --color-text-subdued: #ebebeb;
+  --color-text-disabled: #8a8a8a;
+  --color-text-active: #4188ff;
+  --color-text-info: #51c0ff;
+  --color-text-success: #32a06e;
+  --color-text-warning: #e5a500;
+  --color-text-critical: #ef4d2f;
+
+  --color-border: #616161;
+  --color-border-hover: #8a8a8a;
+  --color-border-pressed: #b5b5b5;
+  --color-border-subdued: #4a4a4a;
+  --color-border-critical: #ef4d2f;
+  --color-border-active: #4188ff;
+  --color-border-exclude: #303030;
+
+  --color-border-on: #e3e3e3;
+  --color-border-on-hover: #303030;
+  --color-border-on-pressed: #d4d4d4;
+  --color-border-on-subdued: #e3e3e3;
+  --color-border-on-critical: #ef4d2f;
+  --color-border-on-exclude: #303030;
+}

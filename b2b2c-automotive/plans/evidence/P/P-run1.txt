@@ -1,0 +1,24 @@
+add line 200
+pay landed: true
+landed /en-US/mau-reseller-north/checkout/confirmation/MA-NFNKX9TM token in url: true
+number in url equals order number: true MA-NFNKX9TM
+h1: Thanks, your order is in. | focused element: H1
+headings: ["H1:Thanks, your order is in.","H2:What happens next","H2:Pick up at Branch Berlin","H2:Order summary","H2:What would you like to do next?","H2:Your private link","H2:Create an account"]
+main text: Thanks, your order is in. | Order MA-NFNKX9TM | Ready when you are: collect it at Branch Berlin in Berlin. Bring photo ID. | Payment received | We don't send emails. Keep this page's link or create an account to find your order later. | What happens next | 1 | Order received | (Current step) | 2 | Ready for pickup | 3 | Collected | Pick up at Branch Berlin | Address: | Teilestraße 1, 10000 Berlin | Phone: +49 000 | Mon | 8 AM – 7 PM | Tue | 8 AM – 7 PM | Wed | 8 AM – 7 PM | Thu | 8 AM – 7 PM | Fri | 8 AM – 7 PM | Sat | 9 AM – 2 PM | Sun | Closed | Bring photo ID | Order summary | ALPENDYN | Küstenwerk ceramic pad set | Quantity 1 | $26.87 | Subtotal | $26.87 | Delivery | Free | Sales tax (0%) | $0.00 | Total | $26.87 | What would you like to do next? | Continue shopping | Print | Your private link | Anyone with this link can see this order. Keep it safe. | Copy link | Create an account | Keep this order in one place. Choose a password and we add the order to your account. | EMAIL | PASSWORD | At least 10 characters. | Create account
+meta robots: noindex, nofollow | referrer meta: no-referrer
+buttons: ["Continue shopping","Print","Copy link","Create account"]
+email field: qa-p1@example.com
+private link field startsWith origin: true
+response headers: {"ref":"no-referrer","cc":"no-store"}
+no horizontal scroll at 375: true | columns: 343px
+no horizontal scroll at 768: true | columns: 360px 352px
+no horizontal scroll at 1024: true | columns: 600px 352px
+no horizontal scroll at 1440: true | columns: 776px 352px
+after reload number shown: true
+copy status: "Select the link and copy it."
+stranger (no cookie, no token) sees: "Page not found | This address does not exist. | Back to home" | h1: Page not found
+tampered token sees 404 page: true
+token holder sees order: true | create account form: 1 | copy link: 1
+same number in another store: true
+commercetools calls from the browser: 0 | mail-like requests: ["GET http://127.0.0.1:4061/app/__complete?sessionId=477b38f3-4efd-491d-928a-ffdf78d22dee&email="]
+console: ["error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3041/en-US/mau-reseller-north/checkout/confirmation/MA-NFNKX9TM","error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3041/en-US/mau-reseller-north/checkout/confirmation/MA-NFNKX9TM?t=ey.tampered.token","error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3041/en-US/mau-reseller-south/checkout/confirmation/MA-NFNKX9TM?t=eyJhbGciOiJIUzI1NiJ9.eyJvaWQiOiIzMmQ5OWE4My05NWYyLTRlYzktOGJjOC03OTIwYTAxMmI4NjgiLCJzayI6Im1hdS1yZXNlbGxlci1ub3J0aCIsImF1ZCI6Im9yZGVyLXZpZXciLCJpYXQiOjE3OTE4NTAwNjgsImV4cCI6MTc5NDQ0MjA2OH0.UdySJ1bnooDei1eJTOMoBbc1vXrmCiMjCITI3tWAmO8"]

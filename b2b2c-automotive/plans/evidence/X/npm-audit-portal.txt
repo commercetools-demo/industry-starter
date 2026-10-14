@@ -1,0 +1,92 @@
+# npm audit report
+
+braces  *
+Severity: high
+braces vulnerable to stack-exhaustion denial of service through deeply nested patterns - https://github.com/advisories/GHSA-vfj7-8cjw-p6xm
+No fix available
+node_modules/braces
+  micromatch  >=0.2.0
+  Depends on vulnerable versions of braces
+  node_modules/micromatch
+    fast-glob  *
+    Depends on vulnerable versions of micromatch
+    node_modules/globby/node_modules/fast-glob
+      globby  >=8.0.0
+      Depends on vulnerable versions of fast-glob
+      node_modules/globby
+        @chakra-ui/cli  >=3.0.0-next.0
+        Depends on vulnerable versions of globby
+        node_modules/@chakra-ui/cli
+          @commercetools/nimbus  <=0.0.0-canary-nimbus-4-0-20260717073521 || >=2.5.0
+          Depends on vulnerable versions of @chakra-ui/cli
+          node_modules/@commercetools/nimbus
+            @commercetools-demo/puck-editor  *
+            Depends on vulnerable versions of @commercetools-demo/puck-api
+            Depends on vulnerable versions of @commercetools-demo/puck-components
+            Depends on vulnerable versions of @commercetools-demo/puck-types
+            Depends on vulnerable versions of @commercetools-demo/puck-version-history
+            Depends on vulnerable versions of @commercetools/nimbus
+            Depends on vulnerable versions of @measured/puck
+            node_modules/@commercetools-demo/puck-editor
+            @commercetools-demo/puck-page-manager  *
+            Depends on vulnerable versions of @commercetools-demo/puck-api
+            Depends on vulnerable versions of @commercetools-demo/puck-editor
+            Depends on vulnerable versions of @commercetools-demo/puck-renderer
+            Depends on vulnerable versions of @commercetools-demo/puck-types
+            Depends on vulnerable versions of @commercetools-demo/puck-version-history
+            Depends on vulnerable versions of @commercetools/nimbus
+            Depends on vulnerable versions of @measured/puck
+            node_modules/@commercetools-demo/puck-page-manager
+            @commercetools-demo/puck-theme-manager  *
+            Depends on vulnerable versions of @commercetools-demo/puck-api
+            Depends on vulnerable versions of @commercetools-demo/puck-types
+            Depends on vulnerable versions of @commercetools/nimbus
+            node_modules/@commercetools-demo/puck-theme-manager
+            @commercetools-demo/puck-version-history  *
+            Depends on vulnerable versions of @commercetools-demo/puck-types
+            Depends on vulnerable versions of @commercetools/nimbus
+            Depends on vulnerable versions of @measured/puck
+            node_modules/@commercetools-demo/puck-version-history
+              @commercetools-demo/puck-content-manager  *
+              Depends on vulnerable versions of @commercetools-demo/puck-api
+              Depends on vulnerable versions of @commercetools-demo/puck-editor
+              Depends on vulnerable versions of @commercetools-demo/puck-renderer
+              Depends on vulnerable versions of @commercetools-demo/puck-types
+              Depends on vulnerable versions of @commercetools-demo/puck-version-history
+              Depends on vulnerable versions of @commercetools/nimbus
+              Depends on vulnerable versions of @measured/puck
+              node_modules/@commercetools-demo/puck-content-manager
+
+uuid  <11.1.1
+Severity: moderate
+uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq
+No fix available
+node_modules/uuid
+  @measured/puck  >=0.13.1-canary.4498467
+  Depends on vulnerable versions of uuid
+  node_modules/@measured/puck
+    @commercetools-demo/puck-components  *
+    Depends on vulnerable versions of @commercetools-demo/puck-api
+    Depends on vulnerable versions of @commercetools-demo/puck-types
+    Depends on vulnerable versions of @measured/puck
+    node_modules/@commercetools-demo/puck-components
+      @commercetools-demo/puck-renderer  *
+      Depends on vulnerable versions of @commercetools-demo/puck-api
+      Depends on vulnerable versions of @commercetools-demo/puck-components
+      Depends on vulnerable versions of @commercetools-demo/puck-types
+      Depends on vulnerable versions of @measured/puck
+      node_modules/@commercetools-demo/puck-renderer
+    @commercetools-demo/puck-types  *
+    Depends on vulnerable versions of @measured/puck
+    node_modules/@commercetools-demo/puck-types
+      @commercetools-demo/puck-api  *
+      Depends on vulnerable versions of @commercetools-demo/puck-types
+      node_modules/@commercetools-demo/puck-api
+
+17 vulnerabilities (6 moderate, 11 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+Some issues need review, and may require choosing
+a different dependency.

@@ -1,0 +1,23 @@
+# dependencies
+/node_modules
+/coverage
+
+# next.js
+/.next/
+/out/
+/build
+.next-build-output.txt
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+
+# env files (only .env.example is committed)
+.env
+.env.local
+.env.*.local
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

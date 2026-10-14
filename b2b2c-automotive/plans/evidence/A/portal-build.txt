@@ -1,0 +1,22 @@
+  Running TypeScript ...
+  Finished TypeScript in 1206ms ...
+  Collecting page data using 5 workers ...
+  Generating static pages using 5 workers (0/5) ...
+  Generating static pages using 5 workers (1/5) 
+  Generating static pages using 5 workers (2/5) 
+  Generating static pages using 5 workers (3/5) 
+✓ Generating static pages using 5 workers (5/5) in 228ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /_not-found
+└ ƒ /[locale]
+
+
+ƒ Proxy (Middleware)
+
+ƒ  (Dynamic)  server-rendered on demand
+
+routes: OK
+no health route in release: OK
+bundle secrets: OK

@@ -1,0 +1,2 @@
+POST form handoff (token in body, not in a URL): {"action":"http://localhost:3000/api/impersonate","method":"post","target":"_blank","hasToken":true,"href":"http://localhost:3160/en-US/customers/fx-shopper-online-3"}
+location.href stayed: http://localhost:3160/en-US/customers/fx-shopper-online-3

@@ -1,0 +1,32 @@
+ship pay: true
+ship method mau-ship-standard | text: Thanks, your order is in. | Order MA-NFNKX9TM | Shipping from Küstenwerk Auto Parts, arriving in 2-3 business days. | Payment received | We don't send emails. Keep this page's link or create an account to find your order later. | What happens next | 1 | Order received | (Current step) | 2 | Shipped | 3 | Delivered | Delivery address | Testweg 1 | 10115 Berlin | United States | Order summary | MALVA SELECT | Malva Select Front brake pad set 2 | Quantity 1 | $30.40 | Subtotal | $30.40 | Delivery | $9.90 | Sales tax (0%) | $0.00 | Total | $40.30 | What would you like to do next? | Continue shopping | Print | Your private link | Anyone with this link can see this order. Keep it safe. | Copy link
+ship no horizontal scroll 375: true
+ship no horizontal scroll 768: true
+ship no horizontal scroll 1024: true
+ship no horizontal scroll 1440: true
+state shipped: Thanks, your order is in. | Order MA-NFNKX9TM | Your order has shipped from Küstenwerk Auto Parts. | Payment received | We don't send emails. Keep this page's link or create an account to fi | current step: 2 Shipped (Current step)
+state delivered: Thanks, your order is in. | Order MA-NFNKX9TM | Delivered. Thank you for your order. | Payment received | We don't send emails. Keep this page's link or create an account to find your order  | current step: 3 Delivered (Current step)
+pickup pay: true
+ready-for-pickup: Thanks, your order is in. | Order MA-0XFM720M | Your order is ready: collect it at Branch Berlin in Berlin. Bring photo ID. | Payment received | We don't send emails. Kee | current step: 2 Ready for pickup (Current step)
+payment pending wording: Order MA-0XFM720M / Ready when you are: collect it at Branch Berlin in Berlin. Bring photo ID. / Your payment is being confirmed. Reload this page in a moment to see the latest. / We don't send emails. Keep this page's link or create an account to find your order later.
+weak: Use at least 10 characters. | focus on alert: alert
+common: That password is too common. Choose a longer or less usual one.
+after account: buttons ["Continue shopping","View order","Print"] | copy link section: 0 | account form: 0
+note: We don't send emails. You can find this order in your account at any time.
+/api/auth/me: {"customer":{"id":"...","email":"qa-p3-38926@example.com","firstName":null,"lastName":null,"mobile":null,"addresses":[{"id":"a1","firstName":null,"lastName":null,"streetName":"Torstraße","streetNumber":"1","postalCode":"10119","city":"Berlin","country":"DE"}],"defaultShippingAddressId":"a1","defaultBillingAddressId":null}}
+header shows signed in: no Sign in link
+order.customerId equals new customer id: true | customer store: mau-reseller-north | custom type key: {"typeId":"type","key":"malva-customer"} | users with that email: 1
+claim again (order has an account): {"status":429,"body":{"error":"Too many attempts. Try again later."}}
+login: 200
+anna pay: true
+owner landing without token: true | buttons: ["Weiter einkaufen","Bestellung ansehen","Drucken"] | note: Wir versenden keine E-Mails. Sie finden diese Bestellung jederzeit in Ihrem Konto.
+sub add: 200
+sub pay: true
+subscription block: Your subscription | Delivery: Monthly | Next delivery: November 12, 2026 | recurring order nextOrderAt: 2026-11-12T00:00:00.000Z
+line chip: Delivery: Monthly
+no recurring order yet: Your subscription | Delivery: Monthly | Your subscription is being set up.
+de-DE: Danke, Ihre Bestellung ist eingegangen. | Bestellung MA-EC3CRTQF | Abholbereit, wann es Ihnen passt: Holen Sie die Teile bei Filiale Berlin in Berlin ab. Bitte Lichtbildausweis mitbringen. | Zahlung eingegangen | Wir versenden keine E-Mails. Speichern Sie den Link zu dieser Seite oder legen Sie ein Konto an, um Ihre Bestellung später wiederzufinden. | So geht es weiter | 1 | Bestellung eingegangen | (Aktueller Schritt) | 2 | Abholbereit | 3 | Abgeholt | Abholung bei Filiale Berlin | Adresse: | Teilestraße 1, 10000 Berlin | Telefon: +49 000 | Mo | 08 Uhr – 19 Uhr | Di | 08 Uhr – 19 Uhr | Mi | 0
+print: follow-up actions display: inline-flex | hidden container: none
+dev completion landed: /en-US/mau-reseller-north/checkout/confirmation/MA-T8NAVD3M | payment: Pending | page: Thanks, your order is in. | Order MA-T8NAVD3M | Ready when you are: collect it at Branch Berlin in Berlin. Bring photo ID. | Your payment is being confirmed. Reload this page in a moment to see the latest. | We don't send emails. Keep this page's link or create an account to find your order later. |
+commercetools calls from the browser: 0 | mail-like: 0
+console (without intended 404s): ["error: Failed to load resource: the server responded with a status of 400 (Bad Request) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: Failed to load resource: the server responded with a status of 400 (Bad Request) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: Failed to load resource: the server responded with a status of 429 (Too Many Requests) http://localhost:3041/api/orders/MA-0XFM720M/claim","error: %c%s%c [cart] default delivery failed with status 409 (ConcurrentModification) background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server  "]

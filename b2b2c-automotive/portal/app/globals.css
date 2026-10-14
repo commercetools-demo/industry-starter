@@ -1,0 +1,420 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* fonts:begin (values come from next/font, see lib/fonts.ts) */
+:root {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-chart: var(--font-inter), system-ui, sans-serif;
+  --font-mono: ui-monospace, Menlo, monospace;
+}
+/* fonts:end */
+
+@theme inline {
+  /* Remove the default Tailwind scales so only token-backed values compile. */
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --spacing: initial;
+  --spacing-*: initial;
+  --container-*: initial;
+  /* theme:begin */
+  /* colours */
+  --color-gray-1: var(--color-gray-1);
+  --color-gray-2: var(--color-gray-2);
+  --color-gray-3: var(--color-gray-3);
+  --color-gray-4: var(--color-gray-4);
+  --color-gray-5: var(--color-gray-5);
+  --color-gray-6: var(--color-gray-6);
+  --color-gray-7: var(--color-gray-7);
+  --color-gray-8: var(--color-gray-8);
+  --color-gray-9: var(--color-gray-9);
+  --color-gray-10: var(--color-gray-10);
+  --color-gray-11: var(--color-gray-11);
+  --color-gray-12: var(--color-gray-12);
+  --color-gray-13: var(--color-gray-13);
+  --color-gray-14: var(--color-gray-14);
+  --color-gray-15: var(--color-gray-15);
+  --color-gray-16: var(--color-gray-16);
+  --color-blue-1: var(--color-blue-1);
+  --color-blue-2: var(--color-blue-2);
+  --color-blue-3: var(--color-blue-3);
+  --color-blue-4: var(--color-blue-4);
+  --color-blue-5: var(--color-blue-5);
+  --color-blue-6: var(--color-blue-6);
+  --color-blue-7: var(--color-blue-7);
+  --color-blue-8: var(--color-blue-8);
+  --color-blue-9: var(--color-blue-9);
+  --color-blue-10: var(--color-blue-10);
+  --color-blue-11: var(--color-blue-11);
+  --color-blue-12: var(--color-blue-12);
+  --color-blue-13: var(--color-blue-13);
+  --color-blue-14: var(--color-blue-14);
+  --color-blue-15: var(--color-blue-15);
+  --color-blue-16: var(--color-blue-16);
+  --color-green-1: var(--color-green-1);
+  --color-green-2: var(--color-green-2);
+  --color-green-3: var(--color-green-3);
+  --color-green-4: var(--color-green-4);
+  --color-green-5: var(--color-green-5);
+  --color-green-6: var(--color-green-6);
+  --color-green-7: var(--color-green-7);
+  --color-green-8: var(--color-green-8);
+  --color-green-9: var(--color-green-9);
+  --color-green-10: var(--color-green-10);
+  --color-green-11: var(--color-green-11);
+  --color-green-12: var(--color-green-12);
+  --color-green-13: var(--color-green-13);
+  --color-green-14: var(--color-green-14);
+  --color-green-15: var(--color-green-15);
+  --color-green-16: var(--color-green-16);
+  --color-azure-1: var(--color-azure-1);
+  --color-azure-2: var(--color-azure-2);
+  --color-azure-3: var(--color-azure-3);
+  --color-azure-4: var(--color-azure-4);
+  --color-azure-5: var(--color-azure-5);
+  --color-azure-6: var(--color-azure-6);
+  --color-azure-7: var(--color-azure-7);
+  --color-azure-8: var(--color-azure-8);
+  --color-azure-9: var(--color-azure-9);
+  --color-azure-10: var(--color-azure-10);
+  --color-azure-11: var(--color-azure-11);
+  --color-azure-12: var(--color-azure-12);
+  --color-azure-13: var(--color-azure-13);
+  --color-azure-14: var(--color-azure-14);
+  --color-azure-15: var(--color-azure-15);
+  --color-azure-16: var(--color-azure-16);
+  --color-purple-1: var(--color-purple-1);
+  --color-purple-2: var(--color-purple-2);
+  --color-purple-3: var(--color-purple-3);
+  --color-purple-4: var(--color-purple-4);
+  --color-purple-5: var(--color-purple-5);
+  --color-purple-6: var(--color-purple-6);
+  --color-purple-7: var(--color-purple-7);
+  --color-purple-8: var(--color-purple-8);
+  --color-purple-9: var(--color-purple-9);
+  --color-purple-10: var(--color-purple-10);
+  --color-purple-11: var(--color-purple-11);
+  --color-purple-12: var(--color-purple-12);
+  --color-purple-13: var(--color-purple-13);
+  --color-purple-14: var(--color-purple-14);
+  --color-purple-15: var(--color-purple-15);
+  --color-purple-16: var(--color-purple-16);
+  --color-red-1: var(--color-red-1);
+  --color-red-2: var(--color-red-2);
+  --color-red-3: var(--color-red-3);
+  --color-red-4: var(--color-red-4);
+  --color-red-5: var(--color-red-5);
+  --color-red-6: var(--color-red-6);
+  --color-red-7: var(--color-red-7);
+  --color-red-8: var(--color-red-8);
+  --color-red-9: var(--color-red-9);
+  --color-red-10: var(--color-red-10);
+  --color-red-11: var(--color-red-11);
+  --color-red-12: var(--color-red-12);
+  --color-red-13: var(--color-red-13);
+  --color-red-14: var(--color-red-14);
+  --color-red-15: var(--color-red-15);
+  --color-red-16: var(--color-red-16);
+  --color-orange-1: var(--color-orange-1);
+  --color-orange-2: var(--color-orange-2);
+  --color-orange-3: var(--color-orange-3);
+  --color-orange-4: var(--color-orange-4);
+  --color-orange-5: var(--color-orange-5);
+  --color-orange-6: var(--color-orange-6);
+  --color-orange-7: var(--color-orange-7);
+  --color-orange-8: var(--color-orange-8);
+  --color-orange-9: var(--color-orange-9);
+  --color-orange-10: var(--color-orange-10);
+  --color-orange-11: var(--color-orange-11);
+  --color-orange-12: var(--color-orange-12);
+  --color-orange-13: var(--color-orange-13);
+  --color-orange-14: var(--color-orange-14);
+  --color-orange-15: var(--color-orange-15);
+  --color-orange-16: var(--color-orange-16);
+  --color-yellow-1: var(--color-yellow-1);
+  --color-yellow-2: var(--color-yellow-2);
+  --color-yellow-3: var(--color-yellow-3);
+  --color-yellow-4: var(--color-yellow-4);
+  --color-yellow-5: var(--color-yellow-5);
+  --color-yellow-6: var(--color-yellow-6);
+  --color-yellow-7: var(--color-yellow-7);
+  --color-yellow-8: var(--color-yellow-8);
+  --color-yellow-9: var(--color-yellow-9);
+  --color-yellow-10: var(--color-yellow-10);
+  --color-yellow-11: var(--color-yellow-11);
+  --color-yellow-12: var(--color-yellow-12);
+  --color-yellow-13: var(--color-yellow-13);
+  --color-yellow-14: var(--color-yellow-14);
+  --color-yellow-15: var(--color-yellow-15);
+  --color-yellow-16: var(--color-yellow-16);
+  --color-black-alpha-2: var(--color-black-alpha-2);
+  --color-black-alpha-3: var(--color-black-alpha-3);
+  --color-black-alpha-4: var(--color-black-alpha-4);
+  --color-black-alpha-5: var(--color-black-alpha-5);
+  --color-black-alpha-6: var(--color-black-alpha-6);
+  --color-black-alpha-7: var(--color-black-alpha-7);
+  --color-black-alpha-8: var(--color-black-alpha-8);
+  --color-black-alpha-9: var(--color-black-alpha-9);
+  --color-black-alpha-10: var(--color-black-alpha-10);
+  --color-black-alpha-11: var(--color-black-alpha-11);
+  --color-black-alpha-12: var(--color-black-alpha-12);
+  --color-black-alpha-13: var(--color-black-alpha-13);
+  --color-black-alpha-14: var(--color-black-alpha-14);
+  --color-black-alpha-15: var(--color-black-alpha-15);
+  --color-black-alpha-16: var(--color-black-alpha-16);
+  --color-bg-page: var(--color-bg-page);
+  --color-bg-surface: var(--color-bg-surface);
+  --color-bg-surface-hover: var(--color-bg-surface-hover);
+  --color-bg-surface-pressed: var(--color-bg-surface-pressed);
+  --color-bg-surface-disabled: var(--color-bg-surface-disabled);
+  --color-bg-surface-subdued: var(--color-bg-surface-subdued);
+  --color-bg-brand: var(--color-bg-brand);
+  --color-bg-brand-hover: var(--color-bg-brand-hover);
+  --color-bg-brand-pressed: var(--color-bg-brand-pressed);
+  --color-bg-brand-disabled: var(--color-bg-brand-disabled);
+  --color-bg-info: var(--color-bg-info);
+  --color-bg-info-hover: var(--color-bg-info-hover);
+  --color-bg-info-pressed: var(--color-bg-info-pressed);
+  --color-bg-info-subdued: var(--color-bg-info-subdued);
+  --color-bg-success: var(--color-bg-success);
+  --color-bg-success-hover: var(--color-bg-success-hover);
+  --color-bg-success-pressed: var(--color-bg-success-pressed);
+  --color-bg-success-subdued: var(--color-bg-success-subdued);
+  --color-bg-warning: var(--color-bg-warning);
+  --color-bg-warning-hover: var(--color-bg-warning-hover);
+  --color-bg-warning-pressed: var(--color-bg-warning-pressed);
+  --color-bg-warning-subdued: var(--color-bg-warning-subdued);
+  --color-bg-critical: var(--color-bg-critical);
+  --color-bg-critical-hover: var(--color-bg-critical-hover);
+  --color-bg-critical-pressed: var(--color-bg-critical-pressed);
+  --color-bg-critical-subdued: var(--color-bg-critical-subdued);
+  --color-bg-active: var(--color-bg-active);
+  --color-bg-active-hover: var(--color-bg-active-hover);
+  --color-bg-active-pressed: var(--color-bg-active-pressed);
+  --color-bg-active-subdued: var(--color-bg-active-subdued);
+  --color-chart-1: var(--color-chart-1);
+  --color-chart-2: var(--color-chart-2);
+  --color-chart-3: var(--color-chart-3);
+  --color-chart-4: var(--color-chart-4);
+  --color-chart-5: var(--color-chart-5);
+  --color-chart-6: var(--color-chart-6);
+  --color-overlay: var(--color-overlay);
+  --color-text: var(--color-text);
+  --color-text-subdued: var(--color-text-subdued);
+  --color-text-disabled: var(--color-text-disabled);
+  --color-text-active: var(--color-text-active);
+  --color-text-info: var(--color-text-info);
+  --color-text-success: var(--color-text-success);
+  --color-text-warning: var(--color-text-warning);
+  --color-text-critical: var(--color-text-critical);
+  --color-text-on: var(--color-text-on);
+  --color-text-on-hover: var(--color-text-on-hover);
+  --color-text-on-pressed: var(--color-text-on-pressed);
+  --color-text-on-active: var(--color-text-on-active);
+  --color-text-on-info: var(--color-text-on-info);
+  --color-text-on-success: var(--color-text-on-success);
+  --color-text-on-warning: var(--color-text-on-warning);
+  --color-text-on-critical: var(--color-text-on-critical);
+  --color-border: var(--color-border);
+  --color-border-hover: var(--color-border-hover);
+  --color-border-pressed: var(--color-border-pressed);
+  --color-border-subdued: var(--color-border-subdued);
+  --color-border-critical: var(--color-border-critical);
+  --color-border-active: var(--color-border-active);
+  --color-border-exclude: var(--color-border-exclude);
+  --color-border-on: var(--color-border-on);
+  --color-border-on-hover: var(--color-border-on-hover);
+  --color-border-on-pressed: var(--color-border-on-pressed);
+  --color-border-on-subdued: var(--color-border-on-subdued);
+  --color-border-on-critical: var(--color-border-on-critical);
+  --color-border-on-exclude: var(--color-border-on-exclude);
+  --color-bg-topbar: var(--color-bg-topbar);
+  /* fonts */
+  --font-sans: var(--font-sans);
+  --font-chart: var(--font-chart);
+  --font-mono: var(--font-mono);
+  /* type scale */
+  --text-h1: var(--text-h1);
+  --text-h1--line-height: var(--leading-h1);
+  --text-h1--letter-spacing: var(--tracking-h1);
+  --text-h2: var(--text-h2);
+  --text-h2--line-height: var(--leading-h2);
+  --text-h2--letter-spacing: var(--tracking-h2);
+  --text-h3: var(--text-h3);
+  --text-h3--line-height: var(--leading-h3);
+  --text-h3--letter-spacing: var(--tracking-h3);
+  --text-h4: var(--text-h4);
+  --text-h4--line-height: var(--leading-h4);
+  --text-h4--letter-spacing: var(--tracking-h4);
+  --text-h5: var(--text-h5);
+  --text-h5--line-height: var(--leading-h5);
+  --text-h5--letter-spacing: var(--tracking-h5);
+  --text-title-1: var(--text-title-1);
+  --text-title-1--line-height: var(--leading-title-1);
+  --text-title-1--letter-spacing: var(--tracking-title-1);
+  --text-title-2: var(--text-title-2);
+  --text-title-2--line-height: var(--leading-title-2);
+  --text-title-2--letter-spacing: var(--tracking-title-2);
+  --text-body-1: var(--text-body-1);
+  --text-body-1--line-height: var(--leading-body-1);
+  --text-body-1--letter-spacing: var(--tracking-body-1);
+  --text-body-2: var(--text-body-2);
+  --text-body-2--line-height: var(--leading-body-2);
+  --text-body-2--letter-spacing: var(--tracking-body-2);
+  --text-caption-1: var(--text-caption-1);
+  --text-caption-1--line-height: var(--leading-caption-1);
+  --text-caption-1--letter-spacing: var(--tracking-caption-1);
+  --text-caption-2: var(--text-caption-2);
+  --text-caption-2--line-height: var(--leading-caption-2);
+  --text-caption-2--letter-spacing: var(--tracking-caption-2);
+  --text-button-1: var(--text-button-1);
+  --text-button-1--line-height: var(--leading-button-1);
+  --text-button-1--letter-spacing: var(--tracking-button-1);
+  --text-button-2: var(--text-button-2);
+  --text-button-2--line-height: var(--leading-button-2);
+  --text-button-2--letter-spacing: var(--tracking-button-2);
+  --text-input-2: var(--text-input-2);
+  --text-input-2--line-height: var(--leading-input-2);
+  --text-input-2--letter-spacing: var(--tracking-input-2);
+  /* weights */
+  --font-weight-medium: var(--weight-medium);
+  --font-weight-semibold: var(--weight-semibold);
+  --font-weight-bold: var(--weight-bold);
+  /* spacing */
+  --spacing-0: var(--space-0);
+  --spacing-025: var(--space-025);
+  --spacing-050: var(--space-050);
+  --spacing-100: var(--space-100);
+  --spacing-150: var(--space-150);
+  --spacing-200: var(--space-200);
+  --spacing-250: var(--space-250);
+  --spacing-300: var(--space-300);
+  --spacing-350: var(--space-350);
+  --spacing-400: var(--space-400);
+  --spacing-450: var(--space-450);
+  --spacing-500: var(--space-500);
+  --spacing-600: var(--space-600);
+  --spacing-700: var(--space-700);
+  --spacing-800: var(--space-800);
+  --spacing-1000: var(--space-1000);
+  --spacing-1100: var(--space-1100);
+  --spacing-1200: var(--space-1200);
+  --spacing-1500: var(--space-1500);
+  --spacing-1600: var(--space-1600);
+  --spacing-2300: var(--space-2300);
+  --spacing-2400: var(--space-2400);
+  --spacing-3200: var(--space-3200);
+  --spacing-6400: var(--space-6400);
+  --spacing-sidebar: var(--sidebar-width);
+  --spacing-sidebar-collapsed: var(--sidebar-width-collapsed);
+  --spacing-topbar: var(--topbar-height);
+  --spacing-widget-padding-y: var(--widget-padding-y);
+  --spacing-widget-gap: var(--widget-gap);
+  /* radius */
+  --radius-050: var(--radius-050);
+  --radius-100: var(--radius-100);
+  --radius-150: var(--radius-150);
+  --radius-200: var(--radius-200);
+  --radius-300: var(--radius-300);
+  --radius-400: var(--radius-400);
+  --radius-500: var(--radius-500);
+  --radius-600: var(--radius-600);
+  --radius-900: var(--radius-900);
+  --radius-1200: var(--radius-1200);
+  --radius-sidebar: var(--radius-sidebar);
+  --radius-full: var(--radius-full);
+  /* shadows */
+  --shadow-button: var(--shadow-button);
+  --shadow-button-pressed: var(--shadow-button-pressed);
+  --shadow-card: var(--shadow-card);
+  --shadow-tooltip: var(--shadow-tooltip);
+  --shadow-dropdown: var(--shadow-dropdown);
+  --shadow-modal: var(--shadow-modal);
+  --shadow-popover: var(--shadow-popover);
+  --shadow-focus: var(--shadow-focus);
+  /* blur */
+  --blur-surface: var(--blur-surface);
+  /* containers */
+  --container-page-desktop: var(--page-desktop);
+  --container-page-tablet: var(--page-tablet);
+  --container-page-mobile: var(--page-mobile);
+  --container-body-desktop: var(--body-desktop);
+  --container-body-tablet: var(--body-tablet);
+  --container-body-mobile: var(--body-mobile);
+  --container-widget-desktop-12col: var(--widget-desktop-12col);
+  --container-widget-desktop-8col: var(--widget-desktop-8col);
+  --container-widget-desktop-4col: var(--widget-desktop-4col);
+  --container-widget-tablet-8col: var(--widget-tablet-8col);
+  --container-widget-tablet-5col: var(--widget-tablet-5col);
+  --container-widget-tablet-3col: var(--widget-tablet-3col);
+  --container-widget-mobile-6col: var(--widget-mobile-6col);
+  /* theme:end */
+}
+
+/* AA layer (workstream Y, Q-Y01). The kit's muted, link and status text colours are below 4.5:1 on its own surfaces
+   (see plans/evidence/Y/portal-contrast-before.txt). Components keep using the semantic text tokens; this layer maps them to
+   the next darker ramp step in light and the next lighter in dark, and adds the input border role (1.4.11).
+   app/tokens.css stays an exact copy of the design export. scripts/contrast-report.mjs reads this layer. */
+:root {
+  --color-text-subdued: var(--color-gray-13);
+  --color-text-active: var(--color-blue-13);
+  --color-text-info: var(--color-azure-13);
+  --color-text-success: var(--color-green-13);
+  --color-text-warning: var(--color-orange-13);
+  --color-text-critical: var(--color-red-13);
+  --color-border-input: var(--color-gray-12);
+}
+
+/* This block comes after the :root one on purpose and restates every token of it: both selectors weigh the same, so a token left out
+   here would take its light value in dark. contrast-report.test.mjs fails when the two lists differ. */
+[data-theme="dark"] {
+  --color-text-subdued: var(--color-gray-7);
+  --color-text-active: var(--color-blue-10);
+  --color-text-info: var(--color-azure-10);
+  --color-text-success: var(--color-green-10);
+  --color-text-warning: var(--color-orange-10);
+  --color-text-critical: var(--color-red-10);
+  --color-border-input: var(--color-gray-11);
+}
+
+@theme inline {
+  --color-border-input: var(--color-border-input);
+}
+
+/* Shell breakpoint (R-11): under 700 px (43.75rem) the sidebar rail becomes a drawer. The 1024 px icon-rail step is Tailwind's max-lg. */
+@custom-variant narrow {
+  @media (width < 43.75rem) {
+    @slot;
+  }
+}
+
+body {
+  background: var(--color-bg-page);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+/* Reduced motion (workstream Y, scripts/check-reduced-motion.mjs): the one global rule for every transition, animation and scroll. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus not obscured (WCAG 2.4.11, workstream Y): the Copilot launcher is fixed bottom right (24 px offset, 48 px high); a focused control
+   scrolls into view above it. scripts/globals-a11y.test.mjs keeps this at least as large as the launcher's footprint. */
+html {
+  scroll-padding-bottom: var(--space-2300);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}

@@ -1,0 +1,15 @@
+# G09 page methods, G03, E01 and E07 leak and source map checks. Portal :3101 production build started with ATTACK_MODE=1 and the JWT canary, dummy credentials.
+## PUT on a page (expect 405)
+HTTP 405
+## DELETE on a page (expect 405)
+HTTP 405
+## TRACE on a page: Next.js itself cannot build a Request for TRACE and answers 500 with the generic text before proxy.ts runs; nothing is echoed. The hosts (Netlify, Vercel) refuse TRACE at the edge. Accepted deviation from the plan's 405.
+HTTP 500
+## GET control (expect 200)
+HTTP 200
+## x-powered-by headers (count, expect 0)
+0
+## canary in the sign-in HTML (count, expect 0)
+0
+files with the canary in .next/static:        0
+source map files in .next/static:        0

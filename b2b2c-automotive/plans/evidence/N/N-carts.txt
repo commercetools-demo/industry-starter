@@ -1,0 +1,25 @@
+Workstream N evidence: offline run (2026-10-12, J18)
+====================================================
+No live commercetools project was used (no credentials in this environment). Headless Chrome over the DevTools protocol drove the
+storefront dev server (port 3017) against a throw-away fake of the endpoints (outside the repo) that mimics the cart, login,
+shipping methods, inventory and standalone price endpoints. Cart ids below are the fake's.
+
+Flows recorded (store mau-reseller-north unless noted):
+- empty cart, then add from the listing card and from the product page: header "Cart . 2", two lines, no non-same-origin API request
+- quantity + and - (minimum 1 keeps 1), quantity past branch stock: "8 from Branch Berlin, 5 ships later"
+- Pick up (Free, store, city, time) and Ship to me ($9.90 below the threshold with "Add $109.70 more", Free above it); pickup sets
+  shippingMethod mau-ship-pickup, the branch address and custom pickupBranchKey; ship sets mau-ship-standard and a country only address
+- promo MALVA-WELCOME5 Applied with the named line "Welcome -5%", NONSENSE Not applied "This code is not valid." and Remove
+- de-DE: EUR format, product discount line "Herbst-Filteraktion -10 %", "Grossbestellung -3 %" over 2,000 EUR, VAT (19%) included
+- subscription line "Lieferung: Vierteljaehrlich" next to a one-time line of the same sku (two lines), renewal note; a part that is not
+  recurring-eligible answers 422 not-subscribable
+- branch change Berlin to Hamburg: every line gets supplyChannel Hamburg, distributionChannel the price channel, price 40,55 -> 38,37 EUR
+  (branch price), pickupBranchKey and address follow
+- sign-in (de-DE): wrong password and a customer of the other store give the identical message; the right shopper keeps the guest line
+  and the customer cart line (fake: anonymous cart state Merged, customer cart holds both), header "Warenkorb . 2", me route returns the
+  customer, at the other store /api/auth/me is null
+- vehicle: Golf 2019 flags 1 of 2 lines, Golf 2020 (one year outside the range) flags both, Checkout stays a link; the lines carry
+  malva-line fields vehicleFitmentKey and fit fits / not-fit
+- three concurrent quantity changes: 200, 200, 200 (409 retry); console clean (only the expected 401s of the wrong password tries)
+
+Live read-back with read_carts, read_inventory, read_shipping_methods and read_standalone_prices: TODO rows M-N02 and M-N03.

@@ -1,0 +1,36 @@
+{
+  "campaigns": [
+    {
+      "key": "tst-w-brake-week",
+      "name": { "de-DE": "Bremsenwoche", "en-US": "Brake week" },
+      "fundingShare": 0.5,
+      "caption": {
+        "de-DE": "Jetzt Bremsen prüfen lassen und 8 % sparen. Mit dem Code BRAKE8.",
+        "en-US": "Get your brakes checked now and save 8%. Use the code BRAKE8."
+      },
+      "code": "BRAKE8",
+      "channels": ["E-mail", "Social", "In store"],
+      "startsAt": "2026-09-01T00:00:00.000Z",
+      "endsAt": "2026-12-31T23:59:59.000Z",
+      "eligibleSkus": ["MLV-BP-41001", "MLV-BD-42001", "MLV-BP-41003"],
+      "permyriad": 800,
+      "demo": true
+    },
+    {
+      "key": "tst-w-summer-filters",
+      "name": { "de-DE": "Sommer-Filteraktion", "en-US": "Summer filter promotion" },
+      "fundingShare": 0.3,
+      "caption": {
+        "de-DE": "Frische Filter für die Sommerreise. Mit dem Code FILTER5.",
+        "en-US": "Fresh filters for the summer trip. Use the code FILTER5."
+      },
+      "code": "FILTER5",
+      "channels": ["E-mail", "Social"],
+      "startsAt": "2026-06-01T00:00:00.000Z",
+      "endsAt": "2026-08-31T23:59:59.000Z",
+      "eligibleSkus": ["MLV-OF-44001", "MLV-OF-44002", "MLV-AF-45001"],
+      "permyriad": 500,
+      "demo": true
+    }
+  ]
+}

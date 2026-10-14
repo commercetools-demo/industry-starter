@@ -1,0 +1,5 @@
+{"ts":"2026-10-13T01:14:56.085Z","rule":"origin","decision":"deny","route":"POST /api/locale","reason":"CROSS_ORIGIN","actor":"unknown"}
+{"ts":"2026-10-13T01:14:56.114Z","rule":"origin","decision":"deny","route":"POST /api/locale","reason":"CROSS_ORIGIN","actor":"unknown"}
+{"ts":"2026-10-13T01:14:56.139Z","rule":"origin","decision":"deny","route":"POST /api/locale","reason":"UNSUPPORTED_MEDIA_TYPE","actor":"unknown"}
+{"ts":"2026-10-13T01:14:56.164Z","rule":"origin","decision":"deny","route":"POST /api/locale","reason":"CROSS_ORIGIN","actor":"unknown"}
+{"ts":"2026-10-13T01:14:56.189Z","rule":"origin","decision":"deny","route":"POST /api/seller/prices/bulk","reason":"CROSS_ORIGIN","actor":"unknown"}

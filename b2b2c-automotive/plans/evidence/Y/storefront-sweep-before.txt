@@ -1,0 +1,169 @@
+=== axe violations
+label-content-name-mismatch [serious] | pages: pdp/de-DE/320, pdp/de-DE/375, pdp/de-DE/768, pdp/de-DE/1024, pdp/de-DE/1440 (5) | .p-3.content-start.rounded-md:nth-child(1) > .justify-between.gap-2.flex > .text-action.hover\:bg-action-subtle.border-border-brand | Fix any of the following: |   Text inside the element is not included in the accessible name
+document-title [serious] | pages: confirmation/de-DE/320, confirmation/de-DE/375, confirmation/de-DE/768, confirmation/de-DE/1024, confirmation/de-DE/1440, confirmation/en-US/320 (10) | html | Fix any of the following: |   Document does not have a non-empty <title> element
+html-has-lang [serious] | pages: confirmation/de-DE/320, confirmation/de-DE/375, confirmation/de-DE/768, confirmation/de-DE/1024, confirmation/de-DE/1440, confirmation/en-US/320 (10) | html | Fix any of the following: |   The <html> element does not have a lang attribute
+landmark-one-main [moderate] | pages: confirmation/de-DE/320, confirmation/de-DE/375, confirmation/de-DE/768, confirmation/de-DE/1024, confirmation/de-DE/1440, confirmation/en-US/320 (10) | html | Fix all of the following: |   Document does not have a main landmark
+page-has-heading-one [moderate] | pages: confirmation/de-DE/320, confirmation/de-DE/375, confirmation/de-DE/768, confirmation/de-DE/1024, confirmation/de-DE/1440, confirmation/en-US/320 (10) | html | Fix all of the following: |   Page must have a level-one heading
+region [moderate] | pages: confirmation/de-DE/320, confirmation/de-DE/375, confirmation/de-DE/768, confirmation/de-DE/1024, confirmation/de-DE/1440, confirmation/en-US/320 (10) | pre | Fix any of the following: |   Some page content is not contained by landmarks
+
+=== horizontal overflow (scroll or clipped offenders)
+home de-DE 320 clipped div. 324 ; p.font-ui.text-xs.font-bold 324 ; h1.my-3.font-display.text-4xl 324 ; p.mb-5.max-w-prose.font-body 324
+home en-US 320 clipped div. 324 ; p.font-ui.text-xs.font-bold 324 ; h1.my-3.font-display.text-4xl 324 ; p.mb-5.max-w-prose.font-body 324
+
+=== target size < 24 (unique)
+a "Alle ansehen ›" 89x20 .font-utility text-sm font-medium text-text-link | home
+a "View all ›" 56x20 .font-utility text-sm font-medium text-text-link | home
+a "Bremsen" 58x20 .text-text-link hover:underline | pdp
+a "Bremsbeläge" 86x20 .text-text-link hover:underline | pdp
+a "Bewertet mit 4.0 von 5 aus 2 Bewertungen" 58x20 .text-rating hover:underline | pdp
+a "Malva Select Bremsbelagsatz vorn 2" 262x20 .line-clamp-2 font-display text-sm font-medium | pdp
+a "Nordlicht Bremsbelagsatz vorn 3" 262x20 .line-clamp-2 font-display text-sm font-medium | pdp
+a "Malva Select Bremsbelagsatz vorn 2" 317x20 .line-clamp-2 font-display text-sm font-medium | pdp
+a "Nordlicht Bremsbelagsatz vorn 3" 317x20 .line-clamp-2 font-display text-sm font-medium | pdp
+a "Nordlicht Bremsbelagsatz vorn 3" 250x20 .line-clamp-2 font-display text-sm font-medium | pdp
+a "Brakes" 45x20 .text-text-link hover:underline | pdp
+a "Brake pads" 73x20 .text-text-link hover:underline | pdp
+a "Rated 4.0 out of 5 from 2 reviews" 58x20 .text-rating hover:underline | pdp
+a "Malva Select Front brake pad set 2" 262x20 .line-clamp-2 font-display text-sm font-medium | pdp
+a "Nordlicht Front brake pad set 3" 262x20 .line-clamp-2 font-display text-sm font-medium | pdp
+a "Malva Select Front brake pad set 2" 317x20 .line-clamp-2 font-display text-sm font-medium | pdp
+a "Nordlicht Front brake pad set 3" 317x20 .line-clamp-2 font-display text-sm font-medium | pdp
+a "Malva Select Front brake pad set 2" 250x20 .line-clamp-2 font-display text-sm font-medium | pdp
+a "Nordlicht Front brake pad set 3" 250x20 .line-clamp-2 font-display text-sm font-medium | pdp
+a "Vektra Brake disc 1" 146x20 .font-display text-sm font-medium text-text | cart-empty,cart-items
+input "radio" 14x16 .mt-1 size-4 accent-action | cart-empty,cart-items
+input "radio" 13x16 .mt-1 size-4 accent-action | cart-empty,cart-items
+input "radio" 16x16 .mt-1 size-4 accent-action | cart-empty,cart-items
+a "Küstenwerk ceramic pad set" 261x20 .font-display text-sm font-medium text-text | cart-empty
+a "Vektra Brake disc 1" 258x20 .font-display text-sm font-medium text-text | cart-empty
+a "Küstenwerk ceramic pad set" 421x20 .font-display text-sm font-medium text-text | cart-empty
+a "Vektra Brake disc 1" 418x20 .font-display text-sm font-medium text-text | cart-empty
+a "Küstenwerk ceramic pad set" 539x20 .font-display text-sm font-medium text-text | cart-empty
+a "Vektra Brake disc 1" 536x20 .font-display text-sm font-medium text-text | cart-empty
+a "Küstenwerk Keramik-Belagsatz" 256x20 .font-display text-sm font-medium text-text | cart-items
+a "Vektra Bremsscheibe 1" 260x20 .font-display text-sm font-medium text-text | cart-items
+a "Küstenwerk Keramik-Belagsatz" 416x20 .font-display text-sm font-medium text-text | cart-items
+a "Vektra Bremsscheibe 1" 420x20 .font-display text-sm font-medium text-text | cart-items
+a "Küstenwerk Keramik-Belagsatz" 534x20 .font-display text-sm font-medium text-text | cart-items
+a "Vektra Bremsscheibe 1" 537x20 .font-display text-sm font-medium text-text | cart-items
+input "radio" 15x16 .mt-1 size-4 accent-action | cart-items
+a "Küstenwerk ceramic pad set" 265x20 .font-display text-sm font-medium text-text | cart-items
+a "Vektra Brake disc 1" 262x20 .font-display text-sm font-medium text-text | cart-items
+a "Küstenwerk ceramic pad set" 425x20 .font-display text-sm font-medium text-text | cart-items
+a "Vektra Brake disc 1" 422x20 .font-display text-sm font-medium text-text | cart-items
+a "Küstenwerk ceramic pad set" 543x20 .font-display text-sm font-medium text-text | cart-items
+a "Vektra Brake disc 1" 540x20 .font-display text-sm font-medium text-text | cart-items
+a "Passwort vergessen?" 134x20 .font-utility text-sm text-text-link underline-offset-2 | sign-in
+a "Neu hier? Konto erstellen" 156x20 .font-utility text-sm text-text-link underline-offset-2 | sign-in
+a "Forgot your password?" 142x20 .font-utility text-sm text-text-link underline-offset-2 | sign-in
+a "New here? Create an account" 183x20 .font-utility text-sm text-text-link underline-offset-2 | sign-in
+input "checkbox" 16x24 .mt-1 size-5 accent-action | register,account-profile
+input "checkbox" 20x24 .mt-1 size-5 accent-action | register,account-profile
+a "Sie haben schon ein Konto? Anmelden" 293x20 .font-utility text-sm text-text-link underline-offset-2 | register
+a "Sie haben schon ein Konto? Anmelden" 603x20 .font-utility text-sm text-text-link underline-offset-2 | register
+a "Zurück zur Anmeldung" 238x20 .font-utility text-sm text-text-link underline-offset-2 | forgot-password
+a "Zurück zur Anmeldung" 293x20 .font-utility text-sm text-text-link underline-offset-2 | forgot-password
+a "Zurück zur Anmeldung" 603x20 .font-utility text-sm text-text-link underline-offset-2 | forgot-password
+
+=== 24..43 px controls at 375 (unique, informational)
+a "Küstenwerk Keramik-Belagsatz" h=42 | home,parts,category
+button "Fahrzeug wählen, um die Passform zu prüf" h=24 | home,parts,category,pdp
+a "Malva Select Bremsbelagsatz vorn 2" h=42 | home,parts,category
+a "Nordlicht Bremsbelagsatz vorn 3" h=42 | home,parts,category
+a "Voltaris Bremsbelagsatz vorn 4" h=42 | home,parts,category
+a "Kestrel Bremsbelagsatz vorn 5" h=42 | home,parts,category
+a "Rheinwerk Bremsbelagsatz vorn 6" h=42 | home,parts,category
+a "Vektra Bremsscheibe 1" h=42 | home,parts,category
+a "Alpendyn Bremsscheibe 2" h=42 | home,parts,category
+a "Küstenwerk ceramic pad set" h=42 | home,parts
+button "Select your vehicle to check fit" h=24 | home,parts,pdp
+a "Malva Select Front brake pad set 2" h=42 | home,parts
+a "Nordlicht Front brake pad set 3" h=42 | home,parts
+a "Voltaris Front brake pad set 4" h=42 | home,parts
+a "Kestrel Front brake pad set 5" h=42 | home,parts
+a "Rheinwerk Front brake pad set 6" h=42 | home,parts
+a "Vektra Brake disc 1" h=42 | home,parts
+a "Alpendyn Brake disc 2" h=42 | home,parts
+a "Malva Select Bremsscheibe 3" h=42 | parts,category
+a "Nordlicht Bremsscheibe 4" h=42 | parts,category
+a "Voltaris Bremsscheibe 5" h=42 | parts,category
+a "Kestrel Ölfilter 1" h=42 | parts
+a "Rheinwerk Ölfilter 2" h=42 | parts
+a "Vektra Ölfilter 3" h=42 | parts
+a "Alpendyn Motoröl 5W-30 3" h=42 | parts
+a "Malva Select Brake disc 3" h=42 | parts
+a "Nordlicht Brake disc 4" h=42 | parts
+a "Voltaris Brake disc 5" h=42 | parts
+a "Kestrel Oil filter 1" h=42 | parts
+a "Rheinwerk Oil filter 2" h=42 | parts
+a "Vektra Oil filter 3" h=42 | parts
+a "Alpendyn Engine oil 5W-30 3" h=42 | parts
+a "Küstenwerk Werkstattpaste" h=42 | category
+a "Vektra Bremsbelagsatz (Vorserie)" h=42 | category
+a "Küstenwerk ceramic pad set" h=40 | cart-empty,cart-items
+a "Küstenwerk Keramik-Belagsatz" h=40 | cart-items
+a "Vektra Bremsscheibe 1" h=40 | cart-items
+a "Zur Startseite" h=24 | account-return
+
+=== console problems (unique)
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/terms | search,search-empty,search-prompt,cart-empty,cart-items,checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/privacy | search,search-empty,search-prompt,cart-empty,cart-items,checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/returns | search,search-empty,search-prompt,cart-empty,cart-items,checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/terms-4aCNHZflK | cart-items
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/privacy-4aCNHZflK | cart-items
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/returns-4aCNHZflK | cart-items
+error: Failed to load resource: the server responded with a status of 503 (Service Unavailable) http://localhost:3180/api/checkout/session | checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/terms-MY3 | checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/privacy-MY3 | checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/returns-MY3 | checkout
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/terms-3wXYLAL | sign-in
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/privacy-3wXYLAL | sign-in
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/returns-3wXYLAL | sign-in
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/terms | sign-in,account-overview
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/privacy | sign-in,account-overview
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/returns | sign-in,account-overview
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/terms-luzB88 | forgot-password
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/privacy-luzB88 | forgot-password
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/returns-luzB88 | forgot-password
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/nope | not-found
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/terms-QFhfTmZSbD | account-payment-methods
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/privacy-QFhfTmZSbD | account-payment-methods
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/returns-QFhfTmZSbD | account-payment-methods
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/de-DE/mau-reseller-north/checkout/confirmation | confirmation
+error: Failed to load resource: the server responded with a status of 404 (Not Found) http://localhost:3180/en-US/mau-reseller-north/checkout/confirmation | confirmation
+
+=== final urls != requested / missing h1 / lang
+home de-DE /de-DE/mau-reseller-north h1=["Originalteile von Küstenwerk Autoteile, in Ihrer Nähe abholbereit."] lang=de-DE title=Küstenwerk Autoteile | Originalteile, passgenau
+home en-US /en-US/mau-reseller-north h1=["Genuine parts from Küstenwerk Auto Parts, ready near you."] lang=en-US title=Küstenwerk Auto Parts | OEM car parts, fit guaranteed
+parts de-DE /de-DE/mau-reseller-north/parts h1=["Alle Teile"] lang=de-DE title=Alle Teile | Küstenwerk Autoteile
+parts en-US /en-US/mau-reseller-north/parts h1=["All parts"] lang=en-US title=All parts | Küstenwerk Auto Parts
+category de-DE /de-DE/mau-reseller-north/category/bremsen h1=["Bremsen"] lang=de-DE title=Bremsen | Küstenwerk Autoteile
+search de-DE /de-DE/mau-reseller-north/search?q=bremse h1=["Ergebnisse für „bremse“"] lang=de-DE title=Ergebnisse für „bremse“ | Küstenwerk Autoteile
+search-empty de-DE /de-DE/mau-reseller-north/search?q=zzzzzzzz h1=["Ergebnisse für „zzzzzzzz“"] lang=de-DE title=Ergebnisse für „zzzzzzzz“ | Küstenwerk Autoteile
+search-prompt de-DE /de-DE/mau-reseller-north/search h1=["Teilename, Nummer oder Marke eingeben"] lang=de-DE title=Teilename, Nummer oder Marke eingeben | Küstenwerk Autoteile
+pdp de-DE /de-DE/mau-reseller-north/p/alpendyn-bp-41001 h1=["Küstenwerk Keramik-Belagsatz"] lang=de-DE title=Küstenwerk Keramik-Belagsatz (MLV-BP-41001) | Küstenwerk Autoteile
+pdp en-US /en-US/mau-reseller-north/p/alpendyn-bp-41001 h1=["Küstenwerk ceramic pad set"] lang=en-US title=Küstenwerk ceramic pad set (MLV-BP-41001) | Küstenwerk Auto Parts
+cart-empty de-DE /de-DE/mau-reseller-north/cart h1=["Ihr Warenkorb"] lang=de-DE title=Ihr Warenkorb | Küstenwerk Autoteile
+cart-items de-DE /de-DE/mau-reseller-north/cart h1=["Ihr Warenkorb"] lang=de-DE title=Ihr Warenkorb | Küstenwerk Autoteile
+cart-items en-US /en-US/mau-reseller-north/cart h1=["Your cart"] lang=en-US title=Your cart | Küstenwerk Auto Parts
+checkout de-DE /de-DE/mau-reseller-north/checkout h1=["Kasse"] lang=de-DE title=Kasse | Küstenwerk Autoteile
+checkout en-US /en-US/mau-reseller-north/checkout h1=["Checkout"] lang=en-US title=Checkout | Küstenwerk Auto Parts
+sign-in de-DE /de-DE/mau-reseller-north/account/sign-in h1=["Anmelden"] lang=de-DE title=Anmelden | Küstenwerk Autoteile
+sign-in en-US /en-US/mau-reseller-north/account/sign-in h1=["Sign in"] lang=en-US title=Sign in | Küstenwerk Auto Parts
+register de-DE /de-DE/mau-reseller-north/account/register h1=["Konto erstellen"] lang=de-DE title=Konto erstellen | Küstenwerk Autoteile
+forgot-password de-DE /de-DE/mau-reseller-north/account/forgot-password h1=["Passwort zurücksetzen"] lang=de-DE title=Passwort zurücksetzen | Küstenwerk Autoteile
+reset-password de-DE /de-DE/mau-reseller-north/account/reset-password?token=abc h1=["Neues Passwort wählen"] lang=de-DE title=Neues Passwort wählen | Küstenwerk Autoteile
+not-found de-DE /de-DE/mau-reseller-north/nope h1=["Seite nicht gefunden"] lang=de-DE title=Malva
+account-overview de-DE /de-DE/mau-reseller-north/account h1=["Hallo, Anna"] lang=de-DE title=Mein Konto | Küstenwerk Autoteile
+account-overview en-US /en-US/mau-reseller-north/account h1=["Hello, Anna"] lang=en-US title=My account | Küstenwerk Auto Parts
+account-orders de-DE /de-DE/mau-reseller-north/account/orders h1=["Bestellungen"] lang=de-DE title=Mein Konto | Küstenwerk Autoteile
+account-order de-DE /de-DE/mau-reseller-north/account/orders h1=["Bestellungen"] lang=de-DE title=Mein Konto | Küstenwerk Autoteile
+account-return de-DE /de-DE/mau-reseller-north/account/orders/return h1=["Seite nicht gefunden"] lang=de-DE title=Mein Konto | Küstenwerk Autoteile
+account-garage de-DE /de-DE/mau-reseller-north/account/garage h1=["Garage"] lang=de-DE title=Mein Konto | Küstenwerk Autoteile
+account-addresses de-DE /de-DE/mau-reseller-north/account/addresses h1=["Adressen"] lang=de-DE title=Mein Konto | Küstenwerk Autoteile
+account-payment-methods de-DE /de-DE/mau-reseller-north/account/payment-methods h1=["Zahlungsarten"] lang=de-DE title=Mein Konto | Küstenwerk Autoteile
+account-subscriptions de-DE /de-DE/mau-reseller-north/account/subscriptions h1=["Abos"] lang=de-DE title=Mein Konto | Küstenwerk Autoteile
+account-returns de-DE /de-DE/mau-reseller-north/account/returns h1=["Retouren"] lang=de-DE title=Mein Konto | Küstenwerk Autoteile
+account-profile de-DE /de-DE/mau-reseller-north/account/profile h1=["Profil"] lang=de-DE title=Mein Konto | Küstenwerk Autoteile
+confirmation de-DE /de-DE/mau-reseller-north/checkout/confirmation h1=[] lang= title=
+confirmation en-US /en-US/mau-reseller-north/checkout/confirmation h1=[] lang= title=

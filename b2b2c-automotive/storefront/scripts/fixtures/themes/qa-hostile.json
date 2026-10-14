@@ -1,0 +1,20 @@
+{
+  "colorPrimary": ";}</style><script>window.__pwned=1</script>",
+  "colorPrimaryHover": "#911c14",
+  "colorSecondary": "#000000",
+  "colorBackground": "#fdfdfd",
+  "colorSurface": "#ffffff",
+  "colorText": "#191c1f",
+  "colorTextMuted": "#475156",
+  "colorAccent": "url(javascript:alert(1))",
+  "borderRadius": "8px;}",
+  "borderWidth": "1",
+  "fontFamily": "x;}</style><script>window.__pwned=1</script>",
+  "fontHeading": "Poppins, system-ui, sans-serif",
+  "spacingScale": 1,
+  "buttonStyle": "solid",
+  "cardShadow": "sm",
+  "headerStyle": "solid",
+  "shadowStyle": "neumorphic",
+  "surfaceBlur": "lg"
+}

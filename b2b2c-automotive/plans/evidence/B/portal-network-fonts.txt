@@ -1,0 +1,7 @@
+Portal /dev/tokens (npm run dev, port 3100), Chrome DevTools MCP, after reload
+- Requests to fonts.googleapis.com or fonts.gstatic.com: none
+- Font file served from the app: /_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2 (Inter, self-hosted by next/font)
+- document.fonts loaded: Inter 400, Inter 500, Inter 600 (only Inter faces)
+- (localhost:3100/__nextjs_font/geist-latin.woff2 is the Next dev error overlay font, not the app)
+- Computed font-family of [data-testid=font-sans]: Inter, "Inter Fallback", system-ui, sans-serif
+- Console errors and warnings: none
