@@ -31,6 +31,7 @@ describe('Vehicle options endpoint (dependent selectors)', () => {
     expect(body.level).toBe('make');
     expect(body.options.map((o) => o.key)).toContain('volkswagen');
     expect(res.headers.get('cache-control')).toBe('public, max-age=300');
+    expect(res.headers.get('netlify-vary')).toBe('query');
   });
 
   it('the market limits the makes', async () => {
