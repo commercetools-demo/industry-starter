@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { expect, test } from '@playwright/test';
 
 /** The footer band sits at the bottom of the viewport even when the page content is shorter than the screen (sign in). */

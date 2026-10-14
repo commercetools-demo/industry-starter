@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/tailoring/[productId]/reset { storeKey } : deletes the store's tailoring; master text and images show again (T-07).
 import { z } from 'zod';
 import { resetTailoring } from '@/lib/ct/seller/tailoring';

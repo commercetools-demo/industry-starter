@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Device recurrence spike (workstream Q-03): what do financed device lines do in the live project?
 // Run: npm run spike:device-recurrence -- [--keep]
 // Creates only resources keyed `spike-device-*` (plus a throwaway customer) in spec-test-b2c-telecom and deletes them at the end.

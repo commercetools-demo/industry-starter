@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The buyer's choice on a device card (color, memory, mode, term) and how it follows the variant. Pure.
 import { INSTALLMENT_TERMS } from '@/lib/config/devices';
 import { availableModeNames, getAvailableModes } from '@/lib/devices/acquisition';

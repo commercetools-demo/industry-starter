@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Assembles the seed manifest from the typed data modules (data/index.ts). Demo customers and orders only with --with-demo.
 import { DEMO, MANIFEST, PLATFORM_MANIFEST } from './data';
 import type { SeedManifest } from './types';

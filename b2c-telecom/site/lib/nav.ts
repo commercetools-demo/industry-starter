@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { HIDDEN_NAV_KEYS, PLAN_FINDER_PATH, PLAN_MENU } from '@/lib/config/nav';
 import type { Category, Locale } from '@/lib/types';
 

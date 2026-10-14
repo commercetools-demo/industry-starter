@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Membership of master parts in a store's assortment, from the three seed sources: the master selection
 // (`mau-sel-malva-master`), the store's own selection and the state object `mau-assortment/<storeKey>`. No price access.
 import 'server-only';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { privateJson } from '@/lib/api/private-json';
 import { customerIdOf, wishlistError, wishlistFailure, wishlistJson } from '@/lib/api/wishlist-api';
 import { readJson } from '@/lib/cart-api';

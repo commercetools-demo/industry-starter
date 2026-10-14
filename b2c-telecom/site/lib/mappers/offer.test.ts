@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { Attribute, Category as SdkCategory, ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
 import type { Market, Offer, OfferFacts } from '@/lib/types';
 import categories from './__fixtures__/categories.json';

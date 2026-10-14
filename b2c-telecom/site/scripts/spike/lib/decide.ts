@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The decision table of the checkout spike (Gate 2). Pure.
 import type { ProbeResult, ProbeStatus } from './probe';
 

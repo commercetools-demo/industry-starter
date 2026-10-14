@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // An in-memory stand-in for the seller-admin commercetools client, for workstream T only: just the calls that
 // lib/ct/seller/{assortment,assortment-write,prices,tailoring,discounts} make, with versions (409 on a stale version),

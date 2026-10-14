@@ -1,5 +1,5 @@
 {
-  "name": "malva-healthcare-site",
+  "name": "@commercetools-labs/malva-healthcare-site",
   "version": "0.1.0",
   "private": true,
   "scripts": {

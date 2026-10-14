@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // node scripts/reconcile-assortment.mjs <storeKey>
 // Report only: compares the store's own selection with "master selection minus the store's withdrawn and blocked parts" (the
 // `mau-assortment/<storeKey>` object) and lists drift. The portal's own reconcile (POST /api/seller/assortment/reconcile) does the fix.

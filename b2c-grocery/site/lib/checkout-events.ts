@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Client-safe: turns the Checkout Browser SDK messages (`onInfo`) into the one thing the storefront cares about. */
 export type CheckoutEvent = { type: 'order-created'; orderId: string } | { type: 'other' };
 

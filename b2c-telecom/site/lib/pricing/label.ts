@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Broadband Facts label builder (spec broadband-facts-label). Pure: the ONLY place where label fields are mapped from
 // catalog data. Nothing is copied: every figure comes from the offer, the line's engine prices and the price schedule.
 import type { BroadbandLabelData, BundleLineKind, LabelRow, LabelSnapshot, Money, Offer, PriceSchedule, TermMonths } from '@/lib/types';

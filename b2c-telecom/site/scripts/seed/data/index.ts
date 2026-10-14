@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The Malva seed manifest: F's data (market, tax, groups, recurrence, shipping) plus G's catalog.
 import type { DemoCustomerDraft, DemoOrderDraft, SeedManifest } from '../types';
 import { cartDiscounts } from './cart-discounts';

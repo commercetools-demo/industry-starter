@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Notification dismissals (R-14, Q-R04): stored per customer in localStorage, so no server write is needed. Client safe.
 import type { PortalNotification } from './types';
 

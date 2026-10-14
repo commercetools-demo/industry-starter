@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // node scripts/verify-discount-preview.mjs <storeKey> <discountId> [--kind=product|cart] [sku] [quantity]
 // Builds a temporary cart in the store with one line (the first assigned SKU unless given), reads what the platform applied and prints
 // it next to the editor's preview figures, then deletes the cart. Refuses an inactive discount. Writes only the temporary cart.

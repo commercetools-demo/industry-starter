@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // What a reseller types into a price field. A comma or a dot is the decimal mark, at most two decimals, above zero.
 // Blank means "no override" (the Malva list price applies). Pure.
 export type PriceInput = { kind: 'blank' } | { kind: 'ok'; centAmount: number } | { kind: 'invalid' };

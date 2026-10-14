@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { timingSafeEqual } from 'node:crypto';
 import { runAutoRefill } from '@/lib/ct/auto-refill-run';
 import { log } from '@/lib/log';

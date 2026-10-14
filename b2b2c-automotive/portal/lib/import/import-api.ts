@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The one permitted file that talks to the commercetools Import API (W-14). The Import API is served by its own host, which the
 // SDK does not cover, so this file (and only this file) may use fetch against it (lint exemption in eslint.config.mjs).
 // Flow: container + chunks of 20 product drafts, wait until every operation has reached a final state (no ordering guarantee),

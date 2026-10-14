@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Default texts of the three e-mail templates (W-04). Stored per store on first edit; never sent (Q-P01). Pure.
 // The texts live in default-templates.json so that scripts/ensure-w.mjs writes the same defaults.
 import defaults from './default-templates.json';

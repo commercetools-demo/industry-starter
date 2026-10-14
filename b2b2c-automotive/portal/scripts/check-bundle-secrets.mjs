@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Secret in the bundle: fails when a secret value (or the word client_secret) appears in .next/static.
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';

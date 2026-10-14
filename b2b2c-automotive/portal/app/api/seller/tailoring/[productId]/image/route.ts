@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/tailoring/[productId]/image (multipart: storeKey, file) : validates the bytes (JPG, PNG or WebP, at least
 // 600 x 600 px, at most 10 MB; never the Content-Type), uploads through the image store and returns `{ url, width, height }`.
 // It does not save: the editor's Save sends the `images` array through PUT, which publishes at once.

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Custom Objects (the serviceability table, D-020): upsert by container + key. The draft key is the object key (a postal
 // code); the container is fixed to the Malva serviceability container, so the reconciler can fetch by key alone.
 import { SERVICEABILITY_CONTAINER } from '../data/serviceability';

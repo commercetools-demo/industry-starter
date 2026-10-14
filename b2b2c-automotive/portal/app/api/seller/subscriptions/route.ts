@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/subscriptions?storeKey= : the store's recurring orders with KPIs and the renewals of the next 7 days (V-09). Admin only.
 import { listSubscriptions } from '@/lib/ct/seller/subscriptions';
 import { json } from '@/lib/portal/route-kit';

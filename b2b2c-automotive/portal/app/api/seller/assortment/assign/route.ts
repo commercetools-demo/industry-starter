@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/assortment/assign { storeKey, productIds | filter } : assign or reinstate (T-03). Never confirms.
 // "Never widen": a blocked upstream part, or one outside the Malva catalog that is not the store's own, is 409 BLOCKED_UPSTREAM.
 import { AssignBody } from '@/lib/catalog/route-schemas';

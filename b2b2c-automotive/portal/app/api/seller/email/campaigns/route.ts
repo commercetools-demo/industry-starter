@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/email/campaigns?storeKey= and POST { storeKey, name, templateKey, rule } (W-07). A campaign is a stored Draft; there
 // is no send route, no recipient list and no mail queue (Q-P01). The rule is parsed strictly again on the server.
 import { createEmailCampaign, listEmailCampaigns } from '@/lib/ct/seller/email-campaigns';

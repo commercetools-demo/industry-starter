@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Form state of the discount editor and its conversion to and from the structured rule (lib/catalog/discount-rule.ts). Pure.
 import type { CartRule, ProductRule } from './discount-rule';
 import { formatPriceInput, parsePriceInput } from './price-input';

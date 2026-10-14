@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * A small evaluator for the commercetools query predicates the unit tests need (never the network). Supported terms, joined
  * by ` and `: `f="x"`, `f=true`, `f=3`, `f!="x"`, `f<"x"` (and `>`, `<=`, `>=`, compared as strings or numbers), `f in ("a", "b")`,

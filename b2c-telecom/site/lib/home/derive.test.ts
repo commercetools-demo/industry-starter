@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { ADDON_OFFERS, CABLE_OFFERS, HOME_TREE, OFFERS_BY_CATEGORY, PHONE_OFFERS } from '@/components/home/__fixtures__/home';
 import { HOME_CONFIG } from '@/lib/config/home';
 import { LISTED_CABLE_100, LISTED_CABLE_GIG, LISTED_PHONE_ESSENTIAL, usd } from '@/lib/listing/__fixtures__/catalog';

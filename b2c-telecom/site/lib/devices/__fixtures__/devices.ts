@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Fixtures of workstream Q: the USD prices of the plan's table and the two handset offers built from them.
 import type { CartLine, DeviceOffer, DevicePrices, LineAcquisition, Money } from '@/lib/types';
 

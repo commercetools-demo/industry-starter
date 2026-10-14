@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Client-safe fetch helpers for hooks. Non-OK responses throw the shared ApiError.
 import { ApiError, isApiErrorCode, type ApiErrorCode } from '@/lib/api-error';
 

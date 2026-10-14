@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { describe, it, expect, vi } from 'vitest';
 import { DEFS, skuOf } from './data/catalog';
 import { QA_PASSWORD, QA_SKUS, createQaOrder, parseArgs, qaCartDraft, qaCustomerDraft, qaEmail, qaOrderDraft, qaSlot, statusActions } from './create-qa-order';

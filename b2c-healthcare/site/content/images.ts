@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Typed view of the banner and cover images (scripts/seed/data/site-images.json, keyed by slot).
 // A slot without an image is null and callers fall back to a token-styled gradient block.
 // URLs are never invented; only clean https URLs from the file are returned.

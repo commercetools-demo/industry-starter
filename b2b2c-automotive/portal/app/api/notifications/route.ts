@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/notifications: notifications of the signed-in associate's store (R-14). Dismissals live in the browser (Q-R04).
 import { loadNotifications } from '@/lib/portal/notification-sources';
 import { ApiError, handle, json, requireCustomer } from '@/lib/portal/route-kit';

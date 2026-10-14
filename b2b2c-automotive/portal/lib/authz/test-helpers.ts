@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Test helpers for seller endpoints (T and U import them): synthetic sessions and the cross-store assertion.
 import { expect } from 'vitest';
 import type { Session } from '@/lib/types';

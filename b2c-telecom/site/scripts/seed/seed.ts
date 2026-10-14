@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run seed:plan | seed. Order of a run: target check -> validate -> plan -> apply -> report.
 import { consoleLog, exitCodeForError, parseArgs, type Log } from './cli';
 import { EXIT } from './config';

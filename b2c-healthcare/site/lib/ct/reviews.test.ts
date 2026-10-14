@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 interface FakeReview { id: string; rating: number; title?: string; text?: string; authorName?: string; createdAt: string; includedInStatistics: boolean; target: { id: string }; custom?: { fields: { verifiedPatient?: boolean } } }

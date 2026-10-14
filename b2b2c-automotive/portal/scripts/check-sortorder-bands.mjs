@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // node scripts/check-sortorder-bands.mjs
 // Read only: every product and cart discount has a sortOrder unique per kind; Malva-funded ones sit in 0.90 to 0.99 (mau-pd-malva-*
 // product discounts, cart discounts funded by Malva), reseller ones in 0.05 to 0.89. Lists every outside value and every duplicate.

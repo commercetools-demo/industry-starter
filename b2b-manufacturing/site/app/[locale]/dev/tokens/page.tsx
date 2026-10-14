@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { notFound } from 'next/navigation';
 
 // Visual smoke page for the design tokens and component classes. Development only: scripts/check-no-dev-pages.mjs

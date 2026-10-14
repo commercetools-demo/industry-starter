@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { accountRoute } from '@/lib/api/account-api';
 import { withListErrors } from '@/lib/api/lists-api';
 import { moveListToBundle, type MoveOutcome } from '@/lib/ct/list-to-bundle';

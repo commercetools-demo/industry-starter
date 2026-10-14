@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Promo code status for a cart (spec "Promo codes visible with reasons"). Pure; the storefront cart (N) reuses it through
 // components/discounts/DiscountCodeStatus.tsx. `key` is the message key suffix under `catalog.codeStatus`.
 export type DiscountCodeState = 'NotActive' | 'NotValid' | 'DoesNotMatchCart' | 'MatchesCart' | 'MaxApplicationReached' | 'ApplicationStoppedByPreviousDiscount';

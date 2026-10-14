@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/search/parts?q=: store scoped part search for the top bar and the palette (R-13). Fewer than two characters
 // answer an empty list without calling commercetools.
 import { MIN_QUERY } from '@/lib/portal/search';

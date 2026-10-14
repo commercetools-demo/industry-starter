@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { ApiError, handle, requireCustomer } from '@/lib/api';
 import { FIELDS_INVALID, WRONG_CURRENT_PASSWORD, readJsonObject, tooManyAttempts } from '@/lib/auth-route';
 import { TooManyAttemptsError, ValidationError, WrongCurrentPasswordError, changePassword } from '@/lib/ct/identity';

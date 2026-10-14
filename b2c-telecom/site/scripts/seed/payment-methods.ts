@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run seed:payment-methods -- --confirm-project spec-test-b2c-telecom --email <customer email>
 // Workstream T (D-032): the account page only LISTS stored payment methods, so demos and Chrome checks need records. This makes sure the
 // custom type `malva-payment-method` exists, then gives the customer two demo cards (Visa 4242, default; Mastercard 5454). The token

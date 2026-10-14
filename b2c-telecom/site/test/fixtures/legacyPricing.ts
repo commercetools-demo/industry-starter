@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Introductory prices and price steps are no longer sold (promotions apply to the first order only), so INTRO_DEFS and STEP_DEFS are
 // empty. Orders placed before that change still carry intro and step periods, and the schedule library keeps reading them. Tests that
 // cover that reading install the definitions that used to be shipped.

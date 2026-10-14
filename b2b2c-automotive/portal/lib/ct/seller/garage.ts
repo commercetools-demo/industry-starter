@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Read-only view of a shopper's garage (V-05). The garage is the `garage` field of the seed type `malva-customer`: a JSON string
 // `{ vehicles: [{ id, make, model, year, engine, ... }], activeId }` with at most 5 vehicles (Q-J04), the same shape guard as
 // `storefront/lib/vehicles/garage.ts`. Anything that does not fit is dropped; the portal never writes the garage.

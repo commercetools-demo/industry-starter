@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET, PATCH, DELETE /api/seller/discounts/[kind]/[id] (T-09). Ownership is checked by id before anything is read or written:
 // a discount of another store answers 404 (not 403, so existence does not leak); Malva-funded ones answer 403 LOCKED_MALVA_FUNDED
 // to PATCH and DELETE. PATCH saves a complete rule; the store's channel clause or `stores` can never change.

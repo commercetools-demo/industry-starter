@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npx tsx scripts/seed/create-qa-order.ts --confirm-project spec-test-b2c-telecom [--scenario design-demo|devices|empty|cancelled|many]
 //                                         [--orders N] [--discontinued] [--customer qa-xxxx@example.com]
 // Creates a throwaway QA customer with realistic orders so the account pages (dashboard, order list, order detail, "Buy again") can be

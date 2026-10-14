@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Shared state and factories for the cart route tests (the `vi.mock` calls themselves stay in each test file; vitest hoists them).
 import { CART_OFFERS } from '@/lib/cart/__fixtures__/offers';
 import type { SessionData } from '@/lib/session-types';

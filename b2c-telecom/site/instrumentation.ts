@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { validateEnv } from './lib/ct/env-core';
 
 // Stops `next start` with the name of the missing or weak variable. Development and test never validate up front.

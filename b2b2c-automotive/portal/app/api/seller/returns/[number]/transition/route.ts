@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/returns/[number]/transition { storeKey, to, refundCents?, reason? } (V-12, V-13). `to` is a status word only: the native
 // shipment and payment states are derived on the server. `to: 'refunded'` requests the refund through Checkout; the return becomes
 // Refunded once the connector confirms (the portal never marks a refund successful itself).

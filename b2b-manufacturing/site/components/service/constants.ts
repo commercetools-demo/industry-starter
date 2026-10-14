@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 export const SECTOR_KEYS = ['facilities', 'manufacturing', 'property', 'healthcare'] as const;
 export type SectorKey = (typeof SECTOR_KEYS)[number];
 export const isSectorKey = (v: unknown): v is SectorKey => typeof v === 'string' && (SECTOR_KEYS as readonly string[]).includes(v);

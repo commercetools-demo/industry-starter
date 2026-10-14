@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** App types. Components import only from here, never from the commercetools SDK. A service has no price field by design. */
 export interface FaqItem { question: string; answer: string }
 

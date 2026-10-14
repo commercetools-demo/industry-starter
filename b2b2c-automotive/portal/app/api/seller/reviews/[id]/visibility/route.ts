@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/reviews/[id]/visibility { storeKey, visibility: 'published' | 'hidden' } : show or hide a review of this store through
 // the review states (V-16). A hidden review leaves the storefront list and the rating statistics.
 import { z } from 'zod';

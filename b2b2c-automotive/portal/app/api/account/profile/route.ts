@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET and PUT /api/account/profile { firstName, lastName, email } (workstream U-10): the signed-in customer's own name and email.
 // The customer is always the session's; no id is accepted from the body. A duplicate email answers 409.
 import { getAccountProfile, updateAccountProfile } from '@/lib/ct/account';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { Category, Locale, Offer } from '@/lib/types';
 
 // Pure link helpers of the catalog surface (D-052). Offers and categories are linked ONLY through these functions: the home page,

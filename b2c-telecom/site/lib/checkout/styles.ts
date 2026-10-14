@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Maps the site's design tokens to the only variables the hosted Checkout accepts (docs: checkout/custom-style). The widget runs in its own
 // frame, so it cannot read our CSS: the VALUES are resolved from the live tokens here. Any other variable would be ignored by the widget.
 

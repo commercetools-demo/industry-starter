@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /* @ds-bundle: {"format":4,"namespace":"Telecom_82a17f","components":[],"sourceHashes":{},"inlinedExternals":[],"unexposedExports":[]} */
 
 (() => {

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Demo customers (only with --with-demo). Password = env SEED_DEMO_PASSWORD (never committed); emails use example.com / example.de.
 // Every record carries demoMarker 'malva-demo' (set by the reconciler). isEmailVerified is true (D-031).
 import type { DemoCustomerDraft } from '../../types';

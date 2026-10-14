@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/prices?storeKey=&currency=&text=&offset=&limit= : the price table (T-05).
 // PUT /api/seller/prices { storeKey, currency?, changes: [{ sku, centAmount | null }], confirm, expectedCount } : publish (T-06).
 // The server owns the facts: the body is strict, so a client can never send a list price, a cost or a currency per change.

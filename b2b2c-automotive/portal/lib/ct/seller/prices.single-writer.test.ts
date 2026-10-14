@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // E1: lib/ct/seller/prices.ts is the only module that may touch standalone prices through the client, and the routes only call it.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';

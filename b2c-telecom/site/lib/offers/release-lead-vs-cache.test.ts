@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 // A release must be applied at least RELEASE_MIN_LEAD_MS ahead: a NEW offer only reaches the cached lists after the catalog cache
 // expires, so every catalog and search TTL has to be at most half of the lead time.

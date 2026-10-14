@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET and POST /api/seller/store/branches (workstream U-05): the store's branches (channels with both roles and branch-info) and
 // "Add branch". Admin only, store key checked first.
 import { createBranch, listBranches } from '@/lib/ct/seller/branches';

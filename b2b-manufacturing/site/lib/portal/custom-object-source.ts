@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import 'server-only';
 import { fetchRecords, fetchSiteNames, CONTAINERS, type InvoiceRecord, type VisitRecord, type WasteDocRecord } from '@/lib/ct/portal-data';
 import { DOC_TYPE } from './documents';

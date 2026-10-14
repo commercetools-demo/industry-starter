@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Demo orders = what the customers already hold (D-021). Created from carts with an order number; immutable once created.
 // The price schedule follows L's PriceSchedule format (`{"v":1,"schedules":[...]}`), computed here without importing app code.
 import type { DemoOrderDraft } from '../../types';

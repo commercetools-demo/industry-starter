@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Turns a LoginOutcome into the session write shared by the form login and the demo login (R-06, R-17a).
 import 'server-only';
 import { DEFAULT_LOCALE_KEY, LOCALE_COOKIE, isAppLocale, type AppLocale } from '@/i18n/config';

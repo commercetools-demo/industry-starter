@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // File-based content: Markdown with front matter under site/content/, read at build or
 // request time on the server. No commercetools import: these pages must survive a degraded commerce tier.
 //

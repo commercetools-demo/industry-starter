@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Dev-only reference sheet of the design tokens (rendered by app/[locale]/_tokens/page.tsx in workstream H).
 // Everything is styled through tokens; nothing here is a product string.
 

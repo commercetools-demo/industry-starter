@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 export type Market = { locale: 'en-US' | 'de-DE'; currency: 'USD' | 'EUR'; country: 'US' | 'DE' };
 export type CountryConfig = Market & { label: string };
 

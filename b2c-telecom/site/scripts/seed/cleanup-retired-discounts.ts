@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Removes the retired Cart Discounts from a live project: the ones that reached recurring orders (second line, bundle, introductory
 // prices, year-tier percentages). The seed does not delete what the manifest no longer has, so they stay in the project until this runs.
 //   seed:cleanup-discounts                                       read-only: lists what would be removed (default)

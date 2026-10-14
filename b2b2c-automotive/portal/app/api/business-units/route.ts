@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/business-units: the associate's units with the stores each can use (R-10).
 import { handle, json, requireCustomer } from '@/lib/portal/route-kit';
 import { getPorts, readSession } from '@/lib/portal/seam';

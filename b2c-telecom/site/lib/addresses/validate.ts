@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { ADDRESS_FIELD_MAX } from '@/lib/config/addresses';
 import type { AddressField, AddressFieldError, AddressInput } from '@/lib/types';
 import { US_STATES } from './zip-table';

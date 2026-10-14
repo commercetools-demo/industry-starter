@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/auth/login: email and password sign-in (R-06). Unknown email and wrong password give one status and one body.
 // Known gap (workstream X decision D9): no rate limiting or bot protection is built anywhere in this project.
 import { z } from 'zod';

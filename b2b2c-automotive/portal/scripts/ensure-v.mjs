@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // node scripts/ensure-v.mjs [--apply]
 // Workstream V prerequisite check (V-00). Idempotent, admin client, dry run unless `--apply`; prints every create or skip.
 //  1. VERIFIES that the seed types `malva-checkout`, `malva-line`, `malva-return-item` and `malva-customer` exist with the fields V uses and

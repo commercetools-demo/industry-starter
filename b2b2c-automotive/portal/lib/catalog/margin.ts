@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Distance of a reseller price from the Malva list price: information only, neutral tone (owner Q-T03, Q-V01).
 // There is no cost price, so there is no margin, no chip, no "thin" and no "below cost".
 const round1 = (n: number): number => Math.round(n * 10) / 10;

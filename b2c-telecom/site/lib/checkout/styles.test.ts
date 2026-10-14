@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { CHECKOUT_STYLE_TOKENS, checkoutStyles } from './styles';
 
 // The variables the hosted Checkout accepts (docs: checkout/custom-style). Anything else is ignored by the widget.

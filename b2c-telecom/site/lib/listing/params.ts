@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { ListingParams, ListingSort } from '@/lib/types';
 
 export const DEFAULT_SORT: ListingSort = 'price-asc';

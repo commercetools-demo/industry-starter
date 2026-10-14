@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Shapes shared by the shell, the auth screens and their Route Handlers (workstream R). No server imports here:
 // client components import these types.
 import type { LogicalRole, Session } from '@/lib/types';

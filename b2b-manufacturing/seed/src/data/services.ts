@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * The 12 Malva services. Names and one-sentence descriptions are verbatim from design/malva/specs/plp.md
  * (the Claude Design prototype). Long-form copy (included, steps, records, faq) is DRAFT content written for the

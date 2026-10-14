@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Typed offers mirroring the seeded catalog (scripts/seed/data): same keys, speeds, technologies, inclusions, conflicts and
 // exceptions, plus real rental/purchase prices of the equipment. Used by every lib/offers test.
 import type { AddonFacts, EquipmentFacts, EquipmentKind, Money, Offer, OfferVariant, PlanFacts, PlanFamily, Technology } from '@/lib/types';

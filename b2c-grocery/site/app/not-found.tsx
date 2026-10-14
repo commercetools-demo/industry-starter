@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Root not-found for URLs outside any locale (rendered inside the root layout; no intl provider: English only). */
 export default function RootNotFound() {
   return (

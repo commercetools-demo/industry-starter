@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Builders for commercetools Cart JSON as the API returns it (only the fields the app reads). Cast once, here.
 import type { Cart as CtCart } from '@commercetools/platform-sdk';
 

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Shapes of the dispense ledger (`malva-dispense-ledger`, one Custom Object per order id). Pure types.
  * The ledger holds quantities and references only: no sig, diagnosis or medication name (health-data-minimization).

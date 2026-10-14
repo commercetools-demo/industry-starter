@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The commercetools implementation of PortalPorts, built from workstream G's modules. Loaded lazily by lib/portal/seam.ts.
 import 'server-only';
 import { registerReseller } from '@/app/api/auth/register/registration';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The dev-only health route must answer 404 in production and must not be reachable by a release build.
 import { readFileSync } from 'node:fs';
 const src = readFileSync('app/api/health/route.ts', 'utf8');

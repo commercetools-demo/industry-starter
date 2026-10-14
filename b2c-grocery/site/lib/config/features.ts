@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** The recurrence policies the storefront offers (seeded by F, read by key; D-034). */
 export const RECURRENCE_POLICY_KEYS = ['weekly', 'every-2-weeks', 'monthly'] as const;
 export type RecurrencePolicyKey = (typeof RECURRENCE_POLICY_KEYS)[number];

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Client-safe JSON helpers for SWR hooks. Do not import server-only code here. */
 export class ApiError extends Error {
   status: number;

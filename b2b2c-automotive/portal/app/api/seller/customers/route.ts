@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/customers?storeKey=&tab=all|registered|guests&q=&offset=&limit= : the store's shoppers and guest checkouts with masked
 // e-mail addresses, KPIs and pagination (V-03). Admin only; the store comes from the checked `storeKey`, never from anything else.
 import { listCustomers } from '@/lib/ct/seller/customers';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Discount amounts in cents, used by BOTH the seeded Cart Discounts (scripts/seed/data/cart-discounts*.ts) and the
 // "Discounts" text of the Broadband Facts label, so no figure exists in two places.
 // Promotions apply to the first order only (every Cart Discount is NonRecurringOrdersOnly, see first-order-promotions): the first

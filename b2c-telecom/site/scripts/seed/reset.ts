@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run seed:reset: removes what the manifests seeded (owned keys only) or, with --demo, the demo data.
 //   seed:reset -- --confirm-project <key>                 dry run: lists what would be removed
 //   seed:reset -- --confirm-project <key> --yes           removes it

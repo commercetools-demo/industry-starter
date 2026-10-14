@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Product and cart discounts of a store (T-09): list, create (inactive), edit, toggle, delete, rank. Every discount is checked
 // against the session's store before it is read or written (404 for a foreign id, so existence does not leak), and Malva-funded
 // discounts are read-only for a reseller (403 LOCKED_MALVA_FUNDED). There is no price floor and no cost check (Q-T03): a rule is

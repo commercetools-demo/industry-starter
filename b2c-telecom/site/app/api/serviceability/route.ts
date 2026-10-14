@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { NextResponse } from 'next/server';
 import { POSTAL_COOKIE, POSTAL_COOKIE_MAX_AGE } from '@/lib/config/eligibility';
 import { errorResponse, json } from '@/lib/ct/http';

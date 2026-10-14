@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Assortment writes (T-03): assign, withdraw and reconcile by changing the store's own product selection, and record the
 // withdrawn state in the custom object `mau-assortment/<storeKey>` (only its `withdrawnByReseller` array). "Never widen" is
 // enforced here, on the server: commercetools does not enforce it (Q-T05). The portal never writes the master selection.

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/company/users/invite { email, firstName, lastName, roleKey } (workstream U-09, decision 16): Admin only. Creates the
 // customer, adds the associate with the chosen role (Admin or Buyer) and returns the one-time accept-invite path ONCE. No email
 // is sent (Q-P01); the path is never stored or logged.

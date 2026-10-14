@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { checkPassword } from '../../lib/config/password';
 import { EXIT } from './config';
 import { ensureCustomerFields } from './customer-fields';

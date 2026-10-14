@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Request bodies of the device cart routes. Pure; every failure is a plain message the route turns into 400 INVALID_INPUT.
 import { MAX_DEVICE_QUANTITY } from '@/lib/config/devices';
 import type { AcquisitionMode } from '@/lib/types';

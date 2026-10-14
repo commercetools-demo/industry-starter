@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { getLock, lockImages, type Lock } from '../../images';
 import type { ProductDraft, VariantDraft } from '../../types';
 import { attrs, toPriceDraft, type AttributeValues, type PriceSpec } from '../catalog-types';

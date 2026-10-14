@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Structured discount rules (T-01, decisions 13, 15, 16): compile to commercetools drafts, describe in plain language,
 // preview on a sample cart and validate. Pure. Predicates are built from validated fields only: ids, SKUs and the store
 // key are checked against SAFE_ID, free text is never concatenated into a predicate.

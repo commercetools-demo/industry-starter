@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Shared enum vocabulary (workstream G). Keys are English and stable; lenum labels carry both locales (D-004).
 import type { LocalizedString } from '../catalog-types';
 

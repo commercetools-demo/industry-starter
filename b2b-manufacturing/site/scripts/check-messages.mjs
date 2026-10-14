@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Message-lookup guard (malva-locale-routing › Message lookup): every t('key') used in app/ and components/ exists in
 // messages/en-US.json, and all catalogues have identical keys.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';

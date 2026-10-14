@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/returns?storeKey=&tab=open|closed : the store's returns with KPIs (V-13); pending refunds are reconciled with the
 // Payment on the way. POST { storeKey, orderNumber, items, reason, comment } records a return ("Record a return", V-11).
 import { z } from 'zod';

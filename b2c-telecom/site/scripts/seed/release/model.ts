@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Pure helpers shared by validation, planning, preview and apply: how a release changes offers, prices and discounts.
 // Everything written by a release is "dark": it carries the release instant itself (start-time / end-time on offers,
 // validFrom / validUntil on prices and cart discounts), so nothing is effective before `releaseAt`.

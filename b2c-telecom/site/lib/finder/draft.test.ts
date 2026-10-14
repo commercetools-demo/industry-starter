@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { addExtra, EMPTY_DRAFT, hasExtra, removeExtra, replacedBy, selectPlan, type DraftExtra } from './draft';
 
 const extra = (offerKey: string, patch: Partial<DraftExtra> = {}): DraftExtra => ({ offerKey, sku: `MLV-${offerKey}`, name: offerKey, kind: 'addon', equipmentKind: null, ...patch });

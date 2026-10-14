@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Offers for the cart tests: J's fixtures (same keys, rules, exceptions) plus real terms, SKUs and prices.
 import * as fx from '@/lib/offers/__fixtures__/offers';
 import type { Money, Offer, OfferVariant, PlanFacts, TermKey, TermMonths } from '@/lib/types';

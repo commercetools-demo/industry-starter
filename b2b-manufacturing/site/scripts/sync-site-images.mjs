@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Copies the clean banner-image picks from the seed project into the site (content/site-images.json) so the build
 // does not depend on the seed directory at runtime. Keeps the committed copy when the seed file is not available.
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Planning and execution of a seed run. Sequential on purpose (category locking, version conflicts).
 import { CtHttpError, type CtApi } from './lib';
 import { predicateAttributes } from './validate';

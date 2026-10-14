@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Role matrix of workstream T (section 8): for every write route a Buyer of the store gets 403 and an Admin of the store gets 200 (or 201);
 // reads work for both. Services are mocked, so a refused request must not reach them.
 import { beforeEach, describe, expect, it, vi } from 'vitest';

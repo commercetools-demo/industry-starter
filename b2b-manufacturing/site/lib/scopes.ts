@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Scopes of the Frontend API client (apiRoot) and of the provisioning client, each with the reason it is needed.
  * `.env.example` documents the same list; lib/scopes.test.ts keeps both in step. Scope names carry `:<projectKey>` in CTP_SCOPES.

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { useId, type InputHTMLAttributes, type ReactNode } from 'react';
 
 /** Label above the control, optional hint and error; the error is announced (role alert) and wired with aria-describedby / aria-invalid. */

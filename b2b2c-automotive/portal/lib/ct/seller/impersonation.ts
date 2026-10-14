@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // "Shop as customer", portal side (workstream V-06). Admin only. The customer is read through the in-store endpoint (another store's
 // customer is 404), a single-use record `malva-impersonation/<jti>` is written, and a 60 second token is signed for the storefront.
 // The storefront landing (`/api/impersonate`) is not built yet, see plans/MISSED-FEATURES.md for its exact contract.

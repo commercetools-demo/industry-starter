@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // RFC 4180 CSV parser for the product import (W-13). Pure. Handles quotes, embedded commas and newlines, a BOM and CRLF. Limits:
 // 1 MB and 2,000 data rows. Nothing is ever evaluated: cells are plain strings.
 export const CSV_MAX_BYTES = 1_000_000;

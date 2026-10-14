@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Curated pairings of the discount prompt (D-027, Planner default): which offer to suggest when a cart is one offer away from a discount.
 // The merchandiser changes this file and the matching Cart Discount in one pull request and reviews it monthly (v1 has no conversion
 // analytics). Prompts only ever suggest ADDING a line, never changing an existing one.

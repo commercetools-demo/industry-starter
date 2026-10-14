@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Turns a plain-language audience description into a rule (W-07, D3). A fixed set of phrases, no LLM (Q-W06): an unknown phrase
 // gets a hint listing the categories. Pure.
 import type { Rule } from './audience';

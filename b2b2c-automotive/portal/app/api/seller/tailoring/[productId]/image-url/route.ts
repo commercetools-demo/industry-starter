@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/tailoring/[productId]/image-url { storeKey, url } : fetches the pasted address once and validates the bytes
 // (https only, no credentials, no private network address, redirects checked, 5 s, 10 MB; then the same limits as an upload).
 // Returns `{ url, width, height }`; it does not save.

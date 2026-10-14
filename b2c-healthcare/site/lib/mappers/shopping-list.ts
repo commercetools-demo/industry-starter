@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { ShoppingList, ShoppingListLineItem } from '@commercetools/platform-sdk';
 import type { ListSummary } from '@/lib/lists-types';
 import type { Money } from '@/lib/types';

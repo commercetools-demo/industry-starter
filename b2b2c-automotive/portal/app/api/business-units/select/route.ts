@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/business-units/select { businessUnitKey, storeKey? }: switches unit and store (R-10). The unit must belong to the
 // associate; the five business unit and store fields are written in one session write and cartId is cleared.
 import { z } from 'zod';

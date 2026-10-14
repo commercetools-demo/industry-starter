@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { orderA, ctOrder } from '@/test/fixtures/orders';
 
 const state = vi.hoisted(() => ({ list: vi.fn(), byNumber: vi.fn(), recurring: vi.fn() }));

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/reviews/[id]/reply { storeKey, text } : the store's public reply (V-16). Text of 1 to 1,000 characters, rendered as
 // text. The review must carry this store's key (else 404). `replyBy` is the store's display name, which the storefront shows.
 import { z } from 'zod';

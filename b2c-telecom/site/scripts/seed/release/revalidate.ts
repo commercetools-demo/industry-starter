@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // `release:verify`: a scheduled release is revalidated against the CURRENT catalog (open question 3): did a referenced key vanish,
 // did a conflict appear, is what the release wrote still in place?
 import type { CtApi } from '../lib';

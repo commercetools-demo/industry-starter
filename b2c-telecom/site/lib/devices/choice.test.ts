@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { NOVA_5G, NOVA_5G_128, NOVA_5G_256_SILVER, NOVA_PRO, NOVA_PRO_256 } from './__fixtures__/devices';
 import { defaultTermFor, findVariant, initialChoice, normalizeChoice } from './choice';
 

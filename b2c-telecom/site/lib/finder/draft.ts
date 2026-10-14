@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Pure. The finder's draft: the extras (add-ons and equipment) the buyer picked for the selected plan. Nothing here touches the cart; the
 // draft is applied on Continue.
 

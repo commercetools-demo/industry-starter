@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Secrets and environment files (bootstrap-and-structure > Environment and least privilege).
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Raw HTTP client of the checkout spike. The recurring payment fields are not in the SDK types yet (beta), so the spike
 // talks plain JSON. Token and credentials stay inside this module and are never logged.
 export type Rec = Record<string, unknown>;

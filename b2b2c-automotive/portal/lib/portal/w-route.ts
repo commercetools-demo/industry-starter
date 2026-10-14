@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Small helper of W's seller routes: a dynamic path segment is checked before it is used (404 for anything unusual).
 import 'server-only';
 import { ApiError } from './route-kit';

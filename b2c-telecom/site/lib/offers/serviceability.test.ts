@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { createCachedServiceability, createStubProvider, describeAvailability, normalizePostalCode, SEEDED_ZIPS, type ServiceabilityProvider } from './serviceability';
 
 const cached = (mode: 'table' | 'all' | 'none' = 'table') => createCachedServiceability(createStubProvider(mode), 300);

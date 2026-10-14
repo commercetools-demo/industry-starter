@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Required commercetools variables (all server-only, never NEXT_PUBLIC_). */
 export const CT_ENV_VARS = [
   'CTP_PROJECT_KEY',

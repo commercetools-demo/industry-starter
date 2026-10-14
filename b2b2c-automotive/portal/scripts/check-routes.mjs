@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Route gate. A version: no route beginning with /dev may appear in the build output (R adds the navigation allow-list).
 // Usage: node scripts/check-routes.mjs <build-output.txt>   or   node scripts/check-routes.mjs --static
 import { existsSync, readFileSync } from 'node:fs';

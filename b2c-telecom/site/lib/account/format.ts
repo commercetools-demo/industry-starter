@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { Locale } from '@/lib/types';
 
 // Dates of the account pages. Everything is formatted in UTC: a date-only value (`serviceStartDate`) must not shift with the viewer's

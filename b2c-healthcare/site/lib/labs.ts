@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Lab result maths (design-account-area: Result table). Pure: no server imports, so components and tests share it.
 // Reference ranges are fixed per test: they come with each result, not from the patient's age or sex.
 

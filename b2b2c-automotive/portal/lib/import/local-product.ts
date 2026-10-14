@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Pure validation of a local product (W-12) and the field helpers the CSV import shares. A price is valid when it is above zero
 // with at most two decimals; there is no floor (Q-T03). A SKU never starts with the Malva prefix `MLV-`.
 export const SKU_PATTERN = /^[A-Z0-9][A-Z0-9._-]{2,39}$/;

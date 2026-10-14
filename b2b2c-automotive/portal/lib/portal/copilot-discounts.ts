@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Copilot action of workstream T (T-11): "Pause the Brake season promo" / "Turn on the Brake season promo". The rule match only reads
 // the sentence; the discount is looked up when the user pressed Confirm, in the signed-in store only. The change goes through the
 // same service as the Active toggle, after `authorizeStore`. Ambiguous names answer with the matching names, Malva-funded ones are refused.

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyConfirmed, plan } from '@/lib/portal/copilot';
 import { sessionFor } from '@/lib/authz/test-helpers';

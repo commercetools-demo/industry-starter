@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Route manifest for the static content pages. Locale-less paths; the footer, the
 // sitemap and the route test all read from here so a page cannot be linked before it exists.
 import { POLICY_SLUGS, getPublishedArticles, hasJournalRow } from '@/lib/content';

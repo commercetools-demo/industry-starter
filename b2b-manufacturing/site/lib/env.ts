@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Typed, validated server configuration. Pure: pass `process.env` (or a test object). */
 export interface CtpConfig {
   projectKey: string;

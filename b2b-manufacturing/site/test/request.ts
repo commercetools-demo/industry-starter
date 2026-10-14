@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** A Request for calling a Route Handler directly: `await POST(makeRequest('/api/x', { method: 'POST', json: {...} }))`. */
 export function makeRequest(url: string, init: Omit<RequestInit, 'body'> & { json?: unknown; cookie?: string } = {}): Request {
   const { json, cookie, headers, ...rest } = init;

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // PUT /api/seller/store/branches/[key]/stock/[sku] { storeKey, availableQuantity?, priceCent? | null } (workstream U-05, Q-005,
 // Q-003): sets the stock of a part on a branch and/or its branch price (null clears it). The price is written by workstream T's
 // single price writer; the SKU must be in the store's assortment (422); there is no price floor.

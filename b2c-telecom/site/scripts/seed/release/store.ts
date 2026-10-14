@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Release records: Custom Objects in container `malva-releases`, key = release key
 // (docs: https://docs.commercetools.com/api/projects/custom-objects). Needs the scope manage_key_value_documents.
 import type { CtApi } from '../lib';

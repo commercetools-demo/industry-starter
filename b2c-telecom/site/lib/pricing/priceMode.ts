@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Fixed or Dynamic price selection mode per monthly line (D-013). Pure: no I/O.
 import { MONTHLY_POLICY_KEY } from '@/lib/config/pricing';
 import type { LineRecurrence, PriceSelectionMode, TermMonths } from '@/lib/types';

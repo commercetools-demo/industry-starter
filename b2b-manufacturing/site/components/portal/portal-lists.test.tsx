@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { render, screen, within } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { NextIntlClientProvider } from 'next-intl';

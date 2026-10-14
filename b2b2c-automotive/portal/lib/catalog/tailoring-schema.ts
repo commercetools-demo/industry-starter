@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Strict input of a tailoring save (T-07, decision 11): only name, description and images can be tailored. SKU, fitment,
 // specifications and slug are rejected as unknown keys. Pure (also used by the editor for client-side hints).
 import { z } from 'zod';

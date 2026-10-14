@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Reseller registration against commercetools (R-07). The provisioning client lives only in this folder (lint fence).
 // Order: customer (frontend client, email verified for this phase, Q-R02), then an inactive Company business unit with the
 // customer as its first Admin. If the unit cannot be created the customer is deleted again (compensation), so no

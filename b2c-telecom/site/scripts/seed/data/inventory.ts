@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Inventory (D-019): physical equipment and handsets only. Services (plans, add-ons) and descriptive `-BASE` SKUs have none.
 import type { InventoryDraft } from '../types';
 import { inventoryKey } from '../reconcilers/inventory';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/store/geocode { storeKey, address } (workstream U-05, Q-U07): "Find coordinates" through OpenStreetMap
 // Nominatim on the server (1 request per second, cached 24 h). Never an error for an unreachable geocoder: the form keeps the
 // manual latitude and longitude fields.

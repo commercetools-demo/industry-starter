@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { runDeletion } from './deletion';
 import { getAdminRoot, isMain, makeCtx, parseFlags, PROJECT_KEY, type Flags } from './lib';
 

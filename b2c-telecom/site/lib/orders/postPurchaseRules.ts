@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Pure rules of post-purchase order management (workstream V): who may cancel or return what, and the update actions that record it.
 // No I/O and no SDK import: the order page (server) and the dialogs (client) use the same functions.
 

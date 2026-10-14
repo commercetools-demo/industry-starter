@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // "no mail code exists" (owner Q-P01, D8): W stores and previews templates and never sends. No provider env var and no send function
 // exist anywhere in the portal; the module list of `lib/no-mail.test.ts` covers mail library imports.
 import { readdirSync, readFileSync, statSync } from 'node:fs';

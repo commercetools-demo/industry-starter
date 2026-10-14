@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The single price table and the price builders (D-011, D-012). USD cents are the source; EUR = USD rounded to whole euros
 // (table rule, no FX conversion): half rounds up.
 import { COUNTRY_OF, POLICY_MONTHLY, type Currency, type PriceSpec } from './catalog-types';

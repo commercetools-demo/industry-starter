@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Development fixtures: synthetic users, units and stores behind the `PORTAL_DEV_FIXTURES=on` flag (never in production).
 // They stand in for commercetools until workstream G lands; names are neutral on purpose (plan R decision 8).
 import type { LogicalRole } from '@/lib/authz/permissions';

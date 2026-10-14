@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Plan: the ordered write list of a release, the change list for the record, and the generated rollback manifest.
 import type { PriceSpec } from '../data/catalog-types';
 import type { CartDiscountDraft, ProductDraft } from '../types';

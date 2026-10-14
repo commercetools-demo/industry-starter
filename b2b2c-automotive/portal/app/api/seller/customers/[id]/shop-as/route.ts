@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/customers/[id]/shop-as { storeKey } : "Shop as customer" (V-06). Admin only (Q-W01). Reads the customer in-store (404
 // when not of this store), records a single-use handoff, signs a 60 second token and returns where the browser POSTs it (the token is
 // never put in a URL). The portal session gets `actingAs` so the shell shows the banner. The storefront landing is deferred.

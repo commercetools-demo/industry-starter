@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { Cart as CtCart } from '@commercetools/platform-sdk';
 import { mapOrder } from '@/lib/mappers/order';
 import { orderA, orderB } from '@/test/fixtures/orders';

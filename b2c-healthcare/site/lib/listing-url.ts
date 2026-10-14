@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Doctor list state <-> URL (`?q=&specialty=&city=&today=1&page=`). Pure and deterministic: the same URL is the
  * same listing (product-listing-page). Unknown or malformed values are dropped, never trusted.

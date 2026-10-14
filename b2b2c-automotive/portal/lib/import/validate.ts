@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // CSV import validation (W-13). Pure: the server calls it on every validate AND on every commit (the commit never trusts a client
 // list). Counts: `valid` rows pass without an issue, `warnings` rows import with a default, `errors` rows are skipped.
 import { LOCAL_PART_TYPE, mapColumns, type ColumnMapping, type ImportTarget, type MappingOverrides } from './columns';

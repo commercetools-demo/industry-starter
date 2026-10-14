@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { makeRequest } from '@/test/request';
 import { createSeamMock } from '@/test/portal-mocks';

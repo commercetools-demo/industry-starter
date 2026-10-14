@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Probe result model and the wrapper that turns any thrown error into a recordable outcome (never a token or secret).
 export type ProbeStatus = 'PASS' | 'FAIL' | 'INFO' | 'UNKNOWN' | 'BLOCKED';
 

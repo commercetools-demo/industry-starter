@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Preview rendering of a stored template (W-04). Values and literal text are HTML-escaped, newlines become <br>. Pure.
 import type { EmailVariable } from './variables';
 

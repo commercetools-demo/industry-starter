@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // What the hosted Checkout tells the page (SDK `onInfo` / `onWarn` / `onError`). Pure and client-safe.
 // Message shape from the docs: { severity, code, message, payload: { order: { id } }, correlationId }.
 

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** SWR keys. Components and hooks import these; never inline an `/api/...` string as a key. */
 export const KEY_CART = 'cart';
 export const KEY_ACCOUNT = 'account';

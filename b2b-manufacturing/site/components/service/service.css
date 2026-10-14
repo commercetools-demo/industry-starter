@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /* Listing and service-detail additions to the design CSS. Tokens only. */
 .sector-filter{margin-bottom:32px;display:grid;gap:12px}
 .chips{list-style:none;padding:0;margin:0;display:flex;gap:8px;flex-wrap:wrap}

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * A minimal one-page PDF writer (built-in Helvetica, text only) so downloads need no dependency. Input is printable
  * Latin-1 text; anything else is replaced by "?".

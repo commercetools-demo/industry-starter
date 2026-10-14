@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // E-mail template variables (workstream W-04). Pure. Templates are stored and previewed only: nothing is ever sent (Q-P01).
 export const EMAIL_VARIABLES = ['order_number', 'customer_name'] as const;
 export type EmailVariable = (typeof EMAIL_VARIABLES)[number];

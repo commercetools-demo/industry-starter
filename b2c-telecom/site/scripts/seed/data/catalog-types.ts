@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Types of the Malva catalog manifests (workstream G). X (coordinated release) imports OfferManifest, CartDiscountManifest,
 // PriceSpec and LocalizedString from here.
 import type {

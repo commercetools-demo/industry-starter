@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Throwaway priced carts. The engine prices the cart, we read the answer, and the cart is always deleted: the discount prompts and the
 // finder's price preview both go through here so the cleanup guarantee lives in one place.
 import type { Cart as CtCart, CartDraft, CartUpdateAction } from '@commercetools/platform-sdk';

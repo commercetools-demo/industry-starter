@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 'use client';
 
 // Client side of workstream W's screens (Marketing, E-mail, Bundles, Product import, Brand partnership): SWR reads and plain async

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // node scripts/verify-assortment-propagation.mjs <storeKey> <sku> present|absent
 // Reads the store projection of one SKU and checks it is (or is not) visible in the store, up to 12 tries 5 s apart, because a
 // selection change reaches the in-store projection after a short delay. Read only. Exit 0 when the expectation holds.

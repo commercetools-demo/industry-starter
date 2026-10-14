@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Release builds only (Netlify sets NETLIFY=true; or MALVA_RELEASE_BUILD=1): deletes the development-only routes so they
 // are absent from the production build, not merely answering 404. DESTRUCTIVE to the working tree: it refuses to run
 // elsewhere (restore with `git checkout -- .` if you ran it by mistake with the flag set).

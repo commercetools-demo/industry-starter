@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Filtering, sorting and summary helpers for the portal lists. Pure: the URL (searchParams) is the only state. */
 export type SearchParams = Record<string, string | string[] | undefined>;
 export type Dir = 'asc' | 'desc';

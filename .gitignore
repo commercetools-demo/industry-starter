@@ -12,3 +12,6 @@ node_modules/
 
 # Figma source files for design-systems (large; keep locally to re-extract)
 design-systems/**/*.fig
+
+# Local tooling lockfiles
+.commercetools/

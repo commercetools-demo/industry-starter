@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // One definition per shared attribute name (the platform rejects conflicting definitions of one name across product
 // types). Product types take a shared definition through `shared(name, { isRequired })`; only requiredness and the
 // label may differ between types.

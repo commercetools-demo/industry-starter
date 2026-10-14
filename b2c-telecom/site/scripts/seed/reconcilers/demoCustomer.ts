@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Demo customers (only with --with-demo): the people the demo orders belong to. Every record carries demoMarker.
 import { DEMO_MARKER_VALUE } from '../../../lib/config/demo';
 import { COLLECTION, asReconciler, type DemoCustomerDraft } from '../types';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { BundleView } from '@/components/bundle/BundleView';
 import { NOVA_5G_128, NOVA_PRO_256, deviceLine, usd } from '@/lib/devices/__fixtures__/devices';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Clinical stand-in types (demo stand-in for an EHR; see README.md). Pure types and interfaces: no server imports,
  * so components may import them. `patientRef` is an opaque per-project id (`pt_<random>`); records never carry name or email.

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** `/en-US/account/orders?x=1` → `/account/orders?x=1`: the i18n router adds the locale itself. */
 export function withoutLocale(path: string, locale: string): string {
   const prefix = `/${locale}`;

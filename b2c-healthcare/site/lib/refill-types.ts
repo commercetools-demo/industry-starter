@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Shapes of the auto-refill pages. Types and pure constants only: safe in client components.
 
 /** The seeded Recurrence Policies (scripts/seed/data/recurrence.ts) as the buyer chooses them. */

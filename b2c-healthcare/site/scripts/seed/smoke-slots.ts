@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { candidateSlots, slotClaimKey, type Mode, type Schedule } from '../../lib/clinical/slots';
 import { getAdminRoot, isMain, type Root } from './lib';
 

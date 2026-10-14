@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { LocalizedString, ProductDraft, VariantDraft } from '../../types';
 import { attrs, type AttributeValues } from '../catalog-types';
 

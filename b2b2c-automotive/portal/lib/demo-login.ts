@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Demo login (R-17a, spec seller-portal/design-demo-login). Server only. Lists the seeded demo associates and signs one in
 // through the same session write as the form login. The demo password lives in the port (env DEMO_LOGIN_PASSWORD, server
 // side) and never reaches the browser; only `{ id, label, group }` is ever returned.

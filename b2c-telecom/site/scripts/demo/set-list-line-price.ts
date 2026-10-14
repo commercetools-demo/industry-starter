@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npx tsx scripts/demo/set-list-line-price.ts --confirm-project spec-test-b2c-telecom <listKey> <lineIndex> <savedAmountCents>
 // Workstream T, for the Chrome checks: sets the saved price (custom field `savedAmountCents`) of the n-th line (0-based) of a saved list,
 // so the list page shows a "Price changed" badge. Allow-listed project only (D-054).

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Cart discounts (D-014, D-027). Predicates use backtick-escaped attribute names (hyphens); proven live in G-18.
 // Docs: https://docs.commercetools.com/api/projects/cartDiscounts , https://docs.commercetools.com/api/projects/predicates
 // Promotions apply to the first order only: every discount here is NonRecurringOrdersOnly (enforced by discounts.test.ts).

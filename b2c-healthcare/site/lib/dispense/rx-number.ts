@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Longest input considered; anything longer cannot be an RX number and is never echoed in full. */
 export const RX_INPUT_MAX = 40;
 

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Domain errors of workstream T. Pure (no server imports): thrown by lib/ct/seller/* and lib/rules/*, mapped to a JSON body
 // by `sellerHandle` (lib/portal/seller-route.ts). The status is one of 400, 403, 404 or 409: `lib/api.ts` keeps coded
 // messages only for those statuses, and a 422 would be answered as a 500.

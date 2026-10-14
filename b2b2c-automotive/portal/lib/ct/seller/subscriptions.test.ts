@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createVFake, type VFake } from '@/lib/portal/v-fixture-root';
 import { mapSubscription, monthlyCents, summarize, canSubscriptionTransition, type RecurringOrderInput } from '@/lib/subscriptions/model';

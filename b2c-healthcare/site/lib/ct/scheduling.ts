@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import 'server-only';
 import { CONTAINERS, createOnly, deleteObject, getObject, queryObjects } from '@/lib/ct/custom-objects';
 import { candidateSlots, slotClaimKey, type Mode, type Schedule, type Slot } from '@/lib/clinical/slots';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Reviews of the store (workstream V-16). `Review` resources carry the custom type `malva-review` (`storeKey`, `replyText`, `replyAt`,
 // `replyBy`) and the states `review-published` (role `ReviewIncludedInStatistics`) and `review-hidden`. The storefront writes a
 // review with the store key of the shopper's session (storefront/lib/ct/reviews.ts); the portal lists only the store's own and replies

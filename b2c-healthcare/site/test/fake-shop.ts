@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * In-memory stand-in for the commercetools endpoints checkout uses (tests only): carts with an address, shipping
  * methods that match a cart (zones by state), tax by state, orders created from a cart, and order state changes.

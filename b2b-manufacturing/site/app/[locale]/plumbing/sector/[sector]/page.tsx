@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { setRequestLocale } from 'next-intl/server';
 import { ListingPage, listingMetadata } from '@/components/service/ListingPage';
 import { SECTOR_KEYS } from '@/components/service/constants';

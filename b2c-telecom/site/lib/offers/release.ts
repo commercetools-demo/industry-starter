@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Read side of the coordinated offer release (workstream X, D-057). Pure, no I/O: shared by the server reads, the client and the
 // release engine. An offer is purchasable only inside its release window: released iff (startTime unset or startTime <= now) and
 // (endTime unset or now < endTime). A malformed date means NOT released (fail closed).

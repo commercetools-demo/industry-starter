@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/auth/register: reseller registration (R-07). The account stays pending: the real PortalPorts.register creates the
 // customer, then an inactive Company business unit with the provisioning client (compensating delete of the customer on
 // failure); a Malva operator activates it in the Merchant Center (OA-11). No session is started here.

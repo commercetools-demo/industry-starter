@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Launch check (malva-homepage › Sample content is labelled): lists every managed content item still flagged
 // `sample: true`. With --strict (release build) it fails while any remains.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // E-mail campaigns by audience rule (W-07). A campaign is a stored record `{ name, templateKey, rule, status: Draft | Ready,
 // recipientCount, openRate: null }` in container `malva-email-campaigns`, key `<storeKey>--<id>`. There is NO send function, NO
 // persisted recipient list and NO mail queue (D8, Q-P01): "Mark ready" stores a count only. Consent is always applied.

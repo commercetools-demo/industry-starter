@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Fails when a secret value or the word `client_secret` appears in the client bundle (.next/static).
 // Secret values come from the environment (CTP_CLIENT_SECRET, CTP_PROV_CLIENT_SECRET, SESSION_SECRET) and from .env.local when present.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';

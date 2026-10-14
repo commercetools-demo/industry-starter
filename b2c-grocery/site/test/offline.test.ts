@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 describe('Offline tests', () => {
   it('an unstubbed fetch fails at once instead of reaching the network', async () => {
     await expect(fetch('https://api.example.com/x')).rejects.toThrow(/Network is disabled in unit tests/);

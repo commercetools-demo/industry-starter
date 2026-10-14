@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npx tsx scripts/demo/advance-order.ts --confirm-project spec-test-b2c-telecom --order MLV-XXXXXXXX <one of the flags below>
 // Workstream V, for the Chrome checks: moves ONE order through the states that staff or a carrier would set, so the order page can show
 // shipments, parcels, tracking references and the goods/refund states of a return. Admin client, allow-listed project only (D-054).

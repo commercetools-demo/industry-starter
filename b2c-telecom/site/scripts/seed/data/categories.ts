@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Category tree (parents first). Order hints are decimal strings; the header reads Phone plans, Wireless internet,
 // Cable internet, Add-ons, and the devices category last.
 import type { CategoryDraft } from '../types';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The two handset offers as the catalog read produces them (kind device, variants with outright and financed prices), built from the
 // DeviceOffer fixtures so both stay in step. Policy ids are the fixed test ids of POLICY_IDS.
 import type { DeviceOffer, DeviceVariant, Offer, OfferVariant } from '@/lib/types';

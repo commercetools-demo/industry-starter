@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Cart update actions of a device line and the guard against the price fallback. Pure: no I/O and no SDK import (the action shapes
 // below are structurally the SDK's `CartUpdateAction`, so lib/ct passes them to the API as they are).
 import { policyKeyFor, readAcquisition, endOfTermFor } from '@/lib/devices/acquisition';

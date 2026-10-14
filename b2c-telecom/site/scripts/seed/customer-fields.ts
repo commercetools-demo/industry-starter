@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run seed:customer-fields -- --confirm-project spec-test-b2c-telecom
 // Workstream R: makes sure the custom type `malva-customer` has the field `sessionsValidAfter` (DateTime) that the password reset
 // uses to invalidate earlier sessions. Idempotent: creates the type when it is missing, adds only the missing field, nothing is sent

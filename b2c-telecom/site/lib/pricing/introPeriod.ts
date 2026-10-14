@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Introductory-period rules (spec introductory-period-price; D-023: the period starts at the order date). Pure: no I/O.
 import { INTRO_DEFS, INTRO_DISCOUNT_KEY_PREFIX, type IntroDef } from '@/lib/config/pricing';
 import type { Money, ScheduleError, TermMonths } from '@/lib/types';

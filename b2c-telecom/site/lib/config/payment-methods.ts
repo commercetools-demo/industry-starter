@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Constants of the stored payment methods (workstream T). Never inline these numbers.
 
 /** A customer may have at most 50 active payment methods (and 100 inactive ones). */

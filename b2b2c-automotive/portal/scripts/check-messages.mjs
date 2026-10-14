@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Message gate (bootstrap-and-structure > Locale routing for two locales, Gates and tests): exactly two catalogs with
 // identical keys and placeholders, no empty values, and every t('ns.key') used in source exists in en-US.json.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';

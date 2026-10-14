@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Client-safe address validation shared by the address dialog and the `/api/account/addresses` routes (S-01). */
 export const ADDRESS_COUNTRIES = ['US', 'DE'] as const;
 export const REQUIRED_ADDRESS_FIELDS = ['firstName', 'lastName', 'streetName', 'postalCode', 'city', 'country'] as const;

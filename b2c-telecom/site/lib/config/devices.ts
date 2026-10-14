@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Constants of the device acquisition modes (workstream Q, D-015, D-060). Never inline these numbers.
 import type { InstallmentTerm } from '@/lib/types';
 

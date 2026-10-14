@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Account side navigation registry (design-account-area: Account layout and navigation).
 // Pure data: no React, no server imports. A later workstream adds its entry in the same commit as its route
 // (S Orders is here already; T: My medicines, Auto-refill, Payment methods; U: Allowance), so an item appears

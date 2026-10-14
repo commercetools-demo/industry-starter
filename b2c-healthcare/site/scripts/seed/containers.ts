@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Every Custom Object container the storefront (and the seed) writes: the values of `CONTAINERS` in lib/ct/custom-objects.ts
  * plus the ones the seed script writes. A unit test (reset.test.ts) reads lib/ct/custom-objects.ts and fails when this list

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/assortment/withdraw { storeKey, productIds | filter, confirm, expectedCount } (T-03).
 // Without `confirm: true` and the exact count the answer is 409 CONFIRMATION_REQUIRED with the impact (count, open carts, branches).
 import { WithdrawBody } from '@/lib/catalog/route-schemas';

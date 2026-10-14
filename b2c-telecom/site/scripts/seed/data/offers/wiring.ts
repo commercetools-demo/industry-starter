@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The offer table (D-016): which product each offer wraps, where it is listed, what it includes. Relations
 // (conflicts, exceptions) are derived from this table by relations.ts.
 import type { OfferFamily } from '../shared/enums';

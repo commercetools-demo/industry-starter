@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { INSTALL_LEAD_DAYS } from '@/lib/config/checkout';
 import { addDays } from '@/lib/pricing/dates';
 import type { CartLine } from '@/lib/types';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 const read = vi.hoisted(() => vi.fn());
 vi.mock('./client', () => ({ getApiRoot: () => ({ inventory: () => ({ get: (args: unknown) => ({ execute: () => read(args) }) }) }) }));

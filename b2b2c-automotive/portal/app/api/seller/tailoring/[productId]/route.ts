@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/tailoring/[productId]?storeKey= : master and tailored values side by side (T-07).
 // PUT /api/seller/tailoring/[productId] { storeKey, name?, description?, images? } : saves and PUBLISHES in the same request (no review).
 // The body is strict: only name, description and images can be tailored; SKU, fitment, specs and slug are refused.

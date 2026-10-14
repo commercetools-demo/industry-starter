@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // One-off cleanup of the furniture sample data in spec-test-b2c-telecom (owner approved 2026-10-07: catalog + sample customers, carts, orders, store).
 // Usage: node cleanup.mjs <path-to-.env.seed> [--execute]    (default is a dry run: lists counts, deletes nothing)
 import { readFileSync } from 'node:fs';

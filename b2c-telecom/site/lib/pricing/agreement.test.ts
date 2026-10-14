@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 // One cart, four surfaces: the bundle, checkout, the confirmation and the account's order all state the same "then monthly" and the same
 // amount due at order, because each reads the engine's figures and the standing price (promotions apply to the first order only).

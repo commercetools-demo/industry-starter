@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // What U writes onto an order right after it exists (spec term-phased-price-schedule and broadband-facts-label): the price schedule of every
 // plan line and the label snapshot. Built from the ORDER's creation date and the order's own prices, never from the cart view or today's
 // catalog, so the stored promise cannot drift. Pure: no I/O.

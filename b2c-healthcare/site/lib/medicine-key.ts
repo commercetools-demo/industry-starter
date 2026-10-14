@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Product key and path of a medicine (`mlv-med-<slug>`, SKU `MED-<slug>`); shared by every surface that links a medicine. */
 const SKU_RE = /^MED-([a-z0-9][a-z0-9-]*)$/i;
 const KEY_RE = /^mlv-med-[a-z0-9-]+$/;

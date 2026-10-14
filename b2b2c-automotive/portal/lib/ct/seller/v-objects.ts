@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Custom objects of workstream V: `malva-customer-notes` (`<storeKey>--<customerId>`), `malva-subscription-audit`
 // (`<storeKey>--<recurringOrderId>--<n>`) and `malva-impersonation` (`<jti>`). Every value carries `storeKey`; reads check it, so a key
 // prefix collision can never show another store's record.

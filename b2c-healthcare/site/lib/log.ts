@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Redacting logger (error-pages, health-data-minimization): what reaches the logs must not contain
 // health data or personal identifiers. Pure module (no server-only import) so it is easy to test.
 

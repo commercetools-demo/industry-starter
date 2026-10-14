@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Typography of rendered markdown (no typography plugin): headings, paragraphs, lists and links inside a content column. */
 export const PROSE =
   'font-body text-md leading-[1.75] text-text ' +

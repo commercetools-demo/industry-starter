@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Navigation model shared by the header, the mobile menu and the footer (design-storefront-shell).
 // Pure data and functions: no React, no server-only imports.
 

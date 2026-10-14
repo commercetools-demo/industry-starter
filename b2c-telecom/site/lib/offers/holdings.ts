@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { HeldService, Offer } from '@/lib/types';
 
 // Pure: derives the services a customer holds from already-read orders and recurring orders (D-021). The reads are in lib/ct/holdings.ts.

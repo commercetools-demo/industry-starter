@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/dashboard/store-performance: sales, orders, average order, top products and the daily series of the last 30
 // days (S-04). Admin only: the role check (`store.view-performance`) runs before any commercetools call. `PORTAL_STORE_PERFORMANCE=off`
 // switches the block off (404), decision 7.

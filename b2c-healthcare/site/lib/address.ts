@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { Address, AddressInput } from '@/lib/types';
 
 // Address rules shared by the form and the Route Handlers (format validation only: no provider).

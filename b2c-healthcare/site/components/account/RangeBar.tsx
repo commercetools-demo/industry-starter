@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { LabFlag } from '@/lib/labs';
 import { markerPosition } from '@/lib/labs';
 import { cx } from '@/components/ui/cx';

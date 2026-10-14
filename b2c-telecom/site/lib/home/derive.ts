@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { SALES_CHANNEL } from '@/lib/config/eligibility';
 import { BLURB_KEY_BY_CATEGORY } from '@/lib/config/listing';
 import { listingKindForCategory } from '@/lib/listing/kinds';

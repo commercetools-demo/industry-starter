@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Definitions of introductory periods and stepped term prices. Empty since promotions apply to the first order only.
 export const MONTHLY_POLICY_KEY = 'malva-monthly' as const;
 

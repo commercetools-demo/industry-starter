@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Booking contact validation, shared by the confirm modal (client) and `POST /api/bookings` (server) so both
  * give the same verdict. Pure: it never logs and never echoes a value; problems are codes.

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Design lint (malva-project-bootstrap › Tokens present): no raw hex colours and no foreign fonts outside the token block,
 // and every --sl-* token of the Figma kit exists in globals.css with the same value.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';

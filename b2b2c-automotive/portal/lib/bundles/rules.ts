@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Sanity limits of a bundle (W-08). There is no price floor (Q-T03): a price only has to be above zero. Pure.
 export interface BundleDraft {
   name: string;

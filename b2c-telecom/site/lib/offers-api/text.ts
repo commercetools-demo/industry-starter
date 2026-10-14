@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { createTranslator } from 'next-intl';
 import deDE from '@/messages/de-DE.json';
 import enUS from '@/messages/en-US.json';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Route Handler paths used by client hooks. Hooks import these constants instead of writing
  * a literal `fetch('/api/...')` (lint rule: no literal endpoint calls in components, hooks, context).

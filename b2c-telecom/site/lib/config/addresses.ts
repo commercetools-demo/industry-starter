@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Constants of the address book (workstream T). Never inline these numbers.
 
 /** The commercetools docs suggest at most 10 addresses per customer. */

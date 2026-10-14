@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/customers/[id]?storeKey= : one shopper with orders, garage, consent, subscriptions, returns and notes (V-03, V-05).
 // The customer is read through the in-store endpoint, so a customer of another store is a 404 (never a 200). Admin only: the e-mail
 // address is shown in full.

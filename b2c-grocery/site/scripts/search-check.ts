@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Read-only live check of the catalog reads (M-G-1, M-G-2). Run from site/:
 //   npx tsx --conditions=react-server --env-file=.env.local scripts/search-check.ts
 import { searchProducts, type SearchParams } from '../lib/ct/search';

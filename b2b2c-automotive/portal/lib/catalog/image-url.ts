@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Pasted image URL intake (T-08). The server fetches the URL once to validate the bytes: https only, no credentials, DNS
 // resolved and private, loopback and link-local addresses refused, at most 2 redirects (each checked again), 5 s timeout,
 // 10 MB cap, then the same `validateImage` as an upload. The saved URL is the pasted one.

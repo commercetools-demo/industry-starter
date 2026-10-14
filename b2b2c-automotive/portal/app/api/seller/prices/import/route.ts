@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/prices/import { storeKey, currency?, csv, dryRun, confirm, expectedCount } (T-06): CSV `sku;price`, at most 2000
 // rows. A dry run (or a missing confirmation) previews every row; publishing goes through `publishPrices`.
 import { parsePriceCsv } from '@/lib/catalog/price-import';

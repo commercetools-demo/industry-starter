@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The only price rule (owner Q-T03: no MAP floor): a price is valid when it is a cent precision amount of the store currency,
 // a whole number of cents above zero with two fraction digits. Anything else is INVALID_MONEY.
 import { CatalogError } from '@/lib/catalog/errors';

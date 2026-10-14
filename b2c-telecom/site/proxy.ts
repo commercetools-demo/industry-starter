@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { NextResponse, type NextRequest } from 'next/server';
 import { DEFAULT_LOCALE, isSupportedLocale, LOCALES, MARKET_COOKIE, MARKET_COOKIE_MAX_AGE } from '@/lib/utils';
 

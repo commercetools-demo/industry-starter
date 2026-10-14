@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Test support: a fake project holding a few Malva offers, and the example manifest. Not used at run time.
 import { readFileSync } from 'node:fs';
 import path from 'node:path';

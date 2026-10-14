@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Rate limits and the per-email sign-in lockout. In memory, per server instance (best effort on serverless; accepted risk, README).
 // The per-IP windows reuse E's fixed-window limiter; the lockout is consecutive failures, so it has its own store.
 import { LOGIN_LOCKOUT } from '@/lib/config/auth';

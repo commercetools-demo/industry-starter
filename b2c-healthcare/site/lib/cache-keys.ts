@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Central SWR keys (storefront-data-loading: Cache keys and invalidation).
  * Hooks and the root layout fallback import these; nobody writes a key string by hand.

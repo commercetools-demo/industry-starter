@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The only definition of the password policy. Imported by the strength indicator, the register/reset forms and the server routes.
 
 export const PASSWORD_POLICY = { minLength: 10, maxLength: 128 } as const;

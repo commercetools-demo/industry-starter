@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/customers/[id]/notes { storeKey, text } : adds a note to a shopper of this store (V-05). Add and list only; the text
 // has 1 to 1,000 characters and is stored and shown as text. Admin only.
 import { z } from 'zod';

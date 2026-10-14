@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 vi.mock('@/lib/ct/bundle', () => ({ readBundle: vi.fn() }));
 vi.mock('@/lib/ct/session', () => ({ updateSession: vi.fn() }));

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Environment switches of the portal auth screens (workstream R). Pure functions of an env object so tests can pass one.
 
 /** Demo login: explicit opt-in and impossible in a production build (spec design-demo-login). */

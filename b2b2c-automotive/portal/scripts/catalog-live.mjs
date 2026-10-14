@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Shared helper of the live catalog scripts (workstream T). Reads the admin client from `portal/.env.local` (never printed), refuses a
 // store key that is not seeded unless `--allow-any` is given, and offers a tiny REST wrapper. Nothing here runs in `npm run check`.
 import { readFileSync } from 'node:fs';

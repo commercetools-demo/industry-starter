@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { OrderEditDraft } from '@commercetools/platform-sdk';
 import { createQaOrder, QA_PASSWORD, QA_SKUS } from './create-qa-order';
 import { getAdminRoot, type Root } from './lib';

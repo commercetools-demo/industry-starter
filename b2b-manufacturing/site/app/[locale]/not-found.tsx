@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { getTranslations } from 'next-intl/server';
 import { LinkButton } from '@/components/ui/Button';
 import { ROUTES } from '@/lib/site';

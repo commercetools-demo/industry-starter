@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Project settings (countries, currencies, languages) and Product Search activation (D-056).
 // Docs: https://docs.commercetools.com/api/projects/product-search#activate-the-product-search-api
 import { consoleLog, exitCodeForError, parseArgs, type Log } from './cli';

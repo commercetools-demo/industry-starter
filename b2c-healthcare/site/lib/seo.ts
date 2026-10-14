@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Absolute URLs for canonical links, hreflang alternates, the sitemap and robots.
 import type { Metadata } from 'next';
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@/lib/utils';

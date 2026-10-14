@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Legal wording of the Broadband Facts label. PLACEHOLDERS until the owner supplies the real wording (SO-08, M-M-1).
 export const LABEL_LEGAL = {
   provider: 'Malva Telecom',

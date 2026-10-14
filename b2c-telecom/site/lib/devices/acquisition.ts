@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Pure module: the three ways a handset is acquired, what is due now, monthly and at the end of the term (device-acquisition-mode).
 // No I/O, no commercetools; shared by the server and the client.
 import { addDays, addMonths, parseDateOnly, toDateOnly } from '@/lib/pricing/dates';

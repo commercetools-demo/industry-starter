@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Only a tie-break for categories without an order hint (or with equal hints). Design order: Phone plans, Wireless internet,
 // Cable internet, Add-ons, then the devices root added by G.
 export const NAV_TIE_BREAK_ORDER: readonly string[] = [

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { roleDrafts } from '../../seed/src/data/roles';
 
 /** In-memory Business Unit, roles and customers that behave like the parts of commercetools the sites and team modules use. */

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Assortment reads (T-02): the rows of "Assigned products", the authority chain card and the impact of a change.
 import 'server-only';
 import { ASSIGNED_STATES } from '@/lib/catalog/assortment-state';

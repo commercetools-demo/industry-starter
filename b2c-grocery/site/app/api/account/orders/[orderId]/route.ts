@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { privateJson, unauthenticated } from '@/lib/api/private-json';
 import { getOrderForCustomer } from '@/lib/ct/orders';
 import { getMarket, getSession } from '@/lib/session';

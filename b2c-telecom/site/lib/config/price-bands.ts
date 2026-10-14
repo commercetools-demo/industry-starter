@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { CurrencyCode, PriceBand } from '@/lib/types';
 
 // Minor units; min inclusive, max exclusive. Applied to the headline recurring amount (the one-time amount when there is none).

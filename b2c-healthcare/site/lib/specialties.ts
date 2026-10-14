@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Specialty and city options of the doctor list. They mirror the enum values of the seeded `doctor` product
  * type (scripts/seed/data/types.ts; `specialties.test.ts` keeps them in sync), so the filter bar and the

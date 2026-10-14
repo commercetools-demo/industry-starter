@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { PREFIX } from '../lib';
 
 /** Synthetic demo patients; no real people. Emails use example.com and phone numbers the 555-01xx range. */

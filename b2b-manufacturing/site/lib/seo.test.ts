@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { absoluteUrl, alternateLanguages, organizationJsonLd, pageMetadata, siteUrl } from './seo';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Audience rules of the e-mail campaigns (W-07, D3). Pure and deterministic: no LLM. Consent is ALWAYS applied by
 // `selectRecipients`; a rule can never select a customer who has not consented. Nothing is ever sent (Q-P01).
 export type Cond =

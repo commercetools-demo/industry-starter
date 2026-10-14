@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Small readers over the manifest, shared by the seed tests and the verify checks.
 import { MANIFEST } from '.';
 import type { PriceDraft, ProductDraft, VariantDraft } from '../types';

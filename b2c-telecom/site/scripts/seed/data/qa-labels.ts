@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Fixtures of the QA orders (workstream S): the Broadband Facts labels stored on the order and the price schedules. Shaped like the
 // app's own records (`LabelSnapshot` v1, `PriceSchedule` v1) but written without importing app code, so the stored text stays what
 // an order of that day would have held. Placeholders `malva.example` / `1-800-MALVA-00` are deliberate.

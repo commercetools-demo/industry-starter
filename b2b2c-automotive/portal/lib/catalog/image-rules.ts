@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Image intake rules (T-08): JPG, PNG or WebP by magic bytes (never by Content-Type or file name), at least 600 x 600 px,
 // at most 10 MB. Dimensions are read from the file header, so no image library is needed. Pure.
 export const MIN_IMAGE_SIDE = 600;

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Token parity check: design/source/_ds/tokens.css vs app/tokens.css.
 // Every custom property of the design file must exist in the storefront file with the
 // same value. The "storefront extensions" block (from its marker to the end of the file)

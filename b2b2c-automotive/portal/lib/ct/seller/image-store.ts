@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Where tailored images are stored (T-08, Q-T08): the Contentools object store through the server (`upload-file` under the store
 // key), the clean URL saved in the tailoring. Production uses workstream U's `uploadStoreFile`; development fixtures use the fake
 // store (live check M-T-4).

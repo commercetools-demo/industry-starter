@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Generates the `@theme inline` body of app/globals.css from app/tokens.css so the two cannot drift.
 // Usage: node scripts/gen-theme-block.mjs          rewrites the block between the theme markers
 //        node scripts/gen-theme-block.mjs --check  exits 1 when the committed block is stale

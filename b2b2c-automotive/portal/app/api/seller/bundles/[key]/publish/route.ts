@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/bundles/[key]/publish { storeKey } : re-checks the components and the price, publishes and puts the bundle in the
 // store's selection (W-09). A bundle of another store is 404.
 import { publishBundle } from '@/lib/ct/seller/bundles';

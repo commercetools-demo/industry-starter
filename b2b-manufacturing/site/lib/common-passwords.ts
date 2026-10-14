@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** The 1000 most common passwords plus the longer entries of the 10 000 most common (lower case; compared case-insensitively). Source: SecLists (MIT). */
 export const COMMON_PASSWORDS: ReadonlySet<string> = new Set([
   '0000',

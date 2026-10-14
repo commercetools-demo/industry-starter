@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Subscriptions of the store (workstream V-07, V-08): the RecurringOrders of the store and the Admin actions pause, resume, cancel and
 // skip next. Recurring orders have no in-store endpoint (OAS `api-RecurringOrder` has the project path only), so every read and write
 // is scoped by `store(key=...)` in the predicate, and an id of another store is "not found". Update action names confirmed in the OAS:

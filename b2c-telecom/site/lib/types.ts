@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // App-level domain types. No SDK imports: components import types from here only (workstream H creates this file;
 // other workstreams append inside sections marked `// ===== <LETTER>: <topic> =====`).
 

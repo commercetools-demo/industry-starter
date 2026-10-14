@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The one place the shell and the auth routes reach the session and commercetools:
 //   session  -> G's signed session cookie (`lib/session.ts`), imported lazily
 //   ports    -> the commercetools implementation (`lib/portal/live-ports.ts`), or, in development with PORTAL_DEV_FIXTURES=on

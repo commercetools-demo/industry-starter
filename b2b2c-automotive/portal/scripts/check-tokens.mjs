@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Design lint (bootstrap-and-structure > Styling from the admin kit): no raw colours, fonts, px sizes or Tailwind
 // arbitrary values in source; every var(--x) exists; the local token file matches the design source; the theme block is current.
 import { existsSync, readFileSync } from 'node:fs';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Contact details shown in the chrome (from the design). */
 export const EMERGENCY_NUMBER = '0800 555 0142';
 export const EMERGENCY_HREF = 'tel:+448005550142';

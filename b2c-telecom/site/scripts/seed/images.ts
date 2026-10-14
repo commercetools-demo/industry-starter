@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Seeded imagery: the recorded image URLs (data/product-images.json), host checks and the drafts the manifest builders attach.
 // `seed` never calls the network for images: it only reads the recorded file.
 import { existsSync, readFileSync } from 'node:fs';

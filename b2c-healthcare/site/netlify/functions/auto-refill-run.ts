@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Netlify scheduled function: the daily auto-refill check. A thin wrapper: the work (decideRun, the
  * prescription ledger, `malva-refill-log`) runs in the Next app behind `POST /api/internal/auto-refill-run`, where the

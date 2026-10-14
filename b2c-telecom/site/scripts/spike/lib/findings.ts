@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Renders the SPIKE-L block of plan/PROJECT-FINDINGS.md. Only whitelisted facts; secrets are redacted defensively.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import type { Decision } from './decide';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Why the sign-in card was opened; selects the reason line under its title. Keys under `auth.reason`. */
 export type AuthReason = 'cart' | 'prescriptions' | 'checkout' | 'order' | 'labs' | 'account';
 

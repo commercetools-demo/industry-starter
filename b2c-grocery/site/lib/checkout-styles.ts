@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Style variables for the hosted checkout (`checkoutFlow({ styles })`). The hosted iframe cannot read our CSS, so the
  * values are resolved from the design tokens at run time (globals.css stays the only file with hex colours).

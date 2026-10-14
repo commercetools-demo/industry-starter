@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { ProductDraft } from '../../types';
 import { INCOMPATIBLE_EQUIPMENT } from '../relations';
 import { descriptiveProduct, highlightSet, type Copy } from './helpers';

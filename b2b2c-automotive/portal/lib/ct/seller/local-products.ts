@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Local products (W-12, W-15, D6): reseller-owned parts of the seed product type `mau-pt-local-part` (no fitment attribute). The
 // price is a standalone price written by T's price writer. A product WITHOUT a fitment claim is published at once with
 // `review-state=approved` and put into the store selection. A product WITH a claim is created UNPUBLISHED with

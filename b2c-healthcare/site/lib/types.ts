@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * App types: the only shapes components, hooks and context may import.
  * Skeleton only; each workstream adds its own types here. SDK types are never re-exported:

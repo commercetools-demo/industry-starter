@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { Category as CtCategory } from '@commercetools/platform-sdk';
 import type { Category } from '@/lib/types';
 import { mapLocalizedString } from '@/lib/mappers';

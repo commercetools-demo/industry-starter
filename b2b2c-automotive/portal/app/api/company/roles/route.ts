@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/company/roles (workstream U-09): exactly the two roles a user can be invited as, Admin and Buyer. The project's sample
 // roles (for example `approver`) are never offered.
 import { listRoles } from '@/lib/ct/company';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // DELETE /api/account/addresses/[id] (workstream U-10): removes one of the signed-in customer's own addresses (404 for any other id).
 import { removeAccountAddress } from '@/lib/ct/account';
 import { companyContext, companyHandle } from '@/lib/portal/company-route';

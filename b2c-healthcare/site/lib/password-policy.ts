@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Password rule shared by the server (register, change password) and the client form, so both
  * accept and refuse exactly the same inputs. No composition rules: length is what matters.

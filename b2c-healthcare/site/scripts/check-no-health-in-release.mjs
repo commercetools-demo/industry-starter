@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Guards the development-only GET /api/health (storefront-bff-and-session: Connection health check).
 //  1. If the route file exists it must carry the production 404 guard.
 //  2. On a release build (NODE_ENV=production) the file must not exist at all; the release pipeline

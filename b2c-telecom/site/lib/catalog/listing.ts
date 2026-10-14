@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { CHIP_PREDICATES, CHIPS_BY_CATEGORY, DEFAULT_CHIPS, LISTING_PAGE_SIZE } from '@/lib/config/facets';
 import { getPriceBands, inBand } from '@/lib/config/price-bands';
 import type { Category, ListingQuery, ListingResult, Offer } from '@/lib/types';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { Price, ProductProjection } from '@commercetools/platform-sdk';
 import type { ConsultationMode, Doctor, DoctorCard, Money } from '@/lib/types';
 import { attrEnumKey, attrNumber, attrSet, attrText, findAttribute } from '@/lib/mappers/attributes';

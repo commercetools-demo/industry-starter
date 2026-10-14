@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { IntroDef } from '@/lib/config/pricing';
 import type { Money } from '@/lib/types';
 import { amountOn, computeIntro, discountKeyFor, introDefFor, isIntroActive, resolveEarlyCancellation, shiftForDelay } from './introPeriod';

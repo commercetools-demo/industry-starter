@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // node scripts/ensure-w.mjs [--apply] [--store <storeKey> ...]
 // Workstream W prerequisite check (W-00). READ ONLY on the project's schema: it VERIFIES that the seed's custom types and product
 // types exist with the attributes W relies on, and fails listing what is missing. It creates NO custom type and NO product type

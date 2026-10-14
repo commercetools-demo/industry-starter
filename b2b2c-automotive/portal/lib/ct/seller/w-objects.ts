@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Custom objects of workstream W (containers `malva-coop-campaigns`, `malva-coop-claims`, `malva-email-templates`,
 // `malva-email-campaigns`, `malva-local-review`). Every store-owned object has the key `<storeKey>--<id>` AND carries `storeKey`
 // in its value; reads check the value, so a key prefix collision can never leak another store's object.

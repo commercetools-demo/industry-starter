@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Bundle price arithmetic (W-08). Pure. `bundleCents = round(total * (100 - d) / 100)`, half to even.
 export interface BundleComponentPrice {
   retailCents: number;

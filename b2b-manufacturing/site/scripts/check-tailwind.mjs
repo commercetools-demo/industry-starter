@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Tailwind v4 without a config file (malva-project-bootstrap › Tailwind v4 without a config file).
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';

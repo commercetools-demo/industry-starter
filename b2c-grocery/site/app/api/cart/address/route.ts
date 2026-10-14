@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { CartNotActiveError } from '@/lib/ct/cart';
 import { cartFailure, cartJson, cartSlotId, getSessionCart, jsonError, readJson } from '@/lib/cart-api';
 import { clearSlot, ensureShippingMethod, setShippingAddress, ShippingMethodUnavailableError } from '@/lib/ct/cart-delivery';

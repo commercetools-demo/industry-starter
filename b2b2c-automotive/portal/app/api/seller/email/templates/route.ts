@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/email/templates?storeKey= : the three templates and the state of the order events (W-04, W-06).
 // Templates are stored only; nothing is ever sent (Q-P01). Event states are "stored-not-sent" or "not-set-up".
 import { listEvents, listTemplates } from '@/lib/ct/seller/email-templates';

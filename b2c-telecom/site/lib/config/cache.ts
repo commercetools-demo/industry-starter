@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Every cache TTL (seconds) and the upstream read timeout. A TTL is the only cache invalidation: there are no webhooks in v1.
 // Other workstreams only append constants here.
 /** Categories change rarely; "New category appears without a deploy" within one minute. */

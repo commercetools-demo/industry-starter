@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/store/branches/[key]/stock?storeKey=&offset=&text= (workstream U-05, Q-005): the store's assigned parts with the
 // stock on this branch and the branch price (empty: the store price applies), 50 per page.
 import { listBranchStock } from '@/lib/ct/seller/branch-stock';

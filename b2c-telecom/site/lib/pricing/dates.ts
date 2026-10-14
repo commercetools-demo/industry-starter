@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Date-only (UTC) arithmetic for price schedules. Never use local Date getters: a buyer in another time zone would see shifted dates.
 
 /** Injectable clock; tests pass a fixed one. */

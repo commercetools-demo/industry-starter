@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { describe, expect, it } from 'vitest';
 import { checkContrast, evaluate, loadReport, parseColour, ratio, resolveModes, themeBlocks } from './contrast-report.mjs';
 import { appRoot, readApp, tmp } from './test-utils.mjs';

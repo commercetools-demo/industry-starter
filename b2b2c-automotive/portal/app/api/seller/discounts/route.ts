@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/discounts?storeKey=&kind=product|cart : the store's own discounts, ranked, plus the Malva-funded ones (locked).
 import { DiscountKindParam } from '@/lib/catalog/route-schemas';
 import { listDiscounts } from '@/lib/ct/seller/discounts';

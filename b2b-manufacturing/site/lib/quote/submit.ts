@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import 'server-only';
 import { ApiError } from '../errors';
 import { createListCart, readLines, resolveCart, discardCart, type ListSession, type SourceLine } from '../ct/quote-list';

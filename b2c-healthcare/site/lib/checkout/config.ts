@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Checkout configuration. Same-day delivery: offered only before the cut-off, New York
  * time, and only where the platform's matching-cart answer contains the method (zone NY/TX/IL). The cut-off is

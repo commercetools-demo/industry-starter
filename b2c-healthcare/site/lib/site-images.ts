@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Banner and journal cover images (scripts/seed/data/site-images.json, keyed by slot).
 // A slot without an image is null; callers then fall back to a token-styled block.
 import siteImages from '@/scripts/seed/data/site-images.json';

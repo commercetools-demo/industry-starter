@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Server-held demo credentials (R-17a): the email comes from the seeded demo associate, the password from DEMO_LOGIN_PASSWORD.
 // Neither is ever returned to the browser. Returns null for an id that is not a listed demo account.
 import 'server-only';

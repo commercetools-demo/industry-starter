@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/local-products?storeKey= and POST { storeKey, name, sku, priceCents, categoryKey, type, brandName?, fitment? } (W-12, W-15).
 // The body is strict: a `publish`, `reviewState` or `prices` field is 400. A fitment claim never publishes; it waits for Malva.
 // A SKU that exists anywhere in the project is 409 with `field: 'sku'` and the generic text "SKU already in use".

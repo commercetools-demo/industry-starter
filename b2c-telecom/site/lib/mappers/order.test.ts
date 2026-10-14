@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { ctLine, ctOrder, kindAttrs, orderA, orderB, orderDevice, CABLE_SKU, NOVA_SKU } from '@/test/fixtures/orders';
 import { classifyLine, deviceVariantOf, mapAddress, mapOrder, mapOrderListItem, parseLabelSnapshot, parseSchedule, statusOf, termFromSku } from './order';
 

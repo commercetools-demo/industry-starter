@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import * as fx from '@/lib/offers/__fixtures__/offers';
 import type { BuyerContext, CartLineRef, Offer } from '@/lib/types';
 import { createCachedServiceability, createStubProvider } from './serviceability';

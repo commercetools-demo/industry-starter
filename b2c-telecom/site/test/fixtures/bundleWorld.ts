@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // An in-memory commercetools for the cart routes: the real route, bundle, cart and guard code runs against it. Only the SDK client
 // (`getApiRoot`) is replaced. Import `makeApiRoot` from a `vi.mock('@/lib/ct/client', ...)` factory.
 import { fakeCart, type FakeCartHandle, type FakeCodes, type FakePrice } from './fakeCart';

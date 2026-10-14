@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Reseller prices as standalone prices (T-05, T-06, section 6). This module is the ONLY writer of standalone prices (a test
 // greps for it): `setStandalonePrice` is the single function that creates, changes or deletes one; `publishPrices` and the
 // bulk and import flows all go through it. There is no price floor and no cost price (Q-T03, Q-V01): a price is valid when it is

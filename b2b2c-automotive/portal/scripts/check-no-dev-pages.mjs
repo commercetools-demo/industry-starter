@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Dev pages are never part of a build: a route under `app/**/dev/**` must use the `.dev.tsx` / `.dev.ts` extension,
 // which next.config.ts registers as a page extension outside production builds only (see Q-B02).
 import path from 'node:path';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** German (de-DE) copy for the 12 services. Same shape and array lengths as the en-US content in `services.ts`. */
 export interface ServiceCopy {
   name: string;

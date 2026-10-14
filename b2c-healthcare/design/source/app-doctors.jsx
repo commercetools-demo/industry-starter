@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 function Doctors({mode}){const{bookings}=useApp();const[q,setQ]=useState('');const[spec,setSpec]=useState('');const[city,setCity]=useState('');const[today,setToday]=useState(false);
 const list=DOCTORS.filter(d=>(!q||(d.name+d.spec).toLowerCase().includes(q.toLowerCase()))&&(!spec||d.spec===spec)&&(mode==='remote'||!city||d.city===city)&&(!today||(nextSlot(d,bookings)||{}).day===0));
 return <><Head title={mode==='remote'?'Remote sessions':'Office visits'} sub={mode==='remote'?'See a licensed doctor by video from wherever you are. No account needed to book.':'Book an in-person appointment at a clinic near you. No account needed to book.'}>

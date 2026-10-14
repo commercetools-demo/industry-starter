@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Version gate: fails if the installed `next` is below 16.0.0 or `next-intl` is below 4.0.0.
 // Reads the installed packages in node_modules (not package.json ranges).
 import { readFileSync } from 'node:fs';

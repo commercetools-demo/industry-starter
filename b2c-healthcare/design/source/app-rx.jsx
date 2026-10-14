@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 function Prescriptions(){const{cart,addToCart}=useApp();const[q,setQ]=useState('');const[rx,setRx]=useState(null);const[err,setErr]=useState('');const[sel,setSel]=useState({});const[toast,setToast]=useState(false);
 const find=(v)=>{const k=(v||q).trim().toUpperCase().replace(/^RX\s?-?/,'RX-');const r=RX[k];if(r){setRx({no:k,...r});setErr('');setSel(Object.fromEntries(r.meds.map(m=>[m.id,true])))}else{setRx(null);setErr('We couldn’t find “'+(v||q)+'”. Check the number printed on your prescription.')}};
 const chosen=rx?rx.meds.filter(m=>sel[m.id]):[];const total=chosen.reduce((s,m)=>s+m.price,0);

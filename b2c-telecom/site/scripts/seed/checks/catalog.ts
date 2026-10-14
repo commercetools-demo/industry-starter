@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // seed:verify checks owned by G: the catalog as it is in the project (counts, prices, references, steps, images, search, demo data).
 import type { CtApi } from '../lib';
 import { getAll, type Obj } from '../reconcilers/util';

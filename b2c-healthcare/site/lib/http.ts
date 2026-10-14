@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Client-safe fetch helper for SWR fetchers: turns a non-2xx `{ error }` response into an HttpError
 // whose status the UI can act on (a 401 means "sign in again", not "access denied").
 

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Sample customers offered by the demo sign-in on the login page. Mirrors scripts/seed/data/demo/customers.ts (emails only; the
 // password is the server env SEED_DEMO_PASSWORD and never reaches the browser).
 export interface DemoLoginCustomer {

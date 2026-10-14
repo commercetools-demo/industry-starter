@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Minimum order value (D-063). Applied to the engine total (due today), or to one month of the recurring charge when that is more (the caller picks the amount). Set MINIMUM_ORDER_USD / MINIMUM_ORDER_EUR (cents, 0 disables). U's checkout route must enforce it with the same function.
 import { minimumOrderValues } from '@/lib/config/cart';
 import type { Money } from '@/lib/types';

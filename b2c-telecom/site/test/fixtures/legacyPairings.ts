@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The shipped prompt pairing list is empty (promotions apply to the first order only). Tests of the prompt engine and its route install
 // the two pairings that used to be shipped, so the engine keeps its coverage.
 import { PROMPT_PAIRINGS, type PromptPairing } from '@/lib/config/promptPairings';

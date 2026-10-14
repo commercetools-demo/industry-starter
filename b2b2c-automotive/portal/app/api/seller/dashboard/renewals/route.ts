@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/dashboard/renewals: subscriptions whose next order is within 7 days (S-05).
 import { dashboardRoute } from '@/lib/ct/seller/dashboard/route-helper';
 import type { RenewalRow } from '@/lib/dashboard/types';

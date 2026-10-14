@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npx tsx scripts/seed/create-financing-customers.ts --confirm-project spec-test-b2c-telecom
 // Workstream Q: two throwaway customers for the Chrome checks of the financing decision, one the stub approves and one it declines
 // (`creditApproved = false`). Emails carry a random hex so every run adds new ones; the passwords are generated and printed to the console

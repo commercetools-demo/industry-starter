@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 type Window = { count: number; resetAt: number };
 const store = ((globalThis as { __rateLimit?: Map<string, Window> }).__rateLimit ??= new Map());
 

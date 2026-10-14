@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/returns/[number]?storeKey= : one return with its lines, refund state and (for "wrong fit") the vehicle and fit result
 // recorded at purchase (V-13, V-14). The order is read in-store: another store's return is a 404.
 import { getReturn } from '@/lib/ct/seller/returns';

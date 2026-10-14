@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import 'server-only';
 
 /** Sample customers of the seeded demo companies (seed/src, SEED_DEMO_PASSWORD). The password never leaves the server. */

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** A policy schedule as the Recurring Orders API returns it. */
 export type Schedule = { type: 'standard'; value: number; intervalUnit: string } | { type: 'dayOfMonth'; day: number } | { type: string };
 

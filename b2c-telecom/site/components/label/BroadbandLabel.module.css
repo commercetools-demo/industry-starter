@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /* Broadband Facts label: the FCC consumer label format. Deliberately OUTSIDE the brand system (D-053): literal black on white,
    2px black border, Roboto, no radius, no tokens, no CSS custom properties, so no theme or token change can alter it. */
 .label {

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Snapshot: the pre-apply state of everything a release touches (reads only; pure over the index).
 import { END_TIME, START_TIME, toSnapPrice } from './model';
 import type { CatalogIndex, DiscountSnapshot, IndexOffer, OfferSnapshot, ReleaseManifest, ReleaseSnapshot } from './types';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { withTimeout } from '@/lib/account/with-timeout';
 import { getCustomerOrdersCached, getRecurringSummariesCached } from '@/lib/ct/orders';
 import { toDateOnly } from '@/lib/pricing/dates';

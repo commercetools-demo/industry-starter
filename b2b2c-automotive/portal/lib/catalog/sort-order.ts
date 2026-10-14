@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // sortOrder bands for discounts (decision 14). A HIGHER value is applied first (commercetools docs, "How Cart Discounts work";
 // confirmed against the knowledge MCP in T-00). Portal rank 1 = highest sortOrder. If a live check ever shows the opposite
 // direction, flip SORT_HIGHER_FIRST: the bands mirror and `rankToSortOrders` reverses.

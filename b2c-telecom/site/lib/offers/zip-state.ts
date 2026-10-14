@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { CountryCode } from '@/lib/types';
 
 // Pure. US state of a ZIP code by its first three digits (USPS section ranges). Only the state is derived; a city is never used.

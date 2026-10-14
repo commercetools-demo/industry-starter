@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run release:validate | preview | apply | cancel | rollback | history | verify  (workstream X, D-057, D-069)
 // First argument after the command is the release key; the manifest is releases/<key>.release.json (or releases/examples/).
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Fails when a public route is dynamic in the `next build` output. Usage: node scripts/check-routes.mjs [build-output.txt]
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';

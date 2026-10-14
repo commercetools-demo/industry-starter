@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/auth/reset: sets a new password from an on-screen reset token (R-08). Demo only, see reset-request/route.ts.
 import { z } from 'zod';
 import { isOnscreenResetEnabled } from '@/lib/portal/flags';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run job:recurring-reconcile
 // Read-only report: for every active recurring order, the generated orders whose line total differs from the standing amount stored on the
 // first order's price schedule (promotions apply to the first order only, so there should be none). It never writes to commercetools.

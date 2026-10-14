@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 // An attribute defined on a product type but read nowhere is dead data (trial-days and price-steps were). Every defined attribute
 // must be named by a storefront reader (lib, app, components), or be listed here with the reason it is kept.

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The financing decision (D-015): a Malva-side interface with a deterministic STUB. Nothing in `app/` may contain these rules; a real
 // credit provider replaces `getFinancingProvider` in this one place. Pure: no I/O, no crypto, the clock is injected.
 import { FINANCING_LIMIT_CENTS } from '@/lib/config/devices';

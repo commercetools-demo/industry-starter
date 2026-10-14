@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Checkout spike (workstream L, Gate 2): can ONE cart carry a recurring Fixed line, a recurring Dynamic line and one-time lines,
 // with recurringPaymentConfiguration.paymentStrategy = Checkout, and become an Order plus a Recurring Order?
 // Run: npm run spike:recurring-checkout -- [--skip-checkout] [--keep]

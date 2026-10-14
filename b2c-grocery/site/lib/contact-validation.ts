@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Shared by the contact form (client) and POST /api/contact (server). No server-only imports. */
 export const CONTACT_TOPICS = ['order', 'delivery', 'product', 'other'] as const;
 export type ContactTopic = (typeof CONTACT_TOPICS)[number];

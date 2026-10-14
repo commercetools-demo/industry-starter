@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/auth/demo-login { customerId }: signs in a listed demo associate (R-17a). 404 when demo login is off.
 import { z } from 'zod';
 import { demoSignIn } from '@/lib/demo-login';

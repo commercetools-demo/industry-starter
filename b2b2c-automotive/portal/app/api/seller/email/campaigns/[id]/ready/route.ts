@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/email/campaigns/[id]/ready { storeKey } : stores the recipient count and sets Ready. Sends nothing, persists no list.
 import { markReady } from '@/lib/ct/seller/email-campaigns';
 import { json } from '@/lib/portal/route-kit';

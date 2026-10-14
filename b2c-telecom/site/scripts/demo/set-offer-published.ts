@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npx tsx scripts/demo/set-offer-published.ts --confirm-project spec-test-b2c-telecom <offerKey> <true|false>
 // Workstream T, for the Chrome checks: publishes or unpublishes the `malva-offer` product with this key, so a saved-list line becomes
 // "No longer available". Run again with `true` to restore. The catalog cache lasts one minute (H). Allow-listed project, `malva-` keys only (D-054).

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { readFileSync } from 'node:fs';
 import { getAdminRoot, parseArgs, Runner, sleep, type Root } from './lib';
 import { deletionOrder, validateManifest, type Manifest, type ManifestEntry } from './sample-manifest';

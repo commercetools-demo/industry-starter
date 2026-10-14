@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Shared reads of workstream T (admin client): product selections, the `mau-assortment/<storeKey>` custom object, product
 // projections and categories. Short in-memory caches (30 s) keep a page load to a handful of calls; a selection is cached per
 // `id:version`, so a write (which bumps the version) is never read stale.

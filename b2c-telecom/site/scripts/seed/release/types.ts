@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Coordinated offer release (workstream X, D-057, D-069): manifest, record and shared shapes.
 import type { CartDiscountManifest, LocalizedString, OfferManifest, PriceSpec } from '../data/catalog-types';
 

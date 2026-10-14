@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Strict request bodies of the catalog seller routes. Unknown keys are refused (400), so a client can never send the facts the
 // server owns (a list price, a cost, a currency per change). Pure.
 import { z } from 'zod';

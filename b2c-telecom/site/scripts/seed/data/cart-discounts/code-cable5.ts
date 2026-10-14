@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // "$5 off Cable with code" and its Discount Code MALVA-CABLE5 (workstream M). Predicates use the backtick-escaped attribute name proven
 // live in G-18 (category predicates would need ids; offers are products, so the offer-family attribute is the stable handle).
 // Docs: https://docs.commercetools.com/api/projects/cartDiscounts , https://docs.commercetools.com/api/projects/discountCodes

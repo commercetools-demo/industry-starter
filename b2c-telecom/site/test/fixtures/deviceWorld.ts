@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // An in-memory commercetools for the device cart routes: the real route, bundle, cart, guard and mapper code runs against it. Only the
 // SDK client (`getApiRoot`) is replaced. It resolves line prices like the platform does: a line with `recurrenceInfo` takes the price
 // tied to its policy and silently FALLS BACK to the one-time price when the variant has none (the trap Q guards against).

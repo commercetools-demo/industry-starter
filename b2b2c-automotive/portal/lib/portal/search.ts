@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Global search helpers (R-13). Pure: shared by the top bar, the palette and the (future) Product Search port.
 import type { PartHit } from './types';
 

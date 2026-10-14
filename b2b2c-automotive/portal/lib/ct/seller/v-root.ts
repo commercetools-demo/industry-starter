@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The commercetools client of workstream V: the seller-admin client, or in development with PORTAL_DEV_FIXTURES=on (never in
 // production) the in-memory fixture client of `lib/portal/v-fixture-root.ts`. Tests inject their own fake with `setVRootForTest`.
 import 'server-only';

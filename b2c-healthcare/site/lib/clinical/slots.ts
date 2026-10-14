@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Pure slot maths (no server imports, no SDK): a weekly pattern in the clinic's IANA time zone becomes UTC instants.
  * Time zones use `Intl` only (DST-safe: a wall time that does not exist on a spring-forward day yields no slot).

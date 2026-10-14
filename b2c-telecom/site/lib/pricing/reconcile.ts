@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Reconciliation of generated recurring orders with the price agreed at the first order. Promotions apply to the first order only, so every
 // recurring order must charge, per line, the standing amount stored on the first order's schedule times the quantity. A line whose total
 // differs is reported (a promotion that reached a recurring order, a Dynamic line that followed a catalog change, a price that moved).

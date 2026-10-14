@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Security headers for every response (HSTS is set by the host). Image hosts match `images.remotePatterns` in next.config.ts. */
 export const IMAGE_HOSTS = ['https://your-loyalty-free-image-source.com', 'https://*.commercetools.com', 'https://storage.googleapis.com'];
 

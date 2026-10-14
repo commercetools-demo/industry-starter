@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // SWR keys shared by hooks and the code that revalidates them.
 export const KEY_SESSION = 'session';
 /** The bundle (M): the key is the URL, so a server-rendered page can pass the cart as the SWR fallback. */

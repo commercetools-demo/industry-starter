@@ -1,5 +1,5 @@
 {
-  "name": "malva-portal",
+  "name": "@commercetools-labs/malva-portal",
   "version": "0.1.0",
   "private": true,
   "scripts": {

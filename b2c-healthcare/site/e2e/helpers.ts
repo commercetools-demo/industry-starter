@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { BrowserContext, Page } from '@playwright/test';
 import { SESSION_COOKIE, signSession } from '../lib/session-core';
 

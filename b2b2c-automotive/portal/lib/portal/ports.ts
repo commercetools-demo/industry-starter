@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Ports: everything the shell and the auth routes need from commercetools, behind one interface (workstream R seam).
 // SWAP: when workstream G lands (lib/ct/client.ts, lib/session.ts), implement `PortalPorts` in lib/ct/portal-ports.ts using
 // R-04 (getAssociateRoles), R-06 (loginCustomer via apiRoot.login().post(), listAssociateUnits, getStoreChannelData),

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Token file helpers: the local app/tokens.css is a copy of the design source minus the Google Fonts @import (Q-B01).
 
 /** Removes the Google Fonts @import line, normalises line endings and ensures exactly one trailing newline. */

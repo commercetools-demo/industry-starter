@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Supported CSV columns of the product import (W-13). Pure. Every other header is Unmapped; `fitment` can never be imported
 // (D6: a local product cannot assert compatibility; add it per product for Malva review).
 export const IMPORT_TARGETS = [

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Privacy operations are an admin tool outside the storefront architecture (no lib/ct): like the seed scripts they use the seed admin client.
 import path from 'node:path';
 import { withRetry, type Rec, type Root } from '../seed/lib';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // A Netlify function runs outside Next, so (like the seed scripts) it builds its own commercetools client from the CTP_* environment.
 /* eslint-disable @typescript-eslint/no-restricted-imports, no-restricted-syntax */
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';

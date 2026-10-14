@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/account/addresses/[id]/default (workstream U-10): makes one of the signed-in customer's own addresses the default.
 import { setDefaultAccountAddress } from '@/lib/ct/account';
 import { companyContext, companyHandle } from '@/lib/portal/company-route';

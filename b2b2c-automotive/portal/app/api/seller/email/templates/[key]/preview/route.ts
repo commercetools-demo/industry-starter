@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/email/templates/[key]/preview { storeKey, subject, body } : renders unsaved text with the sample order
 // (MO-482913, Alex Muster), escaped, and returns the store's brand (logo, primary colour). Stores nothing, sends nothing.
 import { previewTemplate } from '@/lib/ct/seller/email-templates';

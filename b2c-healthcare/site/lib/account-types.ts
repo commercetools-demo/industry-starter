@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Shapes the account area passes between server code and components. Types only.
 import type { BookingStatus } from '@/lib/clinical/types';
 import type { LabFlag } from '@/lib/labs';

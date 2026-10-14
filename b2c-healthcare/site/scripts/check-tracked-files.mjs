@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Fails if a real env file or build output is tracked by the VCS, or if the scanned secrets
 // appear with a NEXT_PUBLIC_ prefix in any tracked file. Run from anywhere inside the repo.
 import { execFileSync } from 'node:child_process';

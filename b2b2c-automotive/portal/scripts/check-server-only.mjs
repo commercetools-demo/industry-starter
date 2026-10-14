@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Server-only boundary (bootstrap-and-structure > Directory structure, Server-only boundary).
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';

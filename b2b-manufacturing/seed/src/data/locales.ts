@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Launch locales (owner, Q-012). Language, country and currency travel together per locale. */
 export const LOCALES = [
   { locale: 'en-US', country: 'US', currency: 'USD' },

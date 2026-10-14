@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import 'server-only';
 import { candidateSlots, type Schedule, type Slot } from '@/lib/clinical/slots';
 import { initialsOf } from '@/lib/mappers/doctor';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/dashboard/kpis: Open returns, Active subscriptions, Unanswered reviews (S-05). Each value is null when only
 // its own source failed. Open orders comes with the recent-orders endpoint (shared key).
 import { dashboardRoute } from '@/lib/ct/seller/dashboard/route-helper';

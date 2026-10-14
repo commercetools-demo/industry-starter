@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run lint:catalog: reads the live catalog through workstream H and prints the findings of lib/offers/lint.ts.
 // Exits 1 on any error. Not part of `npm run verify` (needs network and credentials).
 import Module from 'node:module';

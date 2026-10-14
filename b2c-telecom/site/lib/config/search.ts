@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // P: search configuration. Read at render time from this module (never from process.env) so tests can mock it.
 
 /** Show the magnifier in the header and the mobile drawer. Set to false to hide the entry; /search stays reachable by URL. */

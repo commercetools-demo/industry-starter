@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { IntlError, IntlErrorCode, NextIntlClientProvider, useTranslations } from 'next-intl';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';

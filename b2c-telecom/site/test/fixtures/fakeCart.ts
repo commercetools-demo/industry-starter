@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // A tiny in-memory commercetools cart that applies the update actions the app sends. Prices come from `prices` (sku -> cents); a line
 // with `recurrenceInfo` gets the recurring price (and the policy reference) only when the sku has one, like the real price selection.
 import type { Cart as CtCart } from '@commercetools/platform-sdk';

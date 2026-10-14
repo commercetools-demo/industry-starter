@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npx tsx scripts/demo/place-test-order.ts --confirm-project spec-test-b2c-telecom --cart-id <cartId>
 // Workstream U, for the Chrome checks of the confirmation page: orders an existing cart exactly as the hosted Checkout does (a generated
 // MLV- order number, payment state Paid) and prints ONLY the order number. The order is left without its schedule, label snapshot and

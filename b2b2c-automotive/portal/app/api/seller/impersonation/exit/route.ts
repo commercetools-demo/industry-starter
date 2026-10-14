@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/impersonation/exit: ends a customer session (R-15). The portal session loses `actingAs` (the seller's own `customerId`
 // is untouched), and (V-06) the handoff records of this seller in the session store are marked `ended`, best effort: the storefront
 // session ends by its own idle limit anyway. No request value is used: the actor and the store come from the session.

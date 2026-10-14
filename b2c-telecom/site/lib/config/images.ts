@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Image hosts the seeder, `next.config.ts` and the image components accept.
 export const IMAGE_HOSTS = ['your-loyalty-free-image-source.com', 'media.istockphoto.com'] as const;
 

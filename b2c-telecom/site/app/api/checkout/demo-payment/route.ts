@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { checkoutRoute, readCheckoutBody } from '@/lib/checkout-api';
 import { placeDemoOrder } from '@/lib/ct/checkout';
 

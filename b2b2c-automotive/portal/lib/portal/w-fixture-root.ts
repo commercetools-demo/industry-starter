@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // An in-memory extension of T's fixture client for workstream W: products (create, publish, lookup by sku, key and product type,
 // unpublished products hidden from `staged: false` reads as in commercetools), custom object lists, cart discounts by key,

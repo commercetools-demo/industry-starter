@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run job:schedule-sweep -- [--today=YYYY-MM-DD]
 // Dry run only: lists the price-schedule boundaries (intro ends, step, term ends) that fall due on a day. Billing is out of scope
 // (D-059), so a future billing integration or an operator acts on this report. It never writes to commercetools.

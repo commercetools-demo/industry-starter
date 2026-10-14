@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Shared fake of the commercetools client for the /api/auth route tests: records every request and answers with `world.handler`.
 // The `vi.mock` calls themselves stay in each test file (vitest hoists them).
 import type { Customer } from '@commercetools/platform-sdk';

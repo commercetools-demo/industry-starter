@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { BuyerContext, Offer } from '@/lib/types';
 import { appletv, cable100, cable500, cartOffersByKey, deviceProtect, phoneEssential, phoneUnlimited, routerAx3000, spotify, wireless5g } from './__fixtures__/offers';
 import { guardAdd, revalidateLines, type GuardInput, type GuardLine } from './guard';

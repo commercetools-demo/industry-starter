@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Product info and image tailoring (T-07). Tailoring uses commercetools Product Tailoring in the reseller store. A save writes
 // the staged changes and publishes in the SAME update request: tailored text and images are live at once, there is no pending
 // state, no review and no approval (owner Q-T06, Q-004). Tailorable: name, description, images of the master variant.

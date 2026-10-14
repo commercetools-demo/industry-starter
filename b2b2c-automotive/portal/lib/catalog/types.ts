@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // DTOs of the catalog screens (what the seller routes return). No server imports: components import from here.
 import type { AssortmentState } from './assortment-state';
 import type { CartCondition, Effect, ProductScope } from './discount-rule';

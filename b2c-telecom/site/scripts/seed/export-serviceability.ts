@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run seed:export-serviceability: writes the built-in copy of the serviceability table that K reads when the storefront
 // API client cannot read Custom Objects (scope view_key_value_documents). Run after editing data/serviceability.ts.
 import { writeFileSync } from 'node:fs';

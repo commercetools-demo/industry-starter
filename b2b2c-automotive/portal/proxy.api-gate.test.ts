@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 // Workstream X (C19, D5): the proxy runs the origin gate on every /api route before a handler is reached.
 import { NextRequest } from 'next/server';

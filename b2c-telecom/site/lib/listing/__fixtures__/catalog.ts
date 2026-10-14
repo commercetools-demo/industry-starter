@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Listing fixtures: J's seeded-catalog offers (`lib/offers/__fixtures__/offers.ts`) completed with what a listing needs and J's
 // fixtures leave out: categories, terms and prices on the variants, the headline, bullets, badge, chip attributes and add-on tags.
 import {

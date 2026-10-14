@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Release without health route (bootstrap-and-structure > Gates and tests, Deployment config).
 import { existsSync } from 'node:fs';
 import path from 'node:path';

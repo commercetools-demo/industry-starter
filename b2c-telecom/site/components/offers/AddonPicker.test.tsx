@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LISTED_ADDONS, LISTED_APPLETV, LISTED_CABLE_500, LISTED_CABLE_GIG, LISTED_DEVICE_CARE, LISTED_SPOTIFY } from '@/lib/listing/__fixtures__/catalog';

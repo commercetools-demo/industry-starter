@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Co-op campaigns (W-01, W-03). Campaigns are Malva-owned custom objects (container `malva-coop-campaigns`) and read only here.
 // "Create discount" writes a draft (inactive) cart discount for the signed-in store only; the code is `<CODE>-<STOREKEY>` because
 // discount codes are unique across the project (D2). There is no function that edits a caption. A funding claim is a store-owned

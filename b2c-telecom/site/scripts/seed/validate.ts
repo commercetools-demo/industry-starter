@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Pure manifest validation that runs before any write. Reads (GET by key) are allowed to resolve references.
 import { isOwnedKey } from './config';
 import type { CtApi } from './lib';

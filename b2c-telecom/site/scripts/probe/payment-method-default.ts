@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run probe:payment-default -- --confirm-project spec-test-b2c-telecom
 // Workstream T: does the platform clear the previous default Payment Method when another one gets `setDefault true`? The storefront
 // clears explicitly either way (lib/ct/payment-methods.ts), so the answer cannot break the feature; it only documents the platform.

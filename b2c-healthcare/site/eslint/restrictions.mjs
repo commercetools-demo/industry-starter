@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Architecture restrictions for the storefront (storefront-project-bootstrap: Directory layout).
 // Shared by eslint.config.mjs and eslint/restrictions.test.ts.
 //

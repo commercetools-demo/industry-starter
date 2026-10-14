@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { MAX_BULLETS } from '@/lib/config/listing';
 import { MAX_PHONE_LINES } from '@/lib/config/cart';
 import { planChipId } from '@/lib/listing/facets';

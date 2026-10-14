@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { ShippingMethodDraft } from '../types';
 
 // Zero fixed rates (not free-above, not a shipping discount). Both methods are isDefault:false so the sample default

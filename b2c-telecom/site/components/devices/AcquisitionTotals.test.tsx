@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { screen } from '@testing-library/react';
 import { deviceLine, usd } from '@/lib/devices/__fixtures__/devices';
 import { renderWithProviders } from '@/test/utils';

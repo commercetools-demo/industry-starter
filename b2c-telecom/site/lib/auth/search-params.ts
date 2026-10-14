@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Pure. Reads the query of an auth page on the server (pages avoid `useSearchParams`, so they need no Suspense boundary).
 import type { Locale } from '@/lib/types';
 import { safeReturnPath } from './return-target';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** App types. No SDK imports here: components import only this file (see lib/mappers for the SDK boundary). */
 export interface Money { centAmount: number; currencyCode: string }
 export interface Price { centAmount: number; currencyCode: string; discounted?: Money }

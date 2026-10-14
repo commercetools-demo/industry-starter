@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { AccountRefusal } from '@/lib/api/account-api';
 import { orderActionRoute } from '@/lib/api/order-actions-api';
 import { cancelOrder } from '@/lib/ct/post-purchase';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Demo login must never reach production (spec seller-portal/design-demo-login, Production build):
 //  1. a production build with DEMO_LOGIN_ENABLED=true fails, naming the setting;
 //  2. the demo password (DEMO_LOGIN_PASSWORD) must not appear in .next/static (it is server-only).

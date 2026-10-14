@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/auth/reset-request: on-screen password reset (R-08, owner Q-P01: no email is ever sent).
 // DEMO ONLY: anyone who knows an email can reset that account, so the whole flow is gated by DEMO_ONSCREEN_RESET=true
 // (404 otherwise). Known gap, cited by workstream X and recorded in Z: "on-screen password reset: anyone who knows an

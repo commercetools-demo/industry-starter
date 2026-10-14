@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // E-mail templates of a store (W-04, W-06). Templates are STORED and PREVIEWED only; nothing is ever sent and no provider exists
 // (Q-P01, D8). Container `malva-email-templates`, key `<storeKey>--<templateKey>`, value `{ storeKey, subject, body, enabled }`.
 import 'server-only';

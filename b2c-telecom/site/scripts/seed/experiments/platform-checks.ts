@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run seed:experiments -- --confirm-project spec-test-b2c-telecom [--only inventory,discounts,shipping,fieldsize,handover,recurring]
 //
 // G-18: live experiments that settle open platform questions (inventory mode, predicate syntax, custom field size, the

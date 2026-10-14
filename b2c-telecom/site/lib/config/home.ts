@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Home page content is repo config (planner default of workstream O): no CMS, no custom objects, no per-customer targeting (D-005).
 // Targets are category and offer KEYS: slugs are localized and editable, keys are stable.
 

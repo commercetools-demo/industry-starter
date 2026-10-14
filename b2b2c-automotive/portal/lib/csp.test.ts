@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 // Workstream X, G01 and G10: portal CSP and the headers next.config.ts sends.
 import { afterEach, describe, expect, it, vi } from 'vitest';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { SLOT_CONFIG } from '../config/slots';
 import type { HoldResult, Slot, SlotService } from './types';
 import { DAY_MS, HOUR_MS, parseSlotId, slotIdOf, startOfUtcDay } from './window';

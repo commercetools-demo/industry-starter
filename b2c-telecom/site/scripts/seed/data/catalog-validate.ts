@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Offline validation of the Malva catalog manifest (pure, no network): SKU pattern, owned keys, locale completeness,
 // shared attribute definitions, price completeness and reference existence. F's validateManifest adds the platform-level checks.
 import type { AttributeDefinitionDraft, ProductDraft, ProductTypeDraft, SeedManifest, VariantDraft } from '../types';

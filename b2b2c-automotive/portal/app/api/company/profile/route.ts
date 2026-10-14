@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET and PUT /api/company/profile (workstream U-09, decision 20): the unit's company profile. Everyone reads; only an Admin edits
 // the display name and the contact email. Store, region and currency are "Managed by Malva". No tax id, account number, credit
 // limit or terms exist (wholesale was dropped, Q-V01).

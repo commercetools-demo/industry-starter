@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import 'server-only';
 import type { Cart as CtCart, CartDraft, CartUpdateAction, LineItemDraft } from '@commercetools/platform-sdk';
 import { ACTIVATION_FEE_NAME, ACTIVATION_FEE_SLUG_PREFIX, ACTIVATION_FEE_TAX_CATEGORY_KEY, PROBE_CART_DELETE_DAYS } from '@/lib/config/cart';

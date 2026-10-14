@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The order summary, defined once. Every surface that shows "Due today" (bundle, checkout, finder price strip, confirmation) reads
 // these figures and these rows, so the rows add up to Due today and "Then monthly" is the same number everywhere.
 //

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Which discounts belong to a store, and which are funded by Malva (decision 13). Product discounts have no custom fields and no
 // stores, so a store's own product discounts are recognised by the channel clause in their predicate (those T creates) or by
 // key (`<storeKey>-...` T-created, `mau-pd-<north|south>-...` seeded). Cart discounts carry `stores` and the custom type

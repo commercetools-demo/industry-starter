@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npx tsx scripts/seed/cleanup-qa.ts --confirm-project spec-test-b2c-telecom [--dry-run]
 // Removes what create-qa-order.ts (and the Chrome checks) made: customers whose email matches ^(qa|chrome)-.*@example\.com$ with their
 // recurring orders, orders and carts, and the temporary product `malva-qa-discontinued-addon`. It never touches anything else and refuses

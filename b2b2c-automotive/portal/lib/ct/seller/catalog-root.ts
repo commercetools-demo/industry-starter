@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The commercetools client of workstream T: the seller-admin client, or in development with PORTAL_DEV_FIXTURES=on (never in
 // production) the in-memory fixture client so the screens run without credentials. Always loaded lazily, so a build without
 // the fixture flag never validates or needs anything extra.

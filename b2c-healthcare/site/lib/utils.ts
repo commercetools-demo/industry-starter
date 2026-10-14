@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Region table and locale/money helpers (storefront-locale-routing).
 // COUNTRY_CONFIG is the only place country, currency and language values appear.
 

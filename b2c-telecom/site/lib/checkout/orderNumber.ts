@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { randomInt } from 'node:crypto';
 import { ORDER_NUMBER_ALPHABET, ORDER_NUMBER_LENGTH, ORDER_NUMBER_PATTERN, ORDER_NUMBER_PREFIX } from '@/lib/config/checkout';
 

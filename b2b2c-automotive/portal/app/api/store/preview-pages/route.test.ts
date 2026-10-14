@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 // GET /api/store/preview-pages (workstream U-06): admin only, always the session's store (there is no store parameter to tamper
 // with), a short HEAD probe per page, and a failed probe means "not available yet", never an error.

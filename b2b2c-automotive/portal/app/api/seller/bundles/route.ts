@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/bundles?storeKey= and POST { storeKey, name, discountPercent, components: [{ sku, qty }] } (W-09, W-10).
 // The server recomputes every price from the store's own retail prices; the body carries no price. Components must be assigned to
 // the store (409 COMPONENT_NOT_ASSIGNED naming the SKU). A bundle is created as a Draft.

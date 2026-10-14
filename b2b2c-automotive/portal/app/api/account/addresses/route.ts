@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET and POST /api/account/addresses (workstream U-10): the signed-in customer's personal addresses and "Add address". The
 // customer is always the session's.
 import { addAccountAddress, listAccountAddresses } from '@/lib/ct/account';

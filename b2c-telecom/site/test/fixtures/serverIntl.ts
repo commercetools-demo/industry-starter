@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // `next-intl/server` for page tests: translators over the real message files; `setRequestLocale` remembers the locale for the
 // string form of `getTranslations`. Use: vi.mock('next-intl/server', async () => (await import('@/test/fixtures/serverIntl')).serverIntlMock)
 import { createTranslator } from 'next-intl';

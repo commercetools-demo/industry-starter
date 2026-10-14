@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Feature constants of the category listings (workstream N). The page size lives in `lib/config/facets.ts` (H).
 
 /** Most bullets a plan card shows. */

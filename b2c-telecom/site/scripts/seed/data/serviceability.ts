@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Serviceability table (D-020): seeded as Custom Objects, container `malva-serviceability`, key = postal code.
 // A postal code absent from the table is not served at all (use 00000 in tests). K reads these objects (cached 5 minutes).
 import type { CustomObjectDraft } from '../types';

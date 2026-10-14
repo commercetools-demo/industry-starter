@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import 'server-only';
 // Offer (kind device) -> DeviceOffer: the handset as one offer with color x memory variants and, per variant, the outright price and
 // the monthly amount of each installment term and the lease. No I/O; `policyKeyById` comes from `getDevicePolicyMap` (lib/ct/devices).

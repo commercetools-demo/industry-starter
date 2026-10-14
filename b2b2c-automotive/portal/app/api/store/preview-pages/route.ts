@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/store/preview-pages (workstream U-06): the pages of the theme preview with their storefront URLs, and whether each one
 // exists yet (a short HEAD probe of the storefront; a 404 or no answer means "Storefront page not available yet"). The Product
 // page uses a real part of the store's assortment. Admin only; the store is the session's.

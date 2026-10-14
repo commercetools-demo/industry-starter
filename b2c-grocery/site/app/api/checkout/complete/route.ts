@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { NextResponse } from 'next/server';
 import { jsonError, readJson } from '@/lib/cart-api';
 import { getOrderRef } from '@/lib/ct/orders';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Registers the bundle reconciliation in T's `onAssortmentChanged` hooks (W-09), so a withdraw, a reinstate or a reconcile in the
 // assortment hides or restores the store's bundles. `assortment-write.ts` loads this module (dynamic import at its end). A failure
 // here never fails the assortment change that triggered it: the bundle list reconciles again every time it loads.

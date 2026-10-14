@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Device-financing recurrence policies (D-060): a price is tied to one policy, so each mode and term has its own.
 // All are monthly. `malva-monthly` (F) stays the policy of every service line, add-on and equipment rental.
 import type { RecurrencePolicyDraft } from '../types';

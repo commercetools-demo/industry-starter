@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Customer facts for audience rules (W-07): what each customer of the store bought (categories with ancestors, SKUs), the last
 // order date and the marketing consent. Read from the store's orders (at most 2,000) and customers; cached for 5 minutes per
 // store. Consent comes from the custom field `marketingConsent` of the seed type `malva-customer`; a customer without it has not

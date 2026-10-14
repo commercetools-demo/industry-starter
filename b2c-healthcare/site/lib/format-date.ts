@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Long date for an ISO yyyy-mm-dd string, in the visitor's locale and independent of the server time zone. */
 export function formatIsoDate(iso: string, locale: string): string {
   const date = new Date(`${iso}T00:00:00Z`);

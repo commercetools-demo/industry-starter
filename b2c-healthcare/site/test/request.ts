@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Default cookie name used by tests; workstream D owns the real name in lib/session.ts. */
 export const TEST_SESSION_COOKIE = 'session';
 

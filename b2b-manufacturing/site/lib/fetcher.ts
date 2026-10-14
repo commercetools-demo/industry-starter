@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Browser-side JSON helpers for the hooks. Reads never throw; mutations always do. */
 export async function readJson<T>(url: string): Promise<T | null> {
   try {

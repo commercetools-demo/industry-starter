@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { Locale, Money } from '@/lib/types';
 
 /** The only place that divides a commercetools `centAmount` by 100 (all currencies in use have two fraction digits). */

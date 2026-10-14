@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { CompatVerdict, Reason, ReplaceTarget } from '@/lib/types';
 
 /** Thrown by cart code when a write would break an offer rule. */

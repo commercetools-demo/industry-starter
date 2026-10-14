@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { RATE_LIMITS } from '@/lib/config/rateLimits';
 import { clientKey, rateLimit } from './rate-limit';
 

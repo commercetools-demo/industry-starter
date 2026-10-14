@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Role matrix of workstream W (section "Role matrix"): Marketing, E-mail, Bundles, Product import and Brand partnership are Admin
 // only; a Buyer sees none of the pages and every one of W's seller routes asks for an Admin-only action. Table driven from the
 // permission table and from the route files themselves, so a new W route with a weaker action fails here.

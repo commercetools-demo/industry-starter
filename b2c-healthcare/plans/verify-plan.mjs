@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Verifies the implementation plan. Run from anywhere:
 //   node plans/verify-plan.mjs          check only (exit 1 on any error)
 //   node plans/verify-plan.mjs --sync   first regenerate: scenario checklists in workstream files,

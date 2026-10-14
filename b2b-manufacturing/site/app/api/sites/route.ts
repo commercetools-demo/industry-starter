@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { handle, ok, parseBody, requireBusinessUnit } from '@/lib/api';
 import { addSite, listSites } from '@/lib/ct/sites';
 import { siteSchema } from '@/lib/portal/schemas';

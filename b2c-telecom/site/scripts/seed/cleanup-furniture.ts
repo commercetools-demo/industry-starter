@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // One-time, destructive, gated cleanup of the furniture sample data (D-054). Idempotent: with nothing left it is a no-op.
 //   seed:cleanup -- --list                                       read-only: listing + JSON backup
 //   seed:cleanup -- --execute --confirm-project <key>            deletes exactly the listed set (needs OA-04 APPROVED)

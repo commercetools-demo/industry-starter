@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // CSV product import (W-13, W-14, D7): validation (never persists) and the commit through the Import API. The commit re-validates
 // the file on the server: the client sends the file again, never a list of validated rows. New products only, keys
 // `local-<storeKey>-<sku>` (a product draft import is destructive for an existing key, so existing keys are refused). Prices follow

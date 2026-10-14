@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Class strings shared by the catalog screens. Tokens only (admin kit): spacing, radius, text and colour utilities that
 // app/globals.css generates from app/tokens.css.
 export const cardClass = 'rounded-200 bg-bg-surface p-600 shadow-card';

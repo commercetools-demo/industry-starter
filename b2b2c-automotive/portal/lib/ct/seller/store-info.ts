@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The store a seller edits, read with the admin client: languages, countries, selling currencies, its retail price channel
 // and its branch channels, and the key and version of its own product selection.
 import 'server-only';

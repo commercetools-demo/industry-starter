@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Mapped `Cart` objects for component tests (what GET /api/cart answers).
 import { SAMPLE_LABEL } from '@/components/label/__fixtures__/label';
 import type { Cart, CartLine, CartSummary, Money, PriceSchedule } from '@/lib/types';

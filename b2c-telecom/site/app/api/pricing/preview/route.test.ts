@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 import { CART_OFFERS } from '@/lib/cart/__fixtures__/offers';
 import { fakeCart, type FakeCartHandle, type FakePrice } from '@/test/fixtures/fakeCart';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Customers of the store (workstream V-01, V-03, V-05). A shopper belongs to the reseller's store (`customer.stores`), so every read
 // goes through the in-store endpoints: a customer or order of another store is "not found". Guests are derived from orders without a
 // `customerId`, grouped by e-mail. Lists carry masked e-mail addresses only; the detail shows the full address to an Admin.

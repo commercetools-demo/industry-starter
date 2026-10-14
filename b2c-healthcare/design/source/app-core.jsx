@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 const {useState,useEffect,createContext,useContext,useMemo}=React;
 const Ctx=createContext(null);const useApp=()=>useContext(Ctx);
 const go=p=>{location.hash=p};

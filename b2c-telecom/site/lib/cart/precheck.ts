@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Checks a plan BEFORE it is written to the cart (no commercetools write): can its price schedule be built and can its Broadband Facts label
 // be built from catalog data? A plan that fails either is never added (specs term-phased-price-schedule and broadband-facts-label).
 import { buildLabel, formatLabelMoney } from '@/lib/pricing/label';

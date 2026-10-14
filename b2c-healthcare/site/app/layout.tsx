@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
 import { Lato, Poppins, Roboto } from "next/font/google";

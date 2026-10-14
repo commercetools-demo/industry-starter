@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Axe-style assertions for the device components (no axe library in the project): names, roles, states and live regions.
 import { fireEvent, screen, within } from '@testing-library/react';
 import { BundleView } from '@/components/bundle/BundleView';

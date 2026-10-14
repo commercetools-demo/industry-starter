@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { LIST_LINE_TYPE, RECURRENCE_POLICIES } from './data/recurrence';
 import { CATEGORIES } from './data/categories';
 import { DOCTORS, doctorKey, doctorSku } from './data/doctors';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Layer two of "permissions in two layers" (R-05): every seller write checks, BEFORE any commercetools write, that the store is
 // the one the session works in and that the associate's role may perform the action. Seller endpoints under app/api/seller/**
 // call this first and only then use the admin client.

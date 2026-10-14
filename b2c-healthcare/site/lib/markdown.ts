@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Tiny Markdown subset for the static content files: `##`/`###` headings, paragraphs,
 // `-` lists, **bold** and [text](href) links. Pure data out, so React escapes everything on render.
 

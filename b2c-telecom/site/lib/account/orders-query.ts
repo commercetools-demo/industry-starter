@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { ORDER_STATUS_FILTER_KEYS, type OrderStatusFilter } from '@/lib/config/account';
 
 // The query string of /account/orders. Pure: invalid input never throws, it reads as the default (all orders, page 1).

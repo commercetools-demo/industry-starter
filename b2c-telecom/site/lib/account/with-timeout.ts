@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { PANEL_TIMEOUT_MS } from '@/lib/config/account';
 
 export { PANEL_TIMEOUT_MS };

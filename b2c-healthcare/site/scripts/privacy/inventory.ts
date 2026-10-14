@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Single source for the privacy scripts: which Custom Object containers exist, how each one links to a
  * person, and what the erase, subject-access and retention scripts do with them. `inventory.test.ts` fails when

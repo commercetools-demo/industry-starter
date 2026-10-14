@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Server side of notifications (R-14): a registry of sources. Shipped now: order shipped. "Approval waiting" and
 // "quote counter-offer" are not built (Q-V01); customer return received is a stub until workstream V registers it.
 import 'server-only';

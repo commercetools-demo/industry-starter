@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { FALLBACK_CATEGORY_KEYS } from '@/lib/config/search';
 import { categoryPath, findCategory } from '@/lib/listing/links';
 import type { Category, Locale } from '@/lib/types';

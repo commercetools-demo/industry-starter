@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { authFailure, padResponse, rateLimited, readAuthBody, stringField } from '@/lib/auth/api';
 import { isPlausibleEmail, normalizeEmail } from '@/lib/auth/email';
 import { assertSameOrigin } from '@/lib/auth/origin';

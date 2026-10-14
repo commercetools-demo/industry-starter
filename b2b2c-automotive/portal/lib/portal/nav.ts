@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Navigation definition (workstream R-02). Dashboard on top, then four groups in the spec order.
 // The "Shop from Malva" group, the Approvals badge and "Roles & permissions" do not exist (owner Q-V01, D-028).
 // `scripts/check-routes.mjs` parses the item() calls (id, then the route) and ROUTE_ALLOW_LIST of this file, so keep

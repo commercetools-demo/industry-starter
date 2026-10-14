@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run seed:discounts -- --confirm-project spec-test-b2c-telecom
 // Creates or updates the code discount MALVA-CABLE5 (the other Cart Discounts come from the main seed)
 // (D-054: allow-listed project, `malva-cd-` keys only).

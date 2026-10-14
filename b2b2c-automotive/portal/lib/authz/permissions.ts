@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Portal permission model (workstream R-01). Two logical roles only, Admin and Buyer (owner Q-V01, D-028).
 // Seller-side writes go through the admin client after `authorizeStore`, so most actions map to roles only;
 // S, T, U, V, W add rows to ACTION_ROLES as they need them. No approval actions exist.

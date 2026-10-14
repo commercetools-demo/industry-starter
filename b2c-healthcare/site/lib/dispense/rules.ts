@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Dispensing rules as pure functions (prescription-bound-supply, dispensing-quantity-limit, expiry-dated-supply).
  * No server imports and no commercetools types: the server code reads the data and hands it in, so every

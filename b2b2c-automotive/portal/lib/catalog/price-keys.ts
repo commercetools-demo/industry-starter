@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Standalone price keys, identical to the seed's `channelPriceKey` / `baseKey` (seed/src/data/prices.ts):
 //   <sku>__<channelKey>            EUR, country DE
 //   <sku>__<channelKey>__usd       USD, country US

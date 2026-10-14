@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { offerKeyForProduct, refersTo } from './refs';
 
 const appletv = { key: 'malva-offer-appletv', anchors: ['malva-appletv'], variants: [{ sku: 'MLV-ADD-APPLETV-MTH' }] } as Parameters<typeof refersTo>[1];

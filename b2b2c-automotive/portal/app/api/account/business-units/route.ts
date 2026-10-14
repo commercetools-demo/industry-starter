@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/account/business-units (workstream U-10): for every unit of the signed-in associate, the unit's name and type, the
 // associate's role(s) in it and the store ("Explicit store" or "From parent").
 import { listAccountUnits } from '@/lib/ct/account';

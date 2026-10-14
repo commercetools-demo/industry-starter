@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { describe, expect, it } from 'vitest';
 import { buildPartSearchBody, catalogHref, OE_ATTRIBUTE, PART_NUMBER_ATTRIBUTE, resolveEnter, MIN_QUERY } from './search';
 

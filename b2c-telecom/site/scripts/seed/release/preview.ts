@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Preview: the catalog as customers would see it at an instant, computed without writing anything.
 import { isOfferReleased } from '../../../lib/offers/release';
 import { applyToIndex, discountEffectiveAt, endTimeOf, priceAt, startTimeOf } from './model';

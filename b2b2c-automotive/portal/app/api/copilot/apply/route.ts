@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/copilot/apply { actionId, params }: runs a change the user confirmed in the Copilot panel (R-16).
 // The permission is re-checked here, whatever the panel showed. Unknown actions and missing permissions change nothing.
 import { z } from 'zod';

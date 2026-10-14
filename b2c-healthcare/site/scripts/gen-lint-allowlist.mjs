@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Generates the token allow-list of site/.oxlintrc.json ("x-omelette".tokens) from the
 // custom properties of app/tokens.css (design tokens + storefront extensions), so it never drifts.
 //   node scripts/gen-lint-allowlist.mjs           rewrite .oxlintrc.json

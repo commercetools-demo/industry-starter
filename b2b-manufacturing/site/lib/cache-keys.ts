@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Client-state keys (SWR). Business-Unit-scoped entries are `[KEY, businessUnitKey]` tuples (malva-data-loading › Keys). */
 export const KEY_ACCOUNT = 'account';
 export const KEY_CART = 'quote-list';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 export type CountryConfig = { locale: string; currency: string; country: string; label: string };
 
 /** The only place a locale, currency or country is hard-coded. Add a market here and in messages/<locale>.json. */

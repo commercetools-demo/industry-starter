@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // In-memory fake of the commercetools REST surface used by the seed unit tests (F, G and X reuse it).
 // It models only what the reconcilers need: key/id lookup, `where` on a few shapes, expand, version checks,
 // the update actions of the reconciler table, delete rules (children, published products, product-type use).

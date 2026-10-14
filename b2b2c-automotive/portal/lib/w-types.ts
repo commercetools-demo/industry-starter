@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // App types of workstream W (marketing, e-mail, bundles, local products, import, brand partnership). Pure: the screens and
 // `hooks/marketingApi.ts` import these, never lib/ct; the server modules in lib/ct/seller produce them.
 import type { EmailTemplate, TemplateKey, Locale } from '@/lib/email/defaults';

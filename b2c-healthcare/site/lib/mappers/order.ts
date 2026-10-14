@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { Order, Payment } from '@commercetools/platform-sdk';
 import { mapMoney } from '@/lib/mappers';
 import { CANCELLABLE, type Instrument, type OrderLineView, type OrderStatus, type OrderView, type RefundStatus, type ShipmentState } from '@/lib/order-types';

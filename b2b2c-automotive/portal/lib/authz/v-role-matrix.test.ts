@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Role matrix of workstream V (customers, subscriptions, returns, reviews). Table driven from the permission table and from the route
 // files themselves: every write names an Admin-only action, reads name a view action, and a Buyer sees only the pages R allows.
 // Deviation from the V plan, recorded in plans/notes/questions-VWXYZ.md (Q-V11): R's table lets a Buyer VIEW Returns and Reviews

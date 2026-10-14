@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // After `next build`: fails if a server-only variable NAME or a secret VALUE appears in the client bundle or server output,
 // if a source map is emitted into .next/static, or (release builds) if a dev-only route was compiled. Values are read from
 // the environment only to search for them and are never printed.

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/reviews?storeKey=&tab=latest|highest|lowest : the store's reviews with the rating summary (V-16).
 import { listReviews } from '@/lib/ct/seller/reviews';
 import { json } from '@/lib/portal/route-kit';

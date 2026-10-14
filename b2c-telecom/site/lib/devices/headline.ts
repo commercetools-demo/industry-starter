@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The two prices of a device card: the lowest monthly amount over the longest installment term, and the lowest outright price. Pure.
 import { INSTALLMENT_TERMS } from '@/lib/config/devices';
 import type { DeviceOffer, Money } from '@/lib/types';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { cable500, phoneEssential, withFacts } from '@/lib/offers/__fixtures__/offers';
 import type { Money, Offer, PriceSchedule } from '@/lib/types';
 import { buildLabel, buildLabelSnapshot, formatLabelMoney, parseLabelSnapshot, type LabelBuildInput } from './label';

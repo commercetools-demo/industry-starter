@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/orders/[number]/delivered { storeKey } : the Admin action "Mark delivered" (V-05, D9). Sets `custom.deliveredAt` of the
 // order once (a second call keeps the first date); the 30 day return window runs from it. The order is read in-store (another store's
 // order is a 404).

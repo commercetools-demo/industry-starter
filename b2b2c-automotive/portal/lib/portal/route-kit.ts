@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Route Handler helpers for the portal shell and auth routes: G's `lib/api.ts` plus two small response builders.
 import 'server-only';
 

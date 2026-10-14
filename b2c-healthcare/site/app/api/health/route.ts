@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { checkConnection } from '@/lib/ct/health';
 
 // Development only: removed from release builds (scripts/check-no-health-in-release.mjs).

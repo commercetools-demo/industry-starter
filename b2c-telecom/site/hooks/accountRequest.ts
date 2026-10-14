@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 'use client';
 
 /** A refused or failed /api/account request: `code` is the stable code of that API (`INVALID_ADDRESS`, `ADDRESS_UNRESOLVED`, `LIST_FULL`, ...) or `NETWORK`. */

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 // The price on a card must be the price of the line the cart creates. The card is the storefront's own selection (`selectPrices`); the cart
 // is the engine, modelled here from the platform's documented rule, independently of the storefront code: a price applies when its

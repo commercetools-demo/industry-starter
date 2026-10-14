@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Reads the project into a CatalogIndex (reads only). Validation, snapshot and preview are pure functions over this index.
 import type { CtApi } from '../lib';
 import { getAll, type Obj } from '../reconcilers/util';

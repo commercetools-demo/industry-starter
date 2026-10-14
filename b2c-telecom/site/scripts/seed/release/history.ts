@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // History: "effective" is derived (status scheduled and releaseAt reached), never stored, so there is no job to run
 // (nothing in the platform fires when a date arrives).
 import { userInfo } from 'node:os';

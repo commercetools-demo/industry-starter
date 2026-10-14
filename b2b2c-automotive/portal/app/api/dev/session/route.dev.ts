@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Development only: switches the fixture session so the shell can be checked as each role without credentials.
 //   GET /api/dev/session?as=adminA|buyerA|adminB|pending|none&next=/de-DE
 // Requires PORTAL_DEV_FIXTURES=on (404 otherwise and in production). The `.dev.ts` extension keeps it out of production builds.

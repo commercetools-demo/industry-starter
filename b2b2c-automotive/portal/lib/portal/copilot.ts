@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Copilot that asks before changing (R-16). Deterministic rules, no LLM (Q-R03): a registry of actions plus built-in
 // "where is X" answers. `plan` never changes anything; only `applyConfirmed` (called by POST /api/copilot/apply after the
 // user pressed Confirm) runs an action, and it re-checks the permission. T registers `set-discount-active` in T-14.

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Shared plumbing of the catalog seller routes (workstream T): authorization first, then validation, then the service call.
 //   authorizeSeller(storeKey, action)  the store must be the session's store and the role must allow the action, BEFORE any
 //                                      commercetools call (R `authorizeStore`; in the dev fixture mode the fixture roles decide)

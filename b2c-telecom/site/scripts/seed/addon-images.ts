@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Puts the recorded photo (data/product-images.json) on every add-on offer of a live project, and nothing else:
 //   seed:addon-images                                       read-only: lists what would change (default)
 //   seed:addon-images -- --execute --confirm-project <key>  adds the missing images, removes the ones the lock no longer has, republishes

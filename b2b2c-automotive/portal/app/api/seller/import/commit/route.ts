@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/import/commit { storeKey, csv, overrides? } : imports the file through the Import API (W-14). The client sends the
 // file again; the server validates it again and imports only the rows it accepts itself (never a list from the client).
 import { commitImport } from '@/lib/ct/seller/product-import';

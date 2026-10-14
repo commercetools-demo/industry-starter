@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // PUT and DELETE /api/seller/store/branches/[key] (workstream U-05): edit a branch, or remove it from the store's supply and
 // distribution channels (the channel itself stays). A branch of another store is a 404, whatever its key looks like.
 import { removeBranch, updateBranch } from '@/lib/ct/seller/branches';

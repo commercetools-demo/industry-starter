@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // A tiny in-memory commercetools for the checkout tests: ONE mutable world (cart, orders, shipping methods, session) behind the module
 // mocks of `lib/ct/*`. Route and server-function tests mount the real `lib/ct/checkout.ts` on top of it, so a scenario is proven through
 // the whole stack (validation order, writes, read-back) without any network.

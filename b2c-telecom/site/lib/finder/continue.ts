@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { CartError, type AddLineArgs, type AddLineOptions } from '@/hooks/useCart';
 import type { BlockedAdd, BundleIssueReason, Cart, CartNotice } from '@/lib/types';
 import type { DraftExtra } from './draft';

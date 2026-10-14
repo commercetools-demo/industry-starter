@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Pure validation (no `server-only`) so next.config.ts and instrumentation can call it. Use lib/env.ts from app code.
 export type Env = {
   CTP_PROJECT_KEY: string;

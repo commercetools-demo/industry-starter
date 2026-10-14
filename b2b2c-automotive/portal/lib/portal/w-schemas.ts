@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Strict request bodies of workstream W's seller routes (marketing, e-mail, bundles, local products, import). Unknown keys are
 // refused (400): a client can never send what the server owns (a discount value, a publish flag, a review state, a price per
 // bundle component). The store key is only a claim that `authorizeSeller` compares with the session. Pure.

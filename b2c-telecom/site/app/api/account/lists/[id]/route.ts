@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { accountRoute, readJsonBody } from '@/lib/api/account-api';
 import { withListErrors } from '@/lib/api/lists-api';
 import { deleteList, getList, getLists, renameList, toDetail } from '@/lib/ct/lists';

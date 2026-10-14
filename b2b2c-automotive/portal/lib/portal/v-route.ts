@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Small helpers of V's seller routes (customers, subscriptions, returns, reviews): the display locale of a read, the acting user and the
 // four subscription action routes. Authorization always comes first (`authorizeSeller` / `authorizedBody`), then the service call.
 import 'server-only';

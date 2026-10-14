@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Apply protocol of a release (D-057): validate, snapshot, record, ordered writes, verify, record; compensation on any failure.
 // Every write goes through F's CtApi and is idempotent by key. Everything written is "dark" (inert until releaseAt).
 import { EXIT } from '../config';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // CSV of price changes: `sku;price` or `sku,price` (T-06). Prices are written with a dot, or with a comma when the separator is
 // a semicolon, and at most two decimals. At most 2000 rows; a header line is skipped. Pure.
 export const MAX_IMPORT_ROWS = 2000;

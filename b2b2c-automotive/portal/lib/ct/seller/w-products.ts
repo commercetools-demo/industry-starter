@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Product reads shared by bundles, local products and the brand partnership page (W): the store's own products of a product type,
 // read as staged projections (unpublished products included) and filtered by the attribute `owner-store`. Another store's
 // product is never returned. Product Search would filter on the attribute server side; this reads the type's projections in pages

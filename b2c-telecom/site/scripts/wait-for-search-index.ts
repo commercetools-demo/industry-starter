@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // npm run search:wait: blocks until Product Search returns the seeded offer "Cable 500" (the index lags writes by minutes, D-056).
 // Polls every 30 s for at most 40 attempts (20 minutes), prints the elapsed time and exits 1 on timeout. Read-only; uses .env.local.
 // Not part of `npm run verify` (needs network and credentials).

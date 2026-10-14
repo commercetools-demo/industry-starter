@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { reloadAllowances, type AllowanceStore, type ReloadResult } from '../lib/funding/allowance-core';
 import { customObjectsStore, type CustomObjectsRoot } from '../lib/funding/ct-store';
 import { getAdminRoot, isMain, parseFlags, type Root } from './seed/lib';

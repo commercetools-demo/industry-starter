@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Returns of the store (workstream V-11, V-12): the native `Order.returnInfo` plus the seeded custom type `malva-return-item`
 // (`returnNumber`, `status`, `reason`, `refundCents`, `rejectReason`, `refundRequestedAt`). Orders are read through the in-store
 // endpoint, so an order of another store is "not found". Refunds go through the Checkout Payment Intents API (`checkout-payments.ts`):

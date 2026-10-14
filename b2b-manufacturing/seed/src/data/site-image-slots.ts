@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Banner/section image slots for the website (not stored in commercetools). `data/site-images.json` holds the picks. */
 export interface SiteImageSlot {
   slot: string;

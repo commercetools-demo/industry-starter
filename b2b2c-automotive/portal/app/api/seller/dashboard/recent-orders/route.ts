@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/dashboard/recent-orders: newest storefront orders of the session store plus the Open orders count (S-05).
 // The widget and the Open orders KPI share this one endpoint, so one failure and one Retry cover both.
 import { dashboardRoute } from '@/lib/ct/seller/dashboard/route-helper';

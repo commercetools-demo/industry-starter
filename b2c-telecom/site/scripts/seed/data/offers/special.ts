@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The two special offers are built next to their families (they need the same price rows):
 //  - `malva-offer-cable-existing-customer` (existing customers only) in plans-cable.ts
 //  - `malva-offer-phone-online-only` (channel offer) in plans-phone.ts

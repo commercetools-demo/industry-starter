@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Demo orders (only with --with-demo): what the demo customers already hold (D-021). An order is immutable: an existing
 // orderNumber is `unchanged`. Created as cart -> order, so a recurring line makes the platform create a Recurring Order
 // (verified live in G-18). The cart is typed malva-order from the start (the type is a superset of malva-cart, so its

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Test kit for the catalog seller routes (workstream T). Route tests mock `@/lib/portal/seam` and `@/lib/ct/associate` with these
 // factories (inside `vi.mock(path, async () => (await import('@/test/seller-routes')).seamModule())`), pick a synthetic user with
 // `asUser`, and mock the service module of the route, so no commercetools call can happen.

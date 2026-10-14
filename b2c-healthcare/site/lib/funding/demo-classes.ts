@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Demo-only: which medication class a SKU belongs to, for the demo cost-share rules. A real scheme would answer from
  * its own formulary; the storefront would send the SKU (or a code) and take the answer. `resolver.test.ts` keeps

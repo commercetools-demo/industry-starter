@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Tailwind v4 without a config file (bootstrap-and-structure > Tailwind v3 guard).
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 const PATTERNS: Record<string, RegExp[]> = {
   US: [/^\d{5}$/, /^\d{5}-\d{4}$/],
   DE: [/^\d{5}$/],

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Pure (client-safe). The return target after sign-in: a same-site path, never a host (open-redirect guard).
 import { RETURN_SEGMENTS } from '@/lib/config/auth';
 import { isSupportedLocale, type Market } from '@/lib/utils';

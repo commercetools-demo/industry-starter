@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * One-click sign-in for the three synthetic demo patients (scripts/seed/data/patients.ts) on the login page.
  * Off unless `DEMO_LOGIN_PASSWORD` is set (the same value as `SEED_PATIENT_PASSWORD` used when seeding). The password stays on the

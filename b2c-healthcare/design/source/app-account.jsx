@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 function Account({sub,id}){const{user,setUser,bookings,orders}=useApp();
 const T=[['','Overview'],['labs','Lab tests'],['appointments','Appointments'],['orders','Orders']];
 const ready=LABS.filter(l=>l.status==='ready').length;

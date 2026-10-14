@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // WCAG 2.x contrast helpers (relative luminance and contrast ratio of two sRGB colors).
 
 export type Rgb = readonly [number, number, number];

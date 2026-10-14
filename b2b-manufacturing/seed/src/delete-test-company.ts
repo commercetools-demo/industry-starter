@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { getAdminRoot } from './lib';
 
 /** Deletes a throwaway company registered through the site and its customers. Refuses any key that does not start with `mpw-test-`. */

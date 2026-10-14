@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/tailoring?storeKey=&text=&offset=&limit= : the store's parts with the Tailored and Images chips (T-07).
 import { listTailoring } from '@/lib/ct/seller/tailoring';
 import { json } from '@/lib/portal/route-kit';

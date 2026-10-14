@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { mapOrder } from '@/lib/mappers/order';
 import { ctLine, ctOrder, kindAttrs, orderA, orderB, orderDevice, schedule, CABLE_SKU } from '@/test/fixtures/orders';
 import { serializeSchedules } from '@/lib/pricing/schedule';

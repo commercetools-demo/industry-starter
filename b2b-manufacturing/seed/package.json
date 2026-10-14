@@ -1,5 +1,5 @@
 {
-  "name": "malva-seed",
+  "name": "@commercetools-labs/malva-seed",
   "private": true,
   "type": "module",
   "description": "Idempotent seed scripts for the Malva commercetools project (services, roles, store, demo companies, images).",

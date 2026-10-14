@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/store/link-in-bio-status?storeKey= (workstream U-05): whether the store has a published page with slug
 // /link-in-bio, for the notice on the Share tab.
 import { hasPublishedPage } from '@/lib/contentools/service';

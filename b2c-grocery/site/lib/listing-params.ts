@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { SortKey } from './types';
 
 /** URL contract of the listing: `/shop?category=<slug>&price=<bandId>&stock=in|out&sort=...&page=<n>`. */

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** Types only: safe to import from client code. */
 export interface Slot {
   /** `YYYYMMDD-HH`, e.g. `20261012-10` = 10:00-12:00 (stub: UTC). */

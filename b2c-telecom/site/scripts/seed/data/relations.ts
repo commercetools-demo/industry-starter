@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Derived relations between offers (pure, unit-tested): conflicts, included add-ons and the J exception lists.
 import { OFFER_WIRING, wiringOf } from './offers/wiring';
 

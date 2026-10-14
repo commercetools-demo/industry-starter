@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { getAdminRoot } from './lib';
 
 /** Deletes throwaway QA customers (email like qa-*@example.com) created by manual/browser tests, with their orders and carts. */

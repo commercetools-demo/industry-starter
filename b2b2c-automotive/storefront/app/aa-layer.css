@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /* AA layer (workstream Y, WCAG 1.4.3 and 1.4.11). The automotive kit's status, subtle and rating text colours measure below 4.5:1
    on its own surfaces (see plans/evidence/Y/storefront-contrast-before.txt). Components keep using the semantic tokens; this layer
    moves those few tokens one step darker and adds the input border role. app/tokens.css stays an exact copy of the design export.

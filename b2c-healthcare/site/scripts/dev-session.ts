@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /**
  * Development helper for browser checks without commercetools (`MALVA_FIXTURES=1`, see lib/ct/fixtures.ts).
  * Prints a signed `malva_session` cookie for a fixture patient, so `/prescriptions` can be opened as Sam Rivera:

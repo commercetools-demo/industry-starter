@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The audiences a buyer can be priced as: the groups the catalog read selects for, and the one group an anonymous cart carries.
 export interface AudienceCase {
   name: string;

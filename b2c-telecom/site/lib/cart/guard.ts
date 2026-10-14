@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The ONLY file of the cart that imports J's (compatibility) and K's (exclusivity, eligibility, revalidation) functions. Pure: no I/O.
 // Every failure is ABSOLUTE for buyers (D-022): nothing here takes an override. The route re-runs this on every add, so a card's earlier
 // verdict is never trusted.

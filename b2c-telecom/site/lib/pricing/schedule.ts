@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // The phased price schedule record (spec term-phased-price-schedule; D-013): built once at commitment from the order date,
 // stored on the order and never recomputed from catalog state. Pure: no I/O, no clock (callers pass dates).
 import { INTRO_DEFS, STEP_DEFS, type StepDef } from '@/lib/config/pricing';

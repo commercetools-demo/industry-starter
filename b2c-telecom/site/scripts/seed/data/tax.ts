@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { TaxCategoryDraft } from '../types';
 
 // One placeholder category with a rate per country (D-044). The sample category `standard-tax` is not touched.

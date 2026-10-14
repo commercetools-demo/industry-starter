@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/discounts/product { storeKey, rule? } : creates an inactive product discount limited to the store's retail
 // channel. Without `rule` it creates the draft "New product rule (draft)" (unscheduled) for the editor to complete.
 import { CreateProductBody } from '@/lib/catalog/route-schemas';

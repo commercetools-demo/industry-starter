@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Assortment state of one master part for one reseller store (spec "Assigned products table"). Pure.
 export type AssortmentState = 'inherited' | 'local' | 'available' | 'withdrawn' | 'pre-release' | 'blocked-upstream' | 'pending-review';
 

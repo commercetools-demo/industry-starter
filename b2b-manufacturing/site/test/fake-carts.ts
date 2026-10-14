@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /** The fields of a commercetools cart these tests touch. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- a loose stand-in for the SDK cart, which tests cannot import (lint rule)
 type Cart = any;

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import 'server-only';
 import { ORDER_NUMBER_DIGITS, ORDER_NUMBER_PREFIX } from '@/lib/checkout/config';
 import { CONTAINERS, createOnly, getObject, putObject, statusOf } from '@/lib/ct/custom-objects';

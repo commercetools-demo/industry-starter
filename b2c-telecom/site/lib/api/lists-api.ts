@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import 'server-only';
 import { InvalidListNameError, ListFullError, ListLimitError, ListNotFoundError, UnknownOfferError } from '@/lib/ct/lists';
 import { LIST_NAME_MAX, MAX_LINES_PER_LIST, MAX_LISTS } from '@/lib/config/lists';

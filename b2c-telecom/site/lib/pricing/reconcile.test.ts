@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { Money, PriceSchedule } from '@/lib/types';
 import { SCHEDULE } from '@/test/fixtures/cart';
 import { findMismatches, standingAmountOf, type GeneratedOrder } from './reconcile';

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Pure. What the buyer is told after a sign-in merged the anonymous bundle into the customer's bundle.
 import type { Cart, MergeNote } from '@/lib/types';
 

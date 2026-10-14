@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { beforeEach, describe, expect, it } from 'vitest';
 import { StoredMethodNotFoundError } from '@/lib/checkout/payment-provider';
 import { listStored, mapDescriptor, removeStored, setDefaultStored } from './stored-methods';

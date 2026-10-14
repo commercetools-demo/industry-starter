@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/campaigns/[key]/claim { storeKey, amountCents, invoiceReference, note } : proof of spend (W-03). No file upload
 // (Q-W09). The status is always `submitted`; Malva approves or rejects in the Merchant Center.
 import { submitClaim } from '@/lib/ct/seller/campaigns';

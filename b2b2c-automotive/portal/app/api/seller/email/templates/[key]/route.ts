@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/email/templates/[key]?storeKey= and PUT { storeKey, subject, body, enabled } (W-04). The body is strict; an
 // unknown variable is 400 UNKNOWN_VARIABLE with `variable` naming the first offender. Nothing is sent, only stored.
 import { getTemplate, saveTemplate } from '@/lib/ct/seller/email-templates';

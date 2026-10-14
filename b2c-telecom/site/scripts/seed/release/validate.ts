@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Validation phase of a release: pure over a CatalogIndex, zero writes. Every issue has a code and names the key.
 import type { PriceSpec } from '../data/catalog-types';
 import type { ProductDraft } from '../types';

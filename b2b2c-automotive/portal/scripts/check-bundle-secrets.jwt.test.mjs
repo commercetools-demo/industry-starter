@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 // Workstream X-12: a JWT-shaped string (the canary) in the client bundle fails the scan.
 import { describe, expect, it } from 'vitest';

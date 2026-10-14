@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Seed framework barrel and the ONLY place (besides lib/ct/client.ts) that builds a commercetools client.
 import { readFileSync } from 'node:fs';
 import path from 'node:path';

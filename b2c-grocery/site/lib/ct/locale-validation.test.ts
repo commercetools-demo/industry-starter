@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // The wrapper is created at import time, so record its options in a plain array (mock state is reset between tests).

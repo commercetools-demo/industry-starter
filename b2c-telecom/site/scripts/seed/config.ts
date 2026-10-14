@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Seeding safety configuration (D-054). The allow-list has exactly one entry.
 export const ALLOWED_PROJECT_KEYS = ['spec-test-b2c-telecom'] as const;
 export const OWNED_PREFIX = 'malva-';

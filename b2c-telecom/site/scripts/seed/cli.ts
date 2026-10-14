@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Tiny shared helpers for the seed commands: argument parsing and the process entry wrapper.
 import { EXIT, TargetError } from './config';
 import { CtHttpError } from './lib';

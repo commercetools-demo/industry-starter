@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { Children, cloneElement, isValidElement, Suspense, type ReactElement, type ReactNode } from 'react';
 
 // Testing Library renders on the client, which cannot render async Server Components. This walks a React tree, calls every async

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // @vitest-environment node
 import * as fx from '@/lib/offers/__fixtures__/offers';
 import type { BuyerContext, CartLineRef, Market, Offer } from '@/lib/types';

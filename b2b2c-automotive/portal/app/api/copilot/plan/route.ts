@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/copilot/plan { text, locale }: what the Copilot answers or proposes (R-16). Nothing is changed here; a proposed
 // change comes back as `confirm` and only POST /api/copilot/apply runs it. Planning on the server keeps one registry
 // (T registers its actions there) and the permission check in one place.

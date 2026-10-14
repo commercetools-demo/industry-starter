@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/assortment/chain?storeKey= : the authority chain card (T-02).
 import { getChain } from '@/lib/ct/seller/assortment';
 import { json } from '@/lib/portal/route-kit';

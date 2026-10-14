@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // A fake `CheckoutApi` (what `useCheckout` returns) for the step component tests: the state is given, every write is a spy.
 import { vi } from 'vitest';
 import type { CheckoutApi } from '@/components/checkout/types';

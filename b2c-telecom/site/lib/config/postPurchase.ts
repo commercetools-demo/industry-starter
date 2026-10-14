@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Constants of post-purchase order management (workstream V). Never inline these numbers.
 
 export const CANCEL_REASONS = ['changed_mind', 'better_offer', 'moving', 'service_not_needed', 'other'] as const;

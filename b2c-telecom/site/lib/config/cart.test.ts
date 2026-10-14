@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { ACTIVATION_FEE_TAX_CATEGORY_KEY, MAX_PHONE_LINES, minimumOrderValues, QUANTITY_RULES } from './cart';
 import { DISCOUNT_AMOUNTS, DISCOUNT_KEYS } from './discounts';
 

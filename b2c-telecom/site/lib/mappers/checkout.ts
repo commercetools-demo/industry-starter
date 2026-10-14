@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import 'server-only';
 import type { Address, Cart as CtCart } from '@commercetools/platform-sdk';
 import { isPhysicalLine } from '@/lib/checkout/physical';

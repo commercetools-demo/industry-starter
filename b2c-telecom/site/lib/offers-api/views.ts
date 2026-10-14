@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import { refersTo } from '@/lib/offers/refs';
 import type { CompatVerdict, Money, Offer, Reason, VerdictStatus } from '@/lib/types';
 import { apiFamilyOf, type ApiFamily } from './filters';

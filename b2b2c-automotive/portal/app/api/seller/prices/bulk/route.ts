@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/prices/bulk { storeKey, currency?, mode: 'percentOfList' | 'setTo', value, skus | filter, dryRun } (T-06).
 // `dryRun: true` returns the new price and the distance from the Malva list per part, and flags results of zero or less; it
 // writes nothing. Publishing goes through `publishPrices` (validate all, confirm the count, then write).

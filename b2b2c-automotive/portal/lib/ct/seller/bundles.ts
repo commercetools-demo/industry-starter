@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Bundles (W-09, D4): one product of the seed product type `mau-pt-bundle` that lists its components (`component-skus`,
 // `component-quantities` as `<sku>:<qty>`, `bundle-discount-percent`, `owner-store`). Components must be assigned to the store
 // (`isAssigned`); the bundle price is ONE standalone price on the store's distribution channel written by T's price writer

@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // An in-memory stand-in for the commercetools client of workstream V (customers, orders with returns, recurring orders, payments,
 // reviews, custom objects, states). Used by V's unit tests (`createVFake`) and by the development fixture mode

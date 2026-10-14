@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/import/validate { storeKey, csv, overrides? } : the validation report of a product CSV (W-13). Never persists.
 // The report has counts, the column mapping and the row-level issues with their effect (Skipped, Default used).
 import { validateFile } from '@/lib/ct/seller/product-import';

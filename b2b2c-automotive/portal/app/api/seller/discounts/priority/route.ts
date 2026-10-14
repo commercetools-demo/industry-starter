@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // PUT /api/seller/discounts/priority { storeKey, kind, orderedIds } : saves the rank of the store's own discounts of a kind (T-09).
 // `orderedIds` must be exactly the store's reseller discounts of that kind (409 STALE_LIST otherwise); Malva-funded ones are
 // never part of it. Rank 1 gets the sortOrder that applies first.

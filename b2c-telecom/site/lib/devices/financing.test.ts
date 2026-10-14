@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 import type { FinancingLine, FinancingRequest } from '@/lib/types';
 import { usd } from './__fixtures__/devices';
 import { createStubProvider, decisionIdOf, financedTotalOf, fnv1a32, getFinancingProvider } from './financing';

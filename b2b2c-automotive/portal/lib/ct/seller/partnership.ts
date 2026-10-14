@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // Brand partnership (W-16): the guardrails that still exist after the owner scope change. There is NO price floor, NO territory
 // rule and NO content review (Q-T03, Q-O03, Q-T06). What remains: the fitment-claim rule (Enforced: a local product that claims
 // fitment is never published by the reseller until Malva approves) and an informational price note. KPIs: Compliance over the

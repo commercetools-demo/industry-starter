@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // POST /api/seller/discounts/cart { storeKey, rule? } : creates an inactive cart discount scoped to the store (`stores`, custom type
 // `mau-cart-discount-fields` with fundedBy reseller). Without `rule` it creates the draft "New cart rule (draft)".
 // A rule with a `code` also creates the discount code (409 CODE_TAKEN when the code exists).

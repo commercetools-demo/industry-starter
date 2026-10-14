@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 commercetools GmbH and the commercetools-labs contributors
+ * Freely available, AS IS and UNSUPPORTED. See LICENSE.
+ */
+
 // GET /api/seller/assortment?storeKey=&state=&text=&categoryId=&offset=&limit= : rows of "Assigned products" (T-03).
 import { json } from '@/lib/portal/route-kit';
 import { AssortmentFilter } from '@/lib/catalog/route-schemas';
