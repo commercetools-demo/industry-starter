@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { EMERGENCY_HREF, EMERGENCY_NUMBER, ROUTES } from '@/lib/site';
 import { LocaleSwitch } from './LocaleSwitch';
+import { IntakeButton } from './IntakeButton';
 import { PortalButton } from './PortalButton';
 
 export function TopBar() {
@@ -19,6 +20,7 @@ export function TopBar() {
         <div className="r">
           <LocaleSwitch />
           <span className="hide-sm"><PortalButton as="link" /></span>
+          <span className="hide-sm"><IntakeButton as="link" /></span>
           <Link href={ROUTES.quote} className="hide-sm">{t('requestQuote')}</Link>
         </div>
       </div>

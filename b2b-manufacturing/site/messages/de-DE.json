@@ -45,7 +45,8 @@
     "menuLabel": "Seitenmenü",
     "logoSubline": "Sanitär & Abfall",
     "language": "Sprache und Region",
-    "topBarLabel": "Kontakt und Sprache"
+    "topBarLabel": "Kontakt und Sprache",
+    "intake": "Bestellaufnahme"
   },
   "footer": {
     "blurb": "Sanitär- und Abfallmanagement für Facility Management, Industrie, Immobilienportfolios und Gesundheitswesen.",
@@ -298,7 +299,8 @@
       "quotes": "Angebote und Anfragen",
       "sites": "Standorte",
       "team": "Team",
-      "settings": "Einstellungen"
+      "settings": "Einstellungen",
+      "intake": "Bestellaufnahme"
     },
     "overview": {
       "title": "Übersicht",
@@ -574,6 +576,55 @@
         "new": "Neues Passwort",
         "save": "Speichern und weiter",
         "failed": "Ihr Passwort konnte nicht geändert werden. Bitte versuchen Sie es erneut."
+      }
+    },
+    "intake": {
+      "title": "Bestellaufnahme",
+      "intro": "Laden Sie eine Bestellung, eine Einkaufsbestellung oder eine Produktliste hoch. Daraus erstellen wir einen Warenkorb, eine Einkaufsliste oder eine Angebotsanfrage.",
+      "formTitle": "Neue Aufnahme",
+      "outputLegend": "Erstellen als",
+      "outputCart": "Warenkorb",
+      "outputShoppingList": "Einkaufsliste",
+      "outputQuoteRequest": "Angebotsanfrage",
+      "listName": "Name der Einkaufsliste",
+      "text": "Beschreiben Sie Ihre Bestellung (optional)",
+      "files": "Dateien (bis zu {max}, je {size} MB)",
+      "fileTypes": "PDF, TXT, CSV, DOCX, XLSX, EML, Markdown oder HTML",
+      "remove": "{name} entfernen",
+      "submit": "Absenden",
+      "submitting": "Wird gesendet…",
+      "failed": "Ihre Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+      "recent": "Letzte Aufnahmen",
+      "loading": "Wird geladen…",
+      "loadFailed": "Ihre Aufnahmen konnten nicht geladen werden.",
+      "empty": "Noch keine Aufnahmen. Senden Sie oben eine ab.",
+      "caption": "Letzte Aufnahmen",
+      "col": {
+        "created": "Gesendet",
+        "type": "Erstellen",
+        "input": "Eingabe",
+        "status": "Status",
+        "result": "Ergebnis"
+      },
+      "type": {
+        "Cart": "Warenkorb",
+        "ShoppingList": "Einkaufsliste",
+        "QuoteRequest": "Angebotsanfrage"
+      },
+      "status": {
+        "processing": "In Bearbeitung",
+        "done": "Fertig",
+        "failed": "Fehlgeschlagen"
+      },
+      "textOnly": "Freitext",
+      "createdEntity": "{type} {id}",
+      "quoteCart": "Warenkorb {id}",
+      "warning": {
+        "ProductsNotFound": "Einige Produkte wurden nicht gefunden",
+        "FileNotProcessed": "Eine Datei konnte nicht gelesen werden"
+      },
+      "error": {
+        "StaleProcessing": "Diese Anfrage wurde nicht abgeschlossen."
       }
     }
   },

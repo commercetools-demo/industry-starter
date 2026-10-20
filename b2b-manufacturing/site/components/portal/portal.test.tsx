@@ -25,13 +25,13 @@ const routes = (map: Record<string, unknown>) => vi.stubGlobal('fetch', vi.fn(as
 afterEach(() => { vi.unstubAllGlobals(); pathname = '/en-US/account'; refresh.mockClear(); replace.mockClear(); });
 
 describe('malva-client-portal › Portal shell', () => {
-  it('greets by first name, lists the eight items and marks the current one', async () => {
+  it('greets by first name, lists the nine items and marks the current one', async () => {
     routes({ '/api/auth/me': { customerId: 'c', email: 'e', businessUnitKey: 'a' }, '/api/business-units': { businessUnits: [{ key: 'a', name: 'A' }], current: 'a' } });
     pathname = '/en-US/account/invoices';
     const { container } = wrap(<PortalNav firstName="Dana" />);
     expect(screen.getByText('HELLO, DANA')).toBeInTheDocument();
     const links = within(screen.getByRole('complementary', { name: 'Client portal' })).getAllByRole('link');
-    expect(links.map((l) => l.textContent)).toEqual(['Overview', 'Service visits', 'Waste documents', 'Invoices', 'Quotes and requests', 'Sites', 'Team', 'Settings']);
+    expect(links.map((l) => l.textContent)).toEqual(['Overview', 'Service visits', 'Waste documents', 'Invoices', 'Quotes and requests', 'Order intake', 'Sites', 'Team', 'Settings']);
     expect(screen.getByRole('link', { name: 'Invoices' })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByRole('link', { name: 'Overview' })).not.toHaveAttribute('aria-current');
     expect(screen.queryByLabelText('Company')).toBeNull();

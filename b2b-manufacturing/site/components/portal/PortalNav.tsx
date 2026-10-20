@@ -17,6 +17,7 @@ export const PORTAL_ITEMS = [
   { key: 'documents', href: `${ROUTES.account}/documents` },
   { key: 'invoices', href: `${ROUTES.account}/invoices` },
   { key: 'quotes', href: `${ROUTES.account}/quotes` },
+  { key: 'intake', href: ROUTES.intake },
   { key: 'sites', href: `${ROUTES.account}/sites` },
   { key: 'team', href: `${ROUTES.account}/team` },
   { key: 'settings', href: `${ROUTES.account}/settings` },

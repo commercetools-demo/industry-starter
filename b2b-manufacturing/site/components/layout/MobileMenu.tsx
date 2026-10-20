@@ -12,6 +12,7 @@ import { Link, usePathname } from '@/i18n/routing';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { usePortalDialog } from '@/context/portal-dialog';
 import { inSection, ROUTES } from '@/lib/site';
+import { IntakeButton } from './IntakeButton';
 import { SECTIONS } from './NavLinks';
 
 /** Under 900 px the links go into a full-width panel behind a menu button (a design gap, SO-01). */
@@ -33,6 +34,7 @@ export function MobileMenu() {
       <div id={id} ref={panel} className={`menu-panel${open ? ' on' : ''}`} hidden={!open} aria-label={t('menuLabel')} role="dialog" aria-modal="true">
         {SECTIONS.map(({ key, href }) => <Link key={key} href={href} onClick={close} aria-current={inSection(pathname, href) ? 'page' : undefined}>{t(key)}</Link>)}
         <Button variant="outline" onClick={() => { close(); openPortal(); }}>{t('clientPortal')}</Button>
+        <IntakeButton variant="outline" onClick={close} />
         <LinkButton href={ROUTES.quote} onClick={close}>{t('requestQuote')}</LinkButton>
       </div>
     </>

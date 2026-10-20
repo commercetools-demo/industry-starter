@@ -14,8 +14,9 @@ export const KEY_QUOTE_CONTEXT = 'quote-context';
 export const KEY_QUOTES = 'portal-quotes';
 export const KEY_SITES = 'portal-sites';
 export const KEY_TEAM = 'portal-team';
+export const KEY_INTAKE = 'portal-intake';
 
-export const CLIENT_KEYS = [KEY_QUOTES, KEY_SITES, KEY_TEAM, KEY_ACCOUNT, KEY_CART, KEY_BUSINESS_UNITS, KEY_QUOTE_CONTEXT] as const;
+export const CLIENT_KEYS = [KEY_QUOTES, KEY_SITES, KEY_TEAM, KEY_INTAKE, KEY_ACCOUNT, KEY_CART, KEY_BUSINESS_UNITS, KEY_QUOTE_CONTEXT] as const;
 
 export const buKey = (key: string, businessUnitKey: string | null | undefined): readonly [string, string | null] => [key, businessUnitKey ?? null];
 

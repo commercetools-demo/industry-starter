@@ -25,6 +25,8 @@ export const FRONTEND_SCOPES: Record<string, string> = {
   manage_quotes: 'Accept, decline or renegotiate an issued quote (accepting creates the order from the quote)',
   manage_business_units: 'Portal administrators edit sites and team (workstream S)',
   view_associate_roles: 'Role names in the team screen',
+  manage_intake_agent: 'Intake agent: turn uploaded files or text into a cart, shopping list or quote request',
+  manage_shopping_lists: 'Shopping lists created by the Intake agent',
   manage_key_value_documents: 'Demo portal data (visits, waste documents, invoices) and the durable rate-limit counters, both kept as Custom Objects',
 };
 

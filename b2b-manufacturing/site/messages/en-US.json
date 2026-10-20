@@ -45,7 +45,8 @@
     "menuLabel": "Site menu",
     "logoSubline": "Plumbing & Waste",
     "language": "Language and region",
-    "topBarLabel": "Contact and language"
+    "topBarLabel": "Contact and language",
+    "intake": "Intake"
   },
   "footer": {
     "blurb": "Plumbing and waste management for facilities, manufacturers, property portfolios and healthcare.",
@@ -298,7 +299,8 @@
       "quotes": "Quotes and requests",
       "sites": "Sites",
       "team": "Team",
-      "settings": "Settings"
+      "settings": "Settings",
+      "intake": "Order intake"
     },
     "overview": {
       "title": "Overview",
@@ -574,6 +576,55 @@
         "new": "New password",
         "save": "Save and continue",
         "failed": "We could not change your password. Please try again."
+      }
+    },
+    "intake": {
+      "title": "Order intake",
+      "intro": "Upload an order, a purchase order or a product list and we turn it into a cart, a shopping list or a quote request.",
+      "formTitle": "New intake",
+      "outputLegend": "Create a",
+      "outputCart": "Cart",
+      "outputShoppingList": "Shopping list",
+      "outputQuoteRequest": "Quote request",
+      "listName": "Shopping list name",
+      "text": "Describe your order (optional)",
+      "files": "Files (up to {max}, {size} MB each)",
+      "fileTypes": "PDF, TXT, CSV, DOCX, XLSX, EML, Markdown or HTML",
+      "remove": "Remove {name}",
+      "submit": "Submit",
+      "submitting": "Submitting…",
+      "failed": "We could not submit your request. Please try again.",
+      "recent": "Recent intakes",
+      "loading": "Loading…",
+      "loadFailed": "We could not load your intakes.",
+      "empty": "No intakes yet. Submit one above.",
+      "caption": "Recent intakes",
+      "col": {
+        "created": "Submitted",
+        "type": "Create",
+        "input": "Input",
+        "status": "Status",
+        "result": "Result"
+      },
+      "type": {
+        "Cart": "Cart",
+        "ShoppingList": "Shopping list",
+        "QuoteRequest": "Quote request"
+      },
+      "status": {
+        "processing": "In progress",
+        "done": "Done",
+        "failed": "Failed"
+      },
+      "textOnly": "Free text",
+      "createdEntity": "{type} {id}",
+      "quoteCart": "cart {id}",
+      "warning": {
+        "ProductsNotFound": "Some products were not found",
+        "FileNotProcessed": "A file could not be read"
+      },
+      "error": {
+        "StaleProcessing": "This request did not finish."
       }
     }
   },

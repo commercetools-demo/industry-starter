@@ -72,4 +72,5 @@ export const LIMITS = {
   register: { limit: 5, windowSec: 3600 },
   login: { limit: 10, windowSec: 600 },
   quoteRequest: { limit: 10, windowSec: 3600 },
+  intake: { limit: 20, windowSec: 3600 },
 } as const;

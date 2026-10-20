@@ -5,7 +5,7 @@
  */
 
 /** Security headers for every response (HSTS is set by the host). Image hosts match `images.remotePatterns` in next.config.ts. */
-export const IMAGE_HOSTS = ['https://your-loyalty-free-image-source.com', 'https://*.commercetools.com', 'https://storage.googleapis.com'];
+export const IMAGE_HOSTS = ['https://images.pexels.com', 'https://*.commercetools.com', 'https://storage.googleapis.com'];
 
 export function contentSecurityPolicy(dev = process.env.NODE_ENV !== 'production'): string {
   const directives: Record<string, string[]> = {

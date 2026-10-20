@@ -42,9 +42,9 @@ describe('sync-site-images', () => {
     const site = path.join(root, 'site');
     mkdirSync(seed, { recursive: true });
     mkdirSync(site);
-    writeFileSync(path.join(seed, 'site-images.json'), JSON.stringify({ 'home-hero': [{ url: 'https://your-loyalty-free-image-source.com/photos/1/a.jpeg' }] }));
+    writeFileSync(path.join(seed, 'site-images.json'), JSON.stringify({ 'home-hero': [{ url: 'https://images.pexels.com/photos/1/a.jpeg' }] }));
     expect(syncSiteImages(site)).toBe('copied');
-    writeFileSync(path.join(seed, 'site-images.json'), JSON.stringify({ 'home-hero': [{ url: 'https://your-loyalty-free-image-source.com/photos/1/a.jpeg?w=1' }] }));
+    writeFileSync(path.join(seed, 'site-images.json'), JSON.stringify({ 'home-hero': [{ url: 'https://images.pexels.com/photos/1/a.jpeg?w=1' }] }));
     expect(() => syncSiteImages(site)).toThrow(/clean/);
   });
   it('keeps the committed copy when the seed folder is absent and fails when there is neither', () => {

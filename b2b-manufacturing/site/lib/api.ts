@@ -59,12 +59,21 @@ export async function requireBusinessUnit(locale?: string): Promise<Session & { 
 
 export const ok = (body: unknown) => json(body);
 
+/** A multipart body as an object: text fields as strings, and every part sent under `files` as a File in `files`. */
+async function formBody(request: Request): Promise<Record<string, unknown> | undefined> {
+  const form = await request.formData().catch(() => undefined);
+  if (!form) return undefined;
+  const out: Record<string, unknown> = { files: form.getAll('files').filter((v): v is File => typeof v !== 'string') };
+  for (const [key, value] of form.entries()) if (key !== 'files' && typeof value === 'string') out[key] = value;
+  return out;
+}
+
 /**
- * Reads and validates a JSON body with a zod schema. A body that is not JSON or fails the schema is a 400 whose message is the first
+ * Reads and validates a JSON (or multipart) body with a zod schema. A body that is not JSON or fails the schema is a 400 whose message is the first
  * issue; `fieldErrors` names each failing field (first message per field).
  */
 export async function parseBody<S extends z.ZodType>(request: Request, schema: S, fallback = 'Check your details and try again.'): Promise<z.infer<S>> {
-  const raw = await request.json().catch(() => undefined);
+  const raw = request.headers.get('content-type')?.startsWith('multipart/form-data') ? await formBody(request) : await request.json().catch(() => undefined);
   const result = schema.safeParse(raw);
   if (result.success) return result.data;
   const fieldErrors: Record<string, string> = {};
