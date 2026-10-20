@@ -1,0 +1,15 @@
+/* =========================================================================
+   styles.css — global entry point for the commercetools design system.
+
+   Consumers should link THIS one file. It pulls in the design tokens,
+   type scale and web fonts (Archivo + Roboto + Roboto Mono).
+
+   The other stylesheets in this project are intentionally NOT imported here
+   because they are template/surface-scoped, not global, and would otherwise
+   leak their class names into every consuming page:
+     • slides/slides.css, slides/slides-pd.css, slides/slides-pd2.css,
+       slides/catalog-pd.css  — presales deck templates (link from the deck)
+     • preview/_base.css                         — Design System review cards
+   ========================================================================= */
+
+@import url('./colors_and_type.css');

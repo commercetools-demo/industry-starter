@@ -1,0 +1,244 @@
+/* =========================================================================
+   commercetools Design System — colors_and_type.css
+   Palette extracted from General Deck (dark mode 2.6V0.1) slide 18.
+   Fonts: Archivo (display/headings) + Roboto (body/UI) — both from Google Fonts
+   and identical to the TTFs embedded in the source PPTX.
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ---------- Brand core ---------- */
+  --ct-violet:            #6359FF; /* Primary — Violet +0 (brand.primary) */
+  --ct-violet-600:        #4E43D8; /* Violet -1 (hover) */
+  --ct-violet-700:        #4242B2; /* Violet -2 (active) */
+  --ct-violet-400:        #7676FF; /* Violet +1 */
+  --ct-violet-300:        #8F8FFF; /* Violet +2 */
+  --ct-violet-200:        #C2C2FF; /* Violet +3 (tints/fills) */
+
+  --ct-navy:              #191741; /* Primary dark bg — brand.dark */
+  --ct-navy-700:          #252566; /* Navy +1 */
+  --ct-navy-600:          #4F4F99; /* Navy +2 */
+  --ct-navy-500:          #7979D1; /* Navy +3 (violet-tinged grey) */
+
+  /* ---------- Blue "Azure" (secondary) ---------- */
+  --ct-blue:              #293DE3; /* mid blue accent */
+
+  /* ---------- Teal (accent / success) ---------- */
+  --ct-teal-100:          #9FF7EE;
+  --ct-teal-400:          #0FDBD1;
+  --ct-teal-500:          #0BBFBF; /* Teal primary */
+  --ct-teal-600:          #0BADA8;
+  --ct-teal-700:          #0A948F;
+  --ct-teal-800:          #097F79;
+
+  /* ---------- Amber (accent / warning / highlight) ---------- */
+  --ct-amber-100:         #FFE9A1;
+  --ct-amber-200:         #FFDC6E;
+  --ct-amber-300:         #FFD03B;
+  --ct-amber-400:         #FFC806; /* Amber primary */
+  --ct-amber-500:         #FFB000;
+  --ct-amber-600:         #FF8B00;
+
+  /* ---------- Warm neutrals (off-white "stone" scale, light mode) ---------- */
+  --ct-stone-50:          #FBF9F5;
+  --ct-stone-100:         #F7F2EA;
+  --ct-stone-300:         #DEDAD4;
+  --ct-stone-400:         #C6C2BC;
+  --ct-stone-600:         #94918C;
+  --ct-stone-700:         #7C7975;
+
+  /* ---------- Semantic: foreground / background (dark-mode first) ---------- */
+  --ct-bg-0:              var(--ct-navy);        /* app/page background */
+  --ct-bg-1:              #1F1D4D;               /* elevated surface (between navy and navy-700) */
+  --ct-bg-2:              var(--ct-navy-700);    /* card */
+  --ct-bg-3:              var(--ct-navy-600);    /* inset */
+
+  --ct-fg-0:              #FFFFFF;               /* primary text on dark */
+  --ct-fg-1:              #E8E7FA;               /* secondary text on dark */
+  --ct-fg-2:              var(--ct-navy-500);    /* tertiary / meta */
+  --ct-fg-3:              #5B598C;               /* muted on dark */
+
+  --ct-border-subtle:     rgba(255,255,255,0.08);
+  --ct-border-default:    rgba(255,255,255,0.16);
+  --ct-border-strong:     rgba(255,255,255,0.32);
+
+  /* Semantic states */
+  --ct-success:           var(--ct-teal-500);
+  --ct-info:              var(--ct-blue);
+  --ct-warning:           var(--ct-amber-500);
+  --ct-danger:            #E5484D;
+
+  /* ---------- Typography — families ---------- */
+  --ct-font-display:      'Archivo', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --ct-font-body:         'Roboto', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --ct-font-mono:         'Roboto Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ---------- Type scale (semantic) ---------- */
+  --ct-display-1-size:    clamp(56px, 6vw, 96px);
+  --ct-display-1-line:    1.02;
+  --ct-display-1-tracking: -0.025em;
+  --ct-display-1-weight:  700;
+
+  --ct-display-2-size:    clamp(40px, 4.2vw, 64px);
+  --ct-display-2-line:    1.05;
+  --ct-display-2-tracking: -0.02em;
+  --ct-display-2-weight:  700;
+
+  --ct-h1-size:           44px;
+  --ct-h1-line:           1.1;
+  --ct-h1-weight:         700;
+  --ct-h1-tracking:       -0.015em;
+
+  --ct-h2-size:           32px;
+  --ct-h2-line:           1.15;
+  --ct-h2-weight:         700;
+
+  --ct-h3-size:           24px;
+  --ct-h3-line:           1.25;
+  --ct-h3-weight:         600;
+
+  --ct-h4-size:           18px;
+  --ct-h4-line:           1.3;
+  --ct-h4-weight:         600;
+
+  --ct-body-lg-size:      18px;
+  --ct-body-lg-line:      1.55;
+  --ct-body-size:         15px;
+  --ct-body-line:         1.55;
+  --ct-body-sm-size:      13px;
+  --ct-body-sm-line:      1.5;
+
+  --ct-eyebrow-size:      12px;
+  --ct-eyebrow-tracking:  0.12em;
+  --ct-eyebrow-weight:    600;
+
+  --ct-mono-size:         13px;
+
+  /* ---------- Spacing (8px base with 4px half-step) ---------- */
+  --ct-space-0:   0;
+  --ct-space-1:   4px;
+  --ct-space-2:   8px;
+  --ct-space-3:   12px;
+  --ct-space-4:   16px;
+  --ct-space-5:   24px;
+  --ct-space-6:   32px;
+  --ct-space-7:   48px;
+  --ct-space-8:   64px;
+  --ct-space-9:   96px;
+  --ct-space-10: 128px;
+
+  /* ---------- Radii ---------- */
+  --ct-radius-xs: 4px;
+  --ct-radius-sm: 6px;
+  --ct-radius-md: 10px;
+  --ct-radius-lg: 16px;
+  --ct-radius-xl: 24px;
+  --ct-radius-2xl: 32px;
+  --ct-radius-pill: 999px;
+
+  /* ---------- Shadows (dark-first, subtle) ---------- */
+  --ct-shadow-sm:   0 1px 2px rgba(0,0,0,0.35);
+  --ct-shadow-md:   0 6px 20px rgba(0,0,0,0.35);
+  --ct-shadow-lg:   0 20px 48px rgba(0,0,0,0.45);
+  --ct-shadow-glow: 0 0 60px -10px rgba(99,89,255,0.55);
+
+  /* ---------- Signature gradients / glows (from deck imagery) ---------- */
+  --ct-glow-violet: radial-gradient(closest-side, rgba(118,118,255,0.85), rgba(99,89,255,0.0) 70%);
+  --ct-glow-teal:   radial-gradient(closest-side, rgba(15,219,209,0.85), rgba(11,191,191,0.0) 70%);
+  --ct-aurora:      radial-gradient(60% 80% at 20% 90%, #0BBFBF 0%, rgba(11,191,191,0) 60%),
+                    radial-gradient(40% 50% at 70% 30%, #4E43D8 0%, rgba(78,67,216,0) 60%),
+                    linear-gradient(180deg, #191741 0%, #252566 100%);
+
+  /* ---------- Motion ---------- */
+  --ct-ease:        cubic-bezier(0.4, 0, 0.2, 1);
+  --ct-ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ct-dur-fast:    120ms;
+  --ct-dur-base:    200ms;
+  --ct-dur-slow:    320ms;
+}
+
+/* =========================================================================
+   Semantic element defaults — opt-in via .ct-typography or scoped root
+   ========================================================================= */
+
+.ct-typography,
+.ct-typography * {
+  font-family: var(--ct-font-body);
+  color: var(--ct-fg-0);
+}
+
+.ct-typography h1,
+.ct-h1 {
+  font-family: var(--ct-font-display);
+  font-size: var(--ct-h1-size);
+  line-height: var(--ct-h1-line);
+  font-weight: var(--ct-h1-weight);
+  letter-spacing: var(--ct-h1-tracking);
+  margin: 0 0 var(--ct-space-4);
+}
+
+.ct-typography h2,
+.ct-h2 {
+  font-family: var(--ct-font-display);
+  font-size: var(--ct-h2-size);
+  line-height: var(--ct-h2-line);
+  font-weight: var(--ct-h2-weight);
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--ct-space-4);
+}
+
+.ct-typography h3,
+.ct-h3 {
+  font-family: var(--ct-font-display);
+  font-size: var(--ct-h3-size);
+  line-height: var(--ct-h3-line);
+  font-weight: var(--ct-h3-weight);
+  margin: 0 0 var(--ct-space-3);
+}
+
+.ct-typography h4,
+.ct-h4 {
+  font-family: var(--ct-font-display);
+  font-size: var(--ct-h4-size);
+  line-height: var(--ct-h4-line);
+  font-weight: var(--ct-h4-weight);
+  margin: 0 0 var(--ct-space-2);
+}
+
+.ct-typography p,
+.ct-body {
+  font-family: var(--ct-font-body);
+  font-size: var(--ct-body-size);
+  line-height: var(--ct-body-line);
+  margin: 0 0 var(--ct-space-3);
+  text-wrap: pretty;
+}
+
+.ct-display-1 {
+  font-family: var(--ct-font-display);
+  font-size: var(--ct-display-1-size);
+  line-height: var(--ct-display-1-line);
+  letter-spacing: var(--ct-display-1-tracking);
+  font-weight: var(--ct-display-1-weight);
+  text-wrap: balance;
+}
+
+.ct-display-2 {
+  font-family: var(--ct-font-display);
+  font-size: var(--ct-display-2-size);
+  line-height: var(--ct-display-2-line);
+  letter-spacing: var(--ct-display-2-tracking);
+  font-weight: var(--ct-display-2-weight);
+  text-wrap: balance;
+}
+
+.ct-eyebrow {
+  font-family: var(--ct-font-body);
+  font-size: var(--ct-eyebrow-size);
+  letter-spacing: var(--ct-eyebrow-tracking);
+  font-weight: var(--ct-eyebrow-weight);
+  text-transform: uppercase;
+}
+
+.ct-mono { font-family: var(--ct-font-mono); font-size: var(--ct-mono-size); }

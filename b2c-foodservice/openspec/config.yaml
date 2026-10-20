@@ -1,0 +1,52 @@
+schema: spec-driven
+
+# Project context (optional)
+# Add only constraints that should guide OpenSpec artifacts and workflows.
+# Include constraints an agent cannot infer by reading the code.
+# Keep general project documentation and discoverable codebase facts out.
+# Example:
+#   context: |
+#     Designs and tasks must cover Windows, macOS, and Linux
+#     Write all artifacts in Spanish
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
+
+# ct-sdd:begin v=1 id=platform-skills-conventions
+context: |
+  commercetools platform skills (ct-sdd overlay):
+  Any proposal, spec, design, task, or implementation that touches commercetools
+  — its APIs, SDKs, storefronts, Merchant Center apps, Connect applications, or
+  the Checkout — must first load the matching `commercetools-*` skill. Consult
+  the available `commercetools-*` skills (their descriptions are in context)
+  while proposing and while writing tasks. Do not invent commercetools endpoints,
+  GraphQL fields, or update actions from memory; rely on the loaded skill's
+  guidance. When proposing a change against an existing commercetools codebase,
+  first survey existing platform usage (SDK clients, API calls, Connect apps, MC
+  customizations) before writing the proposal so that discovery happens first.
+rules:
+  proposal:
+    - "If the change touches commercetools, review the available `commercetools-*` skills before writing this proposal; for an existing codebase, first survey current commercetools usage and record it under \"What Changes\" and \"Impact\"."
+  tasks:
+    - "Every task that touches commercetools must carry a `[SKILL: <name>]` annotation at the end of its description, resolved by choosing the matching `commercetools-*` skill (e.g. `- [ ] 1.1 Implement payment session [SKILL: commercetools-checkout]`)."
+    - "Before implementing a task that carries a `[SKILL: <name>]` annotation, load that skill first."
+# ct-sdd:end id=platform-skills-conventions
