@@ -61,9 +61,9 @@ Paths are relative to `storefront/` unless they start with `plans/` or `seed/`. 
 | `app/api/orders/route.ts`, `orders/[id]/reorder/route.ts`, `orders/[id]/returns/route.ts` | Handlers |
 | `app/api/shopping-lists/route.ts`, `shopping-lists/add-to-cart/route.ts` | Saved items |
 | `app/api/account/summary/route.ts`, `profile/route.ts`, `password/route.ts`, `addresses/route.ts`, `addresses/[id]/route.ts`, `payment-methods/route.ts`, `payment-methods/[id]/route.ts`, `delete/route.ts` | Account handlers |
-| `hooks/useOrders.ts`, `useOrder.ts`, `useAddresses.ts`, `useSavedItems.ts` (replaces G's implementation, same exported API), `usePaymentMethods.ts`, `useProfile.ts`, `useAccountSummary.ts` | SWR hooks |
+| `hooks/useOrders.ts` (the one order hook is K's `useOrderStatus`), `useAddresses.ts`, `useSavedItems.ts` (replaces G's implementation, same exported API), `usePaymentMethods.ts`, `useProfile.ts`, `useAccountSummary.ts` | SWR hooks |
 | `lib/cache-keys.ts` | Append `keyAccountSummary(customerId)`, `keyPaymentMethods(customerId)`; D already has `keyOrders`, `keyOrder`, `keyAddresses`, `keySavedItems` (add filter and page as extra tuple elements) |
-| `seed/src/...` | Extend `seed/src/scripts/order-ops.ts` (K) with `ship`, `deliver`, `return` subcommands (L-14) |
+| `seed/src/...` | Extend `seed/src/order-ops.ts` (K) with `ship`, `deliver`, `return` subcommands (L-14) |
 | `messages/*.json` | Namespace `account` (3.10) |
 
 ### 3.2 Visual design (from `AccountPage` in `pages-account.jsx`, `styles.css`; screenshot `screenshots/account.png`)
@@ -74,7 +74,7 @@ Tokens only; ignore the prototype's raw colours and its hard-coded "Maya", "VELA
 - **Grid.** `220px 1fr`, gap 40px, `align-items: start`; under 900px one column, gap 24px.
 - **Tabs** (`AccountTabs`, a `nav` with `aria-label` "Account"): links with icon (18px) and label, padding `12px 14px`, 10px radius, 14px weight 500 `--ink-2`; hover tint `rgba(25,23,65,.05)` via token alpha; active: `--ink` fill, white text, `aria-current="page"`. Order: Orders, Collection, Subscriptions, Saved, Addresses, Payment methods, Reviews, Profile, Settings, then Sign out (muted, `button`, top margin 8px). Under 900px: `flex-direction: row`, `overflow-x: auto`, gap 6px, scroll-snap, the active tab scrolled into view on mount (`scrollIntoView({inline:'center', block:'nearest'})`), no wrapping, 44px minimum target height.
 - **Cards** use the `Card` atom (16px radius, 24px padding, 1px `--line`). Section H2 22px Archivo 700 above content, 18px bottom margin.
-- **Order card** (`OrderCard`, props `{ order: OrderListItem; onReorder(id): void; onDirections?(): void }`): top row: number in Archivo 700 (link to detail), date and total 12.5px `--ink-3`; right: `OrderStatusPill` (pill, 12.5px weight 600, 6px 12px padding, 13px icon: store icon for collect orders, truck for ship; colours: `ready` teal on teal-tint, `completed` `--ink-2` on `--canvas-2`, all others `--accent` on accent-tint). Below: 52x62 thumbnails (radius 8, `--canvas-2`), up to 5 plus "+n". When `ready`: a teal-tint block with store icon: "Ready at {store} · {hours}. Bring your ID and this order number." Buttons: "View details" (ghost), "Buy again" (ghost, when `completed`), "Get directions" (accent, when `ready`, external link `rel="noopener noreferrer"` `target="_blank"`, URL built from the store's `geoLocation`: `https://www.google.com/maps/dir/?api=1&destination=<lat>,<lng>`).
+- **Order card** (`OrderCard`, props `{ order: OrderView; onReorder(id): void; onDirections?(): void }`): top row: number in Archivo 700 (link to detail), date and total 12.5px `--ink-3`; right: `OrderStatusPill` (pill, 12.5px weight 600, 6px 12px padding, 13px icon: store icon for collect orders, truck for ship; colours: `ready` teal on teal-tint, `completed` `--ink-2` on `--canvas-2`, all others `--accent` on accent-tint). Below: 52x62 thumbnails (radius 8, `--canvas-2`), up to 5 plus "+n". When `ready`: a teal-tint block with store icon: "Ready at {store} · {hours}. Bring your ID and this order number." Buttons: "View details" (ghost), "Buy again" (ghost, when `completed`), "Get directions" (accent, when `ready`, external link `rel="noopener noreferrer"` `target="_blank"`, URL built from the store's `geoLocation`: `https://www.google.com/maps/dir/?api=1&destination=<lat>,<lng>`).
 - **Order detail**: breadcrumb "Orders / {number}", the number as H1 (mono), `OrderStatusTrack` (from K) when the order has collect lines, `CollectionCard` like K's, `DeliveryList` (3.3), items list, totals, returns block.
 - **Address card** (`AddressCard`): the `.store-opt` pattern as in checkout (radio-looking, but selection means "default"): label H4 (nickname), "Default" pill, name, line, phone, actions Edit, Delete (link buttons), "Make default" when not default.
 - **Modal** (E atom): 560px, 24px radius, focus trap, Escape closes, returns focus to the opener.
@@ -86,15 +86,8 @@ Types (add to `lib/types.ts`; reuse K's `OrderView`, J's `AppAddress`, `AppCusto
 
 ```
 type OrderStatusKind = 'ordered' | 'preparing' | 'ready' | 'shipped' | 'completed' | 'cancelled'
-type OrderListItem = { id: string; orderNumber: string; createdAt: string; totalCents: number; currency: string
-  status: OrderStatusKind; hasCollect: boolean; hasShip: boolean
-  thumbs: { imageUrl: string | null; name: string }[]; itemCount: number
-  collect: { storeName: string; hours: string | null; lat: number | null; lng: number | null } | null }
-type OrderDetailView = OrderView & { status: OrderStatusKind
-  deliveries: { id: string; createdAt: string; carrier: string | null; trackingId: string | null; trackingUrl: string | null; items: { lineId: string; name: string; quantity: number }[] }[]
-  returns: { id: string; createdAt: string; trackingId: string | null
-             items: { id: string; lineId: string; name: string; quantity: number; reason: string | null; shipmentState: 'Advised'|'Returned'|'BackInStock'|'Unusable'; paymentState: 'NonRefundable'|'Initial'|'Refunded'|'NotRefunded' }[] }[]
-  canReturn: boolean; returnWindowEndsAt: string | null }
+// There is one order model, K's `OrderView` (lib/types.ts), extended for the account: `status`, `hasCollect`, `hasShip`,
+// `collect[].lat/lng`, `deliveries`, `returns`, `canReturn`, `returnWindowEndsAt`, `returnable`. The list and the detail both read it.
 type SavedItem = { productId: string; variantId: number | null; lineItemId: string; addedAt: string; product: ProductSummary }   // G's ProductSummary
 type PaymentMethodView = { id: string; version: number; label: string; method: string; isDefault: boolean }
 ```
@@ -104,10 +97,10 @@ Handlers (all `handle(route, fn)`, `dynamic = 'force-dynamic'`, `requireCustomer
 | Handler | Request | Success | Errors |
 | --- | --- | --- | --- |
 | `GET /api/account/summary` | none | `200 { openOrders: number\|null, readyForCollection: number\|null, savedItems: number\|null }`, each `null` when its own query failed or exceeded 2 s (three independent promises) | none (partial failure is data) |
-| `GET /api/orders?filter=all\|in-progress\|ready\|completed&limit=10&offset=0` | query | `200 { orders: OrderListItem[], total, limit, offset }` newest first, whole history paged (limit 1 to 50) | `400 bad_request` |
-| `GET /api/orders/[id]` | none | `200 { order: OrderDetailView }` (extends K's handler) | `404 not_found` |
+| `GET /api/orders?filter=all\|in-progress\|ready\|completed&limit=10&offset=0` | query | `200 { orders: OrderView[], total, limit, offset }` newest first, whole history paged (limit 1 to 50) | `400 bad_request` |
+| `GET /api/orders/[id]` | none | `200 { order: OrderView }` (extends K's handler) | `404 order_not_found` |
 | `POST /api/orders/[id]/reorder` | none | `200 { added: {sku,name,quantity,fulfilment}[], skipped: {sku,name,reason:'unavailable'\|'out_of_stock'\|'not_found'\|'price_missing'}[], cart: CartSummary }` | `404` |
-| `POST /api/orders/[id]/returns` | `{ items: { lineId: string, quantity: number, reason?: string }[] }` | `200 { order: OrderDetailView }` | `409 return_window_closed`, `409 not_returnable`, `422 validation_failed` |
+| `POST /api/orders/[id]/returns` | `{ items: { lineId: string, quantity: number, reason?: string }[] }` | `200 { order: OrderView }` | `409 return_window_closed`, `409 not_returnable`, `422 validation_failed` |
 | `GET /api/shopping-lists` | none | `200 { list: { id: string, version: number, items: SavedItem[] } \| null }` | |
 | `POST /api/shopping-lists` | `{ productId: string, variantId?: number }` or `{ fromCart: true }` or `{ merge: string[] }` (product ids from the guest `sessionStorage`) | `200 { list }` | `422 validation_failed`, `409 list_full` (250 lines) |
 | `DELETE /api/shopping-lists?productId=<id>` | query | `200 { list }` | |
