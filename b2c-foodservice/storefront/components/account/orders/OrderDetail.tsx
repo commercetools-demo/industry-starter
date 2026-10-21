@@ -6,10 +6,15 @@ import DeliveryList from '@/components/account/orders/DeliveryList';
 import OrderNotFound from '@/components/account/orders/OrderNotFound';
 import OrderStatusPill from '@/components/account/orders/OrderStatusPill';
 import OrderStatusTracker from '@/components/account/orders/OrderStatusTracker';
+import ReturnDialog from '@/components/account/orders/ReturnDialog';
 import ReturnList from '@/components/account/orders/ReturnList';
 import LineImage from '@/components/cart/LineImage';
+import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import { useToast } from '@/context/toast';
 import { useOrder } from '@/hooks/useOrder';
+import { useOrderActions } from '@/hooks/useOrderActions';
+import { useState } from 'react';
 import { Link } from '@/i18n/routing';
 import { formatMoney } from '@/lib/utils';
 import type { OrderDetailView } from '@/lib/types';
@@ -19,6 +24,9 @@ export default function OrderDetail({ orderNumber, initial }: { orderNumber: str
   const t = useTranslations('account.orders');
   const tTabs = useTranslations('account.tabs');
   const { order, isLoading, isError, notFound, mutate } = useOrder(orderNumber, initial);
+  const { startReturn } = useOrderActions();
+  const toast = useToast();
+  const [returning, setReturning] = useState(false);
   const locale = useLocale();
   const format = useFormatter();
   const money = (cents: number, currency: string) => formatMoney(cents, currency, locale);
@@ -111,19 +119,49 @@ export default function OrderDetail({ orderNumber, initial }: { orderNumber: str
               </dl>
             </Card>
 
-            {order.returns.length > 0 ? (
+            {order.returns.length > 0 || order.canReturn || returnClosed(order) ? (
               <section aria-labelledby="returns-heading" className="mb-5">
                 <h3 id="returns-heading" className="m-0 mb-3 font-display text-[17px] font-bold text-ink">
                   {t('return.title2')}
                 </h3>
                 <ReturnList returns={order.returns} />
+                {order.canReturn ? (
+                  <div className="mt-3 flex flex-wrap items-center gap-3">
+                    <Button variant="ghost" onClick={() => setReturning(true)}>
+                      {t('return.start')}
+                    </Button>
+                    {order.returnWindowEndsAt ? (
+                      <span className="text-[12.5px] text-ink-3">
+                        {t('return.windowEnds', { date: format.dateTime(new Date(order.returnWindowEndsAt), { dateStyle: 'medium' }) })}
+                      </span>
+                    ) : null}
+                  </div>
+                ) : returnClosed(order) ? (
+                  <p className="m-0 mt-3 text-[13.5px] text-ink-3" data-testid="return-closed">
+                    {t('return.closed')}
+                  </p>
+                ) : null}
               </section>
             ) : null}
+            <ReturnDialog
+              order={order}
+              open={returning}
+              onClose={() => setReturning(false)}
+              onSubmit={async (items) => {
+                await startReturn(order, items);
+                toast.show(t('return.started'));
+              }}
+            />
           </>
         ) : null}
       </PanelState>
     </section>
   );
+}
+
+/** A completed order that still has units to return but whose window has passed. */
+function returnClosed(o: OrderDetailView): boolean {
+  return o.status === 'completed' && !o.canReturn && Object.values(o.returnable).some((q) => q > 0);
 }
 
 function Row({ label, value, strong = false }: { label: string; value: string; strong?: boolean }) {

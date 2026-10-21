@@ -22,7 +22,14 @@ export type DomainErrorCode =
   | 'quantity_exceeds_stock'
   | 'store_required'
   | 'subscribe_line_not_switchable'
-  | 'code_not_applied';
+  | 'code_not_applied'
+  // Workstream L: account area.
+  | 'return_window_closed'
+  | 'not_returnable'
+  | 'address_needs_confirmation'
+  | 'current_password_invalid'
+  | 'list_full'
+  | 'list_empty';
 
 const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   invalid_credentials: 'Email or password is incorrect',
@@ -43,6 +50,12 @@ const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   store_required: 'Choose a store to collect from',
   subscribe_line_not_switchable: 'A subscription cannot be switched between collection and delivery',
   code_not_applied: 'That code could not be applied',
+  return_window_closed: 'The return window for this order has closed',
+  not_returnable: 'This order cannot be returned',
+  address_needs_confirmation: 'Please check this address',
+  current_password_invalid: 'The current password is incorrect',
+  list_full: 'Your saved items list is full',
+  list_empty: 'You have no saved items',
 };
 
 /** Same envelope as D: `{ error: { code, message, ...extra } }`. Extras are plain data (rule ids, retryAfterSeconds). */

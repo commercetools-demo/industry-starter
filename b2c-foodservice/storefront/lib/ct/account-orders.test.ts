@@ -24,7 +24,7 @@ vi.mock('@/lib/ct/client', () => ({
 }));
 
 import { addReturn, buildOrderQuery, countOrders, getOrderByNumber, getOrderStateIds, listOrders } from '@/lib/ct/account-orders';
-import { ctOrder } from '@/test/orders';
+import { ctLine, ctOrder } from '@/test/orders';
 
 const IDS = { ordered: 's1', preparing: 's2', 'ready-for-collection': 's3', collected: 's4' };
 
@@ -104,7 +104,7 @@ describe('order reads', () => {
   });
 
   it('Return started: addReturnInfo carries line ids, quantities and Advised', async () => {
-    sdk.orderGet.mockResolvedValue({ body: ctOrder({ version: 7 }) });
+    sdk.orderGet.mockResolvedValue({ body: ctOrder({ version: 7, lineItems: [ctLine('l1', { quantity: 2 }), ctLine('l2', { quantity: 2 })] }) });
     sdk.ordersPost.mockResolvedValue({ body: ctOrder({ version: 8 }) });
     await addReturn('o1', [{ lineId: 'l1', quantity: 1, reason: 'Damaged' }, { lineId: 'l2', quantity: 2 }], new Date('2026-10-05T00:00:00.000Z'));
     const body = sdk.ordersPost.mock.calls[0][0].body;
@@ -118,5 +118,16 @@ describe('order reads', () => {
         ],
       },
     ]);
+  });
+
+  it('the latest version decides: units used up meanwhile are refused without a write', async () => {
+    sdk.orderGet.mockResolvedValue({
+      body: ctOrder({
+        lineItems: [ctLine('l1', { quantity: 2 })],
+        returnInfo: [{ items: [{ id: 'r', type: 'LineItemReturnItem', lineItemId: 'l1', quantity: 2, shipmentState: 'Advised', paymentState: 'Initial' }] }],
+      }),
+    });
+    await expect(addReturn('o1', [{ lineId: 'l1', quantity: 1 }])).rejects.toMatchObject({ code: 'conflict' });
+    expect(sdk.ordersPost).not.toHaveBeenCalled();
   });
 });

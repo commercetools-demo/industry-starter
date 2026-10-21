@@ -3,6 +3,8 @@ import type { Order } from '@commercetools/platform-sdk';
 import { apiRoot } from '@/lib/ct/client';
 import { cachedPublic } from '@/lib/ct/public-cache';
 import { updateWithRetry } from '@/lib/ct/retry';
+import { AppError } from '@/lib/errors';
+import { returnableUnits } from '@/lib/mappers/account-order';
 import type { OrderFilter, OrderStateKey } from '@/lib/types';
 
 /** Expansions every account read uses: the state key and the store channel of collect lines. */
@@ -116,8 +118,11 @@ export interface ReturnLineInput { lineId: string; quantity: number; reason?: st
 export async function addReturn(orderId: string, items: ReturnLineInput[], now = new Date()): Promise<Order> {
   return updateWithRetry(
     async () => (await apiRoot.orders().withId({ ID: orderId }).get({ queryArgs: { expand: ORDER_EXPAND } }).execute()).body,
-    async (current) =>
-      (
+    async (current) => {
+      // The latest version decides: a second return started meanwhile may have used the units up.
+      const left = returnableUnits(current);
+      if (items.some((i) => i.quantity > (left[i.lineId] ?? 0))) throw new AppError('conflict', 409);
+      return (
         await apiRoot
           .orders()
           .withId({ ID: orderId })
@@ -140,6 +145,7 @@ export async function addReturn(orderId: string, items: ReturnLineInput[], now =
             },
           })
           .execute()
-      ).body,
+      ).body;
+    },
   );
 }
