@@ -310,6 +310,14 @@ describe('discount codes (I-10)', () => {
     expect(JSON.parse(String(stub.calls.find((c) => c.init?.method === 'PATCH')?.init?.body))).toEqual({ action: 'applyDiscountCode', code: 'WELCOME10' });
   });
 
+  it('Duplicate code says it is already applied and sends nothing', async () => {
+    const applied = viewCart([ship('d')], { codes: [{ id: 'c-1', code: 'WELCOME10', name: 'Welcome', state: 'MatchesCart' }] });
+    const { stub } = setup(applied);
+    await userEvent.type(screen.getByLabelText('Discount code'), 'welcome10{Enter}');
+    expect(await screen.findByRole('alert')).toHaveTextContent('That code is already applied');
+    expect(stub.calls.some((c) => c.init?.method === 'PATCH')).toBe(false);
+  });
+
   it('Discount code rejected tells why and leaves totals unchanged', async () => {
     const unchanged = viewCart([ship('d')], { total: usd(2815) });
     setup(viewCart([ship('d')], { total: usd(1) }), {

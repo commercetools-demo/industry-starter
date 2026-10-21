@@ -401,6 +401,7 @@
         "NotValid": "That code isn't valid",
         "DoesNotMatchCart": "This code doesn't apply to your bag",
         "MaxApplicationReached": "This code has already been used",
+        "alreadyApplied": "That code is already applied",
         "ApplicationStoppedByPreviousDiscount": "This code can't be combined with your other discounts",
         "generic": "We couldn't apply that code"
       },

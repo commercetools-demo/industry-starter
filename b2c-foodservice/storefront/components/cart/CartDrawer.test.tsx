@@ -4,7 +4,7 @@ import { unstable_serialize } from 'swr';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { keyChannels } from '@/lib/cache-keys';
 import type { Cart } from '@/lib/types';
-import { STORE_BK, STORE_SOHO, usd, viewCart, viewLine } from '@/test/cart';
+import { STORE_BK, STORE_SOHO, cad, usd, viewCart, viewLine } from '@/test/cart';
 import { expectNoAxeViolations } from '@/test/axe';
 import { renderShell, stubFetch } from '@/test/shell';
 
@@ -57,6 +57,20 @@ const mixed = () =>
   ]);
 
 describe('CartDrawer', () => {
+  it('Canada drawer shows only delivery and subscription lines and no collect cluster', async () => {
+    const cart = viewCart(
+      [
+        viewLine({ id: 'd', fulfilment: 'delivery', unitPrice: cad(2000) }),
+        viewLine({ id: 's', fulfilment: 'subscribe', unitPrice: cad(1500), recurrence: { policyId: 'rp', schedule: { unit: 'Weeks', value: 2 } } }),
+      ],
+      { currency: 'CAD', country: 'CA' },
+    );
+    setup(cart, {}, 'en-CA');
+    const dialog = await open();
+    expect(within(dialog).queryByText(/Collect/)).toBeNull();
+    expect(dialog.querySelector('[data-group^="collect"]')).toBeNull();
+  });
+
   it('Below the threshold shows Add remaining for free shipping with a teal bar', async () => {
     setup(viewCart([viewLine({ id: 'a', fulfilment: 'delivery', unitPrice: usd(2000) })]));
     await open();

@@ -57,7 +57,7 @@ export default function OrderSummary({ cart, ui }: { cart: Cart; ui: CartUi }) {
         <span data-testid="order-total">{money(cart.total)}</span>
       </div>
 
-      <DiscountCodeForm ui={ui} />
+      <DiscountCodeForm ui={ui} appliedCodes={cart.codes.map((c) => c.code)} />
       <AppliedCodes cart={cart} ui={ui} />
 
       <div className="mt-5">

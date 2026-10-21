@@ -13,7 +13,7 @@ import type { CartUi } from './use-cart-ui';
  * the reason inline (`role="alert"`) and the cart stays exactly as it was: the hook already replaced the cached cart with
  * the unchanged one from the error. Codes and reasons are never logged or sent to analytics.
  */
-export default function DiscountCodeForm({ ui }: { ui: CartUi }) {
+export default function DiscountCodeForm({ ui, appliedCodes = [] }: { ui: CartUi; appliedCodes?: string[] }) {
   const t = useTranslations('cart');
   const id = useId();
   const [value, setValue] = useState('');
@@ -24,6 +24,11 @@ export default function DiscountCodeForm({ ui }: { ui: CartUi }) {
     e.preventDefault();
     const code = value.trim();
     if (!code || busy) return;
+    // A code that is already on the bag is not sent again (Duplicate code).
+    if (appliedCodes.some((c) => c.toLowerCase() === code.toLowerCase())) {
+      setError(t('code.error.alreadyApplied'));
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
