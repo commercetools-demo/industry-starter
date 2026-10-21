@@ -22,7 +22,18 @@ export type DomainErrorCode =
   | 'quantity_exceeds_stock'
   | 'store_required'
   | 'subscribe_line_not_switchable'
-  | 'code_not_applied';
+  | 'code_not_applied'
+  // Workstream K: checkout and orders.
+  | 'cart_not_found'
+  | 'cart_empty'
+  | 'totals_changed'
+  | 'checkout_not_ready'
+  | 'order_exists'
+  | 'sign_in_required'
+  | 'checkout_blocked'
+  | 'collect_out_of_stock'
+  | 'collect_not_available'
+  | 'order_not_found';
 
 const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   invalid_credentials: 'Email or password is incorrect',
@@ -43,6 +54,16 @@ const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   store_required: 'Choose a store to collect from',
   subscribe_line_not_switchable: 'A subscription cannot be switched between collection and delivery',
   code_not_applied: 'That code could not be applied',
+  cart_not_found: 'There is no bag to check out',
+  cart_empty: 'Your bag is empty',
+  totals_changed: 'The totals changed. Please review your bag',
+  checkout_not_ready: 'Checkout is not ready yet',
+  order_exists: 'This order was already placed',
+  sign_in_required: 'Sign in to check out with this bag',
+  checkout_blocked: 'Review your bag before checking out',
+  collect_out_of_stock: 'An item is not in stock at the collection store',
+  collect_not_available: 'Collection is not available in this market',
+  order_not_found: 'Order not found',
 };
 
 /** Same envelope as D: `{ error: { code, message, ...extra } }`. Extras are plain data (rule ids, retryAfterSeconds). */
