@@ -11,6 +11,7 @@
     "test": "vitest run",
     "check": "npm run lint && npm run typecheck && npm run test",
     "predeploy": "node scripts/predeploy-check.mjs",
+    "test:live": "vitest run --config vitest.live.config.mts",
     "verify:build": "next build && node scripts/check-bundle-secrets.mjs"
   },
   "dependencies": {
