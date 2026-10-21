@@ -319,7 +319,8 @@
       "other": "Something else"
     },
     "noSecrets": "Please do not include card numbers or passwords.",
-    "consent": "I have read the privacy policy.",
+    "consent": "I have read the {link}.",
+    "privacyLink": "privacy policy",
     "counter": "{count} of {max} characters",
     "submit": "Send message",
     "sending": "Sending...",

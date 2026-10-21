@@ -17,11 +17,13 @@ interface ContentPageProps {
   contentLang?: string;
   /** Rendered between the heading and the prose: notices, effective date. */
   banners?: ReactNode;
+  /** Full width body for two column pages (contact, journal). */
+  wide?: boolean;
   children: ReactNode;
 }
 
 /** Breadcrumb, one h1, intro and a prose column of at most 68ch. Pages never render their own `<main>`. */
-export default function ContentPage({ title, eyebrow, intro, toc, contentLang, banners, children }: ContentPageProps) {
+export default function ContentPage({ title, eyebrow, intro, toc, contentLang, banners, wide, children }: ContentPageProps) {
   const t = useTranslations('content');
   return (
     <div className="wrap py-10 mobile:py-14">
@@ -42,7 +44,7 @@ export default function ContentPage({ title, eyebrow, intro, toc, contentLang, b
         {intro ? <p className="mt-4 text-[17px] text-ink-2">{intro}</p> : null}
       </header>
       <div className="mt-6 max-w-[68ch]">{banners}</div>
-      <div lang={contentLang} className="max-w-[68ch]">
+      <div lang={contentLang} className={wide ? undefined : 'max-w-[68ch]'}>
         {toc && toc.length > 3 ? (
           <nav aria-label={t('toc')} className="mb-8 rounded-card border border-line bg-surface p-5">
             <p className="eyebrow m-0 mb-3">{t('toc')}</p>
