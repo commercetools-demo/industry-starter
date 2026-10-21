@@ -16,7 +16,7 @@ Updated 2026-10-21 (owner answers D-030 to D-039 applied to every plan). States:
 | G | Browse | 4 | Not started | |
 | H | Product detail | 5 | Not started | |
 | I | Cart | 6 | Not started | |
-| J | Auth and session | 7 | Not started | |
+| J | Auth and session | 7 | Ready for review (offline) | J-01 to J-08 and J-07b done; browser recipe run against the mock (plans/evidence/J/); J-09 probes blocked: OA-J-c; cart merge uses `AuthCart`, follow-up for I (Q-J-15); owner rows OA-J-a to OA-J-c, SO-J-a, M-J-01 to M-J-03 |
 | K | Checkout and confirmation | 8 | Not started | |
 | L | Account area | 9 | Not started | |
 | M | Reviews and ratings | 9 | Not started | |

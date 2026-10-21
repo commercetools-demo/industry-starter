@@ -202,24 +202,24 @@ Branch `ws/j-auth-and-session`. Commit `ws-j: J-0n summary`. Each task is under 
 - [x] **J-07b Demo sign-in (D-040).** Files: `lib/auth/demo-customers.ts`, `app/api/auth/demo-login/route.ts`, `app/api/auth/demo-customers/route.ts`, `components/auth/DemoSignIn.tsx`, messages, `.env.example` names, tests. The list must equal the seed customers (a test reads `seed/src/data/customers.ts` keys and compares). Tests: `Demo list has names and markets but no email or password`, `Demo login signs in the chosen customer and merges the cart`, `Demo login returns 404 when disabled`, `Unknown demo key is refused`, `Demo sign-in is rate limited like login`, `Demo dropdown is not rendered when disabled`. Browser check: pick each seeded customer in the dropdown, confirm the account menu shows their name; search the page source and network log for the demo password and the seeded emails (must be absent). Evidence in `plans/evidence/J/`.
 - [x] **J-07 Sign-in page.** Files: `app/[locale]/account/sign-in/page.tsx`, `components/auth/SignInForm.tsx`, messages in the two catalogues (keys 3.9), tests. Tests: `Failed sign in is ambiguous` (rendered text equal for both cases), `Focus moves to the password after a failed sign in`, `Success redirects to the safe destination`, `Unsafe redirect falls back to account`, `Signed in visitor is sent on`, `Sign-in page offers no federated button`, `Sign-in page has no forgot-password link`.
 - [x] **J-08 Register page.** Files: `app/[locale]/account/register/page.tsx`, `RegisterForm.tsx`, tests. Tests: `Register shows policy failures by rule`, `Register shows the generic refusal for a duplicate`, `Register pre-fills email from the guest cookie and deletes it`, `Register success shows no email promise`.
-- [ ] **J-09 Platform probes and findings.** `[SKILL: commercetools-platform]`. Using the dev server and two throwaway customers (`qa-j-<date>-1@example.com`, `-2@`, synthetic passwords), record in `plans/PROJECT-FINDINGS.md` (no tokens, no passwords): (a) does a login with `anonymousCart` when the customer already has an active cart keep both carts' lines (compare line counts)? (b) the `CustomerSignin` field name the installed SDK uses (`anonymousCart` or `anonymousCartId`). (c) what a login does with an anonymous cart whose currency differs from the customer's active cart (US cart USD, customer cart CAD). Add each answer to the right Q-J row. List the test emails in `plans/evidence/J/test-customers.txt` for the lead's cleanup manifest (D-019).
-- [ ] **J-10 Browser recipe, evidence, hand-off.** Run section 6 and 7, save evidence in `plans/evidence/J/`, add todo rows, set `Ready for review`.
+- [ ] **J-09 (blocked: OA-J-c, needs live credentials) Platform probes and findings.** `[SKILL: commercetools-platform]`. Using the dev server and two throwaway customers (`qa-j-<date>-1@example.com`, `-2@`, synthetic passwords), record in `plans/PROJECT-FINDINGS.md` (no tokens, no passwords): (a) does a login with `anonymousCart` when the customer already has an active cart keep both carts' lines (compare line counts)? (b) the `CustomerSignin` field name the installed SDK uses (`anonymousCart` or `anonymousCartId`). (c) what a login does with an anonymous cart whose currency differs from the customer's active cart (US cart USD, customer cart CAD). Add each answer to the right Q-J row. List the test emails in `plans/evidence/J/test-customers.txt` for the lead's cleanup manifest (D-019).
+- [ ] **J-10 (done offline against the mock, see plans/evidence/J/; live re-run blocked: OA-J-a) Browser recipe, evidence, hand-off.** Run section 6 and 7, save evidence in `plans/evidence/J/`, add todo rows, set `Ready for review`.
 
 ## 5. Scenarios checklist
 
 Tick only when the named test exists and passes. Federated and store-bound scenarios are not applicable by decision (Q-J-01, Q-J-02) and are covered by the stated negative test. `password-reset` and `email-verification` are not applicable (D-032, no email provider); they have no scenarios here and are marked `n/a` in `SPEC-COVERAGE.md`.
 
 `account-sign-in`
-- [ ] Credentials accepted: `Credentials accepted` (J-03)
-- [ ] Unknown and wrong are indistinguishable: `Unknown and wrong are indistinguishable` (J-03) and `Failed sign in is ambiguous` (J-07)
-- [ ] Buyer bound to another entry point: not applicable (Q-J-02); negative test `signIn never calls the in-store endpoint` (J-02)
-- [ ] Federated buyer has no local password: not applicable (Q-J-01); the sign-in page has no SSO control, asserted by `Sign-in page offers no federated button` (J-07)
+- [x] Credentials accepted: `Credentials accepted` (J-03)
+- [x] Unknown and wrong are indistinguishable: `Unknown and wrong are indistinguishable` (J-03) and `Failed sign in is ambiguous` (J-07)
+- [x] Buyer bound to another entry point: not applicable (Q-J-02); negative test `signIn never calls the in-store endpoint` (J-02)
+- [x] Federated buyer has no local password: not applicable (Q-J-01); the sign-in page has no SSO control, asserted by `Sign-in page offers no federated button` (J-07)
 
 `authentication-and-identity`
-- [ ] Sign in carries the anonymous cart: `Sign in carries the anonymous cart` (J-03), browser check B6
-- [ ] Failed sign in is ambiguous: `Failed sign in is ambiguous` (J-07)
-- [ ] Registration is verified automatically: `Register creates a verified customer and signs in` (J-04), browser check B5
-- [ ] No password reset or verification surface: `Sign-in page has no forgot-password link` (J-07), browser check B8
+- [x] Sign in carries the anonymous cart: `Sign in carries the anonymous cart` (J-03), browser check B6
+- [x] Failed sign in is ambiguous: `Failed sign in is ambiguous` (J-07)
+- [x] Registration is verified automatically: `Register creates a verified customer and signs in` (J-04), browser check B5
+- [x] No password reset or verification surface: `Sign-in page has no forgot-password link` (J-07), browser check B8
 
 ## 6. Browser recipe (Chrome DevTools MCP)
 

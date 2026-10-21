@@ -99,3 +99,11 @@ New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import
 - Hooks for G, H and I: `useCollectionStore()` (`store`, `stores`, `select`, `open({ sku })`, `preferShip`), `useAvailability(sku, country)`, `useCartCount()`, `useMarket()` (`switchCountry`, `switchLanguage`), `useShellUi()` (`openCart`, `registerCartDrawer`), `useToast()`. Routes: `GET /api/channels`, `GET /api/availability`, `PUT /api/session/store`, `PUT /api/session/market`, `GET /api/cart/count`, `POST /api/newsletter`.
 - Single source for the free-shipping figure: `getFreeShippingThreshold(country, currency)` in `lib/ct/shipping.ts` (cart and PDP call it too). Listing links: `buildListingHref(slug, { facet: value })` in `lib/nav/listing-href.ts` (`f_<facet>` params).
 - Tests for shell components: `test/shell.tsx` (`renderShell`, `stubFetch`, `routingMock`) and `test/axe.ts`. Local browser checks without credentials: `node scripts/mock-ct-server.mjs` (see its header).
+
+## Auth and session (workstream J)
+
+- Pages `/[locale]/account/sign-in` and `/register` (not guarded). Routes: `/api/auth/login|register|logout|me|demo-login|demo-customers`. Error envelope with extras (`retryAfterSeconds`, `failed`): `domainError` in `lib/api-domain.ts`.
+- Guards: `requireCustomerPage(currentPath)` (`lib/auth/require-customer.ts`, redirects to sign-in with `?redirect=`), `requireCustomerApi()` (= D's `requireCustomer`). Redirect targets always go through `safeRedirect` / `destinationFrom` (`lib/auth/redirect.ts`).
+- Client: `useAccount()` (`customer` undefined while loading, null for a guest), `useAuthActions()` (`signIn`, `register`, `demoSignIn`, `signOut`; failures throw `AuthApiError` with `code` and `extra`). `USER_SCOPED_KEYS` in `lib/cache-keys.ts`: sign-out evicts them; a new user-scoped SWR key must start with one of those names.
+- Demo sign-in (D-040): server list in `lib/auth/demo-customers.ts` (must equal `seed/src/data/customers.ts`, a test checks), env `DEMO_LOGIN_ENABLED=true` and `DEMO_LOGIN_PASSWORD`. Emails and the password never reach the browser.
+- Login and register responses carry `{ customer: AppCustomer, cart: AuthCart | null }`; the session is rewritten with a fresh cookie by `signedInResponse`.

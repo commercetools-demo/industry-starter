@@ -97,7 +97,74 @@ const inventoryEntries = (sku) => {
   }));
 };
 
-const CARTS = { 'cart-active': { cartState: 'Active', totalLineItemQuantity: 3, lineItems: [{ quantity: 2 }, { quantity: 1 }] } };
+const CARTS = {
+  'cart-active': { cartState: 'Active', totalLineItemQuantity: 3, lineItems: [{ quantity: 2 }, { quantity: 1 }] },
+  'cart-maya': { cartState: 'Active', totalLineItemQuantity: 1, lineItems: [{ quantity: 1 }] },
+};
+
+// Customers and login (workstream J). The six seeded demo customers share MOCK_DEMO_PASSWORD (default below, mock only).
+const MOCK_DEMO_PASSWORD = process.env.MOCK_DEMO_PASSWORD ?? 'mock-demo-pass-1';
+const CUSTOMERS = new Map();
+const addCustomer = (email, password, firstName, lastName, extra = {}) => {
+  const id = `cust-${CUSTOMERS.size + 1}`;
+  const customer = {
+    id, version: 1, email, firstName, lastName, isEmailVerified: true, addresses: [], createdAt: '2026-01-01T00:00:00.000Z',
+    lastModifiedAt: '2026-01-01T00:00:00.000Z', ...extra,
+  };
+  CUSTOMERS.set(email.toLowerCase(), { customer, password });
+  return customer;
+};
+[
+  ['maya.okonkwo@example.com', 'Maya', 'Okonkwo', { cart: { id: 'cart-maya', units: 1, lines: 1 } }],
+  ['liam.carter@example.com', 'Liam', 'Carter'], ['priya.nair@example.com', 'Priya', 'Nair'],
+  ['lucas.tremblay@example.com', 'Lucas', 'Tremblay'], ['ava.mackenzie@example.com', 'Ava', 'MacKenzie'],
+  ['noah.patel@example.com', 'Noah', 'Patel'],
+].forEach(([email, first, last, extra]) => {
+  const c = addCustomer(email, MOCK_DEMO_PASSWORD, first, last);
+  if (extra?.cart) c.mockCart = extra.cart;
+});
+const cartBody = (id, units, lines) => ({
+  id, version: 1, cartState: 'Active', totalLineItemQuantity: units, lineItems: Array.from({ length: lines }, () => ({ quantity: units / lines })),
+});
+const readBody = (req) =>
+  new Promise((resolve) => {
+    let raw = '';
+    req.on('data', (c) => (raw += c));
+    req.on('end', () => {
+      try { resolve(JSON.parse(raw || '{}')); } catch { resolve({}); }
+    });
+  });
+const invalid = (res) => json(res, 400, { statusCode: 400, message: 'Account with the given credentials not found.', errors: [{ code: 'InvalidCredentials' }] });
+async function customerRoutes(req, res, path) {
+  if (req.method === 'POST' && path === `/${PROJECT}/login`) {
+    const body = await readBody(req);
+    const entry = CUSTOMERS.get(String(body.email ?? '').toLowerCase());
+    if (!entry || entry.password !== body.password) return invalid(res);
+    const guest = body.anonymousCart?.id ? CARTS[body.anonymousCart.id] : undefined;
+    const own = entry.customer.mockCart;
+    let cart;
+    if (guest && own) {
+      cart = cartBody(own.id, own.units + guest.totalLineItemQuantity, own.lines + guest.lineItems.length);
+      CARTS[own.id] = cart; // the merged bag is now the customer's bag
+    }
+    else if (guest) cart = cartBody(body.anonymousCart.id, guest.totalLineItemQuantity, guest.lineItems.length);
+    else if (own) cart = cartBody(own.id, own.units, own.lines);
+    return json(res, 200, { customer: entry.customer, ...(cart ? { cart } : {}) });
+  }
+  if (req.method === 'POST' && path === `/${PROJECT}/customers`) {
+    const body = await readBody(req);
+    if (CUSTOMERS.has(String(body.email ?? '').toLowerCase())) {
+      return json(res, 400, { statusCode: 400, message: 'duplicate', errors: [{ code: 'DuplicateField', field: 'email' }] });
+    }
+    return json(res, 201, { customer: addCustomer(body.email, body.password, body.firstName, body.lastName) });
+  }
+  const match = new RegExp(`^/${PROJECT}/customers/([^/]+)$`).exec(path);
+  if (req.method === 'GET' && match) {
+    const found = [...CUSTOMERS.values()].find((e) => e.customer.id === match[1]);
+    return found ? json(res, 200, found.customer) : json(res, 404, { statusCode: 404, message: 'not found' });
+  }
+  return false;
+}
 
 const list = (results) => ({ limit: 500, offset: 0, count: results.length, total: results.length, results });
 const json = (res, status, body) => {
@@ -105,9 +172,12 @@ const json = (res, status, body) => {
   res.end(JSON.stringify(body));
 };
 
-createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(dir, 'cert.pem')) }, (req, res) => {
+createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(dir, 'cert.pem')) }, async (req, res) => {
   const url = new URL(req.url ?? '/', `https://localhost:${PORT}`);
   const path = url.pathname;
+  if (path === `/${PROJECT}/login` || path.startsWith(`/${PROJECT}/customers`)) {
+    if ((await customerRoutes(req, res, path)) !== false) return;
+  }
   if (path === '/oauth/token') {
     return json(res, 200, { access_token: 'mock-token', token_type: 'Bearer', expires_in: 172800, scope: `view_project_settings:${PROJECT}` });
   }
