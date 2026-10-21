@@ -17,3 +17,9 @@ export const COLLECTION_MINUTES_FALLBACK = 30;
  * when it adds carry over (task I-12).
  */
 export const CART_CARRY_OVER_ENABLED = false;
+
+/**
+ * Shipping mode of every new cart (D-024). Settable only when a cart is created; workstream K may flip it to
+ * 'Multiple' after its mixed-bag spike. Added by workstream G.
+ */
+export const CART_SHIPPING_MODE: 'Single' | 'Multiple' = 'Single';
