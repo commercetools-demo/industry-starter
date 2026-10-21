@@ -1,3 +1,4 @@
+import { CAPSULE_SYSTEMS } from '@/lib/product/variant-config';
 import type { Cart, CartBlocker, CartLine, Money, ProductShape, VariantAttrValue } from '@/lib/types';
 
 /** Translator bound to the `cart` namespace (a server `getTranslations` or a client `useTranslations`). */
@@ -76,6 +77,21 @@ export function minimumOrder(subtotal: Money, min: number | undefined): Cart['mi
   const value = { centAmount: min, currencyCode: subtotal.currencyCode };
   const shortfall = subtotal.centAmount < min ? { centAmount: min - subtotal.centAmount, currencyCode: subtotal.currencyCode } : null;
   return { value, shortfall };
+}
+
+/**
+ * Machine and capsule nudge (spec "Machine and capsule nudge"): the first machine line whose capsule system is Original or
+ * Vertuo and for which the bag holds no pods of the same system. Machines with other systems never nudge. Pure.
+ */
+export function nudgeTarget(
+  lines: ReadonlyArray<{ shape?: ProductShape; systemKey?: string; name: string }>,
+): { systemKey: string; machineName: string } | null {
+  for (const m of lines) {
+    if (m.shape !== 'machine' || !m.systemKey || !CAPSULE_SYSTEMS.includes(m.systemKey)) continue;
+    const covered = lines.some((p) => p.shape === 'pods' && p.systemKey === m.systemKey);
+    if (!covered) return { systemKey: m.systemKey, machineName: m.name };
+  }
+  return null;
 }
 
 /**
