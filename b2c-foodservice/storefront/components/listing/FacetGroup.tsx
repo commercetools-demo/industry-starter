@@ -150,7 +150,7 @@ function Mark({ facet, option }: { facet: FacetGroupModel; option: FacetOption }
       aria-hidden="true"
       className={cn(
         'flex h-4 w-4 shrink-0 items-center justify-center border',
-        radio ? 'rounded-pill' : 'rounded-[4px]',
+        radio ? 'rounded-pill' : 'rounded-field',
         option.selected ? 'border-ink bg-ink text-surface' : 'border-line-2 bg-surface',
       )}
     >
