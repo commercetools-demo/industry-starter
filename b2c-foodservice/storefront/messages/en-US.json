@@ -1610,7 +1610,9 @@
       "shippingNote": "Shipping is calculated for each delivery."
     },
     "checkout": {
-      "needsAccount": "A subscription needs an account so you can manage it. Sign in or create one to continue."
+      "needsAccount": "A subscription needs an account so you can manage it. Sign in or create one to continue.",
+      "signIn": "Sign in",
+      "register": "Create an account"
     },
     "confirmation": {
       "active": "Your subscription starts now. Next delivery {date}, then every {interval}. Manage it in your account.",

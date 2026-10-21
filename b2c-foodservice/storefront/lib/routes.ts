@@ -46,3 +46,6 @@ export function accountHref(): string {
 export function signInHref(redirect?: string): string {
   return redirect ? `/account/sign-in?redirect=${encodeURIComponent(redirect)}` : '/account/sign-in';
 }
+export function registerHref(redirect?: string): string {
+  return redirect ? `/account/register?redirect=${encodeURIComponent(redirect)}` : '/account/register';
+}

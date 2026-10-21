@@ -32,4 +32,16 @@ describe('Catalog price moved: the buyer is told which price applies', () => {
     expect(note).toHaveTextContent('Your price stays the same for every delivery.');
     expect(note).toHaveTextContent('Shipping is calculated for each delivery.');
   });
+
+  it('Mixed bag shows a Subscriptions group beside Shipping', () => {
+    const sub = viewLine({ id: 's', fulfilment: 'subscribe', unitPrice: usd(1500), recurrence: { policyId: 'rp', schedule: { unit: 'Months', value: 1 } } });
+    const ship = viewLine({ id: 'd', fulfilment: 'delivery', unitPrice: usd(2000) });
+    const channels = { stores: [], selectedKey: null };
+    const cart = viewCart([ship, sub]);
+    stubFetch({ '/api/cart/count': () => ({ count: 2 }), '/api/channels': () => channels, '/api/cart': () => ({ cart }) });
+    renderShell(<CartPage initialCart={cart} />, { fallback: { [unstable_serialize(keyChannels('US'))]: channels } });
+    const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
+    expect(headings).toContain('Shipping to you');
+    expect(headings).toContain('Subscriptions');
+  });
 });

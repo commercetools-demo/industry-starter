@@ -11,9 +11,10 @@ import { ApiError } from '@/hooks/fetcher';
 import { useAccount } from '@/hooks/useAccount';
 import { useCheckout, type HostedSession } from '@/hooks/useCheckout';
 import { Link, useRouter } from '@/i18n/routing';
+import { subscribeNeedsAccount } from '@/lib/checkout/guards';
 import { blockingIssues } from '@/lib/checkout/summary';
 import { validatePickupName } from '@/lib/checkout/validate';
-import { signInHref } from '@/lib/routes';
+import { registerHref, signInHref } from '@/lib/routes';
 import type { CheckoutPayment, CheckoutState } from '@/lib/types';
 import CheckoutIssues from './CheckoutIssues';
 import DeliveryNote from './DeliveryNote';
@@ -235,6 +236,7 @@ export default function CheckoutPage({ resumePart }: { resumePart?: number }) {
               nameError={nameError}
               busy={busy}
               banner={banner}
+              needsAccount={customer === null && subscribeNeedsAccount(state.cart, {})}
               nameRef={nameRef}
               headingRef={reviewHeading}
               onPerson={choosePerson}
@@ -289,8 +291,26 @@ function BannerMessage({ banner }: { banner: Banner }) {
   );
 }
 
+/** Workstream N: a subscription is managed in the account, so a guest signs in or registers before paying. */
+function SubscriptionNeedsAccount() {
+  const t = useTranslations('subscription.checkout');
+  return (
+    <div role="status" data-testid="subscription-needs-account" className="mb-4 rounded-card border border-line-2 bg-canvas-2 p-4 text-[14px] text-ink">
+      <p className="m-0 mb-3">{t('needsAccount')}</p>
+      <div className="flex flex-wrap gap-3">
+        <ButtonLink href={signInHref('/checkout')} variant="ink">
+          {t('signIn')}
+        </ButtonLink>
+        <ButtonLink href={registerHref('/checkout')} variant="ghost">
+          {t('register')}
+        </ButtonLink>
+      </div>
+    </div>
+  );
+}
+
 function Review({
-  state, person, name, nameError, busy, banner, nameRef, headingRef, onPerson, onName, onBlurName, onChangeStore, onContinue,
+  state, person, name, nameError, busy, banner, needsAccount, nameRef, headingRef, onPerson, onName, onBlurName, onChangeStore, onContinue,
 }: {
   state: CheckoutState;
   person: PickupPersonChoice;
@@ -298,6 +318,8 @@ function Review({
   nameError: string | undefined;
   busy: boolean;
   banner: Banner;
+  /** A guest with a subscribe line (workstream N): payment waits for an account. */
+  needsAccount: boolean;
   nameRef: React.RefObject<HTMLInputElement | null>;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   onPerson: (p: PickupPersonChoice) => void;
@@ -314,6 +336,7 @@ function Review({
         {t('steps.review')}
       </h2>
       <BannerMessage banner={banner} />
+      {needsAccount ? <SubscriptionNeedsAccount /> : null}
       <CheckoutIssues issues={state.issues} cart={state.cart} />
       {state.cart.groups.map((group) => (
         <FulfilmentCluster key={group.key} cart={state.cart} group={group}>
@@ -333,7 +356,7 @@ function Review({
           {group.kind === 'delivery' && state.deliveryNote ? <DeliveryNote note={state.deliveryNote} currency={state.summary.currency} /> : null}
         </FulfilmentCluster>
       ))}
-      <Button size="lg" block loading={busy} disabled={blocked || busy} onClick={onContinue} className="mt-5">
+      <Button size="lg" block loading={busy} disabled={blocked || busy || needsAccount} onClick={onContinue} className="mt-5">
         {busy ? t('continuing') : t('continue')}
       </Button>
     </div>
