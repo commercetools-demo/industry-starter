@@ -39,4 +39,11 @@ describe('Agent rules', () => {
       expect(agents, needle).toContain(needle);
     }
   });
+
+  it('AGENTS.md lists handle, requireCustomer, changeMarket, cachedPublic, updateWithRetry', () => {
+    const agents = read('AGENTS.md');
+    for (const needle of ['handle', 'requireCustomer', 'changeMarket', 'cachedPublic', 'updateWithRetry']) {
+      expect(agents, needle).toContain(needle);
+    }
+  });
 });

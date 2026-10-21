@@ -338,26 +338,26 @@ Run `cd storefront && npm run check` before ticking.
   - The probe, read-only, using `apiRoot` from `lib/ct/client`: (1) `apiRoot.get().execute()` records `key`, `countries`, `currencies`, `languages`, `searchIndexing` status (names and values of those arrays; no ids). (2) `apiRoot.products().withId({ ID: 'does-not-exist' }).get().execute()` in `try/catch`: record `typeof e`, `Object.keys(e)`, `e.statusCode`, header **names** present, whether `x-correlation-id` is in `e.headers` or in `e.originalRequest.headers`. This settles where `toAppError` reads the correlation id; fix `toAppError` and its tests if the shape differs. (3) `apiRoot.productProjections().get({ queryArgs: { limit: 1, priceCurrency: 'USD', priceCountry: 'US', staged: false } }).execute()`: record the top-level key names of `results[0]` (does it have `reviewRatingStatistics`? `attributes`?), the variant key names, whether `masterVariant.price` is present (scoped price) and the `images[0]` key names. If there are no products yet (C not run live), record "no products" and re-run after C-12. (4) `apiRoot.reviews().get({ queryArgs: { limit: 1 } }).execute()`: status code only (proves read scope; a 403 means `view_products` is missing).
   - Tests: none (this is the live probe); evidence file and, if a response differs from section 3, a dated row in `PROJECT-FINDINGS.md` and a message to the lead before changing a type.
 
-- [ ] **D-11 Hand-off docs**
+- [x] **D-11 Hand-off docs**
   - Files: `storefront/AGENTS.md` (append a "Server core API" section: the exported names of section 3, the Route Handler shape, the "new resource" checklist of six files), `plans/evidence/D/README.md`.
   - Tests: `agent-rules.test.ts` (A) extended: `AGENTS.md lists handle, requireCustomer, changeMarket, cachedPublic, updateWithRetry`.
 
 ## 5. Scenarios checklist (`server-architecture-and-data-flow`)
 
-- [ ] Client component needs data: `fetchJson ...` tests (D-08) plus the architecture test `Components do not import from lib/ct...` (D-09); `useCart()` itself is tested in I
-- [ ] Raw fetch to commercetools: `Raw fetch to commercetools: no fetch call targets a commercetools host` (D-09)
-- [ ] Price display: `Price display: 495 USD renders $4.95 and never $5` (D-01)
-- [ ] Tampered cookie: `Tampered cookie: an invalid signature gives an empty session and no error` (D-03)
-- [ ] Market change: `Market change: country, currency and locale change together and cartId is reset` (D-03)
-- [ ] Unauthenticated account call: `Unauthenticated account call: requireCustomer yields 401 with no data and no reason` (D-02); the real `/api/orders` assertion is in L, same helper
-- [ ] Facet counts: source half `Catalogue reads use Product Search: nothing calls productProjections().search()` (D-09); the "each group counted against all other active groups" behaviour is tested in G (`Facet counts`)
-- [ ] Two shoppers: `Two shoppers: concurrent getSession calls each return their own cartId` (D-03) and `Two customers never share a key` (D-04)
-- [ ] Double click: `Double click: a stale version is re-read and applied once, not twice` (D-05)
-- [ ] commercetools 5xx: `commercetools 5xx: a 503 becomes upstream_unavailable with status 503` (D-02) and browser step 6; the page "retry state of the design" is exercised with the real `error.tsx` by F
-- [ ] Requirement "Route Handler table": each handler documented in its workstream; D supplies the shape (`handle`, `requireCustomer`) and `agent-rules` test (D-11)
-- [ ] Requirement "Caching": `cachedPublic sets the TTL and the tag of its kind`, `unstable_cache is called only in lib/ct/public-cache.ts` (D-04, D-09)
-- [ ] Requirement "Type boundary": `Mapped output contains no SDK-only fields` (D-07)
-- [ ] Requirement "Errors": `Error body is exactly code and message with no stack and no commercetools text` (D-02)
+- [x] Client component needs data: `fetchJson ...` tests (D-08) plus the architecture test `Components do not import from lib/ct...` (D-09); `useCart()` itself is tested in I
+- [x] Raw fetch to commercetools: `Raw fetch to commercetools: no fetch call targets a commercetools host` (D-09)
+- [x] Price display: `Price display: 495 USD renders $4.95 and never $5` (D-01)
+- [x] Tampered cookie: `Tampered cookie: an invalid signature gives an empty session and no error` (D-03)
+- [x] Market change: `Market change: country, currency and locale change together and cartId is reset` (D-03)
+- [x] Unauthenticated account call: `Unauthenticated account call: requireCustomer yields 401 with no data and no reason` (D-02); the real `/api/orders` assertion is in L, same helper
+- [x] Facet counts: source half `Catalogue reads use Product Search: nothing calls productProjections().search()` (D-09); the "each group counted against all other active groups" behaviour is tested in G (`Facet counts`)
+- [x] Two shoppers: `Two shoppers: concurrent getSession calls each return their own cartId` (D-03) and `Two customers never share a key` (D-04)
+- [x] Double click: `Double click: a stale version is re-read and applied once, not twice` (D-05)
+- [x] commercetools 5xx: `commercetools 5xx: a 503 becomes upstream_unavailable with status 503` (D-02) and browser step 6; the page "retry state of the design" is exercised with the real `error.tsx` by F
+- [x] Requirement "Route Handler table": each handler documented in its workstream; D supplies the shape (`handle`, `requireCustomer`) and `agent-rules` test (D-11)
+- [x] Requirement "Caching": `cachedPublic sets the TTL and the tag of its kind`, `unstable_cache is called only in lib/ct/public-cache.ts` (D-04, D-09)
+- [x] Requirement "Type boundary": `Mapped output contains no SDK-only fields` (D-07)
+- [x] Requirement "Errors": `Error body is exactly code and message with no stack and no commercetools text` (D-02)
 
 ## 6. Browser recipe (Chrome DevTools MCP, you run it)
 

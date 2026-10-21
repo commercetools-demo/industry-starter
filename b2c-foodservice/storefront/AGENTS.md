@@ -49,3 +49,35 @@ A new commercetools resource adds exactly six files and changes nothing else in 
 - Money is integer minor units, formatted with `formatMoney`.
 - Anything only the owner can do or test goes into `plans/TODO-MANUAL-TESTING.md`. Questions go into `plans/QUESTIONS.md` with the default you built to.
 - Load the matching `commercetools-*` skill before any commercetools task; do not guess endpoints or update actions.
+
+## Server core API (workstream D)
+
+Import these; do not rewrite them.
+
+- `lib/types.ts`: `Money`, `Price`, `ImageRef`, `AttributeValue`, `Variant`, `RatingStats`, `Product`, `Category`, `LocaleKey`, `ApiErrorBody`. Append, never rename.
+- `lib/utils.ts`: `formatMoney(centAmount, currency, locale)`, `roundRating`, `getLocalizedString` (server side only, never in components), `isLocaleKey`, `marketForLocale`, `marketForCountry`, `COUNTRY_CONFIG` (each market has `collection`: true for US, false for Canada).
+- `lib/errors.ts`: `AppError`, `ErrorCode`, `SAFE_MESSAGES`, `toAppError`, `errorResponse`. The body is always `{error:{code,message}}`; the UI maps `code` to `errors.<code>`.
+- `lib/api.ts`: `handle(route, fn)` wraps every Route Handler; `requireCustomer()` throws 401; `jsonError(code, status)`.
+- `lib/session.ts` (server-only): `getSession`, `getMarket`, `createSessionToken`, `verifySessionToken`, `setSessionCookie`, `clearSessionCookie`, `setMarketCookie`, `changeMarket` (resets `cartId`), `ensureAnonymousId`, `sanitizeSession`. Cookie `malva-session`, HS256, 30 days.
+- `lib/cache-keys.ts`: `KEY_CART`, `KEY_CART_COUNT`, `KEY_ACCOUNT`, scoped `keyOrders(customerId)` and friends, `TAG`, `TTL`.
+- `lib/ct/public-cache.ts`: `cachedPublic(kind, keyParts, fn)`, the only `unstable_cache` call; public data only. `lib/ct/project.ts`: `getMarkets`.
+- `lib/ct/retry.ts`: `updateWithRetry(read, write)`, one re-read on a 409, then `conflict`. Use it for every versioned update.
+- `lib/ct/image-config.ts`: `cleanImageUrl`, `transformListingImageUrl`, `transformDetailImageUrl`, `transformThumbnailImageUrl`. Also callable from client components. Stored URLs stay clean.
+- `lib/mappers/*`: `mapProduct`, `mapVariant`, `mapPrice`, `pickPrice`, `mapAttributes`, `mapRatingStats`, `mapImages`, `mapCategory`, `buildCategoryTree`, `mapMoney`.
+- `hooks/fetcher.ts`: `fetchJson`, `jsonFetcher`, `ApiError`. No `fetch('/api/...')` in components.
+
+Route Handler shape:
+
+```ts
+export const GET = handle('/api/orders', async () => {
+  const session = await requireCustomer();
+  const orders = await getCustomerOrders(session.customerId); // one lib/ct call
+  return Response.json({ orders });
+});
+```
+
+To change the session: `setSessionCookie(NextResponse.json(body), await createSessionToken({ ...session, cartId }))`.
+
+New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import 'server-only'`), `lib/mappers/<namespace>.ts`, a type in `lib/types.ts`, `app/api/<namespace>/route.ts` using `handle`, an SWR hook in `hooks/`, and a key in `lib/cache-keys.ts`.
+
+`app/api/dev` and `app/api/health` are throwaway routes; `npm run predeploy` fails while they exist.

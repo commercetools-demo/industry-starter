@@ -22,3 +22,4 @@ Q-D-14 | Server cache TTLs. | project 300 s, categories 60, channels 60, shippin
 Q-D-15 | 409 retry policy. | One retry after re-reading, no delay; second 409 is `conflict` 409 | no | Open
 Q-D-16 | Currencies without two decimals. | Digit count from `Intl` (only USD and CAD used, both 2) | no | Open
 Q-D-17 | `lib/ct/image-config.ts` must be callable from client components (H gallery, K summary) but D-09 says every `lib/ct` file has `server-only` and A's ESLint rule bans client imports of `lib/ct`. | The file is pure string work with no secrets: no `server-only` in it, and the ESLint rule and the architecture guard exempt exactly `@/lib/ct/image-config` (fixture and test added in D-06). | no | Open
+Q-D-18 | The live probe (D-10) could not run and the `toAppError` correlation-id location (response `headers` vs `originalRequest.headers`) is unverified; both are read. | Keep reading both; fix once `npm run test:live` runs (OA-01) | no | Open
