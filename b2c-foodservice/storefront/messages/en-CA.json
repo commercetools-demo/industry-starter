@@ -1354,6 +1354,22 @@
         "keepMine": "Keep what I typed",
         "edit": "Edit"
       }
+    },
+    "payments": {
+      "title": "Payment methods",
+      "empty": "No saved cards.",
+      "emptyHelp": "Cards you choose to save while paying appear here.",
+      "hostedOnly": "Card details are only ever entered in our secure payment form at checkout.",
+      "default": "Default",
+      "remove": "Remove",
+      "makeDefault": "Make default",
+      "shop": "Browse the shop",
+      "removed": "Payment method removed.",
+      "failed": "We could not change this payment method. Try again.",
+      "list": "Saved payment methods",
+      "method": {
+        "card": "Card"
+      }
     }
   }
 }
