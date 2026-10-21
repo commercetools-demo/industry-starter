@@ -1281,6 +1281,23 @@
         },
         "trackingId": "Return tracking {id}"
       }
+    },
+    "collection": {
+      "title": "Your collection store",
+      "help": "We use this store for live availability and collection orders.",
+      "change": "Change store",
+      "none": "No store chosen yet.",
+      "chooseStore": "Choose a store",
+      "phone": "Phone {phone}",
+      "unavailable": "Your store could not be loaded.",
+      "tile": {
+        "fast": "Fast collection",
+        "fastText": "Ready in about {minutes, number} minutes",
+        "shipping": "Free delivery",
+        "shippingText": "Free shipping over {threshold}",
+        "subscribe": "Subscribe and save",
+        "subscribeText": "Never run out of coffee"
+      }
     }
   }
 }
