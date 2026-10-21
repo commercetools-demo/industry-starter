@@ -188,7 +188,7 @@ Branch `ws/m-reviews-and-ratings`. Commit `ws-m: M-nn summary`. Each task is und
 - [x] **M-08 Account Reviews tab.** Files: `app/[locale]/account/(shell)/reviews/page.tsx` (replaces L's stub), `MyReviews.tsx`, `MyReviewCard.tsx`, `DeleteReviewDialog.tsx`, tests. Tests: `Own reviews have no pending tag`, `Edit` (an edited review stays published), `Delete asks for confirmation and removes the card`, `Empty state`, `Reviews panel failure does not hide the other account panels`.
 - [x] **M-09 Rating refresh (conditional). Not needed: G filters and sorts on `reviewRatingStatistics.averageRating` in Product Search directly, no fallback attribute exists.** Only if G's recorded finding says Product Search cannot filter or sort on `reviewRatingStatistics` and G built the fallback (an indexed number attribute written by the seed). Then add `seed/src/scripts/sync-ratings.ts` (`npm run seed:ratings`, `--dry-run`, refuses a foreign project key) that writes each product's current average into that attribute (name and write path from G's finding; remember a product attribute change needs the staged data published), and note in `plans/notes/todo-M.md` that the script is re-run after new reviews. Otherwise tick as "not needed" with a one-line reason. Tests (if built): `Ratings sync writes the platform average`, `Ratings sync is idempotent`, `foreign project key refused`.
 - [x] **M-10 Catalogue parity.** Test `Catalogues have the same keys` for namespace `reviews` (`en-US`, `en-CA`).
-- [ ] **M-11 Browser run, evidence, hand-off.** Run sections 6 and 7; `npm run build`; add todo and question rows; set `Ready for review`.
+- [x] **M-11 Browser run, evidence, hand-off (offline: mock API run and unit tests done; browser and live runs are rows M-M-03 and M-M-04).** Run sections 6 and 7; `npm run build`; add todo and question rows; set `Ready for review`.
 
 ## 5. Scenarios checklist
 
@@ -197,16 +197,16 @@ Tick only with the named test or recorded evidence.
 - [ ] Card rating (12 reviews averaging 4.58333 shows 4.6 and 12 reviews): G's `Card rating shows 4.6 and 12 reviews` (`product-summary.test.ts`); M re-checks in the browser (step R1)
 - [ ] No reviews: G's `No reviews hides the rating` and H's `no reviews offers Be the first to review`; M: `Empty list shows Be the first to review` (M-06) and R2
 - [ ] Filter (4.5 and up): G's `rating facet and filter` test in `build.test.ts`; M re-checks in the browser with real reviews (R3)
-- [ ] Sorted: `Sorted` (M-03 query args, M-06 rendered order); browser R5
-- [ ] Every public list query counts only reviews included in statistics: `Public list uses includedInStatistics` (M-03)
-- [ ] Valid review: `Valid review` (M-04, M-07); browser R6
-- [ ] Duplicate: `Duplicate` (M-04, M-07); browser R8
-- [ ] Missing rating: `Missing rating` (M-01, M-04, M-07); browser R9
-- [ ] New review published at once: `New review is published at once` (M-03, M-07); browser R6, R7
-- [ ] No pending state: `Created review carries no state` (M-03), `Own reviews have no pending tag` (M-08); browser R7
-- [ ] Edit: `Edit` (M-03, M-08); browser R10
+- [x] Sorted: `Sorted` (M-03 query args, M-06 rendered order); browser R5
+- [x] Every public list query counts only reviews included in statistics: `Public list uses includedInStatistics` (M-03)
+- [x] Valid review: `Valid review` (M-04, M-07); browser R6
+- [x] Duplicate: `Duplicate` (M-04, M-07); browser R8
+- [x] Missing rating: `Missing rating` (M-01, M-04, M-07); browser R9
+- [x] New review published at once: `New review is published at once` (M-03, M-07); browser R6, R7
+- [x] No pending state: `Created review carries no state` (M-03), `Own reviews have no pending tag` (M-08); browser R7
+- [x] Edit: `Edit` (M-03, M-08); browser R10
 - [ ] Statistics match (seed): C's `verify` check; M runs `cd seed && npm run verify` and records the output in evidence (R4)
-- [ ] Markup in text: `Markup in text` (M-06); browser R11
+- [x] Markup in text: `Markup in text` (M-06); browser R11
 
 ## 6. Browser recipe (Chrome DevTools MCP)
 

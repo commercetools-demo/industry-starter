@@ -6,7 +6,8 @@
 // Served: project, categories, channels, product types, inventory, shipping methods, product projections, Product Search
 // (scripts/mock-fixtures/mock-catalog.mjs) and a small cart (create, read, addLineItem). Workstream H added: one projection by id,
 // recurrence policies and recurring prices, inventory at one supply channel, supplyChannel and recurrenceInfo on lines,
-// placeholder images (MOCK_IMAGES=0 for none) and GET /__mock/carts to read the carts back.
+// placeholder images (MOCK_IMAGES=0 for none) and GET /__mock/carts to read the carts back. Workstream M added reviews
+// (list, create, update, delete, statistics kept in step; scripts/mock-fixtures/mock-reviews.mjs) and one demo order.
 //
 //   node scripts/mock-ct-server.mjs [port]      (needs openssl; writes a throwaway certificate to the OS temp dir)
 //   NODE_TLS_REJECT_UNAUTHORIZED=0 CTP_API_URL=https://localhost:9443 CTP_AUTH_URL=https://localhost:9443 \
@@ -24,6 +25,7 @@ import { join } from 'node:path';
 import {
   DOCS, DOC_BY_ID, FIXTURES, RECURRENCE_POLICIES, VARIANT_BY_SKU, categoryId, channelId, priceFor, productTypeResults, projectionOf, runSearch,
 } from './mock-fixtures/mock-catalog.mjs';
+import { reviewRoutes } from './mock-fixtures/mock-reviews.mjs';
 
 const PORT = Number(process.argv[2] ?? 9443);
 const PROJECT = 'mock-project';
@@ -201,6 +203,10 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
   if (path === `/${PROJECT}/login` || path.startsWith(`/${PROJECT}/customers`)) {
     if ((await customerRoutes(req, res, path)) !== false) return;
   }
+  // Reviews and the verified-purchase order lookup (workstream M).
+  if (path === `/${PROJECT}/reviews` || path.startsWith(`/${PROJECT}/reviews/`) || path === `/${PROJECT}/orders`) {
+    if ((await reviewRoutes(req, res, url, path, readBody)) !== false) return;
+  }
   if (path === '/oauth/token') {
     return json(res, 200, { access_token: 'mock-token', token_type: 'Bearer', expires_in: 172800, scope: `view_project_settings:${PROJECT}` });
   }
@@ -249,7 +255,10 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
   // Debug read of every cart the mock holds, to check supply channels and recurrence info (not a commercetools route).
   if (path === '/__mock/carts') return json(res, 200, [...CARTS.values()]);
   if (path === `/${PROJECT}/product-projections` && req.method === 'GET') {
-    const ids = [...(url.searchParams.get('where') ?? '').matchAll(/"([0-9a-f-]{36})"/g)].map((m) => m[1]);
+    const ids = [
+      ...[...(url.searchParams.get('where') ?? '').matchAll(/"([0-9a-f-]{36})"/g)].map((m) => m[1]),
+      ...[...url.searchParams].filter(([k]) => /^var\.p\d+$/.test(k)).map(([, v]) => v), // predicate variables (workstream M)
+    ];
     const locales = url.searchParams.getAll('localeProjection');
     const currency = url.searchParams.get('priceCurrency') ?? undefined;
     const country = url.searchParams.get('priceCountry') ?? undefined;

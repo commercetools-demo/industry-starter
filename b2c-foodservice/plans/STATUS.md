@@ -19,7 +19,7 @@ Updated 2026-10-21 (owner answers D-030 to D-039 applied to every plan). States:
 | J | Auth and session | 7 | Ready for review (offline) | J-01 to J-08 and J-07b done; browser recipe run against the mock (plans/evidence/J/); J-09 probes blocked: OA-J-c; cart merge uses `AuthCart`, follow-up for I (Q-J-15); owner rows OA-J-a to OA-J-c, SO-J-a, M-J-01 to M-J-03 |
 | K | Checkout and confirmation | 8 | Not started | |
 | L | Account area | 9 | Not started | |
-| M | Reviews and ratings | 9 | Not started | |
+| M | Reviews and ratings | 9 | Ready for review (offline) | M-00 to M-10 done on the mock server (plans/evidence/M/README.md); live runs need OA-01 and OA-M-a (second client, D-027); browser run blocked by a held Chrome profile (M-M-04) |
 | N | Subscriptions | 10 | Not started | |
 | O | Home page | 10 | Ready for review | O-00 to O-10 done against the mock catalogue; FIX-1 header overflow and FIX-2 URL market rule done; live read-back is OA-O-1; see plans/evidence/O/README.md |
 | P | Content and error pages | 10 | Ready for review (partial) | P-00 to P-11, P-13 to P-15 done; P-12 consent-link half blocked on K; scenario "Expired session is not a refusal" blocked on L; evidence plans/evidence/P/; owner rows SO-P1 to SO-P5, OA-P1, M-P-01, M-P-02, M-P-04, OA-P2, OA-P3 |

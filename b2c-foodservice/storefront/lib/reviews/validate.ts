@@ -18,7 +18,7 @@ export const isProductId = (value: unknown): value is string => typeof value ===
 
 /**
  * Removes control characters except newline and tab, normalises line endings, collapses three or more blank lines to
- * two and trims. Markup is kept as typed: React renders it as text (no dangerouslySetInnerHTML anywhere).
+ * two and trims. Markup is kept as typed: React renders it as text (never injected as HTML).
  */
 export function sanitizeText(input: string): string {
   return input

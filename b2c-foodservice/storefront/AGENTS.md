@@ -132,3 +132,11 @@ New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import
 - Cart: `POST /api/cart/lines` now takes all three fulfilments. `buildAddLineAction` (`lib/ct/cart.ts`) is the one place that builds `addLineItem` (collect: `supplyChannel`; subscribe: `recurrenceInfo` Fixed). Refusals are `LineRejected` answered with domain codes (`not_available_for_collection` 409 with `available`, `collect_not_available_in_market`, `unknown_store`, `unknown_policy`, `price_unavailable`) from `lib/api-domain.ts`. `GET /api/recurrence-policies?locale=` is public and cached; hook `useRecurrencePolicies`.
 - Related: `getRelatedProducts`, `getCompatibleCapsules` in `lib/related.ts`; `components/pdp/RelatedStrip.tsx` is a streamed server component. M mounts reviews in `components/pdp/ReviewsSlot.tsx` and flips `REVIEWS_ENABLED`.
 - The mock server now also serves one projection by id, recurrence policies and recurring prices, placeholder images and `GET /__mock/carts`.
+
+## Reviews and ratings (workstream M)
+
+- No moderation (D-037): a review has no state and counts at once. One review per customer and product (`uniquenessValue` `<customerId>:<productId>` plus a pre-check). Routes: `GET/POST /api/reviews`, `PATCH/DELETE /api/reviews/[id]`; rules and pure validation in `lib/reviews/validate.ts`.
+- Reads use the main client (`lib/ct/reviews.ts`); writes use the isolated second client `lib/ct/review-client.ts` (D-027, env names `CTP_REVIEWS_CLIENT_ID`, `CTP_REVIEWS_CLIENT_SECRET`, optional `CTP_REVIEWS_SCOPES`). Nothing else imports it.
+- UI: `components/reviews/ReviewsSection` (mounted by `components/pdp/ReviewsSlot`; `REVIEWS_ENABLED` is true) and the account tab `app/[locale]/account/(shell)/reviews` with `MyReviews`. Hooks: `useReviews` (SWR infinite; call `revalidateReviewLists(productId)` after a write, because SWR's global `mutate(filter)` skips infinite keys), `useMyReviews`, `useReviewActions`.
+- Review text is rendered as plain React text only; never `dangerouslySetInnerHTML`. Responses never carry an email or customer id (a test checks the key list).
+- Mock server: `scripts/mock-fixtures/mock-reviews.mjs` (reviews from the fixtures, create, update, delete, statistics kept in step; customer `cust-1` has an order with the first product).

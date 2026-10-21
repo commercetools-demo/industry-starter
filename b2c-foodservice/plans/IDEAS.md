@@ -41,3 +41,4 @@
 - (H) The bundle 'with milk frother' of the spec is not in the seed `bundle` enum (Q-H-06): seed request for a third value, then it appears with no code change.
 - (H) `tagline` text attribute on products (Q-H-19) and a sibling-system link by product key would let a pod page offer 'also for Vertuo' directly.
 - (H) Mock server gained placeholder images from placehold.co (MOCK_IMAGES=0 to turn off); it also had a duplicate `readBody` that stopped it starting on develop, fixed.
+- (M) Review helpful votes, photos and replies are out of scope. The rate limiter is per instance (Q-J-12); a shared store is needed on multi-instance hosting. A subscription on review created/deleted could revalidate product pages if H starts caching product reads.
