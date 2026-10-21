@@ -6,6 +6,7 @@ import DeliveryList from '@/components/account/orders/DeliveryList';
 import OrderNotFound from '@/components/account/orders/OrderNotFound';
 import OrderStatusPill from '@/components/account/orders/OrderStatusPill';
 import OrderStatusTracker from '@/components/account/orders/OrderStatusTracker';
+import { useReorder } from '@/components/account/orders/useReorder';
 import ReturnDialog from '@/components/account/orders/ReturnDialog';
 import ReturnList from '@/components/account/orders/ReturnList';
 import LineImage from '@/components/cart/LineImage';
@@ -27,6 +28,7 @@ export default function OrderDetail({ orderNumber, initial }: { orderNumber: str
   const { startReturn } = useOrderActions();
   const toast = useToast();
   const [returning, setReturning] = useState(false);
+  const reorder = useReorder();
   const locale = useLocale();
   const format = useFormatter();
   const money = (cents: number, currency: string) => formatMoney(cents, currency, locale);
@@ -60,7 +62,14 @@ export default function OrderDetail({ orderNumber, initial }: { orderNumber: str
                   {t('placedOn', { date: format.dateTime(new Date(order.createdAt), { dateStyle: 'medium' }) })}
                 </p>
               </div>
-              <OrderStatusPill status={order.status} hasCollect={order.hasCollect} hasShip={order.hasShip} />
+              <div className="flex flex-wrap items-center gap-3">
+                <OrderStatusPill status={order.status} hasCollect={order.hasCollect} hasShip={order.hasShip} />
+                {order.status === 'completed' ? (
+                  <Button variant="ghost" loading={reorder.pendingId === order.id} onClick={() => void reorder.reorder(order.id)}>
+                    {t('buyAgain')}
+                  </Button>
+                ) : null}
+              </div>
             </div>
 
             {order.hasCollect && order.status !== 'cancelled' ? (
@@ -155,6 +164,7 @@ export default function OrderDetail({ orderNumber, initial }: { orderNumber: str
           </>
         ) : null}
       </PanelState>
+      {reorder.dialog}
     </section>
   );
 }

@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import PanelState from '@/components/account/PanelState';
 import OrderFilters from '@/components/account/orders/OrderFilters';
 import OrderList from '@/components/account/orders/OrderList';
+import { useReorder } from '@/components/account/orders/useReorder';
 import ButtonLink from '@/components/ui/ButtonLink';
 import { ORDERS_PAGE_SIZE, useOrders } from '@/hooks/useOrders';
 import { usePathname, useRouter } from '@/i18n/routing';
@@ -24,7 +25,8 @@ export function parseOrdersQuery(params: { get(name: string): string | null }): 
 }
 
 /** The Orders tab: filter chips, cards, paging. State lives in the query string so it survives a reload. */
-export default function OrdersTab({ onReorder, reorderingId }: { onReorder?: (id: string) => void; reorderingId?: string | null }) {
+export default function OrdersTab({ onReorder, reorderingId }: { onReorder?: (id: string) => void; reorderingId?: string | null } = {}) {
+  const own = useReorder();
   const t = useTranslations('account.orders');
   const tTabs = useTranslations('account.tabs');
   const locale = useLocale();
@@ -73,11 +75,12 @@ export default function OrdersTab({ onReorder, reorderingId }: { onReorder?: (id
             page={page}
             pages={pages}
             onPage={(p) => go({ filter, page: p })}
-            onReorder={onReorder}
-            reorderingId={reorderingId}
+            onReorder={onReorder ?? ((id) => void own.reorder(id))}
+            reorderingId={reorderingId ?? own.pendingId}
           />
         ) : null}
       </PanelState>
+      {own.dialog}
     </section>
   );
 }
