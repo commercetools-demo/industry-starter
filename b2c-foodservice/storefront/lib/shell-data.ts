@@ -3,6 +3,7 @@ import { getCategoryTree } from '@/lib/ct/categories';
 import { getStoresForCountry } from '@/lib/ct/channels';
 import { getValidCountryConfig } from '@/lib/ct/market';
 import { getPromiseFigures } from '@/lib/ct/promise';
+import { missingCategoryKeys } from '@/lib/nav/mega-config';
 import { getSession } from '@/lib/session';
 import type { Category, MarketOption, PromiseFigures, Store } from '@/lib/types';
 import { marketForLocale } from '@/lib/utils';
@@ -39,6 +40,10 @@ export async function getShellData(locale: string): Promise<ShellData> {
       : Promise.resolve([] as Store[]),
     getValidCountryConfig(),
   ]);
+  if (process.env.NODE_ENV !== 'production' && categories.length > 0) {
+    const missing = missingCategoryKeys(categories);
+    if (missing.length > 0) console.warn(JSON.stringify({ event: 'nav_categories_missing', keys: missing }));
+  }
   const selectedKey = stores.some((s) => s.key === session.collectionStoreKey)
     ? (session.collectionStoreKey ?? null)
     : null;

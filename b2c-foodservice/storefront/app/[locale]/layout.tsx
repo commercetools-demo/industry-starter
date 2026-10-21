@@ -2,6 +2,7 @@ import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { unstable_serialize } from 'swr';
+import Header from '@/components/layout/Header';
 import PromiseBar from '@/components/layout/PromiseBar';
 import ShellProviders from '@/components/layout/ShellProviders';
 import { routing } from '@/i18n/routing';
@@ -37,6 +38,7 @@ export default async function LocaleLayout({
         {t('skipToContent')}
       </a>
       <PromiseBar figures={shell.figures} locale={locale} />
+      <Header categories={shell.categories} />
       <main id="main-content" tabIndex={-1} className="outline-none">
         {children}
       </main>
