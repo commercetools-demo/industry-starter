@@ -256,7 +256,7 @@ Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no co
   - Implement 3.3. Replace A's root layout font handling; keep `NextIntlClientProvider` and `lang`.
   - Tests (spec: Typography, Page title): `Page title is Archivo 800 at 34 to 40px with -0.025em tracking` (parse `page-title` rule: weight 800, `clamp(34px, ..., 40px)`, `-0.025em`, `font-display`), `Hero title scales with clamp(44px, 5.6vw, 82px)`, `Eyebrow is 11px uppercase 0.18em weight 600`, `Wordmark is Archivo 800 with 0.16em spacing`, `Body is 15px with line-height 1.55`, `Layout loads Archivo, Roboto and Roboto Mono with their variables` (read `layout.tsx` source).
 
-- [ ] **E-03 Shape, spacing, motion, breakpoints**
+- [x] **E-03 Shape, spacing, motion, breakpoints**
   - Files: `app/motion.css`, `app/globals.css` (utilities), `app/layout-utils.test.ts`.
   - Implement 3.4 and the breakpoints of 3.2.
   - Tests (spec: Shape, spacing and motion; Breakpoints; Phone): `Radii are pill, 10, 16, 24 and 32`, `Durations are 120, 200 and 320 ms`, `Content never hidden at rest: the entrance keyframes are transform-only and wrapped in prefers-reduced-motion no-preference`, `Reduced motion removes animation durations`, `Phone: breakpoints are defined at 520, 700, 820, 900 and 1080 px`, `Phone: grid-products is 4, then 3 below 1080 and 2 below 820 columns`, `Phone: wrap padding is 32px and 20px under 820px`.
