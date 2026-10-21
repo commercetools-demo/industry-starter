@@ -13,7 +13,7 @@ const POSTAL: Record<string, RegExp> = {
   US: /^\d{5}(-\d{4})?$/,
   CA: /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i,
 };
-const PHONE = /^[0-9+()\-.\s]{7,20}$/;
+export const PHONE = /^[0-9+()\-.\s]{7,20}$/;
 const MAX = { name: 60, street: 100, city: 60, label: 40 };
 
 export type AddressFieldError = 'required' | 'too_long' | 'invalid' | 'unsupported';

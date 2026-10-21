@@ -1370,6 +1370,39 @@
       "method": {
         "card": "Card"
       }
+    },
+    "profile": {
+      "title": "Profile",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "emailHelp": "To change your email, contact us.",
+      "phone": "Phone",
+      "phoneHelp": "Used for your default delivery address.",
+      "phoneNoAddress": "Add an address to save a phone number.",
+      "defaultAddress": "Default address",
+      "defaultAddressNone": "No saved addresses",
+      "save": "Save changes",
+      "saved": "Changes saved.",
+      "failed": "We could not save your changes. Try again.",
+      "error": {
+        "required": "This field is required.",
+        "too_long": "This is too long.",
+        "invalid": "Check this value.",
+        "no_address": "Add an address first."
+      }
+    },
+    "password": {
+      "title": "Change password",
+      "current": "Current password",
+      "new": "New password",
+      "submit": "Update password",
+      "changed": "Password updated.",
+      "wrongCurrent": "Your current password is incorrect.",
+      "policy": "Your new password does not meet the requirements.",
+      "rateLimited": "Too many attempts. Try again later.",
+      "failed": "We could not update your password. Try again.",
+      "required": "Enter your current password."
     }
   }
 }
