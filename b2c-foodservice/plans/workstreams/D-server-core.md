@@ -281,7 +281,7 @@ Read hooks (written later) return safe defaults and never throw; mutation helper
 
 Run `cd storefront && npm run check` before ticking.
 
-- [ ] **D-01 Types and utilities** `[SKILL: commercetools-storefront]`
+- [x] **D-01 Types and utilities** `[SKILL: commercetools-storefront]`
   - Files: `lib/types.ts`, `lib/utils.ts`, `lib/utils.test.ts`.
   - Implement 3.1 and 3.2. Keep A's `COUNTRY_CONFIG` and `LOCALE_COOKIE` untouched.
   - Tests (spec: Price display): `Price display: 1999 CAD in en-CA renders $19.99`, `Price display: 1999 USD in en-US renders $19.99`, `Price display: 495 USD renders $4.95 and never $5`, `Rating rounds to one decimal for display only: 4.58333 gives 4.6`, `getLocalizedString exact match`, `getLocalizedString falls back to the same language`, `getLocalizedString falls back to the default locale then the first value`, `getLocalizedString of undefined is empty`, `marketForLocale falls back to en-US`.

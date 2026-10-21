@@ -1,33 +1,43 @@
-export interface Price {
-  centAmount: number;
-  currencyCode: string;
-  discounted?: { centAmount: number; currencyCode: string };
-}
+import type { ErrorCode } from '@/lib/errors';
+
+export type LocaleKey = 'en-US' | 'en-CA';
+
+export interface Money { centAmount: number; currencyCode: string }
+/** discounted = the price to pay when present; discountName only when the discount was expanded. */
+export interface Price { value: Money; discounted?: Money; discountName?: string }
+export interface ImageRef { url: string; width?: number; height?: number; alt?: string }
+
+export type AttributeValue =
+  | string | number | boolean
+  | { key: string; label: string }
+  | Array<string | number | boolean | { key: string; label: string }>;
 
 export interface Variant {
-  id: number;
-  sku: string;
-  images: string[];
+  id: number; sku: string;
+  images: ImageRef[];
   price?: Price;
-  prices: Price[];
-  attributes: Array<{ name: string; value: unknown }>;
-  availability?: { isOnStock?: boolean };
+  attributes: Record<string, AttributeValue>;
+  availability?: { isOnStock: boolean; availableQuantity?: number };
+}
+
+export interface RatingStats {
+  average: number;
+  count: number;
+  distribution: Record<1 | 2 | 3 | 4 | 5, number>;
 }
 
 export interface Product {
-  type: 'Product';
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  categories: Array<{ id: string }>;
-  variants: Variant[];
+  id: string; key?: string; slug: string; name: string; description?: string;
+  productTypeKey?: string;
+  categoryIds: string[];
+  masterVariant: Variant; variants: Variant[];
+  attributes: Record<string, AttributeValue>;
+  rating?: RatingStats;
 }
 
 export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  parent?: { id: string };
-  children?: Category[];
+  id: string; key?: string; name: string; slug: string; description?: string;
+  imageUrl?: string; parentId?: string; orderHint?: string; children: Category[];
 }
+
+export type ApiErrorBody = { error: { code: ErrorCode; message: string } };
