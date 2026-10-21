@@ -289,6 +289,146 @@
       "added": "Added to bag"
     }
   },
+  "cart": {
+    "variant": {
+      "intensity": "Intensity {n}",
+      "capsules": "{count, plural, one {# capsule} other {# capsules}}",
+      "grams": "{n} g"
+    },
+    "drawer": {
+      "title": "Your bag ({count})",
+      "close": "Close",
+      "view": "View bag",
+      "checkout": "Checkout",
+      "subtotal": "Subtotal",
+      "loadError": "We couldn't load your bag",
+      "retry": "Retry",
+      "loading": "Loading your bag"
+    },
+    "progress": {
+      "remaining": "Add {amount} for free shipping",
+      "unlocked": "You've unlocked free shipping",
+      "label": "Progress to free shipping"
+    },
+    "empty": {
+      "title": "Your bag is empty",
+      "line": "Let's find something to brew.",
+      "drawerCta": "Start shopping",
+      "pageCta": "Shop coffee"
+    },
+    "page": {
+      "title": "Your bag",
+      "breadcrumb": "Bag",
+      "home": "Home",
+      "breadcrumbLabel": "Breadcrumb",
+      "loadError": "We couldn't load your bag"
+    },
+    "group": {
+      "collect": "Collect · {store}",
+      "collectLine": "{address} · ready in about {minutes, plural, one {# minute} other {# minutes}}",
+      "changeStore": "Change store",
+      "ship": "Shipping to you",
+      "shipLine": "Free standard over {threshold} · {minDays} to {maxDays} business days",
+      "shipLineNoThreshold": "Standard delivery · {minDays} to {maxDays} business days",
+      "subscribe": "Subscriptions",
+      "subscribeLine": "Delivered on the schedule you chose"
+    },
+    "line": {
+      "fulfil": {
+        "collect": "Collect at {store}",
+        "delivery": "Ship to me",
+        "subscribe": "Delivers {interval}"
+      },
+      "badge": {
+        "collect": "Collect · {store}",
+        "ship": "Ships to you",
+        "subscribe": "{interval}"
+      },
+      "chip": {
+        "label": "How you get this item",
+        "collect": "Collect",
+        "delivery": "Ship",
+        "collectDisabled": "Not available for collection at {store}"
+      },
+      "qty": {
+        "decrease": "Decrease quantity",
+        "increase": "Increase quantity",
+        "label": "Quantity of {name}",
+        "value": "Quantity {count}"
+      },
+      "remove": "Remove",
+      "removeNamed": "Remove {name}",
+      "firstDelivery": "First delivery by {day}, then {interval}"
+    },
+    "notice": {
+      "priceUpdated": "Price updated",
+      "outOfStock": "Out of stock",
+      "collectUnavailable": "Not in stock at {store}, try shipping",
+      "tryShipping": "Ship instead",
+      "quantityLimit": "Only {n} available"
+    },
+    "summary": {
+      "title": "Order summary",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "shipping": "Shipping",
+      "shippingFree": "Free",
+      "shippingLater": "Calculated at checkout",
+      "taxEstimated": "Estimated tax",
+      "taxIncluded": "Includes {tax} tax",
+      "taxLater": "Calculated at checkout",
+      "total": "Total",
+      "checkout": "Checkout",
+      "secure": "Secure checkout",
+      "gift": "You can add a gift note at checkout"
+    },
+    "minimum": {
+      "shortfall": "Add {shortfall} to reach the {minimum} minimum order"
+    },
+    "blocker": {
+      "outOfStock": "Remove or replace out-of-stock items to check out",
+      "collectUnavailable": "Ship the items that aren't in stock at your store to check out",
+      "priceUnavailable": "An item in your bag has no price"
+    },
+    "code": {
+      "label": "Discount code",
+      "apply": "Apply",
+      "remove": "Remove code {code}",
+      "applied": "Applied codes",
+      "error": {
+        "DoesNotExist": "That code isn't valid",
+        "NotActive": "That code has expired",
+        "NotValid": "That code isn't valid",
+        "DoesNotMatchCart": "This code doesn't apply to your bag",
+        "MaxApplicationReached": "This code has already been used",
+        "ApplicationStoppedByPreviousDiscount": "This code can't be combined with your other discounts",
+        "generic": "We couldn't apply that code"
+      },
+      "reason": {
+        "NotActive": "Expired",
+        "NotValid": "Not valid",
+        "DoesNotMatchCart": "No longer applies to your bag",
+        "MaxApplicationReached": "Already used",
+        "ApplicationStoppedByPreviousDiscount": "Can't be combined with other offers"
+      }
+    },
+    "nudge": {
+      "text": "{machine} needs capsules. Add starter capsules?",
+      "add": "Add",
+      "addNamed": "Add {capsule} for {price}",
+      "added": "Capsules added to your bag"
+    },
+    "dropped": {
+      "title": "{count, plural, one {# item} other {# items}} could not be moved to your new region: {names}",
+      "dismiss": "Dismiss"
+    },
+    "error": {
+      "conflict": "Your bag changed, we've refreshed it",
+      "generic": "Something went wrong. Please try again.",
+      "storeRequired": "Choose a store to collect from",
+      "collectUnavailable": "That item isn't available for collection there"
+    }
+  },
   "store": {
     "picker": {
       "title": "Choose your store",

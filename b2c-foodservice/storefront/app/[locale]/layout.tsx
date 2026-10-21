@@ -2,6 +2,7 @@ import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { unstable_serialize } from 'swr';
+import CartDrawer from '@/components/cart/CartDrawer';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import PromiseBar from '@/components/layout/PromiseBar';
@@ -48,6 +49,7 @@ export default async function LocaleLayout({
       <Footer categories={shell.categories} />
       {/* Dialogs sit outside the header's stacking context so no page layer can cover them. */}
       <StorePicker />
+      <CartDrawer />
       <LocaleChooser markets={shell.markets} />
     </ShellProviders>
   );
