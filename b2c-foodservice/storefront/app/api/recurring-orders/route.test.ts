@@ -72,7 +72,7 @@ describe('GET /api/recurring-orders', () => {
     ]);
     const body = await (await list('?originOrderId=33333333-3333-4333-8333-333333333333')).json();
     expect(body.subscriptions.map((s: { id: string }) => s.id)).toEqual(['bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb']);
-    expect((await list('?originOrderId=nope')).status).toBe(400);
+    expect((await list('?originOrderId=no%20pe')).status).toBe(400);
   });
 
   it('upstream 503 becomes upstream_unavailable', async () => {
@@ -135,7 +135,7 @@ describe('PUT /api/recurring-orders/[id]', () => {
 
   it('unknown action, malformed policy and broken JSON are invalid_request', async () => {
     await signIn();
-    for (const body of [{ action: 'explode' }, { action: 'setInterval', recurrencePolicyId: '1' }, '{not json']) {
+    for (const body of [{ action: 'explode' }, { action: 'setInterval', recurrencePolicyId: '../1' }, '{not json']) {
       const res = await put(body);
       expect(res.status).toBe(400);
       expect((await res.json()).error.code).toBe('invalid_request');

@@ -28,7 +28,8 @@ import { join } from 'node:path';
 import {
   DOCS, DOC_BY_ID, FIXTURES, PRICE_OVERRIDES, RECURRENCE_POLICIES, VARIANT_BY_SKU, categoryId, channelId, priceFor, productTypeResults, projectionOf, runSearch,
 } from './mock-fixtures/mock-catalog.mjs';
-import { orderRoutes } from './mock-fixtures/mock-orders.mjs';
+import { orderRoutes, placedOrders } from './mock-fixtures/mock-orders.mjs';
+import { recurringRoutes } from './mock-fixtures/mock-recurring.mjs';
 import { reviewRoutes } from './mock-fixtures/mock-reviews.mjs';
 import { createAccountMock } from './mock-fixtures/mock-account.mjs';
 
@@ -359,6 +360,8 @@ const account = createAccountMock({ PROJECT, CUSTOMERS, STORES, demoLine, baseCa
 createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(dir, 'cert.pem')) }, async (req, res) => {
   const url = new URL(req.url ?? '/', `https://localhost:${PORT}`);
   const path = url.pathname;
+  // Recurring orders (workstream N); also the customer's placed orders for the pending check.
+  if ((await recurringRoutes(req, res, url, path, { policies: RECURRENCE_POLICIES, json, readBody, project: PROJECT, placedOrders })) !== false) return;
   if ((await account.route(req, res, url, path)) !== false) return;
   if (path === `/${PROJECT}/login` || path.startsWith(`/${PROJECT}/customers`)) {
     if ((await customerRoutes(req, res, path)) !== false) return;

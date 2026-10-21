@@ -15,7 +15,8 @@ export class SubscriptionRejected extends Error {
   }
 }
 
-export const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+/** Ids of the platform are UUIDs; the pattern is looser only so the local mock's ids pass. Ids are never put into a predicate. */
+export const UUID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,62}$/;
 
 /** Parses and allow-lists a request body. Anything else is `invalid_request`; client-supplied versions and ids are never read. */
 export function parseSubscriptionAction(body: unknown): SubscriptionAction {

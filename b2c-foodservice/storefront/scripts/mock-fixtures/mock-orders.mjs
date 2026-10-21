@@ -9,9 +9,14 @@
 //   POST /<project>/sessions                                -> a session id (the Sessions API; use CTP_SESSION_URL to point the app here)
 // Nothing here is a real credential.
 
+import { createRecurringOrders } from './mock-recurring.mjs';
+
 const STATE_CHAIN = ['mcf-order-ordered', 'mcf-order-preparing', 'mcf-order-ready-for-collection', 'mcf-order-collected'];
 const ORDERS = new Map();
 let seq = 0;
+
+/** Every order the mock placed (read by the recurring-orders mock for the pending check). */
+export const placedOrders = () => [...ORDERS.values()];
 
 /** The order a finished hosted Checkout would have created from `cart`. */
 function orderFromCart(cart, body, deps) {
@@ -58,7 +63,10 @@ export async function orderRoutes(req, res, url, path, deps) {
     if (ORDERS.size && [...ORDERS.values()].some((o) => o.orderNumber === body.orderNumber)) {
       return json(res, 409, { statusCode: 409, message: 'duplicate order number', errors: [{ code: 'DuplicateField', field: 'orderNumber' }] });
     }
-    return json(res, 201, orderFromCart(cart, body, deps));
+    const created = orderFromCart(cart, body, deps);
+    // The platform creates the recurring orders itself (documented Method A; workstream N).
+    if (process.env.MOCK_RECURRING !== '0') createRecurringOrders(created, deps.policies);
+    return json(res, 201, created);
   }
   if (path === '/__mock/orders') return json(res, 200, [...ORDERS.values()]);
   if (path === `/${project}/sessions` && req.method === 'POST') {

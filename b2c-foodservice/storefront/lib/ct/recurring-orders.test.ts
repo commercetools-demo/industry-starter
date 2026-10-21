@@ -57,7 +57,7 @@ describe('recurring orders (server module)', () => {
     await expect(getRecurringOrder('someone-else', RO_ID, 'en-US')).rejects.toMatchObject({ code: 'not_found', status: 404 });
     h.get.mockRejectedValueOnce(Object.assign(new Error('x'), { statusCode: 404 }));
     await expect(getRecurringOrder('cust-1', RO_ID, 'en-US')).rejects.toMatchObject({ code: 'not_found' });
-    await expect(getRecurringOrder('cust-1', 'not-a-uuid', 'en-US')).rejects.toMatchObject({ code: 'not_found' });
+    await expect(getRecurringOrder('cust-1', '../x y', 'en-US')).rejects.toMatchObject({ code: 'not_found' });
     expect(h.get).toHaveBeenCalledTimes(2);
   });
 

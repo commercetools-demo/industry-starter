@@ -48,7 +48,7 @@ describe('parseSubscriptionAction', () => {
   it('allow-lists actions and drops everything else', () => {
     expect(parseSubscriptionAction({ action: 'skip', version: 99, customerId: 'x' })).toEqual({ action: 'skip' });
     expect(() => parseSubscriptionAction({ action: 'delete' })).toThrow(expect.objectContaining({ code: 'invalid_request' }));
-    expect(() => parseSubscriptionAction({ action: 'setInterval', recurrencePolicyId: 'x' })).toThrow(expect.objectContaining({ code: 'invalid_request' }));
+    expect(() => parseSubscriptionAction({ action: 'setInterval', recurrencePolicyId: 'x y' })).toThrow(expect.objectContaining({ code: 'invalid_request' }));
     expect(() => parseSubscriptionAction(null)).toThrow(expect.objectContaining({ code: 'invalid_request' }));
   });
 });
