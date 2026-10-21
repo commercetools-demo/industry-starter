@@ -277,3 +277,62 @@ export interface Cart {
   nudge: CartNudge | null;
 }
 export interface DroppedLine { sku: string; name: string; reason: 'no-price' | 'unknown' }
+
+// Workstream L: account area. `OrderDetailView` stands alone until K's `OrderView` lands (Q-L-16).
+export type OrderStatusKind = 'ordered' | 'preparing' | 'ready' | 'shipped' | 'completed' | 'cancelled';
+/** Keys of the seeded `mcf-order-*` states without the prefix. */
+export type OrderStateKey = 'ordered' | 'preparing' | 'ready-for-collection' | 'collected';
+export type OrderFilter = 'all' | 'in-progress' | 'ready' | 'completed';
+export interface OrderCollectInfo { storeName: string; hours: string | null; lat: number | null; lng: number | null }
+export interface OrderListItem {
+  id: string; orderNumber: string; createdAt: string; totalCents: number; currency: string;
+  status: OrderStatusKind; hasCollect: boolean; hasShip: boolean;
+  thumbs: { imageUrl: string | null; name: string }[]; itemCount: number;
+  collect: OrderCollectInfo | null;
+}
+export interface OrderLineView {
+  id: string; sku: string; name: string; imageUrl: string | null; quantity: number;
+  unitCents: number; totalCents: number; fulfilment: Fulfilment; storeName: string | null;
+}
+export type ReturnShipmentState = 'Advised' | 'Returned' | 'BackInStock' | 'Unusable';
+export type ReturnPaymentState = 'NonRefundable' | 'Initial' | 'Refunded' | 'NotRefunded';
+export interface OrderDelivery {
+  id: string; createdAt: string; carrier: string | null; trackingId: string | null; trackingUrl: string | null;
+  items: { lineId: string; name: string; quantity: number }[];
+}
+export interface OrderReturnItem {
+  id: string; lineId: string; name: string; quantity: number; reason: string | null;
+  shipmentState: ReturnShipmentState; paymentState: ReturnPaymentState;
+}
+export interface OrderReturn { id: string; createdAt: string; trackingId: string | null; items: OrderReturnItem[] }
+export interface OrderDetailView {
+  id: string; orderNumber: string; createdAt: string; currency: string; status: OrderStatusKind;
+  stateKey: OrderStateKey | null; shipmentState: string | null; paymentState: string | null;
+  hasCollect: boolean; hasShip: boolean;
+  lines: OrderLineView[];
+  subtotalCents: number; shippingCents: number | null; taxCents: number | null; totalCents: number;
+  collect: (OrderCollectInfo & { addressLine: string | null; phone: string | null }) | null;
+  shippingAddress: { name: string; line: string; city: string; state: string | null; postalCode: string; country: string } | null;
+  deliveries: OrderDelivery[];
+  returns: OrderReturn[];
+  canReturn: boolean; returnWindowEndsAt: string | null;
+  /** Units of each line that can still be returned (line id to quantity). */
+  returnable: Record<string, number>;
+}
+export interface AccountSummary { openOrders: number | null; readyForCollection: number | null; savedItems: number | null }
+export type ReorderSkipReason = 'unavailable' | 'out_of_stock' | 'not_found' | 'price_missing';
+export interface ReorderResult {
+  added: { sku: string; name: string; quantity: number; fulfilment: Fulfilment }[];
+  skipped: { sku: string; name: string; reason: ReorderSkipReason }[];
+  cart: CartSummary;
+}
+export interface SavedItem { productId: string; variantId: number | null; lineItemId: string; addedAt: string; product: ProductSummary | null }
+export interface SavedList { id: string; version: number; items: SavedItem[] }
+export interface AddressInput {
+  label?: string; firstName: string; lastName: string; streetName: string; additionalStreetInfo?: string;
+  city: string; state?: string; postalCode: string; country: string; phone?: string;
+}
+export interface AccountProfile {
+  firstName: string; lastName: string; email: string; phone: string | null; defaultShippingAddressId: string | null;
+}
+export interface PaymentMethodView { id: string; version: number; label: string; method: string; isDefault: boolean }

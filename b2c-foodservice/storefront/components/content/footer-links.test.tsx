@@ -33,9 +33,10 @@ describe('Wiring', () => {
     );
   });
 
-  it('account links stay out of BUILT_ROUTES until J and L enable them', () => {
-    expect([...BUILT_ROUTES].some((r) => r.startsWith('/account'))).toBe(false);
-    expect(footerHref('/account/orders')).toBe('/');
+  it('account tab links are built routes (workstream L); an unbuilt account path still goes home', () => {
+    expect(BUILT_ROUTES.has('/account/orders')).toBe(true);
+    expect(footerHref('/account/orders')).toBe('/account/orders');
+    expect(footerHref('/account/does-not-exist')).toBe('/');
     expect(footerHref('/faq?q=anything')).toBe('/faq?q=anything');
   });
 

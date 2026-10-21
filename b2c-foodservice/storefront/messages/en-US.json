@@ -1133,5 +1133,42 @@
       "loadError": "We could not load your reviews. Please try again.",
       "unavailable": "This product is no longer available."
     }
+  },
+  "account": {
+    "eyebrow": "My account",
+    "greeting": "Hi, {first}",
+    "status": {
+      "open": "{count, plural, one {# open order} other {# open orders}}",
+      "openNone": "No open orders",
+      "ready": "{count} ready for collection",
+      "unavailable": "Orders unavailable"
+    },
+    "tabs": {
+      "label": "Account",
+      "orders": "Orders",
+      "collection": "Collection",
+      "subscriptions": "Subscriptions",
+      "saved": "Saved",
+      "addresses": "Addresses",
+      "payments": "Payment methods",
+      "reviews": "Reviews",
+      "profile": "Profile",
+      "settings": "Settings",
+      "signOut": "Sign out"
+    },
+    "panel": {
+      "unavailable": "{panel} is unavailable right now.",
+      "retry": "Try again",
+      "loading": "Loading…"
+    },
+    "subscriptions": {
+      "title": "Subscriptions",
+      "stub": "No subscriptions yet.",
+      "cta": "Shop coffee"
+    },
+    "reviews": {
+      "stub": "No reviews yet."
+    },
+    "greetingNoName": "Hi there"
   }
 }

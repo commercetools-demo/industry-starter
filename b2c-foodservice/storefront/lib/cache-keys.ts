@@ -27,8 +27,15 @@ export const KEY_RECURRENCE_POLICIES = 'recurrence-policies';
 /** First element of every user-scoped SWR key (string keys and array keys). Sign-out evicts all of them (workstream J). */
 export const USER_SCOPED_KEYS: readonly string[] = [
   'account', 'cart', 'cart-count', 'checkout', 'orders', 'order', 'addresses', 'saved-items', 'my-reviews',
-  'recurring-orders', 'payment-methods',
+  'recurring-orders', 'payment-methods', 'account-summary', 'profile',
 ];
+
+// Workstream L: account area. Every key carries the customer id; the first element is in USER_SCOPED_KEYS.
+export const keyAccountSummary = (customerId: string) => ['account-summary', customerId] as const;
+export const keyPaymentMethods = (customerId: string) => ['payment-methods', customerId] as const;
+export const keyOrdersPage = (customerId: string, filter: string, page: number) =>
+  ['orders', customerId, filter, page] as const;
+export const keyProfile = (customerId: string) => ['profile', customerId] as const;
 
 export const TAG = {
   project: 'project',
