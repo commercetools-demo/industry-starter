@@ -24,3 +24,4 @@
 - (J) When workstream I lands: replace `AuthCart` with its `CartView`, mutate `KEY_CART` in `useAuthActions`, and add a real guest-bag browser check (B6) instead of the `/api/dev/session` simulation.
 - (J) Rate limiter is per instance (`lib/rate-limit.ts`); move to a shared store when hosting runs several instances (Q-J-12, OA-05).
 - (J) `scripts/mock-ct-server.mjs` now answers `POST /login`, `POST /customers`, `GET /customers/:id` (six demo customers, password `MOCK_DEMO_PASSWORD`, default `mock-demo-pass-1`); remove with the rest of the mock in Q.
+- (P) Product and category entries in `sitemap.ts`; one shared rate limiter for J and P; the browser tool needs the repo path allowed so evidence screenshots can be saved

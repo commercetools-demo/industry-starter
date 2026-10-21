@@ -1,3 +1,5 @@
+import { POLICY_SLUGS, aboutHref, contactHref, faqHref, journalHref, policyHref } from '@/lib/routes';
+
 /**
  * Footer link lists. `labelKey` is under `shell.footer.link.`; `category` links resolve through the category tree.
  * Targets owned by other workstreams (P content pages, J account) are listed in BUILT_ROUTES once they exist; until then
@@ -36,7 +38,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     collectionOnly: true,
     links: [
       { labelKey: 'chooseStore', action: 'choose-store' },
-      { labelKey: 'howCollectionWorks', href: '/faq' },
+      { labelKey: 'howCollectionWorks', href: faqHref('collecting-how') },
     ],
   },
   {
@@ -63,9 +65,19 @@ export const FOOTER_LEGAL: Array<{ labelKey: 'privacy' | 'terms' | 'accessibilit
   { labelKey: 'accessibility', href: '/policies/accessibility' },
 ];
 
-/** Routes that exist in the app. Add a path here when its page lands (workstream P and J); everything else links to `/`. */
-export const BUILT_ROUTES: ReadonlySet<string> = new Set<string>();
+/**
+ * Routes that exist in the app. Add a path here when its page lands (workstream P and J); everything else links to `/`.
+ * P built the content pages (about, contact, FAQ, journal, policies); the account links wait for J and L.
+ */
+export const BUILT_ROUTES: ReadonlySet<string> = new Set<string>([
+  aboutHref(),
+  contactHref(),
+  faqHref(),
+  journalHref(),
+  ...POLICY_SLUGS.map(policyHref),
+]);
 
+/** The path decides (a query such as `?q=` does not), so a deep link into a built page stays a link. */
 export function footerHref(href: string): string {
-  return BUILT_ROUTES.has(href) ? href : '/';
+  return BUILT_ROUTES.has(href.split('?')[0]) ? href : '/';
 }

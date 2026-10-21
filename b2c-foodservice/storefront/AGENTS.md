@@ -107,3 +107,9 @@ New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import
 - Client: `useAccount()` (`customer` undefined while loading, null for a guest), `useAuthActions()` (`signIn`, `register`, `demoSignIn`, `signOut`; failures throw `AuthApiError` with `code` and `extra`). `USER_SCOPED_KEYS` in `lib/cache-keys.ts`: sign-out evicts them; a new user-scoped SWR key must start with one of those names.
 - Demo sign-in (D-040): server list in `lib/auth/demo-customers.ts` (must equal `seed/src/data/customers.ts`, a test checks), env `DEMO_LOGIN_ENABLED=true` and `DEMO_LOGIN_PASSWORD`. Emails and the password never reach the browser.
 - Login and register responses carry `{ customer: AppCustomer, cart: AuthCart | null }`; the session is rewritten with a fresh cookie by `signedInResponse`.
+## Content and error pages (workstream P)
+
+- Content is typed data in `content/*.ts` behind `lib/content/` (`resolveLocalized`, `Block`, `renderTokens`). Pages use `ContentPage` and `Blocks`; no raw HTML (the one `dangerouslySetInnerHTML` is `components/content/JsonLd.tsx`). Token figures come from `getPageFigures(locale)`, which never throws (800 ms race).
+- Content hrefs: `lib/routes.ts` (`aboutHref`, `policyHref`, `journalHref`, `signInHref`, `searchHref`). Add a built route to `BUILT_ROUTES` in `lib/nav/footer-config.ts`.
+- Error pages: one `components/error/ErrorPage.tsx` (static, no session or commerce). Policy links in checkout use `components/content/PolicyLink.tsx` (new tab).
+- `POST /api/contact` needs `CONTACT_WEBHOOK_URL`; local stand-in `node scripts/dev/mock-contact-receiver.mjs`. Unknown `/api/*` answers JSON 404.

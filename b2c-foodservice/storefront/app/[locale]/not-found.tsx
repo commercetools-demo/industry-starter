@@ -1,11 +1,6 @@
-import { useTranslations } from 'next-intl';
+import ErrorPage from '@/components/error/ErrorPage';
 
+/** 404 inside a valid locale: the shell is rendered by the locale layout. Static, no data. */
 export default function NotFound() {
-  const t = useTranslations('errors');
-  return (
-    <div>
-      <h1>{t('notFoundTitle')}</h1>
-      <p>{t('notFoundBody')}</p>
-    </div>
-  );
+  return <ErrorPage kind="not-found" />;
 }
