@@ -1,12 +1,17 @@
 import 'server-only';
-import type { Cart } from '@commercetools/platform-sdk';
+import type { Cart, CartAddLineItemAction } from '@commercetools/platform-sdk';
 import { apiRoot } from '@/lib/ct/client';
+import { getStoresForCountry } from '@/lib/ct/channels';
+import { getStoreStock } from '@/lib/ct/inventory';
+import { getProductBySku, getRecurrencePolicyByKey } from '@/lib/ct/product-detail';
 import { updateWithRetry } from '@/lib/ct/retry';
+import type { DomainErrorCode } from '@/lib/api-domain';
 import { AppError } from '@/lib/errors';
 import { mapCartSummary } from '@/lib/mappers/cart';
 import { ensureAnonymousId, type Session } from '@/lib/session';
 import { CART_SHIPPING_MODE } from '@/lib/shop-config';
 import type { CartSummary } from '@/lib/types';
+import { marketForCountry } from '@/lib/utils';
 
 /**
  * Cart core (workstream G, decision D-024). Exports for H and I:
@@ -84,12 +89,88 @@ function toLineError(e: unknown): unknown {
   return e;
 }
 
+/** A line the shopper cannot add, with a code the product page explains (an `api-domain` code, never commercetools text). */
+export class LineRejected extends Error {
+  constructor(
+    readonly code: DomainErrorCode,
+    readonly status: number,
+    readonly extra: Record<string, string | number> = {},
+  ) {
+    super(code);
+    this.name = 'LineRejected';
+  }
+}
+
+/** What the validated input resolved to: the store channel for collect, the policy id for subscribe. */
+export interface LineTargets { channelId?: string; policyId?: string }
+
+const LINE_TYPE = { typeId: 'type', key: 'mcf-line-fulfilment' } as const;
+
+/**
+ * The `addLineItem` update action for a line (workstream H, 3.10). Pure. Exported for I (re-adding a line) and K.
+ *  - delivery: the SKU, the quantity and `fulfilment = delivery`; no supply channel.
+ *  - collect: also the store's `supplyChannel` (a resource identifier object, never a string) and `fulfilment = collect`,
+ *    so a different store or a delivery line of the same SKU is a different line.
+ *  - subscribe: also `recurrenceInfo { recurrencePolicy, priceSelectionMode: 'Fixed' }` and `fulfilment = subscribe`.
+ * A one-time line never carries a `recurrenceInfo` key, not even `undefined`.
+ */
+export function buildAddLineAction(input: AddLineInput, targets: LineTargets = {}): CartAddLineItemAction {
+  const base = {
+    action: 'addLineItem' as const,
+    sku: input.sku,
+    quantity: input.quantity,
+    custom: { type: LINE_TYPE, fields: { fulfilment: input.fulfilment } },
+  };
+  if (input.fulfilment === 'collect') {
+    if (!targets.channelId) throw new LineRejected('unknown_store', 400);
+    return { ...base, supplyChannel: { typeId: 'channel', id: targets.channelId } };
+  }
+  if (input.fulfilment === 'subscribe') {
+    if (!targets.policyId) throw new LineRejected('unknown_policy', 400);
+    return {
+      ...base,
+      recurrenceInfo: { recurrencePolicy: { typeId: 'recurrence-policy', id: targets.policyId }, priceSelectionMode: 'Fixed' },
+    };
+  }
+  return base;
+}
+
+/** Checks a collect or subscribe line against the project before the cart is touched. Delivery needs nothing. */
+async function resolveTargets(market: CartMarket, input: AddLineInput): Promise<LineTargets> {
+  if (input.fulfilment === 'delivery') return {};
+  if (input.fulfilment === 'collect') {
+    if (!marketForCountry(market.country)?.collection) throw new LineRejected('collect_not_available_in_market', 400);
+    const stores = await getStoresForCountry(market.country, market.locale);
+    const store = stores.find((s) => s.key === input.storeKey);
+    if (!store) throw new LineRejected('unknown_store', 400);
+    const available = await getStoreStock(input.sku, store.id);
+    if (available < input.quantity) throw new LineRejected('not_available_for_collection', 409, { available });
+    return { channelId: store.id };
+  }
+  const policy = await getRecurrencePolicyByKey(input.recurrencePolicyKey, market.locale);
+  if (!policy) throw new LineRejected('unknown_policy', 400);
+  const projection = await getProductBySku(input.sku, market);
+  if (!projection) throw new AppError('not_found', 404);
+  const variant = [projection.masterVariant, ...projection.variants].find((v) => v.sku === input.sku);
+  const subscribable = projection.attributes?.find((a) => a.name === 'subscribable')?.value === true;
+  const hasPrice = (variant?.recurrencePrices ?? []).some(
+    (p) =>
+      p.recurrencePolicy?.id === policy.id &&
+      p.value.currencyCode === market.currency &&
+      (p.country === undefined || p.country === market.country) &&
+      p.value.centAmount > 0,
+  );
+  if (!subscribable || !hasPrice) throw new LineRejected('price_unavailable', 422);
+  return { policyId: policy.id };
+}
+
 export async function addLine(
   session: Session,
   market: CartMarket,
   input: AddLineInput,
 ): Promise<{ cart: CartSummary; session: Session }> {
-  if (input.fulfilment !== 'delivery') throw new AppError('bad_request', 501);
+  const targets = await resolveTargets(market, input);
+  const action = buildAddLineAction(input, targets);
   let next = session;
   let cart = session.cartId ? await getActiveCart(session.cartId) : null;
   if (!cart) {
@@ -102,28 +183,12 @@ export async function addLine(
     const updated = await updateWithRetry(
       async () => (await apiRoot.carts().withId({ ID: cartId }).get().execute()).body,
       async (current) =>
-        (
-          await apiRoot
-            .carts()
-            .withId({ ID: cartId })
-            .post({
-              body: {
-                version: current.version,
-                actions: [
-                  {
-                    action: 'addLineItem',
-                    sku: input.sku,
-                    quantity: input.quantity,
-                    custom: { type: { typeId: 'type', key: 'mcf-line-fulfilment' }, fields: { fulfilment: 'delivery' } },
-                  },
-                ],
-              },
-            })
-            .execute()
-        ).body,
+        (await apiRoot.carts().withId({ ID: cartId }).post({ body: { version: current.version, actions: [action] } }).execute()).body,
     );
     return { cart: mapCartSummary(updated), session: next };
   } catch (e) {
+    const code = (e as CtErrorLike)?.body?.errors?.[0]?.code;
+    if (input.fulfilment === 'subscribe' && code === 'MissingPriceForProduct') throw new LineRejected('price_unavailable', 422);
     throw toLineError(e);
   }
 }
