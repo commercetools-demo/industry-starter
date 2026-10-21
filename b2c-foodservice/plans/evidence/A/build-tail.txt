@@ -1,0 +1,12 @@
+
+Route (app)
+┌ ƒ /_not-found
+├ ƒ /[locale]
+└ ƒ /api/health
+
+
+ƒ Proxy (Middleware)
+
+ƒ  (Dynamic)  server-rendered on demand
+
+bundle scan: ok (checked 3 of 3 secret values)

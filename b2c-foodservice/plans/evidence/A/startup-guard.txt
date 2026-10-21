@@ -1,0 +1,8 @@
+== SESSION_SECRET=short npm run dev ==
+Error [EnvError]: An error occurred while loading instrumentation hook: SESSION_SECRET must be at least 32 characters
+> 60 |     throw new EnvError('SESSION_SECRET', 'SESSION_SECRET must be at least 32 characters');
+  variable: 'SESSION_SECRET'
+
+== EXPECTED_PROJECT_KEY=other-project npm run dev ==
+Error [EnvError]: An error occurred while loading instrumentation hook: Wrong commercetools project: CTP_PROJECT_KEY="spec-test-b2c-food" but EXPECTED_PROJECT_KEY="other-project"
+  variable: 'CTP_PROJECT_KEY'

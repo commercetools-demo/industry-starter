@@ -1,0 +1,1 @@
+{"blocked":"OA-01","note":"No credentials yet. With placeholder values the route returns the documented failure shape.","status":502,"body":{"ok":false,"error":{"code":"upstream_unavailable","message":"commercetools did not answer"}}}

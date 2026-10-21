@@ -367,7 +367,7 @@ Do them in order. Commit after each. Run `cd storefront && npm run check` before
   - Steps: section 3.11. Test creates a temp `.next/static/chunks/a.js` containing a fake secret value and expects one problem naming the variable (not the value) and none when absent.
   - Tests (spec: Client bundle scan): `Client bundle scan finds a secret value in .next/static and reports only the name`, `Client bundle scan passes on a clean build output`.
 
-- [ ] **A-12 Agent rules, live checks and evidence** `[SKILL: commercetools-storefront]`
+- [x] **A-12 Agent rules, live checks and evidence** `[SKILL: commercetools-storefront]`
   - Files: `AGENTS.md`, `CLAUDE.md`, `plans/evidence/A/*`.
   - Steps: section 3.14. Then run the whole Browser recipe (section 6) and Self-verification (section 7).
   - Tests: `agent-rules.test.ts`: `New contributor: CLAUDE.md and AGENTS.md name the commands, the lint rules and the two plan files` (read both files, assert they contain `npm run check`, `plans/TODO-MANUAL-TESTING.md`, `plans/QUESTIONS.md`, `@/i18n/routing`, and that AGENTS.md still contains `BEGIN:nextjs-agent-rules`).
