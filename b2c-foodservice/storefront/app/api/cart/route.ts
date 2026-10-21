@@ -2,6 +2,7 @@ import { handle } from '@/lib/api';
 import { domainError } from '@/lib/api-domain';
 import { cartResponse, rejectionResponse, STORE_KEY_PATTERN } from '@/lib/cart/respond';
 import { CodeRejected, applyDiscountCode, changeCollectionStore, getCartView, removeDiscountCode } from '@/lib/ct/cart';
+import { limitClient } from '@/lib/http/limit';
 import { getMarket, getSession } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
@@ -34,6 +35,8 @@ export const PATCH = handle('/api/cart', async (req) => {
   const [session, market] = await Promise.all([getSession(), getMarket()]);
   try {
     if (b.action === 'applyDiscountCode' && typeof b.code === 'string') {
+      const limited = limitClient(req, 'discount-code', { limit: 20, windowMs: 10 * 60 * 1000 });
+      if (limited) return limited;
       const code = b.code.trim();
       // A code with characters no code has can only be unknown: same answer as commercetools gives, cart unchanged.
       if (!CODE_PATTERN.test(code)) {

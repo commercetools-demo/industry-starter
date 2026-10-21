@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { handle, jsonError } from '@/lib/api';
 import { domainError } from '@/lib/api-domain';
 import { LineRejected, addLine, type AddLineInput } from '@/lib/ct/cart';
+import { limitClient } from '@/lib/http/limit';
 import { SKU_PATTERN } from '@/lib/ct/inventory';
 import { createSessionToken, getMarket, getSession, setSessionCookie } from '@/lib/session';
 
@@ -43,6 +44,8 @@ function parse(raw: unknown): AddLineInput | null {
  * The cart is created from the session market, never from client input. The session cookie gets cartId and anonymousId.
  */
 export const POST = handle('/api/cart/lines', async (req) => {
+  const limited = limitClient(req, 'cart-lines', { limit: 200, windowMs: 10 * 60 * 1000 });
+  if (limited) return limited;
   const input = parse(await req.json().catch(() => null));
   if (!input) return jsonError('validation_failed', 400);
   const [session, market] = await Promise.all([getSession(), getMarket()]);

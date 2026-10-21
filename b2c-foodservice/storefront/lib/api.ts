@@ -1,6 +1,7 @@
 import 'server-only';
 import { unstable_rethrow } from 'next/navigation';
 import { AppError, SAFE_MESSAGES, errorResponse, type ErrorCode } from '@/lib/errors';
+import { guardRequest } from '@/lib/http/guard';
 import { getSession, type Session } from '@/lib/session';
 
 type Ctx = { params: Promise<Record<string, string>> };
@@ -15,6 +16,11 @@ export function handle(
   fn: (req: Request, ctx: Ctx) => Promise<Response>,
 ): (req: Request, ctx: Ctx) => Promise<Response> {
   return async (req, ctx) => {
+    const refused = guardRequest(req);
+    if (refused) {
+      const message = refused.code === 'forbidden_origin' ? 'The request origin is not allowed' : 'The request must be JSON';
+      return Response.json({ error: { code: refused.code, message } }, { status: refused.status });
+    }
     try {
       return await fn(req, ctx);
     } catch (e) {

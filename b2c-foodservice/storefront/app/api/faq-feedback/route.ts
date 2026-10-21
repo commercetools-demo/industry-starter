@@ -1,5 +1,6 @@
 import { FAQ_TOPICS, allFaqIds } from '@/content/faq';
 import { handle, jsonError } from '@/lib/api';
+import { limitClient } from '@/lib/http/limit';
 import { AppError } from '@/lib/errors';
 import { isLocaleKey } from '@/lib/utils';
 
@@ -13,6 +14,8 @@ const TIMEOUT_MS = 2500;
  * without it one structured log line is the collector (Q-P-7). No personal data is sent or logged.
  */
 export const POST = handle('/api/faq-feedback', async (req) => {
+  const limited = limitClient(req, 'faq-feedback', { limit: 60, windowMs: 10 * 60 * 1000 });
+  if (limited) return limited;
   const raw: unknown = await req.json().catch(() => null);
   const body = (raw && typeof raw === 'object' ? raw : {}) as { questionId?: unknown; helpful?: unknown; locale?: unknown };
   if (typeof body.questionId !== 'string' || !allFaqIds(FAQ_TOPICS).includes(body.questionId) || typeof body.helpful !== 'boolean') {
