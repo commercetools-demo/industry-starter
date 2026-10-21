@@ -21,7 +21,7 @@ Updated 2026-10-21 (owner answers D-030 to D-039 applied to every plan). States:
 | L | Account area | 9 | Not started | |
 | M | Reviews and ratings | 9 | Not started | |
 | N | Subscriptions | 10 | Not started | |
-| O | Home page | 10 | Not started | |
+| O | Home page | 10 | Ready for review | O-00 to O-10 done against the mock catalogue; FIX-1 header overflow and FIX-2 URL market rule done; live read-back is OA-O-1; see plans/evidence/O/README.md |
 | P | Content and error pages | 10 | Ready for review (partial) | P-00 to P-11, P-13 to P-15 done; P-12 consent-link half blocked on K; scenario "Expired session is not a refusal" blocked on L; evidence plans/evidence/P/; owner rows SO-P1 to SO-P5, OA-P1, M-P-01, M-P-02, M-P-04, OA-P2, OA-P3 |
 | Q | Quality and release | 11 | Not started | |
 

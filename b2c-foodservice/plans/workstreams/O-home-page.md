@@ -254,24 +254,24 @@ Common rules: test first; `npm run check` before ticking; commit `ws-o: O-0x sum
 - [x] **O-07 Editorial and subscribe strips.** `EditorialStrip.tsx`, `SubscribeStrip.tsx`. Tests: `Editorial content: strip text and image come from content`, `Entry point: Shop subscriptions links to the listing filtered to subscribable products`, `subscribe strip hidden when nothing is subscribable`, `strip never shows a hard coded percent`.
 - [x] **O-08 Page, metadata, structured data.** `app/[locale]/page.tsx`, `generateMetadata`, JSON-LD, composition order, Suspense boundaries. Tests: `Anonymous visitor: page renders shared merchandising and no account slot`, `Expired session: page renders as anonymous with no name and no cart count` (cookie with an expired JWT built with `jose`), `tampered cookie renders as anonymous`, `metadata has canonical and three alternates`, `json-ld is valid json with a SearchAction`, `page does not set cache headers that allow sharing across sessions` (response `Cache-Control` is not public). [SKILL: commercetools-storefront]
 - [x] **O-09 Messages, responsive, motion.** Keys of D9 in two catalogues; CSS for D1 and D11 (use E's utilities; no raw values); entrance animation inside `prefers-reduced-motion: no-preference`. Tests: `catalogues have the same home keys`, `entrance animation is disabled under reduced motion` (CSS text assertion), `no raw colour values in home components` (lint passes). `npm run check`, `npm run build` (home route listed as dynamic).
-- [ ] **O-10 Browser and data verification** (sections 6 and 7); evidence in `plans/evidence/O/`; add owner rows; `STATUS.md` `Ready for review`.
+- [x] **O-10 Browser and data verification** (sections 6 and 7); evidence in `plans/evidence/O/`; add owner rows; `STATUS.md` `Ready for review`.
 
 ## 5. Scenarios checklist
 
 `design-home-page` (primary):
 
-- [ ] Hero product: `Hero.test.tsx` `Hero product: glass card links to the product page and shows its price`.
-- [ ] Narrow screen: `Hero.test.tsx` `Narrow screen: image column has display none under 900 and text fills the width`; recipe step 6.5.
-- [ ] Tile order: `CategoryTiles.test.tsx` `Tile order: tiles follow the configured order capped at four`.
-- [ ] Store named: `CollectionBanner.test.tsx` `Store named: headline names the chosen store and its minutes`, `no store chosen asks to choose one`.
-- [ ] No new products: `ProductSection.test.tsx` `No new products: the New arrivals section is absent`.
-- [ ] Editorial content: `EditorialStrip.test.tsx` `Editorial content: strip text and image come from content`.
-- [ ] Entry point: `SubscribeStrip.test.tsx` `Entry point: Shop subscriptions links to the listing filtered to subscribable products`; recipe step 6.7.
+- [x] Hero product: `Hero.test.tsx` `Hero product: glass card links to the product page and shows its price`.
+- [x] Narrow screen: `Hero.test.tsx` `Narrow screen: image column has display none under 900 and text fills the width`; recipe step 6.5.
+- [x] Tile order: `CategoryTiles.test.tsx` `Tile order: tiles follow the configured order capped at four`.
+- [x] Store named: `CollectionBanner.test.tsx` `Store named: headline names the chosen store and its minutes`, `no store chosen asks to choose one`.
+- [x] No new products: `ProductSection.test.tsx` `No new products: the New arrivals section is absent`.
+- [x] Editorial content: `EditorialStrip.test.tsx` `Editorial content: strip text and image come from content`.
+- [x] Entry point: `SubscribeStrip.test.tsx` `Entry point: Shop subscriptions links to the listing filtered to subscribable products`; recipe step 6.7.
 
 `home-landing-page` (template, adapted):
 
-- [ ] Anonymous visitor: `page.test.tsx` `Anonymous visitor: page renders shared merchandising and no account slot`.
-- [ ] Expired session: `page.test.tsx` `Expired session: page renders as anonymous with no name and no cart count`; recipe step 6.9.
+- [x] Anonymous visitor: `page.test.tsx` `Anonymous visitor: page renders shared merchandising and no account slot`.
+- [x] Expired session: `page.test.tsx` `Expired session: page renders as anonymous with no name and no cart count`; recipe step 6.9.
 
 ## 6. Browser recipe (Chrome DevTools MCP)
 

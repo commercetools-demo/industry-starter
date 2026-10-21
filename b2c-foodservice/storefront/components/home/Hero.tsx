@@ -31,7 +31,7 @@ export default function Hero({
   const imageUrl = content.imageUrl ?? featured?.imageUrl ?? null;
   const lines = headlineLines(pick(content.headline, locale));
   return (
-    <section aria-labelledby="home-hero-title" className="home-hero-bg">
+    <section aria-labelledby="home-hero-title" className="home-hero-bg overflow-x-clip">
       <div className="wrap grid min-h-[520px] items-center gap-10 py-10 stack:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] max-xs:py-8">
         <div className="fade-up">
           <p className="eyebrow m-0 mb-4 !text-accent">{pick(content.eyebrow, locale)}</p>
