@@ -87,7 +87,8 @@ describe('mapOrder', () => {
   });
   it('Shipped line with no tracking has an estimate and no parcel', () => {
     const v = mapOrder(order(), ctx);
-    expect(v.ship).toMatchObject({ estimate: '2-4 business days', deliveries: [] });
+    expect(v.ship).toMatchObject({ estimate: '2-4 business days' });
+    expect(v.deliveries).toEqual([]);
   });
   it('Subscription line shows the interval', () => {
     const o = order({ lines: [ctLine({ id: 'u', sku: 'S', fulfilment: 'subscribe', policyId: 'pol' })] });

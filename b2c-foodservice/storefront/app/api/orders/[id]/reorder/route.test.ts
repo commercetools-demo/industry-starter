@@ -2,14 +2,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const jar = vi.hoisted(() => ({ store: new Map<string, string>() }));
-const ct = vi.hoisted(() => ({ getOrderById: vi.fn(), runReorder: vi.fn() }));
+const ct = vi.hoisted(() => ({ getCustomerOrderById: vi.fn(), runReorder: vi.fn() }));
 vi.mock('@/lib/env', () => ({ getEnv: () => ({ SESSION_SECRET: 'a'.repeat(40) }) }));
 vi.mock('next/headers', () => ({
   cookies: async () => ({
     get: (name: string) => (jar.store.has(name) ? { name, value: jar.store.get(name) } : undefined),
   }),
 }));
-vi.mock('@/lib/ct/account-orders', () => ({ getOrderById: ct.getOrderById }));
+vi.mock('@/lib/ct/orders', () => ({ getCustomerOrderById: ct.getCustomerOrderById }));
 vi.mock('@/lib/ct/reorder', () => ({ runReorder: ct.runReorder }));
 
 import { POST } from '@/app/api/orders/[id]/reorder/route';
@@ -20,7 +20,7 @@ const call = (id: string) => POST(new Request(`http://x/api/orders/${id}/reorder
 
 beforeEach(async () => {
   jar.store.clear();
-  ct.getOrderById.mockReset();
+  ct.getCustomerOrderById.mockReset();
   ct.runReorder.mockReset();
   jar.store.set(SESSION_COOKIE, await createSessionToken({ customerId: 'c1', cartId: 'old' }));
   vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -28,7 +28,7 @@ beforeEach(async () => {
 
 describe('POST /api/orders/[id]/reorder', () => {
   it('adds the lines and writes the new cart id into the session cookie', async () => {
-    ct.getOrderById.mockResolvedValue(ctOrder());
+    ct.getCustomerOrderById.mockResolvedValue(ctOrder());
     ct.runReorder.mockResolvedValue({
       result: { added: [{ sku: 'S', name: 'N', quantity: 1, fulfilment: 'delivery' }], skipped: [], cart: { id: 'new', version: 1, count: 1, lines: [] } },
       session: { customerId: 'c1', cartId: 'new' },
@@ -42,7 +42,7 @@ describe('POST /api/orders/[id]/reorder', () => {
   });
 
   it("Reorder of another customer's order is 404 and adds nothing", async () => {
-    ct.getOrderById.mockResolvedValue(null);
+    ct.getCustomerOrderById.mockResolvedValue(null);
     const res = await call('o-foreign');
     expect(res.status).toBe(404);
     expect(ct.runReorder).not.toHaveBeenCalled();

@@ -1,6 +1,6 @@
 import { handle, requireCustomer } from '@/lib/api';
 import { withBudget } from '@/lib/account/budget';
-import { countOrders } from '@/lib/ct/account-orders';
+import { countOrders } from '@/lib/ct/orders';
 import { findList } from '@/lib/ct/shopping-lists';
 import type { AccountSummary } from '@/lib/types';
 

@@ -1,10 +1,10 @@
-import type { OrderStateKey, OrderStatusKind } from '@/lib/types';
+import type { OrderState, OrderStatusKind } from '@/lib/types';
 
 export interface StatusInput {
   /** commercetools `orderState`. */
   orderState: string;
   /** Key of the order's `mcf-order-*` state without the prefix, or null when the order has no state yet. */
-  stateKey: OrderStateKey | null;
+  stateKey: OrderState | null;
   shipmentState: string | null;
   hasCollect: boolean;
   hasShip: boolean;

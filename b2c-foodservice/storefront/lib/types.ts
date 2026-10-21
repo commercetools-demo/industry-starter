@@ -313,60 +313,52 @@ export interface CheckoutState {
   /** Set once the pay stage is prepared (pickup saved): the payments to make, in order. */
   payments: CheckoutPayment[] | null;
 }
+/** The four seeded collection states (`mcf-order-*` without the prefix). */
 export type OrderState = 'ordered' | 'preparing' | 'ready-for-collection' | 'collected';
-export interface OrderLineView {
-  id: string; name: string; variantSummary: string; quantity: number; imageUrl: string | null;
-  fulfilment: Fulfilment; storeKey: string | null; recurrence: RecurrencePolicyView['schedule'] | null; priceCents: number;
-}
-export interface OrderDelivery { id: string; trackingId: string | null; trackingUrl: string | null; carrier: string | null }
-export interface OrderView {
-  id: string; orderNumber: string; createdAt: string; email: string | null; locale: string; currency: string; customerId: string | null;
-  state: OrderState | null; paymentState: string | null; shipmentState: string | null;
-  lines: OrderLineView[];
-  collect: { storeKey: string; storeName: string; address: string; hours: string | null; phone: string | null; readyMinutes: number | null; pickupName: string | null }[];
-  ship: { methodName: string; estimate: string | null; address: string; deliveries: OrderDelivery[] } | null;
-  subscriptions: { lineId: string; schedule: RecurrencePolicyView['schedule'] }[];
-  totals: { subtotalCents: number; discountCents: number; shippingCents: number; taxCents: number; totalCents: number };
-  /** Other orders of the same purchase (complete-per-group), by the shared base number. */
-  linked: { id: string; orderNumber: string }[];
-}
-
-// Workstream L: account area. `OrderDetailView` stands alone until K's `OrderView` lands (Q-L-16).
+/** The one status the account shows, combining the collection state and the shipment state (`lib/account/order-status.ts`). */
 export type OrderStatusKind = 'ordered' | 'preparing' | 'ready' | 'shipped' | 'completed' | 'cancelled';
-/** Keys of the seeded `mcf-order-*` states without the prefix. */
-export type OrderStateKey = 'ordered' | 'preparing' | 'ready-for-collection' | 'collected';
 export type OrderFilter = 'all' | 'in-progress' | 'ready' | 'completed';
-export interface OrderCollectInfo { storeName: string; hours: string | null; lat: number | null; lng: number | null }
-export interface OrderListItem {
-  id: string; orderNumber: string; createdAt: string; totalCents: number; currency: string;
-  status: OrderStatusKind; hasCollect: boolean; hasShip: boolean;
-  thumbs: { imageUrl: string | null; name: string }[]; itemCount: number;
-  collect: OrderCollectInfo | null;
-}
 export interface OrderLineView {
-  id: string; sku: string; name: string; imageUrl: string | null; quantity: number;
-  unitCents: number; totalCents: number; fulfilment: Fulfilment; storeName: string | null;
+  id: string; sku: string; name: string; variantSummary: string; quantity: number; imageUrl: string | null;
+  fulfilment: Fulfilment; storeKey: string | null; storeName: string | null; recurrence: RecurrencePolicyView['schedule'] | null;
+  /** Price of one unit (discounted when it is). */
+  unitCents: number;
+  /** Total of the line (all units, after discounts). */
+  priceCents: number;
 }
-export type ReturnShipmentState = 'Advised' | 'Returned' | 'BackInStock' | 'Unusable';
-export type ReturnPaymentState = 'NonRefundable' | 'Initial' | 'Refunded' | 'NotRefunded';
 export interface OrderDelivery {
   id: string; createdAt: string; carrier: string | null; trackingId: string | null; trackingUrl: string | null;
   items: { lineId: string; name: string; quantity: number }[];
 }
+export type ReturnShipmentState = 'Advised' | 'Returned' | 'BackInStock' | 'Unusable';
+export type ReturnPaymentState = 'NonRefundable' | 'Initial' | 'Refunded' | 'NotRefunded';
 export interface OrderReturnItem {
   id: string; lineId: string; name: string; quantity: number; reason: string | null;
   shipmentState: ReturnShipmentState; paymentState: ReturnPaymentState;
 }
 export interface OrderReturn { id: string; createdAt: string; trackingId: string | null; items: OrderReturnItem[] }
-export interface OrderDetailView {
-  id: string; orderNumber: string; createdAt: string; currency: string; status: OrderStatusKind;
-  stateKey: OrderStateKey | null; shipmentState: string | null; paymentState: string | null;
+/** The one order model: the confirmation page, the account list and the account detail all read this (workstreams K and L). */
+export interface OrderView {
+  id: string; orderNumber: string; createdAt: string; email: string | null; locale: string; currency: string; customerId: string | null;
+  state: OrderState | null; paymentState: string | null; shipmentState: string | null;
+  status: OrderStatusKind;
+  /** Derived from the lines: some line is collected / some line is shipped or subscribed. */
   hasCollect: boolean; hasShip: boolean;
   lines: OrderLineView[];
-  subtotalCents: number; shippingCents: number | null; taxCents: number | null; totalCents: number;
-  collect: (OrderCollectInfo & { addressLine: string | null; phone: string | null }) | null;
-  shippingAddress: { name: string; line: string; city: string; state: string | null; postalCode: string; country: string } | null;
+  collect: {
+    storeKey: string; storeName: string; address: string; hours: string | null; phone: string | null; readyMinutes: number | null;
+    pickupName: string | null; lat: number | null; lng: number | null;
+  }[];
+  ship: {
+    methodName: string; estimate: string | null; address: string;
+    recipient: { name: string; line: string; city: string; state: string | null; postalCode: string; country: string } | null;
+  } | null;
+  /** Parcels with tracking, from the order's shipping info (single or multiple shipping). */
   deliveries: OrderDelivery[];
+  subscriptions: { lineId: string; schedule: RecurrencePolicyView['schedule'] }[];
+  totals: { subtotalCents: number; discountCents: number; shippingCents: number; taxCents: number; totalCents: number };
+  /** Other orders of the same purchase (complete-per-group), by the shared base number. */
+  linked: { id: string; orderNumber: string }[];
   returns: OrderReturn[];
   canReturn: boolean; returnWindowEndsAt: string | null;
   /** Units of each line that can still be returned (line id to quantity). */

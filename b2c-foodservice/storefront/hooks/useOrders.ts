@@ -3,11 +3,11 @@
 import { useAccount } from '@/hooks/useAccount';
 import { useAccountSwr } from '@/hooks/useAccountSwr';
 import { keyOrdersPage } from '@/lib/cache-keys';
-import type { OrderFilter, OrderListItem } from '@/lib/types';
+import type { OrderFilter, OrderView } from '@/lib/types';
 
 export const ORDERS_PAGE_SIZE = 10;
 
-export interface OrdersPage { orders: OrderListItem[]; total: number; limit: number; offset: number }
+export interface OrdersPage { orders: OrderView[]; total: number; limit: number; offset: number }
 
 /** One page of the customer's orders for a filter (`page` is 1-based). The key carries the customer id, filter and page. */
 export function useOrders(filter: OrderFilter, page: number) {

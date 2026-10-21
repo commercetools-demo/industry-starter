@@ -25,10 +25,10 @@ import { pollInterval, ORDER_POLL_MS } from '@/hooks/useOrderStatus';
 import ConfirmationRoute from '@/app/[locale]/checkout/confirmation/[orderId]/page';
 import ConfirmationIndex from '@/app/[locale]/checkout/confirmation/page';
 
-const store = { storeKey: 'mcf-store-nyc-soho', storeName: 'Malva SoHo', address: '1 Prince St, New York', hours: '08:00–18:00', phone: '+1 212 555 0101', readyMinutes: 15, pickupName: 'Maya Lopez' };
-const collectLine = { id: 'c1', name: 'Pod box', variantSummary: '', quantity: 1, imageUrl: null, fulfilment: 'collect' as const, storeKey: store.storeKey, recurrence: null, priceCents: 1000 };
-const shipLine = { id: 'l1', name: 'Machine', variantSummary: '', quantity: 1, imageUrl: null, fulfilment: 'delivery' as const, storeKey: null, recurrence: null, priceCents: 9000 };
-const subLine = { id: 's1', name: 'Dark Roast', variantSummary: '', quantity: 1, imageUrl: null, fulfilment: 'subscribe' as const, storeKey: null, recurrence: { unit: 'Weeks' as const, value: 2 }, priceCents: 1500 };
+const store = { storeKey: 'mcf-store-nyc-soho', storeName: 'Malva SoHo', address: '1 Prince St, New York', hours: '08:00–18:00', phone: '+1 212 555 0101', readyMinutes: 15, pickupName: 'Maya Lopez', lat: null, lng: null };
+const collectLine = { id: 'c1', sku: 'S-C1', storeName: 'Malva SoHo', unitCents: 1000, name: 'Pod box', variantSummary: '', quantity: 1, imageUrl: null, fulfilment: 'collect' as const, storeKey: store.storeKey, recurrence: null, priceCents: 1000 };
+const shipLine = { id: 'l1', sku: 'S-L1', storeName: null, unitCents: 9000, name: 'Machine', variantSummary: '', quantity: 1, imageUrl: null, fulfilment: 'delivery' as const, storeKey: null, recurrence: null, priceCents: 9000 };
+const subLine = { id: 's1', sku: 'S-S1', storeName: null, unitCents: 1500, name: 'Dark Roast', variantSummary: '', quantity: 1, imageUrl: null, fulfilment: 'subscribe' as const, storeKey: null, recurrence: { unit: 'Weeks' as const, value: 2 }, priceCents: 1500 };
 
 const render = (order: OrderView, guest = true, locale = 'en-US') =>
   renderWithIntl(
@@ -75,7 +75,7 @@ describe('confirmation (K-13)', () => {
     expect(within(card).getByText('Tracking will appear here')).toBeInTheDocument();
   });
   it('a parcel with tracking shows the number and a link', () => {
-    render(orderView({ ship: { methodName: 'Standard', estimate: null, address: 'x', deliveries: [{ id: 'd1', trackingId: '1Z999', trackingUrl: 'https://carrier.example/t/1Z999', carrier: 'UPS' }] } }));
+    render(orderView({ ship: { methodName: 'Standard', estimate: null, address: 'x', recipient: null }, deliveries: [{ id: 'd1', createdAt: '2026-10-21T10:00:00.000Z', items: [], trackingId: '1Z999', trackingUrl: 'https://carrier.example/t/1Z999', carrier: 'UPS' }] }));
     expect(screen.getByText('1Z999')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Track parcel' })).toHaveAttribute('rel', expect.stringContaining('noopener'));
   });

@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import OrderCard from '@/components/account/orders/OrderCard';
 import Button from '@/components/ui/Button';
-import type { OrderListItem } from '@/lib/types';
+import type { OrderView } from '@/lib/types';
 
 /** Order cards with Previous and Next (disabled at the ends). `page` is 1-based. */
 export default function OrderList({
@@ -14,7 +14,7 @@ export default function OrderList({
   onReorder,
   reorderingId,
 }: {
-  orders: OrderListItem[];
+  orders: OrderView[];
   page: number;
   pages: number;
   onPage: (page: number) => void;

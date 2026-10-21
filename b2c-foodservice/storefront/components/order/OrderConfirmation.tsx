@@ -43,7 +43,7 @@ export default function OrderConfirmation({ initial, guest }: { initial: OrderVi
         {order.collect.map((c, i) => (
           <CollectionCard key={c.storeKey} collect={c} state={order.state} showTrack={i === 0} />
         ))}
-        {order.ship ? <ShippingNote ship={order.ship} /> : null}
+        {order.ship ? <ShippingNote ship={order.ship} deliveries={order.deliveries} /> : null}
         <OrderSubscriptionCard order={order} />
         <OrderItems order={order} />
         {order.linked.length > 0 ? (

@@ -5,34 +5,36 @@ vi.mock('@/i18n/routing', async () => (await import('@/test/shell')).routingMock
 
 import DeliveryList from '@/components/account/orders/DeliveryList';
 import OrderDetail from '@/components/account/orders/OrderDetail';
-import OrderStatusTracker from '@/components/account/orders/OrderStatusTracker';
 import ReturnList from '@/components/account/orders/ReturnList';
 import { trackingUrl } from '@/lib/account/tracking';
+import { orderView } from '@/test/checkout';
 import { nav, renderShell, stubFetch } from '@/test/shell';
-import type { OrderDetailView } from '@/lib/types';
+import type { OrderView } from '@/lib/types';
 
 const customer = { id: 'c1', email: 'a@example.com', firstName: 'Maya', lastName: 'O', defaultShippingAddressId: null, addresses: [] };
-const order = (over: Partial<OrderDetailView> = {}): OrderDetailView => ({
-  id: 'o1', orderNumber: 'MC-1001', createdAt: '2026-10-01T10:00:00.000Z', currency: 'USD', status: 'shipped',
-  stateKey: null, shipmentState: 'Shipped', paymentState: 'Paid', hasCollect: false, hasShip: true,
-  lines: [
-    { id: 'l1', sku: 'S1', name: 'Ember pods', imageUrl: null, quantity: 3, unitCents: 1000, totalCents: 3000, fulfilment: 'delivery', storeName: null },
-    { id: 'l2', sku: 'S2', name: 'Casa pods', imageUrl: null, quantity: 1, unitCents: 1500, totalCents: 1500, fulfilment: 'delivery', storeName: null },
+const recipient = { name: 'Maya Okonkwo', line: '100 Example Street', city: 'New York', state: 'NY', postalCode: '10012', country: 'US' };
+const order = (over: Partial<OrderView> = {}): OrderView =>
+  orderView({
+    id: 'o1', orderNumber: 'MC-1001', customerId: 'c1', createdAt: '2026-10-01T10:00:00.000Z', currency: 'USD', status: 'shipped',
+    state: null, shipmentState: 'Shipped', paymentState: 'Paid', hasCollect: false, hasShip: true,
+    lines: [
+    { id: 'l1', sku: 'S1', name: 'Ember pods', variantSummary: '', imageUrl: null, quantity: 3, unitCents: 1000, priceCents: 3000, fulfilment: 'delivery', storeKey: null, storeName: null, recurrence: null },
+    { id: 'l2', sku: 'S2', name: 'Casa pods', variantSummary: '', imageUrl: null, quantity: 1, unitCents: 1500, priceCents: 1500, fulfilment: 'delivery', storeKey: null, storeName: null, recurrence: null },
   ],
-  subtotalCents: 4500, shippingCents: 695, taxCents: 360, totalCents: 5195, collect: null,
-  shippingAddress: { name: 'Maya Okonkwo', line: '100 Example Street', city: 'New York', state: 'NY', postalCode: '10012', country: 'US' },
-  deliveries: [], returns: [], canReturn: false, returnWindowEndsAt: null, returnable: { l1: 3, l2: 1 },
-  ...over,
-});
+    ship: { methodName: 'Standard', estimate: null, address: '', recipient },
+    totals: { subtotalCents: 4500, discountCents: 0, shippingCents: 695, taxCents: 360, totalCents: 5195 },
+    returnable: { l1: 3, l2: 1 },
+    ...over,
+  });
 
 beforeEach(() => {
   nav.pathname = '/account/orders/MC-1001';
 });
 afterEach(() => vi.unstubAllGlobals());
 
-const render = (o: OrderDetailView | null, routes: Record<string, () => unknown> = {}) => {
+const render = (o: OrderView | null, routes: Record<string, () => unknown> = {}) => {
   stubFetch({ '/api/auth/me': () => ({ customer }), ...routes });
-  return renderShell(<OrderDetail orderNumber="MC-1001" initial={o} />);
+  return renderShell(<OrderDetail orderId="o1" orderNumber="MC-1001" initial={o} />);
 };
 
 describe('Order detail', () => {
@@ -42,7 +44,7 @@ describe('Order detail', () => {
     expect(screen.getAllByTestId('order-line')).toHaveLength(2);
     expect(screen.getByText('$51.95')).toBeInTheDocument();
     expect(screen.getByTestId('shipping-address')).toHaveTextContent('100 Example Street');
-    expect(screen.queryByTestId('order-tracker')).toBeNull();
+    expect(screen.queryByTestId('order-track')).toBeNull();
   });
 
   it('Shipment state visible: a delivery shows the carrier link and the tracking number', () => {
@@ -85,16 +87,16 @@ describe('Order detail', () => {
 
   it('a collect order shows the tracker and the collection card', () => {
     render(order({
-      hasCollect: true, hasShip: false, status: 'ready', stateKey: 'ready-for-collection', shipmentState: null, shippingAddress: null,
-      collect: { storeName: 'Malva SoHo', hours: '07:00–18:00', lat: 1, lng: 2, addressLine: '100 Example Street, New York', phone: '+1 212 555 0100' },
+      hasCollect: true, hasShip: false, status: 'ready', state: 'ready-for-collection', shipmentState: null, ship: null,
+      collect: [{ storeKey: 'mcf-store-nyc-soho', storeName: 'Malva SoHo', hours: '07:00–18:00', lat: 1, lng: 2, address: '100 Example Street, New York', phone: '+1 212 555 0100', readyMinutes: null, pickupName: null }],
     }));
-    expect(screen.getByTestId('order-tracker')).toBeInTheDocument();
+    expect(screen.getByTestId('order-track')).toHaveAttribute('data-state', 'ready-for-collection');
     expect(screen.getByTestId('collection-card')).toHaveTextContent('Malva SoHo');
     expect(screen.getByTestId('collection-card')).toHaveTextContent('+1 212 555 0100');
   });
 
   it('Detail of an order not theirs: the not-found card, no order data', async () => {
-    render(null, { '/api/orders/number/': () => Response.json({ error: { code: 'not_found', message: 'Not found' } }, { status: 404 }) });
+    render(null, { '/api/orders/o1': () => Response.json({ error: { code: 'not_found', message: 'Not found' } }, { status: 404 }) });
     const card = await screen.findByTestId('order-not-found');
     expect(card).toHaveTextContent("We couldn't find that order.");
     expect(screen.queryByTestId('order-number')).toBeNull();
@@ -102,7 +104,7 @@ describe('Order detail', () => {
   });
 
   it('another failure is a panel error with Try again', async () => {
-    render(null, { '/api/orders/number/': () => Response.json({ error: { code: 'upstream_unavailable', message: 'x' } }, { status: 503 }) });
+    render(null, { '/api/orders/o1': () => Response.json({ error: { code: 'upstream_unavailable', message: 'x' } }, { status: 503 }) });
     expect(await screen.findByTestId('panel-error')).toBeInTheDocument();
     expect(screen.queryByTestId('order-not-found')).toBeNull();
   });
@@ -130,16 +132,17 @@ describe('ReturnList', () => {
   });
 });
 
-describe('OrderStatusTracker', () => {
-  const states = (state: Parameters<typeof OrderStatusTracker>[0]['state']) => {
-    renderShell(<OrderStatusTracker state={state} />);
-    return [...screen.getByTestId('order-tracker').querySelectorAll('li')].map((li) => li.getAttribute('data-state'));
-  };
-  it('ordered: first step active', () => expect(states('ordered')).toEqual(['active', 'todo', 'todo', 'todo']));
-  it('a missing state counts as ordered', () => expect(states(null)).toEqual(['active', 'todo', 'todo', 'todo']));
-  it('preparing', () => expect(states('preparing')).toEqual(['done', 'active', 'todo', 'todo']));
-  it('ready', () => expect(states('ready-for-collection')).toEqual(['done', 'done', 'active', 'todo']));
-  it('collected: all four done', () => expect(states('collected')).toEqual(['done', 'done', 'done', 'done']));
+describe('Order tracker on the detail (the shared OrderStatusTrack)', () => {
+  it('a collect order with no state yet counts as ordered', () => {
+    render(order({ hasCollect: true, hasShip: false, status: 'ordered', state: null, ship: null }));
+    expect(screen.getByTestId('order-track')).toHaveAttribute('data-state', 'ordered');
+    expect(screen.getByTestId('order-track').querySelector('[data-node="ordered"]')).toHaveAttribute('data-status', 'current');
+  });
+  it('collected: all four nodes done', () => {
+    render(order({ hasCollect: true, hasShip: false, status: 'completed', state: 'collected', ship: null }));
+    const nodes = [...screen.getByTestId('order-track').querySelectorAll('li')].map((li) => li.getAttribute('data-status'));
+    expect(nodes).toEqual(['done', 'done', 'done', 'done']);
+  });
 });
 
 describe('DeliveryList', () => {

@@ -2,14 +2,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const jar = vi.hoisted(() => ({ store: new Map<string, string>() }));
-const ct = vi.hoisted(() => ({ getOrderById: vi.fn(), addReturn: vi.fn() }));
+const ct = vi.hoisted(() => ({ getCustomerOrderById: vi.fn(), addReturn: vi.fn() }));
 vi.mock('@/lib/env', () => ({ getEnv: () => ({ SESSION_SECRET: 'a'.repeat(40) }) }));
 vi.mock('next/headers', () => ({
   cookies: async () => ({
     get: (name: string) => (jar.store.has(name) ? { name, value: jar.store.get(name) } : undefined),
   }),
 }));
-vi.mock('@/lib/ct/account-orders', () => ct);
+vi.mock('@/lib/ct/orders', () => ct);
 
 import { POST } from '@/app/api/orders/[id]/returns/route';
 import { SESSION_COOKIE, createSessionToken } from '@/lib/session';
@@ -25,7 +25,7 @@ beforeEach(async () => {
   jar.store.clear();
   for (const f of Object.values(ct)) f.mockReset();
   jar.store.set(SESSION_COOKIE, await createSessionToken({ customerId: 'c1' }));
-  ct.getOrderById.mockResolvedValue(delivered());
+  ct.getCustomerOrderById.mockResolvedValue(delivered());
   ct.addReturn.mockResolvedValue(delivered({ returnInfo: [{ returnDate: recent(), items: [{ id: 'r', type: 'LineItemReturnItem', lineItemId: 'l1', quantity: 2, shipmentState: 'Advised', paymentState: 'Initial' }] }] }));
   vi.spyOn(console, 'error').mockImplementation(() => {});
 });
@@ -40,7 +40,7 @@ describe('POST /api/orders/[id]/returns', () => {
   });
 
   it('a shopper cannot return more than remains', async () => {
-    ct.getOrderById.mockResolvedValue(
+    ct.getCustomerOrderById.mockResolvedValue(
       delivered({ returnInfo: [{ items: [{ id: 'r', type: 'LineItemReturnItem', lineItemId: 'l1', quantity: 2, shipmentState: 'Advised', paymentState: 'Initial' }] }] }),
     );
     const res = await call({ items: [{ lineId: 'l1', quantity: 2 }] });
@@ -65,7 +65,7 @@ describe('POST /api/orders/[id]/returns', () => {
   });
 
   it('Return window closed is refused', async () => {
-    ct.getOrderById.mockResolvedValue(delivered({ lastModifiedAt: '2025-01-01T00:00:00.000Z' }));
+    ct.getCustomerOrderById.mockResolvedValue(delivered({ lastModifiedAt: '2025-01-01T00:00:00.000Z' }));
     const res = await call({ items: [{ lineId: 'l1', quantity: 1 }] });
     expect(res.status).toBe(409);
     expect((await res.json()).error.code).toBe('return_window_closed');
@@ -73,14 +73,14 @@ describe('POST /api/orders/[id]/returns', () => {
   });
 
   it('Order not completed is not returnable', async () => {
-    ct.getOrderById.mockResolvedValue(delivered({ shipmentState: 'Shipped' }));
+    ct.getCustomerOrderById.mockResolvedValue(delivered({ shipmentState: 'Shipped' }));
     const res = await call({ items: [{ lineId: 'l1', quantity: 1 }] });
     expect(res.status).toBe(409);
     expect((await res.json()).error.code).toBe('not_returnable');
   });
 
   it("Return of another customer's order is 404, identical to an unknown order", async () => {
-    ct.getOrderById.mockResolvedValue(null);
+    ct.getCustomerOrderById.mockResolvedValue(null);
     const foreign = await call({ items: [{ lineId: 'l1', quantity: 1 }] }, 'o-foreign');
     const unknown = await call({ items: [{ lineId: 'l1', quantity: 1 }] }, 'nope');
     expect(foreign.status).toBe(404);

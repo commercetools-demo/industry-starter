@@ -7,7 +7,7 @@ import { Field, Select } from '@/components/ui/Field';
 import Modal from '@/components/ui/Modal';
 import { ApiError } from '@/hooks/fetcher';
 import type { ReturnLineDraft } from '@/hooks/useOrderActions';
-import type { OrderDetailView } from '@/lib/types';
+import type { OrderView } from '@/lib/types';
 
 const REASONS = ['damaged', 'wrong', 'notAsDescribed', 'changedMind'] as const;
 
@@ -23,7 +23,7 @@ export default function ReturnDialog({
   onClose,
   onSubmit,
 }: {
-  order: OrderDetailView;
+  order: OrderView;
   open: boolean;
   onClose: () => void;
   onSubmit: (items: ReturnLineDraft[]) => Promise<void>;

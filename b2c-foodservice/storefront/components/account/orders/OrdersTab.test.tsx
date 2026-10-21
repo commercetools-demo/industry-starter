@@ -10,18 +10,21 @@ import AccountShell from '@/components/account/AccountShell';
 import OrderStatusPill from '@/components/account/orders/OrderStatusPill';
 import OrdersTab, { parseOrdersQuery } from '@/components/account/orders/OrdersTab';
 import { directionsUrl } from '@/components/account/orders/OrderCard';
+import { orderView } from '@/test/checkout';
 import { nav, renderShell, stubFetch } from '@/test/shell';
-import type { OrderListItem } from '@/lib/types';
+import type { OrderView } from '@/lib/types';
 
 const customer = { id: 'c1', email: 'a@example.com', firstName: 'Maya', lastName: 'O', defaultShippingAddressId: null, addresses: [] };
-const item = (over: Partial<OrderListItem> = {}): OrderListItem => ({
-  id: 'o1', orderNumber: 'MC-1001', createdAt: '2026-10-01T10:00:00.000Z', totalCents: 4250, currency: 'USD',
-  status: 'ordered', hasCollect: true, hasShip: false,
-  thumbs: [{ imageUrl: null, name: 'Ember pods' }], itemCount: 2,
-  collect: { storeName: 'Malva SoHo', hours: '07:00–18:00', lat: 40.72, lng: -74 },
-  ...over,
-});
-const page = (orders: OrderListItem[], total = orders.length) => ({ orders, total, limit: 10, offset: 0 });
+const item = (over: Partial<OrderView> = {}): OrderView =>
+  orderView({
+    id: 'o1', orderNumber: 'MC-1001', createdAt: '2026-10-01T10:00:00.000Z', currency: 'USD', customerId: 'c1',
+    status: 'ordered', hasCollect: true, hasShip: false, ship: null,
+    lines: [{ id: 'l1', sku: 'S1', name: 'Ember pods', variantSummary: '', imageUrl: null, quantity: 2, unitCents: 2125, priceCents: 4250, fulfilment: 'collect', storeKey: 'mcf-store-nyc-soho', storeName: 'Malva SoHo', recurrence: null }],
+    collect: [{ storeKey: 'mcf-store-nyc-soho', storeName: 'Malva SoHo', address: '', hours: '07:00–18:00', phone: null, readyMinutes: null, pickupName: null, lat: 40.72, lng: -74 }],
+    totals: { subtotalCents: 4250, discountCents: 0, shippingCents: 0, taxCents: 0, totalCents: 4250 },
+    ...over,
+  });
+const page = (orders: OrderView[], total = orders.length) => ({ orders, total, limit: 10, offset: 0 });
 const base = { '/api/auth/me': () => ({ customer }), '/api/account/summary': () => ({ openOrders: 1, readyForCollection: 1, savedItems: 0 }) };
 
 beforeEach(() => {
@@ -146,5 +149,17 @@ describe('parseOrdersQuery', () => {
   it('falls back for anything unknown', () => {
     expect(parseOrdersQuery(new URLSearchParams('filter=evil&page=-4'))).toEqual({ filter: 'all', page: 1 });
     expect(parseOrdersQuery(new URLSearchParams('filter=ready&page=3'))).toEqual({ filter: 'ready', page: 3 });
+  });
+});
+
+describe('Order card thumbnails', () => {
+  it('shows five thumbnails at most and counts the rest', async () => {
+    const line = (id: string) => ({ ...item().lines[0]!, id, name: `Pod ${id}`, quantity: 1 });
+    const lines = ['a', 'b', 'c', 'd', 'e', 'f', 'g'].map(line);
+    stubFetch({ ...base, '/api/orders': () => page([item({ lines, status: 'ordered' })]) });
+    renderShell(<OrdersTab />);
+    const card = await screen.findByTestId('order-card');
+    expect(card.querySelectorAll('ul li')).toHaveLength(6);
+    expect(card).toHaveTextContent('+2');
   });
 });

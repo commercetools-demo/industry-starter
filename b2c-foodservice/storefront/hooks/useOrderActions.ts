@@ -5,7 +5,7 @@ import { useSWRConfig } from 'swr';
 import { fetchJson } from '@/hooks/fetcher';
 import { useAccount } from '@/hooks/useAccount';
 import { keyOrder } from '@/lib/cache-keys';
-import type { OrderDetailView, ReorderResult } from '@/lib/types';
+import type { OrderView, ReorderResult } from '@/lib/types';
 
 export interface ReturnLineDraft { lineId: string; quantity: number; reason?: string }
 
@@ -23,10 +23,10 @@ export function useOrderActions() {
   const customerId = customer?.id ?? null;
 
   const startReturn = useCallback(
-    async (order: Pick<OrderDetailView, 'id' | 'orderNumber'>, items: ReturnLineDraft[]): Promise<OrderDetailView> => {
-      const res = await post<{ order: OrderDetailView }>(`/api/orders/${encodeURIComponent(order.id)}/returns`, { items });
+    async (order: Pick<OrderView, 'id' | 'orderNumber'>, items: ReturnLineDraft[]): Promise<OrderView> => {
+      const res = await post<{ order: OrderView }>(`/api/orders/${encodeURIComponent(order.id)}/returns`, { items });
       // Only this order's own key: the cached detail becomes the answer, no refetch.
-      if (customerId) await mutate(keyOrder(customerId, order.orderNumber), res, { revalidate: false });
+      if (customerId) await mutate(keyOrder(customerId, order.id), res, { revalidate: false });
       return res.order;
     },
     [mutate, customerId],

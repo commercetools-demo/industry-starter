@@ -23,8 +23,9 @@ export function orderView(over: Partial<OrderView> = {}): OrderView {
   return {
     id: 'ord-1', orderNumber: 'MC-ABCDEFGHJK', createdAt: '2026-10-21T10:00:00.000Z', email: 'maya@example.com', locale: 'en-US', currency: 'USD',
     customerId: null, state: 'ordered', paymentState: 'Paid', shipmentState: null,
-    lines: [{ id: 'l1', name: 'Dark Roast Pods', variantSummary: 'Intensity 8 · 10 capsules', quantity: 2, imageUrl: null, fulfilment: 'delivery', storeKey: null, recurrence: null, priceCents: 2400 }],
-    collect: [], ship: { methodName: 'Standard', estimate: '2-4 business days', address: '1 Main St · Brooklyn · 11201', deliveries: [] }, subscriptions: [],
-    totals: { subtotalCents: 2400, discountCents: 0, shippingCents: 695, taxCents: 276, totalCents: 3371 }, linked: [], ...over,
+    status: 'ordered', hasCollect: false, hasShip: true,
+    lines: [{ id: 'l1', sku: 'SKU-1', name: 'Dark Roast Pods', variantSummary: 'Intensity 8 · 10 capsules', quantity: 2, imageUrl: null, fulfilment: 'delivery', storeKey: null, storeName: null, recurrence: null, unitCents: 1200, priceCents: 2400 }],
+    collect: [], ship: { methodName: 'Standard', estimate: '2-4 business days', address: '1 Main St · Brooklyn · 11201', recipient: null }, deliveries: [], subscriptions: [],
+    totals: { subtotalCents: 2400, discountCents: 0, shippingCents: 695, taxCents: 276, totalCents: 3371 }, linked: [], returns: [], canReturn: false, returnWindowEndsAt: null, returnable: {}, ...over,
   };
 }

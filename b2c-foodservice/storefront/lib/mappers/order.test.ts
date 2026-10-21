@@ -1,34 +1,31 @@
 import { describe, expect, it } from 'vitest';
-import { mapOrderDetail, mapOrderListItem, returnableUnits, stateKeyOf } from '@/lib/mappers/account-order';
+import { mapOrder, mapOrderState, returnableUnits } from '@/lib/mappers/order';
 import { collectLine, ctLine, ctOrder } from '@/test/orders';
 
 const NOW = new Date('2026-10-03T12:00:00.000Z');
+import type { Order } from '@commercetools/platform-sdk';
+const view = (o: Order, _locale: string, now: Date) => mapOrder(o, { locale: 'en-US', now });
 
-describe('mapOrderListItem', () => {
+describe('mapOrder (account list fields)', () => {
   it('Ready for collection: status ready with the store, hours and directions point', () => {
-    const o = mapOrderListItem(ctOrder({ lineItems: [collectLine('l1')], stateKey: 'ready-for-collection' }), 'en-US', NOW);
+    const o = view(ctOrder({ lineItems: [collectLine('l1')], stateKey: 'ready-for-collection' }), 'en-US', NOW);
     expect(o.status).toBe('ready');
     expect(o.hasCollect).toBe(true);
     expect(o.hasShip).toBe(false);
-    expect(o.collect).toEqual({ storeName: 'Malva SoHo', hours: '07:00–18:00', lat: 40.72, lng: -74 });
+    expect(o.collect[0]).toMatchObject({ storeName: 'Malva SoHo', hours: '07:00–18:00', lat: 40.72, lng: -74 });
   });
 
   it('a delivery order has no collect block and counts units', () => {
-    const o = mapOrderListItem(ctOrder({ lineItems: [ctLine('l1'), ctLine('l2', { quantity: 3 })], shipmentState: 'Shipped' }), 'en-US', NOW);
-    expect(o.collect).toBeNull();
+    const o = view(ctOrder({ lineItems: [ctLine('l1'), ctLine('l2', { quantity: 3 })], shipmentState: 'Shipped' }), 'en-US', NOW);
+    expect(o.collect).toEqual([]);
     expect(o.status).toBe('shipped');
-    expect(o.itemCount).toBe(5);
-    expect(o.totalCents).toBe(2000);
-    expect(o.thumbs[0]).toEqual({ imageUrl: 'https://img.example.com/l1.jpg', name: 'Product l1' });
+    expect(o.lines.reduce((n, l) => n + l.quantity, 0)).toBe(5);
+    expect(o.totals.totalCents).toBe(2000);
+    expect(o.lines[0]).toMatchObject({ imageUrl: 'https://img.example.com/l1.jpg', name: 'Product l1' });
   });
 
-  it('keeps five thumbnails at most', () => {
-    const lines = ['a', 'b', 'c', 'd', 'e', 'f', 'g'].map((i) => ctLine(i));
-    expect(mapOrderListItem(ctOrder({ lineItems: lines }), 'en-US', NOW).thumbs).toHaveLength(5);
-  });
-
-  it('Mixed order status prefers ready over shipped', () => {
-    const o = mapOrderListItem(
+    it('Mixed order status prefers ready over shipped', () => {
+    const o = view(
       ctOrder({ lineItems: [collectLine('l1'), ctLine('l2')], stateKey: 'ready-for-collection', shipmentState: 'Shipped' }),
       'en-US', NOW,
     );
@@ -37,16 +34,17 @@ describe('mapOrderListItem', () => {
   });
 
   it('an order without a state is ordered', () => {
-    expect(mapOrderListItem(ctOrder({ lineItems: [collectLine('l1')] }), 'en-US', NOW).status).toBe('ordered');
+    expect(view(ctOrder({ lineItems: [collectLine('l1')] }), 'en-US', NOW).status).toBe('ordered');
   });
 
   it('only the seeded state keys count', () => {
-    expect(stateKeyOf(ctOrder({ stateKey: 'collected' }))).toBe('collected');
-    expect(stateKeyOf(ctOrder({ stateKey: 'something-else' }))).toBeNull();
+    expect(mapOrderState(ctOrder({ stateKey: 'collected' }).state?.obj?.key)).toBe('collected');
+    expect(mapOrderState('mcf-order-something-else')).toBeNull();
+    expect(mapOrderState(undefined)).toBeNull();
   });
 });
 
-describe('mapOrderDetail', () => {
+describe('mapOrder (account detail fields)', () => {
   const shipped = (extra: Record<string, unknown> = {}) =>
     ctOrder({
       lineItems: [ctLine('l1', { quantity: 3 }), ctLine('l2')], shipmentState: 'Shipped',
@@ -55,7 +53,7 @@ describe('mapOrderDetail', () => {
     });
 
   it('Partial shipment: one block per delivery, items distinguishable', () => {
-    const d = mapOrderDetail(
+    const d = view(
       shipped({
         shippingInfo: {
           price: { type: 'centPrecision', currencyCode: 'USD', centAmount: 695, fractionDigits: 2 },
@@ -76,7 +74,7 @@ describe('mapOrderDetail', () => {
 
   it('reads deliveries of a multiple-shipping order too, without duplicates', () => {
     const delivery = { id: 'd1', createdAt: 'x', items: [{ id: 'l1', quantity: 1 }], parcels: [] };
-    const d = mapOrderDetail(
+    const d = view(
       shipped({ shippingInfo: undefined, shipping: [{ shippingKey: 'a', shippingInfo: { deliveries: [delivery] } }, { shippingKey: 'b', shippingInfo: { deliveries: [delivery] } }] }),
       'en-US', NOW,
     );
@@ -84,7 +82,7 @@ describe('mapOrderDetail', () => {
   });
 
   it('Refund state visible: goods received and refund are separate fields', () => {
-    const d = mapOrderDetail(
+    const d = view(
       ctOrder({
         shipmentState: 'Delivered',
         returnInfo: [{ returnDate: '2026-10-05T00:00:00.000Z', returnTrackingId: 'RT1', items: [
@@ -107,16 +105,16 @@ describe('mapOrderDetail', () => {
 
   it('is returnable only when completed and inside the window', () => {
     const delivered = ctOrder({ shipmentState: 'Delivered', lastModifiedAt: '2026-10-02T10:00:00.000Z' });
-    expect(mapOrderDetail(delivered, 'en-US', NOW).canReturn).toBe(true);
-    expect(mapOrderDetail(delivered, 'en-US', new Date('2026-12-01T00:00:00.000Z')).canReturn).toBe(false);
-    expect(mapOrderDetail(ctOrder({ shipmentState: 'Shipped' }), 'en-US', NOW).canReturn).toBe(false);
+    expect(view(delivered, 'en-US', NOW).canReturn).toBe(true);
+    expect(view(delivered, 'en-US', new Date('2026-12-01T00:00:00.000Z')).canReturn).toBe(false);
+    expect(view(ctOrder({ shipmentState: 'Shipped' }), 'en-US', NOW).canReturn).toBe(false);
   });
 
   it('totals come from the order, collect orders carry the store address and no shipping address', () => {
-    const d = mapOrderDetail(ctOrder({ lineItems: [collectLine('l1')], stateKey: 'ready-for-collection' }), 'en-US', NOW);
-    expect(d.totalCents).toBe(2000);
-    expect(d.taxCents).toBe(150);
-    expect(d.collect).toMatchObject({ storeName: 'Malva SoHo', addressLine: '100 Example Street, New York', phone: '+1 212 555 0100' });
-    expect(d.shippingAddress).toBeNull();
+    const d = view(ctOrder({ lineItems: [collectLine('l1')], stateKey: 'ready-for-collection' }), 'en-US', NOW);
+    expect(d.totals.totalCents).toBe(2000);
+    expect(d.totals.taxCents).toBe(150);
+    expect(d.collect[0]).toMatchObject({ storeName: 'Malva SoHo', address: '100 Example Street, New York', phone: '+1 212 555 0100' });
+    expect(d.ship?.recipient ?? null).toBeNull();
   });
 });

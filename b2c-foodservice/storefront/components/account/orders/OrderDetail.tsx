@@ -5,26 +5,27 @@ import PanelState from '@/components/account/PanelState';
 import DeliveryList from '@/components/account/orders/DeliveryList';
 import OrderNotFound from '@/components/account/orders/OrderNotFound';
 import OrderStatusPill from '@/components/account/orders/OrderStatusPill';
-import OrderStatusTracker from '@/components/account/orders/OrderStatusTracker';
 import { useReorder } from '@/components/account/orders/useReorder';
 import ReturnDialog from '@/components/account/orders/ReturnDialog';
 import ReturnList from '@/components/account/orders/ReturnList';
 import LineImage from '@/components/cart/LineImage';
+import OrderStatusTrack from '@/components/order/OrderStatusTrack';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import { useToast } from '@/context/toast';
-import { useOrder } from '@/hooks/useOrder';
 import { useOrderActions } from '@/hooks/useOrderActions';
+import { useOrderStatus } from '@/hooks/useOrderStatus';
 import { useState } from 'react';
 import { Link } from '@/i18n/routing';
 import { formatMoney } from '@/lib/utils';
-import type { OrderDetailView } from '@/lib/types';
+import type { OrderView } from '@/lib/types';
 
 /** Order detail: breadcrumb, status, tracker, collection card, shipments, items, totals and returns. */
-export default function OrderDetail({ orderNumber, initial }: { orderNumber: string; initial?: OrderDetailView | null }) {
+export default function OrderDetail({ orderId, orderNumber, initial }: { orderId: string; orderNumber: string; initial?: OrderView | null }) {
   const t = useTranslations('account.orders');
   const tTabs = useTranslations('account.tabs');
-  const { order, isLoading, isError, notFound, mutate } = useOrder(orderNumber, initial);
+  const { order, isLoading, error, notFound, mutate } = useOrderStatus(orderId, initial);
+  const isError = Boolean(error);
   const { startReturn } = useOrderActions();
   const toast = useToast();
   const [returning, setReturning] = useState(false);
@@ -74,31 +75,31 @@ export default function OrderDetail({ orderNumber, initial }: { orderNumber: str
 
             {order.hasCollect && order.status !== 'cancelled' ? (
               <Card className="mb-5">
-                <OrderStatusTracker state={order.stateKey} />
+                <OrderStatusTrack state={order.state ?? 'ordered'} />
               </Card>
             ) : null}
 
-            {order.collect ? (
-              <Card className="mb-5" data-testid="collection-card">
+            {order.collect.map((store) => (
+              <Card key={store.storeKey} className="mb-5" data-testid="collection-card">
                 <h3 className="m-0 mb-2 font-display text-[17px] font-bold text-ink">{t('detail.collection')}</h3>
-                <p className="m-0 text-[14.5px] font-semibold text-ink">{order.collect.storeName}</p>
-                {order.collect.addressLine ? <p className="m-0 text-[14px] text-ink-2">{order.collect.addressLine}</p> : null}
-                {order.collect.hours ? <p className="m-0 text-[14px] text-ink-2">{order.collect.hours}</p> : null}
-                {order.collect.phone ? <p className="m-0 text-[14px] text-ink-2">{order.collect.phone}</p> : null}
+                <p className="m-0 text-[14.5px] font-semibold text-ink">{store.storeName}</p>
+                {store.address ? <p className="m-0 text-[14px] text-ink-2">{store.address}</p> : null}
+                {store.hours ? <p className="m-0 text-[14px] text-ink-2">{store.hours}</p> : null}
+                {store.phone ? <p className="m-0 text-[14px] text-ink-2">{store.phone}</p> : null}
               </Card>
-            ) : null}
+            ))}
 
             <DeliveryList deliveries={order.deliveries} />
 
-            {order.shippingAddress ? (
+            {order.ship?.recipient ? (
               <Card className="mb-5" data-testid="shipping-address">
                 <h3 className="m-0 mb-2 font-display text-[17px] font-bold text-ink">{t('detail.shippingAddress')}</h3>
                 <p className="m-0 text-[14px] text-ink-2">
-                  {order.shippingAddress.name}
+                  {order.ship.recipient.name}
                   <br />
-                  {order.shippingAddress.line}
+                  {order.ship.recipient.line}
                   <br />
-                  {[order.shippingAddress.city, order.shippingAddress.state, order.shippingAddress.postalCode].filter(Boolean).join(' ')}
+                  {[order.ship.recipient.city, order.ship.recipient.state, order.ship.recipient.postalCode].filter(Boolean).join(' ')}
                 </p>
               </Card>
             ) : null}
@@ -116,15 +117,15 @@ export default function OrderDetail({ orderNumber, initial }: { orderNumber: str
                         {l.storeName ? ` · ${l.storeName}` : ''}
                       </p>
                     </div>
-                    <p className="m-0 text-[14px] font-semibold text-ink">{money(l.totalCents, order.currency)}</p>
+                    <p className="m-0 text-[14px] font-semibold text-ink">{money(l.priceCents, order.currency)}</p>
                   </li>
                 ))}
               </ul>
               <dl className="m-0 mt-5 grid gap-1.5 border-t border-line pt-4 text-[14px]">
-                <Row label={t('detail.subtotal')} value={money(order.subtotalCents, order.currency)} />
-                {order.shippingCents !== null ? <Row label={t('detail.shipping')} value={money(order.shippingCents, order.currency)} /> : null}
-                {order.taxCents !== null ? <Row label={t('detail.tax')} value={money(order.taxCents, order.currency)} /> : null}
-                <Row label={t('detail.total')} value={money(order.totalCents, order.currency)} strong />
+                <Row label={t('detail.subtotal')} value={money(order.lines.reduce((n, l) => n + l.priceCents, 0), order.currency)} />
+                {order.ship ? <Row label={t('detail.shipping')} value={money(order.totals.shippingCents, order.currency)} /> : null}
+                {order.totals.taxCents > 0 ? <Row label={t('detail.tax')} value={money(order.totals.taxCents, order.currency)} /> : null}
+                <Row label={t('detail.total')} value={money(order.totals.totalCents, order.currency)} strong />
               </dl>
             </Card>
 
@@ -170,7 +171,7 @@ export default function OrderDetail({ orderNumber, initial }: { orderNumber: str
 }
 
 /** A completed order that still has units to return but whose window has passed. */
-function returnClosed(o: OrderDetailView): boolean {
+function returnClosed(o: OrderView): boolean {
   return o.status === 'completed' && !o.canReturn && Object.values(o.returnable).some((q) => q > 0);
 }
 

@@ -9,7 +9,7 @@ vi.mock('next/headers', () => ({
     get: (name: string) => (jar.store.has(name) ? { name, value: jar.store.get(name) } : undefined),
   }),
 }));
-vi.mock('@/lib/ct/account-orders', () => ct);
+vi.mock('@/lib/ct/orders', () => ct);
 
 import { GET } from '@/app/api/orders/route';
 import { SESSION_COOKIE, createSessionToken } from '@/lib/session';
@@ -38,7 +38,7 @@ describe('GET /api/orders', () => {
     const body = await res.json();
     expect(body).toMatchObject({ total: 25, limit: 5, offset: 10 });
     expect(body.orders[0]).toMatchObject({ orderNumber: 'MC-1001', status: 'ready' });
-    expect(JSON.stringify(body)).not.toContain('customerId');
+    expect(JSON.stringify(body)).not.toContain('c2');
   });
 
   it('defaults to the first page of ten', async () => {

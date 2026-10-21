@@ -17,5 +17,5 @@ export default async function AccountOrderPage({ params }: { params: Promise<{ l
   const { customerId } = await requireCustomerPage(`/account/orders/${encodeURIComponent(orderNumber)}`);
   const order = await loadAccountOrder(customerId, orderNumber, locale);
   if (!order) notFound();
-  return <OrderDetail orderNumber={order.orderNumber} initial={order} />;
+  return <OrderDetail orderId={order.id} orderNumber={order.orderNumber} initial={order} />;
 }

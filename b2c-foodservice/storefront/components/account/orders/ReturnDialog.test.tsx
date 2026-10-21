@@ -6,21 +6,24 @@ vi.mock('@/i18n/routing', async () => (await import('@/test/shell')).routingMock
 
 import OrderDetail from '@/components/account/orders/OrderDetail';
 import ReturnDialog from '@/components/account/orders/ReturnDialog';
+import { orderView } from '@/test/checkout';
 import { nav, renderShell, stubFetch } from '@/test/shell';
-import type { OrderDetailView } from '@/lib/types';
+import type { OrderView } from '@/lib/types';
 
 const customer = { id: 'c1', email: 'a@example.com', firstName: 'Maya', lastName: 'O', defaultShippingAddressId: null, addresses: [] };
-const order = (over: Partial<OrderDetailView> = {}): OrderDetailView => ({
-  id: 'o1', orderNumber: 'MC-1001', createdAt: '2026-10-01T10:00:00.000Z', currency: 'USD', status: 'completed',
-  stateKey: null, shipmentState: 'Delivered', paymentState: 'Paid', hasCollect: false, hasShip: true,
-  lines: [
-    { id: 'l1', sku: 'S1', name: 'Ember pods', imageUrl: null, quantity: 3, unitCents: 1000, totalCents: 3000, fulfilment: 'delivery', storeName: null },
-    { id: 'l2', sku: 'S2', name: 'Casa pods', imageUrl: null, quantity: 1, unitCents: 1500, totalCents: 1500, fulfilment: 'delivery', storeName: null },
+const order = (over: Partial<OrderView> = {}): OrderView =>
+  orderView({
+    id: 'o1', orderNumber: 'MC-1001', customerId: 'c1', createdAt: '2026-10-01T10:00:00.000Z', currency: 'USD', status: 'completed',
+    state: null, shipmentState: 'Delivered', paymentState: 'Paid', hasCollect: false, hasShip: true,
+    lines: [
+    { id: 'l1', sku: 'S1', name: 'Ember pods', variantSummary: '', imageUrl: null, quantity: 3, unitCents: 1000, priceCents: 3000, fulfilment: 'delivery', storeKey: null, storeName: null, recurrence: null },
+    { id: 'l2', sku: 'S2', name: 'Casa pods', variantSummary: '', imageUrl: null, quantity: 1, unitCents: 1500, priceCents: 1500, fulfilment: 'delivery', storeKey: null, storeName: null, recurrence: null },
   ],
-  subtotalCents: 4500, shippingCents: null, taxCents: null, totalCents: 4500, collect: null, shippingAddress: null,
-  deliveries: [], returns: [], canReturn: true, returnWindowEndsAt: '2026-11-01T00:00:00.000Z', returnable: { l1: 3, l2: 1 },
-  ...over,
-});
+    ship: null,
+    totals: { subtotalCents: 4500, discountCents: 0, shippingCents: 0, taxCents: 0, totalCents: 4500 },
+    canReturn: true, returnWindowEndsAt: '2026-11-01T00:00:00.000Z', returnable: { l1: 3, l2: 1 },
+    ...over,
+  });
 
 beforeEach(() => {
   nav.pathname = '/account/orders/MC-1001';
@@ -62,9 +65,9 @@ describe('ReturnDialog', () => {
 });
 
 describe('Returns on the order detail', () => {
-  const render = (o: OrderDetailView, routes: Record<string, () => unknown> = {}) => {
+  const render = (o: OrderView, routes: Record<string, () => unknown> = {}) => {
     stubFetch({ '/api/auth/me': () => ({ customer }), ...routes });
-    return renderShell(<OrderDetail orderNumber="MC-1001" initial={o} />);
+    return renderShell(<OrderDetail orderId="o1" orderNumber="MC-1001" initial={o} />);
   };
 
   it('offers Start a return inside the window and posts the lines', async () => {

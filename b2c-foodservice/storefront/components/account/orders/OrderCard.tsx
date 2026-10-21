@@ -10,7 +10,7 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import { Link } from '@/i18n/routing';
 import { formatMoney } from '@/lib/utils';
-import type { OrderListItem } from '@/lib/types';
+import type { OrderView } from '@/lib/types';
 
 /** Maps directions to the store's coordinates; `null` when the store has none. Pure, tested. */
 export function directionsUrl(lat: number | null, lng: number | null): string | null {
@@ -18,8 +18,11 @@ export function directionsUrl(lat: number | null, lng: number | null): string | 
   return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
 }
 
+/** Thumbnails shown on a card. */
+const THUMBS = 5;
+
 export interface OrderCardProps {
-  order: OrderListItem;
+  order: OrderView;
   /** Buy again; pending is shown while it runs. Offered on completed orders only. */
   onReorder?: (id: string) => void;
   reordering?: boolean;
@@ -29,9 +32,12 @@ export default function OrderCard({ order, onReorder, reordering = false }: Orde
   const t = useTranslations('account.orders');
   const locale = useLocale();
   const format = useFormatter();
-  const ready = order.status === 'ready' && order.collect;
-  const href = ready && order.collect ? directionsUrl(order.collect.lat, order.collect.lng) : null;
-  const extra = order.itemCount - order.thumbs.length;
+  const store = order.collect[0] ?? null;
+  const ready = order.status === 'ready' && store;
+  const href = ready && store ? directionsUrl(store.lat, store.lng) : null;
+  const thumbs = order.lines.slice(0, THUMBS);
+  const itemCount = order.lines.reduce((n, l) => n + l.quantity, 0);
+  const extra = itemCount - thumbs.length;
 
   return (
     <Card as="article" data-testid="order-card" aria-label={t('orderNumber', { number: order.orderNumber })} className="mb-4">
@@ -44,30 +50,30 @@ export default function OrderCard({ order, onReorder, reordering = false }: Orde
             {order.orderNumber}
           </Link>
           <p className="m-0 mt-1 text-[12.5px] text-ink-3">
-            {format.dateTime(new Date(order.createdAt), { dateStyle: 'medium' })} · {formatMoney(order.totalCents, order.currency, locale)}
+            {format.dateTime(new Date(order.createdAt), { dateStyle: 'medium' })} · {formatMoney(order.totals.totalCents, order.currency, locale)}
             {' · '}
-            {t('itemsCount', { count: order.itemCount })}
+            {t('itemsCount', { count: itemCount })}
           </p>
         </div>
         <OrderStatusPill status={order.status} hasCollect={order.hasCollect} hasShip={order.hasShip} />
       </div>
 
       <ul className="m-0 mt-4 flex list-none items-center gap-2 p-0">
-        {order.thumbs.map((th, i) => (
-          <li key={`${th.name}-${i}`}>
+        {thumbs.map((th, i) => (
+          <li key={`${th.id}-${i}`}>
             <LineImage url={th.imageUrl ?? undefined} alt={th.name} width={52} height={62} />
           </li>
         ))}
         {extra > 0 ? <li className="text-[13px] font-medium text-ink-3">{t('more', { count: extra })}</li> : null}
       </ul>
 
-      {ready && order.collect ? (
+      {ready && store ? (
         <div className="mt-4 flex items-start gap-2.5 rounded-field bg-teal/15 p-3.5 text-[14px] text-teal-text" data-testid="ready-block">
           <Icon name="store" size={18} className="mt-0.5 shrink-0" />
           <p className="m-0">
-            {order.collect.hours
-              ? t('readyBlock', { store: order.collect.storeName, hours: order.collect.hours })
-              : t('readyBlockNoHours', { store: order.collect.storeName })}
+            {store.hours
+              ? t('readyBlock', { store: store.storeName, hours: store.hours })
+              : t('readyBlockNoHours', { store: store.storeName })}
           </p>
         </div>
       ) : null}

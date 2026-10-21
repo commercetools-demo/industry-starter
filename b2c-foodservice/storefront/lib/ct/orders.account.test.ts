@@ -23,7 +23,7 @@ vi.mock('@/lib/ct/client', () => ({
   },
 }));
 
-import { addReturn, buildOrderQuery, countOrders, getOrderByNumber, getOrderStateIds, listOrders } from '@/lib/ct/account-orders';
+import { addReturn, buildOrderQuery, countOrders, getCustomerOrderByNumber, getOrderStateIds, listOrders } from '@/lib/ct/orders';
 import { ctLine, ctOrder } from '@/test/orders';
 
 const IDS = { ordered: 's1', preparing: 's2', 'ready-for-collection': 's3', collected: 's4' };
@@ -93,14 +93,14 @@ describe('order queries', () => {
 describe('order reads', () => {
   it('Detail of an order not theirs: a foreign order is null, like an unknown one', async () => {
     sdk.orderGet.mockResolvedValue({ body: ctOrder({ customerId: 'someone-else' }) });
-    expect(await getOrderByNumber('c1', 'MC-1001')).toBeNull();
+    expect(await getCustomerOrderByNumber('c1', 'MC-1001')).toBeNull();
     sdk.orderGet.mockRejectedValue({ statusCode: 404 });
-    expect(await getOrderByNumber('c1', 'MC-9999')).toBeNull();
+    expect(await getCustomerOrderByNumber('c1', 'MC-9999')).toBeNull();
   });
 
   it('returns the order of the owner', async () => {
     sdk.orderGet.mockResolvedValue({ body: ctOrder() });
-    expect((await getOrderByNumber('c1', 'MC-1001'))?.orderNumber).toBe('MC-1001');
+    expect((await getCustomerOrderByNumber('c1', 'MC-1001'))?.orderNumber).toBe('MC-1001');
   });
 
   it('Return started: addReturnInfo carries line ids, quantities and Advised', async () => {

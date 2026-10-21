@@ -6,14 +6,15 @@ vi.mock('@/i18n/routing', async () => (await import('@/test/shell')).routingMock
 vi.mock('next/navigation', () => ({ useSearchParams: () => new URLSearchParams('') }));
 
 import OrdersTab from '@/components/account/orders/OrdersTab';
+import { orderView } from '@/test/checkout';
 import { nav, renderShell, stubFetch } from '@/test/shell';
-import type { OrderListItem } from '@/lib/types';
 
 const customer = { id: 'c1', email: 'a@example.com', firstName: 'Maya', lastName: 'O', defaultShippingAddressId: null, addresses: [] };
-const done: OrderListItem = {
-  id: 'o1', orderNumber: 'MC-1001', createdAt: '2026-10-01T10:00:00.000Z', totalCents: 4250, currency: 'USD',
-  status: 'completed', hasCollect: true, hasShip: false, thumbs: [], itemCount: 2, collect: null,
-};
+const done = orderView({
+  id: 'o1', orderNumber: 'MC-1001', createdAt: '2026-10-01T10:00:00.000Z', currency: 'USD', customerId: 'c1',
+  status: 'completed', hasCollect: true, hasShip: false, ship: null, lines: [], collect: [],
+  totals: { subtotalCents: 4250, discountCents: 0, shippingCents: 0, taxCents: 0, totalCents: 4250 },
+});
 
 beforeEach(() => {
   nav.pathname = '/account/orders';

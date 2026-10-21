@@ -9,7 +9,7 @@ vi.mock('next/headers', () => ({
     get: (name: string) => (jar.store.has(name) ? { name, value: jar.store.get(name) } : undefined),
   }),
 }));
-vi.mock('@/lib/ct/account-orders', () => ({ countOrders: ct.countOrders }));
+vi.mock('@/lib/ct/orders', () => ({ countOrders: ct.countOrders }));
 vi.mock('@/lib/ct/shopping-lists', () => ({ findList: ct.findList }));
 
 import { GET } from '@/app/api/account/summary/route';
