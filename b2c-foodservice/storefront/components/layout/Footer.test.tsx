@@ -46,7 +46,8 @@ describe('Footer', () => {
       expect(href).not.toMatch(/#/);
       expect(href.length).toBeGreaterThan(0);
     }
-    expect(screen.getByRole('link', { name: 'Contact us' })).toHaveAttribute('href', '/');
+    // Contact is built by workstream P; the account pages (J, L) are still unbuilt.
+    expect(screen.getByRole('link', { name: 'Your orders' })).toHaveAttribute('href', '/');
   });
 
   it('Canada has no Collect column', () => {
