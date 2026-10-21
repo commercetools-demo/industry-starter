@@ -387,6 +387,7 @@
       "next": "Next",
       "page": "Page {n}"
     },
+    "results": "Product results",
     "loading": "Loading products"
   },
   "card": {
