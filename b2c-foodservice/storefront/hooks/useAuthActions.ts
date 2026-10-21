@@ -2,10 +2,10 @@
 
 import { useCallback } from 'react';
 import { useSWRConfig } from 'swr';
-import { fetchJson } from '@/hooks/fetcher';
+import { ApiError } from '@/hooks/fetcher';
 import { KEY_ACCOUNT, KEY_CART_COUNT, USER_SCOPED_KEYS } from '@/lib/cache-keys';
 import { useRouter } from '@/i18n/routing';
-import type { AppCustomer, AuthCart } from '@/lib/types';
+import type { AppCustomer, AuthCart, RuleId } from '@/lib/types';
 
 export interface AuthResult { customer: AppCustomer; cart: AuthCart | null }
 
@@ -15,12 +15,45 @@ export function isUserScopedKey(key: unknown): boolean {
   return typeof first === 'string' && USER_SCOPED_KEYS.includes(first);
 }
 
-const post = <T,>(url: string, body?: unknown) =>
-  fetchJson<T>(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-  });
+/** An `ApiError` that also carries the domain extras of the auth routes (Q-J-13). */
+export class AuthApiError extends ApiError {
+  constructor(
+    code: string,
+    status: number,
+    readonly extra: { failed?: RuleId[]; retryAfterSeconds?: number } = {},
+  ) {
+    super(code, status);
+    this.name = 'AuthApiError';
+  }
+}
+
+async function post<T>(url: string, body?: unknown): Promise<T> {
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    });
+  } catch {
+    throw new AuthApiError('upstream_unavailable', 0);
+  }
+  if (!res.ok) {
+    let code = 'internal_error';
+    const extra: { failed?: RuleId[]; retryAfterSeconds?: number } = {};
+    try {
+      const error = ((await res.json()) as { error?: Record<string, unknown> } | null)?.error ?? {};
+      if (typeof error.code === 'string') code = error.code;
+      if (Array.isArray(error.failed)) extra.failed = error.failed as RuleId[];
+      if (typeof error.retryAfterSeconds === 'number') extra.retryAfterSeconds = error.retryAfterSeconds;
+    } catch {
+      // non-JSON error body: keep internal_error
+    }
+    throw new AuthApiError(code, res.status, extra);
+  }
+  return (await res.json()) as T;
+}
 
 /** Sign in, register, demo sign in and sign out. Failures throw `ApiError` with the server's safe code. */
 export function useAuthActions() {
