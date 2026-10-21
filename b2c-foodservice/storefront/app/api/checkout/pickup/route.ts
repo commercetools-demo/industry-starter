@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { handle } from '@/lib/api';
 import { domainError } from '@/lib/api-domain';
 import { planGroups } from '@/lib/checkout/fulfilment-plan';
-import { setPayCartIds } from '@/lib/checkout/pay-cookie';
+import { setPayParts, type PayPart } from '@/lib/checkout/pay-cookie';
 import { blockingIssues } from '@/lib/checkout/summary';
 import { validatePickup } from '@/lib/checkout/validate';
 import { CheckoutNotReady, firstBlocker, getCheckoutState, preparePayments } from '@/lib/ct/checkout';
@@ -50,7 +50,8 @@ export const PUT = handle('/api/checkout/pickup', async (req) => {
     });
     const after = await getCheckoutState(read.session, market);
     const payload = { ...(after.state ?? state), payments: prepared.payments };
-    return setPayCartIds(NextResponse.json(payload, { headers: { 'Cache-Control': 'no-store' } }), prepared.payCartIds);
+    const parts: PayPart[] = prepared.payCartIds.map((id, i) => ({ ...(prepared.payments[i] as PayPart), id }));
+    return setPayParts(NextResponse.json(payload, { headers: { 'Cache-Control': 'no-store' } }), parts);
   } catch (e) {
     if (e instanceof CheckoutNotReady) return domainError('checkout_not_ready', 409, { missing: e.missing });
     throw e;

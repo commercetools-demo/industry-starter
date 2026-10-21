@@ -254,3 +254,8 @@ export async function ensureCheckoutCart(session: Session, market: CartMarket, s
   });
   return rebuilt.session;
 }
+
+/** A cart that is paid directly (no clones) and holds collect lines must already carry the store address and `mcf-collect`. */
+export function isCollectReady(raw: Pick<CtCart, 'shippingAddress'>): boolean {
+  return Boolean(raw.shippingAddress?.additionalAddressInfo?.startsWith('Collection at'));
+}

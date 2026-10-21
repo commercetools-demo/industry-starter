@@ -138,7 +138,8 @@ describe('PUT /api/checkout/pickup', () => {
     expect(res.status).toBe(200);
     expect(((await res.json()) as CheckoutState).payments).toHaveLength(2);
     const cookie = res.headers.getSetCookie().find((c) => c.startsWith('mcf_pay_carts='));
-    expect(cookie).toContain('clone-1%2Cclone-2');
+    expect(decodeURIComponent(cookie ?? '')).toContain('"id":"clone-1"');
+    expect(decodeURIComponent(cookie ?? '')).toContain('"id":"clone-2"');
     expect(cookie?.toLowerCase()).toContain('httponly');
   });
   it('an unsigned-in subscription rule answers 401', async () => {
