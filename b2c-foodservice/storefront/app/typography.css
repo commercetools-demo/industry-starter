@@ -53,7 +53,24 @@ body {
   font-size: 25px;
   letter-spacing: 0.16em;
 
+  /* Tablet: the header holds the wordmark, five links and the actions in one row. */
+  @media (width < 1100px) {
+    font-size: 21px;
+    letter-spacing: 0.1em;
+  }
+
   @media (width < 520px) {
     font-size: 21px;
+  }
+
+  /* Narrow phones: the menu button, wordmark and five header actions must fit in 320px without scrolling sideways. */
+  @media (width < 420px) {
+    font-size: 17px;
+    letter-spacing: 0.1em;
+  }
+
+  @media (width < 360px) {
+    font-size: 15px;
+    letter-spacing: 0.06em;
   }
 }

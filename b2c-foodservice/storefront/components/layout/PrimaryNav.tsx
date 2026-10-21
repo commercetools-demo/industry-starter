@@ -69,7 +69,7 @@ export default function PrimaryNav({ categories }: { categories: Category[] }) {
   };
 
   return (
-    <nav ref={root} aria-label={t('label')} onKeyDown={onKeyDown} className="flex items-center gap-1 max-mobile:hidden">
+    <nav ref={root} aria-label={t('label')} onKeyDown={onKeyDown} className="flex items-center gap-1 max-[1100px]:gap-0 max-mobile:hidden">
       {PRIMARY_NAV.map((item) => {
         const category = findCategoryByKey(categories, item.categoryKey);
         const href = category ? `/category/${category.slug}` : '/';
@@ -101,7 +101,7 @@ export default function PrimaryNav({ categories }: { categories: Category[] }) {
                 : undefined
             }
             className={cn(
-              'group relative px-3.5 py-2.5 font-display text-[15px] font-semibold',
+              'group relative px-3.5 py-2.5 font-display text-[15px] font-semibold max-[1100px]:px-2',
               active ? 'text-accent' : 'text-ink hover:text-accent focus-visible:text-accent',
             )}
           >
@@ -109,7 +109,7 @@ export default function PrimaryNav({ categories }: { categories: Category[] }) {
             <span
               aria-hidden="true"
               className={cn(
-                'absolute bottom-1 left-3.5 right-3.5 h-0.5 origin-left bg-current transition-transform duration-200 motion-reduce:transition-none',
+                'absolute bottom-1 left-3.5 right-3.5 max-[1100px]:left-2 max-[1100px]:right-2 h-0.5 origin-left bg-current transition-transform duration-200 motion-reduce:transition-none',
                 active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100',
               )}
             />

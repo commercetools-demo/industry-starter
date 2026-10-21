@@ -176,18 +176,6 @@ const json = (res, status, body) => {
   res.writeHead(status, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify(body));
 };
-const readBody = (req) =>
-  new Promise((resolve) => {
-    const chunks = [];
-    req.on('data', (c) => chunks.push(c));
-    req.on('end', () => {
-      try {
-        resolve(JSON.parse(Buffer.concat(chunks).toString() || '{}'));
-      } catch {
-        resolve({});
-      }
-    });
-  });
 
 createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(dir, 'cert.pem')) }, async (req, res) => {
   const url = new URL(req.url ?? '/', `https://localhost:${PORT}`);

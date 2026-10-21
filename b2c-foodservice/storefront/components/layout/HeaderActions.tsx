@@ -9,7 +9,7 @@ import StorePill from '@/components/layout/StorePill';
 /** Right side of the header, right to left: store pill, locale pill, search, account, cart. */
 export default function HeaderActions() {
   return (
-    <div className="ml-auto flex items-center gap-1.5">
+    <div className="ml-auto flex min-w-0 items-center gap-1.5 max-mobile:gap-0.5">
       <StorePill />
       <LocalePill />
       <SearchToggle />
