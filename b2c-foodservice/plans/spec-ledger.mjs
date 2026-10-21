@@ -45,8 +45,8 @@ export function testsIn(json) {
   const map = new Map();
   for (const file of json.testResults ?? []) {
     for (const t of file.assertionResults ?? []) {
-      map.set(t.title, t.status === 'passed' ? 'passed' : 'failed');
-      if (t.fullName) map.set(t.fullName, t.status === 'passed' ? 'passed' : 'failed');
+      const status = t.status === 'passed' ? 'passed' : ['pending', 'todo', 'skipped'].includes(t.status) ? 'todo' : 'failed';
+      for (const key of [t.title, t.fullName].filter(Boolean)) if (map.get(key) !== 'passed') map.set(key, status);
     }
   }
   return map;
