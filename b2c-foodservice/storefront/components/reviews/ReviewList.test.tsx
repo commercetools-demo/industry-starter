@@ -1,13 +1,15 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useState } from 'react';
 import { SWRConfig } from 'swr';
+import { useReviews } from '@/hooks/useReviews';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import ReviewList from '@/components/reviews/ReviewList';
 import ReviewListPanel from '@/components/reviews/ReviewListPanel';
 import { expectNoAxeViolations } from '@/test/axe';
 import { renderWithIntl } from '@/test/render';
 import { stubFetch } from '@/test/shell';
-import type { ReviewView } from '@/lib/types';
+import type { ReviewSort, ReviewView } from '@/lib/types';
 
 const PID = '3f1c2a9e-7a1b-4c53-9d0e-1a2b3c4d5e6f';
 const review = (over: Partial<ReviewView> = {}): ReviewView => ({
@@ -80,6 +82,12 @@ describe('ReviewList', () => {
   });
 });
 
+function PanelHarness({ productId }: { productId: string }) {
+  const [sort, setSort] = useState<ReviewSort>('newest');
+  const list = useReviews(productId, sort);
+  return <ReviewListPanel list={list} sort={sort} onSortChange={setSort} />;
+}
+
 describe('ReviewListPanel', () => {
   it('Sorted', async () => {
     const { calls } = stubFetch({
@@ -93,7 +101,7 @@ describe('ReviewListPanel', () => {
     });
     renderWithIntl(
       <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>
-        <ReviewListPanel productId={PID} />
+        <PanelHarness productId={PID} />
       </SWRConfig>,
     );
     await waitFor(() => expect(screen.getAllByTestId('review-item')).toHaveLength(3));

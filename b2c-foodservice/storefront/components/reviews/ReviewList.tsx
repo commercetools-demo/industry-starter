@@ -39,7 +39,7 @@ export default function ReviewList({ reviews, hasMore, isLoading, isLoadingMore,
   }
   if (isError) {
     return (
-      <div className="py-6" role="alert">
+      <div className="py-6" data-testid="reviews-error">
         <p className="m-0 mb-3 text-[14px] text-ink-2">{t('loadError')}</p>
         {onRetry ? <Button variant="ghost" onClick={onRetry}>{t('retry')}</Button> : null}
       </div>

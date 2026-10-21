@@ -42,7 +42,7 @@ export default function ProductDetail({
         </div>
       </PdpProvider>
       <RatingSummary rating={product.rating} />
-      <ReviewsSlot productId={product.id} />
+      <ReviewsSlot productId={product.id} productSlug={product.slug} sku={product.defaultSku} productName={product.name} stats={product.rating} />
       {related}
     </div>
   );

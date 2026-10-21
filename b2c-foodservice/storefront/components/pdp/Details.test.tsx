@@ -5,6 +5,8 @@ import { NextIntlClientProvider } from 'next-intl';
 import RatingSummary from '@/components/pdp/RatingSummary';
 import ReviewsSlot from '@/components/pdp/ReviewsSlot';
 import TrustRow from '@/components/pdp/TrustRow';
+import { SWRConfig } from 'swr';
+import { stubFetch } from '@/test/shell';
 import { accessoryPage, machinePage, podPage, renderPdp, usd } from '@/test/pdp';
 import enUS from '@/messages/en-US.json';
 
@@ -134,9 +136,21 @@ describe('rating summary', () => {
 });
 
 describe('reviews slot', () => {
-  it('reviews slot renders nothing until M', () => {
-    const { container } = render(<ReviewsSlot productId="p-1" />);
-    expect(container).toBeEmptyDOMElement();
+  it('the reviews slot mounts the reviews section (REVIEWS_ENABLED)', async () => {
+    stubFetch({
+      '/api/auth/me': () => ({ customer: null }),
+      '/api/reviews': () => ({ reviews: [], total: 0, page: 0, pageSize: 5, hasMore: false, mine: null }),
+    });
+    const { container } = render(
+      <NextIntlClientProvider locale="en-US" messages={enUS}>
+        <SWRConfig value={{ provider: () => new Map() }}>
+          <ReviewsSlot productId="p-1" productSlug="ember" sku="MCF-1" productName="Ember" stats={null} />
+        </SWRConfig>
+      </NextIntlClientProvider>,
+    );
+    expect(container.querySelector('#reviews-list')).not.toBeNull();
+    expect(await screen.findByText('Be the first to review')).toBeInTheDocument();
+    vi.unstubAllGlobals();
   });
 
   it('the page has the rating summary and no placeholder text for reviews', async () => {

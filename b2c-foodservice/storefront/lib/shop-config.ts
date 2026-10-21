@@ -33,5 +33,5 @@ export const SHIP_DAYS_MIN = 2;
 export const SHIP_DAYS_MAX = 4;
 /** Highest quantity the stepper offers (Q-H-08), further limited by inventory `maxCartQuantity` and stock. */
 export const PDP_MAX_QUANTITY = 99;
-/** M's reviews section mounts on the product page when true; until then the slot renders nothing (Q-H-14). */
-export const REVIEWS_ENABLED = false;
+/** M's reviews section mounts on the product page when true (workstream M turned it on, Q-H-14). */
+export const REVIEWS_ENABLED = true;
