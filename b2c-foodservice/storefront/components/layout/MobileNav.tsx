@@ -57,7 +57,7 @@ export default function MobileNav({ categories }: { categories: Category[] }) {
         <div className="wrap flex h-[72px] shrink-0 items-center justify-between">
           {/* The close button comes first in the DOM so it receives focus on open; the wordmark is shown first. */}
           <IconButton label={t('menu.close')} icon="x" onClick={close} className="order-2" />
-          <Link href="/" onClick={close} className="wordmark order-1 text-ink no-underline">
+          <Link prefetch={false} href="/" onClick={close} className="wordmark order-1 text-ink no-underline">
             {tCommon('brand')}
           </Link>
         </div>
@@ -71,7 +71,7 @@ export default function MobileNav({ categories }: { categories: Category[] }) {
               if (!item.hasMenu) {
                 return (
                   <li key={item.id}>
-                    <Link href={href} onClick={close} className={ROW}>
+                    <Link prefetch={false} href={href} onClick={close} className={ROW}>
                       {label}
                     </Link>
                   </li>
@@ -87,7 +87,7 @@ export default function MobileNav({ categories }: { categories: Category[] }) {
               return (
                 <li key={item.id} className="border-b border-line">
                   <div className="flex items-center">
-                    <Link href={href} onClick={close} className="flex-1 py-4 font-display text-[24px] font-semibold text-ink">
+                    <Link prefetch={false} href={href} onClick={close} className="flex-1 py-4 font-display text-[24px] font-semibold text-ink">
                       {label}
                     </Link>
                     <button
@@ -104,7 +104,7 @@ export default function MobileNav({ categories }: { categories: Category[] }) {
                   <ul id={`mobile-sub-${menu}`} hidden={!isOpen} className="m-0 list-none pb-3 pl-1">
                     {sub.map(({ link, target }) => (
                       <li key={link.labelKey}>
-                        <Link href={target} onClick={close} className="block py-2 text-[16px] text-ink-2">
+                        <Link prefetch={false} href={target} onClick={close} className="block py-2 text-[16px] text-ink-2">
                           {t(`mega.${link.labelKey}`)}
                         </Link>
                       </li>
@@ -140,7 +140,7 @@ export default function MobileNav({ categories }: { categories: Category[] }) {
               </button>
             </li>
             <li>
-              <Link href="/account" onClick={close} className={ROW}>
+              <Link prefetch={false} href="/account" onClick={close} className={ROW}>
                 {t('account.myAccount')}
               </Link>
             </li>

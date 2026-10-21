@@ -4,6 +4,11 @@
 @import './motion.css';
 @import './home.css';
 
+/* WCAG 2.4.11: the 72px sticky header never covers a focused element or an anchor target (Q-Q-5). */
+html {
+  scroll-padding-top: 88px;
+}
+
 body {
   margin: 0;
 }

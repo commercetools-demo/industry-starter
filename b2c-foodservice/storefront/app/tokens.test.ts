@@ -104,3 +104,11 @@ describe('Accessibility', () => {
     expect(contrast(hex('--teal-strong'), hex('--surface')), 'teal-strong graphic').toBeGreaterThanOrEqual(3);
   });
 });
+
+describe('Focus not obscured', () => {
+  it('html scroll padding clears the 72px sticky header', () => {
+    const css = readCss('app/globals.css');
+    const px = Number(/html\s*\{[^}]*scroll-padding-top:\s*(\d+)px/.exec(css)?.[1] ?? 0);
+    expect(px).toBeGreaterThanOrEqual(88);
+  });
+});

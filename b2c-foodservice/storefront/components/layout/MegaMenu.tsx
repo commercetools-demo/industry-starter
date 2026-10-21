@@ -38,7 +38,7 @@ export default function MegaPanel({ menu, categories, open, onEnter, onLeave, on
       if (!href) return []; // a category missing from the tree renders no link, never a dead one
       return [
         <li key={link.labelKey}>
-          <Link href={href} onClick={onNavigate} className={className}>
+          <Link prefetch={false} href={href} onClick={onNavigate} className={className}>
             {t(`mega.${link.labelKey}`)}
           </Link>
         </li>,
@@ -51,7 +51,7 @@ export default function MegaPanel({ menu, categories, open, onEnter, onLeave, on
     if (!item || !target) return [];
     return [
       <li key={id}>
-        <Link href={buildListingHref(target.slug)} onClick={onNavigate} className={LIST_CLASS}>
+        <Link prefetch={false} href={buildListingHref(target.slug)} onClick={onNavigate} className={LIST_CLASS}>
           {t(`nav.${item.labelKey}`)}
         </Link>
       </li>,
@@ -90,7 +90,7 @@ export default function MegaPanel({ menu, categories, open, onEnter, onLeave, on
 
         <div className="max-grid3:hidden">
           {shopAllHref ? (
-            <Link href={shopAllHref} onClick={onNavigate} className="group block">
+            <Link prefetch={false} href={shopAllHref} onClick={onNavigate} className="group block">
               <div className="relative aspect-[16/10] overflow-hidden rounded-card bg-canvas-2">
                 {category?.imageUrl ? (
                   <Image
@@ -123,6 +123,7 @@ export default function MegaPanel({ menu, categories, open, onEnter, onLeave, on
               <span className="eyebrow">{t('mega.brewLabel')}</span>
               {BREW_METHODS.map((brew) => (
                 <Link
+                  prefetch={false}
                   key={brew.key}
                   href={buildListingHref(brewCategory.slug, { brew: brew.key })}
                   onClick={onNavigate}
@@ -134,7 +135,7 @@ export default function MegaPanel({ menu, categories, open, onEnter, onLeave, on
             </>
           ) : null}
           {shopAllHref ? (
-            <Link href={shopAllHref} onClick={onNavigate} className="ml-auto font-semibold text-ink hover:text-accent">
+            <Link prefetch={false} href={shopAllHref} onClick={onNavigate} className="ml-auto font-semibold text-ink hover:text-accent">
               {t('mega.shopAll', { category: categoryName })} →
             </Link>
           ) : null}

@@ -42,7 +42,7 @@ export default function Footer({ categories }: { categories: Category[] }) {
                   {link.action === 'choose-store' ? (
                     <FooterStoreButton label={t(`link.${link.labelKey}`)} className={`${LINK} cursor-pointer border-0 bg-transparent p-0`} />
                   ) : (
-                    <Link href={hrefFor(link)} className={LINK}>
+                    <Link prefetch={false} href={hrefFor(link)} className={LINK}>
                       {t(`link.${link.labelKey}`)}
                     </Link>
                   )}
@@ -58,7 +58,7 @@ export default function Footer({ categories }: { categories: Category[] }) {
           <ul className="m-0 flex list-none gap-5 p-0">
             {FOOTER_LEGAL.map((item) => (
               <li key={item.labelKey}>
-                <Link href={footerHref(item.href)} className="text-footer-meta hover:text-surface">
+                <Link prefetch={false} href={footerHref(item.href)} className="text-footer-meta hover:text-surface">
                   {t(item.labelKey)}
                 </Link>
               </li>
