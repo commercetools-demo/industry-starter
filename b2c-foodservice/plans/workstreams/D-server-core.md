@@ -316,7 +316,7 @@ Run `cd storefront && npm run check` before ticking.
   - Implement 3.8. Fixtures: one pod product (variants 10 and 50 capsules, enum, lenum, set of ltext, boolean), one product with no reviews, one product with a discounted price, one category list with a deep tree.
   - Tests (spec: Type boundary; reviews Card rating/No reviews at mapper level): `Card rating: 12 reviews averaging 4.58333 map to average 4.58333 and count 12 (display 4.6)`, `No reviews: count 0 or absent statistics map to undefined rating`, `Price is the session country and currency price`, `Discounted price is exposed as discounted`, `Price falls back to the prices array when no scoped price is present`, `Enum, lenum, ltext and set attributes map to AttributeValue`, `Unsupported attribute types are dropped`, `Product-level attributes override master variant attributes`, `Product name is localized with fallback`, `Category tree is built from a flat list and sorted by orderHint`, `Mapped output contains no SDK-only fields` (assert `Object.keys` whitelist).
 
-- [ ] **D-08 Client fetch helper**
+- [x] **D-08 Client fetch helper**
   - Files: `hooks/fetcher.ts`, `hooks/fetcher.test.ts`.
   - Implement 3.9; mock `fetch` with `vi.stubGlobal`.
   - Tests (spec: Client component needs data, hook half): `fetchJson returns parsed JSON on 200`, `fetchJson throws ApiError with the server code on a JSON error body`, `fetchJson throws ApiError internal_error on a non-JSON error`, `fetchJson maps a network failure to upstream_unavailable`.
