@@ -66,3 +66,21 @@ export interface MarketOption {
   languages: { locale: string; label: string }[];
   region: 'North America';
 }
+
+// Workstream J: auth and session.
+export type RuleId = 'min_length' | 'max_length' | 'letter' | 'digit' | 'not_email';
+export interface AppAddress {
+  id: string; label: string | null;
+  firstName: string; lastName: string;
+  streetName: string; additionalStreetInfo: string | null;
+  city: string; state: string | null; postalCode: string; country: string;
+  phone: string | null;
+  isDefaultShipping: boolean; isDefaultBilling: boolean;
+}
+export interface AppCustomer {
+  id: string; email: string; firstName: string; lastName: string;
+  defaultShippingAddressId: string | null;
+  addresses: AppAddress[];
+}
+/** The cart as the auth routes report it after a sign-in merge (workstream I owns the full cart view). */
+export interface AuthCart { id: string; lineCount: number; quantity: number }
