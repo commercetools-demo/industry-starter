@@ -121,3 +121,64 @@ export interface FacetGroup {
 export interface CartLineSummary { id: string; sku: string; quantity: number }
 /** Minimal cart for the quick add path. Workstream I replaces it with the full cart type but keeps these fields. */
 export interface CartSummary { id: string; version: number; count: number; lines: CartLineSummary[] }
+
+// Workstream H: product detail view model (see lib/mappers/product-detail.ts).
+export type ProductShape = 'pods' | 'coffee' | 'machine' | 'accessory' | 'gift';
+export type VariantAttrValue = string | number | boolean;
+export interface PriceTier { minimumQuantity: number; value: Money }
+export interface VariantPrice { value: Money; discounted?: Money; discountName?: string; tiers: PriceTier[] }
+export interface VariantStock {
+  /** Online warehouse (the entry without a supply channel). */
+  online: number;
+  restockableInDays?: number;
+  expectedDelivery?: string;
+  minQty?: number;
+  maxQty?: number;
+  /** Quantity per store channel id. */
+  stores: Record<string, number>;
+}
+/** Inventory read for one SKU (lib/ct/inventory.ts#getInventoryDetail). */
+export type InventoryDetail = VariantStock;
+export interface VariantView {
+  sku: string; id: number;
+  /** Enum key, number or boolean values only (sets are facts, not variant attributes). */
+  attrs: Record<string, VariantAttrValue>;
+  attrLabels: Record<string, string>;
+  /** null: no selected price, or the amount is 0. */
+  price: VariantPrice | null;
+  /** Recurrence prices of the shopper's currency and country. */
+  recurring: { policyId: string; value: Money }[];
+  images: ImageRef[];
+  stock: VariantStock;
+  unit?: { money: Money; perKey: 'capsule' | '100g' };
+}
+export type SelectorRenderer = 'pill' | 'colour';
+export interface SelectorDef {
+  attr: string;
+  renderer: SelectorRenderer;
+  required: boolean;
+  options: { value: string; label: string }[];
+}
+export interface ProductDetail {
+  id: string; slug: string; name: string; categoryName: string;
+  breadcrumb: { name: string; slug: string }[];
+  tagline: string; description?: string;
+  shape: ProductShape;
+  badge: CardBadge | null;
+  subscribable: boolean;
+  rating: RatingStats | null;
+  variants: VariantView[];
+  defaultSku: string;
+  selectors: SelectorDef[];
+  facts: {
+    intensity?: number; roast?: string; origin?: string; notes: string[];
+    /** Specification rows; the page maps `key` to `pdp.spec.<key>`. */
+    specs: { key: string; value: string }[];
+  };
+  systemKey?: string;
+  metaTitle?: string; metaDescription?: string;
+}
+export interface RecurrencePolicyView {
+  id: string; key: string; name: string;
+  schedule: { unit: 'Weeks' | 'Months' | 'Days'; value: number };
+}

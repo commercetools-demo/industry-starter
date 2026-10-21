@@ -23,3 +23,15 @@ export const CART_CARRY_OVER_ENABLED = false;
  * 'Multiple' after its mixed-bag spike. Added by workstream G.
  */
 export const CART_SHIPPING_MODE: 'Single' | 'Multiple' = 'Single';
+
+// Workstream H: product detail.
+
+/** Delivery estimate rule (Q-H-02, owner decision SO-x2): an order before the cut-off hour (market time zone) ships the same business day. */
+export const DELIVERY_CUTOFF_HOUR = 14;
+/** Standard delivery takes this many business days (weekends skipped). */
+export const SHIP_DAYS_MIN = 2;
+export const SHIP_DAYS_MAX = 4;
+/** Highest quantity the stepper offers (Q-H-08), further limited by inventory `maxCartQuantity` and stock. */
+export const PDP_MAX_QUANTITY = 99;
+/** M's reviews section mounts on the product page when true; until then the slot renders nothing (Q-H-14). */
+export const REVIEWS_ENABLED = false;
