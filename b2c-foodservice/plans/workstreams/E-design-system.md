@@ -288,7 +288,7 @@ Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no co
   - Implement 3.6. English only (D-030); en-CA spells colour with u.
   - Tests (spec: bootstrap Adding a market, extended): `Catalogues have identical keys` (reuses A's helper), `en-CA uses Canadian spelling where the text has colour or favourite`, `ICU messages parse in both locales` (use `IntlMessageFormat`? not installed: instead render `ui.rating.label` through `NextIntlClientProvider` for counts 0, 1, 12), `Nespresso appears only in compatibility wording`, `Every ErrorCode of lib/errors has an errors.<code> key`, `No catalogue value contains a hex colour or HTML tag`.
 
-- [ ] **E-10 Kitchen-sink page and predeploy gate**
+- [x] **E-10 Kitchen-sink page and predeploy gate**
   - Files: `app/[locale]/dev/design/page.tsx`, `app/[locale]/dev/design/KitchenSink.tsx` (client), `scripts/predeploy-check.mjs` and its test (extend: fail while `app/[locale]/dev` exists).
   - The page shows: every token as a labelled swatch (name beside it, using `style={{ background: 'var(--ink)' }}` strings, never hex), the type scale, every atom in every state (default, hover note, focus, disabled, selected, loading), the icon grid (name under each icon at 24px and 96px), a Drawer and Modal opener, a Toast button, Steps with three states, and the grid utility with 8 placeholder cards. The page 404s when `NODE_ENV === 'production'`.
   - Tests: `Kitchen sink is 404 in production`, `Deploy gate fails while app/[locale]/dev exists`.

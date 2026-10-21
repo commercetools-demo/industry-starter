@@ -11,6 +11,9 @@ export function checkPredeploy(root) {
   if (existsSync(join(root, 'app', 'api', 'health', 'route.ts'))) {
     problems.push('Remove app/api/health/route.ts before deploying');
   }
+  if (existsSync(join(root, 'app', '[locale]', 'dev'))) {
+    problems.push('Remove app/[locale]/dev (the design kitchen sink) before deploying');
+  }
   return problems;
 }
 
