@@ -35,3 +35,6 @@ export function articleHref(slug: string): string {
 export function searchHref(): string {
   return '/search';
 }
+
+/** Top-level categories for pages that must not call commerce (404, About). Slugs are the seeded ones; labels are `shell.nav.<id>`. */
+export const STATIC_TOP_CATEGORIES = ['pods', 'coffee', 'machines', 'accessories', 'gifts'] as const;
