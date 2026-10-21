@@ -282,5 +282,68 @@
     "close": "Close",
     "switchError": "We could not change the country. Please try again.",
     "english": "English"
+  },
+  "auth": {
+    "signIn": {
+      "eyebrow": "Your account",
+      "title": "Sign in",
+      "intro": "Welcome back. Sign in to see your orders and saved items.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "pending": "Signing in…",
+      "invalidCredentials": "Email or password is incorrect.",
+      "tooMany": "Too many attempts. Try again in {seconds} seconds.",
+      "create": "Create an account",
+      "cartMerged": "Your bag was added to your account."
+    },
+    "demo": {
+      "title": "Demo customers",
+      "label": "Choose a demo customer",
+      "submit": "Sign in as",
+      "hint": "For demonstration only. These customers are created by the seed.",
+      "groupUS": "United States",
+      "groupCA": "Canada",
+      "nameUS": "{name} (US)",
+      "nameCA": "{name} (Canada)"
+    },
+    "notice": {
+      "registered": "Account created.",
+      "signedOut": "You are signed out."
+    },
+    "register": {
+      "eyebrow": "Your account",
+      "title": "Create your account",
+      "intro": "Save your bag, track orders and check out faster.",
+      "submit": "Create account",
+      "pending": "Creating account…",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "consent": "By creating an account you agree to the {terms} and {privacy}.",
+      "terms": "terms",
+      "privacy": "privacy policy",
+      "failed": "We could not create the account with these details. If you already have one, sign in.",
+      "created": "Welcome to Malva Coffee.",
+      "haveAccount": "Already have an account? Sign in"
+    },
+    "password": {
+      "show": "Show password",
+      "hide": "Hide password",
+      "rulesMet": "{met} of {total} rules met",
+      "rulesLabel": "Password rules",
+      "rules": {
+        "min_length": "At least 10 characters",
+        "letter": "Contains a letter",
+        "digit": "Contains a number",
+        "not_email": "Is not your email address",
+        "max_length": "At most 128 characters"
+      }
+    },
+    "errors": {
+      "unavailable": "Something went wrong on our side. Please try again.",
+      "retry": "Try again",
+      "required": "This field is required.",
+      "emailShape": "Enter a valid email address."
+    }
   }
 }
