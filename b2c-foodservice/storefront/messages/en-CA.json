@@ -1,7 +1,21 @@
 {
   "common": {
     "brand": "Malva Coffee",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "close": "Close",
+    "open": "Open",
+    "back": "Back",
+    "next": "Next",
+    "save": "Save",
+    "cancel": "Cancel",
+    "remove": "Remove",
+    "edit": "Edit",
+    "loading": "Loading",
+    "retry": "Try again",
+    "yes": "Yes",
+    "no": "No",
+    "colour": "Colour",
+    "favourite": "Favourite"
   },
   "meta": {
     "title": "Malva Coffee",
@@ -10,10 +24,62 @@
   "home": {
     "placeholder": "Malva Coffee is getting ready."
   },
+  "ui": {
+    "stepper": {
+      "decrease": "Decrease quantity",
+      "increase": "Increase quantity"
+    },
+    "rating": {
+      "label": "{value} out of 5, {count, plural, one {# review} other {# reviews}}",
+      "reviews": "{count, plural, one {# review} other {# reviews}}"
+    },
+    "option": {
+      "unavailable": "Not available"
+    },
+    "toast": {
+      "dismiss": "Dismiss"
+    },
+    "drawer": {
+      "close": "Close panel"
+    },
+    "modal": {
+      "close": "Close dialogue"
+    },
+    "steps": {
+      "done": "completed",
+      "current": "current step"
+    },
+    "field": {
+      "required": "Required",
+      "optional": "Optional"
+    }
+  },
+  "a11y": {
+    "menu": "Menu",
+    "cart": "Bag",
+    "search": "Search",
+    "account": "Account",
+    "store": "Store",
+    "language": "Language",
+    "filters": "Filters",
+    "previousImage": "Previous image",
+    "nextImage": "Next image"
+  },
   "errors": {
     "title": "Something went wrong",
     "retry": "Try again",
     "notFoundTitle": "Page not found",
-    "notFoundBody": "We could not find the page you were looking for."
+    "notFoundBody": "We could not find the page you were looking for.",
+    "generic": "Something went wrong. Please try again.",
+    "bad_request": "That request could not be understood.",
+    "validation_failed": "Please check the highlighted fields and try again.",
+    "unauthorized": "Please sign in to continue.",
+    "forbidden": "You do not have access to this.",
+    "not_found": "We could not find what you were looking for.",
+    "conflict": "That changed while you were working. Please refresh and try again.",
+    "rate_limited": "Too many requests. Please wait a moment and try again.",
+    "upstream_unavailable": "We cannot reach our systems right now. Please try again shortly.",
+    "wrong_project": "This site is not connected to the expected store.",
+    "internal_error": "Something went wrong on our side. Please try again."
   }
 }

@@ -283,7 +283,7 @@ Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no co
   - Files: `context/toast.tsx`, `components/ui/Toast.tsx`, `Steps.tsx`, tests (use `vi.useFakeTimers()`).
   - Tests: `Toast shows the message with a polite live region`, `Toast disappears after 2.2 seconds`, `A second message replaces the first and restarts the timer`, `useToast outside the provider throws a clear error`, `Steps marks done, active and pending`, `Steps sets aria-current on the active step`, `Steps done circle shows a check icon`.
 
-- [ ] **E-09 Message catalogues (identical keys, two locales)**
+- [x] **E-09 Message catalogues (identical keys, two locales)**
   - Files: `messages/en-US.json`, `en-CA.json`, `messages/catalogue.test.ts`.
   - Implement 3.6. English only (D-030); en-CA spells colour with u.
   - Tests (spec: bootstrap Adding a market, extended): `Catalogues have identical keys` (reuses A's helper), `en-CA uses Canadian spelling where the text has colour or favourite`, `ICU messages parse in both locales` (use `IntlMessageFormat`? not installed: instead render `ui.rating.label` through `NextIntlClientProvider` for counts 0, 1, 12), `Nespresso appears only in compatibility wording`, `Every ErrorCode of lib/errors has an errors.<code> key`, `No catalogue value contains a hex colour or HTML tag`.
