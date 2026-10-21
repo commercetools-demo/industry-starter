@@ -81,5 +81,205 @@
     "upstream_unavailable": "We cannot reach our systems right now. Please try again shortly.",
     "wrong_project": "This site is not connected to the expected store.",
     "internal_error": "Something went wrong on our side. Please try again."
+  },
+  "shell": {
+    "promise": {
+      "shipping": "Free shipping over {threshold}",
+      "collection": "Free café collection, ready in {minutes, number} min",
+      "returns": "{days, number}-day returns"
+    },
+    "nav": {
+      "label": "Main",
+      "pods": "Pods",
+      "coffee": "Coffee",
+      "machines": "Machines",
+      "accessories": "Accessories",
+      "gifts": "Gifts"
+    },
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu",
+      "title": "Menu"
+    },
+    "search": {
+      "label": "Search",
+      "placeholder": "Search coffee, pods, machines",
+      "submit": "Search",
+      "open": "Open search",
+      "close": "Close search"
+    },
+    "account": {
+      "signIn": "Sign in",
+      "menu": "Account menu",
+      "dashboard": "Dashboard",
+      "signOut": "Sign out",
+      "myAccount": "My account"
+    },
+    "cart": {
+      "aria": "Cart, {count, plural, one {# item} other {# items}}"
+    },
+    "storePill": {
+      "collectAt": "Collect at {store}",
+      "choose": "Choose a store",
+      "aria": "Collection store: {store}. Change store"
+    },
+    "localePill": {
+      "aria": "Country and language: {country}, {currency}. Change"
+    },
+    "mega": {
+      "brewLabel": "Brew methods",
+      "shopAll": "Shop all {category}",
+      "heading": "Shop {category}",
+      "moreHeading": "More from Malva",
+      "expand": "Show {category} categories",
+      "collapse": "Hide {category} categories",
+      "feature": {
+        "newIn": "New in",
+        "bestsellers": "Bestsellers",
+        "sets": "Sets"
+      },
+      "link": {
+        "original": "Original",
+        "vertuo": "Vertuo",
+        "intensity": "Intensity 8 and up",
+        "limited": "Limited editions",
+        "decaf": "Decaf",
+        "beans": "Beans",
+        "ground": "Ground",
+        "singleOrigin": "Single origin",
+        "blends": "Blends",
+        "subscriptions": "Subscriptions",
+        "capsule": "Capsule machines",
+        "beanToCup": "Bean-to-cup",
+        "espresso": "Espresso machines",
+        "filter": "Filter machines",
+        "grinders": "Grinders",
+        "cupsMugs": "Cups and mugs",
+        "frothers": "Milk frothers",
+        "care": "Descaling and care",
+        "storage": "Storage"
+      },
+      "brew": {
+        "espresso": "Espresso",
+        "filter": "Filter",
+        "frenchPress": "French press",
+        "moka": "Moka",
+        "coldBrew": "Cold brew"
+      },
+      "pods": {
+        "compat": "Compatible with Nespresso Original and Vertuo",
+        "promo": {
+          "title": "Capsules for every cup",
+          "line": "Original and Vertuo compatible, from light to dark.",
+          "cta": "Shop pods"
+        }
+      },
+      "coffee": {
+        "promo": {
+          "title": "Freshly roasted",
+          "line": "Beans and ground coffee, roasted for the way you brew.",
+          "cta": "Shop coffee"
+        }
+      },
+      "machines": {
+        "promo": {
+          "title": "Find your machine",
+          "line": "From capsule to bean-to-cup, with the right filter for you.",
+          "cta": "Shop machines"
+        }
+      },
+      "accessories": {
+        "promo": {
+          "title": "The finishing touches",
+          "line": "Cups, frothers and everything to keep your machine happy.",
+          "cta": "Shop accessories"
+        }
+      }
+    },
+    "footer": {
+      "tagline": "Coffee, capsules and machines, delivered to your door.",
+      "col": {
+        "shop": "Shop",
+        "collect": "Collect",
+        "help": "Help",
+        "company": "Company"
+      },
+      "link": {
+        "pods": "Pods",
+        "coffee": "Coffee",
+        "machines": "Machines",
+        "accessories": "Accessories",
+        "gifts": "Gifts",
+        "chooseStore": "Choose your store",
+        "howCollectionWorks": "How collection works",
+        "contact": "Contact us",
+        "faq": "Questions and answers",
+        "shippingReturns": "Shipping and returns",
+        "trackOrder": "Your orders",
+        "about": "About Malva",
+        "journal": "Journal"
+      },
+      "copyright": "© {year} Malva Coffee",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "accessibility": "Accessibility"
+    },
+    "newsletter": {
+      "heading": "Join the list",
+      "label": "Email address",
+      "placeholder": "you@example.com",
+      "join": "Join",
+      "invalid": "Enter a valid email address",
+      "error": "Something went wrong, try again",
+      "success": "Thanks, you're on the list"
+    }
+  },
+  "store": {
+    "picker": {
+      "title": "Choose your store",
+      "intro": "Set your pickup location to see real-time availability across the site.",
+      "searchLabel": "Search stores",
+      "searchPlaceholder": "Town, neighbourhood or postal code",
+      "useLocation": "Use my location",
+      "locationOff": "Location is off, search by town or postcode",
+      "nearest": "Nearest",
+      "openToday": "Open today {open}–{close}",
+      "closedToday": "Closed today",
+      "availability": {
+        "in": "In stock for this item",
+        "low": "Low stock for this item",
+        "out": "Unavailable for this item"
+      },
+      "loading": "Checking stock",
+      "noMatch": "No stores near {query}.",
+      "shipInstead": "Ship to me instead",
+      "selected": "Collecting from {store}",
+      "error": "We could not load the stores.",
+      "count": "{count, plural, one {# store} other {# stores}}",
+      "retry": "Try again",
+      "selectError": "We could not save your store. Please try again."
+    }
+  },
+  "locale": {
+    "title": "Country and language",
+    "billing": "Your current selected location is {country} and your order will be billed in {currency}.",
+    "heading": "{country} ({currency})",
+    "language": "Language",
+    "languageHint": "More languages are coming",
+    "chooseLocation": "Choose your location",
+    "region": {
+      "northAmerica": "North America"
+    },
+    "country": {
+      "US": "United States",
+      "CA": "Canada"
+    },
+    "cartNotice": "Your bag is priced in {oldCurrency}. Items will be moved to {newCurrency} where they are available; others will be listed.",
+    "cartResetNotice": "Your bag will be emptied because it is priced in {oldCurrency}.",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "close": "Close",
+    "switchError": "We could not change the country. Please try again.",
+    "english": "English"
   }
 }

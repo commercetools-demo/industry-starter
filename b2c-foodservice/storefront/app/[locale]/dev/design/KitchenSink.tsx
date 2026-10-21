@@ -68,7 +68,7 @@ function Sink() {
   const [modal, setModal] = useState(false);
 
   return (
-    <main className="wrap pb-24 pt-10">
+    <div className="wrap pb-24 pt-10">
       <p className="eyebrow">Design system</p>
       <h1 className="page-title mt-2" data-sample="page-title">
         Kitchen sink
@@ -286,7 +286,7 @@ function Sink() {
           ))}
         </div>
       </Section>
-    </main>
+    </div>
   );
 }
 
