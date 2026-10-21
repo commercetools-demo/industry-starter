@@ -15,3 +15,9 @@ export async function fetchMarkets(): Promise<CountryConfig[]> {
 }
 
 export const getMarkets: () => Promise<CountryConfig[]> = cachedPublic('project', ['markets'], fetchMarkets);
+
+/** Languages configured on the project (cached 300 s with the other project reads). Added by workstream G. */
+export const getProjectLanguages: () => Promise<string[]> = cachedPublic('project', ['languages'], async () => {
+  const { body } = await apiRoot.get().execute();
+  return body.languages;
+});
