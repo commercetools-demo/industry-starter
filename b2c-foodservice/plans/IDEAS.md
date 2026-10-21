@@ -21,3 +21,10 @@
 - (F) Remove `app/[locale]/dev/store-picker` (dev harness) and `storefront/scripts/mock-ct-server.mjs` in workstream Q; the mock server is only a local aid for browser checks without credentials.
 - (F) Footer links to /contact, /faq, /policies/*, /about, /journal and /account/orders go to `/` until P and J land; then add the paths to `BUILT_ROUTES` in `lib/nav/footer-config.ts`.
 - (F) Pull the search icon pill input and suggestions into G once the search page exists; add axe-core to devDependencies (Q-F-13).
+- (G) A `narrow` width option on the `Drawer` atom (min(360px, 90vw)) for the filter sheet (Q-G-19).
+- (G) Cache the catalogue half of cards by `[locale, ids]` once performance work (Q) shows the id-first read is the cost (Q-G-10).
+- (G) Search suggestions and a real "did you mean" need an external engine; the page only states that typo-tolerant matching is on (Q-G-08).
+- (G) Add `axe-core` to devDependencies (used by every component test, Q-F-13) and zod if the lead wants schema validation in route handlers.
+- (G) `storefront/scripts/mock-ct-server.mjs` now serves the seed catalogue and a Product Search engine; remove it with the dev harness in workstream Q. Re-generate `scripts/mock-fixtures/seed-fixtures.json` with `npx vitest run --config scripts/mock-fixtures/vitest.gen.config.mts` when `seed/src/data` changes.
+- (G) A featuredRank number attribute in the seed would make "Featured" mean something (Q-G-04).
+- (G) The prototype's hover shadow is on the image only; keyboard focus-within gets it too here.

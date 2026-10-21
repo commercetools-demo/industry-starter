@@ -83,7 +83,7 @@ function Option({
   const grid = facet.control === 'grid';
   const dead = option.count === 0 && !option.selected;
   const row = cn(
-    'transition-state flex items-center gap-2.5 text-[14px] text-ink no-underline',
+    'transition-state flex items-center gap-2.5 text-left text-[14px] text-ink no-underline',
     grid
       ? cn('h-10 justify-center rounded-field border text-[14px] font-semibold', option.selected ? 'border-ink bg-ink text-surface' : 'border-line-2 bg-surface hover:border-ink')
       : 'rounded-field px-1 py-1.5 hover:bg-ink/4',

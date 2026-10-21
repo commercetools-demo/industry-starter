@@ -250,7 +250,7 @@ Docs: [carts](https://docs.commercetools.com/api/projects/carts), [cart preparat
 
 Common rules: `lib/ct/*` starts with `import 'server-only'`; components never import `lib/ct`; locale links from `@/i18n/routing`; tokens only; no `any`; all strings in two catalogues; `npm run check` after each task; one commit per task `ws-g: G-0x ...`.
 
-- [ ] **G-00 Preconditions and platform checks.** Run the gates of 3.3 with the commercetools MCP (or `seed` read-only script) and the docs; save `plans/evidence/G/mcp-checks.md` (request, response excerpt ids only, verdict). Confirm Product Search indexing is `Activated` and the seeded counts (products about 40). Record findings in `plans/PROJECT-FINDINGS.md`. [SKILL: commercetools-platform] [SKILL: commercetools-storefront]
+- [x] **G-00 Preconditions and platform checks.** Run the gates of 3.3 with the commercetools MCP (or `seed` read-only script) and the docs; save `plans/evidence/G/mcp-checks.md` (request, response excerpt ids only, verdict). Confirm Product Search indexing is `Activated` and the seeded counts (products about 40). Record findings in `plans/PROJECT-FINDINGS.md`. [SKILL: commercetools-platform] [SKILL: commercetools-storefront] _Done offline: gates (b), (d) and rating checked live; (a), (c), (e) and `limit: 0` wait for the seed run, row OA-G-a (see plans/evidence/G/mcp-checks.md)._
 - [x] **G-01 URL parameters.** `lib/search/params.ts` as 3.2. Tests `params.test.ts`: `defaults per scope`, `round trip keeps facets and sort`, `unknown sort falls back`, `page clamps to 1 and 400`, `unknown facet and value dropped`, `removeFilter resets page`, `single facet re-click clears`, `serialization is stable and omits defaults`, `q is trimmed and cut at 100`. [SPEC: product-listing-page "Filters survive a reload"]
 - [x] **G-02 Facet and price-band config, attribute labels.** `lib/search/facet-config.ts`, `price-bands.ts`, `lib/ct/attribute-labels.ts`. [SKILL: commercetools-platform] Tests: `enum fields point at .key and use enum`, `set enum keeps set_ prefix`, `every facet has a param name and label key`, `price bands are contiguous and per currency`, `labels map enum keys per locale`, `labels cached for an hour`.
 - [x] **G-03 Search request builder (pure).** `lib/search/build.ts` per 3.4. Tests `build.test.ts` (assert structure, no snapshots): `category scope uses categoriesSubTree`, `market filter is currency and country`, `avail goes to the query not postFilter`, `text clause has exact sku boost fullText and fuzzy only above five characters`, `facets carry the other groups' filters and not their own` (scenario "Faceted counts"), `selected groups go to postFilter`, `price sort filters currency and country only`, `rating sort uses review statistics`, `rating facet and filter use averageRating ranges`, `intensity maps to ranges`, `no productProjectionParameters key anywhere`, `language on distinct facets and exact filters`. [SKILL: commercetools-platform] [SPEC: product-listing-page, search-results-page]
@@ -263,28 +263,28 @@ Common rules: `lib/ct/*` starts with `import 'server-only'`; components never im
 - [x] **G-10 Filter sidebar and groups.** `FilterSidebar`, `FacetGroup`, controls, `lib/search/facets.ts`. Tests: `Faceted counts`, `Dead end avoided disables a zero count option`, `radio re-click clears`, `colour dots and button grid render`, `Show all n above six options`, `selected count badge`, `group hidden when no buckets`, `option links carry the new URL`, `no axe violations`.
 - [x] **G-11 Mobile sheet and `GET /api/search`.** `FilterSheet`, `app/api/search/route.ts`. [SKILL: commercetools-platform] Tests: `Apply closes the sheet and navigates once`, `draft selections do not navigate`, `Show n results updates from the count call`, `countOnly uses limit 0`, `invalid params 400`, `unsupported language 422`, `close discards the draft`.
 - [x] **G-12 Listing assembly, states, pagination, routes.** `lib/listing/load.ts`, `ListingPage`, `ProductGrid`, `EmptyState`, `NoResults`, `Pagination`, three route files, `loading.tsx`, `error.tsx`, metadata (`robots: noindex` when `q` or a filter is active, `rel prev/next`). [SKILL: commercetools-storefront] Tests `ListingPage.test.tsx` (mocked ct layer): `Filters survive a reload` (same URL gives same state and count), `Facet combination with no matches keeps removable chips`, `No price for this buyer card states it`, `Page past the last result redirects to the last page`, `Browse a category shows a paginated filterable list`, `Nothing matches offers a way back with fallback content`, `Query matches nothing keeps the query editable`, `Misspelt query sends a fuzzy clause and claims no correction`, `Unsupported language reports it`, `Part number pasted puts that product first and names the matched sku`, `Category change resets filters`, `unknown category 404`, `empty q shows the prompt and no search call`, `B2C only: no variant table or pack selector`.
-- [ ] **G-13 Messages and gates.** Fill the two catalogues for 3.10, run the parity test, `npm run check`, `npm run build` (the three routes are dynamic because they read the session).
+- [x] **G-13 Messages and gates.** Fill the two catalogues for 3.10, run the parity test, `npm run check`, `npm run build` (the three routes are dynamic because they read the session).
 
 ## 5. Scenarios checklist
 
 `design-product-listing-page`:
-- [ ] Search (pill search input focused with clear button; H1 names the query): `G-09` `search pill focused...`, `title for search`
-- [ ] Faceted counts: `build.test.ts`, `FacetGroup` test `Faceted counts`
-- [ ] Dead end avoided: `Dead end avoided disables a zero count option`
-- [ ] Collect filter: `build.test.ts` `avail goes to the query`, `Collect filter chip...`
-- [ ] Remove a chip: `Remove a chip clears one filter...`
-- [ ] Category change: `ListingPage.test.tsx` `Category change resets filters`
-- [ ] Apply: `FilterSheet` `Apply closes the sheet and navigates once`
-- [ ] Back button: browser recipe step 9 (history and scroll) plus `option links carry the new URL`
-- [ ] B2C only: `ListingPage.test.tsx` `B2C only...`
+- [x] Search (pill search input focused with clear button; H1 names the query): `G-09` `search pill focused...`, `title for search`
+- [x] Faceted counts: `build.test.ts`, `FacetGroup` test `Faceted counts`
+- [x] Dead end avoided: `Dead end avoided disables a zero count option`
+- [x] Collect filter: `build.test.ts` `avail goes to the query`, `Collect filter chip...`
+- [x] Remove a chip: `Remove a chip clears one filter...`
+- [x] Category change: `ListingPage.test.tsx` `Category change resets filters`
+- [x] Apply: `FilterSheet` `Apply closes the sheet and navigates once`
+- [x] Back button: browser recipe step 9 (history and scroll) plus `option links carry the new URL`
+- [x] B2C only: `ListingPage.test.tsx` `B2C only...`
 
 `design-product-card`:
-- [ ] Hover, Touch: `ProductCard.test.tsx`
-- [ ] Multiple qualifying flags: `product-summary.test.ts`
-- [ ] Pods: `Pods unit price 0.49 per capsule`, `ProductCard` pods test
-- [ ] Out at the store: `ProductCard.test.tsx`
-- [ ] Required choice: `ProductCard.test.tsx`
-- [ ] Guest (save): `Guest save kept for the session`
+- [x] Hover, Touch: `ProductCard.test.tsx`
+- [x] Multiple qualifying flags: `product-summary.test.ts`
+- [x] Pods: `Pods unit price 0.49 per capsule`, `ProductCard` pods test
+- [x] Out at the store: `ProductCard.test.tsx`
+- [x] Required choice: `ProductCard.test.tsx`
+- [x] Guest (save): `Guest save kept for the session`
 
 `product-listing-page` (template): Filters survive a reload, Facet combination with no matches, No price for this buyer, Page past the last result: `ListingPage.test.tsx` / `G-04` tests named identically.
 

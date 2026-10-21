@@ -44,6 +44,9 @@ export default function ListingPage({ result }: { result: Exclude<ListingResult,
       ) : null}
       <ResultHeader scope={scope} categoryName={result.category?.name} query={params.q} total={result.total} crumbs={result.crumbs} />
       <ListingStoreSync serverStoreKey={result.store?.key ?? null} />
+      {noMatch && params.q && result.noResults && result.activeCount === 0 ? (
+        <NoResults query={params.q} categories={result.noResults.categories} bestsellers={result.noResults.bestsellers} />
+      ) : (
       <div className="grid gap-10 stack:grid-cols-[244px_minmax(0,1fr)]">
         <FilterSidebar groups={result.groups} unavailable={result.facetsFailed} />
         <div className="min-w-0">
@@ -72,6 +75,7 @@ export default function ListingPage({ result }: { result: Exclude<ListingResult,
           )}
         </div>
       </div>
+      )}
     </div>
   );
 }

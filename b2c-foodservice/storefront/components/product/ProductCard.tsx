@@ -32,10 +32,8 @@ export default function ProductCard({ product }: { product: ProductSummary }) {
       data-price={product.price?.from.centAmount ?? ''}
       className="group relative flex min-w-0 flex-col"
     >
-      <div className="relative">
-        <div className="transition-state relative aspect-[5/6] overflow-hidden rounded-card bg-canvas-2 group-hover:shadow-card-hover group-focus-within:shadow-card-hover motion-reduce:transition-none">
-          <CardImage url={product.imageUrl} alt={product.imageAlt} placeholder={tPlp('noPhoto')} />
-        </div>
+      <div className="transition-state relative aspect-[5/6] overflow-hidden rounded-card bg-canvas-2 group-hover:shadow-card-hover group-focus-within:shadow-card-hover motion-reduce:transition-none">
+        <CardImage url={product.imageUrl} alt={product.imageAlt} placeholder={tPlp('noPhoto')} />
         {product.badge ? (
           <Badge
             variant={product.badge === 'new' || product.badge === 'limited-edition' ? 'accent' : 'ink'}
