@@ -36,5 +36,5 @@ export function usePaymentMethods() {
     [adopt],
   );
 
-  return { methods: data?.methods ?? null, isLoading, isError: Boolean(error), reload, remove, makeDefault };
+  return { methods: data?.methods ?? null, isLoading: customer === undefined || isLoading, isError: Boolean(error), reload, remove, makeDefault };
 }

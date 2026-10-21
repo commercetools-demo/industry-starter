@@ -60,13 +60,11 @@ export function reasonFor(e: unknown): ReorderSkipReason | null {
 export interface ReorderRun { result: ReorderResult; session: Session }
 
 /**
- * Adds the order's lines to the CURRENT bag (never a new cart, never replacing it, Q-L-09). Lines the shopper cannot buy
- * now are listed with a reason; the rest are added. Stock: online inventory for delivery lines (a shortfall adds what is
- * there), the store's stock for collect lines (checked by `addLine`).
+ * Adds planned lines to the CURRENT bag one by one (never a new cart, never replacing it, Q-L-09). Lines the shopper cannot
+ * buy now are listed with a reason; the rest are added. Stock: online inventory for delivery lines (a shortfall adds what is
+ * there), the store's stock for collect lines (checked by `addLine`). Shared by Buy again and Saved items "Add all to bag".
  */
-export async function runReorder(session: Session, market: CartMarket, order: Order): Promise<ReorderRun> {
-  const collection = marketForCountry(market.country)?.collection ?? false;
-  const plan = planReorder(order, { locale: market.locale, collection, storeKey: session.collectionStoreKey });
+export async function addPlannedLines(session: Session, market: CartMarket, plan: PlannedLine[]): Promise<ReorderRun> {
   const added: ReorderResult['added'] = [];
   const skipped: ReorderResult['skipped'] = [];
 
@@ -122,4 +120,11 @@ export async function runReorder(session: Session, market: CartMarket, order: Or
   }
   if (!cart) cart = (await getCartForSession(current)) ?? { id: '', version: 0, count: 0, lines: [] };
   return { result: { added, skipped, cart }, session: current };
+}
+
+/** Buy again: the order's lines, planned against the current store and market, added to the current bag (Q-L-09). */
+export async function runReorder(session: Session, market: CartMarket, order: Order): Promise<ReorderRun> {
+  const collection = marketForCountry(market.country)?.collection ?? false;
+  const plan = planReorder(order, { locale: market.locale, collection, storeKey: session.collectionStoreKey });
+  return addPlannedLines(session, market, plan);
 }

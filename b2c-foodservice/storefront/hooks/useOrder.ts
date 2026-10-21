@@ -26,5 +26,5 @@ export function useOrder(orderNumber: string, initial?: OrderDetailView | null) 
     },
   );
   const notFound = error instanceof ApiError && error.status === 404;
-  return { order: data?.order ?? null, isLoading, isError: Boolean(error), notFound, mutate, customerId };
+  return { order: data?.order ?? null, isLoading: customer === undefined || isLoading, isError: Boolean(error), notFound, mutate, customerId };
 }

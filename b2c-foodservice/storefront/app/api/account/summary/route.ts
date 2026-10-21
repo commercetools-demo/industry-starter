@@ -1,6 +1,7 @@
 import { handle, requireCustomer } from '@/lib/api';
 import { withBudget } from '@/lib/account/budget';
 import { countOrders } from '@/lib/ct/account-orders';
+import { findList } from '@/lib/ct/shopping-lists';
 import type { AccountSummary } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -15,14 +16,8 @@ export const GET = handle('/api/account/summary', async () => {
   const [openOrders, readyForCollection, savedItems] = await Promise.all([
     withBudget(countOrders(customerId, 'in-progress')),
     withBudget(countOrders(customerId, 'ready')),
-    withBudget(countSavedItems(customerId)),
+    withBudget(findList(customerId).then((list) => list?.lineItems.length ?? 0)),
   ]);
   const body: AccountSummary = { openOrders, readyForCollection, savedItems };
   return Response.json(body, { headers: { 'Cache-Control': 'no-store' } });
 });
-
-// Saved items arrive with L-13; until then the count is unknown.
-async function countSavedItems(_customerId: string): Promise<number | null> {
-  void _customerId;
-  return null;
-}

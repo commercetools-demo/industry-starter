@@ -326,7 +326,10 @@ export interface ReorderResult {
   skipped: { sku: string; name: string; reason: ReorderSkipReason }[];
   cart: CartSummary;
 }
-export interface SavedItem { productId: string; variantId: number | null; lineItemId: string; addedAt: string; product: ProductSummary | null }
+/** `product` is the card (price in the shopper's market) or null when the product is gone or unpublished; `name` is the list's own copy. */
+export interface SavedItem { productId: string; variantId: number | null; lineItemId: string; addedAt: string; name: string; product: ProductSummary | null }
+export interface SavedSkipped { productId: string; name: string; reason: ReorderSkipReason }
+export interface SavedAddAllResult { added: ReorderResult['added']; skipped: SavedSkipped[]; cart: CartSummary }
 export interface SavedList { id: string; version: number; items: SavedItem[] }
 export interface AddressInput {
   label?: string; firstName: string; lastName: string; streetName: string; additionalStreetInfo?: string;

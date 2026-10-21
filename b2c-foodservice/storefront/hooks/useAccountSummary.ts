@@ -13,5 +13,5 @@ export function useAccountSummary() {
     customerId ? keyAccountSummary(customerId) : null,
     '/api/account/summary',
   );
-  return { summary: data ?? null, isLoading, isError: Boolean(error), mutate, customerId };
+  return { summary: data ?? null, isLoading: customer === undefined || isLoading, isError: Boolean(error), mutate, customerId };
 }

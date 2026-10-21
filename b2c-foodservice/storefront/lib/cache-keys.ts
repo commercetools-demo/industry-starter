@@ -36,6 +36,8 @@ export const keyPaymentMethods = (customerId: string) => ['payment-methods', cus
 export const keyOrdersPage = (customerId: string, filter: string, page: number) =>
   ['orders', customerId, filter, page] as const;
 export const keyProfile = (customerId: string) => ['profile', customerId] as const;
+/** Saved items: `ids` for the hearts (no product read), `full` for the Saved tab (cards). Both extend `keySavedItems`. */
+export const keySavedItemsView = (customerId: string, view: 'ids' | 'full') => ['saved-items', customerId, view] as const;
 
 export const TAG = {
   project: 'project',

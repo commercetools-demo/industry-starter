@@ -68,5 +68,5 @@ export function useAddresses() {
     [adopt],
   );
 
-  return { addresses: data?.addresses ?? null, isLoading, isError: Boolean(error), reload, add, change, remove, customerId };
+  return { addresses: data?.addresses ?? null, isLoading: customer === undefined || isLoading, isError: Boolean(error), reload, add, change, remove, customerId };
 }

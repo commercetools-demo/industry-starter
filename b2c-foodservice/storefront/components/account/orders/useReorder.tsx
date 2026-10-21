@@ -3,9 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useState, type ReactNode } from 'react';
 import { useSWRConfig } from 'swr';
-import ButtonLink from '@/components/ui/ButtonLink';
-import Button from '@/components/ui/Button';
-import Modal from '@/components/ui/Modal';
+import SkippedLinesDialog from '@/components/account/SkippedLinesDialog';
 import { useToast } from '@/context/toast';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { KEY_CART, KEY_CART_COUNT } from '@/lib/cache-keys';
@@ -39,24 +37,12 @@ export function useReorder(): { reorder: (orderId: string) => Promise<void>; pen
   };
 
   const dialog = (
-    <Modal open={result !== null} onClose={() => setResult(null)} title={t('skippedTitle')}>
-      <ul className="m-0 grid list-none gap-3 p-0" data-testid="skipped-lines">
-        {(result?.skipped ?? []).map((s) => (
-          <li key={s.sku} className="flex flex-wrap items-baseline justify-between gap-2 text-[14.5px]">
-            <span className="font-semibold text-ink">{s.name}</span>
-            <span className="text-ink-3">{t(`reason.${s.reason}`)}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="mt-5 flex flex-wrap justify-end gap-3">
-        <Button variant="ghost" onClick={() => setResult(null)}>
-          {t('close')}
-        </Button>
-        <ButtonLink href="/cart" onClick={() => setResult(null)}>
-          {t('viewBag')}
-        </ButtonLink>
-      </div>
-    </Modal>
+    <SkippedLinesDialog
+      open={result !== null}
+      title={t('skippedTitle')}
+      lines={(result?.skipped ?? []).map((l) => ({ key: l.sku, name: l.name, reason: l.reason }))}
+      onClose={() => setResult(null)}
+    />
   );
   return { reorder, pendingId, dialog };
 }

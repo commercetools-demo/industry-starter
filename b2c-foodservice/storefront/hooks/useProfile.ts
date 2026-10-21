@@ -40,5 +40,5 @@ export function useProfile() {
     [],
   );
 
-  return { profile: data?.profile ?? null, isLoading, isError: Boolean(error), reload, save, changePassword };
+  return { profile: data?.profile ?? null, isLoading: customer === undefined || isLoading, isError: Boolean(error), reload, save, changePassword };
 }

@@ -19,5 +19,5 @@ export function useOrders(filter: OrderFilter, page: number) {
     `/api/orders?filter=${filter}&limit=${ORDERS_PAGE_SIZE}&offset=${offset}`,
     { keepPreviousData: true },
   );
-  return { data: data ?? null, isLoading, isError: Boolean(error), mutate, customerId };
+  return { data: data ?? null, isLoading: customer === undefined || isLoading, isError: Boolean(error), mutate, customerId };
 }

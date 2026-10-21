@@ -1422,6 +1422,22 @@
       "failed": "We could not delete your account. Try again.",
       "done": "Your account was deleted.",
       "section": "Delete your account"
+    },
+    "saved": {
+      "title": "Saved items",
+      "empty": "Nothing saved yet. Tap the heart on any product.",
+      "browse": "Browse",
+      "fromBag": "Save items from my bag",
+      "addAll": "Add all to bag",
+      "added": "{count, plural, one {# item added to your bag.} other {# items added to your bag.}}",
+      "nothingAdded": "Nothing could be added to your bag.",
+      "skippedTitle": "These items could not be added",
+      "remove": "Remove from saved",
+      "gone": "No longer available",
+      "failed": "We could not add your saved items. Try again.",
+      "fromBagFailed": "We could not save the items from your bag. Try again.",
+      "viewBag": "View bag",
+      "close": "Close"
     }
   }
 }
