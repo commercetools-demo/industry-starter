@@ -22,15 +22,15 @@
 
 **Context.** Same package as B (`seed/`), written by another agent from `plans/SEED-PLAN.md`, never run live. C is the junior-facing work for the catalogue half: review it against the spec and `SEED-PLAN.md` sections 8 to 16, close gaps with tests, run it live in small steps, and prove with read-backs that everything the storefront workstreams (F to O) need is present.
 
-**Goal.** After C: 41 published products (12 pods, 10 coffees, 8 machines, 8 accessories, 3 gift sets, 115 variants) with names and descriptions in en-US, en-GB and de-DE; embedded prices for US/USD, DE/EUR, GB/GBP on every variant and recurring prices for subscribable products; 805 inventory entries (online plus six stores per variant); 3 cart discounts with 3 codes and 1 product discount; 6 verified demo customers and one saved-items list; review states and 162 approved reviews whose statistics match; images on products and categories once OA-03 allows; `npm run verify` prints `verify: OK`; a second `npm run seed` prints `0 change(s)`.
+**Goal.** After C: 41 published products (12 pods, 10 coffees, 8 machines, 8 accessories, 3 gift sets, 115 variants) with names and descriptions in en-US and en-CA; embedded prices for US/USD and CA/CAD on every variant and recurring prices for subscribable products; 805 inventory entries (online plus six stores per variant); 3 cart discounts with 3 codes and 1 product discount; 4 verified demo customers (two US, two CA) and one saved-items list; the published review state and 162 reviews (published on creation, no moderation, D-037) whose statistics match; images on products and categories once OA-03 allows; `npm run verify` prints `verify: OK`; a second `npm run seed` prints `0 change(s)`.
 
 **In scope**
-- Review of `src/data/{products,catalog,prices,extras,discounts,customers,reviews,states}.ts`, `src/images.ts`, `src/verify.ts`, `src/seed.ts` (steps `products`, `prices`, `inventory`, `discounts`, `customers`, `shopping-lists`, `review-states`, `reviews`).
+- Review of `src/data/{products,catalog,prices,extras,discounts,customers,reviews,states}.ts`, `src/images.ts`, `src/verify.ts`, `src/seed.ts` (steps `products`, `prices`, `inventory`, `discounts`, `customers`, `shopping-lists`, `reviews`).
 - Extra tests, an optional `verify -- --search` probe (Q-C-11), live runs, read-backs, evidence.
 
-**Out of scope**: the foundation steps (B), any storefront code, orders and carts (the seed never creates them), choosing real photos (the owner's endpoint, OA-03), real German copywriting beyond what the seed contains (SO-03/SO-04 reviews).
+**Out of scope**: the foundation steps (B), any storefront code, orders and carts (the seed never creates them), choosing real photos (the owner's endpoint, OA-03), translations (none: English only, D-030; SO-04 stays for the catalogue review).
 
-**Hard safety rules**: as in B section 2. Additionally: demo customer passwords come only from `SEED_DEMO_PASSWORD` in `seed/.env.local`; never print, log or put it in evidence; customer e-mails are synthetic `@example.com` and may appear in evidence only as the count (not necessary at all). Never delete anything in C (no cleanup, no reset).
+**Hard safety rules**: as in B section 2. Additionally: demo customer passwords come only from `SEED_DEMO_PASSWORD` in `seed/.env.local`; never print, log or put it in evidence; customer addresses are synthetic `@example.com` and may appear in evidence only as the count (not necessary at all). Never delete anything in C (no cleanup, no reset).
 
 ## 3. Design
 
@@ -47,8 +47,8 @@ All from `cd seed`. B must be `Done`. Each step is idempotent; a step can be rep
 | 5 | `npm run seed -- --only prices` | one `update prices of product ...` line per product |
 | 6 | `npm run seed -- --only inventory` | 805 `create inventory ...` lines |
 | 7 | `npm run seed -- --only discounts` | 1 product discount, 3 cart discounts, 3 codes |
-| 8 | `npm run seed -- --only customers,shopping-lists` | 6 customers (+ `verify email` lines if needed), 1 list. Needs `SEED_DEMO_PASSWORD` (at least 10 characters) |
-| 9 | `npm run seed -- --only review-states,reviews` | 2 review states, 162 reviews |
+| 8 | `npm run seed -- --only customers,shopping-lists` | 4 customers (auto-verified, D-032), 1 list. Needs `SEED_DEMO_PASSWORD` (at least 10 characters) |
+| 9 | `npm run seed -- --only reviews` | 162 reviews, no review states |
 | 10 | `npm run seed` | `0 change(s)` |
 | 11 | `npm run verify` | `verify: OK` (if the review statistics lag, wait one minute and run it again; section 3.7) |
 | 12 | `npm run seed:images -- --dry-run`; after OA-03 `npm run seed:images`; then `npm run seed` | images recorded; the seed run changes only product images and category assets; a further `npm run seed` reports `0 change(s)`; `npm run verify` is `OK` |
@@ -63,10 +63,9 @@ Wait for Product Search indexing before probing search (a few minutes; creating 
 | `prices` | `products().withId().post` | `setPrices` per variant with embedded `PriceDraft` `{ key, value, country, recurrencePolicy? }` (recurring prices are prices that carry a `recurrencePolicy` reference and come back in `variant.recurrencePrices[]`; the SDK 8 type of `PriceDraft` lacks `recurrencePolicy`, the API accepts it: see the docs example `addPrice` with `recurrencePolicy`) | https://docs.commercetools.com/api/projects/products#set-prices , https://docs.commercetools.com/guides/create-a-recurring-order#set-up-pricing |
 | `inventory` | `inventory()` `.post` | `InventoryEntryDraft { key, sku, quantityOnStock, supplyChannel? }`; update `changeQuantity` | https://docs.commercetools.com/api/projects/inventory |
 | `discounts` | `productDiscounts()`, `cartDiscounts()`, `discountCodes()` | product discount `value relative 1500`, `predicate sku in (...)`; cart discounts `requiresDiscountCode: true`, `stackingMode: 'Stacking'`; codes reference cart discounts by key; updates `changeIsActive`, `changeSortOrder`, `changePredicate`, `changeCartPredicate`, `changeName` | https://docs.commercetools.com/api/projects/productDiscounts , https://docs.commercetools.com/api/projects/cartDiscounts , https://docs.commercetools.com/api/projects/discountCodes |
-| `customers` | `customers()` `.post`, then `customers().emailToken().post` and `customers().emailConfirm().post` for any unverified account | `CustomerDraft` with `key`, `password` (from env), addresses, default shipping and billing | https://docs.commercetools.com/api/projects/customers |
+| `customers` | `customers()` `.post` (no email token step: no email provider, D-032; the seed creates customers with `isEmailVerified: true` through the `emailConfirm` path only if the API requires it) | `CustomerDraft` with `key`, `password` (from env), addresses, default shipping and billing | https://docs.commercetools.com/api/projects/customers |
 | `shopping-lists` | `shoppingLists()` `.post` | `ShoppingListDraft` `mcf-saved-maya` with three line items by SKU | https://docs.commercetools.com/api/projects/shoppingLists |
-| `review-states` | `states()` (type `ReviewState`) | `mcf-review-approved` with role `ReviewIncludedInStatistics`, `mcf-review-pending` (no role, transition to approved) | https://docs.commercetools.com/guides/review-ratings#review-approval-process |
-| `reviews` | `reviews()` `.post` | `ReviewDraft { key, uniquenessValue, authorName, title, text, rating, locale, target (product by key), state (approved), customer? }`; updates `setRating`, `setTitle`, `setText`, `setState`/transition | https://docs.commercetools.com/api/projects/reviews , https://docs.commercetools.com/guides/review-ratings |
+| `reviews` | `reviews()` `.post` | `ReviewDraft { key, uniquenessValue, authorName, title, text, rating, locale, target (product by key), state (published), customer? }`; updates `setRating`, `setTitle`, `setText`, `setState`/transition | https://docs.commercetools.com/api/projects/reviews , https://docs.commercetools.com/guides/review-ratings |
 
 Rating statistics (https://docs.commercetools.com/guides/review-ratings#display-one-product): `reviewRatingStatistics.averageRating` (rounded to 5 decimals), `count`, `ratingsDistribution` (keys `"1"` to `"5"`; a missing key means zero) on the product.
 
@@ -74,25 +73,24 @@ Rating statistics (https://docs.commercetools.com/guides/review-ratings#display-
 
 | Resource | Expected |
 | --- | --- |
-| Products | 41, all published, keys `mcf-...`; by product type `mcf-pods` 12, `mcf-coffee` 10, `mcf-machine` 8, `mcf-accessory` 8, `mcf-gift-set` 3; 115 variants; each product has name and description in `en-US`, `en-GB`, `de-DE`; SKUs `MCF-...` unique |
-| Prices | per variant one one-time price for each of US/USD, DE/EUR, GB/GBP (EUR about 0.92 and GBP about 0.79 of USD, rounded to 5 cents); subscribable products also carry, for each of the four policies, a recurring price per market at 10% below that market's one-time price; embedded price keys like `us-one-time`, `de-every-month`. Expected number of price entries: `npx tsx -e "import('./src/data/prices.ts').then(m=>console.log(m.allPriceDefs().length))"` |
+| Products | 41, all published, keys `mcf-...`; by product type `mcf-pods` 12, `mcf-coffee` 10, `mcf-machine` 8, `mcf-accessory` 8, `mcf-gift-set` 3; 115 variants; each product has name and description in `en-US`, `en-CA`; SKUs `MCF-...` unique |
+| Prices | per variant one one-time price for each of US/USD and CA/CAD (CAD about 1.35 of USD, rounded to 5 cents); subscribable products also carry, for each of the four policies, a recurring price per market at 10% below that market's one-time price; embedded price keys like `us-one-time`, `ca-every-month`. Expected number of price entries: `npx tsx -e "import('./src/data/prices.ts').then(m=>console.log(m.allPriceDefs().length))"` |
 | Inventory | 805 entries = 115 variants x (1 online without channel + 6 store channels); online quantity 40 to 499 (never zero); store quantity 0 for 1 in 20, 1 to 5 (low, threshold 5) for 1 in 7, else 6 to 65; products `POD-EMBER` and `MAC-POD1` are 0 at `mcf-store-munich` and in stock online |
 | Product discount | `mcf-discount-seasonal-machines`: 15% off, predicate on the SKUs of three machines (`MAC-POD1`, `MAC-LEVER`, `MAC-DRIP`), active |
-| Cart discounts and codes | `mcf-discount-welcome10` (10% total price), `mcf-discount-freeship` (100% shipping), `mcf-discount-coffee15` (15 off when the cart is at least 60 USD, 55 EUR or 50 GBP); codes `WELCOME10`, `FREESHIP`, `COFFEE15` |
-| Customers | 6: `maya.okonkwo@example.com`, `liam.carter@example.com` (US), `anna.schneider@example.com`, `jonas.weber@example.com` (DE), `emma.clarke@example.com`, `oliver.hughes@example.com` (GB); `isEmailVerified: true`, one default shipping and billing address each |
+| Cart discounts and codes | `mcf-discount-welcome10` (10% total price), `mcf-discount-freeship` (100% shipping), `mcf-discount-coffee15` (15 off when the cart is at least 60 USD or 80 CAD); codes `WELCOME10`, `FREESHIP`, `COFFEE15` |
+| Customers | 4: `maya.okonkwo@example.com`, `liam.carter@example.com` (US) and two Canadian customers (names in `SEED-PLAN.md`); `isEmailVerified: true` (auto-verified, no email is sent), one default shipping and billing address each |
 | Shopping list | `mcf-saved-maya`, 3 line items, customer Maya |
-| Review states | `mcf-review-pending`, `mcf-review-approved` (role `ReviewIncludedInStatistics`) |
 | Reviews | 162 keyed `mcf-review-<sku>-<n>`, 3 to 12 per top product, none for three products, all `includedInStatistics: true`; per product `reviewRatingStatistics.count` equals the seeded count and `averageRating` equals the seeded mean (tolerance 0.001) |
 | Images | After OA-03: product variants carry `images[0].url` clean (no `?`, no `#`) with dimensions; categories carry `assets[0].sources[0].uri` clean; the file `seed/src/data/images.json` is committed |
 
 ### 3.4 Read-back (no owner needed)
 
-Prefer the commercetools MCP read tools (OA-06). Otherwise a throwaway read-only script (not in git, not in `check`) with these SDK calls:
+Prefer the commercetools MCP read tools (server `food-service`, connected). Otherwise a throwaway read-only script (not in git, not in `check`) with these SDK calls:
 
 | Check | Call |
 | --- | --- |
 | Product count and publication | `apiRoot.products().get({ queryArgs: { limit: 1, withTotal: true, where: 'key in (...)' } })` or `productProjections().get({ queryArgs: { where: 'key = "<k>"', priceCurrency: 'USD', priceCountry: 'US', expand: ['productType'] } })` |
-| One projection in a market | `apiRoot.productProjections().withKey({ key }).get({ queryArgs: { priceCurrency: 'EUR', priceCountry: 'DE' } })`; check `masterVariant.price`, `masterVariant.recurrencePrices.length` (12 for a subscribable product: 3 markets x 4 policies; confirm and write the actual number into the evidence), `masterVariant.attributes` contains `badge` and `subscribable`, `reviewRatingStatistics` |
+| One projection in a market | `apiRoot.productProjections().withKey({ key }).get({ queryArgs: { priceCurrency: 'CAD', priceCountry: 'CA' } })`; check `masterVariant.price`, `masterVariant.recurrencePrices.length` (8 for a subscribable product: 2 markets x 4 policies; confirm and write the actual number into the evidence), `masterVariant.attributes` contains `badge` and `subscribable`, `reviewRatingStatistics` |
 | Inventory | `apiRoot.inventory().get({ queryArgs: { where: 'sku = "<sku>"' } })`: 7 entries; the `supplyChannel` ids resolve to the six `mcf-store-*` channels |
 | Discounts | `cartDiscounts().withKey().get()`, `discountCodes().get({ queryArgs: { where: 'code in ("WELCOME10","FREESHIP","COFFEE15")' } })` |
 | Reviews per product | `apiRoot.reviews().get({ queryArgs: { where: 'target(typeId="product" and id="<id>") and includedInStatistics=true', limit: 100 } })`: `total` equals `reviewRatingStatistics.count` |
@@ -110,15 +108,15 @@ Product Search finding to write down (feeds Q-024 and workstream G): the docs li
 | --- | --- | --- |
 | Product counts and mix | `SEED-PLAN.md` section 8 | 12 pods (6 original, 6 vertuo; variants 10, 50, 100 capsules), 10 coffees (250 g, 1 kg crossed with grinds), 8 machines (colour crossed with bundle), 8 accessories, 3 gift sets; 3 products without reviews; 2 products out of stock at one store |
 | Words | decision D-005 | pods are described as "compatible with Nespresso Original" or "Vertuo", never use Nespresso as a product name or brand; no real third-party brand (denylist test) |
-| Languages | spec Project settings | name, description and slug in en-US, en-GB, de-DE; en-GB uses British spelling (colour) where the text differs |
+| Languages | spec Project settings | name, description and slug in en-US and en-CA; en-CA uses Canadian spelling (colour) where the text differs |
 | Slugs | skill `categories-and-slugs.md` | slugs are unique per language across products; no umlaut or space |
 | Images in drafts | D-010 and spec Images | URLs clean; dimensions set; no image attached when the file is missing |
-| Prices | `SEED-PLAN.md` section 9, D-017 | numbers as 3.3; the US amount is net, DE and GB gross: the **tax category** on every product decides the rate (food or standard) |
+| Prices | `SEED-PLAN.md` section 9, D-017 | numbers as 3.3; US and CA amounts are net: the **tax category** on every product decides the rate (food or standard) |
 | Recurring prices | skill `recurring-prices.md` | only for `subscribable` products; policy by key; 10% below the one-time price of the same market; they come back in `recurrencePrices[]` |
 | Inventory | `SEED-PLAN.md` section 11, spec fulfilment "Availability per store" | deterministic from SKU and store key; online entry without channel; store entries with `supplyChannel`; low threshold 5 |
 | Discounts | `SEED-PLAN.md` section 12 | codes and amounts; `sortOrder` unique and not ending in 0 (platform rule); predicates valid (the API validates them on create: a 400 `InvalidInput` means fix the predicate against https://docs.commercetools.com/api/predicates/cart-predicates); `FREESHIP` currently applies to any shipping method (Q-C-5) |
 | Customers | `SEED-PLAN.md` section 13 | six, verified, default addresses; password only from env; synthetic data |
-| Reviews | spec reviews "Seeded reviews", "Moderation and states" | 3 to 12 per top product, rating skew 5/7/13/30/45 percent for 1 to 5 stars, language of the author's market, each demo customer at most once per product (platform `uniquenessValue`), approved state with the statistics role |
+| Reviews | spec reviews "Seeded reviews", "States" (no moderation, D-037) | 3 to 12 per top product, rating skew 5/7/13/30/45 percent for 1 to 5 stars, English text, each demo customer at most once per product (platform `uniquenessValue`), published state with the statistics role |
 | Verify | spec "Verification" | exits 1 on any mismatch; reports a hand-edited price by SKU |
 
 ### 3.7 When a response differs
@@ -152,15 +150,15 @@ Run `cd seed && npm run check` before ticking a code task. `[SKILL]` tags on eve
 
 - [ ] **C-03 Review product data** `[SKILL: commercetools-catalog-migration]`
   - Files: `seed/src/data/products.ts`, `seed/src/data.test.ts` (shared with B).
-  - Compare with the checklist rows "Product counts and mix", "Words", "Languages", "Slugs". Add tests: `Product counts by type are 12, 10, 8, 8 and 3`, `Every product has name, description and slug in en-US, en-GB and de-DE`, `Slugs are unique per language`, `Nespresso appears only in compatibility wording` (every occurrence is preceded by "compatible with " or "Kompatibel mit " or "kompatibel mit " or "Compatible with " or followed by the disclaimer phrase), `No product name contains a denylisted brand` (denylist: Nespresso, Illy, Lavazza, Starbucks, Nescafe, Keurig, Dolce Gusto, Tassimo, Delonghi, De'Longhi, Breville), `SKUs are unique and start with MCF-`, `Three products have no reviews and two are out of stock at one store`.
+  - Compare with the checklist rows "Product counts and mix", "Words", "Languages", "Slugs". Add tests: `Product counts by type are 12, 10, 8, 8 and 3`, `Every product has name, description and slug in en-US and en-CA`, `Slugs are unique per language`, `Nespresso appears only in compatibility wording` (every occurrence is preceded by "compatible with " or "Compatible with " or followed by the disclaimer phrase), `No product name contains a denylisted brand` (denylist: Nespresso, Illy, Lavazza, Starbucks, Nescafe, Keurig, Dolce Gusto, Tassimo, Delonghi, De'Longhi, Breville), `SKUs are unique and start with MCF-`, `Three products have no reviews and two are out of stock at one store`.
 
 - [ ] **C-04 Review prices** `[SKILL: commercetools-commerce-patterns]`
   - Files: `seed/src/data/prices.ts`, `seed/src/data.test.ts`.
-  - Tests: `Every variant has one-time prices for US USD, DE EUR and GB GBP`, `EUR is about 0.92 and GBP about 0.79 of USD rounded to 5 cents`, `Recurring prices exist only for subscribable products and are 10 percent below the one-time price for every policy`, `Price keys are unique per variant`, `Amounts are positive integers`, `Every product has a tax category: food for pods and coffee, standard for the rest`.
+  - Tests: `Every variant has one-time prices for US USD and CA CAD`, `CAD is about 1.35 of USD rounded to 5 cents`, `Recurring prices exist only for subscribable products and are 10 percent below the one-time price for every policy`, `Price keys are unique per variant`, `Amounts are positive integers`, `Every product has a tax category: food for pods and coffee, standard for the rest`.
 
 - [ ] **C-05 Review inventory** `[SKILL: commercetools-platform]`
   - Files: `seed/src/data/extras.ts`, `seed/src/data.test.ts`.
-  - Tests: `One online entry and six store entries per variant (805)`, `Online stock is never zero`, `Collect at an empty store: POD-EMBER and MAC-POD1 are 0 at Munich and in stock online` (data half of the fulfilment scenario), `Some entries are low stock (1 to 5) and some are 0`, `Quantities are the same on every call`.
+  - Tests: `One online entry and six store entries per variant (805)`, `Online stock is never zero`, `Collect at an empty store: POD-EMBER and MAC-POD1 are 0 at one NYC store and in stock online` (data half of the fulfilment scenario), `Some entries are low stock (1 to 5) and some are 0`, `Quantities are the same on every call`.
 
 - [ ] **C-06 Review discounts** `[SKILL: commercetools-commerce-patterns]`
   - Files: `seed/src/data/discounts.ts`, `seed/src/data.test.ts`.
@@ -168,11 +166,11 @@ Run `cd seed && npm run check` before ticking a code task. `[SKILL]` tags on eve
 
 - [ ] **C-07 Review customers and the list** `[SKILL: commercetools-platform]`
   - Files: `seed/src/data/customers.ts`, `seed/src/seed.test.ts`.
-  - Tests: `Six demo customers, two per market, all with example.com e-mail`, `Every demo customer is verified, also one created unverified earlier`, `Customers get default shipping and billing addresses`, `The demo password is read from the environment and never logged` (exists in `seed.test.ts`: confirm), `The saved list has three line items by SKU that exist`.
+  - Tests: `Six demo customers (three per market, US and CA), all with example.com e-mail`, `Every demo customer is verified at creation (no email is sent)`, `Customers get default shipping and billing addresses`, `The demo password is read from the environment and never logged` (exists in `seed.test.ts`: confirm), `The saved list has three line items by SKU that exist`.
 
 - [ ] **C-08 Review reviews and states** `[SKILL: commercetools-platform]`
   - Files: `seed/src/data/reviews.ts`, `seed/src/data/states.ts`, `seed/src/reviews.test.ts`.
-  - Tests (spec: Seeded reviews): `Seeded reviews: 3 to 12 per top product and none for three products`, `Statistics match` (exists), `Reviews are written in the language of the author's market`, `A customer reviews a product at most once` (the draft carries `uniquenessValue` so the platform enforces it), `Approved state carries ReviewIncludedInStatistics and pending does not`.
+  - Tests (spec: Seeded reviews): `Seeded reviews: 3 to 12 per top product and none for three products`, `Statistics match` (exists), `Reviews are written in English with the author's market in the author name or city`, `A customer reviews a product at most once` (the draft carries `uniquenessValue` so the platform enforces it), `The published state carries ReviewIncludedInStatistics and there is no pending state`.
 
 - [ ] **C-09 Review images** `[SKILL: commercetools-platform]`
   - Files: `seed/src/images.ts`, `seed/src/data/catalog.ts`, `seed/src/images.test.ts`.
@@ -193,7 +191,7 @@ Run `cd seed && npm run check` before ticking a code task. `[SKILL]` tags on eve
 
 - [ ] **C-13 Live: prices and inventory** `[SKILL: commercetools-commerce-patterns]`
   - Files: `live-2-prices.txt`, `live-3-inventory.txt`, `readback-prices-sample.json`, `readback-inventory-sample.json`.
-  - Commands 5 and 6. Read back three products (one pod subscribable, one machine on seasonal sale, one accessory): prices per market, `recurrencePrices` count, discounted price on the seasonal machine (a projection with `priceCurrency` and `priceCountry` shows `price.discounted`), inventory 7 entries, the Munich zero entries. Expected price entry count from 3.3.
+  - Commands 5 and 6. Read back three products (one pod subscribable, one machine on seasonal sale, one accessory): prices per market, `recurrencePrices` count, discounted price on the seasonal machine (a projection with `priceCurrency` and `priceCountry` shows `price.discounted`), inventory 7 entries, the zero entries at one NYC store. Expected price entry count from 3.3.
 
 - [ ] **C-14 Live: discounts, customers, list** `[SKILL: commercetools-platform]`
   - Files: `live-4-discounts.txt`, `live-5-customers.txt`, `readback-discounts.json`.
@@ -227,7 +225,7 @@ Shared with B (tested by the same package, listed in B): Re-run (`Re-run` after 
 
 Extended from other specs:
 - [ ] `reviews-and-ratings` Seeded reviews / Statistics match: `Statistics match` in `seed/src/reviews.test.ts` + live `readback-reviews.json`
-- [ ] `fulfilment-and-availability-model` Collect at an empty store (data half): `Collect at an empty store: POD-EMBER and MAC-POD1 are 0 at Munich and in stock online` + `readback-inventory-sample.json`
+- [ ] `fulfilment-and-availability-model` Collect at an empty store (data half): `Collect at an empty store: POD-EMBER and MAC-POD1 are 0 at one NYC store and in stock online` + `readback-inventory-sample.json`
 - [ ] `fulfilment-and-availability-model` Subscriptions (data half): `Recurring prices exist only for subscribable products...` + `readback-prices-sample.json` (`recurrencePrices` present)
 
 ## 6. Browser recipe (Chrome DevTools MCP, you run it)
@@ -265,7 +263,7 @@ Full rows in `plans/notes/todo-C.md`.
 | Q-C-3 | Guest-style reviews 7 to 12 per product have no customer and a synthetic author (`Sam T.`). | Accepted (Q-S-4); they cannot be edited by anyone | no |
 | Q-C-4 | "Verified purchase" marks need orders linked to reviews; the seed creates none. | No verified marks in the seed; K or Q may create test orders later | M |
 | Q-C-5 | `FREESHIP` applies to any shipping method (predicate `true`). Restrict to standard shipping? | As seeded (collect is free anyway); revisit after K | no |
-| Q-C-6 | EUR and GBP prices: derived (0.92, 0.79, rounded to 5 cents) or supplied? | Derived; the owner may supply a table (replaces `FX`) | no |
+| Q-C-6 | CAD prices: derived (about 1.35, rounded to 5 cents) or supplied? | Derived; the owner may supply a table (replaces `FX`) | no |
 | Q-C-7 | Pack and size variants. | Pods 10, 50, 100 capsules; coffee 250 g and 1 kg crossed with grinds; as seeded | no |
 | Q-C-8 | Which two products are out of stock at which store? | `POD-EMBER` and `MAC-POD1` at `mcf-store-munich` | no |
 | Q-C-9 | Low-stock threshold. | 5 in the seed (`LOW_STOCK_THRESHOLD`); the storefront reads the same value from a constant in `lib/utils.ts` defined by H (not hard-coded in components) | H |

@@ -5,101 +5,77 @@
 
 ## Purpose
 
-Checkout collects only what the bag needs: an address when anything ships, a pickup person when anything is collected, and payment. Members skip contact entry, guests are first class, and discounts can be stacked and removed in view of the total.
+Checkout is owned by the complete commercetools Checkout (full hosted checkout flow, `checkoutFlow`) connected to Stripe (D-039). The hosted flow collects address, shipping and payment and creates the order. The storefront owns what surrounds it: the hand-off from the cart, the shell, a read-only order summary with fulfilment clusters, and the return to the confirmation page. This spec does not invent behaviour the hosted flow cannot do; whatever a hosted step cannot show is stated here as not provided.
 
-Design source: `CheckoutPage` in `pages-checkout.jsx`.
+Design source: `CheckoutPage` in `pages-checkout.jsx` (visual reference for the shell and summary only; its three-step form is replaced by the hosted flow).
 
 ## Requirements
 
-### Requirement: Three steps
+### Requirement: Hosted flow owns the steps
 
-The system SHALL present Details, Fulfilment and Payment as a numbered step indicator beside the H1. Completed steps show a teal check and are clickable to go back; later steps are not.
+The system SHALL hand the shopper to the hosted commercetools Checkout for contact, address, shipping method and payment (Stripe), and SHALL NOT build storefront forms, step indicators or card entry for those steps. The storefront SHALL start the flow only for a cart with at least one line, passing the cart and the session's customer when signed in.
 
-#### Scenario: Going back
-- **GIVEN** the shopper is on Payment
-- **WHEN** they click completed step 1
-- **THEN** step 1 opens with their entries retained
+#### Scenario: Start checkout
+- **GIVEN** a cart with lines
+- **WHEN** the shopper presses Checkout on the cart page or drawer
+- **THEN** the storefront opens the hosted Checkout for that cart, inside the storefront shell where the hosted flow allows embedding, otherwise on the hosted page
 
-### Requirement: Step 1, contact and address
+#### Scenario: Empty cart
+- **GIVEN** an empty cart
+- **WHEN** `/checkout` is opened
+- **THEN** the shopper is redirected to the cart page
 
-The system SHALL show, for a guest, a Contact card (email, first and last name) with a "Use my account" link when a session exists; for a member, a confirmation card "Signed in as {first}" with a "Check out as guest" link. When anything ships it SHALL show a Shipping address card: saved addresses as radio rows (label, default tag, name, line, phone) plus "Use a new address", or the address form for guests. When everything is collected it SHALL show "Pickup only, no address needed".
+### Requirement: Storefront shell around the flow
 
-#### Scenario: Member with saved addresses
-- **GIVEN** a member with a default address and a shipping line
-- **WHEN** step 1 renders
-- **THEN** the default address is preselected and the form is hidden until "Use a new address"
+The system SHALL keep a reduced header (wordmark, secure-checkout note, link back to the bag) and the standard footer legal links around the hosted flow, and SHALL NOT show the full navigation or the cart drawer there.
 
-#### Scenario: Guest switch
-- **GIVEN** a member chooses "Check out as guest"
-- **WHEN** the switch applies
-- **THEN** contact and address fields clear
+#### Scenario: Back to bag
+- **GIVEN** the hosted flow is open
+- **WHEN** the shopper follows "Back to bag"
+- **THEN** the cart page opens with the cart unchanged
 
-#### Scenario: Collect only
-- **GIVEN** every line is collect
-- **WHEN** step 1 renders
-- **THEN** no address is requested
+### Requirement: Order summary with fulfilment clusters
 
-### Requirement: Step 2, fulfilment
+The system SHALL show a read-only order summary beside or above the hosted flow: item count, a scrollable (200px) list of lines grouped in the same clusters as the cart ("Collect at {store}", "Delivery", "Subscription"), each line with image, name, variant, quantity, chip and price, then Subtotal, Discount (teal, negative), Shipping, Tax (tax-exclusive, added) and Total. Totals come from the cart in commercetools, not from the storefront's arithmetic.
 
-The system SHALL show a Pickup location card when anything is collected (store row with address, hours, phone, "Ready in about {n} minutes", Change link; "Who's picking up?" as It's me or Someone else with an alternate-name field), and a Delivery method card when anything ships (address recap; Standard and Express cards with price and days). A delivery slot picker is added where Malva offers timed delivery (`design.md` Q6).
+#### Scenario: Mixed bag summary
+- **GIVEN** a US bag with collect and delivery lines
+- **WHEN** the summary renders
+- **THEN** both clusters show with their lines and chips, and the total equals the cart total
 
-#### Scenario: Someone else collects
-- **GIVEN** "Someone else" is chosen
-- **WHEN** the card updates
-- **THEN** an alternate-name field appears and is required to continue
+#### Scenario: Canada summary
+- **GIVEN** the Canada market is active
+- **WHEN** the summary renders
+- **THEN** no Collect cluster appears and the tax line shows GST only
 
-#### Scenario: Free shipping code
-- **GIVEN** a free-shipping code is applied
-- **WHEN** Standard renders
-- **THEN** it shows "code applied" and the shipping line is free
+### Requirement: Fulfilment inside the hosted flow
 
-### Requirement: Step 3, payment
+The system SHALL treat collection and multiple shipping inside the hosted flow as an outcome of spike K-01: the storefront SHALL show the order summary clusters above either way, and SHALL NOT claim that the hosted flow offers a pickup-person field, an Express method or a delivery-slot picker (D-034: standard carrier only). If K-01 finds the hosted flow cannot represent collect lines, the fallback recorded by the spike applies and is stated in the tasks.
 
-The system SHALL show a Payment card with a security note, then Back and "Place order · {total}". Card entry in the prototype is a mock; the build uses the hosted commercetools Checkout payment component so card data never touches the storefront (`design.md` D6). The card keeps its place, copy and button.
+#### Scenario: Standard carrier only
+- **GIVEN** a bag with delivery lines
+- **WHEN** the hosted flow offers shipping methods
+- **THEN** only the standard carrier method is offered
 
-#### Scenario: Payment failure
-- **GIVEN** a payment is declined
-- **WHEN** the result returns
-- **THEN** the shopper stays on step 3 with the reason and can retry, and the bag is untouched
+### Requirement: Failure and abandonment
 
-#### Scenario: Placement
-- **GIVEN** payment succeeds
-- **WHEN** the order is created
-- **THEN** the bag clears and the confirmation page opens
+The system SHALL leave the cart intact when the hosted flow is abandoned, cancelled or the payment fails, and SHALL return the shopper to the bag with a message saying the order was not placed.
 
-### Requirement: Summary and promo codes
+#### Scenario: Payment declined
+- **GIVEN** a payment is declined in the hosted flow
+- **WHEN** the shopper returns to the storefront
+- **THEN** the bag is untouched and no order exists
 
-The system SHALL show a sticky summary: item count, a scrollable (200px) list of lines with image, name, variant, quantity, fulfilment and price, then a Promo codes field with Add and Enter support; applied codes are teal pills (mono code, label, saving, remove x) and stack. Totals: Subtotal, Discount (teal, negative), Shipping, Tax, Total.
-
-#### Scenario: Invalid code
-- **GIVEN** an unknown code is entered
-- **WHEN** Add is pressed
-- **THEN** an inline red message says the code is not valid and nothing changes
-
-#### Scenario: Duplicate code
-- **GIVEN** a code is already applied
-- **WHEN** it is added again
-- **THEN** a message says it is already applied
-
-#### Scenario: Remove a code
-- **GIVEN** an applied code
-- **WHEN** its x is pressed
-- **THEN** the discount and total recompute
-
-### Requirement: Validation
-
-The system SHALL validate email, name, address (when shipping), phone and pickup person inline on the step they belong to, and block Continue with a message beside the field. The prototype does not validate.
-
-#### Scenario: Missing email
-- **GIVEN** a guest with no email
-- **WHEN** Continue is pressed
-- **THEN** the email field shows an error and focus moves to it
+#### Scenario: Success return
+- **GIVEN** payment succeeds and the order is created
+- **WHEN** the hosted flow returns to the storefront
+- **THEN** the cart is cleared and the confirmation page opens for that order
 
 ### Requirement: Dropped from VELA
 
-The system SHALL NOT carry over the "Create a quote" button.
+The system SHALL NOT carry over the "Create a quote" button, the storefront-built Details, Fulfilment and Payment steps, or the in-page promo code field (promo codes live on the cart page).
 
 #### Scenario: B2C
-- **GIVEN** the Malva payment step
+- **GIVEN** the Malva checkout
 - **WHEN** it renders
-- **THEN** Place order is the only commit action
+- **THEN** the hosted Place order action is the only commit action

@@ -15,7 +15,7 @@ Every spec under `openspec/specs/` maps to exactly one primary workstream, or is
 | design-tokens-and-components | E | | |
 | design-storefront-shell | F | | |
 | design-store-picker-and-locale | F | | |
-| fulfilment-and-availability-model | F | K, N | F stores and availability; K mixed bags, states, tax, shipping; N subscriptions |
+| fulfilment-and-availability-model | F | K, N | F stores (six in NYC, US only) and availability; K mixed bags, states, tax, shipping; N subscriptions |
 | design-product-listing-page | G | | |
 | design-product-card | G | | |
 | design-product-detail-page | H | | |
@@ -24,7 +24,7 @@ Every spec under `openspec/specs/` maps to exactly one primary workstream, or is
 | design-checkout-page | K | | |
 | design-order-confirmation-page | K | | |
 | design-account-area | L | | |
-| reviews-and-ratings | M | G | G adds rating filter and sort |
+| reviews-and-ratings | M | G | G adds rating filter and sort; no moderation (D-037) |
 | design-home-page | O | | |
 
 ## Generated behavioural templates (grocery origin)
@@ -34,7 +34,7 @@ Every spec under `openspec/specs/` maps to exactly one primary workstream, or is
 | about-us | P | |
 | account-and-self-service | L | |
 | account-dashboard | L | |
-| account-registration-request | n/a | B2C registers instantly; no seller activation (D-015) |
+| account-registration-request | n/a | B2C registers instantly and is auto-verified; no seller activation (D-015, D-032) |
 | account-sign-in | J | |
 | address-book | L | |
 | authentication-and-identity | J | |
@@ -44,17 +44,17 @@ Every spec under `openspec/specs/` maps to exactly one primary workstream, or is
 | checkout | K | |
 | checkout-page | K | |
 | contact-us | P | |
-| delivery-slot-booking | n/a | Standard carrier delivery only (Q-004) |
+| delivery-slot-booking | n/a | Standard carrier delivery only (Q-004, D-034) |
 | discovery-and-browse | G | |
-| email-verification | J | Pluggable mail adapter (Q-002) |
+| email-verification | n/a | Not applicable: no email provider; registrations are verified automatically (D-032) |
 | error-pages | P | |
 | faq | P | |
 | home-landing-page | O | |
 | order-confirmation-page | K | |
 | order-history | L | |
 | out-of-stock-substitutions | n/a | Grocery picking; collection is reserved stock (D-022) |
-| password-reset | J | Pluggable mail adapter (Q-002) |
-| payment-methods | L | Limited to what the hosted Checkout supports (Q-014) |
+| password-reset | n/a | Not applicable: no email provider, no password reset (D-032) |
+| payment-methods | L | Saved methods not built; the hosted Checkout with Stripe owns card data (Q-014, D-039) |
 | policy-pages | P | |
 | post-purchase-order-management | L | |
 | product-detail-page | H | |

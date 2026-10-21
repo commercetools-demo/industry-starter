@@ -3,7 +3,7 @@
 
 # seed/
 
-Idempotent scripts that put everything the Malva Coffee shop (B2C online coffee retailer, markets US, DE and GB) needs into its commercetools project, and remove the sample data the project came with, only through a reviewed manifest. Data model: `../plans/SEED-PLAN.md`. Decisions: `../plans/DECISIONS.md`. Open questions: `../plans/notes/questions-seed.md`. Owner-only items: `../plans/notes/todo-seed.md`.
+Idempotent scripts that put everything the Malva Coffee shop (B2C online coffee retailer, markets US and Canada, D-030) needs into its commercetools project, and remove the sample data the project came with, only through a reviewed manifest. Data model: `../plans/SEED-PLAN.md`. Decisions: `../plans/DECISIONS.md`. Open questions: `../plans/notes/questions-seed.md`. Owner-only items: `../plans/notes/todo-seed.md`.
 
 **Status:** type-checked and unit-tested offline (`npm run check`: `tsc --noEmit` and vitest, the SDK is replaced by an in-memory fake API). **Never run against a project** (no credentials where it was written). The first live run needs an API client in `seed/.env.local`.
 
@@ -27,7 +27,7 @@ Idempotent scripts that put everything the Malva Coffee shop (B2C online coffee 
 | --- | --- |
 | `npm run check` | `tsc --noEmit` and all tests (offline) |
 | `npm test` / `npm run lint` | tests only / type check only |
-| `npm run seed:settings` | Product Search indexing on (`changeProductSearchIndexingEnabled`, mode `ProductsSearch`, waits for `Activated`), `changeCountryTaxRateFallbackEnabled` true, countries US DE GB, currencies USD EUR GBP, languages en-US en-GB de-DE (added, never removed) |
+| `npm run seed:settings` | Product Search indexing on (`changeProductSearchIndexingEnabled`, mode `ProductsSearch`, waits for `Activated`), `changeCountryTaxRateFallbackEnabled` true, countries US CA, currencies USD CAD, languages en-US en-CA (added, never removed) |
 | `npm run seed:inventory` | reads the project, writes `cleanup-manifest.json` (type, key or id, name, version, depth, count per type, createdAt); deletes nothing |
 | `npm run seed:cleanup -- --manifest <file> --confirm <projectKey>` | deletes the manifest entries in dependency order (reviews, lists, customers, discount codes, discounts, inventory, products unpublished then deleted, shipping methods, tax categories, zones, categories deepest first, product types, recurrence policies, channels, types, states) |
 | `npm run seed` | idempotent upsert of everything, in dependency order (steps below); a second run says `0 change(s)` |
@@ -35,7 +35,7 @@ Idempotent scripts that put everything the Malva Coffee shop (B2C online coffee 
 | `npm run verify` | read-back checks, exit 1 on any mismatch (including prices and review statistics) |
 | `npm run reset -- --confirm <projectKey>` | deletes the seed's own resources so `seed` can rebuild from nothing |
 
-Seed steps (`--only a,b`): `settings tax shipping states types product-types categories channels recurrence products prices inventory discounts customers shopping-lists review-states reviews`. A step whose prerequisites are neither in the run nor in the project is skipped and reported, never created silently. `products` creates products (names, descriptions, attributes, images); `prices` sets the embedded prices of every variant including the recurrence prices of subscribable products.
+Seed steps (`--only a,b`): `settings tax shipping states types product-types categories channels recurrence products prices inventory discounts customers shopping-lists reviews`. A step whose prerequisites are neither in the run nor in the project is skipped and reported, never created silently. `products` creates products (names, descriptions, attributes, images); `prices` sets the embedded prices of every variant including the recurrence prices of subscribable products.
 
 ## Run order (live)
 
@@ -55,7 +55,7 @@ npm run seed                                  # 9. adds the images to the existi
 npm run verify                                # 10.
 ```
 
-No credentials? `npm run seed -- --dry-run --offline` runs the whole seed against an in-memory API and prints the plan a fresh project would get (1115 changes: 41 products, 41 price updates, 805 inventory entries, 162 reviews, 20 categories, 6 stores, 6 customers, ...).
+No credentials? `npm run seed -- --dry-run --offline` runs the whole seed against an in-memory API and prints the plan a fresh project would get (1112 changes: 41 products, 41 price updates, 805 inventory entries, 162 reviews, 20 categories, 6 stores, 6 customers, ...).
 
 ## Images
 
@@ -63,12 +63,16 @@ No credentials? `npm run seed -- --dry-run --offline` runs the whole seed agains
 
 ## Reviews
 
-Review states `mcf-review-pending` (no statistics role) and `mcf-review-approved` (role `ReviewIncludedInStatistics`), 162 approved reviews on 25 top products (3 to 12 each, none on the other 16, so the empty state is testable), keyed `mcf-review-<sku>-<n>`, written through the Reviews API (target product, customer, rating, title, text, locale, authorName, state). Reviews 1 to 6 of a product come from the six demo customers, reviews 7 to 12 have no customer (synthetic author names). `verify` compares each product's `reviewRatingStatistics.count` and average with the seeded approved reviews; the fake API computes the statistics deterministically.
+No moderation (D-037): there are no review states and no `mcf-review-pending`; every review is published on creation and counts in statistics at once. 162 reviews on 25 top products (3 to 12 each, none on the other 16, so the empty state is testable), keyed `mcf-review-<sku>-<n>`, written through the Reviews API (target product, customer, rating, title, text, locale en-US or en-CA, authorName). Reviews 1 to 6 of a product come from the six demo customers, reviews 7 to 12 have no customer (synthetic author names). `verify` compares each product's `reviewRatingStatistics.count` and average with the seeded review count and average; the fake API computes the statistics deterministically.
 
 ## Demo customers (password `SEED_DEMO_PASSWORD`, at least 10 characters)
 
-`maya.okonkwo@example.com`, `liam.carter@example.com` (US), `anna.schneider@example.com`, `jonas.weber@example.com` (DE), `emma.clarke@example.com`, `oliver.hughes@example.com` (GB). Maya has the saved-items list `mcf-saved-maya`.
+Created already verified (`isEmailVerified: true`, no email flow, D-032): `maya.okonkwo@example.com`, `liam.carter@example.com`, `noah.patel@example.com` (US) and `priya.nair@example.com`, `lucas.tremblay@example.com`, `ava.mackenzie@example.com` (CA). Maya has the saved-items list `mcf-saved-maya`.
 
 ## Files
 
 `src/lib.ts` env, guards, runner · `src/api.ts` thin API layer over the SDK · `src/fake-api.ts` in-memory API for tests and `--offline` · `src/sync.ts` pure "what differs" planners · `src/seed.ts` · `src/settings.ts` · `src/inventory.ts` · `src/cleanup.ts` · `src/reset.ts` · `src/verify.ts` · `src/images.ts` · `src/data/*` the data · tests next to the code · `src/fixtures/image-source.json` complete invented fixture of the documented image endpoint shape.
+
+## Markets, tax, shipping and stores (D-030, D-035, D-036)
+
+Countries US and CA, currencies USD and CAD, languages en-US and en-CA. CAD prices are about 1.37 times USD, rounded to 5 cents. Tax (all tax-exclusive): food 0% in both markets; standard 8% US country rate (New York 8.875%) and 5% GST for Canada as a country-level rate, so `changeCountryTaxRateFallbackEnabled` covers every province. Zones `mcf-zone-us` and `mcf-zone-ca`; standard shipping 6.95 USD (free above 75) and 8.95 CAD (free above 99), express 14.95 USD and 19.95 CAD; `mcf-collect` exists for the US zone only. Six stores, all in New York City, each ready in 30 minutes, with inventory per store. The line-item field `fulfilment` takes `collect`, `delivery` or `subscribe`.

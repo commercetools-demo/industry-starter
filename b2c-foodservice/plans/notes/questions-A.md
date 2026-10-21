@@ -6,7 +6,7 @@
 Format: `Q-<L>-<n> | question | default | blocks? | status`. Draft; the lead consolidates into `plans/QUESTIONS.md`.
 
 Q-A-1 | The skill command creates `site/`; the spec wants `storefront/`. | Use `storefront/` (rename during or right after the command) | no | Open
-Q-A-2 | Where do `vercel.json` and `netlify.toml` live? The command writes them at the project root (`b2c-foodservice/`). | Keep both at the project root with `base = "storefront"`; revisit in Q with OA-05 | no | Open
+Q-A-2 | Where does `netlify.toml` live? The command writes it at the project root (`b2c-foodservice/`). | Keep it at the project root with `base = "storefront"` and delete `vercel.json` (D-038); revisit in Q with OA-05 | no | Open
 Q-A-3 | Locale cookie name. | `malva-locale` instead of the command's `your-shop-country-locale` | no | Open
 Q-A-4 | Detect language from `Accept-Language` on first visit? | No: cookie, else `en-US` | no | Open
 Q-A-5 | `next` range: exact pin or caret? | Caret `^16` resolved to the latest 16.x; the lockfile pins it | no | Open

@@ -54,7 +54,7 @@ describe('Guards on every script', () => {
 
   it('seed keys all start with mcf- and the contract keys are listed', () => {
     expect(PREFIX).toBe('mcf-');
-    expect(CONTRACT_KEYS.length).toBeGreaterThanOrEqual(8);
+    expect(CONTRACT_KEYS.length).toBeGreaterThanOrEqual(6);
   });
 
   it('isCleanUrl accepts scheme, host and path only', () => {
@@ -88,9 +88,9 @@ describe('Project settings', () => {
     expect(api.project.searchIndexing?.productsSearch?.status).toBe('Activated');
     expect(api.project.carts?.countryTaxRateFallbackEnabled).toBe(true);
     // add only: the existing entries stay
-    expect(api.project.countries).toEqual(expect.arrayContaining(['US', 'ES', 'DE', 'GB']));
-    expect(api.project.currencies).toEqual(expect.arrayContaining(['USD', 'CHF', 'EUR', 'GBP']));
-    expect(api.project.languages).toEqual(expect.arrayContaining(['en-US', 'en-GB', 'de-DE']));
+    expect(api.project.countries).toEqual(expect.arrayContaining(['US', 'ES', 'CA']));
+    expect(api.project.currencies).toEqual(expect.arrayContaining(['USD', 'CHF', 'CAD']));
+    expect(api.project.languages).toEqual(expect.arrayContaining(['en-US', 'en-CA']));
     // a second run reports nothing to change
     api.getProject = real;
     const second = new Runner(false, quiet);
@@ -113,8 +113,8 @@ describe('Project settings', () => {
     const actions = planProjectActions({ searchIndexing: { productsSearch: { status: 'Deactivated' } }, carts: { countryTaxRateFallbackEnabled: false }, languages: ['fr'], countries: ['FR'], currencies: ['CHF'] });
     expect(actions[0]).toEqual({ action: 'changeProductSearchIndexingEnabled', enabled: true, mode: 'ProductsSearch' });
     expect(actions[1]).toEqual({ action: 'changeCountryTaxRateFallbackEnabled', countryTaxRateFallbackEnabled: true });
-    expect(actions.find((a) => a.action === 'changeLanguages')).toMatchObject({ languages: ['fr', 'en-US', 'en-GB', 'de-DE'] });
-    expect(planProjectActions({ searchIndexing: { productsSearch: { status: 'Activated' } }, carts: { countryTaxRateFallbackEnabled: true }, languages: ['en-US', 'en-GB', 'de-DE'], countries: ['US', 'DE', 'GB'], currencies: ['USD', 'EUR', 'GBP'] })).toEqual([]);
+    expect(actions.find((a) => a.action === 'changeLanguages')).toMatchObject({ languages: ['fr', 'en-US', 'en-CA'] });
+    expect(planProjectActions({ searchIndexing: { productsSearch: { status: 'Activated' } }, carts: { countryTaxRateFallbackEnabled: true }, languages: ['en-US', 'en-CA'], countries: ['US', 'CA'], currencies: ['USD', 'CAD'] })).toEqual([]);
   });
 
   it('waitForSearchActivation times out with the last status', async () => {

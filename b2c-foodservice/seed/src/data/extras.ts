@@ -6,10 +6,10 @@ import { OUT_OF_STOCK_AT_STORE, allVariants } from './products';
 import { STORE_KEYS } from './stores';
 
 export const recurrencePolicyDrafts: RecurrencePolicyDraft[] = [
-  { key: K.rpEvery2Weeks, name: ls('Every 2 weeks', 'Alle 2 Wochen'), schedule: { type: 'standard', value: 2, intervalUnit: 'Weeks' } },
-  { key: K.rpEveryMonth, name: ls('Every month', 'Jeden Monat'), schedule: { type: 'standard', value: 1, intervalUnit: 'Months' } },
-  { key: K.rpEvery2Months, name: ls('Every 2 months', 'Alle 2 Monate'), schedule: { type: 'standard', value: 2, intervalUnit: 'Months' } },
-  { key: K.rpEvery3Months, name: ls('Every 3 months', 'Alle 3 Monate'), schedule: { type: 'standard', value: 3, intervalUnit: 'Months' } },
+  { key: K.rpEvery2Weeks, name: ls('Every 2 weeks'), schedule: { type: 'standard', value: 2, intervalUnit: 'Weeks' } },
+  { key: K.rpEveryMonth, name: ls('Every month'), schedule: { type: 'standard', value: 1, intervalUnit: 'Months' } },
+  { key: K.rpEvery2Months, name: ls('Every 2 months'), schedule: { type: 'standard', value: 2, intervalUnit: 'Months' } },
+  { key: K.rpEvery3Months, name: ls('Every 3 months'), schedule: { type: 'standard', value: 3, intervalUnit: 'Months' } },
 ];
 
 /** Stock at or below this quantity counts as low stock (SEED-PLAN section 11; the storefront reads the same value from config). */

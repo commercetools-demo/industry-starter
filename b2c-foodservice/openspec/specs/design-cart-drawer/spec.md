@@ -27,12 +27,26 @@ The system SHALL open a 440px right drawer headed "Your bag (n)" with a close bu
 
 ### Requirement: Line item
 
-The system SHALL show per line a 84x100 image, name, line total, variant summary (for example "Intensity 8 · 10 capsules", "250 g · Whole bean"), a fulfilment line (collect at {store}, ship to me, or delivers every {interval}), a stepper and a Remove link.
+The system SHALL show per line a 84x100 image, name, line total, variant summary (for example "Intensity 8 · 10 capsules", "250 g · Whole bean"), a fulfilment chip ("Collect at {store}", "Delivery", or "Subscription · every {interval}"), a stepper and a Remove link.
 
 #### Scenario: Quantity floor
 - **GIVEN** a line with quantity 1
 - **WHEN** the minus control is pressed
 - **THEN** the quantity stays at 1; removal is only through Remove
+
+### Requirement: Mixed bags in the drawer
+
+The system SHALL group drawer lines inside fulfilment clusters with a small heading each ("Collect at {store}", "Delivery", "Subscription"), omit empty clusters, and keep the per-line chip, so a mixed bag (D-033) is readable in the narrow drawer. In the Canada market the Collect cluster and chip never appear (collection is US only, D-035).
+
+#### Scenario: Mixed bag in the drawer
+- **GIVEN** a US bag with one collect line, one delivery line and one subscription line
+- **WHEN** the drawer opens
+- **THEN** three clusters show in that order, each line sits in one cluster and carries its chip
+
+#### Scenario: Canada drawer
+- **GIVEN** the Canada market is active
+- **WHEN** the drawer opens
+- **THEN** only Delivery and Subscription clusters can appear
 
 ### Requirement: Empty state
 

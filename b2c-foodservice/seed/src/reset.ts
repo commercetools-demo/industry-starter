@@ -45,7 +45,7 @@ export function resetTargets(): { kind: Kind; keys: string[] }[] {
     { kind: 'recurrence-policies', keys: keys(recurrencePolicyDrafts) },
     { kind: 'channels', keys: keys(channelDrafts()) },
     { kind: 'types', keys: keys(typeDrafts) },
-    // Definition order: `ordered` references `preparing`, `pending` references `approved`, so the referencing state goes first.
+    // Definition order: `ordered` references `preparing`, so the referencing state goes first.
     { kind: 'states', keys: keys(stateDrafts) },
   ];
 }

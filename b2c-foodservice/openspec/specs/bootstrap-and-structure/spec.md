@@ -5,7 +5,7 @@
 
 ## Purpose
 
-Malva Coffee's online storefront is one Next.js application that sells pods, coffee, machines and accessories for delivery or collection. This spec fixes the stack, the folder layout, the configuration and the quality gates so every later workstream builds on the same ground and a new developer can start the app in minutes. It follows the `commercetools-storefront` skill and its Next.js adapter (`references/stack/nextjs`), scaffolded by `/commercetools:nextjs-setup-project`.
+Malva Coffee's online storefront is one Next.js application that sells pods, coffee, machines and accessories in the United States and Canada, for delivery everywhere and for collection in the six New York City stores (US market only). This spec fixes the stack, the folder layout, the configuration and the quality gates so every later workstream builds on the same ground and a new developer can start the app in minutes. It follows the `commercetools-storefront` skill and its Next.js adapter (`references/stack/nextjs`), scaffolded by `/commercetools:nextjs-setup-project`.
 
 In scope: the online channel only. In-store selling is a separate system and is not built here.
 
@@ -27,7 +27,7 @@ The system SHALL be a Next.js App Router application on the current stable major
 
 ### Requirement: Scaffold by the skill command
 
-The system SHALL be created by running `/commercetools:nextjs-setup-project` in `storefront/` (the app root, a sibling of `seed/`, `plans/`, `design/` and `openspec/`), and the generated structure SHALL then be adjusted only as this spec states. Manual scaffolding that bypasses the command is not allowed except to repair a partial run. The command creates its app folder as `site/`; workstream A renames it to `storefront/` and fixes the paths it wrote (`vercel.json`, `netlify.toml`).
+The system SHALL be created by running `/commercetools:nextjs-setup-project` in `storefront/` (the app root, a sibling of `seed/`, `plans/`, `design/` and `openspec/`), and the generated structure SHALL then be adjusted only as this spec states. Manual scaffolding that bypasses the command is not allowed except to repair a partial run. The command creates its app folder as `site/`; workstream A renames it to `storefront/` and fixes the paths it wrote in `netlify.toml` and deletes the generated `vercel.json`, because the hosting target is Netlify (D-038).
 
 #### Scenario: Scaffold evidence
 - **GIVEN** workstream A has finished
@@ -53,7 +53,7 @@ The system SHALL use this layout under `storefront/`:
 | `context/` | Cart, store and locale providers |
 | `components/{ui,layout,product,...}/` | Components; `ui` holds the atoms of `design-tokens-and-components` |
 | `i18n/` | `routing.ts`, `request.ts` |
-| `messages/` | `en-US.json`, `de-DE.json`, `en-GB.json` with identical keys |
+| `messages/` | `en-US.json` and `en-CA.json` with identical keys |
 | `proxy.ts` | Locale routing middleware |
 | `next.config.ts`, `postcss.config.mjs`, `eslint.config.mjs`, `vitest.config.ts` | Tooling |
 | `.env.example`, `.nvmrc`, `CLAUDE.md`, `AGENTS.md` | Environment template, runtime pin, rules for coding agents |
@@ -65,10 +65,10 @@ The system SHALL use this layout under `storefront/`:
 
 ### Requirement: Locales, countries and currencies from one source
 
-The system SHALL define markets once in `COUNTRY_CONFIG` and derive routing, currency, country and message files from it: `en-US` (US, USD), `de-DE` (DE, EUR) and `en-GB` (GB, GBP). Routes are always locale-prefixed (`/en-US/...`), the default locale is `en-US`, and every locale has a message catalogue with the same keys.
+The system SHALL define markets once in `COUNTRY_CONFIG` and derive routing, currency, country and message files from it: exactly two entries (D-030): `en-US` (US, USD) and `en-CA` (CA, CAD, English only; French is not built). Routes are always locale-prefixed (`/en-US/...`, `/en-CA/...`), the default locale is `en-US`, and each locale has a message catalogue with the same keys. Prices are tax-exclusive in both markets (D-036). Collection features are enabled by a per-market flag that is true for US and false for CA (D-035).
 
 #### Scenario: Unknown locale
-- **GIVEN** a request to `/fr-FR/coffee`
+- **GIVEN** a request to `/fr-FR/coffee` or `/de-DE/coffee`
 - **WHEN** the proxy handles it
 - **THEN** it redirects to the default or cookie locale, never renders a page without a locale
 
@@ -77,9 +77,18 @@ The system SHALL define markets once in `COUNTRY_CONFIG` and derive routing, cur
 - **WHEN** a message file with the same key exists
 - **THEN** routing, currency formatting and cart creation use it without further code changes
 
+### Requirement: Hosting on Netlify
+
+The system SHALL deploy to Netlify (D-038) using `netlify.toml` at the app root and the `/commercetools:nextjs-deploy-netlify` skill, SHALL NOT keep Vercel configuration, and SHALL set the same server-only environment variables in Netlify (never with a `NEXT_PUBLIC_` prefix). The hosted Checkout return URLs and any Stripe webhooks point at the Netlify site URL.
+
+#### Scenario: Deploy config
+- **GIVEN** the app root after workstream A
+- **WHEN** a reviewer lists deployment files
+- **THEN** `netlify.toml` exists and no `vercel.json` exists
+
 ### Requirement: Configuration and secrets
 
-The system SHALL read commercetools settings only from server environment variables (`CTP_PROJECT_KEY`, `CTP_CLIENT_ID`, `CTP_CLIENT_SECRET`, `CTP_AUTH_URL`, `CTP_API_URL`, `CTP_SCOPES`) plus `SESSION_SECRET` (at least 32 characters), keep them in git-ignored `.env.local`, and commit only `.env.example` with names and no values. No secret has a `NEXT_PUBLIC_` prefix. The storefront API client is the Frontend (non-admin) client with only the scopes the storefront needs, including `manage_recurring_orders` once subscriptions are built. A feature that needs a broader scope (reviews) uses a second isolated server-only client (`server-architecture-and-data-flow`).
+The system SHALL read commercetools settings only from server environment variables (`CTP_PROJECT_KEY`, `CTP_CLIENT_ID`, `CTP_CLIENT_SECRET`, `CTP_AUTH_URL`, `CTP_API_URL`, `CTP_SCOPES`) plus `SESSION_SECRET` (at least 32 characters) and, for the demo sign-in of `design-account-area`, `DEMO_LOGIN_ENABLED` and `DEMO_LOGIN_PASSWORD`, keep them in git-ignored `.env.local`, and commit only `.env.example` with names and no values. No secret has a `NEXT_PUBLIC_` prefix. The storefront API client is the Frontend (non-admin) client with only the scopes the storefront needs, including `manage_recurring_orders` once subscriptions are built. A feature that needs a broader scope (reviews) uses a second isolated server-only client (`server-architecture-and-data-flow`).
 
 #### Scenario: Missing secret
 - **GIVEN** `SESSION_SECRET` shorter than 32 characters

@@ -2,7 +2,6 @@
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 import { describe, expect, it } from 'vitest';
 import type { Res } from './api';
-import { K } from './data/base';
 import { CUSTOMERS } from './data/customers';
 import { PRODUCTS, REVIEW_COUNTS } from './data/products';
 import { REVIEWS, expectedStats, reviewDrafts, reviewKey } from './data/reviews';
@@ -27,21 +26,21 @@ const listReviews = async (api: FakeApi, productId: string, sort: 'newest' | 'hi
     .filter((r) => (r.target as { id: string }).id === productId && r.includedInStatistics === true)
     .sort((a, b) => (sort === 'highest' ? (b.rating as number) - (a.rating as number) : sort === 'lowest' ? (a.rating as number) - (b.rating as number) : String(b.createdAt).localeCompare(String(a.createdAt))));
 
-/** A fresh product with the review states in place, for scenarios that need exact numbers. */
+/** A fresh product with products and customers in place, for scenarios that need exact numbers. */
 async function bare(): Promise<{ api: FakeApi; productId: string }> {
   const api = new FakeApi();
-  await runSeed({ api, run: new Runner(false, quiet), demoPassword: 'dummy-long-demo-password' }, 'settings,tax,product-types,categories,recurrence,products,customers,review-states');
+  await runSeed({ api, run: new Runner(false, quiet), demoPassword: 'dummy-long-demo-password' }, 'settings,tax,product-types,categories,recurrence,products,customers');
   const p = await product(api, 'mcf-p-pod-one'); // not reviewed by `bare` runs: the reviews step was not run
   return { api, productId: p.id };
 }
-const post = (api: FakeApi, productId: string, n: number, rating: number, state: string, customer = 'mcf-customer-maya') =>
-  api.create('reviews', { key: `t-${n}`, uniquenessValue: `${customer}:${productId}:${n}`, rating, title: `t${n}`, text: 'x', locale: 'en-US', authorName: 'T T.', target: { typeId: 'product', id: productId }, state: { typeId: 'state', key: state }, customer: { typeId: 'customer', key: customer } });
+const post = (api: FakeApi, productId: string, n: number, rating: number, customer = 'mcf-customer-maya') =>
+  api.create('reviews', { key: `t-${n}`, uniquenessValue: `${customer}:${productId}:${n}`, rating, title: `t${n}`, text: 'x', locale: 'en-US', authorName: 'T T.', target: { typeId: 'product', id: productId }, customer: { typeId: 'customer', key: customer } });
 
 describe('Ratings come from product statistics', () => {
   it('Card rating', async () => {
     // 12 reviews, seven 5-star and five 4-star: average 4.58333, shown as 4.6 with a count of 12
     const { api, productId } = await bare();
-    for (let n = 1; n <= 12; n += 1) await post(api, productId, n, n <= 7 ? 5 : 4, K.reviewApproved);
+    for (let n = 1; n <= 12; n += 1) await post(api, productId, n, n <= 7 ? 5 : 4);
     const s = stats(await api.getById('products', productId) as Res);
     expect(s?.count).toBe(12);
     expect(s?.averageRating).toBeCloseTo(4.58333, 4);
@@ -71,24 +70,17 @@ describe('Listing by rating', () => {
 describe('Review list on the detail page', () => {
   it('Sorted', async () => {
     const { api, productId } = await bare();
-    for (const [n, rating] of [[1, 5], [2, 3], [3, 1]] as const) await post(api, productId, n, rating, K.reviewApproved);
+    for (const [n, rating] of [[1, 5], [2, 3], [3, 1]] as const) await post(api, productId, n, rating);
     expect((await listReviews(api, productId, 'lowest'))[0]?.rating).toBe(1);
     expect((await listReviews(api, productId, 'highest'))[0]?.rating).toBe(5);
   });
 
-  it('Unpublished review hidden', async () => {
-    const { api, productId } = await bare();
-    await post(api, productId, 1, 5, K.reviewApproved);
-    const pending = await post(api, productId, 2, 1, K.reviewPending);
-    expect(pending.includedInStatistics).toBe(false);
-    expect((await listReviews(api, productId, 'newest')).map((r) => r.key)).toEqual(['t-1']);
-  });
 });
 
 describe('Write a review', () => {
   it('Valid review', async () => {
     const { api, productId } = await bare();
-    const r = await post(api, productId, 1, 4, K.reviewPending);
+    const r = await post(api, productId, 1, 4);
     expect((r.target as { id: string }).id).toBe(productId);
     expect((r.customer as { id: string }).id).toBe(api.all('customers').find((c) => c.key === 'mcf-customer-maya')?.id);
     expect(r.rating).toBe(4);
@@ -105,44 +97,34 @@ describe('Write a review', () => {
   it.todo('Missing rating (storefront form validation, covered by the review form tests in the storefront workstream)');
 });
 
-describe('Moderation and states', () => {
-  it('New review pending', async () => {
+describe('No moderation (D-037)', () => {
+  it('a new review is published and counted at once', async () => {
     const { api, productId } = await bare();
-    await post(api, productId, 1, 5, K.reviewApproved);
-    const before = stats(await api.getById('products', productId) as Res);
-    const r = await post(api, productId, 2, 1, K.reviewPending);
-    expect(((await api.getById('states', (r.state as { id: string }).id)) as Res).key).toBe(K.reviewPending);
-    expect(stats(await api.getById('products', productId) as Res)).toEqual(before); // product rating unchanged
+    await post(api, productId, 1, 5);
+    const r = await post(api, productId, 2, 1);
+    expect(r.state).toBeUndefined();
+    expect(r.includedInStatistics).toBe(true);
+    expect(stats(await api.getById('products', productId) as Res)).toMatchObject({ count: 2, averageRating: 3 });
+    expect((await listReviews(api, productId, 'newest')).map((x) => x.key).sort()).toEqual(['t-1', 't-2']);
   });
 
-  it('Approval', async () => {
-    const { api, productId } = await bare();
-    const r = await post(api, productId, 1, 2, K.reviewPending);
-    expect(stats(await api.getById('products', productId) as Res)).toBeUndefined();
-    await api.update('reviews', r, [{ action: 'setState', state: { typeId: 'state', key: K.reviewApproved } }]);
-    expect(stats(await api.getById('products', productId) as Res)?.count).toBe(1);
-    expect((await listReviews(api, productId, 'newest')).map((x) => x.key)).toEqual(['t-1']);
-  });
-
-  it('approved is the target of pending and carries the statistics role', async () => {
+  it('the seed defines no review states', async () => {
     const api = await seeded();
-    const approved = (await api.getByKey('states', K.reviewApproved)) as Res;
-    const pending = (await api.getByKey('states', K.reviewPending)) as Res;
-    expect(approved.roles).toEqual(['ReviewIncludedInStatistics']);
-    expect(pending.roles).toEqual([]);
-    expect((pending.transitions as { id: string }[]).map((t) => t.id)).toEqual([approved.id]);
+    expect(api.all('states').filter((s) => s.type === 'ReviewState')).toEqual([]);
+    expect(await api.getByKey('states', 'mcf-review-pending')).toBeUndefined();
+    expect(await api.getByKey('states', 'mcf-review-approved')).toBeUndefined();
   });
 });
 
 describe('Own reviews in the account', () => {
   it('Edit', async () => {
-    // edit the text, the review returns to the state the moderation rule requires (pending), statistics follow
+    // editing the text keeps the review published and counted
     const { api, productId } = await bare();
-    const r = await post(api, productId, 1, 5, K.reviewApproved);
-    const edited = await api.update('reviews', r, [{ action: 'setText', text: 'Edited text' }, { action: 'setState', state: { typeId: 'state', key: K.reviewPending } }]);
+    const r = await post(api, productId, 1, 5);
+    const edited = await api.update('reviews', r, [{ action: 'setText', text: 'Edited text' }]);
     expect(edited.text).toBe('Edited text');
-    expect(edited.includedInStatistics).toBe(false);
-    expect(stats(await api.getById('products', productId) as Res)).toBeUndefined();
+    expect(edited.includedInStatistics).toBe(true);
+    expect(stats(await api.getById('products', productId) as Res)?.count).toBe(1);
   });
 });
 
@@ -154,7 +136,7 @@ describe('Seeded reviews', () => {
       const p = await product(api, def.key);
       expect(stats(p)?.count ?? 0, def.key).toBe(expectedStats(def.key).count);
     }
-    // approved reviews are all counted
+    // all reviews are published and counted
     const approved = api.all('reviews').filter((r) => r.includedInStatistics === true).length;
     expect(approved).toBe(REVIEWS.length);
   });
@@ -171,7 +153,7 @@ describe('Seeded reviews', () => {
   });
 
   it('writes reviews in the language of the author, spreads ratings 1 to 5 and uses each demo customer at most once per product', () => {
-    expect(new Set(REVIEWS.map((r) => r.locale))).toEqual(new Set(['en-US', 'en-GB', 'de-DE']));
+    expect(new Set(REVIEWS.map((r) => r.locale))).toEqual(new Set(['en-US', 'en-CA']));
     expect(new Set(REVIEWS.map((r) => r.rating))).toEqual(new Set([1, 2, 3, 4, 5]));
     const avg = REVIEWS.reduce((s, r) => s + r.rating, 0) / REVIEWS.length;
     expect(avg).toBeGreaterThan(3.8); // realistic skew towards the top
@@ -181,13 +163,13 @@ describe('Seeded reviews', () => {
       expect(new Set(customers).size).toBe(customers.length);
     }
     for (const r of REVIEWS) if (r.customerKey) expect(CUSTOMERS.some((c) => c.key === r.customerKey)).toBe(true);
-    for (const r of REVIEWS.filter((x) => x.locale === 'de-DE')) expect(r.text).not.toMatch(/\bthe\b/i);
+    for (const r of REVIEWS) expect(['en-US', 'en-CA']).toContain(r.locale);
   });
 
-  it('the review drafts target the product, the customer and the approved state through the Reviews API', () => {
+  it('the review drafts target the product, and the customer, with no state, through the Reviews API', () => {
     const d = reviewDrafts()[0] as unknown as Record<string, unknown>;
     expect(d.target).toMatchObject({ typeId: 'product' });
-    expect(d.state).toEqual({ typeId: 'state', key: K.reviewApproved });
+    expect(d).not.toHaveProperty('state');
     expect(d.uniquenessValue).toBe(d.key);
     for (const x of reviewDrafts()) {
       expect(x.title?.length ?? 0).toBeLessThanOrEqual(80);
@@ -196,15 +178,14 @@ describe('Seeded reviews', () => {
     }
   });
 
-  it('repairs a hand-edited review and a review moved back to pending', async () => {
+  it('repairs a hand-edited review', async () => {
     const api = await seeded();
     const r = api.all('reviews')[0] as Res;
-    const pending = (await api.getByKey('states', K.reviewPending)) as Res;
-    await api.update('reviews', r, [{ action: 'setRating', rating: r.rating === 1 ? 2 : 1 }, { action: 'setState', state: { typeId: 'state', id: pending.id } }]);
+    await api.update('reviews', r, [{ action: 'setRating', rating: r.rating === 1 ? 2 : 1 }]);
     expect(await verifySeed(api)).not.toEqual([]);
     const run = new Runner(false, quiet);
     await runSeed({ api, run, demoPassword: 'dummy-long-demo-password' });
-    expect(run.lines).toEqual([`update review ${r.key} (setRating, setState)`]);
+    expect(run.lines).toEqual([`update review ${r.key} (setRating)`]);
     expect(await verifySeed(api)).toEqual([]);
   });
 

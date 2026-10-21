@@ -14,7 +14,7 @@
 | Branch | `ws/e-design-system`; commit `ws-E: E-05 <summary>` |
 | Primary spec | `openspec/specs/design-tokens-and-components/spec.md` |
 | Generated templates that apply | none |
-| Owner prerequisites | none to build. Optional rows drafted in `plans/notes/todo-E.md`: `SO-x` (German catalogue review, existing SO-03 covers it), `SO-x` (coffee glyphs), `M-E-01`, `M-E-02` |
+| Owner prerequisites | none to build. Optional rows drafted in `plans/notes/todo-E.md`: `SO-x` (coffee glyphs), `M-E-01`, `M-E-02` |
 | Skills to load first | `commercetools-storefront` (`references/b2c/ui-components.md`, `references/stack/nextjs/best-practices/image.md`, `server-components.md`). No commercetools API is called in E, so no task carries a `[SKILL]` tag except where noted |
 | Design source | `design/export/b2b2c-retailer-design/project/app/colors_and_type.css`, `styles.css`, `components.jsx` (`ICONS`, atoms) |
 
@@ -27,7 +27,7 @@
 - Fonts with `next/font/google` (Archivo, Roboto, Roboto Mono) in the root layout.
 - Atoms in `components/ui/`: `Button`, `ButtonLink`, `IconButton`, `Chip`, `Field` (+ `Input`, `Select`, `Textarea`), `OptionButton`, `ColorSwatch`, `Stepper`, `Card`, `Badge`, `AvailabilityDot`, `Rating`, `Drawer`, `Modal`, `Toast` (+ `ToastProvider`, `useToast`), `Steps`, `Icon`.
 - The icon set (VELA `ICONS` minus unused B2B glyphs, plus `cup`, `bean`, `capsule`, `machine`).
-- The base catalogue namespaces `common`, `ui`, `a11y`, `errors` in `en-US`, `de-DE`, `en-GB` (identical keys).
+- The base catalogue namespaces `common`, `ui`, `a11y`, `errors` in `en-US` and `en-CA` (identical keys).
 - A dev-only kitchen-sink page for self-verification.
 
 **Out of scope**
@@ -235,12 +235,12 @@ The prototype also uses emoji nowhere; none may be added.
 
 ### 3.6 i18n catalogue (keys identical in the three files; A's keys stay)
 
-Namespaces and keys E adds (values in all three languages; German is real German, en-GB uses British spelling where it differs):
+Namespaces and keys E adds (values in both locales; en-CA uses Canadian spelling where it differs):
 - `common`: `brand`, `skipToContent`, `close`, `open`, `back`, `next`, `save`, `cancel`, `remove`, `edit`, `loading`, `retry`, `yes`, `no`.
 - `ui`: `stepper.decrease`, `stepper.increase`, `rating.label` (`"{value} out of 5, {count, plural, one {# review} other {# reviews}}"`, de `"{value} von 5, {count, plural, one {# Bewertung} other {# Bewertungen}}"`), `rating.reviews` (`"{count, plural, one {# review} other {# reviews}}"`), `option.unavailable` (`"Not available"`), `toast.dismiss`, `drawer.close`, `modal.close`, `steps.done` (`"completed"`), `steps.current` (`"current step"`), `field.required`, `field.optional`.
 - `a11y`: `menu`, `cart`, `search`, `account`, `store`, `language`, `filters`, `previousImage`, `nextImage`.
 - `errors`: A's keys plus `generic`, `unauthorized`, `forbidden`, `not_found`, `conflict`, `rate_limited`, `upstream_unavailable`, `validation_failed`, `internal_error` (one key per `ErrorCode` of D so `errors.<code>` always exists).
-Other workstreams add their own namespaces to **all three** files in the same commit; `messages.test.ts` (A) fails otherwise. Brand is "Malva Coffee" in all three; "Nespresso" appears only inside compatibility sentences, never as a brand (guide rule 11): E adds a test that no catalogue contains `Nespresso` outside the word pairs `Nespresso Original` and `Nespresso Vertuo`.
+Other workstreams add their own namespaces to **both** files in the same commit; `messages.test.ts` (A) fails otherwise. Brand is "Malva Coffee" in both; "Nespresso" appears only inside compatibility sentences, never as a brand (guide rule 11): E adds a test that no catalogue contains `Nespresso` outside the word pairs `Nespresso Original` and `Nespresso Vertuo`.
 
 ## 4. Tasks
 
@@ -273,7 +273,7 @@ Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no co
 
 - [ ] **E-06 Field, OptionButton, ColorSwatch, Stepper**
   - Files: components and tests.
-  - Tests (spec: Shared atoms, Disabled option explains itself): `Disabled option explains itself: struck through, not selectable, carries a title` (assert `line-through` class, `aria-disabled`, `title`, `onClick` not called), `Disabled option is still focusable`, `TypeScript refuses a disabled option without a reason` (`// @ts-expect-error` line in the test, checked by `npm run typecheck`), `Selected option uses the ink fill and aria-pressed`, `Field shows its label above and the error text with aria-describedby`, `Input focus uses the ring token` (class assertion), `Colour swatch uses the swatch token and falls back for unknown colours`, `Colour swatch selected has the double ring`, `Colour swatch as a button has an accessible name`, `Stepper increments, decrements and stops at min and max`, `Stepper buttons have localized labels in de-DE`, `Stepper announces the value politely`.
+  - Tests (spec: Shared atoms, Disabled option explains itself): `Disabled option explains itself: struck through, not selectable, carries a title` (assert `line-through` class, `aria-disabled`, `title`, `onClick` not called), `Disabled option is still focusable`, `TypeScript refuses a disabled option without a reason` (`// @ts-expect-error` line in the test, checked by `npm run typecheck`), `Selected option uses the ink fill and aria-pressed`, `Field shows its label above and the error text with aria-describedby`, `Input focus uses the ring token` (class assertion), `Colour swatch uses the swatch token and falls back for unknown colours`, `Colour swatch selected has the double ring`, `Colour swatch as a button has an accessible name`, `Stepper increments, decrements and stops at min and max`, `Stepper buttons have localized labels in en-CA`, `Stepper announces the value politely`.
 
 - [ ] **E-07 Drawer and Modal**
   - Files: `components/ui/use-dialog.ts`, `Drawer.tsx`, `Modal.tsx`, tests.
@@ -283,10 +283,10 @@ Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no co
   - Files: `context/toast.tsx`, `components/ui/Toast.tsx`, `Steps.tsx`, tests (use `vi.useFakeTimers()`).
   - Tests: `Toast shows the message with a polite live region`, `Toast disappears after 2.2 seconds`, `A second message replaces the first and restarts the timer`, `useToast outside the provider throws a clear error`, `Steps marks done, active and pending`, `Steps sets aria-current on the active step`, `Steps done circle shows a check icon`.
 
-- [ ] **E-09 Message catalogues (identical keys, three languages)**
-  - Files: `messages/en-US.json`, `de-DE.json`, `en-GB.json`, `messages/catalogue.test.ts`.
-  - Implement 3.6. Use real German; ask for the native review (SO-03).
-  - Tests (spec: bootstrap Adding a market, extended): `Catalogues have identical keys` (reuses A's helper), `German values differ from English except an allow-list` (allow-list: `common.brand`, any value without a letter, `ui.field.optional` if equal), `ICU messages parse in all three languages` (use `IntlMessageFormat`? not installed: instead render `ui.rating.label` through `NextIntlClientProvider` for counts 0, 1, 12), `Nespresso appears only in compatibility wording`, `Every ErrorCode of lib/errors has an errors.<code> key`, `No catalogue value contains a hex colour or HTML tag`.
+- [ ] **E-09 Message catalogues (identical keys, two locales)**
+  - Files: `messages/en-US.json`, `en-CA.json`, `messages/catalogue.test.ts`.
+  - Implement 3.6. English only (D-030); en-CA spells colour with u.
+  - Tests (spec: bootstrap Adding a market, extended): `Catalogues have identical keys` (reuses A's helper), `en-CA uses Canadian spelling where the text has colour or favourite`, `ICU messages parse in both locales` (use `IntlMessageFormat`? not installed: instead render `ui.rating.label` through `NextIntlClientProvider` for counts 0, 1, 12), `Nespresso appears only in compatibility wording`, `Every ErrorCode of lib/errors has an errors.<code> key`, `No catalogue value contains a hex colour or HTML tag`.
 
 - [ ] **E-10 Kitchen-sink page and predeploy gate**
   - Files: `app/[locale]/dev/design/page.tsx`, `app/[locale]/dev/design/KitchenSink.tsx` (client), `scripts/predeploy-check.mjs` and its test (extend: fail while `app/[locale]/dev` exists).
@@ -296,7 +296,7 @@ Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no co
 - [ ] **E-11 Browser verification and evidence** Run section 6 and section 7; save evidence.
 
 - [ ] **E-12 Agent rules for design use**
-  - Files: `storefront/AGENTS.md` (append "Design system": the token names, "no hex, no raw font, no inline radius", the atom list with props, `buttonClasses` for links, how to add an icon, how to add a message key to all three files), `agent-rules.test.ts` extended: `AGENTS.md names the tokens and the atom list`.
+  - Files: `storefront/AGENTS.md` (append "Design system": the token names, "no hex, no raw font, no inline radius", the atom list with props, `buttonClasses` for links, how to add an icon, how to add a message key to both files), `agent-rules.test.ts` extended: `AGENTS.md names the tokens and the atom list`.
 
 ## 5. Scenarios checklist (`design-tokens-and-components`)
 
@@ -340,7 +340,7 @@ Record anything surprising in `plans/PROJECT-FINDINGS.md`.
 
 | ID | Who | When needed | Steps (summary) | Expected | Status |
 | --- | --- | --- | --- | --- | --- |
-| SO-03 (existing) | Native German speaker | Before release | Review `messages/de-DE.json` | Corrections or approval | TODO |
+| SO-03 (removed) | n/a | n/a | German dropped (D-030); no translation sign-off | n/a | Removed |
 | SO-x (E1) | Owner or designer | Before release | Look at `/en-US/dev/design` icons section: approve or redraw the `cup`, `bean`, `capsule`, `machine` glyphs (Q-E-5) | Approval or new path data | TODO |
 | M-E-01 | Owner | Optional, after E is Ready for review | Open the kitchen-sink page on a real phone and a desktop; compare with the VELA screenshots in `design/export/.../screenshots` for the atoms (buttons, chips, fields, stepper, steps) | "Looks like the design" or a list of differences | TODO |
 | M-E-02 | Owner | Before release | Confirm the two token value changes for contrast (`--ink-3` from `#7C7975` to `#6E6B67`, Q-E-1) and the new text tokens `--teal-text`, `--danger-text` | Approval or "keep VELA value, accept AA failure" | TODO |
@@ -363,7 +363,7 @@ Full rows in `plans/notes/todo-E.md`.
 | Q-E-10 | Overlay colour: spec says "42% ink"; the prototype uses `rgba(14,13,41,0.42)` (a darker navy). | `color-mix(in srgb, var(--ink) 42%, transparent)` (spec wins) | no |
 | Q-E-11 | Focus indicator: the spec only names the field ring (accent 14%), which is too faint to count as a focus indicator. | Global `:focus-visible` 2px accent outline offset 2px on every control, plus the 14% ring on fields | no |
 | Q-E-12 | Entrance animation: wrap in `no-preference` and keep transform-only (as the prototype) or drop entirely? | Keep as the prototype; no opacity in keyframes | no |
-| Q-E-13 | Catalogue wording choices: "bag" (not "basket" or "cart") in all three languages; en-GB uses "Colour". | As stated; the German words are reviewed under SO-03 | no |
+| Q-E-13 | Catalogue wording choices: "bag" (not "basket" or "cart") in both locales; en-CA uses "Colour". | As stated | no |
 | Q-E-14 | Rating atom: one star plus number and count (the design), not five stars. | One star; a five-star display for the review list and the write form is built in M | M |
 | Q-E-15 | Radius token naming. | `--radius-pill|field|card|panel|hero` (the spec names the values, not the names) | no |
 
@@ -376,7 +376,7 @@ Also in `plans/notes/questions-E.md`.
 - `grep -rnE "#[0-9a-fA-F]{3,8}\b" storefront/components storefront/app --include=*.tsx` prints nothing (hex only in `tokens.css`).
 - Evidence in `plans/evidence/E/`: kitchen-sink screenshots at 375 and 1440, icons screenshot, focus screenshot, `E-computed-styles.json`, `E-lighthouse.json`, `README.md`.
 - Console and network clean on the kitchen-sink page.
-- All three catalogues have identical keys; German reviewed or `SO-03` row present.
+- Both catalogues have identical keys.
 - No new package added to `package.json` beyond A's list.
 - Rows added to `plans/TODO-MANUAL-TESTING.md`, questions to `plans/QUESTIONS.md` (lead merges the notes).
 - `node plans/verify-plan.mjs` passes; `STATUS.md` row E is `Ready for review`.

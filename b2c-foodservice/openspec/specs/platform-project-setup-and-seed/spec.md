@@ -11,7 +11,7 @@ The commercetools project holds Merchant Center sample data. Malva Coffee needs 
 
 ### Requirement: Project settings
 
-The system SHALL, through a script, enable Product Search indexing (`changeProductSearchIndexingEnabled`, mode `ProductsSearch`, waiting until the status is `Activated`) and enable `changeCountryTaxRateFallbackEnabled` (set to true) in the project configuration. It SHALL also ensure the project's countries are US, DE and GB, currencies USD, EUR and GBP, and languages en-US, en-GB and de-DE, adding but never removing existing entries.
+The system SHALL, through a script, enable Product Search indexing (`changeProductSearchIndexingEnabled`, mode `ProductsSearch`, waiting until the status is `Activated`) and enable `changeCountryTaxRateFallbackEnabled` (set to true) in the project configuration. It SHALL also ensure the project's countries are US and CA, currencies USD and CAD, and languages en-US and en-CA, adding but never removing existing entries (D-030).
 
 #### Scenario: Fresh project
 - **GIVEN** indexing is deactivated and the fallback is off
@@ -53,7 +53,7 @@ The system SHALL abort every seed script unless `SEED_CTP_PROJECT_KEY` equals th
 
 ### Requirement: Idempotent seed in dependency order
 
-The system SHALL create or update, by key, in this order: tax categories and tax rates (US, DE, GB), zones and shipping methods with rates per currency, product types (pods, coffee, machine, accessory, gift set), categories, custom types (line item fulfilment, store, customer preferences, review), supply channels for collection stores, recurrence policies, products with variants, standalone or embedded prices in USD, EUR and GBP, inventory per variant and per store channel, cart discounts and discount codes, demo customers with addresses, then review states and reviews (`reviews-and-ratings`). A second run SHALL report zero changes.
+The system SHALL create or update, by key, in this order: tax categories and tax rates (US: food 0%, standard 8%, NY 8.875%; CA: food 0% zero-rated, standard 5% GST, no provincial tax modelled, D-036), zones and a standard-carrier shipping method with rates per currency (D-034), product types (pods, coffee, machine, accessory, gift set), categories, custom types (line item fulfilment, store, customer preferences, review), supply channels for the six New York City collection stores (invented NYC addresses and geo locations, D-035), recurrence policies, products with variants, standalone or embedded prices in USD and CAD, inventory per variant and per store channel, cart discounts and discount codes, demo customers with addresses, then reviews, published on creation with no review states (`reviews-and-ratings`, D-037). A second run SHALL report zero changes.
 
 #### Scenario: Re-run
 - **GIVEN** a seeded project

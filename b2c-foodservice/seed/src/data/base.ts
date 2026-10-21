@@ -1,26 +1,25 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 
-/** Languages the seed writes names in (decision D-004). */
-export const LANGUAGES = ['en-US', 'en-GB', 'de-DE'] as const;
-export const COUNTRIES = ['US', 'DE', 'GB'] as const;
-export const CURRENCIES = ['USD', 'EUR', 'GBP'] as const;
+/** Languages the seed writes names in (D-030: US and Canada only; French for Canada is not built). */
+export const LANGUAGES = ['en-US', 'en-CA'] as const;
+export const COUNTRIES = ['US', 'CA'] as const;
+export const CURRENCIES = ['USD', 'CAD'] as const;
 export type Country = (typeof COUNTRIES)[number];
 export type Currency = (typeof CURRENCIES)[number];
+export type Locale = (typeof LANGUAGES)[number];
 
-/** Market of each country: currency, locale, whether prices include tax. */
-export const MARKETS: Record<Country, { currency: Currency; locale: 'en-US' | 'en-GB' | 'de-DE'; taxIncluded: boolean }> = {
+/** Market of each country: currency, locale, whether prices include tax (US and CA prices are tax-exclusive). */
+export const MARKETS: Record<Country, { currency: Currency; locale: Locale; taxIncluded: boolean }> = {
   US: { currency: 'USD', locale: 'en-US', taxIncluded: false },
-  DE: { currency: 'EUR', locale: 'de-DE', taxIncluded: true },
-  GB: { currency: 'GBP', locale: 'en-GB', taxIncluded: true },
+  CA: { currency: 'CAD', locale: 'en-CA', taxIncluded: false },
 };
 
 export type LString = Record<string, string>;
-/** Localized string. `gb` falls back to the US text when the British spelling is identical. */
-export const ls = (en: string, de: string, gb: string = en): LString => ({ 'en-US': en, 'en-GB': gb, 'de-DE': de });
+/** Localized string. `ca` falls back to the US text when the Canadian spelling is identical. */
+export const ls = (us: string, ca: string = us): LString => ({ 'en-US': us, 'en-CA': ca });
 
-export const slugify = (s: string): string =>
-  s.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+export const slugify = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 /** Every resource this seed creates has this key prefix (decision D-009). */
 export const PREFIX = 'mcf-';
@@ -30,8 +29,7 @@ export const K = {
   taxFood: 'mcf-tax-food',
   taxStandard: 'mcf-tax-standard',
   zoneUs: 'mcf-zone-us',
-  zoneDe: 'mcf-zone-de',
-  zoneGb: 'mcf-zone-gb',
+  zoneCa: 'mcf-zone-ca',
   shipStandard: 'mcf-ship-standard',
   shipExpress: 'mcf-ship-express',
   shipCollect: 'mcf-collect',
@@ -46,8 +44,6 @@ export const K = {
   orderPreparing: 'mcf-order-preparing',
   orderReady: 'mcf-order-ready-for-collection',
   orderCollected: 'mcf-order-collected',
-  reviewPending: 'mcf-review-pending',
-  reviewApproved: 'mcf-review-approved',
   rpEvery2Weeks: 'mcf-every-2-weeks',
   rpEveryMonth: 'mcf-every-month',
   rpEvery2Months: 'mcf-every-2-months',
@@ -62,11 +58,10 @@ export const K = {
 /**
  * Keys other parts of the app read by fixed name. All of them also carry the `mcf-` prefix today; they are listed
  * explicitly so that `reset` and the key test accept exactly these even if one is ever renamed without the prefix.
- * Order states, review states and custom types.
+ * Order states and custom types.
  */
 export const CONTRACT_KEYS: readonly string[] = [
   K.orderOrdered, K.orderPreparing, K.orderReady, K.orderCollected,
-  K.reviewPending, K.reviewApproved,
   K.typeLine, K.typeStore,
 ];
 

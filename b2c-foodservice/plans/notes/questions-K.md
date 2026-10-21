@@ -7,20 +7,21 @@ Draft for the lead to consolidate into `plans/QUESTIONS.md`. Format: `Q-<L>-<n> 
 
 | ID | Question | Default | Blocks? | Status |
 | --- | --- | --- | --- | --- |
-| Q-K-01 | Payment-only hosted Checkout cannot take the design's own "Place order" button; the widget has its own pay button. Accept? | Yes: widget button labelled "Place order" via Checkout text customisation (OA-K-d), inside the Payment card; Back stays ours. | No | Open |
-| Q-K-02 | Mixed bags: which strategy after the K-01 spike? Should G/I create every cart as `shippingMode: Multiple` (the mode is immutable after creation)? | Strategy from the K-01 decision rule. G's `CART_SHIPPING_MODE` stays `'Single'`; K clones into a `Multiple` cart at checkout when there are two groups (a `Multiple` cart shows no tax estimate on the cart page until every quantity is allocated). | K-03 to K-07 detail | Open |
-| Q-K-02b | If only tax fails under Multiple, fix data or fall back? | Fix data in the seed and keep Multiple. | No | Open |
-| Q-K-02c | Under the `order-per-group` fallback, on which order do discount codes apply? | First order only. | No | Open |
-| Q-K-03 | Can the hosted pay button be hidden, triggered or labelled from our page? | Not assumed; spike probe S12. | No | Open |
-| Q-K-04 | Order number format? | `MC-` plus 10 base32 characters derived from the cart id (deterministic, so retries cannot create a second order). | No | Open |
-| Q-K-05 | If the order exists but the `transitionState` to `mcf-order-ordered` fails? | Log, show the order without tracker, retry on the next read. | No | Open |
-| Q-K-06 | May the shipping country differ from the market? | No: shipping country is the session country. | No | Open |
-| Q-K-07 | Billing address for collect-only orders? | Contact name and email with the store's country; the widget collects any extra fields the PSP needs. | No | Open |
-| Q-K-08 | Should "Check out as guest" detach the order from the signed-in customer? | No: fields clear only (spec); the order stays on the account. | No | Open |
-| Q-K-09 | Save a new checkout address to the account? | Checkbox, off by default, members only. | No | Open |
-| Q-K-10 | How does a guest's email reach the register page after an order? | HTTP-only cookie `mcf_guest_email`, 1 hour, deleted on read; never a URL. | No | Open |
-| Q-K-11 | Where do delivery-day texts ("2-4 business days") come from? | `ShippingMethod.localizedDescription` per locale; request to workstream B to write them in the seed; no text when absent. | No | Open |
-| Q-K-12 | Tracker mapping for `ordered`, and ship-only orders? | `ordered` = Ordered active (spec, not the prototype); ship-only orders show no tracker, only the delivery card. | No | Open |
-| Q-K-13 | Notification promises (emailed receipt, SMS when ready)? | Not shown while no mail adapter is enabled; never for SMS; copy says to check the page or account. | No | Open |
-| Q-K-14 | Who may open a guest order's confirmation? | Anyone holding the order id; phone and billing hidden. Member orders need the owning session. | No | Open |
-| Q-K-15 | Behaviour if `complete` is called twice? | `finalizeOrder` is idempotent by order number. | No | Open |
+| Q-K-01 | The complete hosted Checkout (D-039) has its own pay button and pages; the design's three steps and "Place order" button are replaced. Accept? | Answered by D-039: Review stage ours, the rest hosted; the pay button is labelled "Place order" through Application texts (OA-K-d); the owner judges fidelity in SO-K-b. | No | Answered |
+| Q-K-02 | Mixed bags (required, D-033): which mechanism after the spike? Should G/I create every cart as `shippingMode: Multiple`? | Mechanism from K-01's rule (`complete-multiple`, `complete-per-group`, `payment-only-for-collect`). G's `CART_SHIPPING_MODE` stays `'Single'`; K clones into a `Multiple` cart when the strategy needs it. Reason: with `Multiple` the cart page shows no tax estimate until every quantity is allocated, which would break `design-cart-page` Tax presentation. | Blocks K-03 to K-07 detail only | Open |
+| Q-K-02b | If only tax fails under Multiple: fix data or fall back? | Fix data in the seed and keep the strategy. | No | Open |
+| Q-K-02c | Under `complete-per-group`, on which order do discount codes apply? | First order only. | No | Open |
+| Q-K-03 | Can the hosted pay button be hidden or triggered from our page? | Not assumed; probe S12. | No | Open |
+| Q-K-04 | Order number format? | `MC-` plus 10 base32 characters derived from the cart id (deterministic, so retries cannot duplicate). | No | Open |
+| Q-K-05 | What if an order exists but `transitionState` to `mcf-order-ordered` fails? | Log, show the order with no tracker, retry on the next read. | No | Open |
+| Q-K-06 | May the shipping country differ from the market? | No: the shipping country is the session country (cart currency and prices depend on it); the Application is limited to the market's country if S12 shows it can be. | No | Open |
+| Q-K-07 | Billing address and pickup identity for collect orders? | We ask a pickup name on Review; the hosted flow collects the rest. | No | Open |
+| Q-K-08 | Should "Check out as guest" detach the order from the signed-in customer? | Not applicable under the hosted flow: a signed-in cart stays the customer's; guests use a guest cart. | No | Open |
+| Q-K-09 | Save a new checkout address to the account? | Whatever the hosted flow does; L's address book is the place to manage addresses. | No | Open |
+| Q-K-10 | Where does a guest's email travel to the register page? | HTTP-only cookie `mcf_guest_email`, 1 hour, deleted on read. Never a URL. | No | Open |
+| Q-K-11 | Where do delivery-day texts come from? | `ShippingMethod.localizedDescription` for `en-US` and `en-CA` (seed change): "2-4 business days" style for standard. No text if absent. | No | Open |
+| Q-K-12 | Tracker mapping for `ordered`, and for ship-only orders? | `ordered` = Ordered active (spec, not the prototype). Ship-only orders (all Canada orders) show no tracker, only the delivery card. | No | Open |
+| Q-K-13 | Notification promises (emailed receipt, SMS when ready)? | None anywhere (D-032); copy says check the page or account. Answered. | No | Answered |
+| Q-K-14 | Guest order page access? | Anyone holding the order id sees it with phone and billing hidden; member orders need the owning session. | No | Open |
+| Q-K-15 | Idempotency on the placement path if `complete` is called twice? | `finalizeOrder` is idempotent by order number. | No | Open |
+| Q-K-16 | Express delivery: does the hosted flow offer it next to standard? D-034 says standard carrier only. | Seed standard and express as methods; the hosted flow lists what matches; no carrier choice, no slots. Owner may drop express from the seed. | No | Open |

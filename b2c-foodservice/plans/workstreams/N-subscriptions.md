@@ -38,7 +38,7 @@ Read `plans/JUNIOR-GUIDE.md` first. Everything runs in `storefront/`. Dev URL as
 - Ad-hoc "reorder" (that is `Buy again` in workstream L, a cart replication, never a recurring order: spec modeling note).
 - Collecting payment for renewal orders (Checkout recurring payments are in **public beta**; Q-N-5 and OA-N1 record the decision; renewal orders are created by commercetools but the payment step is not built here).
 - Machines and accessories never offer subscribe (spec).
-- Sending any e-mail or SMS (subscription reminders toggle exists in L's Settings; nothing is sent, Q-N-14).
+- Sending any e-mail or SMS: there is no email provider (D-032), so no reminders, no renewal notices, no email promises in any copy (Q-N-14). L's Settings has no subscription-reminder toggle.
 - Seller-side subscription management (no portal in this project).
 - Editing quantities of an existing recurring order, unless the N-02 spike proves it is possible (task N-09 is conditional).
 
@@ -143,7 +143,7 @@ Paths and names of files that belong to other workstreams (H's Subscribe block, 
 
 - Product page Subscribe block: shown only when `product.subscribable` and the shape is not a machine and the selected variant has recurring prices; interval `select` lists only policies that have a recurring price for the variant; saving percent computed from the recurring and one-time price; button label `Subscribe` with the line total.
 - `POST /api/cart/lines` with `{ sku, quantity, fulfilment: 'subscribe', recurrencePolicyKey }`: resolves the policy by key, checks the recurring price exists for the market, and calls `buildAddLineAction` with `recurrenceInfo: { recurrencePolicy: { typeId: 'recurrence-policy', id }, priceSelectionMode: 'Fixed' }` and the line custom field `fulfilment = subscribe`. One-time lines omit `recurrenceInfo` entirely. Errors `400 unknown_policy`, `422 price_unavailable`.
-- Cart: group `Subscriptions` with `Delivers every {interval}` and `First delivery by {day}, then every {interval}`; no Collect or Ship chips on subscribe lines (Q-I-10); the shipping method is `mcf-ship-standard` when any line is `ship` or `subscribe`.
+- Cart: group `Subscriptions` with `Delivers every {interval}` and `First delivery by {day}, then every {interval}`; no Collect or Ship chips on subscribe lines (Q-I-10); the shipping method is `mcf-ship-standard` when any line is `delivery` or `subscribe`.
 
 **What N adds (small, tested):**
 
@@ -251,48 +251,48 @@ Responsive: card is a 3-column grid (thumbnail, details, actions) above 900 px; 
 
 `SubscriptionNote` reads `GET /api/recurring-orders?originOrderId=<id>` through `useSubscriptions({ originOrderId })`. If a subscription exists: `Your subscription starts now. Next delivery {date}, then every {interval}. Manage it in your account.` If none yet (race, up to ~30 s): `We are setting up your subscription.` with one retry after 5 s and 15 s; after that `We could not confirm your subscription yet. It will appear in your account; contact us if it does not.` (this is the "subscription pending" case in the confirmation). The order itself is never affected (spec requirement "Subscriptions": failure never rolls back the order). Guest orders cannot contain subscribe lines (D2.6).
 
-### D11. i18n keys (`messages/en-US.json`, `de-DE.json`, `en-GB.json`; identical keys)
+### D11. i18n keys (`messages/en-US.json`, `en-CA.json`; identical keys)
 
-en-GB equals en-US except where noted. German is a draft for review (SO-03).
+en-CA equals en-US (English only; no German, no French, D-030).
 
-| Key | en-US | de-DE | en-GB |
-| --- | --- | --- | --- |
-| `subscription.priceLock` | Your price stays the same for every delivery. | Dein Preis bleibt bei jeder Lieferung gleich. | same |
-| `subscription.cart.shippingNote` | Shipping is calculated for each delivery. | Der Versand wird für jede Lieferung berechnet. | same |
-| `subscription.checkout.needsAccount` | A subscription needs an account so you can manage it. Sign in or create one to continue. | Für ein Abo brauchst du ein Konto, um es zu verwalten. Melde dich an oder erstelle eins, um fortzufahren. | same |
-| `subscription.account.customSchedule` | Custom schedule | Individueller Rhythmus | same |
-| `subscription.account.title` | Subscriptions | Abos | same |
-| `subscription.account.empty.title` | No subscriptions yet | Noch keine Abos | same |
-| `subscription.account.empty.text` | Subscribe & save on pods and coffee. Skip, pause or cancel any time. | Abonniere Kapseln und Kaffee und spare. Jederzeit überspringen, pausieren oder kündigen. | same |
-| `subscription.account.empty.cta` | Shop coffee | Kaffee entdecken | same |
-| `subscription.account.error` | We could not load your subscriptions. | Wir konnten deine Abos nicht laden. | same |
-| `subscription.account.retry` | Try again | Erneut versuchen | same |
-| `subscription.account.pending.title` | Subscription pending | Abo wird eingerichtet | same |
-| `subscription.account.pending.text` | We placed your order {orderNumber} and are still setting up the subscription. Check back shortly or contact us if it does not appear. | Wir haben deine Bestellung {orderNumber} aufgenommen und richten das Abo noch ein. Schau gleich noch einmal nach oder kontaktiere uns, falls es nicht erscheint. | same |
-| `subscription.account.failed` | We could not create your last order. | Wir konnten deine letzte Bestellung nicht erstellen. | same |
-| `subscription.account.next` | Next delivery {date} | Nächste Lieferung {date} | same |
-| `subscription.account.last` | Last order {date} | Letzte Bestellung {date} | same |
-| `subscription.account.skipping` | Skipping {date} | {date} wird übersprungen | same |
-| `subscription.account.skippedLabel` | Next delivery skipped | Nächste Lieferung übersprungen | same |
-| `subscription.account.pausedText` | No further orders until you resume. | Keine weiteren Bestellungen, bis du fortsetzt. | same |
-| `subscription.account.moreLines` | +{count} more | +{count} weitere | same |
-| `subscription.status.active` / `paused` / `canceled` / `expired` / `failed` | Active / Paused / Canceled / Expired / Needs attention | Aktiv / Pausiert / Gekündigt / Abgelaufen / Handlungsbedarf | same |
-| `subscription.action.skip` / `changeInterval` / `pause` / `resume` / `cancel` / `subscribeAgain` | Skip next / Change interval / Pause / Resume / Cancel / Subscribe again | Nächste überspringen / Intervall ändern / Pausieren / Fortsetzen / Kündigen / Erneut abonnieren | same |
-| `subscription.dialog.interval.title` | Change interval | Intervall ändern | same |
-| `subscription.dialog.interval.text` | The new interval applies from your next order. Your price per delivery stays the same. | Das neue Intervall gilt ab deiner nächsten Bestellung. Dein Preis pro Lieferung bleibt gleich. | same |
-| `subscription.dialog.interval.current` | Current | Aktuell | same |
-| `subscription.dialog.cancel.title` | Cancel this subscription? | Dieses Abo kündigen? | same |
-| `subscription.dialog.cancel.textLast` | No further orders will be created. Your last order was on {date}. | Es werden keine weiteren Bestellungen erstellt. Deine letzte Bestellung war am {date}. | same |
-| `subscription.dialog.cancel.textNone` | No further orders will be created. No order has been created from it yet. | Es werden keine weiteren Bestellungen erstellt. Bisher wurde keine Bestellung daraus erstellt. | same |
-| `subscription.dialog.keep` / `confirmCancel` / `save` | Keep subscription / Cancel subscription / Save | Abo behalten / Abo kündigen / Speichern | same |
-| `subscription.toast.skipped` / `paused` / `resumed` / `intervalUpdated` | Next delivery skipped / Subscription paused / Subscription resumed / Interval updated | Nächste Lieferung übersprungen / Abo pausiert / Abo fortgesetzt / Intervall aktualisiert | same |
-| `subscription.toast.canceled` | Subscription canceled. Your last order was on {date}. | Abo gekündigt. Deine letzte Bestellung war am {date}. | same |
-| `subscription.toast.error` | That did not work. Please try again. | Das hat nicht geklappt. Bitte versuche es erneut. | same |
-| `subscription.confirmation.active` | Your subscription starts now. Next delivery {date}, then every {interval}. Manage it in your account. | Dein Abo startet jetzt. Nächste Lieferung {date}, danach {interval}. Verwalte es in deinem Konto. | same |
-| `subscription.confirmation.settingUp` | We are setting up your subscription. | Wir richten dein Abo ein. | same |
-| `subscription.confirmation.late` | We could not confirm your subscription yet. It will appear in your account; contact us if it does not. | Wir konnten dein Abo noch nicht bestätigen. Es erscheint in deinem Konto; kontaktiere uns, falls nicht. | same |
+| Key | en-US |
+| --- | --- |
+| `subscription.priceLock` | Your price stays the same for every delivery. |
+| `subscription.cart.shippingNote` | Shipping is calculated for each delivery. |
+| `subscription.checkout.needsAccount` | A subscription needs an account so you can manage it. Sign in or create one to continue. |
+| `subscription.account.customSchedule` | Custom schedule |
+| `subscription.account.title` | Subscriptions |
+| `subscription.account.empty.title` | No subscriptions yet |
+| `subscription.account.empty.text` | Subscribe & save on pods and coffee. Skip, pause or cancel any time. |
+| `subscription.account.empty.cta` | Shop coffee |
+| `subscription.account.error` | We could not load your subscriptions. |
+| `subscription.account.retry` | Try again |
+| `subscription.account.pending.title` | Subscription pending |
+| `subscription.account.pending.text` | We placed your order {orderNumber} and are still setting up the subscription. Check back shortly or contact us if it does not appear. |
+| `subscription.account.failed` | We could not create your last order. |
+| `subscription.account.next` | Next delivery {date} |
+| `subscription.account.last` | Last order {date} |
+| `subscription.account.skipping` | Skipping {date} |
+| `subscription.account.skippedLabel` | Next delivery skipped |
+| `subscription.account.pausedText` | No further orders until you resume. |
+| `subscription.account.moreLines` | +{count} more |
+| `subscription.status.active` / `paused` / `canceled` / `expired` / `failed` | Active / Paused / Canceled / Expired / Needs attention |
+| `subscription.action.skip` / `changeInterval` / `pause` / `resume` / `cancel` / `subscribeAgain` | Skip next / Change interval / Pause / Resume / Cancel / Subscribe again |
+| `subscription.dialog.interval.title` | Change interval |
+| `subscription.dialog.interval.text` | The new interval applies from your next order. Your price per delivery stays the same. |
+| `subscription.dialog.interval.current` | Current |
+| `subscription.dialog.cancel.title` | Cancel this subscription? |
+| `subscription.dialog.cancel.textLast` | No further orders will be created. Your last order was on {date}. |
+| `subscription.dialog.cancel.textNone` | No further orders will be created. No order has been created from it yet. |
+| `subscription.dialog.keep` / `confirmCancel` / `save` | Keep subscription / Cancel subscription / Save |
+| `subscription.toast.skipped` / `paused` / `resumed` / `intervalUpdated` | Next delivery skipped / Subscription paused / Subscription resumed / Interval updated |
+| `subscription.toast.canceled` | Subscription canceled. Your last order was on {date}. |
+| `subscription.toast.error` | That did not work. Please try again. |
+| `subscription.confirmation.active` | Your subscription starts now. Next delivery {date}, then every {interval}. Manage it in your account. |
+| `subscription.confirmation.settingUp` | We are setting up your subscription. |
+| `subscription.confirmation.late` | We could not confirm your subscription yet. It will appear in your account; contact us if it does not. |
 
-H owns the interval and Subscribe block strings (`pdp.*`, `formatInterval`); L's `subscriptions.stub` key is removed from the three catalogues when the stub page is replaced. The form of address (du) must match the choice made by F and E; if they used Sie, follow them (Q-N-15).
+H owns the interval and Subscribe block strings (`pdp.*`, `formatInterval`); L's `subscriptions.stub` key is removed from both catalogues when the stub page is replaced.
 
 ### D12. Cache and performance rules
 
@@ -309,7 +309,7 @@ Ownership and state checks happen only in the Route Handler. The id in the URL i
 Common rules: test first; `npm run check` before ticking; commit `ws-n: N-0x summary`; tokens only; both catalogues; no `any`; `import 'server-only'` in `lib/ct/*`. Tests live next to code and are named after the scenario. Tasks that extend H, I, K or L files change only what the task names.
 
 - [ ] **N-00 Preconditions and paths.** K and L are `Done` in `STATUS.md`. `grep` for the real names and paths of: H's `SubscribeBlock`, `formatInterval`, `useRecurrencePolicies`, `buildAddLineAction`, `RecurrencePolicyView`; I's subscribe group renderer; K's `lib/checkout/guards.ts`, the identity step and `OrderSubscriptionCard`; L's `subscriptions/page.tsx` stub and `(shell)/layout.tsx`; D's `keyRecurringOrders`; F's toast hook; E's modal and button atoms. Write them to `plans/evidence/N/paths.md`. Confirm OA-02 status; if not done, mark the live parts of N-02 to N-07 `blocked: OA-02` and carry on with the unit-testable parts. `npm run check` is green. [SKILL: commercetools-storefront]
-- [ ] **N-01 Price lock in H's Subscribe block and I's Subscriptions group.** Add the line `subscription.priceLock` to H's `SubscribeBlock` and to I's subscribe group (with `subscription.cart.shippingNote`), keys in three catalogues. Tests: `Catalog price moved: Subscribe block tells the price stays the same`, `Catalog price moved: Subscriptions group shows the price lock and shipping note`, `Subscribe line is added with priceSelectionMode Fixed` (asserts `buildAddLineAction`), `One-time line omits recurrenceInfo`, `Subscribe line never gets a supplyChannel`, `subscribe and one-time lines of one SKU stay separate lines`. [SKILL: commercetools-commerce-patterns]
+- [ ] **N-01 Price lock in H's Subscribe block and I's Subscriptions group.** Add the line `subscription.priceLock` to H's `SubscribeBlock` and to I's subscribe group (with `subscription.cart.shippingNote`), keys in both catalogues. Tests: `Catalog price moved: Subscribe block tells the price stays the same`, `Catalog price moved: Subscriptions group shows the price lock and shipping note`, `Subscribe line is added with priceSelectionMode Fixed` (asserts `buildAddLineAction`), `One-time line omits recurrenceInfo`, `Subscribe line never gets a supplyChannel`, `subscribe and one-time lines of one SKU stay separate lines`. [SKILL: commercetools-commerce-patterns]
 - [ ] **N-02 Spike: what the platform creates, skip, schedule, quantity.** Follow D7 exactly. Needs OA-02 and OA-04. Output `plans/evidence/N/spike.md` and `PROJECT-FINDINGS.md` entries; update this file's D2.2, D8 (`totalToSkip` value) and the status lines of N-08 and N-09 (`built` or `not needed`). If OA-02 or OA-04 is not done: write the question, mark `blocked`, continue with N-03 on the documented defaults and come back. [SKILL: commercetools-commerce-patterns]
 - [ ] **N-03 Recurring order server module and mapper.** `lib/ct/recurring-orders.ts` (list, get, apply action, pending detection) and `lib/mappers/recurring-order.ts` per D3 and D8 (`nextOrderAt` to `nextOrderDate`, `lastOrderAt` to `lastOrderDate`, lines from `cart.obj.lineItems` with the fallback, `policyId` derived from line `recurrenceInfo`, `pendingSkips`). Predicate variables only. Tests (fixtures, mocked `apiRoot`): `lines come from the recurring cart`, `lines fall back to the origin order filtered by policy`, `next order date is renamed at the API layer`, `pending skips derive from the counter`, `list query is scoped with a predicate variable`, `order with subscribe lines and no recurring order is pending`, `canceled maps to the canceled state with one l`, `unlabelable schedule maps to null`. [SKILL: commercetools-storefront]
 - [ ] **N-04 Route handlers and hook.** The three route files and `hooks/useSubscriptions.ts` per D8 and D12. Tests (import `GET` and `PUT`, call with `new Request`): `list without a session returns 401 with no detail`, `list returns only the session customer's subscriptions`, `get of another customer's subscription is 404`, `pause calls setRecurringOrderState paused`, `resume sends active`, `cancel sends canceled with one l`, `skip sends the counter draft`, `setInterval rejects an unknown policy`, `resume of a canceled subscription is invalid_state`, `second version conflict surfaces as version_conflict`, `a conflict is retried once`, `non-JSON body is 415`, `client supplied version and customer id are ignored`, `upstream 503 becomes upstream_unavailable`, `originOrderId filter narrows the list`. [SKILL: commercetools-storefront] [SKILL: commercetools-commerce-patterns]
@@ -318,7 +318,7 @@ Common rules: test first; `npm run check` before ticking; commit `ws-n: N-0x sum
 - [ ] **N-07 Confirmation note.** `SubscriptionNote` per D10 rendered inside K's `OrderSubscriptionCard`; retry timers with fake timers in tests. Tests: `confirmation shows next delivery when the subscription exists`, `confirmation says setting up then late message`, `no note on an order without subscribe lines`, `guest order never shows the note`. [SKILL: commercetools-storefront]
 - [ ] **N-08 (conditional on N-02) Create the recurring order ourselves.** Build **only if** the spike shows the platform did not create them. Replicate the order into a cart (`POST /carts/replicate`), remove non-recurring lines, group by policy, create one recurring order per group with `POST /recurring-orders { cart, cartVersion }` ([docs](https://docs.commercetools.com/api/projects/recurring-orders)); called from K's confirmation loader; on failure log `{ orderId, correlationId }`, never throw, never touch the order. If the spike says the platform created them, tick this task with `not needed (spike)` and a link to the evidence. Tests: `Recurring order creation fails: order stays and failure is logged with the order id`, `one recurring order per distinct policy`. [SKILL: commercetools-commerce-patterns]
 - [ ] **N-09 (conditional on N-02) Quantity change.** Only if `changeLineItemQuantity` on the recurring cart worked in the spike: add a stepper per line on the card and `{ "action": "setQuantity", "lineId", "quantity" }` to the PUT contract (update D8 first). Otherwise tick with `not needed: not supported (spike)`, keep Q-N-8 open and record the second half of scenario "Schedule changed in place" as `quantity: not possible` in section 5. Tests: `Schedule changed in place: quantity change keeps the recurring order id`. [SKILL: commercetools-commerce-patterns]
-- [ ] **N-10 Messages, a11y, responsive, gates.** All keys of D11 in three catalogues (identical keys, test exists from E); `npm run check`; `npm run build`; no raw hex or fonts; check at 375 and 1440. Tests: `catalogues have the same subscription keys`, `no hard coded strings in subscription components`.
+- [ ] **N-10 Messages, a11y, responsive, gates.** All keys of D11 in both catalogues (identical keys, test exists from E); `npm run check`; `npm run build`; no raw hex or fonts; check at 375 and 1440. Tests: `catalogues have the same subscription keys`, `no hard coded strings in subscription components`.
 - [ ] **N-11 Browser and data verification** (sections 6 and 7), evidence in `plans/evidence/N/`, owner rows added (section 8), `STATUS.md` `Ready for review`.
 
 ## 5. Scenarios checklist
@@ -340,17 +340,17 @@ Extended specs:
 
 ## 6. Browser recipe (Chrome DevTools MCP)
 
-Base URL `http://localhost:3000`. Viewports 375x812 and 1440x900 (`resize_page`). After each step: `list_console_messages` shows no errors, `list_network_requests` shows no failed request. Evidence under `plans/evidence/N/` named `<step>-<what>-<375|1440>.png`, plus `README.md` (what each file proves). Test accounts: seeded demo customers (`maya.okonkwo@example.com` for US, `anna.schneider@example.com` for DE; password from `SEED_DEMO_PASSWORD`, never typed into evidence). Test card: the Checkout test card documented by OA-04.
+Base URL `http://localhost:3000`. Viewports 375x812 and 1440x900 (`resize_page`). After each step: `list_console_messages` shows no errors, `list_network_requests` shows no failed request. Evidence under `plans/evidence/N/` named `<step>-<what>-<375|1440>.png`, plus `README.md` (what each file proves). Test accounts: seeded demo customers (`maya.okonkwo@example.com` for US, a seeded Canadian customer for CA (see `SEED-PLAN.md`); password from `SEED_DEMO_PASSWORD`, never typed into evidence). Test card: the Checkout test card documented by OA-04.
 
 1. **6.1 Subscribe on a pod (US).** `navigate_page /en-US/...` product page of a subscribable pod (find via the listing `?subscribable=true` or the home strip). `take_snapshot`: three fulfilment cards, the Subscribe card with an interval select listing only the seeded policies that have a price, the saving percentage (about 10%, from the seed prices), the lock sentence `Your price stays the same for every delivery.`. Pick `Every 2 months`, quantity 2, press `Subscribe`. Toast `Added to bag`; header count 2. Screenshot `6-1-pdp-subscribe`. Network: `POST /api/cart/lines` body has `fulfilment: "subscribe"` and `recurrencePolicyKey`; the cart read-back (section 7) shows the line with `recurrenceInfo` and `priceSelectionMode` `Fixed`.
 2. **6.2 Machine has no subscribe.** Open a machine page: no Subscribe card. Open a coffee with no grind chosen: add button reads `Select a grind`; choose grind, subscribe card appears.
-3. **6.3 Bag, mixed.** Add one ship line (accessory) and one collect line (pod box, any store), sign in as Maya. `/en-US/cart`: groups `Collect`, `Shipping to you`, `Subscriptions`; the subscribe line shows `Delivers every 2 months`, the first-delivery estimate, **no** Collect or Ship chips, the price-lock sentence and `Shipping is calculated for each delivery.`; removing the subscribe line removes the group. Add it again from the product page. Screenshot `6-3-cart-groups`.
+3. **6.3 Bag, mixed.** Add one ship line (accessory) and one collect line (pod box, any of the six NYC stores; US market only), sign in as Maya. `/en-US/cart`: groups `Collect`, `Shipping to you`, `Subscriptions`; the subscribe line shows `Delivers every 2 months`, the first-delivery estimate, **no** Collect or Ship chips, the price-lock sentence and `Shipping is calculated for each delivery.`; removing the subscribe line removes the group. Add it again from the product page. Screenshot `6-3-cart-groups`.
 4. **6.4 Guest rule.** Sign out with a subscribe line in the bag, open `/en-US/checkout`: no guest option, sentence shown, sign-in button works and returns to checkout; `fetch('/api/checkout/session', { method: 'POST' })` from the console as a guest answers `401` with code `sign_in_required` (use the route K documents). Screenshot `6-4-guest-rule`.
 5. **6.5 Pay and confirm.** Signed in, pay with the test card. Confirmation page: order number, `Next delivery <date>, then every 2 months`. Screenshot `6-5-confirmation`.
 6. **6.6 Account tab.** `/en-US/account/subscriptions`: one card per schedule group (two cards if two policies), thumbnails, interval, next date, price, status `Active`. Screenshot `6-6-tab-375` and `-1440`.
 7. **6.7 Actions.** Skip next: toast, `Next delivery skipped` label, button disabled. Change interval: dialog, choose another policy, save, toast, card text updates in place. Pause: pill `Paused`, text, only `Resume`. Resume. Cancel: dialog text with last order sentence (or none), confirm, pill `Canceled`, `Subscribe again`. After each action `list_network_requests` shows exactly one `PUT /api/recurring-orders/<id>` with the right body and a 200.
 8. **6.8 States.** Sign in as a customer with no subscriptions: empty card with `Shop coffee`. With the network blocked for `/api/recurring-orders` (use `evaluate_script` to stub `fetch` once to reject, or run with `CTP_API_URL` pointing to an unreachable host in a second dev server on port 3002): error card and `Try again`.
-9. **6.9 de-DE and en-GB.** `/de-DE/...` and `/en-GB/...`: strings translated, EUR and GBP amounts with two decimals, dates in locale format, `Alle 2 Monate`.
+9. **6.9 en-CA.** `/en-CA/...` as the seeded Canadian customer: the same English strings, CAD amounts with two decimals from the CAD recurring prices, dates in the Canadian English format, `Every 2 months`. Canada is delivery only: no Collect group exists, subscribe lines ship by the standard carrier.
 10. **6.10 Isolation.** In a second browser context sign in as another customer: `/account/subscriptions` shows none of the first customer's cards; `evaluate_script` `fetch('/api/recurring-orders/<first customer's id>')` returns 404 with no detail.
 11. **6.11 Keyboard and focus.** Tab through the tab; open and close each dialog with the keyboard; focus returns; rings visible. `lighthouse_audit` (mobile) on the tab: accessibility at least 95; save the report path in the README.
 12. **6.12 Reduced motion.** Emulate `prefers-reduced-motion: reduce` (`emulate`): dialogs and cards appear without animation, all content visible.
@@ -394,8 +394,8 @@ Format `Q-N-n | question | default built | blocks? | Open`. The table in the not
 | Q-N-11 | Free-shipping threshold on renewals (the recurring cart is only the subscription lines) and discount codes on renewals (`recurringOrderScope` of cart discounts)? | Shipping is calculated per delivery with a visible note; discounts untouched (seed `WELCOME10` applies as configured, flagged to workstream C) | no |
 | Q-N-12 | Show Subscribe when the product is `subscribable` and a recurring price exists (both), or by price only (skill)? | Both | no |
 | Q-N-13 | Does the Frontend API client template already include `view_recurrence_policies`? | Add it in OA-02 | N-04 live |
-| Q-N-14 | Subscription reminder e-mails (Settings toggle in L) are they in scope? | No; toggle saved but nothing sent | no |
-| Q-N-15 | German form of address (du or Sie) for the new strings? | Follow E and F (draft uses du) | no |
+| Q-N-14 | Subscription reminder e-mails? | Removed by D-032: no email provider; L has no reminder toggle | no |
+| Q-N-15 | German form of address (du or Sie)? | Removed by D-030: German is dropped | no |
 | Q-N-16 | Seed a demo subscription and a daily test policy (SR-N1)? | Not yet; use the checkout journey | no |
 
 ## 10. Definition of done

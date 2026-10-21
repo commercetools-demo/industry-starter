@@ -20,6 +20,6 @@ Draft for the lead to consolidate into `QUESTIONS.md`. Format: `Q-<L>-<n> | ques
 | Q-N-11 | Free-shipping threshold on renewals (the recurring cart holds only subscription lines) and the scope of discount codes on renewals (`recurringOrderScope` on cart discounts)? | Note "Shipping is calculated for each delivery"; discounts untouched, flagged to workstream C | no | Open |
 | Q-N-12 | Show Subscribe when the product is `subscribable` and a recurring price exists, or by price only (skill)? | Both must hold (H builds this gate; N verifies) | no | Open |
 | Q-N-13 | Does the Frontend API client template include `view_recurrence_policies`? | Add it in OA-02 | N-01 live run | Open |
-| Q-N-14 | Subscription reminder e-mails (toggle in the account Settings, L): in scope? | No; toggle is saved, nothing is sent | no | Open |
-| Q-N-15 | German form of address (du or Sie) | Follow E and F (draft uses du) | no | Open |
+| Q-N-14 | Subscription reminder e-mails? | Removed by D-032: no email provider; no reminder toggle | no | Superseded (D-032) |
+| Q-N-15 | German form of address (du or Sie) | Removed by D-030: German is dropped | no | Superseded (D-030) |
 | Q-N-16 | Seed a demo subscription per demo customer and a daily test policy `mcf-test-daily` (seed request SR-N1, workstream C)? | Not yet; verify through the checkout journey | no | Open |

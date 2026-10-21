@@ -13,7 +13,7 @@ Design source: `HomePage` in `pages-shop.jsx`.
 
 ### Requirement: Hero
 
-The system SHALL open with a two-column hero on a canvas gradient: eyebrow (campaign or season), an 800-weight headline, a 18px supporting line, a primary "Shop the edit" button, a ghost "Find your store" button that opens the store picker, and a row of three promise items (shipping, collection, returns) with icons. The right column holds a rounded 4:4.4 hero image with a soft violet glow and a floating glass card naming a featured product with its price as a button.
+The system SHALL open with a two-column hero on a canvas gradient: eyebrow (campaign or season), an 800-weight headline, a 18px supporting line, a primary "Shop the edit" button, a ghost "Find your store" button that opens the store picker (US market only; in the Canada market it is replaced by a "Shop delivery" button), and a row of promise items (delivery, collection in the US market only, returns) with icons. The right column holds a rounded 4:4.4 hero image with a soft violet glow and a floating glass card naming a featured product with its price as a button.
 
 #### Scenario: Hero product
 - **GIVEN** a featured product is configured
@@ -36,7 +36,12 @@ The system SHALL show four 4:5 tiles in a grid, one per top category (Nespresso 
 
 ### Requirement: Collection banner
 
-The system SHALL show an ink rounded panel with a violet glow: eyebrow "Order online, collect in store", headline "Ready in {n} minutes at {store}", one line on live availability and reserving, buttons "Change store" and "Shop collect-eligible", and three small proof tiles (fast, reserved, no fees).
+The system SHALL, in the US market only (the six stores are all in New York City, D-035; the banner is omitted in the Canada market), show an ink rounded panel with a violet glow: eyebrow "Order online, collect in store", headline "Ready in {n} minutes at {store}", one line on live availability and reserving, buttons "Change store" and "Shop collect-eligible", and three small proof tiles (fast, reserved, no fees).
+
+#### Scenario: Canada market
+- **GIVEN** the Canada market is active
+- **WHEN** the home page renders
+- **THEN** no collection banner and no Find your store button appear
 
 #### Scenario: Store named
 - **GIVEN** the shopper has chosen a store

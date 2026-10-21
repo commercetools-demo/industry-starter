@@ -14,12 +14,12 @@
 | Branch | `ws/a-bootstrap`; one task, one commit: `ws-A: A-05 <summary>` |
 | Primary spec | `openspec/specs/bootstrap-and-structure/spec.md` |
 | Generated templates that apply | none (A is infrastructure; no behavioural template is owned here) |
-| Owner prerequisites | **OA-01** (API clients in `storefront/.env.local`) for the live health check only (task A-12 step 3). Everything else works with placeholder values. New rows drafted in `plans/notes/todo-A.md`: `M-A-01`, `M-A-02` (optional) |
+| Owner prerequisites | **OA-01** (API clients in `storefront/.env.local`) for the live health check only (task A-12 step 3). Everything else works with placeholder values. New rows drafted in `plans/notes/todo-A.md`: `OA-A-b` (live project settings), `M-A-01`, `M-A-02` (optional) |
 | Skills to load first | `commercetools-storefront` (`references/stack/nextjs/project-layout.md`, `overview.md`, `data-loading.md`, `references/core/ct-client.md`), `commercetools-platform` (`references/sdk-setup.md`) |
 
 ## 2. Goal and scope
 
-**Goal.** From a clean clone with Node 22 and a filled `storefront/.env.local`, `cd storefront && npm ci && npm run check && npm run build` is green. The app is the output of `/commercetools:nextjs-setup-project`, adjusted only as the spec says: three locales from one `COUNTRY_CONFIG`, a locale proxy, env validation and the project guard, a health route with a deploy gate, lint rules that enforce the BFF boundary, a bundle secret scan and agent rules (`CLAUDE.md`, `AGENTS.md`).
+**Goal.** From a clean clone with Node 22 and a filled `storefront/.env.local`, `cd storefront && npm ci && npm run check && npm run build` is green. The app is the output of `/commercetools:nextjs-setup-project`, adjusted only as the spec says: two locales (en-US, en-CA) from one `COUNTRY_CONFIG`, a locale proxy, env validation and the project guard, a health route with a deploy gate, lint rules that enforce the BFF boundary, a bundle secret scan and agent rules (`CLAUDE.md`, `AGENTS.md`).
 
 **In scope**
 - Run the skill command, verify its output, record evidence.
@@ -34,7 +34,7 @@
 - Design tokens, fonts, atoms, the real message catalogue: **E**.
 - Any page, header, footer, picker: **F** onwards.
 - Any seed code: **B**, **C**.
-- Deploying or the Netlify/Vercel UI: **Q** (OA-05).
+- Deploying or the Netlify UI: **Q** (OA-05, `/commercetools:nextjs-deploy-netlify`, D-038).
 
 **Split with D (important).** The command writes `lib/utils.ts`, `lib/types.ts`, `lib/cache-keys.ts`, `i18n/*`, `proxy.ts`. A keeps them working and adds the tests listed here. D (which depends on A) later extends `lib/utils.ts` (`formatMoney` tests, `getLocalizedString`), `lib/types.ts`, `lib/cache-keys.ts` and adds `lib/session.ts`. A creates the minimal `lib/ct/client.ts` because the health check needs it; D hardens it (correlation id, error mapping) without changing its exports.
 
@@ -47,10 +47,10 @@ The command is a prompt Claude executes top to bottom without asking. Its steps:
 | Step | What it does | What to check afterwards |
 | --- | --- | --- |
 | 0 | Sends one anonymous `curl` to the commercetools docs search (telemetry, `|| true`). | Nothing. If the network is blocked it still continues. |
-| 1 | `npx create-next-app@^16 site --typescript --app --src-dir=false --tailwind=false --eslint --import-alias "@/*"`, then `npm install @commercetools/platform-sdk@^8 @commercetools/ts-client@^4 next-intl@^4 swr jose tailwindcss @tailwindcss/postcss postcss`. Writes `vercel.json` and `netlify.toml` (`base = "site"`, `NODE_VERSION = "22"`) at the **project root next to `site/`**. | **The directory is named `site`; this project needs `storefront`** (A-01 handles it). `create-next-app` 16 installs Tailwind v4 even with `--tailwind=false` (verified 2026-10-19 in a scratch run), so no `tailwind.config.*` exists; confirm that. It pins `next` and `eslint-config-next` to an exact version (we saw `16.2.6` while npm had a newer 16.x) and `@types/node ^20`. |
+| 1 | `npx create-next-app@^16 site --typescript --app --src-dir=false --tailwind=false --eslint --import-alias "@/*"`, then `npm install @commercetools/platform-sdk@^8 @commercetools/ts-client@^4 next-intl@^4 swr jose tailwindcss @tailwindcss/postcss postcss`. Writes `vercel.json` (deleted by A-01: hosting is Netlify, D-038) and `netlify.toml` (`base = "site"`, `NODE_VERSION = "22"`) at the **project root next to `site/`**. | **The directory is named `site`; this project needs `storefront`** (A-01 handles it). `create-next-app` 16 installs Tailwind v4 even with `--tailwind=false` (verified 2026-10-19 in a scratch run), so no `tailwind.config.*` exists; confirm that. It pins `next` and `eslint-config-next` to an exact version (we saw `16.2.6` while npm had a newer 16.x) and `@types/node ^20`. |
 | 2 | Writes `postcss.config.mjs` (`@tailwindcss/postcss`), replaces `app/globals.css` with `@import 'tailwindcss'`, `@source inline(...)` col-span safelists, and a `@theme` with **terracotta cream colours** (`--color-cream`, `--color-terra`, ...) and `Inter`. | The colours are generic placeholders and are **not** Malva tokens. A-02 removes them; E writes the real tokens. |
 | 3 | `mkdir -p app/[locale] app/api lib/ct lib/mappers hooks components/{ui,layout,product} context i18n messages`. | Empty folders are not tracked by git (A-02 adds `.gitkeep`). |
-| 4 | Writes `lib/types.ts` (Price, Variant, Product, Category), `lib/utils.ts` (`COUNTRY_CONFIG` with en-US/en-GB/de-DE, `DEFAULT_LOCALE`, `formatMoney`, `getLocalizedString`), `lib/cache-keys.ts` (`KEY_CART`, ...). | `COUNTRY_CONFIG` already has our three markets (matches D-004). No flag emoji (good: no emoji rule). |
+| 4 | Writes `lib/types.ts` (Price, Variant, Product, Category), `lib/utils.ts` (`COUNTRY_CONFIG` with en-US/de-DE/en-GB (replace with en-US/en-CA), `DEFAULT_LOCALE`, `formatMoney`, `getLocalizedString`), `lib/cache-keys.ts` (`KEY_CART`, ...). | `COUNTRY_CONFIG` has three markets (en-US, de-DE, en-GB): remove `de-DE` and `en-GB`, add `en-CA` (CA, CAD, English, D-030). No flag emoji (good: no emoji rule). |
 | 5 | Writes `i18n/routing.ts` (`defineRouting` from `Object.keys(COUNTRY_CONFIG)`, `defaultLocale 'en-US'`, `localePrefix 'always'`, exports `Link, redirect, usePathname, useRouter, getPathname` from `createNavigation`), `i18n/request.ts` (`getRequestConfig`, loads `messages/<locale>.json`), `next.config.ts` (`createNextIntlPlugin('./i18n/request.ts')`, `images.unoptimized: true`, remotePatterns `storage.googleapis.com` and `**`), and three `messages/*.json` files containing `{}`. | The `{}` catalogues have no keys; A-06 adds a minimal identical key set. |
 | 6 | Writes `proxy.ts` (Next 16 name for middleware): skips `/api`, `/_next`, `/favicon`, paths with a dot; passes locale-prefixed paths and sets header `x-next-intl-locale`; otherwise redirects to `/<cookie or en-US>/<path>`; cookie name **`your-shop-country-locale`**. | Two things to fix: (1) the cookie name (A-07 renames it to `malva-locale`), (2) **`/fr-FR/coffee` is redirected to `/en-US/fr-FR/coffee`** because an unknown locale is treated as a path, which violates the "Unknown locale" scenario (A-07 fixes with a test). |
 | 7 | `npm list next next-intl @commercetools/platform-sdk @commercetools/ts-client --depth=0` and stops if `next <= 16.0.0`, `next-intl` not 4.x, `platform-sdk <= 8.0.0` or `ts-client <= 4.0.0`. | Save the output as evidence. |
@@ -79,13 +79,13 @@ storefront/
     mappers/.gitkeep
   hooks/.gitkeep  context/.gitkeep  components/{ui,layout,product}/.gitkeep
   i18n/routing.ts  i18n/request.ts
-  messages/en-US.json  de-DE.json  en-GB.json
+  messages/en-US.json  en-CA.json
   proxy.ts   instrumentation.ts   next.config.ts   postcss.config.mjs   eslint.config.mjs   vitest.config.mts
   eslint/rules/*.mjs  eslint/fixtures/*  eslint/rules.test.mjs
   scripts/check-versions.mjs  check-secrets.mjs  check-bundle-secrets.mjs  predeploy-check.mjs  (+ tests)
   test/setup.ts  test/stubs/server-only.ts
   .env.example  .nvmrc  .gitignore  CLAUDE.md  AGENTS.md  README.md
-(project root b2c-foodservice/)  vercel.json  netlify.toml   written by the command, base fixed to storefront
+(project root b2c-foodservice/)  netlify.toml   written by the command, base fixed to storefront (vercel.json deleted, D-038)
 ```
 
 ### 3.3 Exported names and signatures (other workstreams import these)
@@ -93,7 +93,7 @@ storefront/
 ```ts
 // lib/utils.ts
 export interface CountryConfig { locale: string; currency: string; country: string; label: string }
-export const COUNTRY_CONFIG: Record<string, CountryConfig>;   // keys: 'en-US' | 'de-DE' | 'en-GB'
+export const COUNTRY_CONFIG: Record<string, CountryConfig>;   // keys: 'en-US' | 'en-CA'
 export const DEFAULT_LOCALE: CountryConfig;                   // COUNTRY_CONFIG['en-US']
 export const LOCALE_COOKIE = 'malva-locale';                  // the only cookie name for the market
 export function formatMoney(centAmount: number, currencyCode: string, locale?: string): string;   // D tests it
@@ -192,21 +192,21 @@ Also (project guard, second half): if `body.key !== getEnv().EXPECTED_PROJECT_KE
 | Request path | Cookie `malva-locale` | Result |
 | --- | --- | --- |
 | `/api/...`, `/_next/...`, `/favicon...`, any path containing `.` | any | pass through |
-| `/de-DE`, `/de-DE/anything` | any | pass through, header `x-next-intl-locale: de-DE` |
+| `/en-CA`, `/en-CA/anything` | any | pass through, header `x-next-intl-locale: en-CA` |
 | `/` | none | 307 to `/en-US` |
-| `/coffee` | `de-DE` | 307 to `/de-DE/coffee` |
+| `/coffee` | `en-CA` | 307 to `/en-CA/coffee` |
 | `/fr-FR/coffee` (first segment looks like a locale: `/^[a-z]{2}(-[A-Z]{2})?$/` and is not supported) | none | 307 to `/en-US/coffee` (segment **replaced**, never nested) |
-| `/fr-FR/coffee` | `de-DE` | 307 to `/de-DE/coffee` |
+| `/fr-FR/coffee` | `en-CA` | 307 to `/en-CA/coffee` |
 | `/coffee` | `xx-XX` (invalid cookie) | 307 to `/en-US/coffee` |
 Query strings are preserved. No `Accept-Language` detection (Q-A-6). The locale list comes from `Object.keys(COUNTRY_CONFIG)`; never hard-code it in `proxy.ts`. Matcher stays `['/((?!api|_next|favicon|.*\\..*).*)', '/']`. Docs: `node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/proxy.md`.
 
 ### 3.8 i18n and messages
 
 - `i18n/routing.ts` and `i18n/request.ts` as the command wrote them. In `request.ts` validate with `hasLocale(routing.locales, locale)` from `next-intl` (v4) instead of the `includes` cast if it type-checks; behaviour is identical.
-- A's minimal catalogue (E extends it; keys are identical in all three files):
-  `common.brand` ("Malva Coffee" in all three), `common.skipToContent`, `meta.title`, `meta.description`, `home.placeholder`, `errors.title`, `errors.retry`, `errors.notFoundTitle`, `errors.notFoundBody`.
-  German values are real German (`"Zum Inhalt springen"`, `"Etwas ist schiefgelaufen"`, `"Erneut versuchen"`); en-GB may equal en-US text.
-- Message file name equals the `COUNTRY_CONFIG` key exactly (`de-DE.json`).
+- A's minimal catalogue (E extends it; keys are identical in both files):
+  `common.brand` ("Malva Coffee" in both), `common.skipToContent`, `meta.title`, `meta.description`, `home.placeholder`, `errors.title`, `errors.retry`, `errors.notFoundTitle`, `errors.notFoundBody`.
+  en-CA may equal en-US text except Canadian spelling (colour). No German or French (D-030).
+- Message file name equals the `COUNTRY_CONFIG` key exactly (`en-CA.json`).
 - `app/layout.tsx` (async Server Component): `const locale = await getLocale()` from `next-intl/server`, `<html lang={locale}>`, wraps children in `NextIntlClientProvider` (messages from `getMessages()`). `generateMetadata` is **not** added here (P/E).
 - `app/[locale]/layout.tsx`: `const { locale } = await params; if (!hasLocale(routing.locales, locale)) notFound();` (`notFound` from `next/navigation` is allowed; never inside try/catch). `generateStaticParams` returns `routing.locales.map(locale => ({ locale }))`.
 - Strings in components come from `useTranslations`; never a hard-coded user string (rule from the guide).
@@ -302,7 +302,7 @@ Later workstreams append scopes with a reason (`manage_recurring_orders` in N; t
 
 ### 3.13 Directory name, git and hosting files
 
-The command writes into `site/`. Use `storefront/` (spec, D-007). Hosting files `vercel.json` and `netlify.toml` land in the project root `b2c-foodservice/`; change `base = "site"` to `base = "storefront"` in `netlify.toml`. (Q-A-2: where they finally live is decided in Q with OA-05.)
+The command writes into `site/`. Use `storefront/` (spec, D-007). The hosting file `netlify.toml` lands in the project root `b2c-foodservice/`; change `base = "site"` to `base = "storefront"` in it and delete the generated `vercel.json` (Netlify, D-038). (Q-A-2: where `netlify.toml` finally lives is decided in Q with OA-05.)
 
 ### 3.14 Agent rules
 
@@ -318,8 +318,8 @@ Do them in order. Commit after each. Run `cd storefront && npm run check` before
   - Tests: none. Done when `ls storefront/app/[locale] storefront/i18n storefront/lib proxy.ts` all exist.
 
 - [ ] **A-02 Verify the output and apply the fix-ups** `[SKILL: commercetools-storefront]`
-  - Files: `storefront/package.json`, `app/globals.css`, `app/page.tsx` (delete), `public/*.svg` (delete), `README.md`, `netlify.toml`, `vercel.json`, `.gitkeep` files.
-  - Steps: (1) Run `npm list next next-intl @commercetools/platform-sdk @commercetools/ts-client react tailwindcss --depth=0 > ../plans/evidence/A/versions.txt` and check against section 3.9 (next > 16.0.0 and 16.x, next-intl 4.x, SDK 8.x, ts-client 4.x). (2) Move to the latest allowed: `npm install next@^16 eslint-config-next@^16 && npm install -D @types/node@^22`. Confirm `npm view next@16 version | tail -1` equals the installed version. (3) Confirm no `tailwind.config.*`; replace `app/globals.css` with exactly `@import 'tailwindcss';` plus a `body { margin: 0; }` line (removes the placeholder cream/terra theme, E owns tokens). (4) Delete `app/page.tsx` and `public/*.svg`. (5) Set `package.json` `name` to `malva-storefront`, `private: true`. (6) `touch .gitkeep` in `lib/mappers`, `hooks`, `context`, `components/ui`, `components/layout`, `components/product`, `app/api` only if empty. (7) Fix `netlify.toml` base; keep `vercel.json` as written. (8) Rewrite `README.md` (what it is, Node 22, `cp .env.example .env.local`, scripts table, link to `plans/`).
+  - Files: `storefront/package.json`, `app/globals.css`, `app/page.tsx` (delete), `public/*.svg` (delete), `README.md`, `netlify.toml`, `vercel.json` (delete), `.gitkeep` files.
+  - Steps: (1) Run `npm list next next-intl @commercetools/platform-sdk @commercetools/ts-client react tailwindcss --depth=0 > ../plans/evidence/A/versions.txt` and check against section 3.9 (next > 16.0.0 and 16.x, next-intl 4.x, SDK 8.x, ts-client 4.x). (2) Move to the latest allowed: `npm install next@^16 eslint-config-next@^16 && npm install -D @types/node@^22`. Confirm `npm view next@16 version | tail -1` equals the installed version. (3) Confirm no `tailwind.config.*`; replace `app/globals.css` with exactly `@import 'tailwindcss';` plus a `body { margin: 0; }` line (removes the placeholder cream/terra theme, E owns tokens). (4) Delete `app/page.tsx` and `public/*.svg`. (5) Set `package.json` `name` to `malva-storefront`, `private: true`. (6) `touch .gitkeep` in `lib/mappers`, `hooks`, `context`, `components/ui`, `components/layout`, `components/product`, `app/api` only if empty. (7) Fix `netlify.toml` base; delete `vercel.json` (Netlify, D-038). (8) Rewrite `README.md` (what it is, Node 22, `cp .env.example .env.local`, scripts table, link to `plans/`).
   - Tests: none yet (A-03 adds the harness). Check by `npx tsc --noEmit` passing and `npm run build` passing with the command's default placeholder files (it will, no env needed at this point).
 
 - [ ] **A-03 Test harness and scripts**
@@ -334,12 +334,12 @@ Do them in order. Commit after each. Run `cd storefront && npm run check` before
 
 - [ ] **A-05 `COUNTRY_CONFIG`, constants, routing and messages** `[SKILL: commercetools-storefront]`
   - Files: `lib/utils.ts`, `i18n/routing.ts`, `i18n/request.ts`, `messages/*.json`, `app/layout.tsx`, `app/[locale]/layout.tsx`, `app/[locale]/page.tsx`, `app/[locale]/error.tsx`, `app/[locale]/not-found.tsx`, `lib/utils.test.ts`, `messages/messages.test.ts`.
-  - Steps: add `CountryConfig` type and `LOCALE_COOKIE`; keep the three entries (`label`: "United States", "Germany", "United Kingdom"); add the minimal catalogue of section 3.8; write layouts and shells. `error.tsx` is a Client Component with the `reset` button using `useTranslations('errors')`. Placeholder page renders `t('home.placeholder')` inside `<main>`.
+  - Steps: add `CountryConfig` type and `LOCALE_COOKIE`; keep two entries (`label`: "United States", "Canada"; delete de-DE and en-GB); add the minimal catalogue of section 3.8; write layouts and shells. `error.tsx` is a Client Component with the `reset` button using `useTranslations('errors')`. Placeholder page renders `t('home.placeholder')` inside `<main>`.
   - Tests (spec: Locales, countries and currencies from one source): `Routing locales equal the COUNTRY_CONFIG keys`, `Default locale is en-US and prefix is always`, `Adding a market: every COUNTRY_CONFIG key has a message file with the same keys` (reads `messages/`, compares flattened key sets of all files to the en-US one; also fails if a file exists for a key that is not in COUNTRY_CONFIG), `Adding a market: a test entry derives routing without code changes` (import `defineRouting` with `Object.keys` of a copy that has an extra `fr-FR` and assert it appears).
 
 - [ ] **A-06 Locale proxy** `[SKILL: commercetools-storefront]`
   - Files: `proxy.ts`, `proxy.test.ts`.
-  - Steps: rename the cookie to `LOCALE_COOKIE`; implement the table in 3.7; export `proxy` and `config`. Build `NextRequest` objects in tests (`new NextRequest('http://localhost/fr-FR/coffee', { headers: { cookie: 'malva-locale=de-DE' } })`) and read `response.status` and `response.headers.get('location')`.
+  - Steps: rename the cookie to `LOCALE_COOKIE`; implement the table in 3.7; export `proxy` and `config`. Build `NextRequest` objects in tests (`new NextRequest('http://localhost/fr-FR/coffee', { headers: { cookie: 'malva-locale=en-CA' } })`) and read `response.status` and `response.headers.get('location')`.
   - Tests (spec: Unknown locale): `Unknown locale redirects to the default locale, never nested`, `Unknown locale redirects to the cookie locale`, `Bare path gets the cookie locale`, `Invalid cookie falls back to en-US`, `Supported locale passes through and sets x-next-intl-locale`, `API and static paths are not redirected`, `Query string is preserved`.
 
 - [ ] **A-07 Env validation, guard, instrumentation** `[SKILL: commercetools-platform]`
@@ -399,8 +399,8 @@ Load the tools first with ToolSearch (`select:mcp__chrome-devtools__navigate_pag
 1. `cd storefront && npm run dev` in the background (port 3000). Wait for "Ready".
 2. `navigate_page` to `http://localhost:3000/`. Expect the final URL `http://localhost:3000/en-US`. `list_network_requests`: first request is a 307 to `/en-US`, then 200. Save `A-root-redirect-1440.png` (resize to 1440x900 with `resize_page` first).
 3. `navigate_page` to `http://localhost:3000/api/health`. With OA-01 done: 200 and JSON `{"ok":true,"projectKey":"<key>"}`. Save the body (key only) to `health.json`. Without OA-01: record `blocked: OA-01` in `plans/evidence/A/README.md` and expect the 502 `upstream_unavailable` body (that also proves the failure shape); never paste values.
-4. `navigate_page` to `http://localhost:3000/de-DE`. `take_snapshot`: the placeholder text is German; `evaluate_script` `document.documentElement.lang` returns `de-DE`. Repeat for `/en-GB`.
-5. `navigate_page` to `http://localhost:3000/fr-FR/coffee`: final URL `/en-US/coffee`, status 404 page shell (route `coffee` does not exist yet, but the URL must not be `/en-US/fr-FR/coffee`). In `evaluate_script` run `document.cookie='malva-locale=de-DE'` and load `/coffee`: expect `/de-DE/coffee`.
+4. `navigate_page` to `http://localhost:3000/en-CA`. `take_snapshot`; `evaluate_script` `document.documentElement.lang` returns `en-CA`. `/de-DE` and `/en-GB` must be 404 (removed locales).
+5. `navigate_page` to `http://localhost:3000/fr-FR/coffee`: final URL `/en-US/coffee`, status 404 page shell (route `coffee` does not exist yet, but the URL must not be `/en-US/fr-FR/coffee`). In `evaluate_script` run `document.cookie='malva-locale=en-CA'` and load `/coffee`: expect `/en-CA/coffee`.
 6. Resize to 375x812 and 1440x900 and take `A-home-375.png`, `A-home-1440.png`. `list_console_messages`: no error. `list_network_requests`: no failed request (a 404 for the unknown `/coffee` page is expected, anything else is not).
 7. Fail-fast checks in the terminal (Bash, background, read the output, then stop the server): `SESSION_SECRET=short npm run dev` must print an error that contains `SESSION_SECRET must be at least 32 characters` and must not print the value `short`; `EXPECTED_PROJECT_KEY=other npm run dev` must print both keys. Save the trimmed output as `startup-guard.txt`.
 8. `npm run verify:build`; save the tail as `build-tail.txt`.
@@ -409,7 +409,7 @@ Load the tools first with ToolSearch (`select:mcp__chrome-devtools__navigate_pag
 ## 7. Self-verification with data
 
 - `curl -s http://localhost:3000/api/health` is the read-back. Compare `projectKey` with the key you typed in `.env.local` (read your own file, do not print the secret lines).
-- With the commercetools MCP connected (OA-06): read the project (`get project`) and confirm the key equals `EXPECTED_PROJECT_KEY`; also confirm the countries, currencies and languages include US/DE/GB, USD/EUR/GBP, en-US/en-GB/de-DE (B adds them; if missing, note it for workstream B, do not change anything).
+- With the commercetools MCP server `food-service` (connected): read the project (`get project`) and confirm the key equals `EXPECTED_PROJECT_KEY`; also confirm the countries, currencies and languages include US/CA, USD/CAD, en-US/en-CA (B adds them, or the owner action OA-A-b did;  if missing, note it for workstream B, do not change anything).
 - Without MCP: `cd ../seed && npm run verify` is read-only and prints the project settings; use it.
 - Record anything that differs from this file in `plans/PROJECT-FINDINGS.md` (date, finding, source, effect).
 
@@ -417,8 +417,8 @@ Load the tools first with ToolSearch (`select:mcp__chrome-devtools__navigate_pag
 
 | ID | Who | When needed | Steps (summary) | Expected | Status |
 | --- | --- | --- | --- | --- | --- |
-| OA-01 (existing) | Owner | A-12 live health check, A-13 | Create the `storefront` API client, fill `storefront/.env.local` (names in `.env.example`), type the project key twice | `/api/health` returns 200 | TODO |
-| OA-06 (existing, optional) | Owner | Faster read-backs | Reconnect the commercetools MCP | MCP tools listed | TODO |
+| OA-01 (existing) | Owner | A-12 live health check, A-13 | The owner provides the API clients in `.env` files (`seed/.env.local`, `storefront/.env.local`; names in `.env.example`); project key `spec-test-b2c-food` (D-031) | `/api/health` returns 200 | TODO |
+| OA-06 (existing) | Owner | Read-backs | The commerce MCP server `food-service` is connected and can read the project; writes through it were blocked by the permission classifier (see OA-A-b) | MCP read tools listed | Done (reads) |
 | M-A-01 | Owner | Optional, after Ready for review | Fresh clone on your own machine with Node 22, copy `.env.example` to `.env.local`, fill it, `npm ci && npm run check && npm run build` | All green | TODO |
 | M-A-02 | Owner | Optional | Read `storefront/AGENTS.md` and `CLAUDE.md` and confirm the rules read correctly for your team | Approval or corrections | TODO |
 
@@ -429,7 +429,7 @@ Full rows are in `plans/notes/todo-A.md`.
 | ID | Question | Default | Blocks |
 | --- | --- | --- | --- |
 | Q-A-1 | The skill command creates `site/`; the spec wants `storefront/`. | Use `storefront/` (rename during or right after the command) | no |
-| Q-A-2 | Where do `vercel.json` and `netlify.toml` live? The command writes them at the project root (`b2c-foodservice/`). | Keep both at the project root, `base = "storefront"`; revisit in Q with OA-05 | no |
+| Q-A-2 | Where does `netlify.toml` live? The command writes it at the project root (`b2c-foodservice/`). | Keep it at the project root, `base = "storefront"`, delete `vercel.json`; revisit in Q with OA-05 | no |
 | Q-A-3 | Locale cookie name. | `malva-locale` instead of the command's `your-shop-country-locale` | no |
 | Q-A-4 | Detect language from `Accept-Language` for first visits? | No: cookie, else `en-US` | no |
 | Q-A-5 | `next` range: exact pin or caret? | Caret `^16` resolved to the latest 16.x; the lockfile pins it | no |

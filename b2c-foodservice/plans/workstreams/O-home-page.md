@@ -92,7 +92,7 @@ Names of G's and F's exports (search wrapper, `ProductGrid`, listing href builde
 
 ### D4. Content source (`content/home.ts`)
 
-Copy that marketing changes (hero eyebrow, headline, editorial text) lives here, per locale, all three required (so no fallback logic is needed, and a missing locale is a type error):
+Copy that marketing changes (hero eyebrow, headline, editorial text) lives here, per locale, both required (so no fallback logic is needed, and a missing locale is a type error):
 
 ```ts
 import type { Locale } from '@/i18n/routing';
@@ -120,17 +120,17 @@ export interface HomeContent {
 export const HOME_CONTENT: HomeContent = { /* defaults below */ };
 ```
 
-Defaults to ship (`en-US`; `en-GB` equals `en-US` unless noted; `de-DE` is a draft for review, SO-03):
+Defaults to ship (`en-US`; `en-CA` equals `en-US` except Canadian spelling where it differs and the **Canada market is delivery only**: the collection banner, the `Find your store` button and the `home.promise.collect` item are not rendered when the market has no stores, D-035):
 
-| Field | en-US | de-DE |
-| --- | --- | --- |
-| `hero.eyebrow` | The Autumn Edit | Die Herbst-Auswahl |
-| `hero.headline` | Great coffee,\nyour way. | Guter Kaffee,\nganz nach Wahl. |
-| `hero.subline` | Compatible pods, fresh beans and machines. Order online, collect in store or have it delivered. | Kompatible Kapseln, frische Bohnen und Maschinen. Online bestellen, im Store abholen oder liefern lassen. |
-| `editorial.eyebrow` | Our promise | Unser Versprechen |
-| `editorial.headline` | Sourced with care.\nRoasted for flavour. | Mit Sorgfalt eingekauft.\nFür den Geschmack geröstet. |
-| `editorial.body` | We work with growers we know, roast in small batches, and take back used capsules so they can be recycled. | Wir arbeiten mit Anbauern, die wir kennen, rösten in kleinen Chargen und nehmen gebrauchte Kapseln zum Recycling zurück. |
-| `editorial.cta` | Read about our coffee | Mehr über unseren Kaffee |
+| Field | en-US |
+| --- | --- |
+| `hero.eyebrow` | The Autumn Edit |
+| `hero.headline` | Great coffee,\nyour way. |
+| `hero.subline` | Compatible pods, fresh beans and machines. Order online, collect in store or have it delivered. |
+| `editorial.eyebrow` | Our promise |
+| `editorial.headline` | Sourced with care.\nRoasted for flavour. |
+| `editorial.body` | We work with growers we know, roast in small batches, and take back used capsules so they can be recycled. |
+| `editorial.cta` | Read about our coffee |
 
 Claims such as "take back used capsules" are **invented placeholders** until the owner confirms (SO-O1, Q-O-3): put a `// DRAFT copy` comment on the content, not in the UI. `editorial.href` defaults to the About page route that P creates (`/about`); until P is done, use the coffee category path.
 
@@ -178,7 +178,7 @@ Order on the page: Hero, Category tiles, Collection banner, Bestsellers, Editori
 
 ### D7. Metadata and structured data
 
-`generateMetadata({ params })` (await `params`): `title` from `home.meta.title`, `description` (155 characters max, per locale from `messages`), `alternates.canonical` `/{locale}` and `alternates.languages` for `en-US`, `de-DE`, `en-GB`, `openGraph` (title, description, one image: hero image URL or a static `app/opengraph-image.png` supplied by SO-02). JSON-LD `Organization` and `WebSite` with `potentialAction` `SearchAction` pointing at the search route of G; rendered once in the page as `<script type="application/ld+json">` with `JSON.stringify` (content is fixed data, no user input).
+`generateMetadata({ params })` (await `params`): `title` from `home.meta.title`, `description` (155 characters max, per locale from `messages`), `alternates.canonical` `/{locale}` and `alternates.languages` for `en-US` and `en-CA`, `openGraph` (title, description, one image: hero image URL or a static `app/opengraph-image.png` supplied by SO-02). JSON-LD `Organization` and `WebSite` with `potentialAction` `SearchAction` pointing at the search route of G; rendered once in the page as `<script type="application/ld+json">` with `JSON.stringify` (content is fixed data, no user input).
 
 ### D8. States and failure behaviour
 
@@ -192,36 +192,36 @@ Order on the page: Hero, Category tiles, Collection banner, Bestsellers, Editori
 | Image missing | Token-coloured placeholder, same aspect ratio (no layout shift) |
 | Reduced motion | Entrance animation (`fade-up`, 10 px translate) only inside `@media (prefers-reduced-motion: no-preference)`; content visible without it |
 
-### D9. i18n keys (`home.*`; identical keys in `en-US`, `de-DE`, `en-GB`)
+### D9. i18n keys (`home.*`; identical keys in `en-US` and `en-CA`)
 
-en-GB equals en-US except where noted.
+en-CA equals en-US except where noted.
 
-| Key | en-US | de-DE | en-GB |
-| --- | --- | --- | --- |
-| `home.meta.title` | Malva Coffee: pods, coffee and machines | Malva Coffee: Kapseln, Kaffee und Maschinen | same |
-| `home.meta.description` | Compatible capsules, fresh coffee beans and machines. Order online and collect in store or have it delivered. | Kompatible Kapseln, frischer Kaffee und Maschinen. Online bestellen und im Store abholen oder liefern lassen. | same |
-| `home.hero.cta` | Shop the edit | Zur Auswahl | same |
-| `home.hero.findStore` | Find your store | Store finden | same |
-| `home.hero.favourite` | Favourite | Favorit | same |
-| `home.promise.shipping` | Free shipping over {threshold} | Gratis Versand ab {threshold} | same |
-| `home.promise.collect` | Free collection, ready in {minutes} minutes | Gratis Abholung, bereit in {minutes} Minuten | same |
-| `home.promise.returns` | {days}-day returns | {days} Tage Rückgabe | same |
-| `home.tiles.aria` | Shop by category | Nach Kategorie einkaufen | same |
-| `home.banner.eyebrow` | Order online, collect in store | Online bestellen, im Store abholen | same |
-| `home.banner.titleStore` | Ready in {minutes} minutes at {store}. | In {minutes} Minuten bereit im Store {store}. | same |
-| `home.banner.titleNoStore` | Collect in store, ready in minutes. | Im Store abholen, in Minuten bereit. | same |
-| `home.banner.text` | See live availability as you browse, reserve what you want and skip the queue. Free, always. | Sieh die Verfügbarkeit live beim Stöbern, reserviere und überspringe die Schlange. Immer kostenlos. | same |
-| `home.banner.changeStore` | Change store | Store wechseln | same |
-| `home.banner.chooseStore` | Choose a store | Store wählen | same |
-| `home.banner.shopCollect` | Shop collect-eligible | Abholbare Artikel | same |
-| `home.banner.proofFast` / `proofReserved` / `proofNoFees` | Fast / Reserved / No fees | Schnell / Reserviert / Ohne Gebühren | same |
-| `home.bestsellers.eyebrow` / `title` | Most loved / Bestsellers | Am beliebtesten / Bestseller | same |
-| `home.new.eyebrow` / `title` | Just landed / New arrivals | Gerade eingetroffen / Neuheiten | same |
-| `home.viewAll` | View all | Alle ansehen | same |
-| `home.subscribe.eyebrow` | Subscribe & save | Abonnieren & sparen | same |
-| `home.subscribe.title` | Never run out of coffee | Nie wieder ohne Kaffee | same |
-| `home.subscribe.step1` / `step2` / `step3` | Choose your coffee or pods / Set how often / Skip or cancel any time | Kaffee oder Kapseln wählen / Intervall festlegen / Jederzeit überspringen oder kündigen | same |
-| `home.subscribe.cta` | Shop subscriptions | Abos entdecken | same |
+| Key | en-US |
+| --- | --- |
+| `home.meta.title` | Malva Coffee: pods, coffee and machines |
+| `home.meta.description` | Compatible capsules, fresh coffee beans and machines. Order online and collect in store or have it delivered. |
+| `home.hero.cta` | Shop the edit |
+| `home.hero.findStore` | Find your store |
+| `home.hero.favourite` | Favourite |
+| `home.promise.shipping` | Free shipping over {threshold} |
+| `home.promise.collect` | Free collection, ready in {minutes} minutes |
+| `home.promise.returns` | {days}-day returns |
+| `home.tiles.aria` | Shop by category |
+| `home.banner.eyebrow` | Order online, collect in store |
+| `home.banner.titleStore` | Ready in {minutes} minutes at {store}. |
+| `home.banner.titleNoStore` | Collect in store, ready in minutes. |
+| `home.banner.text` | See live availability as you browse, reserve what you want and skip the queue. Free, always. |
+| `home.banner.changeStore` | Change store |
+| `home.banner.chooseStore` | Choose a store |
+| `home.banner.shopCollect` | Shop collect-eligible |
+| `home.banner.proofFast` / `proofReserved` / `proofNoFees` | Fast / Reserved / No fees |
+| `home.bestsellers.eyebrow` / `title` | Most loved / Bestsellers |
+| `home.new.eyebrow` / `title` | Just landed / New arrivals |
+| `home.viewAll` | View all |
+| `home.subscribe.eyebrow` | Subscribe & save |
+| `home.subscribe.title` | Never run out of coffee |
+| `home.subscribe.step1` / `step2` / `step3` | Choose your coffee or pods / Set how often / Skip or cancel any time |
+| `home.subscribe.cta` | Shop subscriptions |
 
 Hero and editorial copy live in `content/home.ts`, not in these catalogues (D4).
 
@@ -245,15 +245,15 @@ One `<h1>`. Sections are `<section aria-labelledby>`. Tiles and cards are links 
 Common rules: test first; `npm run check` before ticking; commit `ws-o: O-0x summary`; tokens only; both catalogues; no `any`; server code `import 'server-only'`.
 
 - [ ] **O-00 Preconditions and paths.** G is `Done`. Grep and write to `plans/evidence/O/paths.md`: G's search wrapper and its filter parameters (`collection` facet values `bestseller`, `new`, `subscribable`; the collect filter), `ProductCard`, `ProductGrid`, listing href builder, category tree function, F's `getPromiseFigures()` (`lib/ct/promise.ts`, returns `{ freeShippingThreshold, collectionMinutes, returnDays }`), `useCollectionStore` (`open()`), `getStoreByKey` or channels cache, E's utilities for glow and glass, `Steps` atom. Check that seed data has: categories `mcf-cat-*` with images, products with `badge` values `bestseller` and `new`, at least four of each (run `seed` verify or read with the MCP). If `new` has none, that is fine (the section disappears) but record it. `npm run check` green. [SKILL: commercetools-platform]
-- [ ] **O-01 Content module.** `content/home.ts` with types and defaults (D4); unit test that every locale has every string and no URL has a query string. Tests: `Editorial content: copy image and link come from the content module`, `content has all three locales`, `image urls are clean`.
+- [ ] **O-01 Content module.** `content/home.ts` with types and defaults (D4); unit test that every locale has every string and no URL has a query string. Tests: `Editorial content: copy image and link come from the content module`, `content has both locales`, `Canada market hides the collection banner`, `image urls are clean`.
 - [ ] **O-02 Home data.** `lib/home-data.ts` (D5); add `badge` filter to G's wrapper if missing (with its test in G's test file). Tests (mock `lib/ct/*`): `a failing section returns empty and the others still return`, `featured product null when the key is unset`, `bestsellers query asks for badge bestseller with four results`, `subscribable count uses one result and total only`, `no server cache wraps product searches`. [SKILL: commercetools-platform] [SKILL: commercetools-storefront]
-- [ ] **O-03 Hero.** `Hero.tsx`, `HeroFeaturedCard.tsx`, `PromiseRow.tsx`, `OpenStoreButton.tsx`. Promise figures from F. Tests: `Hero product: glass card links to the product page and shows its price`, `no featured product hides the card`, `Narrow screen: image column has display none under 900 and text fills the width` (class assertion plus recipe), `hero has exactly one h1`, `promise figures come from the figures function not constants`, `Find your store opens the picker`. [SKILL: commercetools-storefront]
+- [ ] **O-03 Hero** (Canada market: no `Find your store` button and no collect promise item; test `Canada market hides store button and collect promise`). `Hero.tsx`, `HeroFeaturedCard.tsx`, `PromiseRow.tsx`, `OpenStoreButton.tsx`. Promise figures from F. Tests: `Hero product: glass card links to the product page and shows its price`, `no featured product hides the card`, `Narrow screen: image column has display none under 900 and text fills the width` (class assertion plus recipe), `hero has exactly one h1`, `promise figures come from the figures function not constants`, `Find your store opens the picker`. [SKILL: commercetools-storefront]
 - [ ] **O-04 Category tiles.** `CategoryTiles.tsx` per D6.2. Tests: `Tile order: tiles follow the configured order capped at four`, `unknown category key is skipped`, `tile is a link to the category listing`, `missing image shows the placeholder`, `five configured keys render four tiles`.
 - [ ] **O-05 Collection banner.** `CollectionBanner.tsx` per D6.3. Tests: `Store named: headline names the chosen store and its minutes`, `no store chosen asks to choose one`, `unknown store key behaves as none`, `Shop collect-eligible links to the collect filtered listing`, `banner never renders a name or cart count`.
 - [ ] **O-06 Product sections.** `ProductSection.tsx`, `HomeSkeletons.tsx`, the two uses with `Suspense`. Tests: `No new products: the New arrivals section is absent`, `Bestsellers renders four cards with View all link`, `section failure omits only that section`, `skeleton has aria-busy`.
 - [ ] **O-07 Editorial and subscribe strips.** `EditorialStrip.tsx`, `SubscribeStrip.tsx`. Tests: `Editorial content: strip text and image come from content`, `Entry point: Shop subscriptions links to the listing filtered to subscribable products`, `subscribe strip hidden when nothing is subscribable`, `strip never shows a hard coded percent`.
 - [ ] **O-08 Page, metadata, structured data.** `app/[locale]/page.tsx`, `generateMetadata`, JSON-LD, composition order, Suspense boundaries. Tests: `Anonymous visitor: page renders shared merchandising and no account slot`, `Expired session: page renders as anonymous with no name and no cart count` (cookie with an expired JWT built with `jose`), `tampered cookie renders as anonymous`, `metadata has canonical and three alternates`, `json-ld is valid json with a SearchAction`, `page does not set cache headers that allow sharing across sessions` (response `Cache-Control` is not public). [SKILL: commercetools-storefront]
-- [ ] **O-09 Messages, responsive, motion.** Keys of D9 in three catalogues; CSS for D1 and D11 (use E's utilities; no raw values); entrance animation inside `prefers-reduced-motion: no-preference`. Tests: `catalogues have the same home keys`, `entrance animation is disabled under reduced motion` (CSS text assertion), `no raw colour values in home components` (lint passes). `npm run check`, `npm run build` (home route listed as dynamic).
+- [ ] **O-09 Messages, responsive, motion.** Keys of D9 in two catalogues; CSS for D1 and D11 (use E's utilities; no raw values); entrance animation inside `prefers-reduced-motion: no-preference`. Tests: `catalogues have the same home keys`, `entrance animation is disabled under reduced motion` (CSS text assertion), `no raw colour values in home components` (lint passes). `npm run check`, `npm run build` (home route listed as dynamic).
 - [ ] **O-10 Browser and data verification** (sections 6 and 7); evidence in `plans/evidence/O/`; add owner rows; `STATUS.md` `Ready for review`.
 
 ## 5. Scenarios checklist
@@ -280,7 +280,7 @@ Base `http://localhost:3000`. Evidence `plans/evidence/O/<step>-<what>-<375|1440
 1. **6.1 Desktop, en-US.** `resize_page` 1440x900, `navigate_page /en-US`. `take_snapshot`: one `h1`, buttons `Shop the edit` and `Find your store`, three promise items with the **market** threshold (`$` amount equals the threshold in the shipping method rate tiers, read in section 7), glass card with a price, four tiles, banner, `Bestsellers` with four cards, editorial, subscribe strip. Screenshot full page. `evaluate_script`: `document.querySelectorAll('h1').length === 1`.
 2. **6.2 Hero and tiles.** Click the glass card: product page opens. Back. Click each tile: the right category listing. Check the order matches `HOME_CONTENT.tiles.categoryKeys`.
 3. **6.3 Store banner.** Fresh context (no cookie): banner says `Collect in store, ready in minutes.` and `Choose a store`. Press `Find your store` in the hero: the picker opens (F). Pick `Brooklyn`: banner now reads `Ready in <n> minutes at Brooklyn.` (n equals the channel's `collectionMinutes`) after the page refreshes. Reload: still named (session). `Shop collect-eligible` opens the listing with the collect filter.
-4. **6.4 Markets.** `/de-DE` and `/en-GB`: German and British copy, `€` and `£` thresholds from the market, store list limited to the market (F).
+4. **6.4 Markets.** `/en-CA`: CAD threshold (99) from the market, two promise items (shipping, returns), no collection banner, no `Find your store` button, no store pill; `/en-US` still shows the collection banner and the six NYC stores (F).
 5. **6.5 Responsive.** `resize_page` 1080, 900, 820, 700, 520, 375 (height 900). At each: `evaluate_script` `document.documentElement.scrollWidth <= window.innerWidth`; at 1080 grids are 3 columns and tiles 2; at 900 `getComputedStyle(document.querySelector('.hero-media')).display === 'none'` (use the real selector the component has) and the hero text fills the width; at 820 side padding 20 px and 2-column grids; at 375 buttons are full width and at least 44 px high. Screenshots at 1440, 900 and 375.
 6. **6.6 Empty sections.** With the seed variant that has no `new` badge (or temporarily filter the fetch in a test dev server with an env override used only in tests) the `New arrivals` heading is absent from the snapshot. If the seed always has new products, cover this by the unit test only and say so in the README.
 7. **6.7 Subscribe entry.** Press `Shop subscriptions`: the listing opens with the subscribable filter applied (URL carries it, every card has the Subscribe badge or option).
@@ -291,7 +291,7 @@ Base `http://localhost:3000`. Evidence `plans/evidence/O/<step>-<what>-<375|1440
 
 ## 7. Self-verification with data (no asking the owner)
 
-1. Read the market thresholds: shipping methods `mcf-ship-standard` free-above tiers for US, DE and GB (commercetools MCP or `seed verify`); they must equal the home promise figures in step 6.1 and 6.4 (USD 75, EUR 60, GBP 50 unless the seed changed).
+1. Read the market thresholds: shipping methods `mcf-ship-standard` free-above tiers for US and CA (commercetools MCP or `seed verify`); they must equal the home promise figures in step 6.1 and 6.4 (USD 75, CAD 99 unless the seed changed).
 2. Read the six store channels with their `collectionMinutes`; the banner minutes equal the chosen store's value.
 3. Read products with `badge = bestseller` and `new`; the sections show those, at most four each, in the grid order of G's default sort.
 4. Read category keys and images; the tiles' images are those category images.

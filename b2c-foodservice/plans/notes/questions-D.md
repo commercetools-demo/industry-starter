@@ -20,4 +20,4 @@ Q-D-12 | Rating display rounding. | `Math.round(x * 10) / 10` | no | Open
 Q-D-13 | `getLocalizedString` fallback order. | exact, same language, `en-US`, first value | no | Open
 Q-D-14 | Server cache TTLs. | project 300 s, categories 60, channels 60, shipping methods 60, recurrence policies 300 | no | Open
 Q-D-15 | 409 retry policy. | One retry after re-reading, no delay; second 409 is `conflict` 409 | no | Open
-Q-D-16 | Currencies without two decimals. | Digit count from `Intl` (only USD, EUR, GBP used, all 2) | no | Open
+Q-D-16 | Currencies without two decimals. | Digit count from `Intl` (only USD and CAD used, both 2) | no | Open

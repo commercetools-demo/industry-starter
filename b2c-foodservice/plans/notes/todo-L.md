@@ -7,9 +7,9 @@ Draft rows for the lead to merge into `plans/TODO-MANUAL-TESTING.md` (the lead n
 
 | ID | Who | When | Steps | Expected | Status |
 | --- | --- | --- | --- | --- | --- |
-| OA-L-a | Owner | Before L-10 and L-12 live runs | 1. Confirm the storefront API client scopes include `manage_customers`, `manage_orders`, `manage_shopping_lists`, `view_payments` and `manage_payments`. | Handlers work against the live project | TODO |
+| OA-L-a | Owner | Before L-10 and L-12 live runs | 1. Confirm the API clients supplied in `storefront/.env.local` (OA-01) have the scopes: the storefront API client scopes include `manage_customers`, `manage_orders`, `manage_shopping_lists`, `view_payments` and `manage_payments`. | Handlers work against the live project | TODO |
 | OA-L-b | Owner | Before M-L-03 | 1. In the Checkout Application enable Stored Payment Methods. 2. Confirm the connector you installed supports them. | A checkout offers "save this card" | TODO |
-| SO-L-a | Owner | Before release | 1. Read the Collection tiles and the delete-account modal text in `/en-US/account/collection` and `/settings`. 2. Approve or change the wording, especially what is erased and what is kept. | Copy and legal text approved | TODO |
+| SO-L-a | Owner | Before release | 1. Read the Collection tiles (US market only) and the delete-account modal text in `/en-US/account/collection` and `/settings`. 2. Approve or change the wording, especially what is erased and what is kept. | Copy and legal text approved | TODO |
 | SO-L-b | Owner | Before release | 1. Decide the returns window (days) and which items can be returned (consumables such as opened coffee?). 2. Tell the team the numbers. | Policy recorded; `RETURN_WINDOW_DAYS` and eligibility updated | TODO |
 | M-L-01 | Owner | Before release | 1. On a real phone sign in and open each tab. 2. Swipe the tab strip. 3. Add an address with the on-screen keyboard. | No horizontal page scroll, active tab visible, keyboard does not hide fields | TODO |
 | M-L-02 | Owner | Before release | 1. On a real phone with an order in "Ready for collection", tap "Get directions". | The phone's maps app opens at the store | TODO |

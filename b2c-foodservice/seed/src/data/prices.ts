@@ -5,12 +5,12 @@ import { recurrencePolicyDrafts } from './extras';
 import { allVariants, type ProductDef, type VariantDef } from './products';
 
 /**
- * Embedded prices per variant (decision D-017): one for US/USD (tax-exclusive), DE/EUR and GB/GBP (tax-inclusive).
- * USD is the base table (`VariantDef.usd`); EUR is about 0.92 and GBP about 0.79 of USD, rounded to the nearest 5 cents
+ * Embedded prices per variant (decision D-017): one for US/USD and CA/CAD (both tax-exclusive).
+ * USD is the base table (`VariantDef.usd`); CAD is about 1.37 of USD, rounded to the nearest 5 cents
  * so amounts end in .x0 or .x5. Subscribable products also get `recurrencePrices` for every recurrence policy, 10% below
  * the one-time price of the market.
  */
-export const FX: Record<Currency, number> = { USD: 1, EUR: 0.92, GBP: 0.79 };
+export const FX: Record<Currency, number> = { USD: 1, CAD: 1.37 };
 export const RECURRENCE_DISCOUNT = 0.1;
 
 const round5 = (n: number): number => Math.round(n / 5) * 5;

@@ -17,5 +17,5 @@ Draft for the lead to consolidate into `QUESTIONS.md`.
 | Q-O-8 | Bestsellers: only products badged `bestseller`, or fill to four by rating? | Badge only, no fill | no | Open |
 | Q-O-9 | "Buy again" or recently viewed strip for signed-in shoppers (the B2B template has "recently ordered")? | Not built; parked in `IDEAS.md` | no | Open |
 | Q-O-10 | Label of the pods tile: the spec says "Nespresso pods" but D-005 forbids the brand as a product name | Use the platform category name; recommend "Compatible pods" with the line "Nespresso-compatible" | no | Open |
-| Q-O-11 | Which product is the hero's featured product? | First seeded Original pod that has a price in all three markets | no | Open |
+| Q-O-11 | Which product is the hero's featured product? | First seeded Original pod that has a price in both markets (US USD, Canada CAD) | no | Open |
 | Q-O-12 | Is the "returns" figure in the promise row the same in all markets? | Same source as the promise bar (F configuration) | no | Open |

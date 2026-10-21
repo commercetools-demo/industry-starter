@@ -24,7 +24,7 @@ Read `plans/JUNIOR-GUIDE.md` first. Everything runs in `storefront/`. Dev URL as
 **In scope**
 
 1. A small content layer: typed content modules per page, locale fallback with a visible notice, token substitution for figures that must not drift (D2).
-2. Pages: About, Contact (form and route handler), FAQ (and feedback route), Policies (shipping and returns, terms, privacy, accessibility statement, imprint), Journal (listing, filters, article).
+2. Pages: About, Contact (form and route handler), FAQ (and feedback route), Policies (shipping and returns, terms, privacy, accessibility statement), Journal (listing, filters, article).
 3. Error handling: `not-found`, `error`, `global-error`, `forbidden`, catch-all for unknown paths, JSON 404 for unknown `/api` paths, one shared `ErrorPage` component.
 4. SEO: metadata per page, `sitemap.ts`, `robots.ts`, structured data (FAQPage, Article).
 5. Wiring: footer link targets (F's config) and the policy links in checkout (K's consent text), href and target only.
@@ -45,9 +45,9 @@ Read `plans/JUNIOR-GUIDE.md` first. Everything runs in `storefront/`. Dev URL as
 | Template says | What applies to Malva | What does not apply |
 | --- | --- | --- |
 | `about-us`: company story, credentials and route to sales, assembled only from CMS content, served without a commerce call | Story, values (sourcing, roasting, quality guarantee, capsule recycling placeholders), "visit a store" (opens the picker), links to shop and contact. No commerce call. | "Credentials", "certification claims" and "route to sales / supplier vetting": no B2B sales route; no certification is claimed unless the owner supplies one (SO-P2). The template's attribution CTA question is dropped (no referral tracking). |
-| `contact-us`: confirm only what support accepted; phone, email and offices static; chat optional | Form routed to a configured receiver, honest failure, reference number, static channels per market | CRM account or company id (no companies); chat vendor not built; "offices" are customer-care channels per market, not offices |
+| `contact-us`: confirm only what support accepted; phone, email and offices static; chat optional | Form routed to a configured receiver, honest failure, reference number, static channels per market (US, Canada) | CRM account or company id (no companies); chat vendor not built; "offices" are customer-care channels per market, not offices |
 | `faq`: grouped, full answers in the first response, deep link opens one answer, feedback collector may fail silently | As written. Topics are coffee-specific (D6). | Nothing |
-| `policy-pages`: stable addresses, effective date shown, opened from checkout without losing state, locale fallback | As written for shipping and returns, terms, privacy; plus an accessibility statement (footer links it, shell spec) and an imprint (legally required for German sellers, owner to confirm, Q-P-9) | Re-consent for standing B2B orders; per-region variants chosen by store (policies vary by locale only, Q-P-10) |
+| `policy-pages`: stable addresses, effective date shown, opened from checkout without losing state, locale fallback | As written for shipping and returns, terms, privacy; plus an accessibility statement (footer links it, shell spec) (no imprint page: Germany is dropped, D-030; Q-P-9 removed) | Re-consent for standing B2B orders; per-region variants chosen by store (policies vary by locale only, Q-P-10) |
 | `blog-resources`: independently addressable articles, filter listing, withdrawn articles redirect to topic | Called **Journal**. Listing with tag filters and text search, article pages, related articles by tag, withdrawn handling | Gated resources, case studies, form gates |
 | `error-pages`: three conditions, shared shell, route back; commercetools section is B2B (`AssociateMissingPermission`, business units, as-associate) | Not found, server error, forbidden; unauthorized exists but is never shown for an expired session. One component with a discriminator. | The whole commercetools section: there are no associates or business units in B2C (D-015), so no permission names appear anywhere. A shopper opening another customer's order gets **not found**, never "forbidden" (does not reveal that it exists). |
 
@@ -90,7 +90,7 @@ Content files: `content/about.ts`, `content/contact.ts`, `content/faq.ts`, `cont
 | `/{locale}/about` | `app/[locale]/about/page.tsx` | server, static content |
 | `/{locale}/contact` | `app/[locale]/contact/page.tsx` + `components/contact/ContactForm.tsx` (client) | |
 | `/{locale}/faq` | `app/[locale]/faq/page.tsx` + `components/faq/FaqAccordion.tsx` (client) | `?q=<questionId>` opens one answer on the server |
-| `/{locale}/policies/{slug}` | `app/[locale]/policies/[slug]/page.tsx` | slugs `shipping-returns`, `terms`, `privacy`, `accessibility`, `imprint`; unknown slug `notFound()` |
+| `/{locale}/policies/{slug}` | `app/[locale]/policies/[slug]/page.tsx` | slugs `shipping-returns`, `terms`, `privacy`, `accessibility`; unknown slug `notFound()` |
 | `/{locale}/journal` | `app/[locale]/journal/page.tsx` | `?tag=` (repeatable, all must match), `?q=`, `?page=` |
 | `/{locale}/journal/{slug}` | `app/[locale]/journal/[slug]/page.tsx` | |
 | 404 | `app/not-found.tsx`, `app/[locale]/not-found.tsx`, `app/[locale]/[...rest]/page.tsx` | the catch-all calls `notFound()` so unknown paths **inside** a locale render the localized 404 with the shell |
@@ -117,7 +117,7 @@ Page layout: left column the form card, right column the channels card (`Custome
 
 ```ts
 export interface ContactChannel { label: Localized<string>; email: string; phone: string | null; hours: Localized<string>; replyWithin: Localized<string> }
-export const CONTACT: { default: ContactChannel; byCountry: Partial<Record<'US' | 'DE' | 'GB', ContactChannel>> } // placeholder values on the .example domain, flagged SO-P3
+export const CONTACT: { default: ContactChannel; byCountry: Partial<Record<'US' | 'CA', ContactChannel>> } // placeholder values on the .example domain, flagged SO-P3
 ```
 
 Selection: `byCountry[session.country] ?? default` (scenario "Region without an office": a visitor in a market without its own entry sees the default channels, never an empty block). Country comes from the session/locale (`getLocale()`), no commerce call.
@@ -171,7 +171,7 @@ Topics and questions to author as drafts (answers use tokens for figures; owner 
 | Subscriptions | How do subscriptions work? Can I skip, pause or cancel? Does the price change? (answer follows the owner's decision, Q-N-1) |
 | Capsules and machines | Are the capsules compatible with my machine (Original or Vertuo, "compatible with Nespresso", never the brand as ours)? Which grind should I choose? How do I descale? |
 | Returns and payment | What is the returns window ({{returnDays}} days)? Which payment methods are accepted? Is my payment secure? |
-| Your account | How do I reset my password? How do I change my address? How do I delete my account? |
+| Your account | How do I change my address? How do I delete my account? |
 
 Rendering: topics as `<section>` with `<h2>`, each question a native `<details id="question-{id}">` with `<summary>` containing the question text as a heading level 3 button-like row, and the full answer **in the HTML of the first response** (inside the closed `<details>`, so it is crawlable and screen readers can reach it). A table of contents at the top links to topics. `FAQPage` JSON-LD with all questions and plain-text answers (blocks flattened) is rendered for the resolved locale.
 
@@ -187,7 +187,7 @@ Feedback (`FaqFeedback`, client leaf at the end of each answer): `Was this helpf
 
 `content/policies.ts`: `Localized<{ title: string; effectiveDate: 'YYYY-MM-DD'; isDraft: boolean; body: Block[] }>` per slug. **The effective date lives inside the localized text object**, so the date always moves with the text it describes, including when a locale falls back to English (the fallback's own date is shown; scenario "Version superseded"). `EffectiveDate` renders `Effective from {date}` with `Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' })`.
 
-Pages: `shipping-returns` (delivery by market using tokens for the threshold; collection; returns window `{{returnDays}}`, how to return, refunds), `terms` (terms of sale), `privacy` (what is collected: account, orders, session cookie; payment is handled by the hosted Checkout and its provider, card data never touches Malva; reviews; contact form; retention and rights; no analytics or advertising cookies at present, the only cookies are the session cookie and the market preference), `accessibility` (conformance target WCAG 2.2 AA, known gaps, contact route), `imprint` (legal entity, address, representative, register data: **placeholders only**, owner supplies, SO-01).
+Pages: `shipping-returns` (delivery by market using tokens for the threshold; collection; returns window `{{returnDays}}`, how to return, refunds), `terms` (terms of sale), `privacy` (what is collected: account, orders, session cookie; payment is handled by the hosted Checkout and its provider, card data never touches Malva; reviews; contact form; retention and rights; no analytics or advertising cookies at present, the only cookies are the session cookie and the market preference), `accessibility` (conformance target WCAG 2.2 AA, known gaps, contact route). Policy text is US and Canada neutral placeholders (US state and Canadian federal privacy and consumer-law wording to be supplied by the owner or legal, SO-01); there is no imprint, no VAT text and no email promise (no confirmation, reset or marketing email is sent, D-032); the delivery section names the US and Canada markets and says collection is available in New York City stores only.
 
 Rules: each page has a table of contents when it has more than three `h2` blocks; headings have ids; the page is plain server-rendered content with **no session, cart or commerce dependency beyond tokens** (D2); the URL never changes with the content system (stable `policyHref(slug)`, tested by a snapshot of the slug list so a rename fails a test). "Opened from checkout": checkout's consent links open the policy in a **new tab** (`target="_blank"`, `rel="noopener"`, set by task P-12), so the original tab keeps cart, addresses and selections; the policy page itself has no redirect and requires nothing.
 
@@ -247,7 +247,7 @@ Files and behaviour:
 
 - `app/[locale]/not-found.tsx` renders `ErrorPage kind="not-found"`. `app/not-found.tsx` (no locale known) renders the same with the default locale's messages. `app/[locale]/[...rest]/page.tsx` calls `notFound()` so unmatched paths under a valid locale use the localized page (known next-intl pattern).
 - `app/[locale]/error.tsx` (`'use client'`) renders `ErrorPage kind="server-error"` with `reset` and `error.digest`. It does **not** touch cookies, SWR cache or session (scenario "Upstream fault": session and cart stay intact).
-- `app/global-error.tsx` (`'use client'`, includes `<html>` and `<body>`) imports the global stylesheet so tokens apply, and cannot use `NextIntlClientProvider`, so it carries a small **inline dictionary for the three locales** (the one allowed exception to "strings come from the catalogues"; a test checks it has all three), choosing the language from the first path segment.
+- `app/global-error.tsx` (`'use client'`, includes `<html>` and `<body>`) imports the global stylesheet so tokens apply, and cannot use `NextIntlClientProvider`, so it carries a small **inline dictionary for the two locales** (the one allowed exception to "strings come from the catalogues"; a test checks it has both), choosing the language from the first path segment.
 - `app/[locale]/forbidden.tsx` / `unauthorized.tsx`: Next.js `forbidden()` and `unauthorized()` may require `experimental.authInterrupts` in `next.config.ts`. P-00 checks the Next.js documentation for the installed 16.x and records the answer in `PROJECT-FINDINGS.md`; if the flag is needed set it only in `next.config.ts` and say so in the hand-off. B2C code rarely calls `forbidden()` (D-015).
 - `app/api/[...rest]/route.ts` exports `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD` returning `404 { "error": { "code": "not_found", "message": "Not found" } }` so unknown API paths do not return HTML.
 - Recovery policy for retired products (template question): a product that is unpublished or unknown returns the **hard 404 page** with search and category links (no redirect, Q-P-12).
@@ -255,49 +255,49 @@ Files and behaviour:
 
 ### D10. SEO
 
-`app/sitemap.ts`: entries for `/{locale}` and the content routes (about, contact, faq, every policy, journal, every published article) for the three locales, with `alternates.languages` where a page has its own translation, `lastModified` from `updatedAt` or the policy `effectiveDate`. `app/robots.ts`: allow `/`, disallow `/api/`, `/*/account`, `/*/cart`, `/*/checkout`, and point at the sitemap (absolute site origin from `NEXT_PUBLIC_SITE_URL` or the deployment URL variable; the name is chosen in P-00 and added to `.env.example`, no secret). Withdrawn articles are never in the sitemap.
+`app/sitemap.ts`: entries for `/{locale}` and the content routes (about, contact, faq, every policy, journal, every published article) for the two locales (en-US, en-CA), with `alternates.languages` where a page has its own translation, `lastModified` from `updatedAt` or the policy `effectiveDate`. `app/robots.ts`: allow `/`, disallow `/api/`, `/*/account`, `/*/cart`, `/*/checkout`, and point at the sitemap (absolute site origin from `NEXT_PUBLIC_SITE_URL` or the deployment URL variable; the name is chosen in P-00 and added to `.env.example`, no secret). Withdrawn articles are never in the sitemap.
 
-### D11. i18n keys (new namespaces; identical keys in the three catalogues)
+### D11. i18n keys (new namespaces; identical keys in the two catalogues)
 
-`content.*` (shared), `about.*`, `contact.*`, `faq.*`, `policy.*`, `journal.*`, `error.*`. Page copy itself is in `content/*.ts` (Localized), these catalogues carry the **interface** strings. en-GB equals en-US except spelling where it differs. Core keys (all of them are created in the tasks; the table lists the ones with exact text a reviewer must check):
+`content.*` (shared), `about.*`, `contact.*`, `faq.*`, `policy.*`, `journal.*`, `error.*`. Page copy itself is in `content/*.ts` (Localized), these catalogues carry the **interface** strings. en-CA equals en-US except spelling where it differs. Core keys (all of them are created in the tasks; the table lists the ones with exact text a reviewer must check):
 
-| Key | en-US | de-DE |
-| --- | --- | --- |
-| `content.fallbackNotice` | This page is shown in English because it is not available in {language} yet. | Diese Seite wird auf Englisch angezeigt, weil sie noch nicht auf {language} verfügbar ist. |
-| `content.draftBanner` | This text is a draft and not final legal text. | Dieser Text ist ein Entwurf und kein endgültiger Rechtstext. |
-| `content.toc` | On this page | Auf dieser Seite |
-| `content.tokenFallback.freeShipping` | our free-shipping threshold | unsere Versandkostenfrei-Grenze |
-| `content.tokenFallback.collectMinutes` | a short time | kurze Zeit |
-| `content.tokenFallback.returnDays` | the return period | die Rückgabefrist |
-| `policy.effective` | Effective from {date} | Gültig ab {date} |
-| `contact.title` | Contact us | Kontakt |
-| `contact.field.name` / `email` / `topic` / `orderNumber` / `message` | Name / Email / Topic / Order number (optional) / Message | Name / E-Mail / Thema / Bestellnummer (optional) / Nachricht |
-| `contact.topic.order` / `collection` / `subscription` / `product` / `other` | My order / Collection in store / A subscription / A product / Something else | Meine Bestellung / Abholung im Store / Ein Abo / Ein Produkt / Etwas anderes |
-| `contact.noSecrets` | Please do not include card numbers or passwords. | Bitte gib keine Kartennummern oder Passwörter an. |
-| `contact.consent` | I have read the privacy policy. | Ich habe die Datenschutzerklärung gelesen. |
-| `contact.submit` / `sending` | Send message / Sending... | Nachricht senden / Wird gesendet... |
-| `contact.sent.title` | Thank you. We have your message. | Danke. Wir haben deine Nachricht erhalten. |
-| `contact.sent.reference` | Reference {reference} | Referenz {reference} |
-| `contact.sent.channel` | Received by {channel} | Eingegangen bei {channel} |
-| `contact.sent.reply` | We usually reply within {replyWithin}. | Wir antworten in der Regel innerhalb von {replyWithin}. |
-| `contact.failed` | We could not send your message. What you wrote is still here. Try again, or reach us at {email} or {phone}. | Wir konnten deine Nachricht nicht senden. Dein Text ist noch da. Versuche es erneut oder erreiche uns unter {email} oder {phone}. |
-| `contact.failedRate` | Please wait a few minutes before trying again. | Bitte warte einige Minuten, bevor du es erneut versuchst. |
-| `contact.error.required` / `emailInvalid` / `tooShort` / `tooLong` / `consentRequired` | This field is required. / Enter a valid email address. / Please write a little more. / Please shorten your message. / Please confirm to continue. | Dieses Feld ist erforderlich. / Gib eine gültige E-Mail-Adresse ein. / Bitte schreibe etwas mehr. / Bitte kürze deine Nachricht. / Bitte bestätige, um fortzufahren. |
-| `faq.title` | Frequently asked questions | Häufige Fragen |
-| `faq.helpful` / `yes` / `no` / `thanks` | Was this helpful? / Yes / No / Thanks for your feedback. | War das hilfreich? / Ja / Nein / Danke für dein Feedback. |
-| `journal.title` | Journal | Journal |
-| `journal.search` / `clear` | Search articles / Clear all | Artikel suchen / Alle löschen |
-| `journal.empty` | No articles match your filters. | Keine Artikel passen zu deinen Filtern. |
-| `journal.removeFilter` | Remove filter {label} | Filter {label} entfernen |
-| `journal.related` | Keep reading | Weiterlesen |
-| `journal.tags.brewing` / `capsules` / `machines` / `sourcing` / `subscriptions` / `care` | Brewing / Capsules / Machines / Sourcing / Subscriptions / Care | Zubereitung / Kapseln / Maschinen / Herkunft / Abos / Pflege |
-| `error.notFound.title` / `text` | We can't find that page. / The address may be mistyped, or the product may no longer be available. | Diese Seite finden wir nicht. / Die Adresse ist vielleicht falsch geschrieben oder das Produkt ist nicht mehr verfügbar. |
-| `error.server.title` / `text` | Something went wrong on our side. / Your bag and your account are safe. Please try again. | Bei uns ist etwas schiefgelaufen. / Dein Warenkorb und dein Konto sind sicher. Bitte versuche es erneut. |
-| `error.forbidden.title` / `text` | You don't have access to this page. / If you think this is a mistake, contact us. | Du hast keinen Zugriff auf diese Seite. / Wenn du das für einen Fehler hältst, kontaktiere uns. |
-| `error.unauthorized.title` | Please sign in to continue. | Bitte melde dich an, um fortzufahren. |
-| `error.retry` / `home` / `contact` / `reference` / `searchLabel` / `searchSubmit` | Try again / Back to home / Contact us / Reference {reference} / Search the shop / Search | Erneut versuchen / Zur Startseite / Kontakt / Referenz {reference} / Im Shop suchen / Suchen |
+| Key | en-US |
+| --- | --- |
+| `content.fallbackNotice` | This page is shown in English because it is not available in {language} yet. |
+| `content.draftBanner` | This text is a draft and not final legal text. |
+| `content.toc` | On this page |
+| `content.tokenFallback.freeShipping` | our free-shipping threshold |
+| `content.tokenFallback.collectMinutes` | a short time |
+| `content.tokenFallback.returnDays` | the return period |
+| `policy.effective` | Effective from {date} |
+| `contact.title` | Contact us |
+| `contact.field.name` / `email` / `topic` / `orderNumber` / `message` | Name / Email / Topic / Order number (optional) / Message |
+| `contact.topic.order` / `collection` / `subscription` / `product` / `other` | My order / Collection in store / A subscription / A product / Something else |
+| `contact.noSecrets` | Please do not include card numbers or passwords. |
+| `contact.consent` | I have read the privacy policy. |
+| `contact.submit` / `sending` | Send message / Sending... |
+| `contact.sent.title` | Thank you. We have your message. |
+| `contact.sent.reference` | Reference {reference} |
+| `contact.sent.channel` | Received by {channel} |
+| `contact.sent.reply` | We usually reply within {replyWithin}. |
+| `contact.failed` | We could not send your message. What you wrote is still here. Try again, or reach us at {email} or {phone}. |
+| `contact.failedRate` | Please wait a few minutes before trying again. |
+| `contact.error.required` / `emailInvalid` / `tooShort` / `tooLong` / `consentRequired` | This field is required. / Enter a valid email address. / Please write a little more. / Please shorten your message. / Please confirm to continue. |
+| `faq.title` | Frequently asked questions |
+| `faq.helpful` / `yes` / `no` / `thanks` | Was this helpful? / Yes / No / Thanks for your feedback. |
+| `journal.title` | Journal |
+| `journal.search` / `clear` | Search articles / Clear all |
+| `journal.empty` | No articles match your filters. |
+| `journal.removeFilter` | Remove filter {label} |
+| `journal.related` | Keep reading |
+| `journal.tags.brewing` / `capsules` / `machines` / `sourcing` / `subscriptions` / `care` | Brewing / Capsules / Machines / Sourcing / Subscriptions / Care |
+| `error.notFound.title` / `text` | We can't find that page. / The address may be mistyped, or the product may no longer be available. |
+| `error.server.title` / `text` | Something went wrong on our side. / Your bag and your account are safe. Please try again. |
+| `error.forbidden.title` / `text` | You don't have access to this page. / If you think this is a mistake, contact us. |
+| `error.unauthorized.title` | Please sign in to continue. |
+| `error.retry` / `home` / `contact` / `reference` / `searchLabel` / `searchSubmit` | Try again / Back to home / Contact us / Reference {reference} / Search the shop / Search |
 
-German is a draft for SO-03 (form of address follows E and F). Footer and nav labels belong to F.
+Footer and nav labels belong to F.
 
 ### D12. Accessibility and responsive
 
@@ -313,11 +313,11 @@ Pages import nothing from `lib/ct/*` except through the promise-figure wrapper o
 
 ## 4. Tasks
 
-Common rules: test first; `npm run check` before ticking; commit `ws-p: P-0x summary`; tokens only; three catalogues; no `any`; no `dangerouslySetInnerHTML`; links through `@/i18n/routing`.
+Common rules: test first; `npm run check` before ticking; commit `ws-p: P-0x summary`; tokens only; two catalogues; no `any`; no `dangerouslySetInnerHTML`; links through `@/i18n/routing`.
 
 - [ ] **P-00 Preconditions and findings.** E and F `Done`. Grep and record in `plans/evidence/P/paths.md`: F's footer link config, F's `getPromiseFigures()` (`lib/ct/promise.ts`), the store-picker opener, G's search route and K's checkout consent links, L's account guard function, H's not-found call. Read the Next.js 16 documentation for `forbidden`, `unauthorized` and `authInterrupts` and the not-found status code behaviour; record in `PROJECT-FINDINGS.md`. Pick the env name for the site origin (add to `.env.example`). Add `.env.example` entries `CONTACT_WEBHOOK_URL=`, `CONTACT_WEBHOOK_TOKEN=`, `FEEDBACK_WEBHOOK_URL=` (no values). `npm run check` green. [SKILL: commercetools-storefront]
 - [ ] **P-01 Content layer.** `lib/content/localized.ts`, `blocks.ts`, `index.ts`, `renderTokens`, `lib/routes.ts` additions, `components/content/*` (`ContentPage`, `Blocks`, `FallbackNotice`, `EffectiveDate`, `DraftBanner`), messages `content.*`. Tests: `Locale without translation: fallback language is served and identified`, `fallback chain ends at en-US`, `blocks render semantic elements and no raw html`, `no dangerouslySetInnerHTML in content components`, `tokens are replaced from figures`, `tokens fall back when figures fail or time out`, `route helpers return stable paths`. 
-- [ ] **P-02 About page.** `content/about.ts`, route, metadata. Tests: `Editor publishes a correction: content change appears in the rendered page from the module only` (render, change fixture, render again), `Commerce tier degraded: About renders with commerce mocked to throw`, `Locale without translation: About shows the notice in de-DE when only English exists`, `about has one h1`.
+- [ ] **P-02 About page.** `content/about.ts`, route, metadata. Tests: `Editor publishes a correction: content change appears in the rendered page from the module only` (render, change fixture, render again), `Commerce tier degraded: About renders with commerce mocked to throw`, `Locale without translation: About shows the notice in en-CA when only the en-US text exists`, `about has one h1`.
 - [ ] **P-03 Policies.** `content/policies.ts` (five policies, drafts with placeholder text, effective dates), route with `generateStaticParams`, table of contents, `EffectiveDate`, `DraftBanner`. Tests: `every policy has an iso effective date no later than today in every locale`, `Version superseded: the date comes from the same object as the text`, `Policy not translated: fallback text and its own date are shown`, `policy slugs are stable` (snapshot of the slug list), `unknown policy slug is not found`, `Opened from checkout: policy page needs no session and sets no redirect`, `policy page has no commerce import beyond tokens`.
 - [ ] **P-04 FAQ page.** `content/faq.ts` (six topics, drafts), page, `FaqAccordion`, `?q=` handling, JSON-LD. Tests: `answers are present in the first response inside closed details`, `Deep link to one question: hash opens that answer`, `Deep link: q parameter renders that answer open on the server`, `other topics remain reachable`, `unknown question id is ignored`, `Answer not translated: fallback is served with a notice`, `json-ld lists every question`.
 - [ ] **P-05 FAQ feedback.** `app/api/faq-feedback/route.ts`, `FaqFeedback`. Tests: `Feedback collector unreachable: vote is discarded and nothing is shown`, `acknowledgement only after recorded true`, `unknown question id is 400`, `feedback is forwarded to the configured receiver`, `without a receiver it logs one line and answers 202`, `no personal data is logged`, `request times out after 3 seconds on the client`.
@@ -325,11 +325,11 @@ Common rules: test first; `npm run check` before ticking; commit `ws-p: P-0x sum
 - [ ] **P-07 Contact page and form.** Page, `ContactForm`, channels card, market selection, prefill. Tests: `Enquiry accepted downstream: confirmation names the channel and shows the reference`, `Routing unavailable: text is preserved and phone and email are offered`, `Chat script absent: no chat placeholder and no third-party script`, `Region without an office: default channels are shown`, `first invalid field gets focus`, `labels errors and aria-invalid are wired`, `button is disabled while sending`, `signed-in prefill does not overwrite typed text`.
 - [ ] **P-08 Journal content and listing.** `content/journal/*` (three drafts: tagged, untagged, withdrawn), registry, listing with filters, search, pagination, chips. Tests: `Filter matches nothing: states it and keeps the applied filters visible`, `removing one chip relaxes only that filter`, `all selected tags must match`, `search matches title and description`, `page beyond the last is clamped`, `withdrawn and unknown articles are not listed`, `fallback articles are marked`.
 - [ ] **P-09 Journal article page.** Route, metadata, JSON-LD, related block, withdrawn redirect, `generateStaticParams`. Tests: `Article withdrawn: redirects to its topic and serves no text`, `Article without tags: related block is omitted`, `related shows at most three published articles sharing a tag`, `metadata has title description canonical and article time`, `alternates list only locales with their own text`, `unknown slug is not found`, `article slugs are unique and valid`.
-- [ ] **P-10 Error component and files.** `ErrorPage`, the route files (replace the bare `error.tsx` and `not-found.tsx` shells that A created and that E styled minimally), the catch-all, `global-error` with inline dictionary, `forbidden.tsx` per P-00, messages `error.*`. Tests: `Address resolves to nothing: not found page has search and category links and no session read`, `Upstream fault: server error page offers retry and does not touch cookies`, `Upstream fault: retry calls reset`, `Expired session is not a refusal: account guard redirects to sign-in with the destination and renders no error page` (imports L's guard), `server error page shows only the digest never the message`, `global error dictionary has all three locales`, `unknown locale path renders the default-locale 404`, `error page imports nothing from lib/ct`. [SKILL: commercetools-storefront]
+- [ ] **P-10 Error component and files.** `ErrorPage`, the route files (replace the bare `error.tsx` and `not-found.tsx` shells that A created and that E styled minimally), the catch-all, `global-error` with inline dictionary, `forbidden.tsx` per P-00, messages `error.*`. Tests: `Address resolves to nothing: not found page has search and category links and no session read`, `Upstream fault: server error page offers retry and does not touch cookies`, `Upstream fault: retry calls reset`, `Expired session is not a refusal: account guard redirects to sign-in with the destination and renders no error page` (imports L's guard), `server error page shows only the digest never the message`, `global error dictionary has both locales`, `unknown locale path renders the default-locale 404`, `error page imports nothing from lib/ct`. [SKILL: commercetools-storefront]
 - [ ] **P-11 Unknown API paths.** `app/api/[...rest]/route.ts`. Tests: `unknown api path answers json 404 for every method`, `existing api routes are not shadowed` (call a known handler path through the router list in a test that lists `app/api` folders).
-- [ ] **P-12 Wiring.** F's footer link config: set hrefs for Shipping and returns, FAQ, Contact us, Our story, Journal, Privacy, Terms, Accessibility, Imprint using `lib/routes.ts`. K's consent text: policy links open in a new tab with `rel="noopener"`. Change **only** hrefs and `target`/`rel`. Tests: `footer links point at content routes`, `checkout consent links open in a new tab`. [SKILL: commercetools-storefront]
-- [ ] **P-13 SEO.** `app/sitemap.ts`, `app/robots.ts`. Tests: `sitemap lists content pages in three locales`, `withdrawn articles are not in the sitemap`, `robots disallows api account cart and checkout`.
-- [ ] **P-14 Messages, responsive, a11y, gates.** All keys of D11 plus every other key used, in three catalogues (identical key test from E); CSS per D12; `npm run check`; `npm run build` (content routes static, error routes present). Tests: `catalogues have the same content keys`, `no hard coded strings in content components`.
+- [ ] **P-12 Wiring.** F's footer link config: set hrefs for Shipping and returns, FAQ, Contact us, Our story, Journal, Privacy, Terms, Accessibility using `lib/routes.ts`. K's consent text: policy links open in a new tab with `rel="noopener"`. Change **only** hrefs and `target`/`rel`. Tests: `footer links point at content routes`, `checkout consent links open in a new tab`. [SKILL: commercetools-storefront]
+- [ ] **P-13 SEO.** `app/sitemap.ts`, `app/robots.ts`. Tests: `sitemap lists content pages in both locales`, `withdrawn articles are not in the sitemap`, `robots disallows api account cart and checkout`.
+- [ ] **P-14 Messages, responsive, a11y, gates.** All keys of D11 plus every other key used, in two catalogues (identical key test from E); CSS per D12; `npm run check`; `npm run build` (content routes static, error routes present). Tests: `catalogues have the same content keys`, `no hard coded strings in content components`.
 - [ ] **P-15 Browser and degraded-tier verification** (sections 6 and 7); evidence in `plans/evidence/P/`; owner rows; `STATUS.md` `Ready for review`.
 
 ## 5. Scenarios checklist
@@ -338,7 +338,7 @@ Common rules: test first; `npm run check` before ticking; commit `ws-p: P-0x sum
 
 - [ ] Editor publishes a correction: `about.test.tsx` `Editor publishes a correction: content change appears in the rendered page from the module only`. **Note**: "without a storefront deployment" is not possible with repository content; the module is the single seam and a CMS swap is Q-P-1. Mark this scenario `partial: content module only` and add the owner sign-off in SO-P2.
 - [ ] Commerce tier degraded: `about.test.tsx` `Commerce tier degraded: About renders with commerce mocked to throw`; recipe 6.9.
-- [ ] Locale without translation: `about.test.tsx` `Locale without translation: About shows the notice in de-DE when only English exists`.
+- [ ] Locale without translation: `about.test.tsx` `Locale without translation: About shows the notice in en-CA when only the en-US text exists`.
 
 `contact-us`:
 
@@ -375,14 +375,14 @@ Common rules: test first; `npm run check` before ticking; commit `ws-p: P-0x sum
 
 Base `http://localhost:3000`. Viewports 375x812 and 1440x900. Evidence `plans/evidence/P/<step>-<what>-<375|1440>.png` and `README.md`. Console without errors and no failed requests unless the step says a failure is expected (then it is named in the README). Start the mock receiver for steps 6.3 and 6.4: `cd storefront && node scripts/dev/mock-contact-receiver.mjs` and set `CONTACT_WEBHOOK_URL=http://127.0.0.1:4010/` in `.env.local`.
 
-1. **6.1 Footer tour.** On `/en-US` click each footer link (Shipping and returns, FAQ, Contact us, Our story, Journal, Privacy, Terms, Accessibility, Imprint): each lands on a real page with one `h1`, no 404. Repeat the four for `/de-DE` and `/en-GB` (German pages show the English-fallback notice where text is English).
+1. **6.1 Footer tour.** On `/en-US` click each footer link (Shipping and returns, FAQ, Contact us, Our story, Journal, Privacy, Terms, Accessibility): each lands on a real page with one `h1`, no 404. Repeat for `/en-CA` (Canada pages show the same text; delivery-only wording appears in the shipping page).
 2. **6.2 About and policies.** `/en-US/about`: snapshot shows headings and bands; `Find your store` opens the picker. `/en-US/policies/terms`: `Effective from <date>`, draft banner, table of contents links jump to headings. Screenshot at 375 and 1440.
 3. **6.3 Contact success.** `/en-US/contact`: fill all fields (`@example.com`), tick consent, submit: confirmation card shows `Reference MC-...` and the channel name. `list_network_requests` shows `POST /api/contact` 202. The receiver terminal printed the same reference and no message text appears in the dev server log.
 4. **6.4 Contact failure.** Set `CONTACT_WEBHOOK_URL=http://127.0.0.1:4010/?fail=1` (the receiver then answers 500), restart the dev server, and submit: the failed message appears, the fields keep their text, the phone and email links are present, the button is enabled again. Restore the normal URL, restart, and resubmit successfully. Submit empty: inline errors, focus on the first invalid field. Submit six times quickly: the sixth shows the wait message (429).
 5. **6.5 FAQ.** `/en-US/faq`: `evaluate_script` counts `details` elements and checks that every `details` has a non-empty answer in its `textContent` while closed (read `textContent`, not `innerText`, which hides closed content). Open `/en-US/faq#question-<id>`: that answer is open and in view; open `/en-US/faq?q=<id>`: open on load. Click `No` on an answer: thanks text; then block `/api/faq-feedback` (stub `fetch` to reject with `evaluate_script` before clicking): nothing is shown.
 6. **6.6 Policy from checkout.** Add a pod to the bag, `/en-US/checkout`, fill the address, click the Terms link in the consent text: it opens in a new tab (`list_pages` shows two pages); close it: the first tab still has address and selections.
 7. **6.7 Journal.** `/en-US/journal`: cards, tag chips. Apply two tags that have no common article: empty message with two removable chips; remove one chip: results appear. Open the untagged article: no `Keep reading` block. Open the withdrawn slug: you land on `/journal?tag=<topic>` (network shows 307) and the old text is nowhere. Metadata: `evaluate_script` reads `document.title` and `link[rel=canonical]`.
-8. **6.8 404.** `/en-US/does-not-exist`, `/de-DE/does-not-exist` and `/xx/foo`: localized 404 with shell, search form and category links; the document response status is 404 (`list_network_requests` and `get_network_request`); a search from the 404 page works. A product route with an unknown slug: same page and status; if status is 200 record it (D9). `/api/nothing` returns JSON 404.
+8. **6.8 404.** `/en-US/does-not-exist`, `/en-CA/does-not-exist` and `/xx/foo`: localized 404 with shell, search form and category links; the document response status is 404 (`list_network_requests` and `get_network_request`); a search from the 404 page works. A product route with an unknown slug: same page and status; if status is 200 record it (D9). `/api/nothing` returns JSON 404.
 9. **6.9 Server error and degraded commerce.** Start a second dev server on port 3002 with `CTP_API_URL=http://127.0.0.1:9` (separate env file, never committed): About, Contact, FAQ, every policy and the journal render fully; a commerce page (a listing) shows the localized server-error page with `Try again` and a reference, with the header and footer present; click `Try again` (still failing: the page stays, no loop); the cart count in the header is unchanged from before.
 10. **6.10 Expired session.** Signed out, open `/en-US/account/orders`: you land on sign-in with the destination preserved (URL carries `next`), **not** on a forbidden page.
 11. **6.11 Responsive, keyboard, audit.** Resize 1080, 900, 820, 700, 520, 375 on contact, FAQ, journal and 404: no horizontal scroll (`scrollWidth <= innerWidth`), contact one column under 900. Keyboard: Tab through the contact form and a FAQ item (Enter toggles, focus ring visible). `lighthouse_audit` for About, Contact, FAQ, Terms, Journal and the 404 page: accessibility, SEO and best practices at least 95 (record any lower score with the reason).
@@ -398,33 +398,33 @@ Base `http://localhost:3000`. Viewports 375x812 and 1440x900. Evidence `plans/ev
 
 | ID | Who | When | Steps | Expected | Status |
 | --- | --- | --- | --- | --- | --- |
-| SO-01 (existing) | Owner or legal | Before release | Supply or approve Impressum, privacy policy, terms of sale, cookie statement and returns text for US, DE and GB in `storefront/content/policies.ts`; set `isDraft: false` per policy. | Final text; draft banner gone | TODO |
+| SO-01 (existing) | Owner or legal | Before release | Supply or approve privacy policy, terms of sale, cookie statement and returns text for the US and Canada (neutral drafts; no Impressum, no VAT text) in `storefront/content/policies.ts`; set `isDraft: false` per policy. | Final text; draft banner gone | TODO |
 | SO-P1 | Owner | Before release | These pages have no design. Compare the screenshots in `plans/evidence/P/` with your intent: About, Contact, FAQ, a policy, Journal list and article, 404, 500. | Approval or change list | TODO |
 | SO-P2 | Owner | Before release | Read `content/about.ts` and `content/faq.ts` (all answers). Approve or rewrite; confirm no claim (certification, sourcing, recycling) is untrue. | Approved copy | TODO |
-| SO-P3 | Owner | Before release | Provide customer-care email, phone, opening hours and reply time per market (US, DE, GB) for `content/contact.ts` (current values are placeholders on the `.example` domain). | Real channels in the file | TODO |
+| SO-P3 | Owner | Before release | Provide customer-care email, phone, opening hours and reply time per market (US, Canada) for `content/contact.ts` (current values are placeholders on the `.example` domain). | Real channels in the file | TODO |
 | SO-P4 | Owner and legal | Before release | Decide whether a cookie or consent banner is needed (no analytics or third-party scripts today; the session and market cookies are essential). Record the decision in `QUESTIONS.md` Q-P-6. | Decision recorded | TODO |
 | SO-P5 | Owner | Before release | Replace the three drafted journal articles with real ones or remove them; supply images. | Real articles | TODO |
 | OA-P1 | Owner | Before the contact form can work outside tests | 1. Choose where enquiries go (a helpdesk, a Slack or Teams incoming webhook, a form service). 2. Put its URL in `storefront/.env.local` and the host's settings as `CONTACT_WEBHOOK_URL`; token (if any) as `CONTACT_WEBHOOK_TOKEN`. 3. Optionally the same for FAQ feedback: `FEEDBACK_WEBHOOK_URL`. 4. Tell the team the URL is set (never paste it in chat). | A real submit shows a confirmation and the message arrives | TODO |
 | M-P-01 | Owner | After OA-P1 | Send a real enquiry from the deployed site on a phone; read it at the receiver; note the reference. | Message arrives with the same reference shown on screen | TODO |
 | M-P-02 | Owner or accessibility reviewer | After P-15 | Read Contact, FAQ and a policy with VoiceOver (macOS) or TalkBack: headings, form errors, details toggles, fallback notice. | Everything announced sensibly | TODO |
-| M-P-03 | German-speaking reviewer | Before release | Read the German strings and the German policy and imprint text. | Natural wording; imprint complete | TODO |
+| M-P-03 | Removed | n/a | German review no longer applies: Germany and German are dropped (D-030). | n/a | WAIVED |
 
 ## 9. Questions (also in `plans/notes/questions-P.md`)
 
 | ID | Question | Default | Blocks |
 | --- | --- | --- | --- |
 | Q-P-1 | Where does page content live (the templates say CMS, with edits published without a deployment)? | In repository content modules behind one seam; a correction needs a deploy | no |
-| Q-P-2 | Which pages and routes exist (names, slugs)? | `/about`, `/contact`, `/faq`, `/policies/{shipping-returns, terms, privacy, accessibility, imprint}`, `/journal` | no |
+| Q-P-2 | Which pages and routes exist (names, slugs)? | `/about`, `/contact`, `/faq`, `/policies/{shipping-returns, terms, privacy, accessibility}`, `/journal` | no |
 | Q-P-3 | Where do contact enquiries go and who answers? | A webhook receiver chosen by the owner (OA-P1); until then the form reports "not sent" honestly | live contact |
 | Q-P-4 | Rate limiting on serverless is per instance | In-memory limit now; a shared store or the host's WAF in Q's security review | no |
 | Q-P-5 | Does a signed-in shopper's enquiry carry the customer id? | No; only prefilled name and email that the shopper can edit | no |
 | Q-P-6 | Cookie or consent banner and chat widget? | Neither; no third-party scripts; SO-P4 | release |
 | Q-P-7 | Who owns FAQ feedback ("unhelpful" votes)? | The server log is the collector; owner names a receiver and an owner later | no |
 | Q-P-8 | Which statements on About are legally controlled (certifications, sourcing)? | None are claimed; owner adds with sign-off | release |
-| Q-P-9 | Is an imprint required (German seller)? Which entity data? | Page exists with placeholders; owner and legal confirm | release |
-| Q-P-10 | Do policies vary by market or only by language? | By language (locale); US and GB share English text | release |
+| Q-P-9 | Removed (D-030): no German seller, no imprint page | None | no |
+| Q-P-10 | Do policies vary by market or only by language? | By language (locale); en-US and en-CA share English text; delivery wording differs by market via tokens | release |
 | Q-P-11 | Re-consent for subscribers after a material terms change, and where is it recorded? | Not built; out of scope | no |
-| Q-P-12 | Retired product linked from an old email: hard 404 or soft redirect to the category? | Hard 404 page with search and category links | no |
+| Q-P-12 | Retired product linked from an old bookmark or page: hard 404 or soft redirect to the category? | Hard 404 page with search and category links | no |
 | Q-P-13 | Name of the blog section (spec says blog and resources) | "Journal" at `/journal` | no |
 | Q-P-14 | Where are superseded policy versions kept so the text in force on an order date can be produced? | Git history; no public archive | no |
 | Q-P-15 | Newsletter sign-up (footer) needs a receiver and a route not in the route table | Not built here; reported to the lead (F decides) | no |

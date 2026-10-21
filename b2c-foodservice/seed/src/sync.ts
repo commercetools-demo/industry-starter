@@ -129,15 +129,12 @@ export function planDiscountUpdate(kind: 'product-discounts' | 'cart-discounts',
   return out;
 }
 
-/** Review text, rating and state (the target and key never change). A state is compared by key. */
-export function planReviewUpdate(existing: Res, draft: { rating?: number; title?: string; text?: string; state?: { key?: string } }, keyOf: KeyOf): Action[] {
+/** Review text and rating (the target and key never change). Reviews carry no state (D-037). */
+export function planReviewUpdate(existing: Res, draft: { rating?: number; title?: string; text?: string }, _keyOf?: KeyOf): Action[] {
   const out: Action[] = [];
   if (draft.rating !== undefined && existing.rating !== draft.rating) out.push({ action: 'setRating', rating: draft.rating });
   if (draft.title !== undefined && existing.title !== draft.title) out.push({ action: 'setTitle', title: draft.title });
   if (draft.text !== undefined && existing.text !== draft.text) out.push({ action: 'setText', text: draft.text });
-  const haveState = existing.state as Ref;
-  const haveKey = haveState ? (haveState.key ?? keyOf('state', haveState.id ?? '')) : undefined;
-  if (draft.state?.key && haveKey !== draft.state.key) out.push({ action: 'setState', state: { typeId: 'state', key: draft.state.key } });
   return out;
 }
 

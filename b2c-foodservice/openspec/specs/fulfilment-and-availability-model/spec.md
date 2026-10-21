@@ -5,31 +5,36 @@
 
 ## Purpose
 
-Malva Coffee sells online for delivery, for collection in a store, and by subscription. This spec states how those three are represented in commercetools so the design specs (`design-product-detail-page`, `design-cart-page`, `design-checkout-page`, `design-account-area`) have one data model behind them. In-store selling is out of scope; stores appear here only as collection points and stock holders.
+Malva Coffee sells in the United States and Canada, online for standard-carrier delivery, for collection in one of six New York City stores (US market only), and by subscription. This spec states how those three are represented in commercetools so the design specs (`design-product-detail-page`, `design-cart-page`, `design-checkout-page`, `design-account-area`) have one data model behind them. In-store selling is out of scope; stores appear here only as collection points and stock holders.
 
 ## Requirements
 
 ### Requirement: Stores are supply channels
 
-The system SHALL represent each collection store as a commercetools channel with role `InventorySupply`, a key (`mcf-store-<city>`), a localized name, an address, geo location, opening hours and phone held in channel custom fields, and the country it serves. Only these channels appear in the store picker.
+The system SHALL represent each collection store as a commercetools channel with role `InventorySupply`, a key (`mcf-store-<slug>`), a localized name, an invented New York City address, geo location, opening hours and phone held in channel custom fields. There are exactly six, all in New York City (D-035), and all serve the US market. Only these channels appear in the store picker.
 
 #### Scenario: Store list
 - **GIVEN** channels with and without `InventorySupply`
 - **WHEN** the store picker loads
-- **THEN** only `InventorySupply` channels appear, nearest first
+- **THEN** only the six `InventorySupply` channels appear, nearest first
+
+#### Scenario: Canada has no collection
+- **GIVEN** the Canada market is active
+- **WHEN** a page would show the store picker, a Collect option or a collection filter
+- **THEN** it is hidden or replaced by a note that collection is available in the US market only, and the cart API rejects a collect line
 
 ### Requirement: Availability per store
 
-The system SHALL take collection availability from inventory entries on the store's supply channel, and shipping availability from the entry without a channel (the online warehouse). A variant is collectable at a store only when that store's entry has available quantity greater than zero; low stock is a configured threshold.
+The system SHALL take collection availability from inventory entries on the store's supply channel, and delivery availability from the entry without a channel (the online warehouse). A variant is collectable at a store only when that store's entry has available quantity greater than zero; low stock is a configured threshold.
 
 #### Scenario: Collect at an empty store
 - **GIVEN** a variant with stock online but none at the chosen store
 - **WHEN** the shopper selects Collect
-- **THEN** it is shown unavailable for collection and still available to ship
+- **THEN** it is shown unavailable for collection and still available for delivery
 
 ### Requirement: Fulfilment per line
 
-The system SHALL record each cart line's fulfilment as one of `collect`, `ship` or `subscribe`: collect lines carry the store as `supplyChannel`; subscribe lines carry `recurrenceInfo`; ship lines carry neither. A line custom field `fulfilment` mirrors the choice so the UI and reports read one value.
+The system SHALL record each cart line's fulfilment as one of `collect`, `delivery` or `subscribe`: collect lines carry the store as `supplyChannel`; subscribe lines carry `recurrenceInfo`; delivery lines carry neither. A line custom field `fulfilment` mirrors the choice so the UI and reports read one value.
 
 #### Scenario: Collect line
 - **GIVEN** a shopper reserves a capsule box for collection at a store
@@ -38,12 +43,19 @@ The system SHALL record each cart line's fulfilment as one of `collect`, `ship` 
 
 ### Requirement: Mixed bags
 
-The system SHALL allow one bag to hold collect, ship and subscribe lines, and SHALL place them as one order using commercetools multiple shipping (`shippingMode: Multiple`) with one shipping method per fulfilment group (a "Collect in store" method with the store as the target address, and delivery methods for shipped lines). Whether the hosted Checkout supports this is verified in workstream K (spike K-01); if it does not, the fallback (recorded in `plans/DECISIONS.md` when chosen) is one order per fulfilment group, paid in sequence.
+The system SHALL allow one bag to hold collect, delivery and subscribe lines (D-033; "no mixed bags" is not an option), and SHALL place them as one order using commercetools multiple shipping (`shippingMode: Multiple`) with one shipping method per fulfilment cluster (a "Collect in store" method with the store as the target address, and the standard-carrier method for delivery lines). The mechanism inside the complete hosted Checkout (D-039) and the fallback if it cannot represent this (recorded in `plans/DECISIONS.md` when chosen) are decided by workstream K (spike K-01), never by dropping mixed bags.
+
+The cart page, cart drawer, checkout summary, confirmation and account orders SHALL show each line clearly marked inside its fulfilment cluster ("Collect at {store}", "Delivery", "Subscription") using the line's `fulfilment` field, as specified in `design-cart-page` and `design-cart-drawer`.
+
+#### Scenario: Lines are marked by cluster
+- **GIVEN** a bag with a machine for delivery, capsules for collection and a subscribed coffee
+- **WHEN** the cart, drawer or order summary renders
+- **THEN** each line appears in exactly one cluster whose heading and per-line chip match its `fulfilment` value
 
 #### Scenario: Mixed order
 - **GIVEN** a bag with a machine to ship and capsules to collect
 - **WHEN** the shopper pays
-- **THEN** one payment succeeds and the order shows both groups, or two linked orders exist under the documented fallback
+- **THEN** one payment succeeds and the order shows both clusters, or two linked orders exist under the documented fallback
 
 ### Requirement: Order states for collection
 
@@ -65,18 +77,23 @@ The system SHALL offer subscribe only where a variant has a recurring price for 
 
 ### Requirement: Shipping by market
 
-The system SHALL offer shipping methods only for the shopper's country and currency, with a free-shipping threshold per market read from shipping rate tiers, not from front-end constants.
+The system SHALL offer the single standard-carrier shipping method (D-034; no Express, no timed slots) for the shopper's country and currency, with a free-shipping threshold per market (US in USD, Canada in CAD) read from shipping rate tiers, not from front-end constants.
 
 #### Scenario: Threshold per market
-- **GIVEN** different thresholds for US, DE and GB
+- **GIVEN** different thresholds for US and Canada
 - **WHEN** the cart page renders in each market
 - **THEN** the progress message uses that market's threshold and currency
 
 ### Requirement: Tax by market
 
-The system SHALL use the platform tax mode with tax categories for coffee and food (reduced where the market has it) and for machines and accessories (standard), tax-inclusive prices in DE and GB and tax-exclusive prices in the US, and country-level fallback rates so a US address without a state rate still resolves (`changeCountryTaxRateFallbackEnabled`).
+The system SHALL use the platform tax mode with tax categories for coffee and food (US 0%, Canada 0% zero-rated) and for machines and accessories (US 8% with NY 8.875%, Canada 5% GST), all as defaults accepted in D-036. Prices are tax-exclusive in both the US and Canada and tax is added and shown as such. Provincial tax (HST and PST) is not modelled in Canada and is noted for an accountant. Country-level fallback rates apply so an address without a state rate still resolves (`changeCountryTaxRateFallbackEnabled`).
 
 #### Scenario: US address without state rate
 - **GIVEN** a US shipping address whose state has no rate
 - **WHEN** the cart is priced
 - **THEN** the country rate is applied and the cart has a tax portion
+
+#### Scenario: Canadian address
+- **GIVEN** a Canadian shipping address in any province
+- **WHEN** the cart is priced
+- **THEN** a machine carries 5% GST, food carries 0%, and no provincial tax is added

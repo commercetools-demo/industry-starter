@@ -48,7 +48,7 @@
 Replace the command's file. Add only what D's mappers produce; later workstreams extend (append, never rename).
 
 ```ts
-export type LocaleKey = 'en-US' | 'de-DE' | 'en-GB';
+export type LocaleKey = 'en-US' | 'en-CA';
 
 export interface Money { centAmount: number; currencyCode: string }              // integer minor units
 export interface Price { value: Money; discounted?: Money; discountName?: string }   // discounted = the price to pay when present; discountName only when the search call expanded 'masterVariant.price.discounted.discount' and 'variants[*].price.discounted.discount'
@@ -92,10 +92,10 @@ Rule: components never import from `@commercetools/*`; `Product.rating` is the o
 ```ts
 export function formatMoney(centAmount: number, currencyCode: string, locale?: string): string
 // Intl.NumberFormat(locale, { style: 'currency', currency }) ; divisor = 10 ** resolvedOptions().maximumFractionDigits
-// 490, 'EUR', 'de-DE' => '4,90 €' (a NO-BREAK SPACE before the euro sign; tests must use  ) ; never '5'
+// 1999, 'CAD', 'en-CA' => '$19.99'; 1999, 'USD', 'en-US' => '$19.99'; 495, 'USD' => '$4.95' (never '$5')
 export function roundRating(average: number): number          // Math.round(average * 10) / 10 ; 4.58333 -> 4.6 ; display only
 export function getLocalizedString(obj: Record<string, string> | undefined, locale: string): string
-// order: exact key; same-language key (first key whose lower-cased prefix before '-' equals the locale's, so 'en-GB' falls back to 'en-US'); DEFAULT_LOCALE key; first value; ''
+// order: exact key; same-language key (first key whose lower-cased prefix before '-' equals the locale's, so 'en-CA' falls back to 'en-US' when a value has no en-CA key); DEFAULT_LOCALE key; first value; ''
 export function isLocaleKey(value: unknown): value is LocaleKey
 export function marketForLocale(locale: string): CountryConfig           // falls back to DEFAULT_LOCALE
 export function marketForCountry(country: string): CountryConfig | undefined
@@ -269,7 +269,7 @@ Read hooks (written later) return safe defaults and never throw; mutation helper
 | `GET /api/dev/session` | 200 `{"session":{...the ten fields that are set...},"market":{"country":"US","currency":"USD","locale":"en-US"}}` (never the token) |
 | `GET /api/dev/session?simulate=503` | 503 `{"error":{"code":"upstream_unavailable","message":"..."}}` (throws `{statusCode:503}` through `handle`) |
 | `GET /api/dev/session?simulate=409` or `=404` or `=429` | 409 `conflict` / 404 `not_found` / 429 `rate_limited` |
-| `POST /api/dev/session` body `{"market":"de-DE"}` | 200 `{"ok":true}` + `Set-Cookie` session (market changed by `changeMarket`, `cartId` dropped) + market cookie |
+| `POST /api/dev/session` body `{"market":"en-CA"}` | 200 `{"ok":true}` + `Set-Cookie` session (market changed by `changeMarket`, `cartId` dropped) + market cookie |
 | `POST /api/dev/session` body `{"cartId":"abc","customerId":"c1"}` | 200 `{"ok":true}` + session cookie with those fields (dev only) |
 | any other body key | ignored |
 
@@ -284,7 +284,7 @@ Run `cd storefront && npm run check` before ticking.
 - [ ] **D-01 Types and utilities** `[SKILL: commercetools-storefront]`
   - Files: `lib/types.ts`, `lib/utils.ts`, `lib/utils.test.ts`.
   - Implement 3.1 and 3.2. Keep A's `COUNTRY_CONFIG` and `LOCALE_COOKIE` untouched.
-  - Tests (spec: Price display): `Price display: 490 EUR in de-DE renders 4,90 € and never 5` (compare with ` `), `Price display: 1999 USD in en-US renders $19.99`, `Price display: GBP in en-GB renders £3.95 for 395`, `Rating rounds to one decimal for display only: 4.58333 gives 4.6`, `getLocalizedString exact match`, `getLocalizedString falls back to the same language`, `getLocalizedString falls back to the default locale then the first value`, `getLocalizedString of undefined is empty`, `marketForLocale falls back to en-US`.
+  - Tests (spec: Price display): `Price display: 1999 CAD in en-CA renders $19.99`, `Price display: 1999 USD in en-US renders $19.99`, `Price display: 495 USD renders $4.95 and never $5`, `Rating rounds to one decimal for display only: 4.58333 gives 4.6`, `getLocalizedString exact match`, `getLocalizedString falls back to the same language`, `getLocalizedString falls back to the default locale then the first value`, `getLocalizedString of undefined is empty`, `marketForLocale falls back to en-US`.
 
 - [ ] **D-02 Errors and handler wrapper**
   - Files: `lib/errors.ts`, `lib/api.ts`, tests next to them.
@@ -299,7 +299,7 @@ Run `cd storefront && npm run check` before ticking.
 - [ ] **D-04 Cache keys, public cache, project markets** `[SKILL: commercetools-storefront]`
   - Files: `lib/cache-keys.ts`, `lib/ct/public-cache.ts`, `lib/ct/project.ts`, tests.
   - Implement 3.5. In tests mock `next/cache` so `unstable_cache` returns `fn` and records `(keys, opts)`; mock `@/lib/ct/client` for the project read.
-  - Tests (spec: Caching; Two shoppers): `Base keys KEY_CART, KEY_CART_COUNT and KEY_ACCOUNT are exported strings (other workstreams import them)`, `Keys of per-person data contain the customer id`, `Two customers never share a key`, `Market-scoped keys contain country and currency`, `cachedPublic sets the TTL and the tag of its kind`, `Only public kinds can be cached (kind is one of the five TTL keys)`, `getMarkets keeps only markets the project supports` (project with `countries ['US','DE']` drops GB), `getMarkets matches languages case-insensitively`.
+  - Tests (spec: Caching; Two shoppers): `Base keys KEY_CART, KEY_CART_COUNT and KEY_ACCOUNT are exported strings (other workstreams import them)`, `Keys of per-person data contain the customer id`, `Two customers never share a key`, `Market-scoped keys contain country and currency`, `cachedPublic sets the TTL and the tag of its kind`, `Only public kinds can be cached (kind is one of the five TTL keys)`, `getMarkets keeps only markets the project supports` (project with `countries ['US']` drops CA), `getMarkets matches languages case-insensitively`.
 
 - [ ] **D-05 409 retry** `[SKILL: commercetools-storefront]`
   - Files: `lib/ct/retry.ts`, `lib/ct/retry.test.ts`.
@@ -346,7 +346,7 @@ Run `cd storefront && npm run check` before ticking.
 
 - [ ] Client component needs data: `fetchJson ...` tests (D-08) plus the architecture test `Components do not import from lib/ct...` (D-09); `useCart()` itself is tested in I
 - [ ] Raw fetch to commercetools: `Raw fetch to commercetools: no fetch call targets a commercetools host` (D-09)
-- [ ] Price display: `Price display: 490 EUR in de-DE renders 4,90 € and never 5` (D-01)
+- [ ] Price display: `Price display: 495 USD renders $4.95 and never $5` (D-01)
 - [ ] Tampered cookie: `Tampered cookie: an invalid signature gives an empty session and no error` (D-03)
 - [ ] Market change: `Market change: country, currency and locale change together and cartId is reset` (D-03)
 - [ ] Unauthenticated account call: `Unauthenticated account call: requireCustomer yields 401 with no data and no reason` (D-02); the real `/api/orders` assertion is in L, same helper
@@ -366,7 +366,7 @@ Load the tools with ToolSearch first. Evidence in `plans/evidence/D/`.
 1. `cd storefront && npm run dev` (background). Resize to 1440x900.
 2. `navigate_page` to `http://localhost:3000/api/dev/session`. Expect JSON with `session: {}` and `market` `en-US/USD/US`. Save `dev-session-initial.json`. `evaluate_script`: `document.cookie` must not contain `malva-session` (proves HttpOnly).
 3. `evaluate_script`: `await fetch('/api/dev/session',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cartId:'abc',customerId:'c1'})}).then(r=>r.json())` returns `{ok:true}`. Reload `/api/dev/session`: `session.cartId === 'abc'`. In `list_network_requests` open the POST (`get_network_request`) and confirm `Set-Cookie: malva-session=...; HttpOnly; SameSite=Lax; Max-Age=2592000; Path=/` (Secure is absent in dev). Save the header line with the cookie **value removed** as `set-cookie-flags.txt`.
-4. POST `{"market":"de-DE"}`; GET again: `market` is `de-DE/EUR/DE`, `cartId` is gone, `customerId` is still `c1`. Screenshot of each JSON page at 1440 (`D-session-market-1440.png`); the pages are JSON so the 375 check is one screenshot `D-session-375.png`.
+4. POST `{"market":"en-CA"}`; GET again: `market` is `en-CA/CAD/CA`, `cartId` is gone, `customerId` is still `c1`. Screenshot of each JSON page at 1440 (`D-session-market-1440.png`); the pages are JSON so the 375 check is one screenshot `D-session-375.png`.
 5. Tampered cookie (Bash, not the browser): `curl -s -H 'Cookie: malva-session=garbage' http://localhost:3000/api/dev/session` returns `session: {}` and HTTP 200. Save `tampered.txt`.
 6. 5xx: `navigate_page` to `http://localhost:3000/api/dev/session?simulate=503`. Expect 503 and exactly `{"error":{"code":"upstream_unavailable","message":"..."}}`; the dev-server terminal shows one JSON log line with `correlationId` and **no** body or stack in the response. Repeat with `simulate=409`.
 7. `list_console_messages`: no errors; `list_network_requests`: only the expected 503/409 are non-2xx.
@@ -376,7 +376,7 @@ Load the tools with ToolSearch first. Evidence in `plans/evidence/D/`.
 ## 7. Self-verification with data
 
 - `npm run test:live` (read-only probe, D-10) is the data read-back for D. Compare against section 3: where the correlation id lives, whether `reviewRatingStatistics` and product-level `attributes` appear on a projection, whether a scoped `price` is present.
-- With the commercetools MCP (OA-06): `get project` for countries/currencies/languages (must be US/DE/GB, USD/EUR/GBP, en-US/en-GB/de-DE after workstream B); `query products limit 1` after C. Without MCP: `cd ../seed && npm run verify`.
+- With the commercetools MCP server `food-service` (OA-06, reads only): `get project` for countries/currencies/languages (must be US/CA, USD/CAD, en-US/en-CA after workstream B or owner action OA-A-b); `query products limit 1` after C. Without MCP: `cd ../seed && npm run verify`.
 - Anything that differs from the plan: dated row in `plans/PROJECT-FINDINGS.md`, then tell the lead. Never change a type of section 3.1 silently; other workstreams import it.
 
 ## 8. Manual testing and owner items
@@ -408,7 +408,7 @@ Full rows in `plans/notes/todo-D.md`.
 | Q-D-13 | `getLocalizedString` fallback order. | exact, same language, `en-US`, first value | no |
 | Q-D-14 | Server cache TTLs. | project 300 s, categories 60, channels 60, shipping methods 60, recurrence policies 300 (skill table) | no |
 | Q-D-15 | 409 retry policy. | One retry after re-reading, no delay; second 409 is `conflict` 409 | no |
-| Q-D-16 | Currencies without two decimals. | `formatMoney` takes the digit count from `Intl` (only USD, EUR, GBP are used, all 2) | no |
+| Q-D-16 | Currencies without two decimals. | `formatMoney` takes the digit count from `Intl` (only USD and CAD are used, both 2) | no |
 
 Also in `plans/notes/questions-D.md`.
 

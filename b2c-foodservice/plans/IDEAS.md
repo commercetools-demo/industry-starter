@@ -9,3 +9,7 @@
 - Machine and capsule "starter bundles" as one product.
 - Store pages with local events and live opening hours.
 - Gift cards.
+- French for the Canada market (`fr-CA`); provincial tax (HST/PST) for Canada (D-030, D-036).
+- Transactional email (order confirmation, password reset, email verification, subscription reminders) once an email provider is chosen (D-032).
+- Review moderation (D-037 removed it).
+- Collection in Canada once Canadian stores exist (D-035).

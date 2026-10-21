@@ -4,7 +4,7 @@ import type { ShoppingListDraft } from '@commercetools/platform-sdk';
 import { K, MARKETS, ls, type Country } from './base';
 import { productByCode } from './products';
 
-/** Six synthetic demo customers (SEED-PLAN section 13), two per market. Every address is invented. */
+/** Six synthetic demo customers (SEED-PLAN section 13, D-030): four in the US, two in Canada. Every address is invented. */
 export interface CustomerDef {
   key: string;
   email: string;
@@ -17,10 +17,10 @@ export interface CustomerDef {
 export const CUSTOMERS: CustomerDef[] = [
   { key: 'mcf-customer-maya', email: 'maya.okonkwo@example.com', firstName: 'Maya', lastName: 'Okonkwo', country: 'US', street: { streetName: 'Example Street', streetNumber: '100', postalCode: '10012', city: 'New York', state: 'NY' } },
   { key: 'mcf-customer-liam', email: 'liam.carter@example.com', firstName: 'Liam', lastName: 'Carter', country: 'US', street: { streetName: 'Sample Avenue', streetNumber: '25', postalCode: '94110', city: 'San Francisco', state: 'CA' } },
-  { key: 'mcf-customer-anna', email: 'anna.schneider@example.com', firstName: 'Anna', lastName: 'Schneider', country: 'DE', street: { streetName: 'Beispielstraße', streetNumber: '12', postalCode: '10115', city: 'Berlin' } },
-  { key: 'mcf-customer-jonas', email: 'jonas.weber@example.com', firstName: 'Jonas', lastName: 'Weber', country: 'DE', street: { streetName: 'Musterweg', streetNumber: '7', postalCode: '80801', city: 'München' } },
-  { key: 'mcf-customer-emma', email: 'emma.clarke@example.com', firstName: 'Emma', lastName: 'Clarke', country: 'GB', street: { streetName: 'Sample Road', streetNumber: '31', postalCode: 'W1D 3QB', city: 'London' } },
-  { key: 'mcf-customer-oliver', email: 'oliver.hughes@example.com', firstName: 'Oliver', lastName: 'Hughes', country: 'GB', street: { streetName: 'Example Close', streetNumber: '4', postalCode: 'M4 1HN', city: 'Manchester' } },
+  { key: 'mcf-customer-priya', email: 'priya.nair@example.com', firstName: 'Priya', lastName: 'Nair', country: 'CA', street: { streetName: 'Example Street', streetNumber: '88', postalCode: 'M5V 2T6', city: 'Toronto', state: 'ON' } },
+  { key: 'mcf-customer-lucas', email: 'lucas.tremblay@example.com', firstName: 'Lucas', lastName: 'Tremblay', country: 'CA', street: { streetName: 'Sample Avenue', streetNumber: '14', postalCode: 'V6B 1A1', city: 'Vancouver', state: 'BC' } },
+  { key: 'mcf-customer-ava', email: 'ava.mackenzie@example.com', firstName: 'Ava', lastName: 'MacKenzie', country: 'CA', street: { streetName: 'Example Road', streetNumber: '301', postalCode: 'H2Y 1C6', city: 'Montreal', state: 'QC' } },
+  { key: 'mcf-customer-noah', email: 'noah.patel@example.com', firstName: 'Noah', lastName: 'Patel', country: 'US', street: { streetName: 'Sample Boulevard', streetNumber: '9', postalCode: '60614', city: 'Chicago', state: 'IL' } },
 ];
 
 export const customerDraft = (c: CustomerDef, password: string): Record<string, unknown> => {
@@ -34,8 +34,8 @@ export const customerDraft = (c: CustomerDef, password: string): Record<string, 
 /** Saved-items list of Maya (the "saved items" feature of the account area). Line items use SKUs, so they resolve to the seeded variants. */
 export const shoppingListDraft = (): ShoppingListDraft => ({
   key: K.savedMaya,
-  name: ls('Saved items', 'Gemerkte Artikel'),
-  slug: ls('saved-items-maya', 'gemerkte-artikel-maya'),
+  name: ls('Saved items'),
+  slug: ls('saved-items-maya'),
   customer: { typeId: 'customer', key: 'mcf-customer-maya' },
   lineItems: ['POD-EMBER', 'COF-HOUSE', 'MAC-POD1'].map((code) => ({ sku: productByCode(code).variants[0]?.sku as string, quantity: 1 })),
 });

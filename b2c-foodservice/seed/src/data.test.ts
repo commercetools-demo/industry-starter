@@ -36,7 +36,7 @@ describe('seed data (SEED-PLAN)', () => {
     expect(new Set(allVariants().map((v) => v.variant.sku)).size).toBe(allVariants().length);
   });
 
-  it('names, descriptions and slugs exist in en-US, en-GB and de-DE, slugs are unique per locale', () => {
+  it('names, descriptions and slugs exist in en-US and en-CA, slugs are unique per locale', () => {
     for (const p of PRODUCTS) {
       for (const l of LANGUAGES) {
         expect(p.name[l], `${p.key} name ${l}`).toBeTruthy();
@@ -45,19 +45,17 @@ describe('seed data (SEED-PLAN)', () => {
       }
     }
     for (const l of LANGUAGES) expect(new Set(PRODUCTS.map((p) => p.slug[l])).size, `slugs ${l}`).toBe(PRODUCTS.length);
-    // British and American spelling differ, German is German
+    // Canadian and American spelling differ
     const pod = PRODUCTS.find((p) => p.code === 'POD-EMBER');
     expect(pod?.description['en-US']).toContain('flavor');
-    expect(pod?.description['en-GB']).toContain('flavour');
-    expect(pod?.description['de-DE']).toContain('Kompatibel mit Nespresso Original Maschinen');
+    expect(pod?.description['en-CA']).toContain('flavour');
   });
 
   it('pods are described as compatible with Nespresso Original or Vertuo and the brand is never a product name', () => {
     for (const p of PRODUCTS.filter((x) => x.kind === 'pods')) {
       const sys = p.common.system === 'original' ? 'Original' : 'Vertuo';
       expect(p.description['en-US']).toContain(`Compatible with Nespresso ${sys} machines`);
-      expect(p.description['en-GB']).toContain(`Compatible with Nespresso ${sys} machines`);
-      expect(p.description['de-DE']).toContain(`Kompatibel mit Nespresso ${sys} Maschinen`);
+      expect(p.description['en-CA']).toContain(`Compatible with Nespresso ${sys} machines`);
     }
     for (const p of PRODUCTS) for (const l of LANGUAGES) expect(p.name[l], p.key).not.toMatch(/nespresso/i);
     for (const k of categoryDrafts()) expect(JSON.stringify(k.name)).not.toMatch(/nespresso/i);
@@ -74,43 +72,52 @@ describe('seed data (SEED-PLAN)', () => {
     expect(CONTRACT_KEYS).toEqual(expect.arrayContaining(typeDrafts.map((t) => t.key)));
   });
 
-  it('tax categories follow the plan: food 0/7/0, standard 8 (NY 8.875) / 19 / 20; US exclusive, DE and GB inclusive', () => {
+  it('tax categories follow D-036: US food 0 / standard 8 (NY 8.875), Canada food 0 / GST 5 as country-level rates; all tax-exclusive', () => {
     const rates = (key: string) => taxCategoryDrafts.find((t) => t.key === key)?.rates ?? [];
     const food = rates('mcf-tax-food');
-    expect(food.map((r) => [r.country, r.amount])).toEqual([['US', 0], ['DE', 0.07], ['GB', 0]]);
+    expect(food.map((r) => [r.country, r.amount])).toEqual([['US', 0], ['CA', 0]]);
     const std = rates('mcf-tax-standard');
     expect(std.find((r) => r.country === 'US' && !r.state)?.amount).toBe(0.08);
     expect(std.find((r) => r.state === 'NY')?.amount).toBe(0.08875);
-    expect(std.find((r) => r.country === 'DE')?.amount).toBe(0.19);
-    expect(std.find((r) => r.country === 'GB')?.amount).toBe(0.2);
-    for (const r of [...food, ...std]) expect(r.includedInPrice).toBe(MARKETS[r.country as 'US' | 'DE' | 'GB'].taxIncluded);
+    const ca = std.filter((r) => r.country === 'CA');
+    expect(ca).toHaveLength(1);
+    expect(ca[0]?.amount).toBe(0.05);
+    expect(ca[0]?.state).toBeUndefined(); // country-level: the fallback serves every province
+    for (const r of [...food, ...std]) expect(r.includedInPrice).toBe(MARKETS[r.country as 'US' | 'CA'].taxIncluded);
   });
 
-  it('three zones and three shipping methods with a rate per currency; free-above tiers on standard', () => {
-    expect(zoneDrafts.map((z) => z.key)).toEqual(['mcf-zone-us', 'mcf-zone-de', 'mcf-zone-gb']);
+  it('two zones and three shipping methods; standard has a free-above tier per currency, collection is US only', () => {
+    expect(zoneDrafts.map((z) => z.key)).toEqual(['mcf-zone-us', 'mcf-zone-ca']);
     expect(shippingMethodDrafts.map((m) => m.key)).toEqual(['mcf-ship-standard', 'mcf-ship-express', 'mcf-collect']);
     const std = shippingMethodDrafts[0]!.zoneRates!.map((z) => z.shippingRates![0]!);
-    expect(std.map((r) => [r.price.centAmount, r.freeAbove?.centAmount])).toEqual([[695, 7500], [490, 6000], [395, 5000]]);
-    expect(shippingMethodDrafts[1]!.zoneRates!.map((z) => z.shippingRates![0]!.price.centAmount)).toEqual([1495, 1290, 995]);
-    expect(shippingMethodDrafts[2]!.zoneRates!.map((z) => z.shippingRates![0]!.price.centAmount)).toEqual([0, 0, 0]);
+    expect(std.map((r) => [r.price.currencyCode, r.price.centAmount, r.freeAbove?.centAmount])).toEqual([['USD', 695, 7500], ['CAD', 895, 9900]]);
+    expect(shippingMethodDrafts[1]!.zoneRates!.map((z) => z.shippingRates![0]!.price.centAmount)).toEqual([1495, 1995]);
+    expect(shippingMethodDrafts[2]!.zoneRates!.map((z) => (z.zone as { key: string }).key)).toEqual(['mcf-zone-us']);
   });
 
-  it('six stores as InventorySupply channels, two per market, with a store type and hours', () => {
-    expect(STORES.map((s) => s.key)).toEqual(['mcf-store-nyc-soho', 'mcf-store-brooklyn', 'mcf-store-berlin-mitte', 'mcf-store-munich', 'mcf-store-london-soho', 'mcf-store-manchester']);
+  it('six stores in New York City as InventorySupply channels, ready in 30 minutes, with a store type and hours', () => {
+    expect(STORES.map((s) => s.key)).toEqual(['mcf-store-nyc-soho', 'mcf-store-brooklyn-williamsburg', 'mcf-store-upper-west-side', 'mcf-store-midtown-east', 'mcf-store-long-island-city', 'mcf-store-harlem']);
     for (const c of channelDrafts()) {
       expect(c.roles).toEqual(['InventorySupply']);
       expect(c.geoLocation).toMatchObject({ type: 'Point' });
       expect(c.custom?.type).toMatchObject({ key: 'mcf-store' });
+      expect(c.address).toMatchObject({ country: 'US', state: 'NY' });
+      const [lng, lat] = (c.geoLocation as unknown as { coordinates: [number, number] }).coordinates;
+      expect(lat).toBeGreaterThan(40.4);
+      expect(lat).toBeLessThan(41);
+      expect(lng).toBeGreaterThan(-74.3);
+      expect(lng).toBeLessThan(-73.6);
     }
-    expect(STORES.filter((s) => s.country === 'US')).toHaveLength(2);
+    for (const s of STORES) expect(s.collectionMinutes).toBe(30);
+    expect(STORES.every((s) => s.country === 'US')).toBe(true);
     expect(STORES.some((s) => s.hours.sun === 'closed')).toBe(true);
     expect(STORES.some((s) => s.hours.sun !== 'closed')).toBe(true);
   });
 
-  it('order states chain ordered > preparing > ready > collected, review states pending > approved; creation order puts targets first', () => {
+  it('order states chain ordered > preparing > ready > collected, there are no review states (D-037); creation order puts targets first', () => {
     expect(stateDrafts.filter((s) => s.type === 'OrderState').map((s) => s.key)).toEqual(['mcf-order-ordered', 'mcf-order-preparing', 'mcf-order-ready-for-collection', 'mcf-order-collected']);
     expect(stateDrafts.find((s) => s.key === 'mcf-order-ordered')?.initial).toBe(true);
-    expect(stateDrafts.find((s) => s.key === 'mcf-review-approved')?.roles).toEqual(['ReviewIncludedInStatistics']);
+    expect(stateDrafts.every((s) => s.type === 'OrderState')).toBe(true);
     const order = stateCreationOrder().map((s) => s.key);
     for (const s of stateDrafts) for (const t of s.transitions ?? []) expect(order.indexOf(t.key as string)).toBeLessThan(order.indexOf(s.key));
   });
@@ -141,15 +148,14 @@ describe('seed data (SEED-PLAN)', () => {
     for (const p of PRODUCTS) for (const c of p.categories) expect(keys.has(c), `${p.key} ${c}`).toBe(true);
   });
 
-  it('prices: one per market per variant, EUR about 0.92 and GBP about 0.79 of USD on .x0 or .x5, tax inclusive handled by the tax rates', () => {
+  it('prices: one per market per variant, CAD about 1.37 of USD on .x0 or .x5, both tax-exclusive', () => {
     for (const { product, variant } of allVariants()) {
       const defs = priceDefsOf(product, variant).filter((d) => !d.policy);
-      expect(defs.map((d) => [d.country, d.currency])).toEqual([['US', 'USD'], ['DE', 'EUR'], ['GB', 'GBP']]);
+      expect(defs.map((d) => [d.country, d.currency])).toEqual([['US', 'USD'], ['CA', 'CAD']]);
       expect(variant.usd % 5).toBe(0);
-      expect(oneTimeCents(variant.usd, 'EUR') % 5).toBe(0);
-      expect(oneTimeCents(variant.usd, 'GBP') % 5).toBe(0);
-      expect(Math.abs(oneTimeCents(variant.usd, 'EUR') / variant.usd - 0.92)).toBeLessThan(0.01);
-      expect(Math.abs(oneTimeCents(variant.usd, 'GBP') / variant.usd - 0.79)).toBeLessThan(0.01);
+      expect(oneTimeCents(variant.usd, 'CAD') % 5).toBe(0);
+      expect(Math.abs(oneTimeCents(variant.usd, 'CAD') / variant.usd - 1.37)).toBeLessThan(0.01);
+      expect(oneTimeCents(variant.usd, 'CAD')).not.toBe(variant.usd);
     }
     expect(oneTimeCents(590, 'USD')).toBe(590);
   });
@@ -158,14 +164,14 @@ describe('seed data (SEED-PLAN)', () => {
     for (const { product, variant } of allVariants()) {
       const defs = priceDefsOf(product, variant);
       const recurring = defs.filter((d) => d.policy);
-      expect(recurring).toHaveLength(product.subscribable ? 12 : 0);
+      expect(recurring).toHaveLength(product.subscribable ? 8 : 0);
       for (const r of recurring) {
         const base = defs.find((d) => !d.policy && d.country === r.country);
         expect(r.cents).toBe(recurringCents(base!.cents));
         expect(Math.abs(r.cents / base!.cents - 0.9)).toBeLessThan(0.005);
       }
     }
-    expect(allPriceDefs().length).toBeGreaterThan(1000);
+    expect(allPriceDefs().length).toBeGreaterThan(700);
     // the draft the API gets carries the policy as a resource identifier by key
     const sub = PRODUCTS.find((p) => p.subscribable)!;
     const draft = productDrafts({}, true).find((d) => d.key === sub.key)!;
@@ -193,8 +199,8 @@ describe('seed data (SEED-PLAN)', () => {
     for (const d of [...cartDiscountDrafts, ...pd]) expect(d.sortOrder).toMatch(/^0\.\d*[1-9]$/);
   });
 
-  it('six demo customers with addresses, two per market, and a saved-items list for Maya', () => {
-    expect(CUSTOMERS.map((c) => c.email)).toEqual(['maya.okonkwo@example.com', 'liam.carter@example.com', 'anna.schneider@example.com', 'jonas.weber@example.com', 'emma.clarke@example.com', 'oliver.hughes@example.com']);
+  it('six verified demo customers with addresses, four US and two CA, and a saved-items list for Maya', () => {
+    expect(CUSTOMERS.map((c) => c.email)).toEqual(['maya.okonkwo@example.com', 'liam.carter@example.com', 'priya.nair@example.com', 'lucas.tremblay@example.com', 'ava.mackenzie@example.com', 'noah.patel@example.com']);
     for (const c of CUSTOMERS) {
       const d = customerDraft(c, 'a-long-demo-password') as { addresses: { country: string }[]; isEmailVerified: boolean; locale: string; defaultShippingAddress: number };
       expect(d.addresses[0]?.country).toBe(c.country);
@@ -208,7 +214,7 @@ describe('seed data (SEED-PLAN)', () => {
 
   it('hash is deterministic', () => {
     expect(hash('a')).toBe(hash('a'));
-    expect(slugify('Über Größe')).toBe('ueber-groesse');
+    expect(slugify('Cold Brew & Co.')).toBe('cold-brew-co');
   });
 
   it('contains no real credential, no secret value and every source file has the SPDX header', () => {

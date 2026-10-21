@@ -3,7 +3,7 @@
 
 # Manual testing and owner items: workstream E (draft)
 
-Existing SO-03 (German review) is referenced, not redefined.
+SO-03 (German review) is removed: Germany and German are dropped (D-030).
 
 | ID | Who | When needed | Steps | Expected result | Status |
 | --- | --- | --- | --- | --- | --- |

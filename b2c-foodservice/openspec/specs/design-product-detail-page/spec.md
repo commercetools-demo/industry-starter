@@ -5,7 +5,7 @@
 
 ## Purpose
 
-The detail page turns interest into a committed line: the right variant, the right fulfilment (collect, ship, or subscribe) and a clear statement of when the shopper gets it. It must handle four product shapes with one layout: pods, coffee, machines and accessories.
+The detail page turns interest into a committed line: the right variant, the right fulfilment (collect, deliver, or subscribe) and a clear statement of when the shopper gets it. It must handle four product shapes with one layout: pods, coffee, machines and accessories.
 
 Design source: `ProductDetail`, `Accordion`, `SizeGuide` in `pages-pdp.jsx`.
 
@@ -63,16 +63,26 @@ The prototype's clothing size guide becomes a "Compatibility guide" modal for po
 
 ### Requirement: Fulfilment choice
 
-The system SHALL offer "How would you like it?" as option cards: Collect (free, ready in about {n} minutes), Ship (free over the threshold, 2 to 4 days) and Subscribe & save (deliver every {interval}, skip or cancel any time, saving shown). Subscribe appears only for subscribable products; machines never offer it. Subscribe is new design (`design.md` section 6).
+The system SHALL offer "How would you like it?" as option cards: Collect (free, ready in about {n} minutes; US market only, hidden in the Canada market where only Delivery and Subscribe appear, D-035), Delivery (standard carrier, free over the threshold, 2 to 4 days) and Subscribe & save (deliver every {interval}, skip or cancel any time, saving shown). Subscribe appears only for subscribable products; machines never offer it. Subscribe is new design (`design.md` section 6).
 
 - Collect shows a bordered block with a status dot, "In stock at {store}" or "Unavailable", address, distance, "Ready today, in about {n} minutes" in teal, and a Change link to the store picker.
-- Ship shows "Order in the next {h} hours for delivery by {day}".
+- Delivery shows "Order in the next {h} hours for delivery by {day}".
 - Subscribe shows an interval select and the recurring price.
 
 #### Scenario: Out of stock for collection
 - **GIVEN** the item is unavailable at the chosen store
 - **WHEN** Collect is selected
-- **THEN** the status shows Unavailable, the add button reads "Unavailable for collection", and switching to Ship re-enables it
+- **THEN** the status shows Unavailable, the add button reads "Unavailable for collection", and switching to Delivery re-enables it
+
+#### Scenario: Canada market
+- **GIVEN** the Canada market is active
+- **WHEN** the fulfilment choice renders
+- **THEN** the Collect card and store Change link are absent, and a short note says collection is available in the US market only
+
+#### Scenario: Mixed bag line
+- **GIVEN** a bag already holds a delivery line
+- **WHEN** a collect line is added from this page
+- **THEN** both lines coexist in the bag (D-033) and the toast names the cluster it joined
 
 #### Scenario: Variant out of stock at store
 - **GIVEN** Collect is selected
@@ -90,7 +100,7 @@ The system SHALL show a stepper and a large add button whose label reflects stat
 
 ### Requirement: Trust row and details
 
-The system SHALL show returns, quality guarantee and responsibly-sourced items under the button, then accordions: Details (open by default; origin, notes, intensity or specifications), Brewing and care (descaling, storage, capsule recycling), and Shipping and collection.
+The system SHALL show returns, quality guarantee and responsibly-sourced items under the button, then accordions: Details (open by default; origin, notes, intensity or specifications), Brewing and care (descaling, storage, capsule recycling), and Delivery and collection (collection shown for the US market only).
 
 #### Scenario: Accordion
 - **GIVEN** an accordion header

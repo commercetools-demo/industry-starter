@@ -3,12 +3,12 @@
 
 # Status
 
-Updated 2026-10-19. States: `Not started`, `In progress`, `Ready for review`, `Done`, `Blocked: <row>`.
+Updated 2026-10-21 (owner answers D-030 to D-039 applied to every plan). States: `Not started`, `In progress`, `Ready for review`, `Done`, `Blocked: <row>`.
 
 | ID | Workstream | Wave | State | Notes |
 | --- | --- | --- | --- | --- |
 | A | Bootstrap | 1 | Not started | Plan written (`workstreams/A-bootstrap.md`) |
-| B | Seed foundation | 1 | Ready for review (offline) | Seed package built, 91 tests pass, never run live (needs OA-01) |
+| B | Seed foundation | 1 | Ready for review (offline) | Seed package built offline; being updated for US and Canada, six NYC stores, no review states (D-030 to D-037); never run live (needs OA-01) |
 | C | Seed catalogue | 2 | Ready for review (offline) | Same package as B; live run and images pending (OA-01, OA-03) |
 | D | Server core | 2 | Not started | |
 | E | Design system | 2 | Not started | |
@@ -29,9 +29,10 @@ Updated 2026-10-19. States: `Not started`, `In progress`, `Ready for review`, `D
 
 | Item | State |
 | --- | --- |
-| commercetools project and API clients | Not provided (OA-01) |
-| commercetools commerce MCP | Failed to connect in the planning session (OA-06) |
+| commercetools project and API clients | Project `spec-test-b2c-food`; the owner provides API clients in `seed/.env.local` and `storefront/.env.local` (OA-01) |
+| commercetools commerce MCP | Server `food-service` is connected and can read the project; writes via the MCP were blocked by the permission classifier (OA-08) |
 | Chrome DevTools MCP | Available |
 | Image endpoint | Not provided (OA-03) |
-| Hosted Checkout application and PSP | Not set up (OA-04) |
-| Live project settings (search indexing, tax fallback) | **Not yet applied**: `seed:settings` needs OA-01 |
+| Full hosted Checkout application and Stripe connector | Not set up (OA-04) |
+| Hosting | Netlify (D-038, OA-05); not set up |
+| Live project settings | `changeCountryTaxRateFallbackEnabled` is already true. **Not yet applied:** Product Search indexing, and CA / CAD / en-CA. **Owner action (OA-08):** either add a permission rule for `mcp__food-service__update_project` so the team can apply them through the MCP, or run `cd seed && npm run seed:settings` |

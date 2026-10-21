@@ -5,7 +5,7 @@
 
 ## Purpose
 
-The shell is on every page and carries the omnichannel promise: the shopper's collection store, region and currency, search and cart are always one click away. It is the same shell for guests and signed-in members.
+The shell is on every page and carries the omnichannel promise: the shopper's collection store (US market), market and currency, search and cart are always one click away. It is the same shell for guests and signed-in members.
 
 Design source: `Header`, `MegaMenu`, `MobileNav`, `Footer`, `Toast` in `components.jsx` and `nav-extras.jsx`.
 
@@ -13,7 +13,7 @@ Design source: `Header`, `MegaMenu`, `MobileNav`, `Footer`, `Toast` in `componen
 
 ### Requirement: Promise bar
 
-The system SHALL show a slim ink bar above the header with the shipping threshold, the click-and-collect promise and the returns window, e.g. "Free shipping over {threshold} · Free café collection, ready in {minutes} · {days}-day returns". The figures come from configuration, not copy.
+The system SHALL show a slim ink bar above the header with the delivery threshold, the click-and-collect promise and the returns window, e.g. "Free delivery over {threshold} · Free store collection, ready in {minutes} · {days}-day returns". The collection promise is omitted in the Canada market (delivery only, D-035). The figures come from configuration, not copy.
 
 #### Scenario: Threshold changes
 - **GIVEN** the free-shipping threshold is edited in configuration
@@ -22,7 +22,7 @@ The system SHALL show a slim ink bar above the header with the shipping threshol
 
 ### Requirement: Sticky header
 
-The system SHALL render a 72px sticky header on a translucent canvas with blur and a hairline bottom border, containing in order: menu toggle (under 820px), the "Malva Coffee" wordmark linking home, primary navigation, then the action cluster: collection-store pill, locale pill, search, account, cart.
+The system SHALL render a 72px sticky header on a translucent canvas with blur and a hairline bottom border, containing in order: menu toggle (under 820px), the "Malva Coffee" wordmark linking home, primary navigation, then the action cluster: collection-store pill (US market only), market pill (United States or Canada), search, account, cart.
 
 Primary navigation: Nespresso pods, Coffee, Machines, Accessories, Gifts. Each link has an underline that grows on hover and is accent-coloured when active.
 
@@ -34,11 +34,16 @@ Primary navigation: Nespresso pods, Coffee, Machines, Accessories, Gifts. Each l
 #### Scenario: Signed in
 - **GIVEN** a signed-in shopper
 - **WHEN** the header renders
-- **THEN** the account icon becomes an initials avatar with a dropdown holding name, email, Dashboard and Sign out; a guest sees the plain icon that leads to sign-in
+- **THEN** the account icon becomes an initials avatar with a dropdown holding name, email, Dashboard and Sign out (registration and sign-in land the shopper signed in at once, no email step, D-032); a guest sees the plain icon that leads to sign-in
 
 ### Requirement: Collection-store pill
 
-The system SHALL show the chosen collection store in the header as "Collect at {store}", opening the store picker. When no store is chosen it reads "Choose a store".
+The system SHALL show the chosen collection store in the header as "Collect at {store}", opening the store picker. When no store is chosen it reads "Choose a store". In the Canada market the pill is hidden.
+
+#### Scenario: Canada market
+- **GIVEN** the Canada market is active
+- **WHEN** the header renders
+- **THEN** no collection-store pill is shown and the promise bar has no collection text
 
 #### Scenario: Store drives availability
 - **GIVEN** the shopper picks a store
@@ -72,12 +77,12 @@ The system SHALL replace the primary navigation under 820px with a full-screen s
 
 ### Requirement: Footer
 
-The system SHALL render an ink footer with a brand column (wordmark, one-line tagline, email sign-up with Join) and four link columns (Shop, Collect, Help, Company), then a bottom row with copyright and Privacy, Terms, Accessibility.
+The system SHALL render an ink footer with a brand column (wordmark, one-line tagline, newsletter sign-up with Join) and four link columns (Shop, Collect (US market only), Help, Company), then a bottom row with copyright and Privacy, Terms, Accessibility.
 
 #### Scenario: Newsletter
 - **GIVEN** a visitor enters an email and presses Join
 - **WHEN** the address is valid
-- **THEN** a confirmation toast shows; an invalid address shows an inline error, never a silent failure
+- **THEN** a toast shows "Thanks, you're on the list" and the address is only recorded (no email is sent, D-032, and no copy promises one); an invalid address shows an inline error, never a silent failure
 
 ### Requirement: Toast feedback
 

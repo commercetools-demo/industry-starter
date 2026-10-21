@@ -17,6 +17,6 @@ Q-E-9 | Dev kitchen-sink page `app/[locale]/dev/design`. | Yes; 404 in productio
 Q-E-10 | Overlay colour: spec says "42% ink", prototype uses `rgba(14,13,41,0.42)`. | `color-mix(in srgb, var(--ink) 42%, transparent)` (spec wins) | no | Open
 Q-E-11 | Focus indicator: the spec names only the 14% accent field ring, too faint to count as focus. | Global `:focus-visible` 2px accent outline, offset 2px, plus the ring on fields | no | Open
 Q-E-12 | Entrance animation. | Keep as the prototype (transform-only, `no-preference` only, no opacity) | no | Open
-Q-E-13 | Wording choices. | "bag" in all three languages; en-GB uses "Colour"; German reviewed under SO-03 | no | Open
+Q-E-13 | Wording choices. | "bag" in both locales; en-CA uses "Colour" | no | Open
 Q-E-14 | Rating atom form. | One star plus number and count (as the design); five-star displays for the review list and form are built in M | M | Open
 Q-E-15 | Radius token names. | `--radius-pill`, `--radius-field`, `--radius-card`, `--radius-panel`, `--radius-hero` | no | Open

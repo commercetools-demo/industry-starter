@@ -8,7 +8,9 @@ Verified platform and environment facts. Add a dated row whenever a commercetool
 | Date | Finding | Source | Effect |
 | --- | --- | --- | --- |
 | 2026-10-19 | The Claude Design MCP (`DesignSync`) returns HTTP 403 for this organization (zero data retention policy). The design came from an exported handoff zip. | Tool response | Design is read from `design/export/`; do not re-read the Claude Design project |
-| 2026-10-19 | The commercetools commerce MCP did not connect (`CONNECTION_CLOSED`) | Session start | No live project reads yet; see OA-06 |
+| 2026-10-19 | The commercetools commerce MCP did not connect (`CONNECTION_CLOSED`) | Session start | Superseded 2026-10-21: the `food-service` MCP server is connected |
+| 2026-10-21 | The `food-service` commerce MCP can read the project `spec-test-b2c-food`; `changeCountryTaxRateFallbackEnabled` is already true. Writes through `mcp__food-service__update_project` were blocked by the permission classifier | Session 2026-10-21 | Product Search indexing and CA / CAD / en-CA still need a permission rule or the `seed:settings` run (OA-08) |
+| 2026-10-21 | Owner decisions D-030 to D-039: US and Canada only, six NYC stores, no email or password reset, no review moderation, Netlify, full hosted Checkout with Stripe | Owner answers to Q-001 to Q-024 | All plans updated; D-016 is superseded by D-039 |
 | 2026-10-19 | `sample-data/image.json` is truncated (cut inside an object) and is not valid JSON | Parse error at line 223 | Seed image code is tested against a complete fixture of the same shape |
 | 2026-10-19 | Latest npm: next 16.4.2, next-intl 4.14.9, tailwindcss 4.3.3, `@commercetools/platform-sdk` 9.7.0, `ts-client` 5.1.1. The skill's gates are SDK ^8 and ts-client ^4 | `npm view` | D-006 keeps ^8 and ^4 |
 | 2026-10-19 | Product reviews: `reviewRatingStatistics` (`averageRating`, `count`, `ratingsDistribution`) on the product; query reviews with `where=target(typeId="product" and id="...") and includedInStatistics=true` | docs.commercetools.com/guides/review-ratings | `reviews-and-ratings` |

@@ -30,16 +30,16 @@ describe('Stores are supply channels', () => {
     const picker = api.all('channels').filter((c) => ((c.roles as string[]) ?? []).includes('InventorySupply'));
     expect(picker.map((c) => c.key).sort()).toEqual(STORES.map((s) => s.key).sort());
     expect(picker).toHaveLength(6);
-    // nearest first: from Berlin the Berlin store leads, from London the London store
+    // nearest first: from Times Square the Midtown East store leads, from Brooklyn Heights the Williamsburg store
     const near = (origin: [number, number]) => [...picker].sort((a, b) => km(origin, (a.geoLocation as { coordinates: [number, number] }).coordinates) - km(origin, (b.geoLocation as { coordinates: [number, number] }).coordinates))[0]?.key;
-    expect(near([13.405, 52.52])).toBe('mcf-store-berlin-mitte');
-    expect(near([-0.1276, 51.5072])).toBe('mcf-store-london-soho');
+    expect(near([-73.9855, 40.758])).toBe('mcf-store-midtown-east');
+    expect(near([-73.9442, 40.7081])).toBe('mcf-store-brooklyn-williamsburg');
     // each store carries address, hours and phone in custom fields, and the country it serves
     for (const c of picker) {
       const fields = (c.custom as { fields: Record<string, unknown> }).fields;
       expect(Object.keys(fields).sort()).toEqual(['addressLine', 'city', 'collectionMinutes', 'hours', 'phone', 'postalCode']);
       expect(JSON.parse(fields.hours as string).sun).toBeTruthy();
-      expect((c.address as { country: string }).country).toMatch(/^(US|DE|GB)$/);
+      expect((c.address as { country: string }).country).toBe('US');
     }
     expect(new Set(picker.map((c) => JSON.stringify((c.custom as { fields: { hours: string } }).fields.hours))).size).toBeGreaterThan(2); // hours differ per store
   });
@@ -82,7 +82,7 @@ describe('Fulfilment per line', () => {
     expect(type.resourceTypeIds).toEqual(['line-item']);
     const field = (type.fieldDefinitions as { name: string; type: { name: string; values: { key: string }[] } }[]).find((f) => f.name === 'fulfilment');
     expect(field?.type.name).toBe('Enum');
-    expect(field?.type.values.map((v) => v.key)).toEqual(['collect', 'ship', 'subscribe']);
+    expect(field?.type.values.map((v) => v.key)).toEqual(['collect', 'delivery', 'subscribe']);
     const store = (await api.getByKey('channels', STORES[0]?.key as string)) as Res;
     expect(store.roles).toEqual(['InventorySupply']);
     const collect = (await api.getByKey('shipping-methods', K.shipCollect)) as Res;
@@ -117,8 +117,8 @@ describe('Subscriptions', () => {
       const p = (await api.getByKey('products', def.key)) as Res;
       const md = p.masterData as { current: { masterVariant: { recurrencePrices: unknown[]; prices: unknown[] }; variants: { recurrencePrices: unknown[]; prices: unknown[] }[] } };
       for (const v of [md.current.masterVariant, ...md.current.variants]) {
-        expect(v.prices, def.key).toHaveLength(3);
-        expect(v.recurrencePrices.length, def.key).toBe(def.subscribable ? 12 : 0);
+        expect(v.prices, def.key).toHaveLength(2);
+        expect(v.recurrencePrices.length, def.key).toBe(def.subscribable ? 8 : 0);
       }
     }
     expect(PRODUCTS.filter((p) => p.subscribable).length).toBeGreaterThanOrEqual(15);
@@ -135,8 +135,7 @@ describe('Shipping by market', () => {
     const rates = Object.fromEntries((standard.zoneRates as { zone: { id: string }; shippingRates: { price: { centAmount: number; currencyCode: string }; freeAbove: { centAmount: number; currencyCode: string } }[] }[]).map((z) => [zones.get(z.zone.id), z.shippingRates[0]]));
     // each market has its own free-shipping threshold and currency, read from the rate, not from front-end constants
     expect(rates[K.zoneUs]).toMatchObject({ price: { centAmount: 695, currencyCode: 'USD' }, freeAbove: { centAmount: 7500, currencyCode: 'USD' } });
-    expect(rates[K.zoneDe]).toMatchObject({ price: { centAmount: 490, currencyCode: 'EUR' }, freeAbove: { centAmount: 6000, currencyCode: 'EUR' } });
-    expect(rates[K.zoneGb]).toMatchObject({ price: { centAmount: 395, currencyCode: 'GBP' }, freeAbove: { centAmount: 5000, currencyCode: 'GBP' } });
+    expect(rates[K.zoneCa]).toMatchObject({ price: { centAmount: 895, currencyCode: 'CAD' }, freeAbove: { centAmount: 9900, currencyCode: 'CAD' } });
     const express = (await api.getByKey('shipping-methods', K.shipExpress)) as Res;
     expect(JSON.stringify(express.zoneRates)).not.toContain('freeAbove');
     expect(JSON.stringify(express.zoneRates)).toContain('1495');
@@ -154,17 +153,16 @@ describe('Tax by market', () => {
     expect(pick('US', 'NY')?.amount).toBe(0.08875);
     expect(pick('US', 'CA')?.amount).toBe(0.08); // California has no rate of its own: the country rate applies
     expect(pick('US')?.amount).toBe(0.08);
-    expect(pick('DE')?.amount).toBe(0.19);
-    expect(pick('GB')?.amount).toBe(0.2);
+    expect(pick('CA')?.amount).toBe(0.05); // GST is a country-level rate: it applies to every Canadian province
   });
 
-  it('uses the food category for pods and coffee and the standard category for machines, accessories and gifts; US exclusive, DE and GB inclusive', async () => {
+  it('uses the food category for pods and coffee and the standard category for machines, accessories and gifts; all rates tax-exclusive', async () => {
     const api = await seeded();
     const food = (await api.getByKey('tax-categories', K.taxFood)) as Res;
     const rate = (c: Res, country: string) => (c.rates as { country: string; amount: number; includedInPrice: boolean }[]).find((r) => r.country === country);
-    expect([rate(food, 'US')?.amount, rate(food, 'DE')?.amount, rate(food, 'GB')?.amount]).toEqual([0, 0.07, 0]);
+    expect([rate(food, 'US')?.amount, rate(food, 'CA')?.amount]).toEqual([0, 0]);
     const std = (await api.getByKey('tax-categories', K.taxStandard)) as Res;
-    expect([rate(std, 'US')?.includedInPrice, rate(std, 'DE')?.includedInPrice, rate(std, 'GB')?.includedInPrice]).toEqual([false, true, true]);
+    expect([rate(std, 'US')?.includedInPrice, rate(std, 'CA')?.includedInPrice]).toEqual([false, false]);
     const taxById = new Map(api.all('tax-categories').map((t) => [t.id, t.key]));
     for (const def of PRODUCTS) {
       const p = (await api.getByKey('products', def.key)) as Res;

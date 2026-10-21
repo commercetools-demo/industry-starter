@@ -3,7 +3,7 @@
 
 # plans/
 
-Implementation plan for the Malva Coffee online storefront (`storefront/`) and its platform data scripts (`seed/`), written for junior developers to follow task by task.
+Implementation plan for the Malva Coffee online storefront (`storefront/`; markets US and Canada, hosted on Netlify) and its platform data scripts (`seed/`), written for junior developers to follow task by task.
 
 | File | Purpose |
 | --- | --- |

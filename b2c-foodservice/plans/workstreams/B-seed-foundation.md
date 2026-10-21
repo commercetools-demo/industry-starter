@@ -22,7 +22,7 @@
 
 **Context.** The seed package was written by another agent from `plans/SEED-PLAN.md` and has **never run against a live project** (`STATUS.md`). It sits at `seed/` (`package.json`, `src/*.ts`, `src/data/*.ts`, tests next to the code, `seed/README.md` may still be appearing). B is the **junior-facing work around it**: read it against the spec, close gaps with tests, then run it live, in a safe order, and prove with read-backs that the project holds the foundation of the platform model.
 
-**Goal.** After B: the commercetools project has Product Search indexing `Activated`, the country tax-rate fallback on, countries/currencies/languages for US/DE/GB added, **no leftover Merchant Center sample data** (only what the reviewed manifest listed was removed), and the foundation resources exist with `mcf-` keys: tax categories, zones, shipping methods, order states, custom types, product types, categories, six store channels, four recurrence policies. A second run reports `0 change(s)`. The evidence folder proves each step.
+**Goal.** After B: the commercetools project has Product Search indexing `Activated`, the country tax-rate fallback on, countries/currencies/languages for US/CA, USD/CAD and en-US/en-CA added, **no leftover Merchant Center sample data** (only what the reviewed manifest listed was removed), and the foundation resources exist with `mcf-` keys: tax categories, zones, shipping methods, order states, custom types, product types, categories, six store channels (all in New York City, D-035), four recurrence policies. A second run reports `0 change(s)`. The evidence folder proves each step.
 
 **In scope**
 - Review of: guards and env (`src/lib.ts`), fake API (`src/fake-api.ts`), settings (`src/settings.ts`), inventory and cleanup (`src/inventory.ts`, `src/cleanup.ts`), reset (`src/reset.ts`), and the foundation data files (`src/data/{base,tax-shipping,custom-types,states,product-types,categories,stores,extras}.ts`).
@@ -30,7 +30,7 @@
 - Live run of the **foundation steps** only: `settings`, `tax`, `shipping`, `states`, `types`, `product-types`, `categories`, `channels`, `recurrence`.
 - Read-back and evidence.
 
-**Out of scope (C does them)**: `products`, `prices`, `inventory`, `discounts`, `customers`, `shopping-lists`, `review-states`, `reviews`, `seed:images`, the full `verify`. Do not run those steps in B.
+**Out of scope (C does them)**: `products`, `prices`, `inventory`, `discounts`, `customers`, `shopping-lists`, `reviews`, `seed:images`, the full `verify`. Do not run those steps in B.
 
 **Hard safety rules** (from `JUNIOR-GUIDE.md`, restated because B is where deletion exists)
 1. Only the project named in `seed/.env.local` and typed again as `EXPECTED_PROJECT_KEY`. Never a project whose key contains `health`.
@@ -47,7 +47,7 @@
 | `src/lib.ts` | `readSeedEnv` (variables `SEED_CTP_PROJECT_KEY`, `SEED_CTP_AUTH_URL`, `SEED_CTP_API_URL`, `SEED_CTP_CLIENT_ID`, `SEED_CTP_CLIENT_SECRET`, `SEED_CTP_SCOPES`, `EXPECTED_PROJECT_KEY`; optional `SEED_DEMO_PASSWORD`, `IMAGE_SOURCE_URL`), `assertSafeProject` (key equals `EXPECTED_PROJECT_KEY`, never `health`), `connect` (builds the client, then `GET project` and compares the key **the API reports**), `parseArgs` (`--dry-run --offline --only --confirm --manifest`), `Runner` (counts changes, prints `would ...` in dry run) |
 | `src/api.ts`, `src/fake-api.ts` | Thin `Api` interface over the SDK (`getByKey`, `getById`, `list`, `create`, `update`, `remove`, `verifyCustomerEmail`, `getProject`, `updateProject`) and an in-memory fake that enforces versions (409), unresolved key references (400) and reference-exists on delete |
 | `src/sync.ts` | Pure planners: from "what exists" and "what the seed wants" to update actions (`[]` means in sync). This is what makes the run idempotent |
-| `src/seed.ts` | Steps in order: `settings`, `tax`, `shipping`, `states`, `types`, `product-types`, `categories`, `channels`, `recurrence`, `products`, `prices`, `inventory`, `discounts`, `customers`, `shopping-lists`, `review-states`, `reviews`. `--only a,b` runs just those; a step whose prerequisite is neither in the run nor in the project is **skipped and reported** (exit code 1), never created silently. Prints `plan by step` and `N change(s)` |
+| `src/seed.ts` | Steps in order: `settings`, `tax`, `shipping`, `states`, `types`, `product-types`, `categories`, `channels`, `recurrence`, `products`, `prices`, `inventory`, `discounts`, `customers`, `shopping-lists`, `reviews`. `--only a,b` runs just those; a step whose prerequisite is neither in the run nor in the project is **skipped and reported** (exit code 1), never created silently. Prints `plan by step` and `N change(s)` |
 | `src/settings.ts` | `npm run seed:settings`; sends only the missing actions; waits for `Activated` (poll 5 s, timeout 15 min) |
 | `src/inventory.ts` | `npm run seed:inventory`: reads 17 kinds, writes `seed/cleanup-manifest.json` (type, ref, id, key, name, version, depth; counts; `skippedSeedOwned`); seed-owned keys are only counted; built-in states skipped; orders and carts never listed |
 | `src/cleanup.ts` | `npm run seed:cleanup -- --manifest <file> [--dry-run] --confirm <key>`; refuses before any request: wrong `--confirm`, manifest for another project, manifest older than 24 h; refuses every `mcf-` entry; deletes in `DELETE_ORDER`; unpublishes a product before deleting; retries failures up to 3 passes |
@@ -88,7 +88,7 @@ If step 8 reports failures (a resource still referenced): do not loop. Follow se
 | `states` | `states()` (type `OrderState`) | create with `transitions` (targets created first); `setTransitions` | https://docs.commercetools.com/api/projects/states |
 | `types` | `types()` | create `mcf-line-fulfilment` (line-item, enum `fulfilment`) and `mcf-store` (channel); updates `addFieldDefinition` | https://docs.commercetools.com/api/projects/types |
 | `product-types` | `productTypes()` | create with attribute definitions; updates `addAttributeDefinition` (never removes or changes a constraint: those are irreversible) | https://docs.commercetools.com/api/projects/productTypes |
-| `categories` | `categories()` | create with slugs in en-US, en-GB, de-DE, `orderHint`, `parent` by key; updates `changeName`, `addAsset` (images, in C) | https://docs.commercetools.com/api/projects/categories |
+| `categories` | `categories()` | create with slugs in en-US and en-CA, `orderHint`, `parent` by key; updates `changeName`, `addAsset` (images, in C) | https://docs.commercetools.com/api/projects/categories |
 | `channels` | `channels()` | create with `roles: ['InventorySupply']`, `address`, `geoLocation`, `custom` (type `mcf-store`); updates `setCustomField` etc. | https://docs.commercetools.com/api/projects/channels |
 | `recurrence` | `recurrencePolicies()` | create `schedule: { type: 'standard', value, intervalUnit }` | https://docs.commercetools.com/api/projects/recurrence-policies |
 
@@ -98,12 +98,12 @@ Product Search note (https://docs.commercetools.com/api/projects/product-search)
 
 | Resource | Expected count and content |
 | --- | --- |
-| Project | `searchIndexing.productsSearch.status = Activated`; `carts.countryTaxRateFallbackEnabled = true`; `countries` include `US DE GB`; `currencies` include `USD EUR GBP`; `languages` include `en-US en-GB de-DE`; nothing removed |
-| Tax categories | 2: `mcf-tax-food` (US 0%, DE 7% included, GB 0% included), `mcf-tax-standard` (US 8% country rate, US-NY 8.875%, DE 19% included, GB 20% included). US `includedInPrice: false`, DE and GB `true` |
+| Project | `searchIndexing.productsSearch.status = Activated`; `carts.countryTaxRateFallbackEnabled = true`; `countries` include `US CA`; `currencies` include `USD CAD`; `languages` include `en-US en-CA`; nothing removed (the owner action OA-A-b may already have applied part of this, see STATUS) |
+| Tax categories | 2: `mcf-tax-food` (US 0%, CA 0% zero-rated), `mcf-tax-standard` (US 8% country rate, US-NY 8.875%, CA 5% GST; no provincial tax, HST/PST not modelled, D-036). US and CA `includedInPrice: false` |
 | Zones | 3: `mcf-zone-us`, `mcf-zone-de`, `mcf-zone-gb` (one country each) |
-| Shipping methods | 3: `mcf-ship-standard` (US 6.95 USD free above 75.00; DE 4.90 EUR free above 60.00; GB 3.95 GBP free above 50.00; `isDefault: true`), `mcf-ship-express` (14.95 / 12.90 / 9.95), `mcf-collect` (0 in each zone). Tax category `mcf-tax-standard` |
+| Shipping methods | 3: `mcf-ship-standard` (US 6.95 USD free above 75.00; CA 8.95 CAD free above 99.00; `isDefault: true`), `mcf-ship-express` (14.95 USD / 17.95 CAD), `mcf-collect` (0, US zone only: the Canada market is delivery only, D-035). Standard carrier only (D-034). Tax category `mcf-tax-standard` |
 | Order states (`mcf-` prefix) | 4: `mcf-order-ordered` (initial), `mcf-order-preparing`, `mcf-order-ready-for-collection`, `mcf-order-collected`; transitions ordered to preparing to ready to collected. Review states come in C |
-| Custom types | `mcf-line-fulfilment` (resource `line-item`, field `fulfilment` enum `collect`, `ship`, `subscribe`), `mcf-store` (resource `channel`, fields `addressLine`, `city`, `postalCode`, `phone`, `hours`, `collectionMinutes`), plus `mcf-order-notes` if Q-B-1 is applied |
+| Custom types | `mcf-line-fulfilment` (resource `line-item`, field `fulfilment` enum `collect`, `delivery`, `subscribe`), `mcf-store` (resource `channel`, fields `addressLine`, `city`, `postalCode`, `phone`, `hours`, `collectionMinutes`), plus `mcf-order-notes` if Q-B-1 is applied |
 | Product types | 5: `mcf-pods`, `mcf-coffee`, `mcf-machine`, `mcf-accessory`, `mcf-gift-set` with the attributes of `SEED-PLAN.md` section 6 |
 | Categories | 20 (`mcf-cat-pods` with 2 children, `mcf-cat-coffee` 4, `mcf-cat-machines` 5, `mcf-cat-accessories` 4, `mcf-cat-gifts`), each with slugs in the three languages |
 | Channels | 6 with role `InventorySupply`: `mcf-store-nyc-soho`, `mcf-store-brooklyn`, `mcf-store-berlin-mitte`, `mcf-store-munich`, `mcf-store-london-soho`, `mcf-store-manchester`; each with `address.country`, `geoLocation` Point `[lng, lat]`, custom fields incl. `hours` (JSON text by weekday) and `collectionMinutes` (30, 45, 30, 45, 20, 30) |
@@ -113,7 +113,7 @@ Counts of categories (20) were read from `seed/src/data/categories.ts`; if a cou
 
 ### 3.5 Read-back (no owner needed)
 
-With the commercetools MCP connected (OA-06): list its tools first (`ToolSearch` with `commercetools`). Use the **read** tools only. Equivalent REST reads through the SDK (what the MCP does underneath) for when you write a throwaway read-only script (never in `check`):
+With the commercetools MCP server `food-service` (connected, OA-06 done): list its tools first (`ToolSearch` with `food-service`). Use the **read** tools only. Equivalent REST reads through the SDK (what the MCP does underneath) for when you write a throwaway read-only script (never in `check`):
 
 | Read | Call | Check |
 | --- | --- | --- |
@@ -161,7 +161,7 @@ Stop the step, do not loop, and:
 | Categories | `SEED-PLAN.md` section 7 | slugs unique per language, order hints, parents by key, tree depth 2 |
 | Channels | spec fulfilment "Stores are supply channels" | role `InventorySupply`, key `mcf-store-<city>`, localized name, address, `geoLocation`, hours and phone in custom fields |
 | States | spec fulfilment "Order states for collection" | `initial` flag on `ordered`; transitions in order; review states are C |
-| Types | spec fulfilment "Fulfilment per line" | `fulfilment` enum `collect|ship|subscribe` on line items |
+| Types | spec fulfilment "Fulfilment per line" | `fulfilment` enum `collect|delivery|subscribe` on line items |
 
 ## 4. Tasks
 
@@ -184,7 +184,7 @@ Run `cd seed && npm run check` before ticking a code task. `[SKILL]` tags are on
 
 - [ ] **B-04 Review settings** `[SKILL: commercetools-platform]`
   - Files: `seed/src/settings.ts`, `seed/src/lib.test.ts`.
-  - Compare with 3.3 row `settings` and the docs page https://docs.commercetools.com/api/projects/project#change-product-search-indexing-enabled . Confirm the field of `changeCountryTaxRateFallbackEnabled` is `countryTaxRateFallbackEnabled` in the OpenAPI schema (`commercetools-oas-schemata`, resource `api-Project`). Add tests if missing: `Fresh project`, `Dry run`, `Second run reports nothing to change`, `Existing countries are kept when adding US DE GB`.
+  - Compare with 3.3 row `settings` and the docs page https://docs.commercetools.com/api/projects/project#change-product-search-indexing-enabled . Confirm the field of `changeCountryTaxRateFallbackEnabled` is `countryTaxRateFallbackEnabled` in the OpenAPI schema (`commercetools-oas-schemata`, resource `api-Project`). Add tests if missing: `Fresh project`, `Dry run`, `Second run reports nothing to change`, `Existing countries are kept when adding US and CA`.
   - Tests named after spec: `Fresh project`, `Dry run`.
 
 - [ ] **B-05 Review inventory and cleanup safety** `[SKILL: commercetools-platform]`
@@ -194,7 +194,7 @@ Run `cd seed && npm run check` before ticking a code task. `[SKILL]` tags are on
 
 - [ ] **B-06 Review the foundation data** `[SKILL: commercetools-commerce-patterns]`
   - Files: `seed/src/data/{tax-shipping,custom-types,states,product-types,categories,stores,extras}.ts`, `seed/src/data.test.ts` (create if absent).
-  - Walk the checklist rows Tax, Shipping, Product types, Categories, Channels, States, Types against `plans/SEED-PLAN.md` and 3.4. Add a data test per row that asserts the numbers of 3.4 (`Tax rates are 0, 7, 0 for food and 8, 8.875, 19, 20 for standard`, `US prices are tax-exclusive and DE and GB inclusive`, `Standard shipping thresholds are 75, 60 and 50`, `Collect costs nothing in all zones`, `Every store is an InventorySupply channel with geo location and hours`, `Order states are in transition order and ordered is initial`, `Slugs exist in en-US, en-GB and de-DE for every category`, `Constraint choices: variant dimensions are CombinationUnique`).
+  - Walk the checklist rows Tax, Shipping, Product types, Categories, Channels, States, Types against `plans/SEED-PLAN.md` and 3.4. Add a data test per row that asserts the numbers of 3.4 (`Tax rates are 0 and 0 for food (US, CA) and 8, 8.875, 5 for standard (US, US-NY, CA)`, `US and CA prices are tax-exclusive`, `Standard shipping thresholds are 75 USD and 99 CAD`, `Collect costs nothing and exists in the US zone only`, `Every store is an InventorySupply channel with geo location and hours`, `Order states are in transition order and ordered is initial`, `Slugs exist in en-US and en-CA for every category`, `Constraint choices: variant dimensions are CombinationUnique`).
   - Tests: as listed.
 
 - [ ] **B-07 Close the spec gaps** `[SKILL: commercetools-platform]`
@@ -273,7 +273,7 @@ Section 3.4 (expected end state) and 3.5 (read-back) are the verification. Order
 | OA-01 (existing) | Owner | B-10 to B-14 | Seed API client into `seed/.env.local`, project key typed twice | `seed:settings -- --dry-run` connects | TODO |
 | OA-07 (existing) | Owner | B-11 to B-12 | Review `seed/cleanup-manifest.json`, remove entries to keep, approve in writing | Written approval | TODO |
 | OA-x (B1) | Owner | With OA-01 | Create the seed client with the scope list of `seed/.env.example` (B-08) instead of an unspecified "manage scopes" | No 403 during the live run | TODO |
-| SO-x (B1) | Owner or accountant | Before release | Confirm tax rates (US 0 food and 8 standard, NY 8.875, DE 7 and 19, GB 0 and 20; Q-010) | Written confirmation | TODO |
+| SO-x (B1) | Owner or accountant | Before release | Confirm tax rates (US 0 food and 8 standard, NY 8.875; CA 0 food and 5 GST, no provincial tax; Q-010, D-036) | Written confirmation | TODO |
 | SO-x (B2) | Owner | Before release | Confirm the six invented store addresses and the hours are acceptable as demo data | Approval | TODO |
 | M-B-01 | Owner | Optional, after B-14 | Open the Merchant Center for the project: Settings, Project settings, Storefront Search (active); Settings, Shipping methods (3); Products, Categories (20) | Matches `plans/evidence/B/README.md` | TODO |
 
@@ -286,7 +286,7 @@ Full rows in `plans/notes/todo-B.md`.
 | Q-B-1 | The spec lists a custom type for order notes; the seed has none. | Add `mcf-order-notes` (order, field `note`), in `CONTRACT_KEYS` | no |
 | Q-B-2 | `SEED-PLAN.md` section 1 and `D-019` say orders and carts cannot be deleted through the API. The docs say they can (`manage_orders` scope; Delete Order and Delete Cart exist). Does cleanup remove sample orders and carts? | No: the seed never touches orders or carts (needs no `manage_orders`); the plan text is corrected by the lead | no |
 | Q-B-3 | Seed client scopes: a precise list or `manage_project`? | The precise list of B-08 (least privilege) | OA-01 |
-| Q-B-4 | US food tax and GB food tax. | 0 and 0 (Q-010); owner or accountant confirms | no |
+| Q-B-4 | US and CA food tax. | 0 and 0 (Q-010, D-036); owner or accountant confirms | no |
 | Q-B-5 | New York state rate. | Include 8.875% for `NY`; every other US state uses the 8% country rate | no |
 | Q-B-6 | Free-shipping threshold representation. | `freeAbove` on the standard zone rate (not price tiers); F and I read it from the shipping method | no |
 | Q-B-7 | `mcf-collect` price and tax category. | 0 in each currency; tax category `mcf-tax-standard` | no |

@@ -8,7 +8,7 @@ import { fail, getAdmin, isMainModule, parseArgs, Runner, sleep } from './lib';
  * Project settings the storefront needs:
  *  - Product Search indexing ON (mode ProductsSearch) and we wait until it reports Activated
  *  - changeCountryTaxRateFallbackEnabled true
- *  - countries US DE GB, currencies USD EUR GBP, languages en-US en-GB de-DE: ADDED when missing, never removed
+ *  - countries US CA, currencies USD CAD, languages en-US en-CA: ADDED when missing, never removed
  *
  *   npm run seed:settings [-- --dry-run]
  */

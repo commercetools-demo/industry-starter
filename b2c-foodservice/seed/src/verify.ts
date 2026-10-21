@@ -175,7 +175,7 @@ export async function verifySeed(api: Api): Promise<string[]> {
     if (!r) problems.push(`review ${d.key}: missing`);
     else {
       if (r.rating !== d.rating) problems.push(`review ${d.key}: rating ${String(r.rating)} instead of ${d.rating}`);
-      if (r.includedInStatistics !== true) problems.push(`review ${d.key}: not included in statistics (state must be ${K.reviewApproved})`);
+      if (r.includedInStatistics !== true) problems.push(`review ${d.key}: not included in statistics (reviews carry no state, so they count at once)`);
     }
   }
   for (const def of PRODUCTS) {

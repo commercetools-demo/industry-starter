@@ -43,10 +43,10 @@ The system SHALL list the reviews of the product through `GET reviews` with `whe
 - **WHEN** "Lowest" is chosen
 - **THEN** the 1-star review is first
 
-#### Scenario: Unpublished review hidden
-- **GIVEN** a review that is not included in statistics
+#### Scenario: Immediate visibility
+- **GIVEN** a review was just created by another shopper
 - **WHEN** the list loads
-- **THEN** it is not shown to other shoppers
+- **THEN** it is shown, because every review is published on creation
 
 ### Requirement: Write a review
 
@@ -55,7 +55,7 @@ The system SHALL let a signed-in customer write one review per product with a ra
 #### Scenario: Valid review
 - **GIVEN** a signed-in customer who has not reviewed the product
 - **WHEN** they submit rating 4 with text
-- **THEN** a review is created for that product and customer and a confirmation is shown
+- **THEN** a review is created for that product and customer and a confirmation is shown and the review is live
 
 #### Scenario: Duplicate
 - **GIVEN** the customer already reviewed the product
@@ -67,37 +67,32 @@ The system SHALL let a signed-in customer write one review per product with a ra
 - **WHEN** it is submitted
 - **THEN** the rating control shows an error and nothing is sent
 
-### Requirement: Moderation and states
+### Requirement: Published on creation
 
-The system SHALL use review states so unpublished reviews do not change statistics: `mcf-review-pending` (not included in statistics) and `mcf-review-approved` (included). New customer reviews start pending and are approved in the Merchant Center; the seed creates states and its own reviews as approved. The default, until the owner decides (`plans/QUESTIONS.md`), is moderation on.
+The system SHALL publish every review immediately and include it in statistics at once (D-037): there is no moderation, no pending state and no review states. A review is created with `includedInStatistics` true by default, and the product rating, count and distribution change as soon as it is saved.
 
-#### Scenario: New review pending
-- **GIVEN** a customer submits a review
+#### Scenario: New review is live
+- **GIVEN** a customer submits a review with rating 5
 - **WHEN** it is saved
-- **THEN** it is in `mcf-review-pending`, the product rating is unchanged and the customer sees "Thanks, your review will appear after approval"
-
-#### Scenario: Approval
-- **GIVEN** a pending review
-- **WHEN** it moves to `mcf-review-approved`
-- **THEN** the product statistics include it and it appears in the list
+- **THEN** it appears in the product's list at once, the product statistics include it, and the customer sees "Thanks, your review is live"
 
 ### Requirement: Own reviews in the account
 
-The system SHALL show the customer's own reviews, including pending ones with a "Pending" tag, under Orders or a Reviews tab of the account, with edit and delete (`setRating`, `setTitle`, `setText`, delete by version).
+The system SHALL show the customer's own reviews, under Orders or a Reviews tab of the account, with edit and delete (`setRating`, `setTitle`, `setText`, delete by version).
 
 #### Scenario: Edit
-- **GIVEN** an approved review
+- **GIVEN** a published review
 - **WHEN** the customer edits the text
-- **THEN** it is updated and returns to the state the moderation rule requires
+- **THEN** it is updated and stays published, and the statistics follow the new rating
 
 ### Requirement: Seeded reviews
 
-The system SHALL seed review states and between 3 and 12 reviews per top product (none for a few, so the empty state is testable) written by the demo customers in en-US, en-GB and de-DE, with a spread of ratings, all keyed `mcf-review-<sku>-<n>`, and `verify` SHALL compare product statistics with the seeded reviews.
+The system SHALL seed between 3 and 12 reviews per top product (none for a few, so the empty state is testable) written by the demo customers in en-US and en-CA, with a spread of ratings, all keyed `mcf-review-<sku>-<n>`, and `verify` SHALL compare product statistics with the seeded reviews.
 
 #### Scenario: Statistics match
 - **GIVEN** the seed finished
 - **WHEN** `verify` runs
-- **THEN** each product's `reviewRatingStatistics.count` equals its seeded approved review count
+- **THEN** each product's `reviewRatingStatistics.count` equals its seeded review count
 
 ### Requirement: Safety
 

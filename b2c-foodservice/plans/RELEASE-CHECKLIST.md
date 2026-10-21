@@ -26,18 +26,18 @@ Run order: 1) section A (offline, from a clean clone), 2) section B (live projec
 - [ ] End-to-end journeys J0 to J15 of `plans/E2E-JOURNEYS.md` run on a release build with read-backs. `plans/evidence/Q/journeys.md`. Task Q-09.
 - [ ] Security review (section 6 of workstream Q): BFF boundary, bundle scan, cookie flags, 401 matrix, IDOR matrix, CSRF and origin check, open redirect, XSS (reviews, contact, search, JSON-LD), headers and CSP, rate limits, logging. `plans/evidence/Q/security.md`. Tasks Q-10 to Q-13.
 - [ ] Performance: traces for home, listing, product, cart; budgets met or each miss explained; cache headers verified. `plans/evidence/Q/perf.md`. Task Q-14.
-- [ ] Hosted Checkout verified with the test card (J1, J2, J3, J15) and a declined card.
-- [ ] Mixed bag outcome (one order with multiple shipping, or the documented fallback) matches `plans/DECISIONS.md`.
+- [ ] Full hosted Checkout with Stripe verified with the test card (J1, J2, J3, J15) and a declined card; the Canada journey is ship-only.
+- [ ] Mixed bag outcome (mixed bags are required, D-033: one order with multiple shipping, or the documented fallback that still shows every line in its cluster) matches `plans/DECISIONS.md`.
 
 ## C. Deployment preparation (owner performs, Claude verifies)
 
 | # | Item | How verified | Row |
 | --- | --- | --- | --- |
-| 1 | Hosting chosen (Vercel or Netlify, Q-015) and project created | `/commercetools:nextjs-deploy-vercel` or `/commercetools:nextjs-deploy-netlify` verifies credentials then hands off to the host's skill | OA-05 |
+| 1 | Netlify site created (hosting is Netlify, D-038) | `/commercetools:nextjs-deploy-netlify` verifies credentials then hands off to the host's skill | OA-05 |
 | 2 | Production API client for the storefront with exactly the scopes in `storefront/.env.example` (including `manage_recurring_orders`, `view_recurrence_policies`) and nothing admin; values only in the host's environment settings | `check-secrets`; scopes list compared with the `.env.example` comment; owner never pastes values into chat | OA-01, OA-02 |
 | 3 | `SESSION_SECRET` of at least 32 random characters, different per environment | `predeploy-check` (length only, value never printed) | OA-N-Q1 |
 | 4 | `EXPECTED_PROJECT_KEY` equals `CTP_PROJECT_KEY` for the target project | `predeploy-check` (names of both keys only) | OA-N-Q1 |
-| 5 | Hosted Checkout application and payment connector set for the production origin and allowed origins; names of the variables only in `.env.example` | owner row; J1 on the deployed URL | OA-04 |
+| 5 | Hosted Checkout application (full checkout flow) and Stripe connector set for the production origin and allowed origins; names of the variables only in `.env.example` | owner row; J1 on the deployed URL | OA-04 |
 | 6 | Contact and feedback receivers set (`CONTACT_WEBHOOK_URL`, `CONTACT_WEBHOOK_TOKEN`, `FEEDBACK_WEBHOOK_URL`) | M-P-01 on the deployed URL | OA-P1 |
 | 7 | Site origin variable set for sitemap and metadata | `/sitemap.xml` shows the production origin | OA-05 |
 | 8 | Node 22 set on the host (`.nvmrc`, and the host's Node setting); build command `npm run build`; base directory `storefront` | host build log | OA-05 |
@@ -54,15 +54,15 @@ Run order: 1) section A (offline, from a clean clone), 2) section B (live projec
 
 1. Run `node plans/verify-plan.mjs --release` (all workstreams `Done`, all owner rows `DONE`, `PASS` or `WAIVED`).
 2. In the storefront folder run `npm run predeploy` (the deploy gate of Q-15) and fix what it reports.
-3. Deploy with the skill: `/commercetools:nextjs-deploy-vercel` or `/commercetools:nextjs-deploy-netlify`.
+3. Deploy with the skill: `/commercetools:nextjs-deploy-netlify`.
 4. Tell Claude the URL; Claude runs section E.
 
 ## E. Post-deploy smoke (Claude runs it on the deployed URL)
 
-- [ ] `GET /en-US`, `/de-DE`, `/en-GB` return 200; `/en-US/does-not-exist` returns 404 with the localized page; `GET /api/health` returns 404.
+- [ ] `GET /en-US` and `/en-CA` return 200; `/en-US/does-not-exist` returns 404 with the localized page; `GET /api/health` returns 404.
 - [ ] `curl -I` shows the security headers (CSP, nosniff, referrer policy, permissions policy, HSTS) and no `x-powered-by`.
 - [ ] Session cookie has `HttpOnly`, `Secure`, `SameSite=Lax` after sign-in.
-- [ ] Sign in as one seeded shopper per market; sign out.
+- [ ] Sign in as one seeded shopper per market (US and Canada); sign out.
 - [ ] One order round trip (J1 in the US) with the test card, then its cleanup entry in `test-data.md`.
 - [ ] One subscription round trip (J3, J4) and the account tab.
 - [ ] Contact form delivers to the real receiver (M-P-01).
@@ -75,3 +75,4 @@ Run order: 1) section A (offline, from a clean clone), 2) section B (live projec
 - [ ] Second `npm run seed` after the purge reports `0 change(s)`.
 - [ ] Known gaps accepted by the owner (M-Q-06): no monitoring or alerting; rate limits are per instance unless the host provides them; renewal payment for subscriptions depends on Checkout recurring payments (public beta); no cookie banner (no third-party scripts); content is in the repository (a text correction needs a deploy); newsletter and any other route listed as "not built" in `plans/evidence/Q/fixes.md`; in-store selling is out of scope (D-001).
 - [ ] If the repository will be published: run the `ct-builders-readiness` skill and keep its report out of the published tree (`plans/evidence/Q/PUBLISH-READINESS.md`); MIT and SPDX headers on every source file, no customer or internal names, `design/export/` decision by the owner.
+- [ ] Demo sign-in (D-040): owner confirms `DEMO_LOGIN_ENABLED` is `true` only on demo deployments and `DEMO_LOGIN_PASSWORD` is set in Netlify as a secret.

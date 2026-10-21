@@ -54,11 +54,11 @@ describe('Verification', () => {
     const def = PRODUCTS[0]!;
     const p = (await api.getByKey('products', def.key)) as Res;
     const md = p.masterData as { published: boolean; current: { name: Record<string, string> }; staged: { name: Record<string, string> } };
-    delete md.staged.name['de-DE'];
+    delete md.staged.name['en-CA'];
     md.published = false; // an unpublished product is checked on its staged data
     const problems = checkProduct(p, def, () => undefined);
     expect(problems).toContain(`${def.key}: not published`);
-    expect(problems).toContain(`${def.key}: name missing in de-DE`);
+    expect(problems).toContain(`${def.key}: name missing in en-CA`);
   });
 
   it('checkReviewStatistics compares count and average', () => {

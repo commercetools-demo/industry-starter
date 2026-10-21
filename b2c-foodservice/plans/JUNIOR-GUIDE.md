@@ -31,7 +31,7 @@ Read this once, then follow **one workstream file at a time** (`plans/workstream
 8. **Seeded keys start with `mcf-`.** Anything without the prefix is not yours, except what a cleanup manifest lists.
 9. **Image URLs are stored clean**: no query string, no fragment. Resize at render time only.
 10. **No wildcard deletes.** Deleting happens only in seed scripts, driven by a reviewed manifest or the seed's own keys.
-11. Markets are US, DE and GB; locales `en-US`, `de-DE`, `en-GB`. Capsules are Nespresso-**compatible**; never use the Nespresso name as a product brand. The site is the **online** channel only.
+11. Markets are US and Canada only (D-030); locales `en-US` (USD) and `en-CA` (CAD, English). All six stores are in New York City, so collection is US only and Canada is delivery only. There is no email, no password reset and no review moderation (D-032, D-037). Capsules are Nespresso-**compatible**; never use the Nespresso name as a product brand. The site is the **online** channel only.
 
 ## 2. How to do a task (the loop)
 

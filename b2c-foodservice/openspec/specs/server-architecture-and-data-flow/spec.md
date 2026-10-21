@@ -28,9 +28,9 @@ The system SHALL follow this call chain and no other: component, then SWR hook, 
 The system SHALL map every commercetools response to app types in `lib/mappers/*` before it leaves `lib/ct`, and components SHALL import types only from `lib/types.ts`. Prices are integer minor units with a currency code and are formatted by `formatMoney(centAmount, currency, locale)` with two decimals.
 
 #### Scenario: Price display
-- **GIVEN** a price of 490 cents in EUR for locale `de-DE`
+- **GIVEN** a price of 490 cents in CAD for locale `en-CA`
 - **WHEN** it is formatted
-- **THEN** it renders as "4,90 €", never "5"
+- **THEN** it renders as "$4.90" with the CAD currency convention of `en-CA`, never "5"
 
 ### Requirement: Session
 
@@ -61,14 +61,15 @@ The system SHALL expose these handlers, each documented with its request, respon
 | Path | Methods | Purpose |
 | --- | --- | --- |
 | `/api/health` | GET | Connectivity check (removed before deploy) |
-| `/api/session/store`, `/api/session/market` | PUT | Collection store and market choice (market updates country, currency, locale together and resets `cartId`) |
+| `/api/session/store`, `/api/session/market` | PUT | Collection store (US market only) and market choice, US or Canada (market updates country, currency, locale together and resets `cartId`) |
 | `/api/cart/count` | GET | Header badge count |
 | `/api/newsletter`, `/api/contact`, `/api/faq-feedback` | POST | Content-page forms (honest "not sent" when no destination is configured) |
-| `/api/auth/login`, `/register`, `/logout`, `/me` | POST, POST, POST, GET | Customer session |
+| `/api/auth/login`, `/register`, `/logout`, `/me` | POST, POST, POST, GET | Customer session; registration creates an auto-verified customer and signs in at once (D-032); there is no password-reset or email-verification route |
+| `/api/checkout` | POST | Start the hosted commercetools Checkout for the session cart and return its URL or session (D-039) |
 | `/api/cart` | GET, POST, PATCH, DELETE | Cart read, line add or update, addresses, discount codes |
 | `/api/cart/lines/[lineId]` | PATCH, DELETE | Quantity, fulfilment, remove |
-| `/api/shipping-methods` | GET | Methods for the session currency and country |
-| `/api/channels` | GET | Collection stores |
+| `/api/shipping-methods` | GET | Standard carrier method for the session currency and country (D-034) |
+| `/api/channels` | GET | The six NYC collection stores (empty for the Canada market) |
 | `/api/availability` | GET | Per-store stock for a SKU |
 | `/api/search` | GET | Product Search with facets |
 | `/api/shopping-lists` | GET, POST, DELETE | Saved items |
@@ -77,6 +78,11 @@ The system SHALL expose these handlers, each documented with its request, respon
 | `/api/recurring-orders`, `/api/recurring-orders/[id]` | GET, PUT | Subscriptions |
 | `/api/recurrence-policies` | GET | Policies for the selector |
 | `/api/account/*` | GET, PATCH, DELETE | Profile, addresses |
+
+#### Scenario: Collection in Canada
+- **GIVEN** the session market is Canada
+- **WHEN** `/api/channels` is called
+- **THEN** it returns an empty list and a cart cannot hold a collect line
 
 #### Scenario: Unauthenticated account call
 - **GIVEN** no customer session

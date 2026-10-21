@@ -11,7 +11,7 @@ import { inventoryDrafts, recurrencePolicyDrafts } from './data/extras';
 import { productTypeDrafts } from './data/product-types';
 import { PRODUCTS } from './data/products';
 import { reviewDrafts } from './data/reviews';
-import { orderStateDrafts, reviewStateDrafts } from './data/states';
+import { orderStateDrafts } from './data/states';
 import { channelDrafts } from './data/stores';
 import { shippingMethodDrafts, taxCategoryDrafts, zoneDrafts } from './data/tax-shipping';
 import { FakeApi } from './fake-api';
@@ -216,24 +216,12 @@ export const STEPS: Step[] = [
     },
   },
   {
-    // Approved is the target of pending, so it is created first.
-    name: 'review-states', requires: [],
-    run: async (c) => {
-      for (const s of [...reviewStateDrafts()].reverse()) {
-        await upsert(c, 'states', `review state ${s.key}`, s as unknown as Obj, (e) => S.planStateUpdate(e, s as never, c.keyOf));
-        await c.loadKeys('state', 'states');
-      }
-    },
-  },
-  {
-    // Reviews through the Reviews API, approved, so `reviewRatingStatistics` exists on the product.
+    // Reviews through the Reviews API, published at once (D-037, no moderation, no review state), so `reviewRatingStatistics` exists on the product.
     name: 'reviews',
     requires: [
       { step: 'products', kind: 'products', key: productKey() }, { step: 'customers', kind: 'customers', key: 'mcf-customer-maya' },
-      { step: 'review-states', kind: 'states', key: 'mcf-review-approved' },
     ],
     run: async (c) => {
-      await c.loadKeys('state', 'states');
       for (const d of reviewDrafts()) await upsert(c, 'reviews', `review ${d.key}`, d as unknown as Obj, (e) => S.planReviewUpdate(e, d as never, c.keyOf));
     },
   },

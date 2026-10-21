@@ -22,7 +22,7 @@ describe('Idempotent seed in dependency order', () => {
   });
 
   it('runs the steps in the documented order', () => {
-    expect(STEP_NAMES).toEqual(['settings', 'tax', 'shipping', 'states', 'types', 'product-types', 'categories', 'channels', 'recurrence', 'products', 'prices', 'inventory', 'discounts', 'customers', 'shopping-lists', 'review-states', 'reviews']);
+    expect(STEP_NAMES).toEqual(['settings', 'tax', 'shipping', 'states', 'types', 'product-types', 'categories', 'channels', 'recurrence', 'products', 'prices', 'inventory', 'discounts', 'customers', 'shopping-lists', 'reviews']);
   });
 
   it('Re-run', async () => {
@@ -99,13 +99,13 @@ describe('Idempotent seed in dependency order', () => {
     const product = (await api.getByKey('products', PRODUCTS[0]?.key as string)) as Res;
     const staged = (product.masterData as { staged: { masterVariant: { sku: string; prices: { value: { centAmount: number } }[] } } }).staged;
     await api.update('products', product, [{ action: 'setPrices', sku: staged.masterVariant.sku, prices: [{ value: { currencyCode: 'USD', centAmount: 1 }, country: 'US' }], staged: true }, { action: 'publish' }]);
-    const store = (await api.getByKey('channels', 'mcf-store-munich')) as Res;
+    const store = (await api.getByKey('channels', 'mcf-store-brooklyn-williamsburg')) as Res;
     await api.update('channels', store, [{ action: 'setCustomField', name: 'phone', value: '000' }]);
     const inv = api.all('inventory')[0] as Res;
     await api.update('inventory', inv, [{ action: 'changeQuantity', quantity: 99999 }]);
     const tax = (await api.getByKey('tax-categories', 'mcf-tax-food')) as Res;
-    const de = (tax.rates as { id: string; country: string; name: string; includedInPrice: boolean }[]).find((r) => r.country === 'DE') as { id: string; name: string; includedInPrice: boolean };
-    await api.update('tax-categories', tax, [{ action: 'replaceTaxRate', taxRateId: de.id, taxRate: { name: de.name, amount: 0.5, includedInPrice: true, country: 'DE' } }]);
+    const ca = (tax.rates as { id: string; country: string; name: string; includedInPrice: boolean }[]).find((r) => r.country === 'CA') as { id: string; name: string; includedInPrice: boolean };
+    await api.update('tax-categories', tax, [{ action: 'replaceTaxRate', taxRateId: ca.id, taxRate: { name: ca.name, amount: 0.5, includedInPrice: false, country: 'CA' } }]);
     const run = new Runner(false, quiet);
     const r = await runSeed({ ...opts(api), run });
     expect(r.changes).toBe(4); // prices (1 product), channel, inventory, tax

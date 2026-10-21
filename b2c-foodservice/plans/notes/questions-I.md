@@ -8,8 +8,8 @@ Format `Q-<L>-<n> | question | default | blocks? | Open`. The lead consolidates 
 Q-I-1 | Region switch with a populated bag (template open question; also Q-F-03)? | Carry over lines that have a price, convert collect lines of another country to ship, list everything that could not move | No | Open
 Q-I-2 | Where is the minimum order value configured and per what (template open question)? | Per-currency constant MIN_ORDER_VALUE in lib/shop-config.ts, 0 meaning off | No | Open
 Q-I-3 | Does the free-shipping progress count collection lines? | No, only lines that ship (ship, subscribe) | No | Open
-Q-I-4 | Single shipping mode prices the whole bag with one method; mixed-bag free-above is then compared to the full total | Sync mcf-ship-standard if any line ships else mcf-collect; K's spike decides Multiple or one order per group | No (K decides) | Open
-Q-I-5 | Default CART_SHIPPING_MODE? | Single (skill); K may change it, rebuildCart migrates existing carts | No (K decides) | Open
+Q-I-4 | Single shipping mode prices the whole bag with one method; mixed-bag free-above is then compared to the full total | Sync mcf-ship-standard if any line ships else mcf-collect; K's spike K-01 decides how Multiple shipping is done in the hosted Checkout; mixed bags are required (D-033) | No (K decides) | Open
+Q-I-5 | Default CART_SHIPPING_MODE? | Single for single-cluster bags; K moves a mixed bag to a Multiple cart (D-033) with rebuildCart migrating existing carts | No (K decides) | Open
 Q-I-6 | How to keep 'Price updated' across reloads? | Optional line field priceWas (seed request); without it the mark shows only on the detecting response | No | Open
 Q-I-7 | Cart summary needs variant attributes on lines (savedToLineItem false by default) | Always enrich lines from one batched projection read; seed request to save the needed attributes on the line | No | Open
 Q-I-8 | Discount code casing? | Send as typed after trim; verify in I-00 and uppercase only if the project's codes require it | No | Open

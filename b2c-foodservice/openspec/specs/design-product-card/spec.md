@@ -45,12 +45,17 @@ The system SHALL show "From {price}" when variants differ in price, and a unit p
 
 ### Requirement: Availability line
 
-The system SHALL show a dot and text for the shopper's collection store: In stock at {store} (teal), Low stock at {store} (amber), Not available at {store} (stone). With no store chosen it shows a "Choose a store" link instead.
+The system SHALL show a dot and text for the shopper's collection store: In stock at {store} (teal), Low stock at {store} (amber), Not available at {store} (stone). With no store chosen it shows a "Choose a store" link instead. In the Canada market (delivery only, D-035) the line and link are omitted entirely.
 
 #### Scenario: Out at the store
 - **GIVEN** the item is out of stock at the chosen store
 - **WHEN** the card renders
-- **THEN** the line reads "Not available at {store}" and the card is still openable and shippable
+- **THEN** the line reads "Not available at {store}" and the card is still openable and deliverable
+
+#### Scenario: Canada card
+- **GIVEN** the Canada market is active
+- **WHEN** a card renders
+- **THEN** no availability line and no Choose a store link appear
 
 ### Requirement: Quick add
 

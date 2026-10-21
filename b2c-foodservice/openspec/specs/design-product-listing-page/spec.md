@@ -52,12 +52,17 @@ Malva facets:
 
 ### Requirement: Toolbar, chips and sort
 
-The system SHALL show a toolbar with a mobile Filters button (badge with active count), an "Available at {store}" toggle chip and a sort select: Featured, Price low to high, Price high to low, Top rated. Active filters show as removable chips with a "Clear all" link.
+The system SHALL show a toolbar with a mobile Filters button (badge with active count), an "Available at {store}" toggle chip (hidden in the Canada market, D-035) and a sort select: Featured, Price low to high, Price high to low, Top rated. Active filters show as removable chips with a "Clear all" link.
 
 #### Scenario: Collect filter
 - **GIVEN** "Available at {store}" is on
 - **WHEN** the list recomputes
 - **THEN** products out of stock at that store are removed and counts reflect it
+
+#### Scenario: Canada toolbar
+- **GIVEN** the Canada market is active
+- **WHEN** the toolbar renders
+- **THEN** the "Available at {store}" chip is absent
 
 #### Scenario: Remove a chip
 - **GIVEN** an active filter chip
