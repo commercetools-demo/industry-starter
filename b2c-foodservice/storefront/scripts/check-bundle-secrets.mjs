@@ -5,7 +5,11 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const SECRET_NAMES = ['CTP_CLIENT_SECRET', 'CTP_CLIENT_ID', 'SESSION_SECRET'];
+/** Every server-only value named in .env.example (names only; the test below keeps this list in step with the file). */
+export const SECRET_NAMES = [
+  'CTP_CLIENT_SECRET', 'CTP_CLIENT_ID', 'SESSION_SECRET', 'CTP_REVIEWS_CLIENT_ID', 'CTP_REVIEWS_CLIENT_SECRET',
+  'DEMO_LOGIN_PASSWORD', 'CONTACT_WEBHOOK_URL', 'CONTACT_WEBHOOK_TOKEN', 'FEEDBACK_WEBHOOK_URL',
+];
 const MIN_LENGTH = 8;
 
 function walk(dir, accept) {

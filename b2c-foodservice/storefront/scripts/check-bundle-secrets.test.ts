@@ -2,7 +2,8 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { checkBundleSecrets } from './check-bundle-secrets.mjs';
+import { readFileSync } from 'node:fs';
+import { SECRET_NAMES, checkBundleSecrets } from './check-bundle-secrets.mjs';
 
 const VALUE = 'fake-secret-value-12345';
 
@@ -38,5 +39,26 @@ describe('Client bundle scan', () => {
     const problems = checkBundleSecrets(root, { SESSION_SECRET: VALUE });
     expect(problems).toHaveLength(1);
     expect(problems[0]).toContain('SESSION_SECRET');
+  });
+});
+
+describe('Secret list', () => {
+  it('contact webhook token in the bundle is found', () => {
+    const problems = checkBundleSecrets(build(`var t="${VALUE}";`), { CONTACT_WEBHOOK_TOKEN: VALUE });
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain('CONTACT_WEBHOOK_TOKEN');
+    expect(problems[0]).not.toContain(VALUE);
+  });
+
+  it('list covers every secret named in .env.example', () => {
+    const example = readFileSync(join(process.cwd(), '.env.example'), 'utf8');
+    const names = [...example.matchAll(/^([A-Z][A-Z0-9_]*)=/gm)].map((m) => m[1]);
+    // Names that are settings, keys of public things or URLs of the project, not secrets.
+    const notSecret = new Set([
+      'CTP_PROJECT_KEY', 'EXPECTED_PROJECT_KEY', 'CTP_AUTH_URL', 'CTP_API_URL', 'CTP_SCOPES', 'CTP_REVIEWS_SCOPES', 'DEMO_LOGIN_ENABLED',
+      'NEXT_PUBLIC_SITE_URL', 'CTP_CHECKOUT_APP_KEY', 'CTP_SESSION_URL',
+    ]);
+    const missing = names.filter((n) => !notSecret.has(n) && !SECRET_NAMES.includes(n));
+    expect(missing).toEqual([]);
   });
 });
