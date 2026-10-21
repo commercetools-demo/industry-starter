@@ -19,6 +19,9 @@ export interface SearchRequestBody {
   markMatchingVariants?: boolean;
 }
 
+/** One facet of a Product Search response: buckets for distinct and ranges, `value` for count. */
+export interface RawFacet { name: string; buckets?: { key: string | number | boolean; count: number }[]; value?: number }
+
 export interface SearchContext { locale: string; currency: string; country: string; storeChannelId?: string }
 
 export interface SearchScope {
