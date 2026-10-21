@@ -320,11 +320,11 @@
       "firstName": "First name",
       "lastName": "Last name",
       "consent": "By creating an account you agree to the {terms} and {privacy}.",
-      "terms": "terms",
-      "privacy": "privacy policy",
       "failed": "We could not create the account with these details. If you already have one, sign in.",
       "created": "Welcome to Malva Coffee.",
-      "haveAccount": "Already have an account? Sign in"
+      "haveAccount": "Already have an account? Sign in",
+      "terms": "terms",
+      "privacy": "privacy policy"
     },
     "password": {
       "show": "Show password",

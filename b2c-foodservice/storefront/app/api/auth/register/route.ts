@@ -1,5 +1,6 @@
 import { handle } from '@/lib/api';
 import { domainError } from '@/lib/api-domain';
+import { GUEST_EMAIL_COOKIE } from '@/lib/auth/guest-email';
 import { isEmailShape } from '@/lib/auth/email-shape';
 import { isCredentialFailure, limitRegister, signedInResponse } from '@/lib/auth/login-flow';
 import { validatePassword } from '@/lib/auth/password-policy';
@@ -41,5 +42,8 @@ export const POST = handle('/api/auth/register', async (req) => {
     throw e;
   }
   const result = await signIn(email, password, { cartId: session.cartId, anonymousId: session.anonymousId });
-  return signedInResponse(result, session, 201);
+  const res = await signedInResponse(result, session, 201);
+  // The guest-order email prefill (set by checkout) has done its job; only a route can remove the cookie.
+  res.cookies.set(GUEST_EMAIL_COOKIE, '', { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 0 });
+  return res;
 });

@@ -44,7 +44,7 @@ export function isCredentialFailure(e: unknown): boolean {
 }
 
 /** Writes a fresh session cookie (new iat, fresh signature) and the customer plus merged cart as JSON. */
-export async function signedInResponse(result: SignInResult, session: Session, status = 200): Promise<Response> {
+export async function signedInResponse(result: SignInResult, session: Session, status = 200): Promise<NextResponse> {
   const body = {
     customer: toAppCustomer(result.customer),
     cart: result.cart ? toAuthCart(result.cart) : null,

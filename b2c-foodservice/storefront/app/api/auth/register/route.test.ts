@@ -52,6 +52,11 @@ describe('POST /api/auth/register', () => {
     expect(ct.createCustomer.mock.invocationCallOrder[0]).toBeLessThan(ct.signIn.mock.invocationCallOrder[0]);
   });
 
+  it('Register deletes the guest-email prefill cookie', async () => {
+    const res = await post(valid);
+    expect(res.headers.get('set-cookie')).toMatch(/mcf_guest_email=;[^,]*Max-Age=0/i);
+  });
+
   it('Register then merges the cart', async () => {
     ct.signIn.mockResolvedValue({ customer: { id: 'c9', email: valid.email, addresses: [] }, cart: { id: 'cart-7', lineItems: [{ quantity: 1 }] } });
     await seed({ cartId: 'cart-7', anonymousId: 'anon-7' });
