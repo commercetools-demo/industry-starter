@@ -19,3 +19,30 @@ Verified platform and environment facts. Add a dated row whenever a commercetool
 | 2026-10-21 | Horizontal overflow on every page at 1080 and 900 px (scrollWidth 1132) and at 375 px (467), identical on About, so it comes from the shell (header or footer grid), not from P pages | Chrome DevTools, iframe widths | F to check; P pages add none |
 | 2026-10-21 | Next 16.4 error boundaries receive `retry` (refetch) as well as `reset`; the content routes are dynamic because the locale layout reads the session | Next docs, `next build` output | P calls `retry` when present (Q-P-19, Q-P-20) |
 | 2026-10-21 | M-03, installed SDK 8 `ReviewDraft`: `key`, `uniquenessValue` (unique among Reviews), `locale`, `authorName`, `title`, `text`, `target` (product or channel), `state`, `rating`, `customer`, `custom`. A review created without `state` has no state gate, so it counts in `reviewRatingStatistics` at once (D-037). Update actions used: `setRating`, `setTitle`, `setText` only. A duplicate `uniquenessValue` is a 400 with error code `DuplicateField` (mapped to `already_reviewed`, live confirmation is owner row M-M-03). Reads need `view_products`, create/update/delete need `manage_products`; per D-027 writes use a second server-only client (`lib/ct/review-client.ts`, env names `CTP_REVIEWS_CLIENT_ID`, `CTP_REVIEWS_CLIENT_SECRET`, optional `CTP_REVIEWS_SCOPES`) | SDK `review.d.ts`, docs.commercetools.com/api/projects/reviews | M-03, OA-M-a |
+
+## F-K-01 Mixed bags and the hosted Checkout (2026-10-21)
+
+**Status: documentation only. No live Checkout Application or Stripe connector exists (OA-04, OA-K-a), so every probe that needs one is `blocked: OA-K-a`. `storefront/scripts/spike-k.mts` is written and typechecked but has not been run (it needs live credentials).**
+
+Documentation checked (checkout skill docs search): https://docs.commercetools.com/checkout/browser-sdk (checkoutFlow, paymentFlow, the `checkout_completed` Message with `payload.order.id`), https://docs.commercetools.com/learning-implement-checkout/implement-commercetools-checkout/extend-checkout-functionality (multiple shipping methods, skip default pages, custom order number), https://docs.commercetools.com/learning-implement-checkout/implement-commercetools-checkout/intro-to-commercetools-checkout (Checkout does not create carts).
+
+| # | Probe | Result | Facts |
+| --- | --- | --- | --- |
+| S1 | Multiple cart, collect group address and method | UNKNOWN (script ready, not run) | Documented actions `addItemShippingAddress`, `addShippingMethod`, `setLineItemShippingDetails`; field names to confirm against SDK 8 types |
+| S2 | Tax per market | UNKNOWN | Documented: with `Multiple`, `taxedPrice` is calculated only when every quantity is allocated |
+| S3 | `matchingCart` per market | UNKNOWN | Script ready |
+| S4 | Free-above on Multiple | UNKNOWN | Not documented whether the threshold compares the cart or the group |
+| S5 | Discount codes on Multiple | UNKNOWN | Script ready |
+| S6 | Sessions API for ship-only, collect-only, Multiple carts | blocked: OA-K-a | |
+| S7, S8 | Hosted flow ship-only, created Order | blocked: OA-K-a | |
+| S9 | `transitionState` from no state | UNKNOWN | Verify live that the seeded `mcf-order-ordered` state accepts a first transition (it should be the initial state) |
+| S10 | Clone path / merge | UNKNOWN | Documented: `shippingMode` is immutable after creation |
+| S11 | New session pays the new total | blocked: OA-K-a | |
+| S12 | Hosted controls | PARTIAL from docs | `onInfo` code `checkout_completed` with `payload.order.id`; `skipPaymentSuccessPage` and `skipPaymentErrorPage` are `checkoutFlow` options; `<div data-ctc />` is the documented mount point (full page without it). UNKNOWN: `onError` codes, pay-button text, `en-CA` locale, country limit |
+| S13 | Mixed bag in the complete hosted flow | **Predicted FAIL (documentation)** | "Use Payment Only mode. This is because the Complete Checkout mode handles shipping configuration internally." Not proved live |
+| S14 | Collect-only cart in the complete flow | UNKNOWN | No page says whether the hosted flow keeps a pre-set store address and `mcf-collect`; it asks for shipping and billing address itself |
+| S15 | Payment Only with a Multiple cart | Predicted PASS (documentation) | The documented supported path; not proved live |
+
+**Decision (provisional, by the rule table): `MIXED_STRATEGY = 'complete-per-group'`.** S13 is predicted FAIL and S14 is UNKNOWN, so the collect group is treated as one more group paid in the complete flow (its store address and `mcf-collect` are written on its own Single cart before the session). The bag stays one bag in the UI; at pay time it is cloned into one Single cart per payment group (each collect store, then delivery plus subscription), the bag itself is untouched, and each clone is paid in sequence with `futureOrderNumber` `<base>-A`, `-B`. If S14 FAILs live, switch to `payment-only-for-collect` (K-14c, needs OA-K-e); if S13 unexpectedly PASSes, `complete-multiple`. `lib/checkout/strategy.ts` is the single switch and `buildFulfilmentActions` (the `Multiple` path) is already implemented and tested. See Q-K-02 and the todo rows OA-K-a and OA-K-e.
+
+Deviation from the workstream: the spike script builds its own client instead of importing `lib/ct/client` (that module imports `server-only` and `@/lib/env`, which plain node cannot resolve).
