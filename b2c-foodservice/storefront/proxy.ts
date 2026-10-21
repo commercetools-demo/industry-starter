@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { COUNTRY_CONFIG, DEFAULT_LOCALE } from '@/lib/utils';
+import { COUNTRY_CONFIG, DEFAULT_LOCALE, LOCALE_COOKIE } from '@/lib/utils';
 
 const LOCALES = Object.keys(COUNTRY_CONFIG);
-const DEFAULT_LOCALE_STRING = DEFAULT_LOCALE.locale; // 'en-US'
+const LOCALE_HEADER = 'x-next-intl-locale';
+// A first path segment shaped like a locale, for example fr-FR or de.
+const LOCALE_SHAPE = /^[a-z]{2}(-[A-Z]{2})?$/;
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
     pathname.startsWith('/api/') ||
+    pathname === '/api' ||
     pathname.startsWith('/_next/') ||
     pathname.startsWith('/favicon') ||
     pathname.includes('.')
@@ -16,21 +19,27 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const matchedLocale = LOCALES.find(
-    (l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`)
-  );
-  if (matchedLocale) {
-    const response = NextResponse.next();
-    response.headers.set('x-next-intl-locale', matchedLocale);
+  const [, first = '', ...rest] = pathname.split('/');
+
+  if (LOCALES.includes(first)) {
+    // Forward on the request too, so server components read the locale (next-intl).
+    const headers = new Headers(request.headers);
+    headers.set(LOCALE_HEADER, first);
+    const response = NextResponse.next({ request: { headers } });
+    response.headers.set(LOCALE_HEADER, first);
     return response;
   }
 
-  // Cookie stores the BCP-47 locale directly (e.g. 'en-US', 'de-DE')
-  const cookieLocale = request.cookies.get('your-shop-country-locale')?.value;
-  const locale = (cookieLocale && LOCALES.includes(cookieLocale)) ? cookieLocale : DEFAULT_LOCALE_STRING;
+  const cookie = request.cookies.get(LOCALE_COOKIE)?.value;
+  const locale = cookie && LOCALES.includes(cookie) ? cookie : DEFAULT_LOCALE.locale;
+
+  // An unsupported locale-shaped first segment is replaced, never nested.
+  const segments = LOCALE_SHAPE.test(first) ? rest : [first, ...rest];
+  const tail = segments.join('/');
+
   const url = request.nextUrl.clone();
-  url.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
-  return NextResponse.redirect(url);
+  url.pathname = tail ? `/${locale}/${tail}` : `/${locale}`;
+  return NextResponse.redirect(url, 307);
 }
 
 export const config = {
