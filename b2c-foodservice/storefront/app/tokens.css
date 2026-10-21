@@ -1,0 +1,128 @@
+/* Single token layer (design-tokens-and-components). Names are final; values may change in a re-skin.
+   Hex values live in this file only. */
+:root {
+  /* semantic */
+  --ink: #191741;
+  --ink-2: #4F4F99;
+  --ink-3: #6E6B67;
+  --canvas: #FBF9F5;
+  --canvas-2: #F4F0E8;
+  --surface: #FFFFFF;
+  --line: #E7E2D9;
+  --line-2: #DEDAD4;
+  --accent: #6359FF;
+  --accent-press: #4242B2;
+  --teal: #0BBFBF;
+  --ct-amber-500: #FFB000;
+  --ct-danger: #E5484D;
+  --maxw: 1320px;
+
+  /* accessibility additions (new names, nothing renamed) */
+  --teal-strong: #0A948F;
+  --teal-text: #08746F;
+  --danger-text: #C62F35;
+  --stone: #C6C2BC;
+  --footer-heading: #8F8FFF;
+  --footer-link: #C2C2FF;
+  --footer-meta: #8F8FFF;
+  --ring: color-mix(in srgb, var(--accent) 14%, transparent);
+  --overlay: color-mix(in srgb, var(--ink) 42%, transparent);
+
+  /* machine colour swatches (keys from the seed COLOURS) */
+  --swatch-black: #1C1B1F;
+  --swatch-white: #F7F7F5;
+  --swatch-red: #B3262B;
+  --swatch-silver: #B8BCC2;
+  --swatch-cream: #EADFC8;
+  --swatch-fallback: var(--canvas-2);
+
+  /* shape */
+  --radius-pill: 999px;
+  --radius-field: 10px;
+  --radius-card: 16px;
+  --radius-panel: 24px;
+  --radius-hero: 32px;
+
+  /* motion */
+  --dur-press: 120ms;
+  --dur-state: 200ms;
+  --dur-drawer: 320ms;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-lg: 0 20px 48px rgb(0 0 0 / 0.45);
+  --shadow-card-hover: 0 18px 40px color-mix(in srgb, var(--ink) 10%, transparent);
+
+  /* palette scales (from colors_and_type.css) */
+  --ct-violet: #6359FF;
+  --ct-violet-600: #4E43D8;
+  --ct-violet-700: #4242B2;
+  --ct-violet-400: #7676FF;
+  --ct-violet-300: #8F8FFF;
+  --ct-violet-200: #C2C2FF;
+  --ct-navy: #191741;
+  --ct-navy-700: #252566;
+  --ct-navy-600: #4F4F99;
+  --ct-navy-500: #7979D1;
+  --ct-teal-100: #9FF7EE;
+  --ct-teal-400: #0FDBD1;
+  --ct-teal-500: #0BBFBF;
+  --ct-teal-600: #0BADA8;
+  --ct-teal-700: #0A948F;
+  --ct-teal-800: #097F79;
+  --ct-amber-100: #FFE9A1;
+  --ct-amber-200: #FFDC6E;
+  --ct-amber-300: #FFD03B;
+  --ct-amber-400: #FFC806;
+  --ct-amber-600: #FF8B00;
+  --ct-stone-50: #FBF9F5;
+  --ct-stone-100: #F7F2EA;
+  --ct-stone-300: #DEDAD4;
+  --ct-stone-400: #C6C2BC;
+  --ct-stone-600: #94918C;
+  --ct-stone-700: #7C7975;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-canvas: var(--canvas);
+  --color-canvas-2: var(--canvas-2);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-accent: var(--accent);
+  --color-accent-press: var(--accent-press);
+  --color-teal: var(--teal);
+  --color-teal-strong: var(--teal-strong);
+  --color-teal-text: var(--teal-text);
+  --color-amber: var(--ct-amber-500);
+  --color-danger: var(--ct-danger);
+  --color-danger-text: var(--danger-text);
+  --color-stone: var(--stone);
+  --color-footer-heading: var(--footer-heading);
+  --color-footer-link: var(--footer-link);
+  --color-footer-meta: var(--footer-meta);
+  --color-ring: var(--ring);
+  --color-overlay: var(--overlay);
+
+  --radius-pill: var(--radius-pill);
+  --radius-field: var(--radius-field);
+  --radius-card: var(--radius-card);
+  --radius-panel: var(--radius-panel);
+  --radius-hero: var(--radius-hero);
+
+  --shadow-lg: var(--shadow-lg);
+  --shadow-card-hover: var(--shadow-card-hover);
+
+  --font-display: var(--font-archivo), -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: var(--font-roboto), -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: var(--font-roboto-mono), ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --breakpoint-*: initial;
+  --breakpoint-xs: 520px;
+  --breakpoint-narrow: 700px;
+  --breakpoint-mobile: 820px;
+  --breakpoint-stack: 900px;
+  --breakpoint-grid3: 1080px;
+}

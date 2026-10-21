@@ -246,71 +246,71 @@ Other workstreams add their own namespaces to **both** files in the same commit;
 
 Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no commercetools API in E).
 
-- [ ] **E-01 Token layer and its tests**
+- [x] **E-01 Token layer and its tests**
   - Files: `app/tokens.css`, `app/globals.css`, `test/css.ts` (helper that reads and parses a CSS file into a map of custom properties and at-rules), `test/contrast.ts` (`contrast(fgHex, bgHex): number`), `app/tokens.test.ts`.
   - Implement 3.2. `globals.css` becomes the four `@import` lines plus `body { margin: 0; }`.
   - Tests (spec: Single token layer, Re-skin by token, Accessibility): `Tokens in sync: every token named in the spec table exists in tokens.css` (read `openspec/specs/design-tokens-and-components/spec.md`, parse the first table's first column, compare **names only**), `Re-skin by token: replacing every colour value leaves no component with a raw value` (rewrite all hex values in a copy of `tokens.css` to other hexes, assert the component scan below still finds none), `No component contains a raw colour, font or radius value` (scan `components/**`, `app/**/*.tsx`: no hex, no `rgb(`/`hsl(`, no `font-family`, no `rounded-[`, no `font-[`), `Text tokens meet WCAG AA on canvas, canvas-2 and surface` (ink, ink-2, ink-3, teal-text, danger-text, and white on accent, on danger-text, on accent-press; plus footer tokens on ink; plus teal-strong 3:1 on surface), `Tailwind mapping covers every colour token`.
 
-- [ ] **E-02 Fonts and typography**
+- [x] **E-02 Fonts and typography**
   - Files: `app/layout.tsx`, `app/typography.css`, `app/typography.test.ts`.
   - Implement 3.3. Replace A's root layout font handling; keep `NextIntlClientProvider` and `lang`.
   - Tests (spec: Typography, Page title): `Page title is Archivo 800 at 34 to 40px with -0.025em tracking` (parse `page-title` rule: weight 800, `clamp(34px, ..., 40px)`, `-0.025em`, `font-display`), `Hero title scales with clamp(44px, 5.6vw, 82px)`, `Eyebrow is 11px uppercase 0.18em weight 600`, `Wordmark is Archivo 800 with 0.16em spacing`, `Body is 15px with line-height 1.55`, `Layout loads Archivo, Roboto and Roboto Mono with their variables` (read `layout.tsx` source).
 
-- [ ] **E-03 Shape, spacing, motion, breakpoints**
+- [x] **E-03 Shape, spacing, motion, breakpoints**
   - Files: `app/motion.css`, `app/globals.css` (utilities), `app/layout-utils.test.ts`.
   - Implement 3.4 and the breakpoints of 3.2.
   - Tests (spec: Shape, spacing and motion; Breakpoints; Phone): `Radii are pill, 10, 16, 24 and 32`, `Durations are 120, 200 and 320 ms`, `Content never hidden at rest: the entrance keyframes are transform-only and wrapped in prefers-reduced-motion no-preference`, `Reduced motion removes animation durations`, `Phone: breakpoints are defined at 520, 700, 820, 900 and 1080 px`, `Phone: grid-products is 4, then 3 below 1080 and 2 below 820 columns`, `Phone: wrap padding is 32px and 20px under 820px`.
 
-- [ ] **E-04 Icons and IconButton**
+- [x] **E-04 Icons and IconButton**
   - Files: `lib/cn.ts`, `components/ui/icons.ts`, `components/ui/Icon.tsx`, `components/ui/IconButton.tsx`, `test/render.tsx` (`renderWithIntl(ui, { locale = 'en-US' })` wrapping `NextIntlClientProvider` with the real catalogue), tests.
   - Implement 3.5 Icon, IconButton, `cn`. Add the four coffee glyphs.
   - Tests (spec: Iconography, Accessibility): `New glyph: every icon renders a 24px viewBox, 1.75 stroke, round caps and joins`, `New glyph: cup, bean, capsule and machine exist`, `Icon paths use only drawing commands M L H V C S Q T A Z` (regex on path data), `No emoji in the icon set or in components` (scan for emoji code points), `Icon button: an icon-only control has an accessible name` (`getByRole('button', { name: 'Cart' })`), `Icon button: decorative icons are aria-hidden`, `Icon with a title is exposed as an image`, `cn drops falsy parts`.
 
-- [ ] **E-05 Button, ButtonLink, Chip, Badge, Card, AvailabilityDot, Rating**
+- [x] **E-05 Button, ButtonLink, Chip, Badge, Card, AvailabilityDot, Rating**
   - Files: one component and one test per file in `components/ui/`.
   - Implement per 3.5.
   - Tests: `Button defaults to ink and type button`, `Button accent and ghost classes differ`, `Button disabled has opacity 40 and blocks clicks`, `Button loading disables and exposes aria-busy`, `ButtonLink renders an anchor with the locale prefix` (mock `@/i18n/routing` Link if `next/link` needs router context), `Chip active sets aria-pressed`, `Chip active uses ink fill`, `Badge variants ink and accent`, `AvailabilityDot has three states and a label when given`, `Rating shows 4.6 and 12 reviews for 4.58333 and 12` (spec reviews-and-ratings: Card rating), `Rating renders nothing for no rating` (value 0), `Rating label is announced with a plural` (en and de), `Card renders as the chosen element`.
 
-- [ ] **E-06 Field, OptionButton, ColorSwatch, Stepper**
+- [x] **E-06 Field, OptionButton, ColorSwatch, Stepper**
   - Files: components and tests.
   - Tests (spec: Shared atoms, Disabled option explains itself): `Disabled option explains itself: struck through, not selectable, carries a title` (assert `line-through` class, `aria-disabled`, `title`, `onClick` not called), `Disabled option is still focusable`, `TypeScript refuses a disabled option without a reason` (`// @ts-expect-error` line in the test, checked by `npm run typecheck`), `Selected option uses the ink fill and aria-pressed`, `Field shows its label above and the error text with aria-describedby`, `Input focus uses the ring token` (class assertion), `Colour swatch uses the swatch token and falls back for unknown colours`, `Colour swatch selected has the double ring`, `Colour swatch as a button has an accessible name`, `Stepper increments, decrements and stops at min and max`, `Stepper buttons have localized labels in en-CA`, `Stepper announces the value politely`.
 
-- [ ] **E-07 Drawer and Modal**
+- [x] **E-07 Drawer and Modal**
   - Files: `components/ui/use-dialog.ts`, `Drawer.tsx`, `Modal.tsx`, tests.
   - Tests (spec: Accessibility, Shared atoms): `Drawer opens with focus inside and a dialog role`, `Escape closes the drawer`, `Tab is trapped inside the drawer`, `Focus returns to the opener on close`, `Overlay click closes`, `Closed drawer is inert and not focusable`, `Body scroll is locked while open and restored`, `Drawer is 440px wide and Modal is 560px with a 24px radius` (class assertions), `Modal title labels the dialog`, `Drawer close button has a localized accessible name`.
 
-- [ ] **E-08 Toast and Steps**
+- [x] **E-08 Toast and Steps**
   - Files: `context/toast.tsx`, `components/ui/Toast.tsx`, `Steps.tsx`, tests (use `vi.useFakeTimers()`).
   - Tests: `Toast shows the message with a polite live region`, `Toast disappears after 2.2 seconds`, `A second message replaces the first and restarts the timer`, `useToast outside the provider throws a clear error`, `Steps marks done, active and pending`, `Steps sets aria-current on the active step`, `Steps done circle shows a check icon`.
 
-- [ ] **E-09 Message catalogues (identical keys, two locales)**
+- [x] **E-09 Message catalogues (identical keys, two locales)**
   - Files: `messages/en-US.json`, `en-CA.json`, `messages/catalogue.test.ts`.
   - Implement 3.6. English only (D-030); en-CA spells colour with u.
   - Tests (spec: bootstrap Adding a market, extended): `Catalogues have identical keys` (reuses A's helper), `en-CA uses Canadian spelling where the text has colour or favourite`, `ICU messages parse in both locales` (use `IntlMessageFormat`? not installed: instead render `ui.rating.label` through `NextIntlClientProvider` for counts 0, 1, 12), `Nespresso appears only in compatibility wording`, `Every ErrorCode of lib/errors has an errors.<code> key`, `No catalogue value contains a hex colour or HTML tag`.
 
-- [ ] **E-10 Kitchen-sink page and predeploy gate**
+- [x] **E-10 Kitchen-sink page and predeploy gate**
   - Files: `app/[locale]/dev/design/page.tsx`, `app/[locale]/dev/design/KitchenSink.tsx` (client), `scripts/predeploy-check.mjs` and its test (extend: fail while `app/[locale]/dev` exists).
   - The page shows: every token as a labelled swatch (name beside it, using `style={{ background: 'var(--ink)' }}` strings, never hex), the type scale, every atom in every state (default, hover note, focus, disabled, selected, loading), the icon grid (name under each icon at 24px and 96px), a Drawer and Modal opener, a Toast button, Steps with three states, and the grid utility with 8 placeholder cards. The page 404s when `NODE_ENV === 'production'`.
   - Tests: `Kitchen sink is 404 in production`, `Deploy gate fails while app/[locale]/dev exists`.
 
-- [ ] **E-11 Browser verification and evidence** Run section 6 and section 7; save evidence.
+- [x] **E-11 Browser verification and evidence** Run section 6 and section 7; save evidence.
 
-- [ ] **E-12 Agent rules for design use**
+- [x] **E-12 Agent rules for design use**
   - Files: `storefront/AGENTS.md` (append "Design system": the token names, "no hex, no raw font, no inline radius", the atom list with props, `buttonClasses` for links, how to add an icon, how to add a message key to both files), `agent-rules.test.ts` extended: `AGENTS.md names the tokens and the atom list`.
 
 ## 5. Scenarios checklist (`design-tokens-and-components`)
 
-- [ ] Re-skin by token: `Re-skin by token: replacing every colour value leaves no component with a raw value` (E-01)
-- [ ] Page title: `Page title is Archivo 800 at 34 to 40px with -0.025em tracking` and `Hero title scales with clamp(44px, 5.6vw, 82px)` (E-02) plus browser step 4 computed styles
-- [ ] Content never hidden at rest: `Content never hidden at rest: the entrance keyframes are transform-only and wrapped in prefers-reduced-motion no-preference` (E-03) plus browser step 6
-- [ ] Disabled option explains itself: `Disabled option explains itself: struck through, not selectable, carries a title` (E-06)
-- [ ] New glyph: `New glyph: every icon renders a 24px viewBox, 1.75 stroke, round caps and joins` and `New glyph: cup, bean, capsule and machine exist` (E-04) plus screenshot `E-icons-1440.png`
-- [ ] Phone: `Phone: grid-products is 4, then 3 below 1080 and 2 below 820 columns` (E-03) plus browser step 7 at 390 px (two columns). The slide-in nav and the full-height filter sheet are built in F and G; their Phone assertions are listed there
-- [ ] Icon button: `Icon button: an icon-only control has an accessible name` (E-04)
-- [ ] Requirement Single token layer: `Tokens in sync...`, `No component contains a raw colour, font or radius value` (E-01)
-- [ ] Requirement Shape, spacing and motion: radii and duration tests (E-03)
-- [ ] Requirement Shared atoms: one test group per atom (E-05 to E-08)
-- [ ] Requirement Accessibility: `Text tokens meet WCAG AA...` (E-01), Lighthouse accessibility run (browser step 9)
+- [x] Re-skin by token: `Re-skin by token: replacing every colour value leaves no component with a raw value` (E-01)
+- [x] Page title: `Page title is Archivo 800 at 34 to 40px with -0.025em tracking` and `Hero title scales with clamp(44px, 5.6vw, 82px)` (E-02) plus browser step 4 computed styles
+- [x] Content never hidden at rest: `Content never hidden at rest: the entrance keyframes are transform-only and wrapped in prefers-reduced-motion no-preference` (E-03) plus browser step 6
+- [x] Disabled option explains itself: `Disabled option explains itself: struck through, not selectable, carries a title` (E-06)
+- [x] New glyph: `New glyph: every icon renders a 24px viewBox, 1.75 stroke, round caps and joins` and `New glyph: cup, bean, capsule and machine exist` (E-04) plus screenshot `E-icons-1440.png`
+- [x] Phone: `Phone: grid-products is 4, then 3 below 1080 and 2 below 820 columns` (E-03) plus browser step 7 at 390 px (two columns). The slide-in nav and the full-height filter sheet are built in F and G; their Phone assertions are listed there
+- [x] Icon button: `Icon button: an icon-only control has an accessible name` (E-04)
+- [x] Requirement Single token layer: `Tokens in sync...`, `No component contains a raw colour, font or radius value` (E-01)
+- [x] Requirement Shape, spacing and motion: radii and duration tests (E-03)
+- [x] Requirement Shared atoms: one test group per atom (E-05 to E-08)
+- [x] Requirement Accessibility: `Text tokens meet WCAG AA...` (E-01), Lighthouse accessibility run (browser step 9)
 
 ## 6. Browser recipe (Chrome DevTools MCP, you run it)
 

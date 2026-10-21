@@ -81,3 +81,13 @@ To change the session: `setSessionCookie(NextResponse.json(body), await createSe
 New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import 'server-only'`), `lib/mappers/<namespace>.ts`, a type in `lib/types.ts`, `app/api/<namespace>/route.ts` using `handle`, an SWR hook in `hooks/`, and a key in `lib/cache-keys.ts`.
 
 `app/api/dev` and `app/api/health` are throwaway routes; `npm run predeploy` fails while they exist.
+
+## Design system
+
+- Tokens live only in `app/tokens.css`: `--ink`, `--ink-2`, `--ink-3`, `--canvas`, `--canvas-2`, `--surface`, `--line`, `--line-2`, `--accent`, `--accent-press`, `--teal`, `--teal-text`, `--danger-text`, `--ct-amber-500`, `--ct-danger`, `--stone`, `--maxw`, plus `--radius-*`, `--dur-*`, `--swatch-*`. Use the Tailwind names (`bg-canvas text-ink border-line rounded-card font-display`). Rule: no hex, no raw font, no inline radius; a re-skin changes values in `app/tokens.css` only.
+- Responsive: mobile first; `mobile:` is min-width 820px, `max-mobile:` is below it. Layout utilities: `wrap`, `grid-products`, `fade-up`; type utilities: `eyebrow`, `page-title`, `hero-title`, `section-title`, `wordmark`.
+- Atoms are in `components/ui/`: `Button` (`variant` ink|accent|ghost, `size` md|lg, `block`, `loading`), `ButtonLink`, `IconButton` (`label`, `icon`, `badgeCount`), `Chip` (`active`), `Field` with `Input`, `Select`, `Textarea` (`invalid`), `OptionButton` (`selected`; `disabled` needs `disabledReason`), `ColorSwatch` (`colour`, `label`, `size`, `selected`, `onSelect`), `Stepper`, `Card`, `Badge`, `AvailabilityDot`, `Rating`, `Drawer`, `Modal`, `Steps`, `Icon`. Toast: mount `ToastProvider` from `context/toast.tsx` once, then call `useToast().show(message)`.
+- A link that looks like a button: use `ButtonLink`, or `buttonClasses({ variant, size, block })` on any element.
+- Add an icon: append an array of path strings to `components/ui/icons.ts` (24px viewBox, 1.75 stroke, round caps, no emoji).
+- Add a message key to both `messages/en-US.json` and `messages/en-CA.json` in the same commit; en-CA spells colour and favourite the Canadian way.
+- Check changes by eye on `/en-US/dev/design` (dev only; removed before deploy).
