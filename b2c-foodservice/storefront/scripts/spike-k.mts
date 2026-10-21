@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports, no-restricted-syntax -- standalone research script (task K-01), not app code: it cannot import lib/ct/client */
 // SPDX-License-Identifier: MIT
 // Workstream K, spike K-01. NOT YET RUN: needs live credentials in .env.local (OA-04, OA-K-a for S6 to S8 and S11 to S15).
 // Run: node --env-file=.env.local --experimental-strip-types scripts/spike-k.mts [S1 S2 ...]

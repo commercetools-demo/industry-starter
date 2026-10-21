@@ -277,3 +277,56 @@ export interface Cart {
   nudge: CartNudge | null;
 }
 export interface DroppedLine { sku: string; name: string; reason: 'no-price' | 'unknown' }
+
+// Workstream K: checkout and confirmation. The Review stage reads the cart view (`Cart`, workstream I) and adds what checkout needs.
+export type MixedStrategy = 'complete-multiple' | 'complete-per-group' | 'payment-only-for-collect';
+export type CheckoutStage = 'review' | 'pay';
+export type CheckoutIssueCode = 'line_unavailable' | 'collect_out_of_stock' | 'collect_not_available' | 'price_changed' | 'currency_mismatch';
+export interface CheckoutIssue { code: CheckoutIssueCode; lineId: string }
+export type DiscountCodeState = 'applied' | 'not_applicable' | 'pending';
+export interface DiscountCodeView { code: string; label: string | null; state: DiscountCodeState; reason: string | null; savingCents: number | null }
+export interface SummaryView {
+  currency: string;
+  /** Before cart-level discounts. */
+  subtotalCents: number; discountCents: number;
+  /** null: no shipping method yet ("Calculated in secure checkout"). */
+  shippingCents: number | null; shippingFree: boolean;
+  /** null: the engine has no taxed price yet. */
+  taxCents: number | null; totalCents: number; version: number;
+}
+export interface CheckoutPickup {
+  storeKey: string; storeName: string; address: string; hoursToday: string | null; phone: string | null;
+  readyMinutes: number | null; pickupName: string | null;
+}
+/** One payment: one fulfilment cluster (complete-per-group pays each collect store, then delivery plus subscription). */
+export interface CheckoutPayment { part: number; clusterKey: GroupKey; label: string | null; totalCents: number }
+export interface CheckoutState {
+  cartId: string; version: number;
+  strategy: MixedStrategy;
+  /** The bag as the cart page shows it: every line carries its `groupKey`; the UI renders lines only inside their cluster. */
+  cart: Cart;
+  pickup: CheckoutPickup | null;
+  deliveryNote: { freeAboveCents: number | null; days: string | null } | null;
+  codes: DiscountCodeView[];
+  summary: SummaryView;
+  issues: CheckoutIssue[];
+  /** Set once the pay stage is prepared (pickup saved): the payments to make, in order. */
+  payments: CheckoutPayment[] | null;
+}
+export type OrderState = 'ordered' | 'preparing' | 'ready-for-collection' | 'collected';
+export interface OrderLineView {
+  id: string; name: string; variantSummary: string; quantity: number; imageUrl: string | null;
+  fulfilment: Fulfilment; storeKey: string | null; recurrenceLabel: string | null; priceCents: number;
+}
+export interface OrderDelivery { id: string; trackingId: string | null; trackingUrl: string | null; carrier: string | null }
+export interface OrderView {
+  id: string; orderNumber: string; createdAt: string; email: string | null; locale: string; currency: string; customerId: string | null;
+  state: OrderState | null; paymentState: string | null; shipmentState: string | null;
+  lines: OrderLineView[];
+  collect: { storeKey: string; storeName: string; address: string; hours: string | null; phone: string | null; readyMinutes: number | null; pickupName: string | null }[];
+  ship: { methodName: string; estimate: string | null; address: string; deliveries: OrderDelivery[] } | null;
+  subscriptions: { lineId: string; interval: string }[];
+  totals: { subtotalCents: number; discountCents: number; shippingCents: number; taxCents: number; totalCents: number };
+  /** Other orders of the same purchase (complete-per-group), by the shared base number. */
+  linked: { id: string; orderNumber: string }[];
+}
