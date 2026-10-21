@@ -9,12 +9,14 @@ export interface CountryConfig {
   label: string;
   /** Per-market flag: collection in store is offered (US only; Canada is delivery only, D-035). */
   collection: boolean;
+  /** IANA time zone for store opening hours (Q-F-10). */
+  timeZone: string;
 }
 
 /** The one source for markets: routing, message files and the proxy derive from these keys (D-030). */
 export const COUNTRY_CONFIG: Record<string, CountryConfig> = {
-  'en-US': { locale: 'en-US', currency: 'USD', country: 'US', label: 'United States', collection: true },
-  'en-CA': { locale: 'en-CA', currency: 'CAD', country: 'CA', label: 'Canada', collection: false },
+  'en-US': { locale: 'en-US', currency: 'USD', country: 'US', label: 'United States', collection: true, timeZone: 'America/New_York' },
+  'en-CA': { locale: 'en-CA', currency: 'CAD', country: 'CA', label: 'Canada', collection: false, timeZone: 'America/Toronto' },
 };
 
 export const DEFAULT_LOCALE: CountryConfig = COUNTRY_CONFIG['en-US'];

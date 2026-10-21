@@ -16,6 +16,9 @@ export const keyReviews = (productId: string, sort: 'newest' | 'highest' | 'lowe
 export const keyRecurringOrders = (customerId: string) => ['recurring-orders', customerId] as const;
 export const keyShippingMethods = (country: string, currency: string) =>
   ['shipping-methods', country, currency] as const;
+export const KEY_SELECTED_STORE = 'selected-store';
+export const KEY_MARKET = 'market';
+export const keyChannel = (id: string) => ['channel', id] as const;
 export const keyChannels = (country: string) => ['channels', country] as const;
 export const keyAvailability = (sku: string, country: string, storeKey: string | null) =>
   ['availability', sku, country, storeKey ?? 'online'] as const;

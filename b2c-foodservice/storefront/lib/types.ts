@@ -41,3 +41,28 @@ export interface Category {
 }
 
 export type ApiErrorBody = { error: { code: ErrorCode; message: string } };
+
+// Workstream F: shell, stores, availability, promise figures, markets.
+export type Weekday = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+/** 'HH:mm' in the store time zone; null means closed that day. */
+export type OpeningHours = Record<Weekday, { open: string; close: string } | null>;
+export interface Store {
+  /** Channel id and key (for example mcf-store-nyc-soho). */
+  id: string; key: string;
+  name: string;
+  addressLine: string; city: string; postalCode: string; country: string;
+  phone?: string; hours: OpeningHours; timeZone: string;
+  collectionMinutes: number;
+  geo?: { lat: number; lng: number };
+}
+export type AvailabilityState = 'in' | 'low' | 'out';
+export interface StoreAvailability { storeKey: string; state: AvailabilityState; quantity: number }
+export interface SkuAvailability { sku: string; ship: AvailabilityState; stores: StoreAvailability[] }
+export interface PromiseFigures {
+  freeShippingThreshold: Money | null; collectionMinutes: number | null; returnDays: number;
+}
+export interface MarketOption {
+  country: string; currency: string; locale: string; label: string;
+  languages: { locale: string; label: string }[];
+  region: 'North America';
+}
