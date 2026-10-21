@@ -1,6 +1,7 @@
 import 'server-only';
 import { apiRoot } from '@/lib/ct/client';
 import { cachedPublic } from '@/lib/ct/public-cache';
+import { findCategory } from '@/lib/category-tree';
 import { buildCategoryTree, mapCategory } from '@/lib/mappers/category';
 import type { Category } from '@/lib/types';
 
@@ -21,3 +22,15 @@ export const getCategoryTree: (locale: string) => Promise<Category[]> = cachedPu
   ['category-tree'],
   fetchCategoryTree,
 );
+
+/** Category by its locale slug, from the cached tree (no extra call). null when unknown. Added by workstream G. */
+export async function getCategoryBySlug(locale: string, slug: string): Promise<Category | null> {
+  return findCategory(await getCategoryTree(locale), (c) => c.slug === slug);
+}
+
+/** Category by key (the `category` facet value, e.g. `mcf-cat-pods-original`). */
+export async function getCategoryByKey(locale: string, key: string): Promise<Category | null> {
+  return findCategory(await getCategoryTree(locale), (c) => c.key === key);
+}
+
+export { breadcrumbOf } from '@/lib/category-tree';
