@@ -357,7 +357,7 @@ Do them in order. Commit after each. Run `cd storefront && npm run check` before
   - Steps: keep `images.unoptimized: true`; replace the `{ hostname: '**' }` pattern by `[{ protocol: 'https', hostname: '**' }]` only (drop `storage.googleapis.com`, redundant; the spec says allow https remote patterns). Import `nextConfig` from the file in a test (export the unwrapped config as `export const baseConfig` and `export default withNextIntl(baseConfig)`).
   - Tests (spec: Image handling): `Images are unoptimized and https remote patterns are allowed`. The "Stored URL with a query" scenario is tested where the URL is written: seed workstream C (`strips query and fragment from stored image URLs`); this file lists it as covered there.
 
-- [ ] **A-10 ESLint rules and fixtures**
+- [x] **A-10 ESLint rules and fixtures**
   - Files: `eslint.config.mjs`, `eslint/rules/no-server-in-client.mjs`, `eslint/fixtures/*`, `eslint/rules.test.mjs`.
   - Steps: section 3.10. Then run `npm run lint` on the whole app, fix real violations in generated code.
   - Tests (spec: Server import in a client file; Quality gates): `Server import in a client file: lib/ct import fails with the boundary rule`, `Server import in a client file: @commercetools import fails`, `use client file importing lib/types passes`, `Bare next/link in locale UI fails`, `useRouter from next/navigation in locale UI fails`, `notFound from next/navigation passes`, `Link from @/i18n/routing passes`, `any fails`, `Raw hex in a component fails`, `Tailwind arbitrary hex fails`, `new ClientBuilder outside lib/ct/client.ts fails`, `new ClientBuilder in lib/ct/client.ts passes`.
