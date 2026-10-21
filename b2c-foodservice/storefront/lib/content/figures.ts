@@ -1,4 +1,5 @@
 import 'server-only';
+import { getTranslations } from 'next-intl/server';
 import { channelFor } from '@/content/contact';
 import type { ContentFigures } from '@/lib/content/blocks';
 import { getPromiseFigures } from '@/lib/ct/promise';
@@ -40,12 +41,18 @@ export async function getContentFigures(locale: string, fallbacks: TokenFallback
       freeShipping: figures.freeShippingThreshold
         ? formatMoney(figures.freeShippingThreshold.centAmount, figures.freeShippingThreshold.currencyCode, locale)
         : base.freeShipping,
-      collectMinutes: figures.collectionMinutes !== null ? String(figures.collectionMinutes) : base.collectMinutes,
-      returnDays: String(figures.returnDays),
+      collectMinutes: figures.collectionMinutes !== null ? `${figures.collectionMinutes} minutes` : base.collectMinutes,
+      returnDays: `${figures.returnDays} days`,
     };
   } catch {
     return base;
   } finally {
     if (timer) clearTimeout(timer);
   }
+}
+
+/** Figures with the neutral fallback phrases from the message catalogue. For pages that use `{{tokens}}`. */
+export async function getPageFigures(locale: string): Promise<ContentFigures> {
+  const t = await getTranslations({ locale, namespace: 'content.tokenFallback' });
+  return getContentFigures(locale, { freeShipping: t('freeShipping'), collectMinutes: t('collectMinutes'), returnDays: t('returnDays') });
 }

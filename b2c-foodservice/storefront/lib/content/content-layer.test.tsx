@@ -109,13 +109,13 @@ describe('tokens', () => {
       returnDays: 30,
     });
     const f = await getContentFigures('en-US', FALLBACKS);
-    expect(f).toMatchObject({ freeShipping: '$40.00', collectMinutes: '30', returnDays: '30' });
+    expect(f).toMatchObject({ freeShipping: '$40.00', collectMinutes: '30 minutes', returnDays: '30 days' });
   });
   it('a missing part keeps only that fallback', async () => {
     promise.getPromiseFigures.mockResolvedValue({ freeShippingThreshold: null, collectionMinutes: null, returnDays: 30 });
     const f = await getContentFigures('en-CA', FALLBACKS);
     expect(f.freeShipping).toBe('our free-shipping threshold');
-    expect(f.returnDays).toBe('30');
+    expect(f.returnDays).toBe('30 days');
   });
 });
 
