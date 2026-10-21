@@ -1,0 +1,32 @@
+{
+  "name": "storefront",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@commercetools/platform-sdk": "^8.27.0",
+    "@commercetools/ts-client": "^4.10.0",
+    "jose": "^6.2.13",
+    "next": "16.2.6",
+    "next-intl": "^4.14.9",
+    "postcss": "^8.5.31",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "swr": "^2.5.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,12 @@
+/commercetools:nextjs-setup-project run 2026-10-21 (Node v22.21.1), directory name storefront instead of site.
+Step 0: documentation-search telemetry curl (|| true).
+Step 1: npx create-next-app@^16 storefront --typescript --app --src-dir=false --tailwind=false --eslint --import-alias "@/*" --use-npm --yes --disable-git
+        npm install @commercetools/platform-sdk@^8 @commercetools/ts-client@^4 next-intl@^4 swr jose tailwindcss @tailwindcss/postcss postcss
+        netlify.toml written at project root with base = "storefront". vercel.json NOT written (hosting is Netlify, D-038; A-02 would delete it).
+Step 2: postcss.config.mjs already correct; no tailwind.config.* exists (create-next-app 16 installs Tailwind v4); app/globals.css replaced by the command's cream/terra theme.
+Step 3: mkdir app/[locale] app/api lib/ct lib/mappers hooks components/{ui,layout,product} context i18n messages
+Step 4: lib/types.ts, lib/utils.ts, lib/cache-keys.ts written.
+Step 5: i18n/routing.ts, i18n/request.ts, next.config.ts, messages/{en-US,en-GB,de-DE}.json ({}).
+Step 6: proxy.ts written (cookie your-shop-country-locale).
+Step 7: versions in versions.txt (next 16.2.6, next-intl 4.14.9, platform-sdk 8.27.0, ts-client 4.10.0): gates pass.
+Note: create-next-app also wrote AGENTS.md (nextjs-agent-rules block) and CLAUDE.md (@AGENTS.md).
