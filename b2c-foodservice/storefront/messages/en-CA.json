@@ -1615,7 +1615,7 @@
       "register": "Create an account"
     },
     "confirmation": {
-      "active": "Your subscription starts now. Next delivery {date}, then every {interval}. Manage it in your account.",
+      "active": "Your subscription starts now. Next delivery {date}, then {interval}. Manage it in your account.",
       "settingUp": "We are setting up your subscription.",
       "late": "We could not confirm your subscription yet. It will appear in your account; contact us if it does not."
     },

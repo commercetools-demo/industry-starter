@@ -3,14 +3,15 @@
 import { useTranslations } from 'next-intl';
 import { useIntervalLabel } from '@/components/cart/use-cart-ui';
 import Card from '@/components/ui/Card';
+import SubscriptionNote from '@/components/checkout/SubscriptionNote';
 import Icon from '@/components/ui/Icon';
 import { Link } from '@/i18n/routing';
 import { accountHref } from '@/lib/routes';
 import type { OrderView } from '@/lib/types';
 
 /**
- * The subscription card: each subscribed line with its interval. Next delivery dates and the "setting up your subscription"
- * state belong to workstream N (its `SubscriptionNote` plugs in here); K shows only what the order itself says.
+ * The subscription card: each subscribed line with its interval. The next delivery date and the "setting up your
+ * subscription" state come from workstream N's `SubscriptionNote`; K shows only what the order itself says.
  */
 export default function OrderSubscriptionCard({ order }: { order: OrderView }) {
   const t = useTranslations('order.subscription');
@@ -37,6 +38,7 @@ export default function OrderSubscriptionCard({ order }: { order: OrderView }) {
               </li>
             ))}
           </ul>
+          <SubscriptionNote order={order} />
           <Link href={accountHref()} className="mt-2 inline-block text-[13.5px] font-medium text-ink underline underline-offset-2">
             {t('manage')}
           </Link>
