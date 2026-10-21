@@ -14,7 +14,7 @@ export default function Accordion({ title, defaultOpen = false, children }: { ti
   const panelId = useId();
   return (
     <div className="border-b border-line">
-      <h3 className="m-0">
+      <h2 className="m-0">
         <button
           type="button"
           aria-expanded={open}
@@ -25,7 +25,7 @@ export default function Accordion({ title, defaultOpen = false, children }: { ti
           {title}
           <Icon name="chevR" size={18} className={cn('transition-state shrink-0 motion-reduce:transition-none', open && 'rotate-90')} />
         </button>
-      </h3>
+      </h2>
       <div id={panelId} hidden={!open} className={cn('pb-5 text-[14px] leading-relaxed text-ink-2', open && 'fade-up')}>
         {children}
       </div>
