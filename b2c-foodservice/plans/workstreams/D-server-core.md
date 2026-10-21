@@ -301,7 +301,7 @@ Run `cd storefront && npm run check` before ticking.
   - Implement 3.5. In tests mock `next/cache` so `unstable_cache` returns `fn` and records `(keys, opts)`; mock `@/lib/ct/client` for the project read.
   - Tests (spec: Caching; Two shoppers): `Base keys KEY_CART, KEY_CART_COUNT and KEY_ACCOUNT are exported strings (other workstreams import them)`, `Keys of per-person data contain the customer id`, `Two customers never share a key`, `Market-scoped keys contain country and currency`, `cachedPublic sets the TTL and the tag of its kind`, `Only public kinds can be cached (kind is one of the five TTL keys)`, `getMarkets keeps only markets the project supports` (project with `countries ['US']` drops CA), `getMarkets matches languages case-insensitively`.
 
-- [ ] **D-05 409 retry** `[SKILL: commercetools-storefront]`
+- [x] **D-05 409 retry** `[SKILL: commercetools-storefront]`
   - Files: `lib/ct/retry.ts`, `lib/ct/retry.test.ts`.
   - Implement 3.6. Fake store in the test: `{ version, data }`, `read` returns a copy, `write` throws `{statusCode:409}` when the passed version is stale and otherwise increments.
   - Tests (spec: Cart concurrency; Double click): `Double click: a stale version is re-read and applied once, not twice`, `A second 409 surfaces as conflict`, `A non-409 error is rethrown unchanged and not retried`, `Success on the first try reads once`.
