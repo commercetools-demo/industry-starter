@@ -2,6 +2,7 @@ import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { unstable_serialize } from 'swr';
+import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import PromiseBar from '@/components/layout/PromiseBar';
 import ShellProviders from '@/components/layout/ShellProviders';
@@ -42,6 +43,7 @@ export default async function LocaleLayout({
       <main id="main-content" tabIndex={-1} className="outline-none">
         {children}
       </main>
+      <Footer categories={shell.categories} />
     </ShellProviders>
   );
 }
