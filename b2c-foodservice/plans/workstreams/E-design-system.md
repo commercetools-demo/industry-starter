@@ -266,7 +266,7 @@ Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no co
   - Implement 3.5 Icon, IconButton, `cn`. Add the four coffee glyphs.
   - Tests (spec: Iconography, Accessibility): `New glyph: every icon renders a 24px viewBox, 1.75 stroke, round caps and joins`, `New glyph: cup, bean, capsule and machine exist`, `Icon paths use only drawing commands M L H V C S Q T A Z` (regex on path data), `No emoji in the icon set or in components` (scan for emoji code points), `Icon button: an icon-only control has an accessible name` (`getByRole('button', { name: 'Cart' })`), `Icon button: decorative icons are aria-hidden`, `Icon with a title is exposed as an image`, `cn drops falsy parts`.
 
-- [ ] **E-05 Button, ButtonLink, Chip, Badge, Card, AvailabilityDot, Rating**
+- [x] **E-05 Button, ButtonLink, Chip, Badge, Card, AvailabilityDot, Rating**
   - Files: one component and one test per file in `components/ui/`.
   - Implement per 3.5.
   - Tests: `Button defaults to ink and type button`, `Button accent and ghost classes differ`, `Button disabled has opacity 40 and blocks clicks`, `Button loading disables and exposes aria-busy`, `ButtonLink renders an anchor with the locale prefix` (mock `@/i18n/routing` Link if `next/link` needs router context), `Chip active sets aria-pressed`, `Chip active uses ink fill`, `Badge variants ink and accent`, `AvailabilityDot has three states and a label when given`, `Rating shows 4.6 and 12 reviews for 4.58333 and 12` (spec reviews-and-ratings: Card rating), `Rating renders nothing for no rating` (value 0), `Rating label is announced with a plural` (en and de), `Card renders as the chosen element`.
