@@ -88,9 +88,15 @@ export interface ProductSummary {
   matchedSku?: string;
 }
 
-export interface FacetOption { value: string; label: string; count: number; selected: boolean; colour?: string }
+export interface FacetOption {
+  value: string; label: string; count: number; selected: boolean;
+  /** Colour enum key (colour facet only). */
+  colour?: string;
+  /** Listing URL (path without the locale, with query) that toggles this option; set by the server. */
+  href?: string;
+}
 export interface FacetGroup {
-  name: string; control: 'checkbox' | 'radio' | 'colour' | 'grid';
+  name: string; label: string; control: 'checkbox' | 'radio' | 'colour' | 'grid';
   options: FacetOption[]; selectedCount: number;
 }
 

@@ -32,7 +32,7 @@ export const FACETS: FacetDef[] = [
   { name: 'intensity', labelKey: 'intensity', control: 'grid', kind: 'ranges', field: 'variants.attributes.intensity', fieldType: 'number', appliesTo: ['pods', 'coffee'], values: INTENSITY_VALUES },
   { name: 'roast', labelKey: 'roast', control: 'checkbox', kind: 'distinct', field: 'variants.attributes.roast.key', fieldType: 'enum', appliesTo: ['coffee'], values: ROASTS },
   { name: 'brew', labelKey: 'brew', control: 'checkbox', kind: 'distinct', field: 'variants.attributes.brewMethods.key', fieldType: 'set_enum', appliesTo: ['coffee', 'machines', 'accessories'], values: BREW },
-  { name: 'origin', labelKey: 'origin', control: 'checkbox', kind: 'distinct', field: 'variants.attributes.origin', fieldType: 'text', appliesTo: ['coffee'], limit: 50, pattern: /^[\p{L}\p{N} ,.'-]{1,60}$/u },
+  { name: 'origin', labelKey: 'origin', control: 'checkbox', kind: 'distinct', field: 'variants.attributes.origin', fieldType: 'text', appliesTo: ['coffee'], limit: 50, pattern: /^[\p{L}\p{N} .'-]{1,40}(, [\p{L}\p{N} .'-]{1,40}){0,3}$/u },
   { name: 'decaf', labelKey: 'decaf', control: 'checkbox', kind: 'distinct', field: 'variants.attributes.decaf', fieldType: 'boolean', appliesTo: ['pods', 'coffee'], values: ['true'] },
   { name: 'organic', labelKey: 'organic', control: 'checkbox', kind: 'distinct', field: 'variants.attributes.organic', fieldType: 'boolean', appliesTo: ['pods', 'coffee'], values: ['true'] },
   { name: 'fairtrade', labelKey: 'fairtrade', control: 'checkbox', kind: 'distinct', field: 'variants.attributes.fairtrade', fieldType: 'boolean', appliesTo: ['pods', 'coffee'], values: ['true'] },

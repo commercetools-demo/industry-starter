@@ -364,6 +364,7 @@
       "intensity": "Intensity {n}"
     },
     "availableAt": "Available at {store}",
+    "availableChoose": "Available at my store",
     "empty": {
       "title": "No products match these filters.",
       "clear": "Clear all filters"

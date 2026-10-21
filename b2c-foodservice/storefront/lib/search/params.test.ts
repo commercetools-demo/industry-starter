@@ -52,6 +52,11 @@ describe('listing params', () => {
     expect(parseListingParams({ q: 'a'.repeat(300) }, 'search').q).toHaveLength(100);
     expect(parseListingParams({ q: '   ' }, 'search').q).toBeUndefined();
   });
+  it('origin values may contain a comma and a space', () => {
+    const p = parseListingParams({ f_origin: 'Brazil, Colombia,Peru' }, 'shop');
+    expect(p.facets.origin).toEqual(['Brazil, Colombia', 'Peru']);
+    expect(parseListingParams({ f_origin: 'x"; drop' }, 'shop').facets).toEqual({});
+  });
   it('Clear all keeps q and drops facets, avail, sort and page', () => {
     const p = parseListingParams({ q: 'x', f_roast: 'dark', avail: '1', sort: 'rating', page: '2' }, 'search');
     const c = clearAllFilters(p, 'search');

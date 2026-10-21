@@ -38,7 +38,7 @@ export function parseListingParams(sp: SP, scope: ListingScope): ListingParams {
   for (const def of FACETS) {
     const raw = first(sp[`f_${def.name}`]);
     if (!raw) continue;
-    let values = [...new Set(raw.split(',').map((v) => v.trim()).filter((v) => isFacetValueAllowed(def, v)))];
+    let values = [...new Set(raw.split(/,(?! )/).map((v) => v.trim()).filter((v) => isFacetValueAllowed(def, v)))];
     if (facetMode(def) === 'single') values = values.slice(0, 1);
     if (values.length > 0) facets[def.name] = values;
   }
