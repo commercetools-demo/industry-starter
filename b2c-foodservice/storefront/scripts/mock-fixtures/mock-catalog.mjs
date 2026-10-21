@@ -75,8 +75,12 @@ export const VARIANT_BY_SKU = new Map(DOCS.flatMap((d) => d.variants.map((v) => 
 
 const money = (currency, cents) => ({ type: 'centPrecision', currencyCode: currency, centAmount: cents, fractionDigits: 2 });
 
+/** Catalogue price changes made through the mock server's POST /__mock/price (sku -> cents), applied to every market. */
+export const PRICE_OVERRIDES = new Map();
+
 export function priceFor(variant, country, currency) {
-  return variant.prices.find((p) => p.country === country && p.currency === currency);
+  const found = variant.prices.find((p) => p.country === country && p.currency === currency);
+  return found && PRICE_OVERRIDES.has(variant.sku) ? { ...found, cents: PRICE_OVERRIDES.get(variant.sku) } : found;
 }
 
 export function stockChannels(variant) {

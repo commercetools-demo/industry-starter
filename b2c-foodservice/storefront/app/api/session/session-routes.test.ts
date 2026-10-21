@@ -12,6 +12,8 @@ vi.mock('@/lib/ct/channels', () => ({
   getStoresForCountry: async (country: string) =>
     country === 'US' ? [{ key: 'mcf-store-a' }, { key: 'mcf-store-b' }] : [],
 }));
+// Carry over (workstream I) is tested in market-carry-over.test.ts; here the old cart is never found.
+vi.mock('@/lib/ct/cart', () => ({ getOwnedCartForRebuild: async () => null, rebuildCart: vi.fn() }));
 vi.mock('@/lib/ct/project', () => ({
   getMarkets: async () => [
     { locale: 'en-US', currency: 'USD', country: 'US', label: 'United States', collection: true, timeZone: 'x' },
@@ -84,7 +86,7 @@ describe('PUT /api/session/market', () => {
     const res = await put(putMarket, { country: 'CA' });
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({
-      country: 'CA', currency: 'CAD', locale: 'en-CA', cartCarriedOver: false, droppedLines: [],
+      country: 'CA', currency: 'CAD', locale: 'en-CA', cartCarriedOver: false, droppedLines: [], droppedCodes: [],
     });
     const session = await written(res);
     expect(session).toMatchObject({ country: 'CA', currency: 'CAD', locale: 'en-CA' });

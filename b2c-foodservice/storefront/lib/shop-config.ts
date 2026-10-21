@@ -13,10 +13,10 @@ export const NEARBY_RADIUS_KM = 80;
 export const COLLECTION_MINUTES_FALLBACK = 30;
 
 /**
- * Region switch with a populated bag (Q-F-03). F resets the bag; workstream I flips this to true
- * when it adds carry over (task I-12).
+ * Region switch with a populated bag (Q-F-03). F reset the bag; workstream I turned carry over on (task I-12): the bag
+ * moves into a new cart in the new market and anything that cannot move is listed.
  */
-export const CART_CARRY_OVER_ENABLED = false;
+export const CART_CARRY_OVER_ENABLED = true;
 
 /**
  * Shipping mode of every new cart (D-024). Settable only when a cart is created; workstream K may flip it to
@@ -35,3 +35,10 @@ export const SHIP_DAYS_MAX = 4;
 export const PDP_MAX_QUANTITY = 99;
 /** M's reviews section mounts on the product page when true (workstream M turned it on, Q-H-14). */
 export const REVIEWS_ENABLED = true;
+
+// Workstream I: cart.
+
+/** Minimum order value per currency in minor units; 0 means off (Q-I-02, owner decision SO-x2). Compared with the subtotal. */
+export const MIN_ORDER_VALUE: Record<string, number> = { USD: 0, CAD: 0 };
+/** Highest quantity of one cart line (Q-I-12), further limited by stock. */
+export const CART_MAX_LINE_QUANTITY = 99;

@@ -143,7 +143,7 @@ describe('LocaleChooser', () => {
     await open();
     await userEvent.click(within(drawer()).getByRole('button', { name: /Canada/ }));
     const notice = await within(drawer()).findByRole('alertdialog');
-    expect(notice).toHaveTextContent('Your bag will be emptied because it is priced in USD.');
+    expect(notice).toHaveTextContent('Your bag is priced in USD. Items will be moved to CAD where they are available; others will be listed.');
     await userEvent.click(within(notice).getByRole('button', { name: 'Cancel' }));
     expect(calls.some((c) => c.url === '/api/session/market')).toBe(false);
     expect(nav.replace).not.toHaveBeenCalled();

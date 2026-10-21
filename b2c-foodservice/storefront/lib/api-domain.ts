@@ -16,7 +16,13 @@ export type DomainErrorCode =
   | 'unknown_policy'
   | 'price_unavailable'
   // Workstream M: one review per product and customer.
-  | 'already_reviewed';
+  | 'already_reviewed'
+  // Workstream I: cart changes the bag page explains.
+  | 'line_not_found'
+  | 'quantity_exceeds_stock'
+  | 'store_required'
+  | 'subscribe_line_not_switchable'
+  | 'code_not_applied';
 
 const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   invalid_credentials: 'Email or password is incorrect',
@@ -32,13 +38,18 @@ const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   unknown_policy: 'That delivery interval is not available',
   price_unavailable: 'No price is available for this item',
   already_reviewed: 'You have already reviewed this product',
+  line_not_found: 'That item is not in your bag',
+  quantity_exceeds_stock: 'That quantity is not available',
+  store_required: 'Choose a store to collect from',
+  subscribe_line_not_switchable: 'A subscription cannot be switched between collection and delivery',
+  code_not_applied: 'That code could not be applied',
 };
 
 /** Same envelope as D: `{ error: { code, message, ...extra } }`. Extras are plain data (rule ids, retryAfterSeconds). */
 export function domainError(
   code: DomainErrorCode,
   status: number,
-  extra: Record<string, string | number | string[]> = {},
+  extra: Record<string, unknown> = {},
 ): Response {
   return Response.json({ error: { code, message: DOMAIN_MESSAGES[code], ...extra } }, { status });
 }

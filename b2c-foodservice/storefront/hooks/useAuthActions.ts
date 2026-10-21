@@ -3,7 +3,7 @@
 import { useCallback } from 'react';
 import { useSWRConfig } from 'swr';
 import { ApiError } from '@/hooks/fetcher';
-import { KEY_ACCOUNT, KEY_CART_COUNT, USER_SCOPED_KEYS } from '@/lib/cache-keys';
+import { KEY_ACCOUNT, KEY_CART, KEY_CART_COUNT, USER_SCOPED_KEYS } from '@/lib/cache-keys';
 import { useRouter } from '@/i18n/routing';
 import type { AppCustomer, AuthCart, RuleId } from '@/lib/types';
 
@@ -64,7 +64,8 @@ export function useAuthActions() {
   const adopt = useCallback(
     async (result: AuthResult) => {
       await mutate(KEY_ACCOUNT, { customer: result.customer }, { revalidate: false });
-      await mutate(KEY_CART_COUNT);
+      // The merged bag may differ from the guest bag: refresh the full cart (workstream I) and the badge.
+      await Promise.all([mutate(KEY_CART_COUNT), mutate(KEY_CART)]);
       return result;
     },
     [mutate],

@@ -8,6 +8,9 @@
 // recurrence policies and recurring prices, inventory at one supply channel, supplyChannel and recurrenceInfo on lines,
 // placeholder images (MOCK_IMAGES=0 for none) and GET /__mock/carts to read the carts back. Workstream M added reviews
 // (list, create, update, delete, statistics kept in step; scripts/mock-fixtures/mock-reviews.mjs) and one demo order.
+// Workstream I completed the cart: line
+// prices and totals, shipping with a free-above rule, flat tax per country, discount codes (WELCOME10, COFFEE15 over 60, FREESHIP,
+// EXPIRED10), every update action the storefront sends, ownership fields, and POST /__mock/price and /__mock/stock hooks.
 //
 //   node scripts/mock-ct-server.mjs [port]      (needs openssl; writes a throwaway certificate to the OS temp dir)
 //   NODE_TLS_REJECT_UNAUTHORIZED=0 CTP_API_URL=https://localhost:9443 CTP_AUTH_URL=https://localhost:9443 \
@@ -23,7 +26,7 @@ import { createServer } from 'node:https';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  DOCS, DOC_BY_ID, FIXTURES, RECURRENCE_POLICIES, VARIANT_BY_SKU, categoryId, channelId, priceFor, productTypeResults, projectionOf, runSearch,
+  DOCS, DOC_BY_ID, FIXTURES, PRICE_OVERRIDES, RECURRENCE_POLICIES, VARIANT_BY_SKU, categoryId, channelId, priceFor, productTypeResults, projectionOf, runSearch,
 } from './mock-fixtures/mock-catalog.mjs';
 import { reviewRoutes } from './mock-fixtures/mock-reviews.mjs';
 
@@ -77,14 +80,16 @@ const inventoryEntries = (sku) => {
   const found = VARIANT_BY_SKU.get(sku);
   if (!found) return [];
   const { stock } = found.variant;
+  const over = STOCK_OVERRIDES.get(sku);
+  const online = over?.online ?? stock.online;
   return [
-    { id: `inv-${sku}-online`, version: 1, sku, availableQuantity: stock.online, quantityOnStock: stock.online },
-    ...stock.stores.map((q, i) => ({
-      id: `inv-${sku}-${i}`, version: 1, sku, availableQuantity: q, quantityOnStock: q, supplyChannel: { typeId: 'channel', id: channelId(i) },
-    })),
+    { id: `inv-${sku}-online`, version: 1, sku, availableQuantity: online, quantityOnStock: online },
+    ...stock.stores.map((q0, i) => {
+      const q = over?.stores.get(i) ?? q0;
+      return { id: `inv-${sku}-${i}`, version: 1, sku, availableQuantity: q, quantityOnStock: q, supplyChannel: { typeId: 'channel', id: channelId(i) } };
+    }),
   ];
 };
-
 
 // Customers and login (workstream J). The six seeded demo customers share MOCK_DEMO_PASSWORD (default below, mock only).
 const MOCK_DEMO_PASSWORD = process.env.MOCK_DEMO_PASSWORD ?? 'mock-demo-pass-1';
@@ -107,9 +112,13 @@ const addCustomer = (email, password, firstName, lastName, extra = {}) => {
   const c = addCustomer(email, MOCK_DEMO_PASSWORD, first, last);
   if (extra?.cart) c.mockCart = extra.cart;
 });
-const cartBody = (id, units, lines) => ({
-  id, version: 1, cartState: 'Active', totalLineItemQuantity: units, lineItems: Array.from({ length: lines }, () => ({ quantity: units / lines })),
-});
+// The cart a login answers with (a merged or adopted bag). Real lines, so the cart view can read them.
+const cartBody = (id, units, lines, customerId) => {
+  const skus = ['MCF-POD-EMBER-10', 'MCF-POD-CASA-10', 'MCF-POD-EMBER-50'];
+  const cart = baseCart(id, { customerId });
+  for (let i = 0; i < lines; i += 1) cart.lineItems.push(demoLine(cart, skus[i % skus.length], Math.max(1, Math.round(units / lines)), `li-${id}-${i}`));
+  return reprice(cart);
+};
 const readBody = (req) =>
   new Promise((resolve) => {
     let raw = '';
@@ -128,11 +137,19 @@ async function customerRoutes(req, res, path) {
     const own = entry.customer.mockCart;
     let cart;
     if (guest && own) {
-      cart = cartBody(own.id, own.units + guest.totalLineItemQuantity, own.lines + guest.lineItems.length);
-      CARTS.set(own.id, cart); // the merged bag is now the customer's bag
+      // The guest bag joins the customer's bag, which is now the customer's active cart.
+      cart = cartBody(own.id, own.units, own.lines, entry.customer.id);
+      cart.lineItems.push(...guest.lineItems);
+      cart.version += 1;
+      CARTS.set(own.id, reprice(cart));
+    } else if (guest) {
+      cart = { ...guest, customerId: entry.customer.id };
+      delete cart.anonymousId;
+      CARTS.set(cart.id, cart);
+    } else if (own) {
+      cart = cartBody(own.id, own.units, own.lines, entry.customer.id);
+      CARTS.set(own.id, cart);
     }
-    else if (guest) cart = cartBody(body.anonymousCart.id, guest.totalLineItemQuantity, guest.lineItems.length);
-    else if (own) cart = cartBody(own.id, own.units, own.lines);
     return json(res, 200, { customer: entry.customer, ...(cart ? { cart } : {}) });
   }
   if (req.method === 'POST' && path === `/${PROJECT}/customers`) {
@@ -150,44 +167,178 @@ async function customerRoutes(req, res, path) {
   return false;
 }
 // ---------------------------------------------------------------- carts
-const CARTS = new Map([
-  ['cart-active', { id: 'cart-active', version: 1, cartState: 'Active', totalLineItemQuantity: 3, lineItems: [{ id: 'li-a', quantity: 2, variant: { sku: 'MCF-POD-EMBER-10' } }, { id: 'li-b', quantity: 1, variant: { sku: 'MCF-POD-CASA-10' } }] }],
-]);
-CARTS.set('cart-maya', { id: 'cart-maya', version: 1, cartState: 'Active', totalLineItemQuantity: 1, lineItems: [{ id: 'li-m', quantity: 1, variant: { sku: 'MCF-POD-EMBER-10' } }] });
+// A small cart engine (workstream G added create, read and addLineItem; I completes it): line prices and totals, a discount
+// percentage per code, shipping with a free-above threshold, and a flat tax per country. It stands in for commercetools so the
+// drawer and the cart page can be driven in a browser without credentials; it is not a model of the real engine.
+//   POST /__mock/price { sku, cents|null }   changes the catalogue price (a cart then shows "Price updated")
+//   POST /__mock/stock { sku, online?, store?: <index 0-5>, quantity? }   changes stock (out of stock, empty store)
+const MOCK_TAX = { US: 0.08, CA: 0.05 };
+const MOCK_SHIPPING = { USD: { rate: 695, freeAbove: 7500 }, CAD: { rate: 895, freeAbove: 9900 } };
+const MOCK_CODES = {
+  WELCOME10: { id: 'dc-welcome10', percent: 10, name: { 'en-US': 'Welcome 10%' } },
+  COFFEE15: { id: 'dc-coffee15', percent: 15, minNet: { USD: 6000, CAD: 8000 }, name: { 'en-US': 'Coffee 15%' } },
+  FREESHIP: { id: 'dc-freeship', freeShipping: true, name: { 'en-US': 'Free shipping' } },
+  EXPIRED10: { id: 'dc-expired10', reject: 'NotActive' },
+};
+const centMoney = (currencyCode, centAmount) => ({ type: 'centPrecision', currencyCode, centAmount, fractionDigits: 2 });
+const ctError = (status, errors, message = 'mock') => ({ status, body: { statusCode: status, message, errors } });
+const STOCK_OVERRIDES = new Map(); // sku -> { online?, stores: Map(index -> quantity) }
+
+function newLine(cart, found, action, price, id) {
+  const currency = cart.totalPrice?.currencyCode;
+  const projection = projectionOf(found.doc, { currency, country: cart.country, locales: [] });
+  const variant = [projection.masterVariant, ...projection.variants].find((v) => v.sku === action.sku);
+  const unit = action.recurrenceInfo ? Math.round(price.cents * 0.9) : price.cents; // the recurring price is 10% below
+  return {
+    id, productId: found.doc.id, name: found.doc.name, productSlug: found.doc.slug, quantity: action.quantity ?? 1,
+    variant: { id: found.variant.id, sku: action.sku, images: variant?.images ?? [] }, custom: action.custom,
+    price: { value: centMoney(price.currency, unit) }, totalPrice: centMoney(price.currency, 0),
+    ...(action.supplyChannel ? { supplyChannel: action.supplyChannel } : {}),
+    ...(action.recurrenceInfo ? { recurrenceInfo: action.recurrenceInfo } : {}),
+  };
+}
+
+/** Line totals, discount codes, shipping, tax and the cart totals, recomputed after every change. */
+function reprice(cart) {
+  const currency = cart.totalPrice.currencyCode;
+  const lines = cart.lineItems;
+  for (const l of lines) l.totalPrice = centMoney(currency, l.price.value.centAmount * l.quantity);
+  const list = lines.reduce((n, l) => n + l.totalPrice.centAmount, 0);
+  let percent = 0;
+  let freeShipping = false;
+  for (const info of cart.discountCodes ?? []) {
+    const def = Object.values(MOCK_CODES).find((d) => d.id === info.discountCode.id);
+    const matches = !def?.minNet || list >= def.minNet[currency];
+    info.state = matches ? 'MatchesCart' : 'DoesNotMatchCart';
+    if (matches) {
+      percent += def?.percent ?? 0;
+      freeShipping = freeShipping || Boolean(def?.freeShipping);
+    }
+  }
+  if (percent > 0) for (const l of lines) l.totalPrice = centMoney(currency, Math.round(l.price.value.centAmount * l.quantity * (1 - percent / 100)));
+  const net = lines.reduce((n, l) => n + l.totalPrice.centAmount, 0);
+  const rule = MOCK_SHIPPING[currency] ?? MOCK_SHIPPING.USD;
+  if (cart.shippingInfo) {
+    const collect = cart.shippingInfo.shippingMethod?.obj?.key === 'mcf-collect';
+    cart.shippingInfo.price = centMoney(currency, collect || freeShipping || net >= rule.freeAbove ? 0 : rule.rate);
+    cart.shippingInfo.shippingMethodState = 'MatchesCart';
+  }
+  const shipping = cart.shippingInfo?.price.centAmount ?? 0;
+  const taxRate = MOCK_TAX[cart.country] ?? 0;
+  for (const l of lines) l.taxRate = { name: 'mock', amount: taxRate, includedInPrice: false, country: cart.country };
+  const tax = Math.round((net + shipping) * taxRate);
+  cart.totalLineItemQuantity = lines.reduce((n, l) => n + l.quantity, 0);
+  cart.totalPrice = centMoney(currency, net + shipping);
+  cart.taxedPrice = lines.length === 0 ? undefined : {
+    totalNet: centMoney(currency, net + shipping), totalGross: centMoney(currency, net + shipping + tax), totalTax: centMoney(currency, tax), taxPortions: [],
+  };
+  if (!cart.taxedPrice) delete cart.taxedPrice;
+  return cart;
+}
+
+const demoLine = (cart, sku, quantity, id) => {
+  const found = VARIANT_BY_SKU.get(sku);
+  return newLine(cart, found, { sku, quantity, custom: { fields: { fulfilment: 'delivery' } } }, priceFor(found.variant, cart.country, cart.totalPrice.currencyCode), id);
+};
+const baseCart = (id, owner, extra = {}) => ({
+  id, version: 1, cartState: 'Active', country: 'US', locale: 'en-US', shippingMode: 'Single', lineItems: [], discountCodes: [],
+  totalPrice: centMoney('USD', 0), ...owner, ...extra,
+});
+const CARTS = new Map();
+const seedDemo = (id, owner, lines) => {
+  const cart = baseCart(id, owner);
+  lines.forEach(([sku, q], i) => cart.lineItems.push(demoLine(cart, sku, q, `li-${id}-${i}`)));
+  CARTS.set(id, reprice(cart));
+};
+seedDemo('cart-active', { anonymousId: 'mock-active' }, [['MCF-POD-EMBER-10', 2], ['MCF-POD-CASA-10', 1]]);
+seedDemo('cart-maya', { customerId: 'cust-1' }, [['MCF-POD-EMBER-10', 1]]);
 let cartSeq = 0;
-const withTotals = (cart) => ({ ...cart, totalLineItemQuantity: cart.lineItems.reduce((n, l) => n + l.quantity, 0) });
+let lineSeq = 0;
 
 function updateCart(cart, body) {
-  if (body.version !== cart.version) return { status: 409, body: { statusCode: 409, message: 'Object has a different version', errors: [{ code: 'ConcurrentModification' }] } };
-  let next = cart;
+  if (body.version !== cart.version) return ctError(409, [{ code: 'ConcurrentModification' }], 'Object has a different version');
+  const next = JSON.parse(JSON.stringify(cart));
+  const currency = next.totalPrice.currencyCode;
+  const lineOf = (id) => next.lineItems.find((l) => l.id === id);
   for (const action of body.actions ?? []) {
-    if (action.action !== 'addLineItem') return { status: 400, body: { statusCode: 400, message: `unsupported action ${action.action}`, errors: [{ code: 'InvalidOperation', message: 'mock' }] } };
-    const found = VARIANT_BY_SKU.get(action.sku);
-    if (!found) return { status: 400, body: { statusCode: 400, message: `A product with SKU '${action.sku}' not found.`, errors: [{ code: 'InvalidOperation', message: `A product with SKU '${action.sku}' not found.` }] } };
-    if (!priceFor(found.variant, next.country, next.currency ?? next.totalPrice?.currencyCode)) {
-      return { status: 400, body: { statusCode: 400, message: 'no price', errors: [{ code: 'MissingPriceForProduct', message: 'no price' }] } };
-    }
-    // Lines merge on SKU, fulfilment, supply channel and recurrence policy, like the platform (workstream H).
-    const sameLine = (l) =>
-      l.variant.sku === action.sku && l.custom?.fields?.fulfilment === action.custom?.fields?.fulfilment
-      && l.supplyChannel?.id === action.supplyChannel?.id
-      && l.recurrenceInfo?.recurrencePolicy?.id === action.recurrenceInfo?.recurrencePolicy?.id;
-    const existing = next.lineItems.find(sameLine);
-    const price = priceFor(found.variant, next.country, next.currency ?? next.totalPrice?.currencyCode);
-    const unit = action.recurrenceInfo ? Math.round(price.cents * 0.9) : price.cents; // the recurring price is 10% below
-    next = existing
-      ? { ...next, lineItems: next.lineItems.map((l) => (l === existing ? { ...l, quantity: l.quantity + (action.quantity ?? 1) } : l)) }
-      : {
-          ...next,
-          lineItems: [...next.lineItems, {
-            id: `li-${next.lineItems.length + 1}-${cartSeq}`, quantity: action.quantity ?? 1, variant: { sku: action.sku }, custom: action.custom,
-            price: { value: { currencyCode: price.currency, centAmount: unit } },
-            ...(action.supplyChannel ? { supplyChannel: action.supplyChannel } : {}),
-            ...(action.recurrenceInfo ? { recurrenceInfo: action.recurrenceInfo } : {}),
-          }],
+    switch (action.action) {
+      case 'addLineItem': {
+        const found = VARIANT_BY_SKU.get(action.sku);
+        if (!found) return ctError(400, [{ code: 'InvalidOperation', message: `A product with SKU '${action.sku}' not found.` }]);
+        const price = priceFor(found.variant, next.country, currency);
+        if (!price) return ctError(400, [{ code: 'MissingPriceForProduct', message: 'no price' }]);
+        // Lines merge on SKU, fulfilment, supply channel and recurrence policy, like the platform (workstream H).
+        const existing = next.lineItems.find(
+          (l) => l.variant.sku === action.sku && l.custom?.fields?.fulfilment === action.custom?.fields?.fulfilment
+            && l.supplyChannel?.id === action.supplyChannel?.id
+            && l.recurrenceInfo?.recurrencePolicy?.id === action.recurrenceInfo?.recurrencePolicy?.id,
+        );
+        if (existing) existing.quantity += action.quantity ?? 1;
+        else next.lineItems.push(newLine(next, found, action, price, `li-${(lineSeq += 1)}-${cartSeq}`));
+        break;
+      }
+      case 'changeLineItemQuantity': {
+        const l = lineOf(action.lineItemId);
+        if (!l) return ctError(400, [{ code: 'InvalidOperation', message: 'line item not found' }]);
+        l.quantity = action.quantity;
+        break;
+      }
+      case 'removeLineItem': {
+        if (!lineOf(action.lineItemId)) return ctError(400, [{ code: 'InvalidOperation', message: 'line item not found' }]);
+        next.lineItems = next.lineItems.filter((l) => l.id !== action.lineItemId);
+        break;
+      }
+      case 'setLineItemSupplyChannel': {
+        const l = lineOf(action.lineItemId);
+        if (!l) return ctError(400, [{ code: 'InvalidOperation', message: 'line item not found' }]);
+        if (action.supplyChannel) l.supplyChannel = action.supplyChannel;
+        else delete l.supplyChannel;
+        break;
+      }
+      case 'setLineItemCustomField': {
+        const l = lineOf(action.lineItemId);
+        if (!l) return ctError(400, [{ code: 'InvalidOperation', message: 'line item not found' }]);
+        l.custom = { fields: { ...(l.custom?.fields ?? {}), [action.name]: action.value } };
+        break;
+      }
+      case 'setShippingMethod':
+        next.shippingInfo = {
+          shippingMethodName: action.shippingMethod.key === 'mcf-collect' ? 'Collect in store' : 'Standard', price: centMoney(currency, 0),
+          shippingMethod: { typeId: 'shipping-method', id: `sm-${action.shippingMethod.key}`, obj: { key: action.shippingMethod.key } },
         };
+        break;
+      case 'recalculate':
+        for (const l of next.lineItems) {
+          const found = VARIANT_BY_SKU.get(l.variant.sku);
+          const price = found && priceFor(found.variant, next.country, currency);
+          if (price && !l.recurrenceInfo) l.price = { value: centMoney(price.currency, price.cents) };
+        }
+        break;
+      case 'addDiscountCode': {
+        const def = MOCK_CODES[action.code];
+        const fail = (reason) => ctError(400, [{ code: 'DiscountCodeNonApplicable', reason, message: 'The discount code could not be applied.' }]);
+        if (!def) return fail('DoesNotExist');
+        if (def.reject) return fail(def.reject);
+        const list = next.lineItems.reduce((n, l) => n + l.price.value.centAmount * l.quantity, 0);
+        if (def.minNet && list < def.minNet[currency]) return fail('DoesNotMatchCart');
+        if (!next.discountCodes.some((d) => d.discountCode.id === def.id)) {
+          next.discountCodes.push({ discountCode: { typeId: 'discount-code', id: def.id, obj: { id: def.id, code: action.code, name: def.name } }, state: 'MatchesCart' });
+        }
+        break;
+      }
+      case 'removeDiscountCode':
+        next.discountCodes = next.discountCodes.filter((d) => d.discountCode.id !== action.discountCode.id);
+        break;
+      case 'setDeleteDaysAfterLastModification':
+        next.deleteDaysAfterLastModification = action.deleteDaysAfterLastModification;
+        break;
+      default:
+        return ctError(400, [{ code: 'InvalidOperation', message: `unsupported action ${action.action}` }]);
+    }
   }
-  return { status: 200, body: withTotals({ ...next, version: cart.version + 1 }) };
+  reprice(next);
+  next.version = cart.version + 1;
+  return { status: 200, body: next };
 }
 
 const list = (results, total = results.length) => ({ limit: 500, offset: 0, count: results.length, total, results });
@@ -254,6 +405,21 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
   }
   // Debug read of every cart the mock holds, to check supply channels and recurrence info (not a commercetools route).
   if (path === '/__mock/carts') return json(res, 200, [...CARTS.values()]);
+  // Test hooks for the browser: change a catalogue price or a stock level (not commercetools routes).
+  if (path === '/__mock/price' && req.method === 'POST') {
+    const { sku, cents } = await readBody(req);
+    if (cents === null || cents === undefined) PRICE_OVERRIDES.delete(sku);
+    else PRICE_OVERRIDES.set(sku, cents);
+    return json(res, 200, { sku, cents: cents ?? null });
+  }
+  if (path === '/__mock/stock' && req.method === 'POST') {
+    const { sku, online, store, quantity } = await readBody(req);
+    const over = STOCK_OVERRIDES.get(sku) ?? { stores: new Map() };
+    if (typeof online === 'number') over.online = online;
+    if (typeof store === 'number') over.stores.set(store, quantity ?? 0);
+    STOCK_OVERRIDES.set(sku, over);
+    return json(res, 200, { sku, online: over.online ?? null, stores: Object.fromEntries(over.stores) });
+  }
   if (path === `/${PROJECT}/product-projections` && req.method === 'GET') {
     const ids = [
       ...[...(url.searchParams.get('where') ?? '').matchAll(/"([0-9a-f-]{36})"/g)].map((m) => m[1]),
@@ -275,10 +441,9 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
   if (path === `/${PROJECT}/carts` && req.method === 'POST') {
     const body = await readBody(req);
     cartSeq += 1;
-    const cart = withTotals({
-      id: `cart-${cartSeq}`, version: 1, cartState: 'Active', lineItems: [], country: body.country, currency: body.currency,
-      totalPrice: { currencyCode: body.currency }, shippingMode: body.shippingMode, ...(body.anonymousId ? { anonymousId: body.anonymousId } : {}),
-    });
+    const cart = reprice(baseCart(`cart-${cartSeq}`, {
+      ...(body.anonymousId ? { anonymousId: body.anonymousId } : {}), ...(body.customerId ? { customerId: body.customerId } : {}),
+    }, { country: body.country, locale: body.locale, shippingMode: body.shippingMode, totalPrice: centMoney(body.currency, 0) }));
     CARTS.set(cart.id, cart);
     return json(res, 201, cart);
   }

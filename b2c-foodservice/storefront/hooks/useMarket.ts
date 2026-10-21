@@ -4,11 +4,15 @@ import { useLocale } from 'next-intl';
 import { useCallback } from 'react';
 import { fetchJson } from '@/hooks/fetcher';
 import { usePathname, useRouter } from '@/i18n/routing';
+import { storeDroppedLines } from '@/lib/cart/dropped';
+import type { DroppedLine } from '@/lib/types';
 import { marketForLocale } from '@/lib/utils';
 
 export interface MarketSwitchResult {
   country: string; currency: string; locale: string;
-  cartCarriedOver: boolean; droppedLines: string[];
+  cartCarriedOver: boolean;
+  /** Lines the new market could not take (workstream I); the notice stays until dismissed. */
+  droppedLines: DroppedLine[];
 }
 
 /**
@@ -29,6 +33,7 @@ export function useMarket() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(language ? { country, locale: language } : { country }),
       });
+      storeDroppedLines(result.droppedLines ?? []);
       const search = typeof window === 'undefined' ? '' : window.location.search;
       router.replace(`${pathname}${search}`, { locale: result.locale });
       router.refresh();

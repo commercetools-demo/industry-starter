@@ -214,3 +214,66 @@ export interface ReviewPage { reviews: ReviewView[]; total: number; page: number
 /** GET /api/reviews?productId=... answer: the page plus the signed-in customer's own review id for this product. */
 export interface ReviewPageResponse extends ReviewPage { mine: { id: string } | null }
 export interface ReviewInput { rating: number; title?: string; text?: string }
+
+// Workstream I: the full cart view (what the drawer, the cart page and checkout read). `Cart` keeps every field of `CartSummary`.
+export type Fulfilment = 'collect' | 'delivery' | 'subscribe';
+/** `collect:<storeKey>`, `delivery` or `subscribe`. The only definition of a fulfilment group is `groupKeyOf` (lib/cart/plan.ts). */
+export type GroupKey = `collect:${string}` | 'delivery' | 'subscribe';
+export type LineNoticeKind = 'price-updated' | 'out-of-stock' | 'collect-unavailable' | 'quantity-exceeds-stock';
+export interface LineNotice {
+  kind: LineNoticeKind;
+  /** price-updated: the unit price before the change. */
+  previous?: Money;
+  /** quantity-exceeds-stock: how many can be bought. */
+  available?: number;
+}
+export interface CartLineStore {
+  key: string; id: string; name: string; addressLine: string; city: string; collectionMinutes: number;
+}
+export interface CartLine {
+  id: string; sku: string; productId: string; slug: string; name: string;
+  imageUrl?: string; imageAlt: string;
+  /** "Intensity 8 · 10 capsules", "250 g · Whole bean". */
+  variantSummary: string;
+  quantity: number;
+  unitPrice: Money; oldUnitPrice?: Money;
+  /** The engine's line total, verbatim. */
+  total: Money;
+  fulfilment: Fulfilment;
+  groupKey: GroupKey;
+  store?: CartLineStore;
+  recurrence?: { policyId: string; schedule: { unit: 'Weeks' | 'Months' | 'Days'; value: number } };
+  /** For ship lines: stock at the session's chosen store, to enable the Collect chip. */
+  collectAtSessionStore?: { storeKey: string; storeName: string; state: AvailabilityState } | null;
+  notices: LineNotice[];
+  maxQuantity: number;
+  /** Product shape ('pods', 'machine', ...) and capsule system, for the companion nudge. */
+  shape?: ProductShape;
+  systemKey?: string;
+}
+export interface CartGroup { key: GroupKey; kind: Fulfilment; store?: CartLineStore; lineIds: string[] }
+export type CodeState =
+  | 'MatchesCart' | 'NotActive' | 'DoesNotMatchCart' | 'MaxApplicationReached' | 'ApplicationStoppedByPreviousDiscount' | 'NotValid';
+export interface AppliedCode { id: string; code: string; name?: string; state: CodeState; reasonKey?: string }
+export type CartBlocker = 'empty' | 'below-minimum' | 'out-of-stock' | 'collect-unavailable' | 'price-unavailable';
+export interface CartNudge { sku: string; name: string; price: Money; machineName: string }
+export interface Cart {
+  id: string; version: number; currency: string; country: string; shippingMode: 'Single' | 'Multiple';
+  /** Units (totalLineItemQuantity). */
+  count: number;
+  lines: CartLine[]; groups: CartGroup[];
+  /** Display sum of the engine's line totals (not a decision input). */
+  subtotal: Money;
+  /** Positive amount saved (display sum), null when none. */
+  discount: Money | null;
+  shipping: { amount: Money; isFree: boolean } | null;
+  tax: { amount: Money; included: boolean } | null;
+  /** The engine total (taxedPrice.totalGross when present, else totalPrice). */
+  total: Money;
+  codes: AppliedCode[];
+  freeShipping: { threshold: Money | null; remaining: Money | null; reached: boolean };
+  minimumOrder: { value: Money | null; shortfall: Money | null };
+  canCheckout: boolean; blockers: CartBlocker[];
+  nudge: CartNudge | null;
+}
+export interface DroppedLine { sku: string; name: string; reason: 'no-price' | 'unknown' }

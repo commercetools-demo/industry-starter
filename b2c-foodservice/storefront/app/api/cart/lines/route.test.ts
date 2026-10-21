@@ -22,7 +22,7 @@ vi.mock('@/lib/ct/client', () => ({
       post: ({ body }: { body: Record<string, unknown> }) => ({
         execute: async () => {
           ct.n += 1;
-          const cart = { id: `cart-${ct.n}`, version: 1, cartState: 'Active', lineItems: [], ...body };
+          const cart = { id: `cart-${ct.n}`, version: 1, cartState: 'Active', lineItems: [], totalPrice: { centAmount: 0, currencyCode: body.currency }, ...body };
           ct.carts.set(cart.id, cart);
           ct.created.push(body);
           return { body: cart };
@@ -46,7 +46,7 @@ vi.mock('@/lib/ct/client', () => ({
             }
             const c = ct.carts.get(ID) as { version: number; lineItems: unknown[] };
             const a = body.actions[0] as { sku: string; quantity: number };
-            const next = { ...c, version: c.version + 1, lineItems: [...c.lineItems, { id: `li-${c.lineItems.length + 1}`, quantity: a.quantity, variant: { sku: a.sku } }] };
+            const next = { ...c, version: c.version + 1, lineItems: [...c.lineItems, { id: `li-${c.lineItems.length + 1}`, quantity: a.quantity, variant: { sku: a.sku }, productId: 'p-1', name: { 'en-US': 'x' }, productSlug: { 'en-US': 'x' }, price: { value: { centAmount: 100, currencyCode: 'USD' } }, totalPrice: { centAmount: 100 * a.quantity, currencyCode: 'USD' } }] };
             ct.carts.set(ID, next);
             return { body: next };
           },
@@ -55,6 +55,10 @@ vi.mock('@/lib/ct/client', () => ({
     }),
   },
 }));
+
+// The full view (GET) reads more than the add path: its enrichment reads and the translator are stubbed here and tested on their own.
+vi.mock('@/lib/ct/cart-enrich', async () => ({ getCartEnrichment: async () => (await import('@/lib/mappers/cart')).EMPTY_ENRICHMENT }));
+vi.mock('next-intl/server', () => ({ getTranslations: async () => (key: string) => key }));
 
 import { GET as getCart } from '../route';
 import { POST } from './route';
