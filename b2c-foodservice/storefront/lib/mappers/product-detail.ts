@@ -224,6 +224,7 @@ export function mapProductDetail(p: ProductProjection, ctx: DetailContext): Prod
     facts: {
       ...(intensity !== undefined ? { intensity } : {}),
       ...(roast ? { roast } : {}),
+      ...(isEnum(roastRaw) ? { roastKey: roastRaw.key } : {}),
       ...(origin ? { origin } : {}),
       notes,
       specs,

@@ -171,7 +171,7 @@ export interface ProductDetail {
   defaultSku: string;
   selectors: SelectorDef[];
   facts: {
-    intensity?: number; roast?: string; origin?: string; notes: string[];
+    intensity?: number; roast?: string; roastKey?: string; origin?: string; notes: string[];
     /** Specification rows; the page maps `key` to `pdp.spec.<key>`. */
     specs: { key: string; value: string }[];
   };
@@ -181,4 +181,21 @@ export interface ProductDetail {
 export interface RecurrencePolicyView {
   id: string; key: string; name: string;
   schedule: { unit: 'Weeks' | 'Months' | 'Days'; value: number };
+}
+
+/** What the product page needs for one SKU and locale (built by lib/pdp/load.ts). Plain data, safe to pass to client components. */
+export interface ProductPageData {
+  product: ProductDetail;
+  /** Category slugs of the two pod systems, for the compatibility guide links. */
+  guideLinks: { original?: string; vertuo?: string };
+  /** Recurrence policies (empty when the product is not subscribable or the read failed: the Subscribe card is hidden). */
+  policies: RecurrencePolicyView[];
+  /** The inventory read failed: the page says stock could not be checked and disables the add button. */
+  inventoryFailed: boolean;
+  freeShippingThreshold: Money | null;
+  returnDays: number;
+  /** Collection in store is offered in this market (US only, D-035). */
+  collection: boolean;
+  country: string;
+  currency: string;
 }

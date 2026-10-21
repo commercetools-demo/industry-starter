@@ -1,5 +1,6 @@
 import 'server-only';
 import { cache } from 'react';
+import { findCategory } from '@/lib/category-tree';
 import { getAttributeLabels } from '@/lib/ct/attribute-labels';
 import { getCategoryTree } from '@/lib/ct/categories';
 import { getInventoryDetail } from '@/lib/ct/inventory';
@@ -7,22 +8,10 @@ import { getProductBySku, getRecurrencePolicies } from '@/lib/ct/product-detail'
 import { getFreeShippingThreshold } from '@/lib/ct/shipping';
 import { mapProductDetail } from '@/lib/mappers/product-detail';
 import { RETURN_DAYS } from '@/lib/shop-config';
-import type { Category, InventoryDetail, Money, ProductDetail, RecurrencePolicyView } from '@/lib/types';
+import type { Category, InventoryDetail, ProductPageData } from '@/lib/types';
 import { marketForLocale } from '@/lib/utils';
 
-export interface ProductPageData {
-  product: ProductDetail;
-  /** Recurrence policies (empty when the product is not subscribable or the read failed: the Subscribe card is hidden). */
-  policies: RecurrencePolicyView[];
-  /** The inventory read failed: the page says stock could not be checked and disables the add button. */
-  inventoryFailed: boolean;
-  freeShippingThreshold: Money | null;
-  returnDays: number;
-  /** Collection in store is offered in this market (US only, D-035). */
-  collection: boolean;
-  country: string;
-  currency: string;
-}
+export type { ProductPageData };
 
 const logFailure = (event: string) => (e: unknown) => {
   console.error(JSON.stringify({ event, status: (e as { statusCode?: number })?.statusCode }));
@@ -65,8 +54,12 @@ async function load(sku: string, locale: string): Promise<ProductPageData | null
     inventory: inventory ?? ({} as Record<string, InventoryDetail>),
     policyIds: policies ? new Set(policies.map((p) => p.id)) : null,
   });
+  const slugOf = (key: string) => findCategory(tree, (c) => c.key === key)?.slug;
+  const original = slugOf('mcf-cat-pods-original');
+  const vertuo = slugOf('mcf-cat-pods-vertuo');
   return {
     product,
+    guideLinks: { ...(original ? { original } : {}), ...(vertuo ? { vertuo } : {}) },
     policies: product.subscribable && product.shape !== 'machine' ? (policies ?? []) : [],
     inventoryFailed: inventory === null,
     freeShippingThreshold: threshold,
