@@ -40,7 +40,12 @@ export type DomainErrorCode =
   | 'address_needs_confirmation'
   | 'current_password_invalid'
   | 'list_full'
-  | 'list_empty';
+  | 'list_empty'
+  // Workstream N: subscription changes the account explains.
+  | 'invalid_state'
+  | 'subscription_unavailable'
+  | 'version_conflict'
+  | 'unsupported_media_type';
 
 const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   invalid_credentials: 'Email or password is incorrect',
@@ -77,6 +82,10 @@ const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   current_password_invalid: 'The current password is incorrect',
   list_full: 'Your saved items list is full',
   list_empty: 'You have no saved items',
+  invalid_state: 'That change is not possible for this subscription right now',
+  subscription_unavailable: 'That delivery interval is not available',
+  version_conflict: 'This subscription changed while you were working. Please try again',
+  unsupported_media_type: 'The request must be JSON',
 };
 
 /** Same envelope as D: `{ error: { code, message, ...extra } }`. Extras are plain data (rule ids, retryAfterSeconds). */

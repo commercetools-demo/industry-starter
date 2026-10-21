@@ -384,3 +384,59 @@ export interface AccountProfile {
   firstName: string; lastName: string; email: string; phone: string | null; defaultShippingAddressId: string | null;
 }
 export interface PaymentMethodView { id: string; version: number; label: string; method: string; isDefault: boolean }
+
+// ---------------------------------------------------------------- workstream N: subscriptions
+
+export type SubscriptionState = 'active' | 'paused' | 'canceled' | 'expired' | 'failed';
+
+export interface SubscriptionLine {
+  lineId: string;
+  sku: string;
+  productId: string;
+  slug: string | null;
+  name: string;
+  /** "50 capsules", "250 g, Filter"; empty when the line carries no readable attribute. */
+  variantLabel: string;
+  imageUrl: string | null;
+  quantity: number;
+  unitPrice: Money;
+  totalPrice: Money;
+}
+
+/** One recurring order of the signed-in customer (a group of subscribe lines that share a schedule). */
+export interface Subscription {
+  id: string;
+  version: number;
+  state: SubscriptionState;
+  /** Derived from the lines' `recurrenceInfo`; the recurring-orders API speaks policy ids, the add-to-bag API speaks keys. */
+  policyId: string | null;
+  /** Null when the schedule cannot be expressed (day of month). */
+  schedule: RecurrencePolicyView['schedule'] | null;
+  nextOrderDate: string | null;
+  lastOrderDate: string | null;
+  startedAt: string;
+  /** `max(0, totalToSkip - skipped)`, 0 without a skip configuration. */
+  pendingSkips: number;
+  priceSelectionMode: 'fixed' | 'dynamic' | null;
+  lines: SubscriptionLine[];
+  total: Money;
+  originOrderId: string | null;
+  originOrderNumber: string | null;
+}
+
+/** An order with subscribe lines for which no recurring order was found (yet). */
+export interface PendingSubscription {
+  orderId: string;
+  orderNumber: string | null;
+  placedAt: string;
+  lines: Array<{ name: string; quantity: number; policyId: string }>;
+}
+
+export type SubscriptionAction =
+  | { action: 'pause' }
+  | { action: 'resume' }
+  | { action: 'cancel' }
+  | { action: 'skip' }
+  | { action: 'setInterval'; recurrencePolicyId: string };
+
+export interface SubscriptionsResponse { subscriptions: Subscription[]; pending: PendingSubscription[] }
