@@ -14,6 +14,7 @@ import { formatMoney } from '@/lib/utils';
  */
 export default function SubscribeBlock() {
   const t = useTranslations('pdp');
+  const tSub = useTranslations('subscription');
   const locale = useLocale();
   const { preview, policies, policyId, setPolicyId } = usePdp();
   const selectId = useId();
@@ -39,6 +40,7 @@ export default function SubscribeBlock() {
           <s className="text-[13px] font-normal text-ink-3">{t('subscribe.oneTime', { amount: fmt(oneTime) })}</s>
         ) : null}
       </p>
+      <p className="m-0 text-[12.5px] text-ink-2" data-testid="subscribe-price-lock">{tSub('priceLock')}</p>
       <p className="m-0 text-[12.5px] text-ink-3">{t('subscribe.skipCancel')}</p>
     </div>
   );

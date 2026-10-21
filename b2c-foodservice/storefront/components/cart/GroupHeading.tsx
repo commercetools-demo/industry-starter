@@ -23,6 +23,7 @@ export default function GroupHeading({
 }) {
   const Heading = level === 2 ? 'h2' : 'h3';
   const t = useTranslations('cart.group');
+  const tSub = useTranslations('subscription');
   const money = useMoney();
   const store = group.store;
 
@@ -53,6 +54,11 @@ export default function GroupHeading({
           {title}
         </Heading>
         {line ? <p className="m-0 mt-0.5 text-[13px] text-ink-3">{line}</p> : null}
+        {!compact && group.kind === 'subscribe' ? (
+          <p className="m-0 mt-0.5 text-[13px] text-ink-3" data-testid="subscription-price-lock">
+            {tSub('priceLock')} {tSub('cart.shippingNote')}
+          </p>
+        ) : null}
       </div>
       {!compact && group.kind === 'collect' && onChangeStore ? (
         <button

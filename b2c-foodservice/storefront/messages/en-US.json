@@ -1608,5 +1608,85 @@
       "viewBag": "View bag",
       "close": "Close"
     }
+  },
+  "subscription": {
+    "priceLock": "Your price stays the same for every delivery.",
+    "cart": {
+      "shippingNote": "Shipping is calculated for each delivery."
+    },
+    "checkout": {
+      "needsAccount": "A subscription needs an account so you can manage it. Sign in or create one to continue."
+    },
+    "confirmation": {
+      "active": "Your subscription starts now. Next delivery {date}, then every {interval}. Manage it in your account.",
+      "settingUp": "We are setting up your subscription.",
+      "late": "We could not confirm your subscription yet. It will appear in your account; contact us if it does not."
+    },
+    "account": {
+      "customSchedule": "Custom schedule",
+      "title": "Subscriptions",
+      "empty": {
+        "title": "No subscriptions yet",
+        "text": "Subscribe & save on pods and coffee. Skip, pause or cancel any time.",
+        "cta": "Shop coffee"
+      },
+      "error": "We could not load your subscriptions.",
+      "retry": "Try again",
+      "contact": "Contact us",
+      "pending": {
+        "title": "Subscription pending",
+        "text": "We placed your order {orderNumber} and are still setting up the subscription. Check back shortly or contact us if it does not appear."
+      },
+      "failed": "We could not create your last order.",
+      "next": "Next delivery {date}",
+      "last": "Last order {date}",
+      "skipping": "Skipping {date}",
+      "skippedLabel": "Next delivery skipped",
+      "pausedText": "No further orders until you resume.",
+      "moreLines": "+{count} more",
+      "perDelivery": "{amount} per delivery",
+      "quantity": "Quantity {count}",
+      "list": "Your subscriptions"
+    },
+    "status": {
+      "active": "Active",
+      "paused": "Paused",
+      "canceled": "Canceled",
+      "expired": "Expired",
+      "failed": "Needs attention"
+    },
+    "action": {
+      "skip": "Skip next",
+      "changeInterval": "Change interval",
+      "pause": "Pause",
+      "resume": "Resume",
+      "cancel": "Cancel",
+      "subscribeAgain": "Subscribe again"
+    },
+    "dialog": {
+      "interval": {
+        "title": "Change interval",
+        "text": "The new interval applies from your next order. Your price per delivery stays the same.",
+        "current": "Current",
+        "blockedBySkip": "You can change the interval after the skipped delivery has passed."
+      },
+      "cancel": {
+        "title": "Cancel this subscription?",
+        "textLast": "No further orders will be created. Your last order was on {date}.",
+        "textNone": "No further orders will be created. No order has been created from it yet."
+      },
+      "keep": "Keep subscription",
+      "confirmCancel": "Cancel subscription",
+      "save": "Save"
+    },
+    "toast": {
+      "skipped": "Next delivery skipped",
+      "paused": "Subscription paused",
+      "resumed": "Subscription resumed",
+      "intervalUpdated": "Interval updated",
+      "canceled": "Subscription canceled. Your last order was on {date}.",
+      "canceledNone": "Subscription canceled.",
+      "error": "That did not work. Please try again."
+    }
   }
 }
