@@ -7,7 +7,7 @@ Updated 2026-10-21 (owner answers D-030 to D-039 applied to every plan). States:
 
 | ID | Workstream | Wave | State | Notes |
 | --- | --- | --- | --- | --- |
-| A | Bootstrap | 1 | Not started | Plan written (`workstreams/A-bootstrap.md`) |
+| A | Bootstrap | 1 | Ready for review | A-01 to A-13 done offline; live health check blocked on OA-01 (OA-A-c); see plans/evidence/A/README.md |
 | B | Seed foundation | 1 | Ready for review (offline) | Seed package built offline; being updated for US and Canada, six NYC stores, no review states (D-030 to D-037); never run live (needs OA-01) |
 | C | Seed catalogue | 2 | Ready for review (offline) | Same package as B; live run and images pending (OA-01, OA-03) |
 | D | Server core | 2 | Not started | |

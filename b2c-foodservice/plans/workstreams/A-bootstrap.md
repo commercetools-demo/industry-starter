@@ -372,25 +372,25 @@ Do them in order. Commit after each. Run `cd storefront && npm run check` before
   - Steps: section 3.14. Then run the whole Browser recipe (section 6) and Self-verification (section 7).
   - Tests: `agent-rules.test.ts`: `New contributor: CLAUDE.md and AGENTS.md name the commands, the lint rules and the two plan files` (read both files, assert they contain `npm run check`, `plans/TODO-MANUAL-TESTING.md`, `plans/QUESTIONS.md`, `@/i18n/routing`, and that AGENTS.md still contains `BEGIN:nextjs-agent-rules`).
 
-- [ ] **A-13 Fresh clone dry run and hand-off**
+- [x] **A-13 Fresh clone dry run and hand-off**
   - Steps: commit everything; `git clone . "$TMPDIR/dry-a"` (use the scratchpad folder), `cd .../b2c-foodservice/storefront`, `cp` a prepared `.env.local` (placeholders are fine, project key identical to expected), `npm ci && npm run check && npm run build`. Save the last 20 lines to `plans/evidence/A/fresh-clone.txt`. Set `STATUS.md` row A to `Ready for review`.
 
 ## 5. Scenarios checklist (`bootstrap-and-structure`)
 
-- [ ] Fresh clone builds: A-13 dry run, evidence `fresh-clone.txt`; plus `Stack and version gates pass on the real repository` (A-04)
-- [ ] Forbidden version: `Forbidden version: next 15.x fails with the version rule` (and 3 siblings, A-04)
-- [ ] Scaffold evidence: `plans/evidence/A/{command-output.txt,versions.txt,health.json}` (A-01, A-12); reviewer reads the folder
-- [ ] A new resource: documented in `AGENTS.md` (checked by `New contributor` test) and exercised first by D; test `AGENTS.md lists the six files for a new resource` in `agent-rules.test.ts`
-- [ ] Unknown locale: `Unknown locale redirects to the default locale, never nested` (A-06)
-- [ ] Adding a market: `Adding a market: every COUNTRY_CONFIG key has a message file with the same keys` (A-05)
-- [ ] Missing secret: `Missing secret: SESSION_SECRET shorter than 32 names the variable and not the value` (A-07) and browser step 6
-- [ ] Client bundle scan: `Client bundle scan finds a secret value in .next/static and reports only the name` (A-11) and `npm run verify:build` evidence
-- [ ] Wrong project: `Wrong project names both keys` (A-07) and browser step 7
-- [ ] Stored URL with a query: `Images are unoptimized and https remote patterns are allowed` (A-09); the "only the part before `?` is stored" half is tested by workstream C (`strips query and fragment from stored image URLs`)
+- [x] Fresh clone builds: A-13 dry run, evidence `fresh-clone.txt`; plus `Stack and version gates pass on the real repository` (A-04)
+- [x] Forbidden version: `Forbidden version: next 15.x fails with the version rule` (and 3 siblings, A-04)
+- [x] Scaffold evidence: `plans/evidence/A/{command-output.txt,versions.txt,health.json}` (A-01, A-12); reviewer reads the folder
+- [x] A new resource: documented in `AGENTS.md` (checked by `New contributor` test) and exercised first by D; test `AGENTS.md lists the six files for a new resource` in `agent-rules.test.ts`
+- [x] Unknown locale: `Unknown locale redirects to the default locale, never nested` (A-06)
+- [x] Adding a market: `Adding a market: every COUNTRY_CONFIG key has a message file with the same keys` (A-05)
+- [x] Missing secret: `Missing secret: SESSION_SECRET shorter than 32 names the variable and not the value` (A-07) and browser step 6
+- [x] Client bundle scan: `Client bundle scan finds a secret value in .next/static and reports only the name` (A-11) and `npm run verify:build` evidence
+- [x] Wrong project: `Wrong project names both keys` (A-07) and browser step 7
+- [x] Stored URL with a query: `Images are unoptimized and https remote patterns are allowed` (A-09); the "only the part before `?` is stored" half is tested by workstream C (`strips query and fragment from stored image URLs`)
 - [ ] Credentials valid: `Credentials valid: health returns 200 with the project key and no secret` (A-08) and live step 3
-- [ ] Deploy gate: `Deploy gate fails while app/api/health/route.ts exists` (A-08)
-- [ ] Server import in a client file: `Server import in a client file: lib/ct import fails with the boundary rule` (A-10)
-- [ ] New contributor: `New contributor: CLAUDE.md and AGENTS.md name the commands, the lint rules and the two plan files` (A-12)
+- [x] Deploy gate: `Deploy gate fails while app/api/health/route.ts exists` (A-08)
+- [x] Server import in a client file: `Server import in a client file: lib/ct import fails with the boundary rule` (A-10)
+- [x] New contributor: `New contributor: CLAUDE.md and AGENTS.md name the commands, the lint rules and the two plan files` (A-12)
 
 ## 6. Browser recipe (Chrome DevTools MCP, you run it)
 
