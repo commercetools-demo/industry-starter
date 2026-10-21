@@ -16,8 +16,8 @@ export interface AddToCartInput {
 }
 
 /**
- * Adds a line through POST /api/cart/lines. On success the cart cache (KEY_CART) and the header badge (KEY_CART_COUNT)
- * are set from the response body, with no refetch. `add` resolves to the cart, or null after setting `error`.
+ * Adds a line through POST /api/cart/lines. On success the header badge (KEY_CART_COUNT) is set from the response body
+ * and the full cart (KEY_CART, workstream I) is revalidated. `add` resolves to the cart, or null after setting `error`.
  */
 export function useAddToCart() {
   const { mutate } = useSWRConfig();
@@ -34,8 +34,9 @@ export function useAddToCart() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(input),
         });
+        // The response is a CartSummary; the full cart (drawer, page) is read again, the badge is set at once.
         await Promise.all([
-          mutate(KEY_CART, { cart: res.cart }, { revalidate: false }),
+          mutate(KEY_CART),
           mutate(KEY_CART_COUNT, { count: res.cart.count }, { revalidate: false }),
         ]);
         return res.cart;
