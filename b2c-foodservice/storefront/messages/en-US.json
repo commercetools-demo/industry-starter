@@ -232,6 +232,9 @@
       "invalid": "Enter a valid email address",
       "error": "Something went wrong, try again",
       "success": "Thanks, you're on the list"
+    },
+    "toast": {
+      "added": "Added to bag"
     }
   },
   "store": {
@@ -282,5 +285,137 @@
     "close": "Close",
     "switchError": "We could not change the country. Please try again.",
     "english": "English"
+  },
+  "plp": {
+    "title": {
+      "all": "All products",
+      "search": "Results for \"{query}\""
+    },
+    "count": "{count, plural, one {# product} other {# products}}",
+    "breadcrumb": {
+      "aria": "Breadcrumb",
+      "home": "Home",
+      "search": "Search",
+      "all": "All products"
+    },
+    "search": {
+      "label": "Search products",
+      "placeholder": "Search coffee, pods, machines",
+      "clear": "Clear search",
+      "prompt": "Enter a coffee, a machine or a product code",
+      "submit": "Search"
+    },
+    "sort": {
+      "label": "Sort by",
+      "featured": "Featured",
+      "bestMatch": "Best match",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low",
+      "rating": "Top rated"
+    },
+    "filters": {
+      "title": "Filters",
+      "open": "Filters",
+      "close": "Close filters",
+      "clearAll": "Clear all",
+      "showAll": "Show all {n}",
+      "showLess": "Show less",
+      "apply": "Show {n, plural, one {# result} other {# results}}",
+      "unavailable": "Filters are unavailable right now.",
+      "groupOpen": "Collapse {name}",
+      "groupClosed": "Expand {name}",
+      "selected": "{n} selected"
+    },
+    "chip": {
+      "remove": "Remove filter {label}",
+      "avail": "Available at {store}"
+    },
+    "facet": {
+      "category": "Category",
+      "system": "Machine system",
+      "intensity": "Intensity",
+      "roast": "Roast",
+      "brew": "Brew method",
+      "origin": "Origin",
+      "decaf": "Decaf",
+      "organic": "Organic",
+      "fairtrade": "Fairtrade",
+      "colour": "Color",
+      "price": "Price",
+      "rating": "Rating",
+      "collection": "Collection"
+    },
+    "facetValue": {
+      "collection": {
+        "bestseller": "Bestsellers",
+        "new": "New",
+        "limitedEdition": "Limited edition",
+        "subscribable": "Subscribe & save"
+      },
+      "rating": {
+        "4_5": "4.5 and up",
+        "4_0": "4.0 and up"
+      },
+      "price": {
+        "under": "Under {max}",
+        "between": "{min} to {max}",
+        "over": "{min} and up"
+      },
+      "intensity": "Intensity {n}"
+    },
+    "availableAt": "Available at {store}",
+    "empty": {
+      "title": "No products match these filters.",
+      "clear": "Clear all filters"
+    },
+    "noResults": {
+      "title": "We couldn’t find anything for \"{query}\"",
+      "hint": "Typo-tolerant matching was already applied. Try fewer words, a different spelling or a product code.",
+      "browse": "Browse by category",
+      "bestsellers": "Bestsellers"
+    },
+    "unsupportedLanguage": "Browsing is not available in this language yet.",
+    "error": {
+      "title": "We couldn’t load the products.",
+      "retry": "Try again"
+    },
+    "noPhoto": "Photo coming soon",
+    "pagination": {
+      "aria": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {n}"
+    },
+    "loading": "Loading products"
+  },
+  "card": {
+    "badge": {
+      "bestseller": "Bestseller",
+      "new": "New",
+      "limitedEdition": "Limited edition",
+      "subscribe": "Subscribe & save"
+    },
+    "from": "From {price}",
+    "noPrice": "No price available",
+    "perCapsule": "{price} per capsule",
+    "per100g": "{price} per 100 g",
+    "intensity": "Intensity {n}",
+    "rating": "{avg} out of 5, {count, plural, one {# review} other {# reviews}}",
+    "availability": {
+      "in": "In stock at {store}",
+      "low": "Low stock at {store}",
+      "out": "Not available at {store}",
+      "choose": "Choose a store"
+    },
+    "quickAdd": "Quick add",
+    "quickAddNamed": "Quick add {name}",
+    "chooseOptions": "Choose options for {name}",
+    "addError": "We couldn’t add that to your bag. Please try again.",
+    "save": "Save",
+    "saved": "Saved",
+    "saveNamed": "Save {name}",
+    "matchedVariant": "Matched SKU {sku}",
+    "swatchMore": "+{n}",
+    "colours": "Colours: {list}"
   }
 }
