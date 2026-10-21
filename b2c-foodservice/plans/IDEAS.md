@@ -33,3 +33,7 @@
 - (G) `storefront/scripts/mock-ct-server.mjs` now serves the seed catalogue and a Product Search engine; remove it with the dev harness in workstream Q. Re-generate `scripts/mock-fixtures/seed-fixtures.json` with `npx vitest run --config scripts/mock-fixtures/vitest.gen.config.mts` when `seed/src/data` changes.
 - (G) A featuredRank number attribute in the seed would make "Featured" mean something (Q-G-04).
 - (G) The prototype's hover shadow is on the image only; keyboard focus-within gets it too here.
+- (H) Variant-level price tier support is in `effectiveUnitPrice` but no tier table is rendered (B2C); a market with tiers only needs a small table component.
+- (H) The bundle 'with milk frother' of the spec is not in the seed `bundle` enum (Q-H-06): seed request for a third value, then it appears with no code change.
+- (H) `tagline` text attribute on products (Q-H-19) and a sibling-system link by product key would let a pod page offer 'also for Vertuo' directly.
+- (H) Mock server gained placeholder images from placehold.co (MOCK_IMAGES=0 to turn off); it also had a duplicate `readBody` that stopped it starting on develop, fixed.

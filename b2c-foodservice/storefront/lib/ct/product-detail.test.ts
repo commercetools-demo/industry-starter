@@ -41,6 +41,7 @@ describe('getProductBySku', () => {
     expect(id).toEqual({ ID: 'prod-1' });
     expect(query.queryArgs).toMatchObject({ staged: false, priceCurrency: 'USD', priceCountry: 'US', localeProjection: ['en-US'] });
     expect(JSON.stringify(query.queryArgs.expand)).not.toContain('recurrencePrices');
+    expect(query.queryArgs.expand).toContain('productType');
   });
 
   it('invalid sku is not found before any call', async () => {

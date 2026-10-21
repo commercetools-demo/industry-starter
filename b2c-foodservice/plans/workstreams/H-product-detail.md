@@ -216,26 +216,26 @@ Common rules as in G. Each task ends with `npm run check`; commit `ws-h: H-0x ..
 ## 5. Scenarios checklist
 
 `design-product-detail-page`:
-- [ ] Mobile (gallery first, buy box second, add reachable): `H-03` `Mobile order...`, browser step 9
-- [ ] Variant imagery: `Gallery` test `Variant imagery swaps with the colour`
-- [ ] Price follows the variant: `H-02`/`H-05` `Price follows the variant`
-- [ ] Required choice missing: `H-02` `Required choice missing reads Select a grind`
-- [ ] Incompatible combination: `H-02` `Incompatible combination bundle is disabled not offered`
-- [ ] Out of stock for collection: `H-02` and `H-06`
-- [ ] Variant out of stock at store: `H-02` `...disables the option with the title`
-- [ ] Reserve: `H-07` `Reserve adds a collect line...`
-- [ ] Accordion: `H-08` `Accordion toggles...`
-- [ ] Machine (related): `H-09` `Machine page leads with compatible capsules`
+- [x] Mobile (gallery first, buy box second, add reachable): `H-03` `Mobile order...`, browser step 9
+- [x] Variant imagery: `Gallery` test `Variant imagery swaps with the colour`
+- [x] Price follows the variant: `H-02`/`H-05` `Price follows the variant`
+- [x] Required choice missing: `H-02` `Required choice missing reads Select a grind`
+- [x] Incompatible combination: `H-02` `Incompatible combination bundle is disabled not offered`
+- [x] Out of stock for collection: `H-02` and `H-06`
+- [x] Variant out of stock at store: `H-02` `...disables the option with the title`
+- [x] Reserve: `H-07` `Reserve adds a collect line...`
+- [x] Accordion: `H-08` `Accordion toggles...`
+- [x] Machine (related): `H-09` `Machine page leads with compatible capsules`
 
 `product-detail-page` (template):
-- [ ] Quantity crosses a tier: `H-02` `Quantity crosses a tier`
-- [ ] No price resolves: `H-02` `No price resolves...` and `H-05` render test
-- [ ] Variant out of stock (with restock information): `H-06` ship block test `outOnline backInDays expected`
+- [x] Quantity crosses a tier: `H-02` `Quantity crosses a tier`
+- [x] No price resolves: `H-02` `No price resolves...` and `H-05` render test
+- [x] Variant out of stock (with restock information): `H-06` ship block test `outOnline backInDays expected`
 
 `fulfilment-and-availability-model` (H part):
-- [ ] Collect at an empty store: `H-06`
-- [ ] Collect line (supplyChannel and `fulfilment = collect`): `H-07`
-- [ ] Subscriptions gate (subscribe only where a recurring price exists): `H-06`; line gets `recurrenceInfo`: `H-07`
+- [x] Collect at an empty store: `H-06`
+- [x] Collect line (supplyChannel and `fulfilment = collect`): `H-07`
+- [x] Subscriptions gate (subscribe only where a recurring price exists): `H-06`; line gets `recurrenceInfo`: `H-07`
 
 `reviews-and-ratings` (extended): Card/page rating and No reviews ("Be the first to review"): `H-08`.
 

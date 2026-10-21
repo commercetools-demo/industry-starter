@@ -33,7 +33,8 @@ export async function getProductBySku(sku: string, ctx: DetailReadContext): Prom
           priceCurrency: ctx.currency,
           priceCountry: ctx.country,
           localeProjection: [ctx.locale],
-          expand: ['masterVariant.price.discounted.discount', 'variants[*].price.discounted.discount'],
+          // productType: the shape (pods, coffee, machine...) comes from the product type key, which is not expanded by default.
+          expand: ['productType', 'masterVariant.price.discounted.discount', 'variants[*].price.discounted.discount'],
         },
       })
       .execute();

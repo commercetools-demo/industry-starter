@@ -40,6 +40,13 @@ function apiValue(type, raw) {
   return raw;
 }
 
+/** { "5": 3, "4": 2 } from a list of star ratings, like reviewRatingStatistics.ratingsDistribution (workstream H). */
+const distributionOf = (ratings) => {
+  const out = {};
+  for (const r of ratings) out[String(r)] = (out[String(r)] ?? 0) + 1;
+  return out;
+};
+
 // ---------------------------------------------------------------- documents
 export const DOCS = FIXTURES.products.map((p, i) => {
   const direct = p.categories.map((k) => categoryId(k));
@@ -58,7 +65,7 @@ export const DOCS = FIXTURES.products.map((p, i) => {
     directCategoryIds: direct, subTreeIds: sub, productType: p.productType, common: p.common,
     createdAt: new Date(Date.UTC(2026, 0, 1) + (FIXTURES.products.length - i) * 86400000).toISOString(),
     stats: ratings.length
-      ? { averageRating: ratings.reduce((a, b) => a + b, 0) / ratings.length, count: ratings.length, highestRating: Math.max(...ratings), lowestRating: Math.min(...ratings), ratingsDistribution: {} }
+      ? { averageRating: ratings.reduce((a, b) => a + b, 0) / ratings.length, count: ratings.length, highestRating: Math.max(...ratings), lowestRating: Math.min(...ratings), ratingsDistribution: distributionOf(ratings) }
       : undefined,
     variants,
   };
@@ -80,13 +87,51 @@ export function stockChannels(variant) {
   return out;
 }
 
+// ---------------------------------------------------------------- recurrence policies and images (workstream H)
+const POLICY_SCHEDULES = {
+  'mcf-every-2-weeks': { value: 2, intervalUnit: 'Weeks', en: 'Every 2 weeks' },
+  'mcf-every-month': { value: 1, intervalUnit: 'Months', en: 'Every month' },
+  'mcf-every-2-months': { value: 2, intervalUnit: 'Months', en: 'Every 2 months' },
+  'mcf-every-3-months': { value: 3, intervalUnit: 'Months', en: 'Every 3 months' },
+};
+export const policyId = (key) => `rp-${key}`;
+export const RECURRENCE_POLICIES = FIXTURES.recurrencePolicies.map((key) => ({
+  id: policyId(key), version: 1, key, name: { 'en-US': POLICY_SCHEDULES[key].en, 'en-CA': POLICY_SCHEDULES[key].en },
+  schedule: { type: 'standard', value: POLICY_SCHEDULES[key].value, intervalUnit: POLICY_SCHEDULES[key].intervalUnit },
+  createdAt: '2026-01-01T00:00:00.000Z', lastModifiedAt: '2026-01-01T00:00:00.000Z',
+}));
+
+/**
+ * Placeholder images (clean URLs, no query) so the gallery can be driven in a browser: three per variant, the first one
+ * coloured by the variant's colour when it has one. Set MOCK_IMAGES=0 for none (the labelled placeholder).
+ */
+const COLOUR_BG = { black: '1c1b1f', white: 'cfcfcb', red: 'b3262b', silver: '8a8f96', cream: 'd8c9a8' };
+const PRODUCT_BG = ['6359ff', '0a948f', '4f4f99', 'b3262b', '8a6a3a', '3b3a6e'];
+function imagesFor(doc, variant) {
+  if (process.env.MOCK_IMAGES === '0') return [];
+  const colour = variant.attrs.find((a) => a.name === 'colour')?.raw;
+  const base = COLOUR_BG[colour] ?? PRODUCT_BG[doc.index % PRODUCT_BG.length];
+  return [base, 'f4f0e8', '191741'].map((bg, i) => ({
+    url: `https://placehold.co/1200x1440/${bg}/${i === 1 ? '191741' : 'ffffff'}.png`, dimensions: { w: 1200, h: 1440 },
+    ...(i === 0 ? { label: `${doc.name['en-US']}, pack shot` } : {}),
+  }));
+}
+
 /** Product projection (current, published) with price selection and an optional locale projection. */
 export function projectionOf(doc, { currency, country, locales }) {
   const pick = (ls) => (locales?.length ? Object.fromEntries(Object.entries(ls).filter(([k]) => locales.includes(k))) : ls);
   const variant = (v) => {
     const price = currency && country ? priceFor(v, country, currency) : undefined;
+    // Subscribable products carry one recurring price per policy, 10% below the one-time price (seed: prices.ts).
+    const recurrencePrices = price && doc.common.subscribable === true
+      ? RECURRENCE_POLICIES.map((p) => ({
+          id: `rprice-${v.sku}-${p.key}`, value: money(price.currency, Math.round(price.cents * 0.9)), country,
+          recurrencePolicy: { typeId: 'recurrence-policy', id: p.id },
+        }))
+      : [];
     return {
-      id: v.id, sku: v.sku, images: [],
+      id: v.id, sku: v.sku, images: imagesFor(doc, v),
+      ...(recurrencePrices.length > 0 ? { recurrencePrices } : {}),
       attributes: v.attrs.map((a) => ({ name: a.name, value: a.value })),
       ...(price ? { price: { id: `price-${v.sku}-${country}`, value: money(price.currency, price.cents), country } } : {}),
       availability: { isOnStock: v.stock.online > 0, availableQuantity: v.stock.online, channels: stockChannels(v) },
@@ -94,7 +139,7 @@ export function projectionOf(doc, { currency, country, locales }) {
   };
   return {
     id: doc.id, version: 1, key: doc.key, name: pick(doc.name), slug: pick(doc.slug), description: pick(doc.description),
-    productType: { typeId: 'product-type', id: `pt-${doc.productType}` },
+    productType: { typeId: 'product-type', id: `pt-${doc.productType}`, obj: { key: doc.productType } },
     categories: doc.directCategoryIds.map((id) => ({ typeId: 'category', id })),
     attributes: Object.entries(doc.common).map(([name, raw]) => ({
       name, value: apiValue(ATTR_TYPES.get(`${doc.productType}:${name}`) ?? { name: 'text' }, raw),
