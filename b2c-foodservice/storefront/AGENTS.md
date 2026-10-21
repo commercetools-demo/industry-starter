@@ -148,3 +148,11 @@ New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import
 - Client: `useCart({ initialCart, enabled })`, `useCartMutations()` (sets `KEY_CART` and the badge from each response), `CartDrawer` (mounted in the locale layout, reads the cart only when opened), `/[locale]/cart` (`components/cart/CartPage.tsx`). Each line sits in its fulfilment cluster and has a fulfilment badge (D-033); Canada renders no Collect UI.
 - Region switch: `PUT /api/session/market` carries the bag over with `rebuildCart` (`CART_CARRY_OVER_ENABLED` is true); unmovable lines come back as `droppedLines` and are shown by `DroppedLinesNotice` (sessionStorage `mcf-dropped-lines`). `getCartView` also rebuilds a cart whose shipping mode differs from `CART_SHIPPING_MODE`. After sign-in `useAuthActions` refreshes `KEY_CART`.
 - Tests: `test/cart.ts` (commercetools-shaped and view-shaped carts), `test/fake-carts.ts` (in-memory cart engine for route tests). The mock server has a cart engine (codes WELCOME10, COFFEE15, FREESHIP, EXPIRED10) and `POST /__mock/price|stock`.
+
+## Account area (workstream L)
+
+- Shell: `app/[locale]/account/(shell)/layout.tsx` gives a signed-in customer `AccountShell` (tabs, header); every page calls `requireCustomerPage('/account/<tab>')`. The Collection tab is US only (404 in Canada).
+- Server: `lib/ct/account-orders.ts`, `reorder.ts`, `addresses.ts`, `customer.ts`, `payment-methods.ts`, `shopping-lists.ts`; pure rules in `lib/account/*` (order status, returns window, address policy and validation). Order detail is `/api/orders/number/[orderNumber]`; unknown and foreign orders both answer 404.
+- Payment methods are read only (token never leaves the server); scopes are `view_payment_methods` and `manage_payment_methods`. Remove sets Inactive (a default method is first set to non-default).
+- `useSavedItems` keeps its API: sessionStorage for guests, the server shopping list for signed-in customers (merged once at sign-in).
+- Mock server: `scripts/mock-fixtures/mock-account.mjs` (orders in every state for Maya US, Priya Canada, a foreign order for Liam). Dev tooling: `npm run seed:order-ship` in `seed/`.

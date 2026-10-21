@@ -29,6 +29,7 @@ import {
   DOCS, DOC_BY_ID, FIXTURES, PRICE_OVERRIDES, RECURRENCE_POLICIES, VARIANT_BY_SKU, categoryId, channelId, priceFor, productTypeResults, projectionOf, runSearch,
 } from './mock-fixtures/mock-catalog.mjs';
 import { reviewRoutes } from './mock-fixtures/mock-reviews.mjs';
+import { createAccountMock } from './mock-fixtures/mock-account.mjs';
 
 const PORT = Number(process.argv[2] ?? 9443);
 const PROJECT = 'mock-project';
@@ -348,9 +349,13 @@ const json = (res, status, body) => {
 };
 // (readBody is declared once, above, in the customers section: J and G each added one and the file did not start.)
 
+// Account area (workstream L): order states, orders, customer updates, shopping lists, stored payment methods, POST /__mock/order.
+const account = createAccountMock({ PROJECT, CUSTOMERS, STORES, demoLine, baseCart, reprice, centMoney, readBody, json });
+
 createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(dir, 'cert.pem')) }, async (req, res) => {
   const url = new URL(req.url ?? '/', `https://localhost:${PORT}`);
   const path = url.pathname;
+  if ((await account.route(req, res, url, path)) !== false) return;
   if (path === `/${PROJECT}/login` || path.startsWith(`/${PROJECT}/customers`)) {
     if ((await customerRoutes(req, res, path)) !== false) return;
   }

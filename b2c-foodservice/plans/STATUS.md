@@ -18,7 +18,7 @@ Updated 2026-10-21 (owner answers D-030 to D-039 applied to every plan). States:
 | I | Cart | 6 | Ready for review | I-01 to I-13 done; I-00 and the browser recipe are owner rows OA-I-a and OA-I-b |
 | J | Auth and session | 7 | Ready for review (offline) | J-01 to J-08 and J-07b done; browser recipe run against the mock (plans/evidence/J/); J-09 probes blocked: OA-J-c; cart merge uses `AuthCart`, follow-up for I (Q-J-15); owner rows OA-J-a to OA-J-c, SO-J-a, M-J-01 to M-J-03 |
 | K | Checkout and confirmation | 8 | Not started | |
-| L | Account area | 9 | Not started | |
+| L | Account area | 9 | Ready for review | Browser run blocked (profile busy), see OA-L-c |
 | M | Reviews and ratings | 9 | Ready for review (offline) | M-00 to M-10 done on the mock server (plans/evidence/M/README.md); live runs need OA-01 and OA-M-a (second client, D-027); browser run blocked by a held Chrome profile (M-M-04) |
 | N | Subscriptions | 10 | Not started | |
 | O | Home page | 10 | Ready for review | O-00 to O-10 done against the mock catalogue; FIX-1 header overflow and FIX-2 URL market rule done; live read-back is OA-O-1; see plans/evidence/O/README.md |
