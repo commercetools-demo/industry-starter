@@ -37,7 +37,6 @@ export default function SearchInput({ initialQuery, otherParams, autoFocus }: { 
         name="q"
         value={value}
         maxLength={100}
-        // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus={autoFocus}
         onChange={(e) => setValue(e.target.value)}
         placeholder={t('placeholder')}
