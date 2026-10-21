@@ -14,7 +14,9 @@ export type DomainErrorCode =
   | 'collect_not_available_in_market'
   | 'unknown_store'
   | 'unknown_policy'
-  | 'price_unavailable';
+  | 'price_unavailable'
+  // Workstream M: one review per product and customer.
+  | 'already_reviewed';
 
 const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   invalid_credentials: 'Email or password is incorrect',
@@ -29,6 +31,7 @@ const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   unknown_store: 'That store is not available',
   unknown_policy: 'That delivery interval is not available',
   price_unavailable: 'No price is available for this item',
+  already_reviewed: 'You have already reviewed this product',
 };
 
 /** Same envelope as D: `{ error: { code, message, ...extra } }`. Extras are plain data (rule ids, retryAfterSeconds). */

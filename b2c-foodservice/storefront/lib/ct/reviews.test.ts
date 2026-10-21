@@ -68,8 +68,9 @@ const h = vi.hoisted(() => {
 vi.mock('@/lib/ct/client', () => ({ apiRoot: h.api }));
 vi.mock('@/lib/ct/review-client', () => ({ reviewWriteRoot: () => h.writeApi }));
 
+import { AlreadyReviewedError } from '@/lib/reviews/errors';
 import {
-  AlreadyReviewedError, createReview, deleteReview, listMyReviews, listProductReviews, updateReview,
+  createReview, deleteReview, listMyReviews, listProductReviews, updateReview,
 } from '@/lib/ct/reviews';
 
 const review = (over: Partial<Review> = {}): Review =>

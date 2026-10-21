@@ -4,6 +4,7 @@ import { apiRoot } from '@/lib/ct/client';
 import { reviewWriteRoot } from '@/lib/ct/review-client';
 import { updateWithRetry } from '@/lib/ct/retry';
 import { AppError } from '@/lib/errors';
+import { AlreadyReviewedError } from '@/lib/reviews/errors';
 import { REVIEW_PAGE_SIZE, authorName, isProductId, type ValidReview } from '@/lib/reviews/validate';
 import { getLocalizedString } from '@/lib/utils';
 import type { ReviewSort } from '@/lib/types';
@@ -14,14 +15,6 @@ export const REVIEW_SORT: Record<ReviewSort, string[]> = {
   highest: ['rating desc', 'createdAt desc'],
   lowest: ['rating asc', 'createdAt desc'],
 };
-
-/** A review by this customer for this product exists already (uniquenessValue or the pre-check). */
-export class AlreadyReviewedError extends Error {
-  constructor(readonly reviewId: string | null) {
-    super('already_reviewed');
-    this.name = 'AlreadyReviewedError';
-  }
-}
 
 const notFound = () => new AppError('not_found', 404);
 const badId = (id: string) => !/^[A-Za-z0-9-]{1,64}$/.test(id);
