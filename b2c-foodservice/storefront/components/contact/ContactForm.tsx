@@ -150,7 +150,7 @@ export default function ContactForm({ locale, channel }: ContactFormProps) {
 
       {/* Honeypot: invisible, not focusable, not announced. A person never fills it. */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-        <label htmlFor="contact-website">Website</label>
+        <label htmlFor="contact-website">{t('field.website')}</label>
         <input id="contact-website" name="website" tabIndex={-1} autoComplete="off" value={values.website} onChange={(e) => set('website', e.target.value)} />
       </div>
 
