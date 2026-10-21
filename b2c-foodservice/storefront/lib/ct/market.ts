@@ -38,9 +38,14 @@ export async function getValidCountryConfig(): Promise<MarketOption[]> {
   return toMarketOptions(Object.values(COUNTRY_CONFIG));
 }
 
-/** The CountryConfig for a country that the project supports, or undefined. */
-export async function validateMarket(country: string): Promise<CountryConfig | undefined> {
+/**
+ * The CountryConfig for a country that the project supports, or undefined. With `locale` it must be one of that
+ * country's languages (a language-only change keeps the country); without it the country's first language is used.
+ */
+export async function validateMarket(country: string, locale?: string): Promise<CountryConfig | undefined> {
   const options = await getValidCountryConfig();
   const option = options.find((o) => o.country === country);
-  return option ? COUNTRY_CONFIG[option.locale] : undefined;
+  if (!option) return undefined;
+  if (locale === undefined) return COUNTRY_CONFIG[option.locale];
+  return option.languages.some((l) => l.locale === locale) ? COUNTRY_CONFIG[locale] : undefined;
 }

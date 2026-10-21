@@ -10,7 +10,7 @@ import type { LocaleKey } from '@/lib/types';
 export const dynamic = 'force-dynamic';
 
 /**
- * PUT /api/session/market { country: 'CA' }
+ * PUT /api/session/market { country: 'CA', locale?: 'en-CA' } (locale only for a language change inside the country)
  * 200 { country, currency, locale, cartCarriedOver, droppedLines }; 400 validation_failed for an unsupported market.
  * Country, currency and locale change together. The cart id is dropped when the currency changes (a cart is bound to
  * its currency); a change to the same currency keeps it. The collection store is cleared when it is not in the new
@@ -19,9 +19,10 @@ export const dynamic = 'force-dynamic';
  */
 export const PUT = handle('/api/session/market', async (req) => {
   const raw: unknown = await req.json().catch(() => null);
-  const country = (raw as { country?: unknown } | null)?.country;
-  if (typeof country !== 'string') return jsonError('validation_failed', 400);
-  const target = await validateMarket(country);
+  const input = (raw ?? {}) as { country?: unknown; locale?: unknown };
+  if (typeof input.country !== 'string') return jsonError('validation_failed', 400);
+  if (input.locale !== undefined && typeof input.locale !== 'string') return jsonError('validation_failed', 400);
+  const target = await validateMarket(input.country, input.locale);
   if (!target) return jsonError('validation_failed', 400);
 
   const session = await getSession();

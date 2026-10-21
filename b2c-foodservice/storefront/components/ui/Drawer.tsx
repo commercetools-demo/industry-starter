@@ -12,10 +12,12 @@ export interface DrawerProps {
   title: string;
   footer?: ReactNode;
   side?: 'right' | 'left';
+  /** `wide` is 620px (the locale chooser); the default is 440px. */
+  width?: 'default' | 'wide';
   children: ReactNode;
 }
 
-export default function Drawer({ open, onClose, title, footer, side = 'right', children }: DrawerProps) {
+export default function Drawer({ open, onClose, title, footer, side = 'right', width = 'default', children }: DrawerProps) {
   const t = useTranslations('ui.drawer');
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
@@ -43,7 +45,8 @@ export default function Drawer({ open, onClose, title, footer, side = 'right', c
         data-open={open}
         tabIndex={-1}
         className={cn(
-          'transition-drawer fixed bottom-0 top-0 z-90 flex w-[min(440px,100vw)] flex-col bg-canvas shadow-lg',
+          'transition-drawer fixed bottom-0 top-0 z-90 flex flex-col bg-canvas shadow-lg',
+          width === 'wide' ? 'w-[min(620px,100vw)]' : 'w-[min(440px,100vw)]',
           side === 'right' ? 'right-0' : 'left-0',
           open ? 'visible translate-x-0' : `invisible ${hidden}`,
         )}

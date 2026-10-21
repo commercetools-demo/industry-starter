@@ -115,6 +115,12 @@ describe('PUT /api/session/market', () => {
     }
   });
 
+  it('a locale outside the country is rejected, one inside it is accepted', async () => {
+    expect((await put(putMarket, { country: 'US', locale: 'en-CA' })).status).toBe(400);
+    expect((await put(putMarket, { country: 'US', locale: 5 })).status).toBe(400);
+    expect((await put(putMarket, { country: 'US', locale: 'en-US' })).status).toBe(200);
+  });
+
   it('response carries cartCarriedOver and droppedLines', async () => {
     const json = await (await put(putMarket, { country: 'US' })).json();
     expect(json).toHaveProperty('cartCarriedOver', false);

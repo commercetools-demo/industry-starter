@@ -13,7 +13,7 @@ export interface MarketSwitchResult {
 
 /**
  * The current market (from the route locale) and the one-step switch, for the locale chooser and any page that needs it.
- * `switchCountry` calls PUT /api/session/market, then replaces the route locale and refreshes server data, so every
+ * `switchCountry(country)` calls PUT /api/session/market, then replaces the route locale and refreshes server data, so every
  * page re-reads currency from the session. It rejects with ApiError when the server refuses the market.
  */
 export function useMarket() {
@@ -23,11 +23,11 @@ export function useMarket() {
   const pathname = usePathname();
 
   const switchCountry = useCallback(
-    async (country: string): Promise<MarketSwitchResult> => {
+    async (country: string, language?: string): Promise<MarketSwitchResult> => {
       const result = await fetchJson<MarketSwitchResult>('/api/session/market', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ country }),
+        body: JSON.stringify(language ? { country, locale: language } : { country }),
       });
       const search = typeof window === 'undefined' ? '' : window.location.search;
       router.replace(`${pathname}${search}`, { locale: result.locale });
@@ -37,5 +37,8 @@ export function useMarket() {
     [router, pathname],
   );
 
-  return { country: market.country, currency: market.currency, locale: market.locale, switchCountry };
+  /** A language change inside the current country: the cart is untouched (same currency). */
+  const switchLanguage = useCallback((language: string) => switchCountry(market.country, language), [switchCountry, market.country]);
+
+  return { country: market.country, currency: market.currency, locale: market.locale, switchCountry, switchLanguage };
 }

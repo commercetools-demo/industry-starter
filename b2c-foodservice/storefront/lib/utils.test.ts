@@ -54,6 +54,11 @@ describe('Price display', () => {
   it('Price display: 495 USD renders $4.95 and never $5', () => {
     expect(formatMoney(495, 'USD')).toBe('$4.95');
   });
+  it('Pod sleeve price shows two decimals: 695 is $6.95 in both markets, never $7', () => {
+    expect(formatMoney(695, 'USD', 'en-US')).toBe('$6.95');
+    expect(formatMoney(695, 'CAD', 'en-CA')).toBe('$6.95');
+    expect(formatMoney(695, 'USD', 'en-US')).not.toBe('$7');
+  });
   it('Rating rounds to one decimal for display only: 4.58333 gives 4.6', () => {
     expect(roundRating(4.58333)).toBe(4.6);
   });
