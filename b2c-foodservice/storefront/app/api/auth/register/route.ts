@@ -1,5 +1,6 @@
 import { handle } from '@/lib/api';
 import { domainError } from '@/lib/api-domain';
+import { isEmailShape } from '@/lib/auth/email-shape';
 import { isCredentialFailure, limitRegister, signedInResponse } from '@/lib/auth/login-flow';
 import { validatePassword } from '@/lib/auth/password-policy';
 import { createCustomer, signIn } from '@/lib/ct/auth';
@@ -7,7 +8,6 @@ import { getMarket, getSession } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
 
-const EMAIL_SHAPE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const text = (v: unknown, max: number): string | null =>
   typeof v === 'string' && v.trim().length > 0 && v.trim().length <= max ? v.trim() : null;
 
@@ -23,7 +23,7 @@ export const POST = handle('/api/auth/register', async (req) => {
   const firstName = text(input.firstName, 100);
   const lastName = text(input.lastName, 100);
   const password = typeof input.password === 'string' ? input.password : null;
-  if (!email || !EMAIL_SHAPE.test(email) || !firstName || !lastName || password === null) {
+  if (!email || !isEmailShape(email) || !firstName || !lastName || password === null) {
     return domainError('invalid_request', 400);
   }
   const limited = limitRegister(req);

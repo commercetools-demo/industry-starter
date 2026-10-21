@@ -13,3 +13,11 @@ export function safeRedirect(target: string | null | undefined, fallback: string
   if (/%2f|%5c/i.test(path)) return fallback;
   return target;
 }
+
+type Param = string | string[] | undefined;
+const first = (v: Param): string | undefined => (Array.isArray(v) ? v[0] : v);
+
+/** The destination query parameter is `redirect`; workstream N's `next` is accepted as an alias (`redirect` wins). */
+export function destinationFrom(params: { redirect?: Param; next?: Param }, fallback = '/account'): string {
+  return safeRedirect(first(params.redirect) ?? first(params.next), fallback);
+}
