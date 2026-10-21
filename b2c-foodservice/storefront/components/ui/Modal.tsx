@@ -37,9 +37,10 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
         aria-labelledby={titleId}
         aria-hidden={!open}
         inert={!open}
+        data-open={open}
         tabIndex={-1}
         className={cn(
-          'transition-state fixed left-1/2 top-1/2 z-90 max-h-[88vh] w-[min(560px,94vw)] -translate-x-1/2 overflow-y-auto rounded-panel bg-canvas shadow-lg',
+          'transition-dialog fixed left-1/2 top-1/2 z-90 max-h-[88vh] w-[min(560px,94vw)] -translate-x-1/2 overflow-y-auto rounded-panel bg-canvas shadow-lg',
           open ? 'visible -translate-y-1/2 opacity-100' : 'invisible -translate-y-[46%] opacity-0',
         )}
       >

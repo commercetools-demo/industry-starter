@@ -40,6 +40,7 @@ export default function Drawer({ open, onClose, title, footer, side = 'right', c
         aria-labelledby={titleId}
         aria-hidden={!open}
         inert={!open}
+        data-open={open}
         tabIndex={-1}
         className={cn(
           'transition-drawer fixed bottom-0 top-0 z-90 flex w-[min(440px,100vw)] flex-col bg-canvas shadow-lg',

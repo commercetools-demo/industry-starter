@@ -1,0 +1,20 @@
+{
+  "viewport": "1440x900, Chrome DevTools MCP, /en-US/dev/design",
+  "fontsLoaded": { "Archivo 800": true, "Roboto 400": true, "Roboto Mono 400": true },
+  "fontRequests": "3 woff2 from /_next/static/media, none to fonts.googleapis.com or fonts.gstatic.com",
+  "pageTitle": { "fontWeight": "800", "fontSize": "40px", "letterSpacing": "-1px" },
+  "heroTitle": { "fontWeight": "800", "fontSize": "80.64px", "letterSpacing": "-2.016px" },
+  "eyebrow": { "fontSize": "11px", "textTransform": "uppercase", "letterSpacing": "1.98px", "fontWeight": "600" },
+  "wordmark": { "fontWeight": "800", "fontSize": "25px", "letterSpacing": "4px" },
+  "body": { "fontSize": "15px", "backgroundColor": "rgb(251, 249, 245)" },
+  "gridColumns": { "1440": 4, "1000": 3, "500 (narrowest window the MCP allows)": 2 },
+  "wrapPadding": { "1440": "32px", "500": "20px" },
+  "pageTitleAtNarrow": "34px",
+  "drawer": { "width": 440, "focusMovesInside": true, "focusReturnsToOpener": true, "closedVisibility": "hidden", "bodyScrollLocked": true },
+  "modal": { "width": 560, "borderRadius": "24px", "focusInside": true },
+  "toast": "visible after click, empty after 2.3 s",
+  "disabledOptionTitle": "Not available for collection",
+  "focusOutline": "solid 2px rgb(99, 89, 255)",
+  "animationsRunningAtRest": 0,
+  "zeroOpacityElementsInMain": "only the two closed overlays (decorative, aria-hidden)"
+}

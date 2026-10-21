@@ -27,21 +27,38 @@
 }
 
 @utility transition-press {
-  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-property: color, background-color, border-color, box-shadow, transform, scale, translate, opacity;
   transition-duration: var(--dur-press);
   transition-timing-function: var(--ease);
 }
 
 @utility transition-state {
-  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-property: color, background-color, border-color, box-shadow, transform, scale, translate, opacity;
   transition-duration: var(--dur-state);
   transition-timing-function: var(--ease);
 }
 
+/* Dialog panels: visibility flips at once when opening (so focus can move in) and after the slide when closing. */
 @utility transition-drawer {
-  transition-property: transform, opacity, visibility;
-  transition-duration: var(--dur-drawer);
-  transition-timing-function: var(--ease-out);
+  transition-property: translate, opacity, visibility;
+  transition-duration: var(--dur-drawer), var(--dur-drawer), 0s;
+  transition-timing-function: var(--ease-out), var(--ease-out), linear;
+  transition-delay: 0s, 0s, 0s;
+
+  &[data-open='false'] {
+    transition-delay: 0s, 0s, var(--dur-drawer);
+  }
+}
+
+@utility transition-dialog {
+  transition-property: translate, opacity, visibility;
+  transition-duration: var(--dur-state), var(--dur-state), 0s;
+  transition-timing-function: var(--ease-out), var(--ease-out), linear;
+  transition-delay: 0s, 0s, 0s;
+
+  &[data-open='false'] {
+    transition-delay: 0s, 0s, var(--dur-state);
+  }
 }
 
 @keyframes fadeUp {

@@ -293,9 +293,9 @@ Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no co
   - The page shows: every token as a labelled swatch (name beside it, using `style={{ background: 'var(--ink)' }}` strings, never hex), the type scale, every atom in every state (default, hover note, focus, disabled, selected, loading), the icon grid (name under each icon at 24px and 96px), a Drawer and Modal opener, a Toast button, Steps with three states, and the grid utility with 8 placeholder cards. The page 404s when `NODE_ENV === 'production'`.
   - Tests: `Kitchen sink is 404 in production`, `Deploy gate fails while app/[locale]/dev exists`.
 
-- [ ] **E-11 Browser verification and evidence** Run section 6 and section 7; save evidence.
+- [x] **E-11 Browser verification and evidence** Run section 6 and section 7; save evidence.
 
-- [ ] **E-12 Agent rules for design use**
+- [x] **E-12 Agent rules for design use**
   - Files: `storefront/AGENTS.md` (append "Design system": the token names, "no hex, no raw font, no inline radius", the atom list with props, `buttonClasses` for links, how to add an icon, how to add a message key to both files), `agent-rules.test.ts` extended: `AGENTS.md names the tokens and the atom list`.
 
 ## 5. Scenarios checklist (`design-tokens-and-components`)

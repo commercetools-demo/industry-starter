@@ -65,7 +65,8 @@ describe('Icon button', () => {
 
   it('Icon button: decorative icons are aria-hidden', () => {
     render(<IconButton label="Cart" icon="bag" badgeCount={3} />);
-    const button = screen.getByRole('button', { name: 'Cart' });
+    // the visible count is part of the accessible name (WCAG label in name)
+    const button = screen.getByRole('button', { name: 'Cart (3)' });
     expect(button.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     expect(button).toHaveAttribute('type', 'button');
   });

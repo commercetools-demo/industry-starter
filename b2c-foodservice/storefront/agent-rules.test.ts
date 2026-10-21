@@ -26,6 +26,18 @@ describe('Agent rules', () => {
     }
   });
 
+  it('AGENTS.md names the tokens and the atom list', () => {
+    const agents = read('AGENTS.md');
+    for (const needle of [
+      '--ink', '--canvas', '--accent', '--teal-text', '--danger-text', 'app/tokens.css', 'buttonClasses',
+      'Button', 'ButtonLink', 'IconButton', 'Chip', 'Field', 'OptionButton', 'ColorSwatch', 'Stepper',
+      'Card', 'Badge', 'AvailabilityDot', 'Rating', 'Drawer', 'Modal', 'Steps', 'ToastProvider',
+      'components/ui/icons.ts', 'no hex',
+    ]) {
+      expect(agents, needle).toContain(needle);
+    }
+  });
+
   it('AGENTS.md lists the six files for a new resource', () => {
     const agents = read('AGENTS.md');
     for (const needle of [

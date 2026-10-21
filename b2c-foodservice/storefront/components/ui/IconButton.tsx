@@ -13,7 +13,7 @@ export default function IconButton({ label, icon, badgeCount, className, type = 
   return (
     <button
       type={type}
-      aria-label={label}
+      aria-label={badgeCount !== undefined && badgeCount > 0 ? `${label} (${badgeCount})` : label}
       className={cn(
         'transition-state relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-pill border-0 bg-transparent text-ink hover:bg-ink/6 disabled:pointer-events-none disabled:opacity-40',
         className,

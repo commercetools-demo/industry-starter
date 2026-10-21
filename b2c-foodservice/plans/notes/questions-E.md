@@ -20,3 +20,6 @@ Q-E-12 | Entrance animation. | Keep as the prototype (transform-only, `no-prefer
 Q-E-13 | Wording choices. | "bag" in both locales; en-CA uses "Colour" | no | Open
 Q-E-14 | Rating atom form. | One star plus number and count (as the design); five-star displays for the review list and form are built in M | M | Open
 Q-E-15 | Radius token names. | `--radius-pill`, `--radius-field`, `--radius-card`, `--radius-panel`, `--radius-hero` | no | Open
+Q-E-16 | D's `ErrorCode` also has `bad_request` and `wrong_project`, which the workstream's `errors.*` list omits. | Added `errors.bad_request` and `errors.wrong_project` so every code has a key; the catalogue test reads `lib/errors.ts` once D merges and otherwise uses D's documented list | no | Open
+Q-E-17 | `roundRating` lives in D's `lib/utils.ts`, not merged yet. | `Rating` rounds locally with `Math.round(v * 10) / 10`; switch to `roundRating` after merging D (see IDEAS) | no | Open
+Q-E-18 | Lighthouse flagged a visible badge count missing from the accessible name. | `IconButton` with `badgeCount` names itself `<label> (<count>)` | no | Open
