@@ -925,5 +925,73 @@
     "reviews": {
       "heading": "Customer reviews"
     }
+  },
+  "reviews": {
+    "title": "Reviews",
+    "sortBy": "Sort by",
+    "sort": {
+      "newest": "Newest",
+      "highest": "Highest rated",
+      "lowest": "Lowest rated"
+    },
+    "empty": "No reviews yet.",
+    "beFirst": "Be the first to review",
+    "showMore": "Show more",
+    "loading": "Loading…",
+    "moreLoaded": "{count, plural, one {# more review loaded} other {# more reviews loaded}}",
+    "loadError": "We could not load the reviews. Please try again.",
+    "retry": "Try again",
+    "item": {
+      "stars": "{rating} out of 5",
+      "verified": "Verified purchase",
+      "by": "by {name}"
+    },
+    "cta": {
+      "signIn": "Sign in to write a review.",
+      "signInLink": "Sign in",
+      "write": "Write a review",
+      "reviewed": "You reviewed this product on {date}.",
+      "reviewedNoDate": "You reviewed this product.",
+      "edit": "Edit your review"
+    },
+    "form": {
+      "title": "Write a review",
+      "editTitle": "Edit your review",
+      "rating": "Your rating",
+      "ratingError": "Choose a rating",
+      "reviewTitle": "Title (optional)",
+      "text": "Your review (optional)",
+      "postedAs": "Posted as {name}",
+      "submit": "Submit review",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "star": "{n, plural, one {# star} other {# stars}}",
+      "count": "{n}/{max}",
+      "published": "Thanks, your review is live. The average updates shortly.",
+      "edited": "Your changes are live.",
+      "error": "We could not save your review. Please try again.",
+      "rateLimited": "You have posted a lot of reviews. Please try again later.",
+      "alreadyReviewed": "You have already reviewed this product. You can edit your review instead."
+    },
+    "errors": {
+      "rating_required": "Choose a rating.",
+      "rating_invalid": "Choose between 1 and 5 stars.",
+      "title_too_long": "The title can have at most 80 characters.",
+      "text_too_long": "The review can have at most 2000 characters."
+    },
+    "mine": {
+      "title": "Your reviews",
+      "empty": "You have not written any reviews yet.",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteTitle": "Delete this review?",
+      "deleteText": "This cannot be undone.",
+      "deleteConfirm": "Delete review",
+      "deleted": "Review deleted.",
+      "showMore": "Show more",
+      "showLess": "Show less",
+      "loadError": "We could not load your reviews. Please try again.",
+      "unavailable": "This product is no longer available."
+    }
   }
 }
