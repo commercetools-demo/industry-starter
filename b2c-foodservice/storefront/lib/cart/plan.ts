@@ -40,6 +40,19 @@ export type SwitchPlan =
   | { kind: 'reject'; reason: 'line_not_found' | 'subscribe_line_not_switchable' }
   | { kind: 'ops'; ops: PlanOp[]; /** Quantity the line ends with (merged quantity when it joins a twin). */ resultingQuantity: number };
 
+/** Seeded shipping method keys (D-034: standard carrier only; collection has its own zero-price method). */
+export const SHIP_METHOD_KEY = 'mcf-ship-standard';
+export const COLLECT_METHOD_KEY = 'mcf-collect';
+
+/**
+ * The shipping method of a `Single` cart (Q-I-04): standard when any line ships (delivery or subscribe), else collect.
+ * An empty bag has none.
+ */
+export function shippingMethodKeyFor(fulfilments: readonly Fulfilment[]): typeof SHIP_METHOD_KEY | typeof COLLECT_METHOD_KEY | null {
+  if (fulfilments.length === 0) return null;
+  return fulfilments.some((f) => f !== 'collect') ? SHIP_METHOD_KEY : COLLECT_METHOD_KEY;
+}
+
 /** The fulfilment group a line belongs to. */
 export function groupKeyOf(line: { fulfilment: Fulfilment; store?: Pick<CartLineStore, 'key'> }): GroupKey {
   if (line.fulfilment === 'collect') return `collect:${line.store?.key ?? 'unknown'}`;
