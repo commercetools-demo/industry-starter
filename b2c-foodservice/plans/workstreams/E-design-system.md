@@ -246,7 +246,7 @@ Other workstreams add their own namespaces to **both** files in the same commit;
 
 Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no commercetools API in E).
 
-- [ ] **E-01 Token layer and its tests**
+- [x] **E-01 Token layer and its tests**
   - Files: `app/tokens.css`, `app/globals.css`, `test/css.ts` (helper that reads and parses a CSS file into a map of custom properties and at-rules), `test/contrast.ts` (`contrast(fgHex, bgHex): number`), `app/tokens.test.ts`.
   - Implement 3.2. `globals.css` becomes the four `@import` lines plus `body { margin: 0; }`.
   - Tests (spec: Single token layer, Re-skin by token, Accessibility): `Tokens in sync: every token named in the spec table exists in tokens.css` (read `openspec/specs/design-tokens-and-components/spec.md`, parse the first table's first column, compare **names only**), `Re-skin by token: replacing every colour value leaves no component with a raw value` (rewrite all hex values in a copy of `tokens.css` to other hexes, assert the component scan below still finds none), `No component contains a raw colour, font or radius value` (scan `components/**`, `app/**/*.tsx`: no hex, no `rgb(`/`hsl(`, no `font-family`, no `rounded-[`, no `font-[`), `Text tokens meet WCAG AA on canvas, canvas-2 and surface` (ink, ink-2, ink-3, teal-text, danger-text, and white on accent, on danger-text, on accent-press; plus footer tokens on ink; plus teal-strong 3:1 on surface), `Tailwind mapping covers every colour token`.
