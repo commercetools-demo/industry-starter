@@ -4,6 +4,7 @@ import { ctCart, ctLine, STORE_SOHO, viewCart, viewLine } from '@/test/cart';
 const h = vi.hoisted(() => ({
   view: null as unknown,
   raw: null as unknown,
+  byId: {} as Record<string, unknown>,
   posted: [] as { id: string; body: unknown }[],
   created: [] as unknown[],
   conflictOnce: false,
@@ -29,7 +30,7 @@ vi.mock('@/lib/ct/client', () => ({
         },
       }),
       withId: ({ ID }: { ID: string }) => ({
-        get: () => ({ execute: async () => ({ body: { ...(h.raw as object), id: ID } }) }),
+        get: () => ({ execute: async () => ({ body: { ...((h.byId[ID] ?? h.raw) as object), id: ID } }) }),
         post: ({ body }: { body: { version: number } }) => ({
           execute: async () => {
             if (h.conflictOnce) {
@@ -45,7 +46,7 @@ vi.mock('@/lib/ct/client', () => ({
   },
 }));
 
-import { ensureCheckoutCart, getCheckoutState, missingForPayment, preparePayments, CheckoutNotReady } from './checkout';
+import { ensureCheckoutCart, getCheckoutState, missingForPayment, preparePayments, removePaidLines, CheckoutNotReady } from './checkout';
 
 const market = { country: 'US', currency: 'USD', locale: 'en-US' };
 const session = { anonymousId: 'anon', cartId: 'cart-1' };
@@ -63,6 +64,7 @@ function rawMixed() {
 beforeEach(() => {
   h.posted = [];
   h.created = [];
+  h.byId = {};
   h.conflictOnce = false;
   h.rebuild.mockReset();
 });
@@ -175,5 +177,28 @@ describe('ensureCheckoutCart', () => {
     h.view = viewCart([shipLine]);
     h.raw = ctCart({ anonymousId: 'anon', lines: [ctLine({ id: 's1', sku: 'B' })] });
     expect(await ensureCheckoutCart(session, market, 'complete-multiple')).toBe(session);
+  });
+});
+
+describe('complete-per-group', () => {
+  it('Second payment failure leaves the first order intact: paying the first part removes only its lines from the bag', async () => {
+    h.raw = rawMixed();
+    h.byId['clone-a'] = ctCart({ anonymousId: 'anon', lines: [ctLine({ id: 'x1', sku: 'A', fulfilment: 'collect', channelId: 'ch-soho' })] });
+    await removePaidLines(session, 'clone-a');
+    const actions = (h.posted[0]?.body as { actions: { action: string; lineItemId: string }[] }).actions;
+    expect(actions).toEqual([{ action: 'removeLineItem', lineItemId: 'c1' }]);
+  });
+  it('a clone of somebody else never removes anything', async () => {
+    h.raw = rawMixed();
+    h.byId['clone-z'] = ctCart({ anonymousId: 'another-shopper', lines: [ctLine({ id: 'x1', sku: 'A', fulfilment: 'collect', channelId: 'ch-soho' })] });
+    await removePaidLines(session, 'clone-z');
+    expect(h.posted).toHaveLength(0);
+  });
+  it('Every line stays in its group: no line is in two payment carts', async () => {
+    h.view = viewCart([collectLine, shipLine, viewLine({ id: 'u1', fulfilment: 'subscribe' })]);
+    h.raw = rawMixed();
+    await preparePayments(session, market, { pickupName: 'Maya Lopez' });
+    const skus = (h.created as { lineItems: { sku: string }[] }[]).flatMap((c) => c.lineItems.map((l) => l.sku));
+    expect([...skus].sort()).toEqual(['A', 'B', 'C']);
   });
 });

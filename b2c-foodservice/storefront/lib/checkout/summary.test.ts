@@ -103,6 +103,21 @@ describe('order number', () => {
   });
 });
 
+describe('complete-per-group order numbers (K-14b)', () => {
+  it('Mixed order under the fallback creates two linked orders', () => {
+    const base = orderNumberForCart('cart-9');
+    const a = orderNumberForPart(base, 0, 2);
+    const b = orderNumberForPart(base, 1, 2);
+    expect(a).not.toBe(b);
+    expect(baseOrderNumber(a)).toBe(base);
+    expect(baseOrderNumber(b)).toBe(base);
+    expect(numbersOfPurchase(base)).toEqual(expect.arrayContaining([a, b]));
+  });
+  it('Retry never duplicates an order: the same cart and part always give the same number', () => {
+    expect(orderNumberForPart(orderNumberForCart('cart-9'), 1, 2)).toBe(orderNumberForPart(orderNumberForCart('cart-9'), 1, 2));
+  });
+});
+
 describe('codeSavings', () => {
   const cart: SavingsCart = {
     lineItems: [{ discountedPricePerQuantity: [{ quantity: 2, discountedPrice: { includedDiscounts: [{ discount: { id: 'cd-10' }, discountedAmount: { centAmount: 100 } }, { discount: { id: 'other' }, discountedAmount: { centAmount: 50 } }] } }] }],
