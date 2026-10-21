@@ -286,7 +286,7 @@ Run `cd storefront && npm run check` before ticking.
   - Implement 3.1 and 3.2. Keep A's `COUNTRY_CONFIG` and `LOCALE_COOKIE` untouched.
   - Tests (spec: Price display): `Price display: 1999 CAD in en-CA renders $19.99`, `Price display: 1999 USD in en-US renders $19.99`, `Price display: 495 USD renders $4.95 and never $5`, `Rating rounds to one decimal for display only: 4.58333 gives 4.6`, `getLocalizedString exact match`, `getLocalizedString falls back to the same language`, `getLocalizedString falls back to the default locale then the first value`, `getLocalizedString of undefined is empty`, `marketForLocale falls back to en-US`.
 
-- [ ] **D-02 Errors and handler wrapper**
+- [x] **D-02 Errors and handler wrapper**
   - Files: `lib/errors.ts`, `lib/api.ts`, tests next to them.
   - Implement 3.3. `console.error` is mocked in tests (`vi.spyOn`).
   - Tests (spec: commercetools 5xx; Unauthenticated account call; Errors): `commercetools 5xx: a 503 becomes upstream_unavailable with status 503`, `A network failure becomes upstream_unavailable`, `Error body is exactly code and message with no stack and no commercetools text`, `Correlation id is logged and not returned`, `409 maps to conflict, 404 to not_found, 429 to rate_limited`, `commercetools 401 becomes internal_error 500`, `Unauthenticated account call: requireCustomer yields 401 with no data and no reason`, `handle returns 500 internal_error for an unknown throw`, `redirect inside a handler is not swallowed` (a function that throws an object with `digest: 'NEXT_REDIRECT'` is rethrown by `handle`, using `unstable_rethrow` from `next/navigation`; mock it).
