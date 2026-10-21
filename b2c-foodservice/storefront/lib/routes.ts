@@ -38,3 +38,11 @@ export function searchHref(): string {
 
 /** Top-level categories for pages that must not call commerce (404, About). Slugs are the seeded ones; labels are `shell.nav.<id>`. */
 export const STATIC_TOP_CATEGORIES = ['pods', 'coffee', 'machines', 'accessories', 'gifts'] as const;
+
+/** Account area (workstreams J and L). The pages may not exist yet; they are linked from error pages only. */
+export function accountHref(): string {
+  return '/account';
+}
+export function signInHref(redirect?: string): string {
+  return redirect ? `/account/sign-in?redirect=${encodeURIComponent(redirect)}` : '/account/sign-in';
+}
