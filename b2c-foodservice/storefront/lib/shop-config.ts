@@ -13,10 +13,10 @@ export const NEARBY_RADIUS_KM = 80;
 export const COLLECTION_MINUTES_FALLBACK = 30;
 
 /**
- * Region switch with a populated bag (Q-F-03). F resets the bag; workstream I flips this to true
- * when it adds carry over (task I-12).
+ * Region switch with a populated bag (Q-F-03). F reset the bag; workstream I turned carry over on (task I-12): the bag
+ * moves into a new cart in the new market and anything that cannot move is listed.
  */
-export const CART_CARRY_OVER_ENABLED = false;
+export const CART_CARRY_OVER_ENABLED = true;
 
 /**
  * Shipping mode of every new cart (D-024). Settable only when a cart is created; workstream K may flip it to

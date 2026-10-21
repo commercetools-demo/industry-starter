@@ -164,6 +164,17 @@ describe('GET /api/cart (I-03)', () => {
     expect((await errOf(res)).code).toBe('upstream_unavailable');
   });
 
+  it('a cart whose shipping mode differs from the constant is rebuilt in the configured mode', async () => {
+    const old = await bag([{ id: 'a', sku: 'S1', quantity: 2 }], { shippingMode: 'Multiple' });
+    const res = await get();
+    const view = await cartOf(res);
+    expect(view.shippingMode).toBe('Single');
+    expect(view.id).not.toBe(old);
+    expect(view.lines).toMatchObject([{ sku: 'S1', quantity: 2 }]);
+    expect((await sessionOf(res))?.cartId).toBe(view.id);
+    expect(fake.carts.get(old)!.deleteDaysAfterLastModification).toBe(1);
+  });
+
   it('without a cart returns null and no cookie change', async () => {
     const res = await get();
     expect(await res.json()).toEqual({ cart: null });

@@ -24,6 +24,8 @@ export const fake = {
   readError: undefined as unknown,
   /** Current catalogue price per SKU in minor units; a missing SKU is unknown, 0 or null means no price. */
   prices: {} as Record<string, number | null>,
+  /** Prices in CAD when they differ from `prices` (a null or 0 entry means no CAD price). */
+  cadPrices: {} as Record<string, number | null>,
   codes: {} as Record<string, FakeCode>,
   stock: {} as Record<string, InventoryDetail>,
   /** Shipping: standard rate and free-above threshold (net lines), minor units. */
@@ -38,6 +40,7 @@ export const fake = {
     this.readError = undefined;
     this.n = 0;
     this.prices = {};
+    this.cadPrices = {};
     this.codes = {};
     this.stock = {};
   },
@@ -89,7 +92,7 @@ function apply(cart: Obj, action: Obj): void {
   };
   switch (action.action) {
     case 'addLineItem': {
-      const price = fake.prices[action.sku as string];
+      const price = priceFor(action.sku as string, currency);
       if (price === undefined) throw err(400, [{ code: 'InvalidOperation', message: `A product with SKU '${String(action.sku)}' not found.` }]);
       if (!price) throw err(400, [{ code: 'MissingPriceForProduct', message: 'no price' }]);
       const existing = lines.find((l) => sameLine(l, action));
@@ -133,7 +136,7 @@ function apply(cart: Obj, action: Obj): void {
       break;
     case 'recalculate':
       for (const l of lines) {
-        const p = fake.prices[l.variant.sku];
+        const p = priceFor(l.variant.sku, currency);
         if (p && !l.recurrenceInfo) l.price = { value: money(p, currency) };
       }
       break;
@@ -153,6 +156,10 @@ function apply(cart: Obj, action: Obj): void {
     case 'setDeleteDaysAfterLastModification': cart.deleteDaysAfterLastModification = action.deleteDaysAfterLastModification; break;
     default: throw err(400, [{ code: 'InvalidOperation', message: `unsupported ${String(action.action)}` }]);
   }
+}
+
+function priceFor(sku: string, currency: string): number | null | undefined {
+  return currency === 'CAD' && sku in fake.cadPrices ? fake.cadPrices[sku] : fake.prices[sku];
 }
 
 const copy = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;

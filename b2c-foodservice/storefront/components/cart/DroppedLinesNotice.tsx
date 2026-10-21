@@ -3,22 +3,8 @@
 import { useTranslations } from 'next-intl';
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
 import Icon from '@/components/ui/Icon';
+import { DROPPED_LINES_KEY, DROPPED_LINES_EVENT as CHANGE_EVENT, storeDroppedLines } from '@/lib/cart/dropped';
 import type { DroppedLine } from '@/lib/types';
-
-/** sessionStorage key written by `useMarket` after a region switch that could not move every line. */
-export const DROPPED_LINES_KEY = 'mcf-dropped-lines';
-const CHANGE_EVENT = 'mcf-dropped-lines-change';
-
-/** Remembers the lines a region switch could not move until the shopper dismisses the notice. */
-export function storeDroppedLines(lines: DroppedLine[]): void {
-  try {
-    if (lines.length > 0) sessionStorage.setItem(DROPPED_LINES_KEY, JSON.stringify(lines));
-    else sessionStorage.removeItem(DROPPED_LINES_KEY);
-    window.dispatchEvent(new Event(CHANGE_EVENT));
-  } catch {
-    // storage unavailable: no notice, the switch itself still worked
-  }
-}
 
 function subscribe(onChange: () => void): () => void {
   window.addEventListener(CHANGE_EVENT, onChange);
