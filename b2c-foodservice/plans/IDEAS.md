@@ -18,3 +18,6 @@
 - (E) Replace the local rating rounding in `components/ui/Rating.tsx` with `roundRating` from `lib/utils.ts` once workstream D is merged.
 - (E) Vitest globals are off, so Testing Library cleanup is registered in `test/setup.ts`; keep it if A's setup changes.
 - (E) Give `ColorSwatch` a documented list of colour keys once the seed `COLOURS` enum is final (an unknown key falls back by CSS `var()` today).
+- (F) Remove `app/[locale]/dev/store-picker` (dev harness) and `storefront/scripts/mock-ct-server.mjs` in workstream Q; the mock server is only a local aid for browser checks without credentials.
+- (F) Footer links to /contact, /faq, /policies/*, /about, /journal and /account/orders go to `/` until P and J land; then add the paths to `BUILT_ROUTES` in `lib/nav/footer-config.ts`.
+- (F) Pull the search icon pill input and suggestions into G once the search page exists; add axe-core to devDependencies (Q-F-13).

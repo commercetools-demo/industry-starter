@@ -38,6 +38,7 @@ const StoreSearch = forwardRef<HTMLInputElement, StoreSearchProps>(function Stor
             ref={ref}
             shape="pill"
             type="search"
+            name="store-search"
             value={text}
             onChange={(e) => setText(e.target.value)}
             aria-label={t('searchLabel')}

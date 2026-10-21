@@ -13,7 +13,7 @@ import type { SkuAvailability } from '@/lib/types';
 export function useAvailability(sku: string | null, country: string, storeKey: string | null = null) {
   return useSWR<SkuAvailability>(
     sku ? keyAvailability(sku, country, storeKey) : null,
-    () => jsonFetcher<SkuAvailability>(`/api/availability?sku=${encodeURIComponent(sku as string)}`),
+    () => jsonFetcher<SkuAvailability>(`/api/availability?sku=${encodeURIComponent(sku as string)}&country=${encodeURIComponent(country)}`),
     { revalidateOnFocus: false },
   );
 }

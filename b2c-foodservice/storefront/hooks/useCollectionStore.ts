@@ -36,7 +36,7 @@ export function useCollectionStore() {
         await fetchJson('/api/session/store', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ storeKey }),
+          body: JSON.stringify({ storeKey, country }),
         });
         return true;
       } catch {
@@ -44,7 +44,7 @@ export function useCollectionStore() {
         return false;
       }
     },
-    [data, mutate],
+    [data, mutate, country],
   );
 
   return {

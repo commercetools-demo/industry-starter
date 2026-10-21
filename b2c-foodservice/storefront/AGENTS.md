@@ -91,3 +91,11 @@ New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import
 - Add an icon: append an array of path strings to `components/ui/icons.ts` (24px viewBox, 1.75 stroke, round caps, no emoji).
 - Add a message key to both `messages/en-US.json` and `messages/en-CA.json` in the same commit; en-CA spells colour and favourite the Canadian way.
 - Check changes by eye on `/en-US/dev/design` (dev only; removed before deploy).
+
+## Shell and pickers (workstream F)
+
+- Layout: `app/[locale]/layout.tsx` renders skip link, promise bar, header, `<main id="main-content">`, footer, store picker and locale chooser. **Pages must not render their own `<main>`** (use `div` or `section`). Page layers must stay below `z-60` (the header); dialogs use `z-80` and up.
+- Shell data is read once per request by `lib/shell-data.ts` (never throws; each part degrades alone). The URL locale drives the shell; the session supplies the chosen store.
+- Hooks for G, H and I: `useCollectionStore()` (`store`, `stores`, `select`, `open({ sku })`, `preferShip`), `useAvailability(sku, country)`, `useCartCount()`, `useMarket()` (`switchCountry`, `switchLanguage`), `useShellUi()` (`openCart`, `registerCartDrawer`), `useToast()`. Routes: `GET /api/channels`, `GET /api/availability`, `PUT /api/session/store`, `PUT /api/session/market`, `GET /api/cart/count`, `POST /api/newsletter`.
+- Single source for the free-shipping figure: `getFreeShippingThreshold(country, currency)` in `lib/ct/shipping.ts` (cart and PDP call it too). Listing links: `buildListingHref(slug, { facet: value })` in `lib/nav/listing-href.ts` (`f_<facet>` params).
+- Tests for shell components: `test/shell.tsx` (`renderShell`, `stubFetch`, `routingMock`) and `test/axe.ts`. Local browser checks without credentials: `node scripts/mock-ct-server.mjs` (see its header).

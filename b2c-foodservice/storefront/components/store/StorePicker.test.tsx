@@ -98,7 +98,7 @@ describe('StorePicker', () => {
     expect(within(dialog()).getByText('Low stock for this item')).toBeInTheDocument();
     expect(within(dialog()).getByText('Unavailable for this item')).toBeInTheDocument();
     expect(calls.filter((c) => c.url.startsWith('/api/availability'))).toHaveLength(1);
-    expect(calls.find((c) => c.url.startsWith('/api/availability'))?.url).toBe('/api/availability?sku=POD-1');
+    expect(calls.find((c) => c.url.startsWith('/api/availability'))?.url).toBe('/api/availability?sku=POD-1&country=US');
     // An unavailable store is still selectable.
     expect(within(dialog()).getByRole('radio', { name: /Malva Astoria/ })).toBeEnabled();
   });
@@ -123,7 +123,7 @@ describe('StorePicker', () => {
     await waitFor(() => expect(dialog()).toHaveAttribute('aria-hidden', 'true'));
     const put = calls.find((c) => c.url === '/api/session/store');
     expect(put?.init?.method).toBe('PUT');
-    expect(JSON.parse(String(put?.init?.body))).toEqual({ storeKey: BROOKLYN.key });
+    expect(JSON.parse(String(put?.init?.body))).toEqual({ storeKey: BROOKLYN.key, country: 'US' });
     expect(screen.getByRole('status')).toHaveTextContent('Collecting from Malva Brooklyn');
   });
 

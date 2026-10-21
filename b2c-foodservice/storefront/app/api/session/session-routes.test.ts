@@ -59,6 +59,12 @@ describe('PUT /api/session/store', () => {
     expect((await put(putStore, {})).status).toBe(400);
   });
 
+  it('the page market decides which stores are valid, not the session', async () => {
+    await seed({ country: 'CA', currency: 'CAD', locale: 'en-CA' });
+    expect((await put(putStore, { storeKey: 'mcf-store-a', country: 'US' })).status).toBe(200);
+    expect((await put(putStore, { storeKey: 'mcf-store-a', country: 'DE' })).status).toBe(400);
+  });
+
   it('null clears the choice', async () => {
     await seed({ collectionStoreKey: 'mcf-store-a', country: 'US', currency: 'USD', locale: 'en-US' });
     const res = await put(putStore, { storeKey: null });

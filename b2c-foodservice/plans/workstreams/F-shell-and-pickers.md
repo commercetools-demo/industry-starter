@@ -241,34 +241,34 @@ Common rules: server-only modules start with `import 'server-only'`; components 
 ## 5. Scenarios checklist
 
 Primary spec `design-storefront-shell`:
-- [ ] Threshold changes: `F-04` `Threshold changes`, `PromiseBar.test.tsx`
-- [ ] Cart count: `Header.test.tsx` `Cart count shows 3 for 3 units across 2 lines`
-- [ ] Signed in: `Header.test.tsx` `Signed in shows initials avatar...`, guest case
-- [ ] Store drives availability: `StorePicker.test.tsx` `Selecting a row persists and closes` plus G-/H- tests (`useCollectionStore` consumed); F-level: `store choice persists in the session`
-- [ ] Pointer leaves: `MegaMenu.test.tsx` `Pointer leaves closes after 130 ms` and `re-entering within 130 ms keeps it open`
-- [ ] Link target: `MegaMenu.test.tsx` `Link target opens listing...`
-- [ ] Navigating from the panel: `MobileNav.test.tsx`
-- [ ] Newsletter: `NewsletterForm.test.tsx` (valid, invalid)
-- [ ] Repeated action: `ToastProvider.test.tsx`
+- [x] Threshold changes: `F-04` `Threshold changes`, `PromiseBar.test.tsx`
+- [x] Cart count: `Header.test.tsx` `Cart count shows 3 for 3 units across 2 lines`
+- [x] Signed in: `Header.test.tsx` `Signed in shows initials avatar...`, guest case
+- [x] Store drives availability: `StorePicker.test.tsx` `Selecting a row persists and closes` plus G-/H- tests (`useCollectionStore` consumed); F-level: `store choice persists in the session`
+- [x] Pointer leaves: `MegaMenu.test.tsx` `Pointer leaves closes after 130 ms` and `re-entering within 130 ms keeps it open`
+- [x] Link target: `MegaMenu.test.tsx` `Link target opens listing...`
+- [x] Navigating from the panel: `MobileNav.test.tsx`
+- [x] Newsletter: `NewsletterForm.test.tsx` (valid, invalid)
+- [x] Repeated action: `ToastProvider.test.tsx`
 
 Primary spec `design-store-picker-and-locale`:
-- [ ] Opened from a product: `StorePicker.test.tsx`
-- [ ] Opened from the header: `StorePicker.test.tsx`
-- [ ] Persistence: `StorePicker.test.tsx` and `store choice persists in the session`
-- [ ] No match: `StorePicker.test.tsx` `No match offers shipping instead`
-- [ ] Country change: `LocaleChooser.test.tsx`
-- [ ] Only the offered locales: `LocaleChooser.test.tsx`
-- [ ] Pod sleeve price: `lib/utils.test.ts` `Pod sleeve price shows two decimals`
+- [x] Opened from a product: `StorePicker.test.tsx`
+- [x] Opened from the header: `StorePicker.test.tsx`
+- [x] Persistence: `StorePicker.test.tsx` and `store choice persists in the session`
+- [x] No match: `StorePicker.test.tsx` `No match offers shipping instead`
+- [x] Country change: `LocaleChooser.test.tsx`
+- [x] Only the offered locales: `LocaleChooser.test.tsx`
+- [x] Pod sleeve price: `lib/utils.test.ts` `Pod sleeve price shows two decimals`
 
 Spec `fulfilment-and-availability-model` (F part):
-- [ ] Store list: `channels.test.ts` `Store list shows only InventorySupply channels`
-- [ ] Collect at an empty store: `inventory.test.ts` (F-03); the PDP side is H
-- [ ] Threshold per market: `F-04` `threshold read per market` (the cart page side is I)
+- [x] Store list: `channels.test.ts` `Store list shows only InventorySupply channels`
+- [x] Collect at an empty store: `inventory.test.ts` (F-03); the PDP side is H
+- [x] Threshold per market: `F-04` `threshold read per market` (the cart page side is I)
 
 Template `switching-region-or-language`:
-- [ ] Region switched before a cart exists: `Market change sets country currency and locale together...` and `LocaleChooser` flow
-- [ ] Region switched with a cart: `LocaleChooser` `cart notice...`, `session cartId reset`; carry over in I-12
-- [ ] Product not sellable in the new region: contract field `droppedLines` tested in I-12; F test `response carries cartCarriedOver and droppedLines`
+- [x] Region switched before a cart exists: `Market change sets country currency and locale together...` and `LocaleChooser` flow
+- [x] Region switched with a cart: `LocaleChooser` `cart notice...`, `session cartId reset`; carry over in I-12
+- [x] Product not sellable in the new region: contract field `droppedLines` tested in I-12; F test `response carries cartCarriedOver and droppedLines`
 
 ## 6. Browser recipe (Chrome DevTools MCP; base `http://localhost:3000`; evidence in `plans/evidence/F/`)
 

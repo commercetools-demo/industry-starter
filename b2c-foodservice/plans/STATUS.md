@@ -12,7 +12,7 @@ Updated 2026-10-21 (owner answers D-030 to D-039 applied to every plan). States:
 | C | Seed catalogue | 2 | Ready for review (offline) | Same package as B; live run and images pending (OA-01, OA-03) |
 | D | Server core | 2 | Ready for review (offline) | D-01 to D-09, D-11 done; D-10 live probe code done, run blocked: OA-01; browser recipe done offline with dummy env, step 8 blocked: OA-01; Q-A-17 `collection` flag done; see plans/evidence/D/README.md |
 | E | Design system | 2 | Ready for review | E-01 to E-12 done; browser recipe run (plans/evidence/E/); owner rows SO-x, M-E-01 to M-E-03 |
-| F | Shell and pickers | 3 | Not started | |
+| F | Shell and pickers | 3 | Ready for review (offline) | F-01 to F-12 done; browser recipe run against a local mock upstream (plans/evidence/F/), live re-run blocked: OA-x1; owner rows OA-x1, SO-x1, M-F-01 to M-F-03; questions Q-F-01 to Q-F-18 |
 | G | Browse | 4 | Not started | |
 | H | Product detail | 5 | Not started | |
 | I | Cart | 6 | Not started | |
