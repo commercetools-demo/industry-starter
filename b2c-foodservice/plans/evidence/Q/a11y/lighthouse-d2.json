@@ -1,0 +1,72 @@
+{
+ "account-desktop": {
+  "scores": {
+   "performance": 100,
+   "accessibility": 96,
+   "best-practices": 100,
+   "seo": 45
+  },
+  "lcp": 703,
+  "cls": 0.046,
+  "tbt": 0,
+  "ttfb": 8,
+  "fcp": 291,
+  "bytes": 514,
+  "failing": [
+   {
+    "id": "document-title",
+    "title": "Document doesn't have a `<title>` element",
+    "items": [
+     "<html lang=\"en-US\" class=\"pxR-ia_variable vFRkmq_variable B-a2UW_variable\">"
+    ]
+   },
+   {
+    "id": "label-content-name-mismatch",
+    "title": "Elements with visible text labels do not have matching accessible names.",
+    "items": [
+     "<button type=\"button\" aria-haspopup=\"dialog\" aria-label=\"Country and language: US, USD. Change\" class=\"transition-state inline-flex shrink-0 items-center gap-2 rounded-pill bord…\">"
+    ]
+   },
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   },
+   {
+    "id": "is-crawlable",
+    "title": "Page is blocked from indexing",
+    "items": [
+     "{\"source\":{\"type\":\"source-location\",\"url\":\"http://localhost:3100/robots.txt\",\"urlProvider\":\"network\",\"line\":3,\"column\":0"
+    ]
+   }
+  ]
+ },
+ "pdp-desktop": {
+  "scores": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "lcp": 816,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 11,
+  "fcp": 369,
+  "bytes": 728,
+  "failing": [
+   {
+    "id": "label-content-name-mismatch",
+    "title": "Elements with visible text labels do not have matching accessible names.",
+    "items": [
+     "<button type=\"button\" aria-haspopup=\"dialog\" aria-label=\"Country and language: US, USD. Change\" class=\"transition-state inline-flex shrink-0 items-center gap-2 rounded-pill bord…\">"
+    ]
+   },
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   }
+  ]
+ }
+}

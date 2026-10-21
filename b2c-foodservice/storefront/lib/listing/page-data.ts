@@ -26,8 +26,13 @@ export async function listingMetadata(locale: string, result: ListingResult): Pr
   const title =
     scope === 'category' ? (result.category?.name ?? '') : scope === 'search' ? t('title.search', { query: params.q ?? '' }) : t('title.all');
   const url = (page: number) => `/${locale}${listingHref(result.basePath, { ...params, page }, scope)}`;
+  const description =
+    scope === 'category'
+      ? (result.category?.description ?? t('description.category', { name: title }))
+      : scope === 'search' ? t('description.search') : t('description.all');
   return {
     title,
+    description,
     robots: params.q || activeFilterCount(params) > 0 ? { index: false } : undefined,
     pagination: {
       ...(result.page > 1 ? { previous: url(result.page - 1) } : {}),

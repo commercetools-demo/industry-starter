@@ -176,7 +176,7 @@
       "aria": "Collection store: {store}. Change store"
     },
     "localePill": {
-      "aria": "Country and language: {country}, {currency}. Change"
+      "aria": "{country} ({currency}) | {language}: change country and language"
     },
     "mega": {
       "brewLabel": "Brew methods",
@@ -688,6 +688,11 @@
     "title": {
       "all": "All products",
       "search": "Results for \"{query}\""
+    },
+    "description": {
+      "category": "Shop {name} at Malva Coffee: compatible pods, fresh coffee and machines, delivered or ready to collect.",
+      "all": "Shop every Malva Coffee product: compatible pods, fresh coffee, machines and accessories.",
+      "search": "Search results from Malva Coffee."
     },
     "count": "{count, plural, one {# product} other {# products}}",
     "breadcrumb": {

@@ -122,13 +122,13 @@ describe('Header', () => {
     guestFetch();
     renderShell(<Header categories={TREE} />, { locale: 'en-CA', fallback: fallbackFor(null, [], 'CA') });
     expect(screen.queryByRole('button', { name: /Collection store/ })).toBeNull();
-    expect(screen.getByRole('button', { name: /Country and language: CA, CAD/ })).toHaveTextContent('CA (CAD) | EN');
+    expect(screen.getByRole('button', { name: /CA \(CAD\) \| EN: change country and language/ })).toHaveTextContent('CA (CAD) | EN');
   });
 
   it('locale pill shows country currency and language', () => {
     guestFetch();
     renderShell(<Header categories={TREE} />, { fallback: fallbackFor(null) });
-    expect(screen.getByRole('button', { name: /Country and language/ })).toHaveTextContent('US (USD) | EN');
+    expect(screen.getByRole('button', { name: /US \(USD\) \| EN: change country and language/ })).toHaveTextContent('US (USD) | EN');
   });
 
   it('active link has aria-current', () => {
