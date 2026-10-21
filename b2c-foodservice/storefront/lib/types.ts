@@ -66,3 +66,34 @@ export interface MarketOption {
   languages: { locale: string; label: string }[];
   region: 'North America';
 }
+
+// Workstream G: browse. Card, listing and cart core types.
+export type CardBadge = 'bestseller' | 'limited-edition' | 'new' | 'subscribe';
+export interface ProductSummary {
+  id: string; slug: string;
+  /** SKU of the default variant (cheapest in the market, tie: master). */
+  sku: string;
+  name: string; categoryName: string;
+  imageUrl?: string; imageAlt: string;
+  badge: CardBadge | null;
+  /** null: no price in this market. `from` is the amount to pay; `old` the struck-through one. */
+  price: { from: Money; fromIsRange: boolean; old?: Money; discountName?: string } | null;
+  unit?: { money: Money; perKey: 'capsule' | '100g' };
+  label?: { kind: 'intensity' | 'roast'; value: string };
+  swatches?: { key: string; name: string }[];
+  requiredChoice: 'grind' | 'colour' | null;
+  rating: { average: number; count: number } | null;
+  /** null when no store is chosen (or the market has no stores). */
+  availability: { state: AvailabilityState } | null;
+  matchedSku?: string;
+}
+
+export interface FacetOption { value: string; label: string; count: number; selected: boolean; colour?: string }
+export interface FacetGroup {
+  name: string; control: 'checkbox' | 'radio' | 'colour' | 'grid';
+  options: FacetOption[]; selectedCount: number;
+}
+
+export interface CartLineSummary { id: string; sku: string; quantity: number }
+/** Minimal cart for the quick add path. Workstream I replaces it with the full cart type but keeps these fields. */
+export interface CartSummary { id: string; version: number; count: number; lines: CartLineSummary[] }
