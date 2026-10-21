@@ -1403,6 +1403,25 @@
       "rateLimited": "Too many attempts. Try again later.",
       "failed": "We could not update your password. Try again.",
       "required": "Enter your current password."
+    },
+    "settings": {
+      "title": "Settings",
+      "saveFailed": "Could not save. Try again.",
+      "noPrefs": "There are no email or text message settings: we do not send marketing messages."
+    },
+    "delete": {
+      "button": "Delete account",
+      "title": "Delete your account?",
+      "erased": "This erases your profile, addresses, saved items and saved cards.",
+      "retained": "Order records are kept for legal and tax reasons.",
+      "password": "Enter your password to confirm",
+      "confirm": "Delete my account",
+      "cancel": "Keep my account",
+      "wrong": "That password is not correct.",
+      "rateLimited": "Too many attempts. Try again later.",
+      "failed": "We could not delete your account. Try again.",
+      "done": "Your account was deleted.",
+      "section": "Delete your account"
     }
   }
 }

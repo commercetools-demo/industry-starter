@@ -2,21 +2,23 @@
 import type { Customer } from '@commercetools/platform-sdk';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const sdk = vi.hoisted(() => ({ get: vi.fn(), post: vi.fn(), password: vi.fn() }));
+const sdk = vi.hoisted(() => ({ get: vi.fn(), post: vi.fn(), password: vi.fn(), login: vi.fn(), del: vi.fn() }));
 vi.mock('@/lib/env', () => ({ getEnv: () => ({}) }));
 vi.mock('@/lib/ct/client', () => ({
   apiRoot: {
+    login: () => ({ post: (a: unknown) => ({ execute: () => sdk.login(a) }) }),
     customers: () => ({
       withId: () => ({
         get: () => ({ execute: () => sdk.get() }),
         post: (a: unknown) => ({ execute: () => sdk.post(a) }),
+        delete: (a: unknown) => ({ execute: () => sdk.del(a) }),
       }),
       password: () => ({ post: (a: unknown) => ({ execute: () => sdk.password(a) }) }),
     }),
   },
 }));
 
-import { changePassword, getProfile, isInvalidCurrentPassword, updateProfile } from '@/lib/ct/customer';
+import { WrongPasswordError, changePassword, deleteCustomerAccount, getProfile, isInvalidCurrentPassword, updateProfile } from '@/lib/ct/customer';
 
 const addr = (id: string, phone?: string) => ({ id, key: `k-${id}`, country: 'US', firstName: 'Maya', lastName: 'O', streetName: '1 Main St', city: 'NYC', postalCode: '10012', ...(phone ? { phone } : {}) });
 const customer = (over: Record<string, unknown> = {}): Customer =>
@@ -96,5 +98,27 @@ describe('password', () => {
     expect(isInvalidCurrentPassword({ statusCode: 400, body: { errors: [{ code: 'InvalidCurrentPassword' }] } })).toBe(true);
     expect(isInvalidCurrentPassword({ statusCode: 400, body: { errors: [{ code: 'InvalidField' }] } })).toBe(false);
     expect(isInvalidCurrentPassword(new Error('x'))).toBe(false);
+  });
+});
+
+describe('deleteCustomerAccount', () => {
+  it('Delete account: re-verifies the password at login (no cart fields), then deletes with dataErasure false', async () => {
+    sdk.login.mockResolvedValue({ body: {} });
+    sdk.del.mockResolvedValue({ body: {} });
+    await deleteCustomerAccount('c1', 'right-pass-1');
+    expect(sdk.login).toHaveBeenCalledWith({ body: { email: 'maya@example.com', password: 'right-pass-1' } });
+    expect(sdk.del).toHaveBeenCalledWith({ queryArgs: { version: 4, dataErasure: false } });
+  });
+
+  it('a wrong password deletes nothing', async () => {
+    sdk.login.mockRejectedValue({ statusCode: 400 });
+    await expect(deleteCustomerAccount('c1', 'nope')).rejects.toBeInstanceOf(WrongPasswordError);
+    expect(sdk.del).not.toHaveBeenCalled();
+  });
+
+  it('another login failure is not mistaken for a wrong password', async () => {
+    sdk.login.mockRejectedValue({ statusCode: 503 });
+    await expect(deleteCustomerAccount('c1', 'x')).rejects.toMatchObject({ statusCode: 503 });
+    expect(sdk.del).not.toHaveBeenCalled();
   });
 });

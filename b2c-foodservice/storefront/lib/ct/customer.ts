@@ -85,3 +85,32 @@ export async function changePassword(customerId: string, currentPassword: string
         .execute(),
   );
 }
+
+/** commercetools answers a wrong password at the login endpoint with 400 (`InvalidCredentials`). */
+const isBadCredentials = (e: unknown): boolean => (e as { statusCode?: unknown } | null)?.statusCode === 400;
+
+export class WrongPasswordError extends Error {
+  constructor() {
+    super('wrong_password');
+    this.name = 'WrongPasswordError';
+  }
+}
+
+/**
+ * Deletes the customer after re-verifying the password with the login endpoint (no anonymous cart fields, so no cart is
+ * merged or adopted). `dataErasure: false`: the orders stay as records (Q-L-10). Throws `WrongPasswordError` and deletes
+ * nothing when the password is wrong. Never call this for a seeded customer in a test.
+ */
+export async function deleteCustomerAccount(customerId: string, password: string): Promise<void> {
+  const current = await readCustomer(customerId);
+  try {
+    await apiRoot.login().post({ body: { email: current.email, password } }).execute();
+  } catch (e) {
+    if (isBadCredentials(e)) throw new WrongPasswordError();
+    throw e;
+  }
+  await updateWithRetry(
+    () => readCustomer(customerId),
+    async (latest) => apiRoot.customers().withId({ ID: customerId }).delete({ queryArgs: { version: latest.version, dataErasure: false } }).execute(),
+  );
+}
