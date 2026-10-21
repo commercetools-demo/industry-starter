@@ -1298,6 +1298,62 @@
         "subscribe": "Subscribe and save",
         "subscribeText": "Never run out of coffee"
       }
+    },
+    "addresses": {
+      "title": "Addresses",
+      "empty": "No saved addresses.",
+      "emptyHelp": "Add an address and we will offer it at checkout.",
+      "add": "Add address",
+      "edit": "Edit",
+      "delete": "Delete",
+      "makeDefault": "Make default",
+      "default": "Default",
+      "label": "Name this address (Home, Work)",
+      "addTitle": "Add an address",
+      "editTitle": "Edit address",
+      "deleteConfirm": "Delete this address?",
+      "deleteDefaultPromote": "This is your default address. {label} will become your default.",
+      "deleteDefaultNone": "This is your default address. You will have no default until you choose one.",
+      "deleteAction": "Delete address",
+      "deleteKeep": "Keep it",
+      "deleted": "Address deleted.",
+      "saved": "Address saved.",
+      "failed": "We could not save the address. Try again.",
+      "list": "Saved addresses",
+      "form": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "street": "Street address",
+        "street2": "Apartment, suite, unit (optional)",
+        "city": "City",
+        "state": "State",
+        "statePlaceholder": "Choose a state",
+        "postalCode": "ZIP code",
+        "postalCodeCA": "Postal code",
+        "country": "Country",
+        "phone": "Phone (optional)",
+        "makeDefault": "Make this my default address",
+        "save": "Save address",
+        "cancel": "Cancel",
+        "countries": {
+          "US": "United States",
+          "CA": "Canada"
+        },
+        "error": {
+          "required": "This field is required.",
+          "too_long": "This is too long.",
+          "invalid": "Check this value.",
+          "unsupported": "We do not deliver there."
+        }
+      },
+      "verify": {
+        "title": "Check this address",
+        "unresolved": "We couldn't confirm: {fields}.",
+        "suggestion": "Did you mean: {address}",
+        "useSuggestion": "Use suggestion",
+        "keepMine": "Keep what I typed",
+        "edit": "Edit"
+      }
     }
   }
 }
