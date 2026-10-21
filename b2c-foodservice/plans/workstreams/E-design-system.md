@@ -275,11 +275,11 @@ Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no co
   - Files: components and tests.
   - Tests (spec: Shared atoms, Disabled option explains itself): `Disabled option explains itself: struck through, not selectable, carries a title` (assert `line-through` class, `aria-disabled`, `title`, `onClick` not called), `Disabled option is still focusable`, `TypeScript refuses a disabled option without a reason` (`// @ts-expect-error` line in the test, checked by `npm run typecheck`), `Selected option uses the ink fill and aria-pressed`, `Field shows its label above and the error text with aria-describedby`, `Input focus uses the ring token` (class assertion), `Colour swatch uses the swatch token and falls back for unknown colours`, `Colour swatch selected has the double ring`, `Colour swatch as a button has an accessible name`, `Stepper increments, decrements and stops at min and max`, `Stepper buttons have localized labels in en-CA`, `Stepper announces the value politely`.
 
-- [ ] **E-07 Drawer and Modal**
+- [x] **E-07 Drawer and Modal**
   - Files: `components/ui/use-dialog.ts`, `Drawer.tsx`, `Modal.tsx`, tests.
   - Tests (spec: Accessibility, Shared atoms): `Drawer opens with focus inside and a dialog role`, `Escape closes the drawer`, `Tab is trapped inside the drawer`, `Focus returns to the opener on close`, `Overlay click closes`, `Closed drawer is inert and not focusable`, `Body scroll is locked while open and restored`, `Drawer is 440px wide and Modal is 560px with a 24px radius` (class assertions), `Modal title labels the dialog`, `Drawer close button has a localized accessible name`.
 
-- [ ] **E-08 Toast and Steps**
+- [x] **E-08 Toast and Steps**
   - Files: `context/toast.tsx`, `components/ui/Toast.tsx`, `Steps.tsx`, tests (use `vi.useFakeTimers()`).
   - Tests: `Toast shows the message with a polite live region`, `Toast disappears after 2.2 seconds`, `A second message replaces the first and restarts the timer`, `useToast outside the provider throws a clear error`, `Steps marks done, active and pending`, `Steps sets aria-current on the active step`, `Steps done circle shows a check icon`.
 
