@@ -12,7 +12,6 @@ export type ValidationResult =
   | { ok: false; fields: Partial<Record<'rating' | 'title' | 'text', ReviewFieldCode>> };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-// eslint-disable-next-line no-control-regex
 const CONTROL_EXCEPT_NEWLINE_TAB = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g;
 
 export const isProductId = (value: unknown): value is string => typeof value === 'string' && UUID.test(value);

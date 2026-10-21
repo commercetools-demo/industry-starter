@@ -73,7 +73,7 @@ const eslintConfig = defineConfig([
     rules: { 'no-restricted-imports': 'off' },
   },
   {
-    files: ['lib/ct/client.ts'],
+    files: ['lib/ct/client.ts', 'lib/ct/review-client.ts'],
     rules: { 'no-restricted-syntax': 'off' },
   },
 ]);
