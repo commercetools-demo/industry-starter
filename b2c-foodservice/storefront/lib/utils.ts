@@ -1,10 +1,20 @@
-export const COUNTRY_CONFIG: Record<string, { currency: string; locale: string; country: string; label: string }> = {
+export interface CountryConfig {
+  locale: string;
+  currency: string;
+  country: string;
+  label: string;
+}
+
+/** The one source for markets: routing, message files and the proxy derive from these keys (D-030). */
+export const COUNTRY_CONFIG: Record<string, CountryConfig> = {
   'en-US': { locale: 'en-US', currency: 'USD', country: 'US', label: 'United States' },
-  'en-GB': { locale: 'en-GB', currency: 'GBP', country: 'GB', label: 'United Kingdom' },
-  'de-DE': { locale: 'de-DE', currency: 'EUR', country: 'DE', label: 'Germany' },
+  'en-CA': { locale: 'en-CA', currency: 'CAD', country: 'CA', label: 'Canada' },
 };
 
-export const DEFAULT_LOCALE = COUNTRY_CONFIG['en-US'];
+export const DEFAULT_LOCALE: CountryConfig = COUNTRY_CONFIG['en-US'];
+
+/** The only cookie name for the chosen market. */
+export const LOCALE_COOKIE = 'malva-locale';
 
 export function formatMoney(centAmount: number, currencyCode: string, locale = 'en-US'): string {
   return new Intl.NumberFormat(locale, { style: 'currency', currency: currencyCode })

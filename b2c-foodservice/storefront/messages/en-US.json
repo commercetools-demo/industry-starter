@@ -1,1 +1,19 @@
-{}
+{
+  "common": {
+    "brand": "Malva Coffee",
+    "skipToContent": "Skip to content"
+  },
+  "meta": {
+    "title": "Malva Coffee",
+    "description": "Coffee beans, capsules and subscriptions, delivered or ready to collect."
+  },
+  "home": {
+    "placeholder": "Malva Coffee is getting ready."
+  },
+  "errors": {
+    "title": "Something went wrong",
+    "retry": "Try again",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "We could not find the page you were looking for."
+  }
+}
