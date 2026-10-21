@@ -5,7 +5,8 @@
  */
 export type CheckoutErrorCode = 'pickup_name_required' | 'pickup_name_invalid' | 'person_invalid' | 'code_malformed';
 
-const NAME_PATTERN = /^[\p{L}\p{M}][\p{L}\p{M} '’.-]*$/u;
+/** A person's name: letters, marks, spaces and `' ’ . -`, starting with a letter. Shared with the account address book. */
+export const NAME_PATTERN = /^[\p{L}\p{M}][\p{L}\p{M} '’.-]*$/u;
 const CODE_PATTERN = /^[A-Z0-9_-]{2,32}$/;
 
 export type PickupPerson = 'me' | 'other';
@@ -32,6 +33,9 @@ export function validateCode(value: unknown): CheckoutErrorCode | null {
 }
 
 const CURRENCY_OF: Record<string, string> = { US: 'USD', CA: 'CAD' };
+
+/** The two countries of this shop (D-030): the only ones a checkout or an address book accepts. */
+export const SHOP_COUNTRIES = ['US', 'CA'] as const;
 
 /** The only country and currency pairs of this shop (D-030). */
 export function currencyMatchesCountry(country: string, currency: string): boolean {

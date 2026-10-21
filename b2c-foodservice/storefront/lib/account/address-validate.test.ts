@@ -39,4 +39,10 @@ describe('validateAddress', () => {
     expect(validateAddress({ ...ok, phone: 'call me' })).toEqual({ ok: false, fields: { phone: 'invalid' } });
     expect(validateAddress({ ...ok, city: 'x'.repeat(61) })).toEqual({ ok: false, fields: { city: 'too_long' } });
   });
+
+  it('names follow the checkout rule: letters, spaces and apostrophes pass, digits and symbols do not', () => {
+    expect(validateAddress({ ...ok, firstName: "Siobhán", lastName: "O'Brien-Núñez" }).ok).toBe(true);
+    expect(validateAddress({ ...ok, firstName: 'M4ya' })).toEqual({ ok: false, fields: { firstName: 'invalid' } });
+    expect(validateAddress({ ...ok, lastName: '<script>' })).toEqual({ ok: false, fields: { lastName: 'invalid' } });
+  });
 });

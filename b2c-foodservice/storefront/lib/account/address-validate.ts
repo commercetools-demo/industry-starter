@@ -1,7 +1,8 @@
+import { NAME_PATTERN, SHOP_COUNTRIES } from '@/lib/checkout/validate';
 import type { AddressInput } from '@/lib/types';
 
-/** The two markets (D-030). */
-export const ADDRESS_COUNTRIES = ['US', 'CA'] as const;
+/** The two markets (D-030), shared with the checkout validators. */
+export const ADDRESS_COUNTRIES = SHOP_COUNTRIES;
 
 export const US_STATES: readonly string[] = [
   'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME',
@@ -24,7 +25,7 @@ export type AddressValidation =
 const text = (v: unknown): string => (typeof v === 'string' ? v.trim().replace(/\s+/g, ' ') : '');
 
 /**
- * Format checks for an address book entry (workstream L; K's checkout validators replace these when K lands, Q-L-17).
+ * Format checks for an address book entry (workstream L; names and countries use the checkout validators of `lib/checkout/validate.ts`, Q-L-17).
  * Returns the normalised address (trimmed, state and Canadian postal code upper-cased) or field error codes the form
  * shows beside the fields. Phone is optional. The state is required in the US only.
  */
@@ -46,6 +47,9 @@ export function validateAddress(raw: unknown): AddressValidation {
 
   const firstName = required('firstName', MAX.name);
   const lastName = required('lastName', MAX.name);
+  for (const [key, v] of [['firstName', firstName], ['lastName', lastName]] as const) {
+    if (v && !fields[key] && !NAME_PATTERN.test(v)) fields[key] = 'invalid';
+  }
   const streetName = required('streetName', MAX.street);
   const additionalStreetInfo = optional('additionalStreetInfo', MAX.street);
   const city = required('city', MAX.city);
