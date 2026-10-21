@@ -261,7 +261,7 @@ Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no co
   - Implement 3.4 and the breakpoints of 3.2.
   - Tests (spec: Shape, spacing and motion; Breakpoints; Phone): `Radii are pill, 10, 16, 24 and 32`, `Durations are 120, 200 and 320 ms`, `Content never hidden at rest: the entrance keyframes are transform-only and wrapped in prefers-reduced-motion no-preference`, `Reduced motion removes animation durations`, `Phone: breakpoints are defined at 520, 700, 820, 900 and 1080 px`, `Phone: grid-products is 4, then 3 below 1080 and 2 below 820 columns`, `Phone: wrap padding is 32px and 20px under 820px`.
 
-- [ ] **E-04 Icons and IconButton**
+- [x] **E-04 Icons and IconButton**
   - Files: `lib/cn.ts`, `components/ui/icons.ts`, `components/ui/Icon.tsx`, `components/ui/IconButton.tsx`, `test/render.tsx` (`renderWithIntl(ui, { locale = 'en-US' })` wrapping `NextIntlClientProvider` with the real catalogue), tests.
   - Implement 3.5 Icon, IconButton, `cn`. Add the four coffee glyphs.
   - Tests (spec: Iconography, Accessibility): `New glyph: every icon renders a 24px viewBox, 1.75 stroke, round caps and joins`, `New glyph: cup, bean, capsule and machine exist`, `Icon paths use only drawing commands M L H V C S Q T A Z` (regex on path data), `No emoji in the icon set or in components` (scan for emoji code points), `Icon button: an icon-only control has an accessible name` (`getByRole('button', { name: 'Cart' })`), `Icon button: decorative icons are aria-hidden`, `Icon with a title is exposed as an image`, `cn drops falsy parts`.
