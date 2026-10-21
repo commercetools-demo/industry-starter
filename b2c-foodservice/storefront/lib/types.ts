@@ -316,7 +316,7 @@ export interface CheckoutState {
 export type OrderState = 'ordered' | 'preparing' | 'ready-for-collection' | 'collected';
 export interface OrderLineView {
   id: string; name: string; variantSummary: string; quantity: number; imageUrl: string | null;
-  fulfilment: Fulfilment; storeKey: string | null; recurrenceLabel: string | null; priceCents: number;
+  fulfilment: Fulfilment; storeKey: string | null; recurrence: RecurrencePolicyView['schedule'] | null; priceCents: number;
 }
 export interface OrderDelivery { id: string; trackingId: string | null; trackingUrl: string | null; carrier: string | null }
 export interface OrderView {
@@ -325,7 +325,7 @@ export interface OrderView {
   lines: OrderLineView[];
   collect: { storeKey: string; storeName: string; address: string; hours: string | null; phone: string | null; readyMinutes: number | null; pickupName: string | null }[];
   ship: { methodName: string; estimate: string | null; address: string; deliveries: OrderDelivery[] } | null;
-  subscriptions: { lineId: string; interval: string }[];
+  subscriptions: { lineId: string; schedule: RecurrencePolicyView['schedule'] }[];
   totals: { subtotalCents: number; discountCents: number; shippingCents: number; taxCents: number; totalCents: number };
   /** Other orders of the same purchase (complete-per-group), by the shared base number. */
   linked: { id: string; orderNumber: string }[];
