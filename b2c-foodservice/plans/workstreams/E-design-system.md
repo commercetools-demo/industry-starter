@@ -300,17 +300,17 @@ Run `cd storefront && npm run check` before ticking. `[SKILL]` tags: none (no co
 
 ## 5. Scenarios checklist (`design-tokens-and-components`)
 
-- [ ] Re-skin by token: `Re-skin by token: replacing every colour value leaves no component with a raw value` (E-01)
-- [ ] Page title: `Page title is Archivo 800 at 34 to 40px with -0.025em tracking` and `Hero title scales with clamp(44px, 5.6vw, 82px)` (E-02) plus browser step 4 computed styles
-- [ ] Content never hidden at rest: `Content never hidden at rest: the entrance keyframes are transform-only and wrapped in prefers-reduced-motion no-preference` (E-03) plus browser step 6
-- [ ] Disabled option explains itself: `Disabled option explains itself: struck through, not selectable, carries a title` (E-06)
-- [ ] New glyph: `New glyph: every icon renders a 24px viewBox, 1.75 stroke, round caps and joins` and `New glyph: cup, bean, capsule and machine exist` (E-04) plus screenshot `E-icons-1440.png`
-- [ ] Phone: `Phone: grid-products is 4, then 3 below 1080 and 2 below 820 columns` (E-03) plus browser step 7 at 390 px (two columns). The slide-in nav and the full-height filter sheet are built in F and G; their Phone assertions are listed there
-- [ ] Icon button: `Icon button: an icon-only control has an accessible name` (E-04)
-- [ ] Requirement Single token layer: `Tokens in sync...`, `No component contains a raw colour, font or radius value` (E-01)
-- [ ] Requirement Shape, spacing and motion: radii and duration tests (E-03)
-- [ ] Requirement Shared atoms: one test group per atom (E-05 to E-08)
-- [ ] Requirement Accessibility: `Text tokens meet WCAG AA...` (E-01), Lighthouse accessibility run (browser step 9)
+- [x] Re-skin by token: `Re-skin by token: replacing every colour value leaves no component with a raw value` (E-01)
+- [x] Page title: `Page title is Archivo 800 at 34 to 40px with -0.025em tracking` and `Hero title scales with clamp(44px, 5.6vw, 82px)` (E-02) plus browser step 4 computed styles
+- [x] Content never hidden at rest: `Content never hidden at rest: the entrance keyframes are transform-only and wrapped in prefers-reduced-motion no-preference` (E-03) plus browser step 6
+- [x] Disabled option explains itself: `Disabled option explains itself: struck through, not selectable, carries a title` (E-06)
+- [x] New glyph: `New glyph: every icon renders a 24px viewBox, 1.75 stroke, round caps and joins` and `New glyph: cup, bean, capsule and machine exist` (E-04) plus screenshot `E-icons-1440.png`
+- [x] Phone: `Phone: grid-products is 4, then 3 below 1080 and 2 below 820 columns` (E-03) plus browser step 7 at 390 px (two columns). The slide-in nav and the full-height filter sheet are built in F and G; their Phone assertions are listed there
+- [x] Icon button: `Icon button: an icon-only control has an accessible name` (E-04)
+- [x] Requirement Single token layer: `Tokens in sync...`, `No component contains a raw colour, font or radius value` (E-01)
+- [x] Requirement Shape, spacing and motion: radii and duration tests (E-03)
+- [x] Requirement Shared atoms: one test group per atom (E-05 to E-08)
+- [x] Requirement Accessibility: `Text tokens meet WCAG AA...` (E-01), Lighthouse accessibility run (browser step 9)
 
 ## 6. Browser recipe (Chrome DevTools MCP, you run it)
 
