@@ -3,24 +3,24 @@
 import useSWR from 'swr';
 import { fetchJson } from '@/hooks/fetcher';
 import { KEY_ACCOUNT } from '@/lib/cache-keys';
-
-export interface AccountSummary { firstName: string; lastName: string; email: string }
+import type { AppCustomer } from '@/lib/types';
 
 /**
- * The signed-in customer for the header, from GET /api/auth/me (built by J): `{ customer: { firstName, lastName, email } | null }`.
- * Returns `customer: null` for a guest and on any failure. Sign out with POST /api/auth/logout, then `mutate(KEY_ACCOUNT)`.
+ * The signed-in customer from GET /api/auth/me. `customer` is `undefined` while loading, `null` for a guest and on any
+ * failure, otherwise the customer. Sign in, register and sign out go through `useAuthActions()`.
  */
 export function useAccount() {
-  const { data, mutate, isLoading } = useSWR<{ customer: AccountSummary | null }>(
+  const { data, mutate, isLoading } = useSWR<{ customer: AppCustomer | null }>(
     KEY_ACCOUNT,
     async () => {
       try {
-        return await fetchJson<{ customer: AccountSummary | null }>('/api/auth/me');
+        return await fetchJson<{ customer: AppCustomer | null }>('/api/auth/me');
       } catch {
         return { customer: null };
       }
     },
     { revalidateOnFocus: false },
   );
-  return { customer: data?.customer ?? null, isLoading, mutate };
+  const customer: AppCustomer | null | undefined = data === undefined ? undefined : data.customer;
+  return { customer, isLoading, mutate };
 }

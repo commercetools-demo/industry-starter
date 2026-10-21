@@ -3,8 +3,8 @@
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import Icon from '@/components/ui/Icon';
-import { fetchJson } from '@/hooks/fetcher';
 import { useAccount } from '@/hooks/useAccount';
+import { useAuthActions } from '@/hooks/useAuthActions';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
 
 const ICON_LINK =
@@ -13,7 +13,8 @@ const ICON_LINK =
 /** Guest: user icon link to sign in. Signed in: initials avatar and a dropdown (name, email, Dashboard, Sign out). */
 export default function AccountMenu() {
   const t = useTranslations('shell.account');
-  const { customer, mutate } = useAccount();
+  const { customer } = useAccount();
+  const { signOut: signOutAction } = useAuthActions();
   const router = useRouter();
   const pathname = usePathname();
   // The menu is open for one pathname only, so any route change closes it without an effect.
@@ -67,9 +68,8 @@ export default function AccountMenu() {
   const signOut = async () => {
     setOpen(false);
     try {
-      await fetchJson('/api/auth/logout', { method: 'POST' });
+      await signOutAction({ navigate: false });
     } finally {
-      await mutate({ customer: null }, { revalidate: false });
       router.refresh();
     }
   };

@@ -24,6 +24,12 @@ export const keyAvailability = (sku: string, country: string, storeKey: string |
   ['availability', sku, country, storeKey ?? 'online'] as const;
 export const KEY_RECURRENCE_POLICIES = 'recurrence-policies';
 
+/** First element of every user-scoped SWR key (string keys and array keys). Sign-out evicts all of them (workstream J). */
+export const USER_SCOPED_KEYS: readonly string[] = [
+  'account', 'cart', 'cart-count', 'checkout', 'orders', 'order', 'addresses', 'saved-items', 'my-reviews',
+  'recurring-orders', 'payment-methods',
+];
+
 export const TAG = {
   project: 'project',
   categories: 'categories',
