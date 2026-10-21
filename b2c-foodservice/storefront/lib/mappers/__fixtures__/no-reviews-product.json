@@ -1,0 +1,12 @@
+{
+  "id": "p-mach-1",
+  "version": 1,
+  "productType": { "typeId": "product-type", "id": "pt-2" },
+  "name": { "en-US": "Home Machine" },
+  "slug": { "en-US": "home-machine" },
+  "categories": [],
+  "reviewRatingStatistics": { "averageRating": 0, "highestRating": 0, "lowestRating": 0, "count": 0, "ratingsDistribution": {} },
+  "attributes": [],
+  "masterVariant": { "id": 1, "sku": "MCF-MACH-1", "attributes": [] },
+  "variants": []
+}

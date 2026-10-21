@@ -311,7 +311,7 @@ Run `cd storefront && npm run check` before ticking.
   - Implement 3.7 and the image row of 3.8.
   - Tests (spec: Image handling via bootstrap): `cleanImageUrl removes query and fragment`, `Transforms add size parameters to a clean URL`, `Transforms never double a query that is already stripped`, `A non-https or invalid URL is returned unchanged`, `mapImages stores and returns the clean URL even if the source has a query`, `Components call the three transforms: listing, detail and thumbnail differ in size`.
 
-- [ ] **D-07 Mappers** `[SKILL: commercetools-storefront]`
+- [x] **D-07 Mappers** `[SKILL: commercetools-storefront]`
   - Files: `lib/mappers/{money,price,attribute,rating,variant,product,category}.ts`, fixtures, tests.
   - Implement 3.8. Fixtures: one pod product (variants 10 and 50 capsules, enum, lenum, set of ltext, boolean), one product with no reviews, one product with a discounted price, one category list with a deep tree.
   - Tests (spec: Type boundary; reviews Card rating/No reviews at mapper level): `Card rating: 12 reviews averaging 4.58333 map to average 4.58333 and count 12 (display 4.6)`, `No reviews: count 0 or absent statistics map to undefined rating`, `Price is the session country and currency price`, `Discounted price is exposed as discounted`, `Price falls back to the prices array when no scoped price is present`, `Enum, lenum, ltext and set attributes map to AttributeValue`, `Unsupported attribute types are dropped`, `Product-level attributes override master variant attributes`, `Product name is localized with fallback`, `Category tree is built from a flat list and sorted by orderHint`, `Mapped output contains no SDK-only fields` (assert `Object.keys` whitelist).
