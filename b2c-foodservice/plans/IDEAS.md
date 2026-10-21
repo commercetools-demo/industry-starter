@@ -45,3 +45,6 @@
 
 - (I) Mock server now has a small cart engine plus POST /__mock/price and /__mock/stock hooks; a future K could reuse its reprice() for checkout totals.
 - (I) Cart notice copy could show the previous price ("was $10.00") once priceWas exists; the notice already carries `previous`.
+- (K) Order lines could show the variant summary on the confirmation if the cart saved the attributes on the line (Q-I-7) or the confirmation read the products.
+- (K) `complete-per-group` could attach the second order to the first one with an order custom field instead of the shared number prefix.
+- (K) The Checkout Browser SDK exposes `checkoutFlow({ shipping: { getShippingMethods, onShippingMethodSelected } })` (external shipping methods) and `forms` customisation; worth testing in S13/S14 as a route to a single hosted payment for collect plus delivery.

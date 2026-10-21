@@ -47,7 +47,9 @@ export async function createCheckoutSession(
     if (!tokenRes.ok) throw new AppError('upstream_unavailable', 502);
     const { access_token: token } = (await tokenRes.json()) as { access_token?: string };
     if (!token) throw new AppError('upstream_unavailable', 502);
-    const res = await fetcher(`https://session.${region}.${HOST}/${env.CTP_PROJECT_KEY}/sessions`, {
+    // CTP_SESSION_URL points the Sessions API at a local mock (scripts/mock-ct-server.mjs); unset in every real environment.
+    const base = process.env.CTP_SESSION_URL?.trim().replace(/\/+$/, '') || `https://session.${region}.${HOST}`;
+    const res = await fetcher(`${base}/${env.CTP_PROJECT_KEY}/sessions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify(sessionBody(input.cartId, applicationKey, input.orderNumber)),

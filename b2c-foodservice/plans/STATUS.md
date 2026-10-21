@@ -17,7 +17,7 @@ Updated 2026-10-21 (owner answers D-030 to D-039 applied to every plan). States:
 | H | Product detail | 5 | Ready for review (offline) | H-00 to H-10 done against the mock upstream; build passes, route dynamic; live checks pending: OA-H-a; browser recipe not driven (browser busy): M-H-03; owner rows OA-x2, SO-x1, SO-x2, M-H-01 to M-H-04; questions Q-H-01 to Q-H-21; see plans/evidence/H/README.md |
 | I | Cart | 6 | Ready for review | I-01 to I-13 done; I-00 and the browser recipe are owner rows OA-I-a and OA-I-b |
 | J | Auth and session | 7 | Ready for review (offline) | J-01 to J-08 and J-07b done; browser recipe run against the mock (plans/evidence/J/); J-09 probes blocked: OA-J-c; cart merge uses `AuthCart`, follow-up for I (Q-J-15); owner rows OA-J-a to OA-J-c, SO-J-a, M-J-01 to M-J-03 |
-| K | Checkout and confirmation | 8 | Not started | |
+| K | Checkout and confirmation | 8 | Ready for review (offline) | K-01 (documentation only, provisional `complete-per-group`), K-02 to K-15 done; K-16 partial: API flow run against the mock (plans/evidence/K/), browser run blocked (Chrome held, M-K-07), hosted parts blocked: OA-K-a; owner rows OA-K-a to OA-K-g, SO-K-a, SO-K-b, M-K-01 to M-K-07; P-12 consent links are in `CheckoutPage` |
 | L | Account area | 9 | Not started | |
 | M | Reviews and ratings | 9 | Ready for review (offline) | M-00 to M-10 done on the mock server (plans/evidence/M/README.md); live runs need OA-01 and OA-M-a (second client, D-027); browser run blocked by a held Chrome profile (M-M-04) |
 | N | Subscriptions | 10 | Not started | |

@@ -28,6 +28,7 @@ import { join } from 'node:path';
 import {
   DOCS, DOC_BY_ID, FIXTURES, PRICE_OVERRIDES, RECURRENCE_POLICIES, VARIANT_BY_SKU, categoryId, channelId, priceFor, productTypeResults, projectionOf, runSearch,
 } from './mock-fixtures/mock-catalog.mjs';
+import { orderRoutes } from './mock-fixtures/mock-orders.mjs';
 import { reviewRoutes } from './mock-fixtures/mock-reviews.mjs';
 
 const PORT = Number(process.argv[2] ?? 9443);
@@ -301,6 +302,9 @@ function updateCart(cart, body) {
         l.custom = { fields: { ...(l.custom?.fields ?? {}), [action.name]: action.value } };
         break;
       }
+      case 'setShippingAddress':
+        next.shippingAddress = action.address;
+        break;
       case 'setShippingMethod':
         next.shippingInfo = {
           shippingMethodName: action.shippingMethod.key === 'mcf-collect' ? 'Collect in store' : 'Standard', price: centMoney(currency, 0),
@@ -354,6 +358,8 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
   if (path === `/${PROJECT}/login` || path.startsWith(`/${PROJECT}/customers`)) {
     if ((await customerRoutes(req, res, path)) !== false) return;
   }
+  // Orders, the Sessions API and the "hosted Checkout finished" hook (workstream K).
+  if ((await orderRoutes(req, res, url, path, { CARTS, stores: STORES, policies: RECURRENCE_POLICIES, json, readBody, project: PROJECT })) !== false) return;
   // Reviews and the verified-purchase order lookup (workstream M).
   if (path === `/${PROJECT}/reviews` || path.startsWith(`/${PROJECT}/reviews/`) || path === `/${PROJECT}/orders`) {
     if ((await reviewRoutes(req, res, url, path, readBody)) !== false) return;
@@ -367,6 +373,12 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
   if (path === `/${PROJECT}/channels`) return json(res, 200, list(STORES));
   if (path === `/${PROJECT}/categories`) return json(res, 200, list(CATEGORIES));
   if (path === `/${PROJECT}/product-types`) return json(res, 200, list(productTypeResults()));
+  if (path === `/${PROJECT}/shipping-methods/key=mcf-ship-standard`) {
+    return json(res, 200, {
+      id: 'ship-std', version: 1, key: 'mcf-ship-standard', name: 'Standard',
+      localizedDescription: { 'en-US': '2-4 business days', 'en-CA': '2-4 business days' }, zoneRates: [],
+    });
+  }
   if (path === `/${PROJECT}/shipping-methods/matching-location`) {
     const currency = url.searchParams.get('currency') ?? 'USD';
     const freeAbove = currency === 'CAD' ? 9900 : 7500;
@@ -444,8 +456,18 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
     const cart = reprice(baseCart(`cart-${cartSeq}`, {
       ...(body.anonymousId ? { anonymousId: body.anonymousId } : {}), ...(body.customerId ? { customerId: body.customerId } : {}),
     }, { country: body.country, locale: body.locale, shippingMode: body.shippingMode, totalPrice: centMoney(body.currency, 0) }));
-    CARTS.set(cart.id, cart);
-    return json(res, 201, cart);
+    // A draft with lines, codes, a shipping address or method (workstream K clones a bag into payment carts).
+    const actions = [
+      ...(body.lineItems ?? []).map((l) => ({ action: 'addLineItem', ...l })),
+      ...(body.discountCodes ?? []).map((code) => ({ action: 'addDiscountCode', code })),
+      ...(body.shippingMethod ? [{ action: 'setShippingMethod', shippingMethod: body.shippingMethod }] : []),
+    ];
+    if (body.shippingAddress) cart.shippingAddress = body.shippingAddress;
+    if (body.customerEmail) cart.customerEmail = body.customerEmail;
+    const filled = actions.length > 0 ? updateCart(cart, { version: cart.version, actions }) : { status: 200, body: cart };
+    if (filled.status !== 200) return json(res, filled.status, filled.body);
+    CARTS.set(cart.id, filled.body);
+    return json(res, 201, filled.body);
   }
   const cartMatch = new RegExp(`^/${PROJECT}/carts/([^/]+)$`).exec(path);
   if (cartMatch) {

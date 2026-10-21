@@ -313,7 +313,7 @@ Branch `ws/k-checkout-and-confirmation`. Commit `ws-k: K-nn summary`. Each task 
   - **K-14b `complete-per-group`**: `lib/checkout/split.ts` creates one cart per group (Single mode, group lines, copied codes only on the first cart, Q-K-02c), order numbers `<base>-A`, `<base>-B`; Pay stage shows "Payment 1 of 2" with the amount per order and names the cluster; `finalizeOrder` for each; confirmation shows all linked orders by the shared base number, each line still under its cluster. Tests: `Mixed order under the fallback creates two linked orders`, `Second payment failure leaves the first order intact and says so`, `Retry never duplicates an order`, `Every line stays in its cluster on the confirmation`.
   - **K-14c `payment-only-for-collect`**: for carts with a collect group, own steps Details (contact, address when shipping), Delivery (standard method, pickup person) and the Payment Only widget (`paymentFlow`) of the second Application (`CTP_CHECKOUT_PAYMENT_APP_KEY`, OA-K-e); the earlier version of this plan (git history of this file before 2026-10-21, sections 3.2 to 3.6) holds the step designs, validators (US and Canada address rules: ZIP `^\d{5}(-\d{4})?$`, Canadian postal code `^[A-Z]\d[A-Z] ?\d[A-Z]\d$`, states and provinces lists) and tests to reuse. Tests: `Mixed order under payment-only-for-collect pays once`, `Ship-only cart still uses the complete hosted flow`, `Canadian postal code is checked`, `Province is required for Canada`.
 - [x] **K-15 Catalogue parity.** Files: `messages/*.json`. A script-free check: the `en-US` and `en-CA` catalogues have identical keys for `checkout` and `order` (the existing lint rule fails otherwise). Tests: `Catalogues have the same keys`.
-- [ ] **K-16 Browser run with a test card, evidence, hand-off.** Run sections 6 and 7; if the card step cannot be automated record why and rely on the M rows; save evidence; add todo rows; `npm run build`; set `Ready for review`. `blocked: OA-K-a` for the hosted parts until the Checkout Application exists.
+- [ ] **K-16 (partial: API run against the mock done, plans/evidence/K/; browser and live hosted parts blocked: OA-K-a, M-K-07) Browser run with a test card, evidence, hand-off.** Run sections 6 and 7; if the card step cannot be automated record why and rely on the M rows; save evidence; add todo rows; `npm run build`; set `Ready for review`. `blocked: OA-K-a` for the hosted parts until the Checkout Application exists.
 
 ### 4.1 Fallback behaviour (for K-14)
 
@@ -324,45 +324,45 @@ Branch `ws/k-checkout-and-confirmation`. Commit `ws-k: K-nn summary`. Each task 
 Tick only with the named test or recorded evidence. "Browser" means a recorded check in section 6.
 
 `design-checkout-page`
-- [ ] Going back: `Going back` (K-10)
-- [ ] Collect only (US): `Collect only` (K-06, K-10)
-- [ ] Someone else collects: `Someone else collects` (K-11)
-- [ ] Free shipping code: `Free shipping code` (K-05)
-- [ ] Payment failure: `Payment failure` (K-12); browser R12 with the decline card (or M-K-03)
-- [ ] Placement: `Placement` (K-12, K-07); browser R11
-- [ ] Mixed bag marked by cluster: `Mixed bag shows one cluster per fulfilment group and each line inside its cluster`, `No line appears outside a cluster or in two clusters` (K-10); browser R16
-- [ ] Canada is delivery only: `Canada bag shows no collect cluster and no store picker` (K-10), `Canada session never gets mcf-collect` (K-04); browser R18
-- [ ] Hosted Checkout owns address, delivery and payment (D-039): `Hosted success and error pages are skipped` (K-12); browser R10
-- [ ] Place order is the only commit action (the hosted pay button): `Widget mount point exists` (K-12)
+- [x] Going back: `Going back` (K-10)
+- [x] Collect only (US): `Collect only` (K-06, K-10)
+- [x] Someone else collects: `Someone else collects` (K-11)
+- [x] Free shipping code: `Free shipping code` (K-05)
+- [x] Payment failure: `Payment failure` (K-12); browser R12 with the decline card (or M-K-03)
+- [x] Placement: `Placement` (K-12, K-07); browser R11
+- [x] Mixed bag marked by cluster: `Mixed bag shows one cluster per fulfilment group and each line inside its cluster`, `No line appears outside a cluster or in two clusters` (K-10); browser R16
+- [x] Canada is delivery only: `Canada bag shows no collect cluster and no store picker` (K-10), `Canada session never gets mcf-collect` (K-04); browser R18
+- [x] Hosted Checkout owns address, delivery and payment (D-039): `Hosted success and error pages are skipped` (K-12); browser R10
+- [x] Place order is the only commit action (the hosted pay button): `Widget mount point exists` (K-12)
 - Removed by D-039: the prototype's own Details, Fulfilment and Payment steps, our address and promo forms (promo code entry stays on the cart page, I; K only reads the result back, K-05).
 
 `design-order-confirmation-page`
-- [ ] Guest: `Guest` (K-13)
-- [ ] Status progress: `Status progress` (K-13); browser R15
-- [ ] Shipped line: `Shipped line` (K-13)
-- [ ] No recent order: `No recent order` (K-13)
-- [ ] No email claim (D-032): `Confirmation never claims an email or text was sent` (K-13)
+- [x] Guest: `Guest` (K-13)
+- [x] Status progress: `Status progress` (K-13); browser R15
+- [x] Shipped line: `Shipped line` (K-13)
+- [x] No recent order: `No recent order` (K-13)
+- [x] No email claim (D-032): `Confirmation never claims an email or text was sent` (K-13)
 
 `checkout`
-- [ ] Address changes the total: `Address change moves tax` (K-04); browser R7
-- [ ] Totals moved before the session: `Totals moved before the session` (K-12, K-07)
-- [ ] Placement fails at the last moment: `Placement outcome unknown shows one retry path` (K-12), `Retry never duplicates an order` / `Existing order is reported instead of a second session` (K-07, K-14b)
+- [x] Address changes the total: `Address change moves tax` (K-04); browser R7
+- [x] Totals moved before the session: `Totals moved before the session` (K-12, K-07)
+- [x] Placement fails at the last moment: `Placement outcome unknown shows one retry path` (K-12), `Retry never duplicates an order` / `Existing order is reported instead of a second session` (K-07, K-14b)
 
 `checkout-page`
-- [ ] Address change moves tax: `Address change moves tax` (K-04)
-- [ ] Delivery price per market: `Free above threshold gives price zero per market` (K-04)
+- [x] Address change moves tax: `Address change moves tax` (K-04)
+- [x] Delivery price per market: `Free above threshold gives price zero per market` (K-04)
 
 `order-confirmation-page`
-- [ ] Order placed: `Order placed` (K-13)
-- [ ] Placement outcome unknown: `Placement outcome unknown looks the order up by number` (K-07)
-- [ ] Revisited later: `Revisited later` (K-08, K-13)
+- [x] Order placed: `Order placed` (K-13)
+- [x] Placement outcome unknown: `Placement outcome unknown looks the order up by number` (K-07)
+- [x] Revisited later: `Revisited later` (K-08, K-13)
 
 `fulfilment-and-availability-model` (parts owned by K)
-- [ ] Mixed order: `Mixed order has collect and ship parts` (K-08) plus spike evidence S13 and S8 (or K-14b / K-14c tests)
-- [ ] Ready: `Ready` (K-08), `Status progress` (K-13), browser R15
-- [ ] Threshold per market: `Threshold per market` (K-04)
-- [ ] US address without state rate: `US address without state rate has a tax portion` (K-04); browser R8
-- [ ] Canada tax: `Canada food is zero rated and standard goods carry GST` (K-04)
+- [x] Mixed order: `Mixed order has collect and ship parts` (K-08) plus spike evidence S13 and S8 (or K-14b / K-14c tests)
+- [x] Ready: `Ready` (K-08), `Status progress` (K-13), browser R15
+- [x] Threshold per market: `Threshold per market` (K-04)
+- [x] US address without state rate: `US address without state rate has a tax portion` (K-04); browser R8
+- [x] Canada tax: `Canada food is zero rated and standard goods carry GST` (K-04)
 
 ## 6. Browser recipe (Chrome DevTools MCP)
 
