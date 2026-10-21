@@ -47,7 +47,7 @@ describe('account catalogue', () => {
       'account.orders.detail.noTracking', 'account.orders.return.start', 'account.orders.return.shipment.Unusable', 'account.orders.return.payment.NonRefundable',
       'account.collection.title', 'account.collection.tile.fastText', 'account.saved.empty', 'account.saved.addAll', 'account.addresses.deleteDefaultNone',
       'account.addresses.verify.keepMine', 'account.payments.hostedOnly', 'account.profile.emailHelp', 'account.password.wrongCurrent',
-      'account.settings.title', 'account.delete.retained', 'account.subscriptions.stub',
+      'account.settings.title', 'account.delete.retained',
     ]) {
       expect(keys.has(k), k).toBe(true);
     }

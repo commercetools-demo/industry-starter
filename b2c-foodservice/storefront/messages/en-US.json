@@ -1330,11 +1330,6 @@
       "retry": "Try again",
       "loading": "Loading…"
     },
-    "subscriptions": {
-      "title": "Subscriptions",
-      "stub": "No subscriptions yet.",
-      "cta": "Shop coffee"
-    },
     "reviews": {
       "stub": "No reviews yet."
     },
@@ -1677,7 +1672,8 @@
       },
       "keep": "Keep subscription",
       "confirmCancel": "Cancel subscription",
-      "save": "Save"
+      "save": "Save",
+      "cancelLabel": "Cancel"
     },
     "toast": {
       "skipped": "Next delivery skipped",
