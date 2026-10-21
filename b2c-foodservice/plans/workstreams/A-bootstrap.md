@@ -312,17 +312,17 @@ The command writes into `site/`. Use `storefront/` (spec, D-007). The hosting fi
 
 Do them in order. Commit after each. Run `cd storefront && npm run check` before ticking (from A-03 on).
 
-- [ ] **A-01 Run the skill command** `[SKILL: commercetools-storefront]`
+- [x] **A-01 Run the skill command** `[SKILL: commercetools-storefront]`
   - Files: creates the app folder; evidence `plans/evidence/A/command-output.txt`.
   - Steps: (1) `cd /Users/behnam/code/commercetools-labs/industry-starter/b2c-foodservice && node -v` must print `v22.x` (else `nvm install 22 && nvm use 22`). (2) `git status` is clean for `storefront/` and `storefront/` does not exist. (3) Run `/commercetools:nextjs-setup-project`. Immediately tell the session: "Use the directory name `storefront` wherever the command says `site`, and write `netlify.toml` with `base = \"storefront\"`." If the command already created `site/`, run `mv site storefront && rm -rf storefront/.next` afterwards (npm paths are relative; the `.next` cache is not). (4) If `storefront/.git` exists (create-next-app inits git outside a repo only; check anyway) remove that folder: `rm -rf storefront/.git`. (5) Save the session's command transcript summary (commands run, versions) to `plans/evidence/A/command-output.txt` with no env values.
   - Tests: none. Done when `ls storefront/app/[locale] storefront/i18n storefront/lib proxy.ts` all exist.
 
-- [ ] **A-02 Verify the output and apply the fix-ups** `[SKILL: commercetools-storefront]`
+- [x] **A-02 Verify the output and apply the fix-ups** `[SKILL: commercetools-storefront]`
   - Files: `storefront/package.json`, `app/globals.css`, `app/page.tsx` (delete), `public/*.svg` (delete), `README.md`, `netlify.toml`, `vercel.json` (delete), `.gitkeep` files.
   - Steps: (1) Run `npm list next next-intl @commercetools/platform-sdk @commercetools/ts-client react tailwindcss --depth=0 > ../plans/evidence/A/versions.txt` and check against section 3.9 (next > 16.0.0 and 16.x, next-intl 4.x, SDK 8.x, ts-client 4.x). (2) Move to the latest allowed: `npm install next@^16 eslint-config-next@^16 && npm install -D @types/node@^22`. Confirm `npm view next@16 version | tail -1` equals the installed version. (3) Confirm no `tailwind.config.*`; replace `app/globals.css` with exactly `@import 'tailwindcss';` plus a `body { margin: 0; }` line (removes the placeholder cream/terra theme, E owns tokens). (4) Delete `app/page.tsx` and `public/*.svg`. (5) Set `package.json` `name` to `malva-storefront`, `private: true`. (6) `touch .gitkeep` in `lib/mappers`, `hooks`, `context`, `components/ui`, `components/layout`, `components/product`, `app/api` only if empty. (7) Fix `netlify.toml` base; delete `vercel.json` (Netlify, D-038). (8) Rewrite `README.md` (what it is, Node 22, `cp .env.example .env.local`, scripts table, link to `plans/`).
   - Tests: none yet (A-03 adds the harness). Check by `npx tsc --noEmit` passing and `npm run build` passing with the command's default placeholder files (it will, no env needed at this point).
 
-- [ ] **A-03 Test harness and scripts**
+- [x] **A-03 Test harness and scripts**
   - Files: `package.json`, `vitest.config.mts`, `test/setup.ts`, `test/stubs/server-only.ts`, `.nvmrc`, `lib/utils.test.ts` (smoke).
   - Steps: install packages of section 3.9; write config exactly as shown; add scripts; `.nvmrc` = `22`; `engines`. Smoke test `it('Fresh clone builds: the test runner starts')` asserting `COUNTRY_CONFIG['en-US'].currency === 'USD'`.
   - Tests: the smoke test; `npm run check` passes (lint may report warnings from the generated code: fix them, do not disable rules).

@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "predeploy": "node scripts/predeploy-check.mjs",
+    "verify:build": "next build && node scripts/check-bundle-secrets.mjs"
   },
   "dependencies": {
     "@commercetools/platform-sdk": "^8.27.0",
@@ -17,16 +22,28 @@
     "postcss": "^8.5.31",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "server-only": "^0.0.1",
     "swr": "^2.5.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/node": "^22.20.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.1.2",
     "eslint": "^9",
     "eslint-config-next": "^16.4.2",
+    "jsdom": "^29.1.1",
     "tailwindcss": "^4.3.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
