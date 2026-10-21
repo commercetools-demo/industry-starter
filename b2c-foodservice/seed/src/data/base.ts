@@ -40,6 +40,7 @@ export const K = {
   ptGiftSet: 'mcf-gift-set',
   typeLine: 'mcf-line-fulfilment',
   typeStore: 'mcf-store',
+  typeReview: 'mcf-review',
   orderOrdered: 'mcf-order-ordered',
   orderPreparing: 'mcf-order-preparing',
   orderReady: 'mcf-order-ready-for-collection',
@@ -62,7 +63,7 @@ export const K = {
  */
 export const CONTRACT_KEYS: readonly string[] = [
   K.orderOrdered, K.orderPreparing, K.orderReady, K.orderCollected,
-  K.typeLine, K.typeStore,
+  K.typeLine, K.typeStore, K.typeReview,
 ];
 
 /** Deterministic 32-bit hash (FNV-1a). All "random looking" seed values derive from it so every run is identical. */

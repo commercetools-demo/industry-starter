@@ -191,3 +191,24 @@ describe('Seeded reviews', () => {
 
   it.todo('Markup in text (escaping happens when the storefront renders; seed review texts contain no markup, asserted above)');
 });
+
+describe('review custom type (workstream M)', () => {
+  it('the mcf-review type has verifiedPurchase and orderNumber on the review resource', async () => {
+    const api = await seeded();
+    const type = (await api.getByKey('types', 'mcf-review')) as Res;
+    expect(type.resourceTypeIds).toEqual(['review']);
+    expect((type.fieldDefinitions as { name: string }[]).map((f) => f.name)).toEqual(['verifiedPurchase', 'orderNumber']);
+  });
+
+  it('second run reports 0 changes', async () => {
+    const api = await seeded();
+    const second = new Runner(false, quiet);
+    const r = await runSeed({ api, run: second, demoPassword: 'dummy-long-demo-password' });
+    expect(r.changes).toBe(0);
+  });
+
+  it('seed refuses a foreign project key', async () => {
+    const { assertSafeProject } = await import('./lib');
+    expect(() => assertSafeProject('someone-elses-project', 'spec-test-b2c-food')).toThrow(/mismatch/);
+  });
+});

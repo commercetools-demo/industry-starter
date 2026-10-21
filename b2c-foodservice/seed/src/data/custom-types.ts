@@ -31,4 +31,12 @@ export const typeDrafts: TypeDraft[] = [
       num('collectionMinutes', 'Collection ready after (minutes)'),
     ],
   },
+  // Review type (workstream M): set by the storefront when a review is written; seeded reviews carry no custom fields.
+  {
+    key: K.typeReview, name: ls('Malva review'), resourceTypeIds: ['review'],
+    fieldDefinitions: [
+      { name: 'verifiedPurchase', label: ls('Verified purchase'), required: false, type: { name: 'Boolean' }, inputHint: 'SingleLine' },
+      str('orderNumber', 'Order number'),
+    ],
+  },
 ];
