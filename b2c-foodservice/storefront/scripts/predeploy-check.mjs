@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
-// Deploy gate: the diagnostic health route must be gone before deploying.
+// Deploy gate: the throwaway diagnostic routes must be gone before deploying.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,6 +10,9 @@ export function checkPredeploy(root) {
   const problems = [];
   if (existsSync(join(root, 'app', 'api', 'health', 'route.ts'))) {
     problems.push('Remove app/api/health/route.ts before deploying');
+  }
+  if (existsSync(join(root, 'app', 'api', 'dev'))) {
+    problems.push('Remove app/api/dev before deploying');
   }
   return problems;
 }

@@ -12,6 +12,13 @@ describe('deploy gate', () => {
     expect(checkPredeploy(root)).toEqual(['Remove app/api/health/route.ts before deploying']);
   });
 
+  it('Deploy gate fails while app/api/dev exists', () => {
+    const root = mkdtempSync(join(tmpdir(), 'predeploy-'));
+    mkdirSync(join(root, 'app', 'api', 'dev', 'session'), { recursive: true });
+    writeFileSync(join(root, 'app', 'api', 'dev', 'session', 'route.ts'), 'export {};\n');
+    expect(checkPredeploy(root)).toEqual(['Remove app/api/dev before deploying']);
+  });
+
   it('Deploy gate passes when the route is removed', () => {
     const root = mkdtempSync(join(tmpdir(), 'predeploy-'));
     mkdirSync(join(root, 'app', 'api'), { recursive: true });

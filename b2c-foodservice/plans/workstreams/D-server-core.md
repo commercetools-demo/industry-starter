@@ -321,7 +321,7 @@ Run `cd storefront && npm run check` before ticking.
   - Implement 3.9; mock `fetch` with `vi.stubGlobal`.
   - Tests (spec: Client component needs data, hook half): `fetchJson returns parsed JSON on 200`, `fetchJson throws ApiError with the server code on a JSON error body`, `fetchJson throws ApiError internal_error on a non-JSON error`, `fetchJson maps a network failure to upstream_unavailable`.
 
-- [ ] **D-09 Architecture guard tests and the dev session route** `[SKILL: commercetools-storefront]`
+- [x] **D-09 Architecture guard tests and the dev session route** `[SKILL: commercetools-storefront]`
   - Files: `lib/architecture.test.ts`, `app/api/dev/session/route.ts`, `app/api/dev/session/route.test.ts`, `scripts/predeploy-check.mjs` (extend), `scripts/predeploy-check.test.ts` (extend).
   - `architecture.test.ts` walks `app lib hooks components context` (skip tests and fixtures) and reads source text:
     - `Raw fetch to commercetools: no fetch call targets a commercetools host` (regex on `fetch(` lines containing `commercetools.com`, `CTP_API_URL` or `CTP_AUTH_URL`; allowed only in `scripts/`).
