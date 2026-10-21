@@ -19,11 +19,13 @@ interface ContentPageProps {
   banners?: ReactNode;
   /** Full width body for two column pages (contact, journal). */
   wide?: boolean;
+  /** Breadcrumb entries between Home and the page title. Hrefs have no locale prefix. */
+  parents?: Array<{ label: string; href: string }>;
   children: ReactNode;
 }
 
 /** Breadcrumb, one h1, intro and a prose column of at most 68ch. Pages never render their own `<main>`. */
-export default function ContentPage({ title, eyebrow, intro, toc, contentLang, banners, wide, children }: ContentPageProps) {
+export default function ContentPage({ title, eyebrow, intro, toc, contentLang, banners, wide, parents, children }: ContentPageProps) {
   const t = useTranslations('content');
   return (
     <div className="wrap py-10 mobile:py-14">
@@ -34,6 +36,14 @@ export default function ContentPage({ title, eyebrow, intro, toc, contentLang, b
               {t('home')}
             </Link>
           </li>
+          {(parents ?? []).map((p) => (
+            <li key={p.href} className="contents">
+              <span aria-hidden="true">/</span>
+              <Link href={p.href} className="underline underline-offset-2 hover:text-accent">
+                {p.label}
+              </Link>
+            </li>
+          ))}
           <li aria-hidden="true">/</li>
           <li aria-current="page">{title}</li>
         </ol>
