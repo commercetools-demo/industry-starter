@@ -75,6 +75,16 @@ export const BUILT_ROUTES: ReadonlySet<string> = new Set<string>([
   faqHref(),
   journalHref(),
   ...POLICY_SLUGS.map(policyHref),
+  // Workstream L: account area (the tab pages are guarded; a guest lands on sign-in with the path kept).
+  '/account/orders',
+  '/account/collection',
+  '/account/subscriptions',
+  '/account/saved',
+  '/account/addresses',
+  '/account/payment-methods',
+  '/account/reviews',
+  '/account/profile',
+  '/account/settings',
 ]);
 
 /** The path decides (a query such as `?q=` does not), so a deep link into a built page stays a link. */

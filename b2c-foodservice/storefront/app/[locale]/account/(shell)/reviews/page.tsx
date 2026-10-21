@@ -14,9 +14,6 @@ export default async function AccountReviewsPage({ params }: { params: Promise<{
   const { locale } = await params;
   setRequestLocale(locale);
   await requireCustomerPage('/account/reviews');
-  return (
-    <div className="wrap py-10">
-      <MyReviews />
-    </div>
-  );
+  // The account frame (workstream L's `(shell)/layout.tsx`) provides the wrap, header and tabs.
+  return <MyReviews />;
 }

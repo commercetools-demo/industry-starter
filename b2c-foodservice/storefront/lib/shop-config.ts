@@ -3,6 +3,9 @@
 /** Promise bar "N-day returns" (Q-F-04: owner to confirm; VELA's 90 is a placeholder). */
 export const RETURN_DAYS = 30;
 
+/** Days after completion in which the account offers "Start a return" (Q-L-08, SO-L-b; measured from `lastModifiedAt`, Q-L-15). */
+export const RETURN_WINDOW_DAYS = 30;
+
 /** Quantity at or below which a store or the warehouse shows "Low stock" (Q-F-05). */
 export const LOW_STOCK_THRESHOLD = 5;
 

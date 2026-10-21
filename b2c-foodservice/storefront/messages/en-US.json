@@ -1302,5 +1302,311 @@
       "quantity": "x{quantity}"
     },
     "numberLabel": "Order"
+  },
+  "account": {
+    "eyebrow": "My account",
+    "greeting": "Hi, {first}",
+    "status": {
+      "open": "{count, plural, one {# open order} other {# open orders}}",
+      "openNone": "No open orders",
+      "ready": "{count} ready for collection",
+      "unavailable": "Orders unavailable"
+    },
+    "tabs": {
+      "label": "Account",
+      "orders": "Orders",
+      "collection": "Collection",
+      "subscriptions": "Subscriptions",
+      "saved": "Saved",
+      "addresses": "Addresses",
+      "payments": "Payment methods",
+      "reviews": "Reviews",
+      "profile": "Profile",
+      "settings": "Settings",
+      "signOut": "Sign out"
+    },
+    "panel": {
+      "unavailable": "{panel} is unavailable right now.",
+      "retry": "Try again",
+      "loading": "Loading…"
+    },
+    "subscriptions": {
+      "title": "Subscriptions",
+      "stub": "No subscriptions yet.",
+      "cta": "Shop coffee"
+    },
+    "reviews": {
+      "stub": "No reviews yet."
+    },
+    "greetingNoName": "Hi there",
+    "orders": {
+      "title": "Order history",
+      "empty": "No orders yet.",
+      "emptyCta": "Shop coffee",
+      "filterLabel": "Filter orders",
+      "filter": {
+        "all": "All",
+        "inProgress": "In progress",
+        "ready": "Ready for collection",
+        "completed": "Completed"
+      },
+      "emptyFiltered": "No orders match this filter.",
+      "orderNumber": "Order {number}",
+      "placedOn": "Placed {date}",
+      "itemsCount": "{count, plural, one {# item} other {# items}}",
+      "pill": {
+        "ordered": "Ordered",
+        "preparing": "Preparing",
+        "ready": "Ready for collection",
+        "shipped": "Shipped",
+        "collected": "Collected",
+        "delivered": "Delivered",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "readyBlock": "Ready at {store} · {hours}. Bring your ID and this order number.",
+      "readyBlockNoHours": "Ready at {store}. Bring your ID and this order number.",
+      "details": "View details",
+      "buyAgain": "Buy again",
+      "directions": "Get directions",
+      "more": "+{count} more",
+      "prev": "Previous",
+      "next": "Next",
+      "page": "Page {page} of {pages}",
+      "pagination": "Orders pages",
+      "notFound": "We couldn't find that order.",
+      "notFoundHelp": "Check the number or go back to your orders.",
+      "backToOrders": "Back to orders",
+      "breadcrumb": "Orders",
+      "reorder": {
+        "added": "{count, plural, one {# item added to your bag.} other {# items added to your bag.}}",
+        "nothingAdded": "Nothing could be added to your bag.",
+        "skippedTitle": "These items could not be added",
+        "reason": {
+          "unavailable": "No longer available",
+          "out_of_stock": "Out of stock",
+          "not_found": "No longer in our range",
+          "price_missing": "No price in your country"
+        },
+        "viewBag": "View bag",
+        "close": "Close",
+        "failed": "We could not add these items. Try again."
+      },
+      "detail": {
+        "deliveries": "Shipments",
+        "parcel": "Parcel {n}",
+        "tracking": "Track parcel",
+        "trackingId": "Tracking number {id}",
+        "noTracking": "Tracking will appear here",
+        "items": "Items",
+        "quantity": "Quantity {count}",
+        "collection": "Collection",
+        "shippingAddress": "Delivery address",
+        "subtotal": "Subtotal",
+        "shipping": "Shipping",
+        "tax": "Tax",
+        "total": "Total",
+        "stateOrdered": "Ordered",
+        "tracker": "Order progress",
+        "fulfilment": {
+          "collect": "Collect in store",
+          "delivery": "Delivery",
+          "subscribe": "Subscription"
+        },
+        "refresh": "This page updates while your order is being prepared."
+      },
+      "return": {
+        "start": "Start a return",
+        "title": "Which items are you returning?",
+        "reason": "Reason",
+        "reasons": {
+          "none": "Choose a reason (optional)",
+          "damaged": "Damaged",
+          "wrong": "Wrong item",
+          "notAsDescribed": "Not as described",
+          "changedMind": "Changed my mind"
+        },
+        "submit": "Start return",
+        "closed": "The return window for this order has closed.",
+        "title2": "Returns",
+        "windowEnds": "You can start a return until {date}.",
+        "quantityLabel": "Quantity to return of {name}",
+        "pickOne": "Choose at least one item.",
+        "failed": "We could not start the return. Try again.",
+        "started": "Return started.",
+        "shipmentLabel": "Goods",
+        "paymentLabel": "Refund",
+        "shipment": {
+          "Advised": "Return announced",
+          "Returned": "Goods received",
+          "BackInStock": "Back in stock",
+          "Unusable": "Cannot be resold"
+        },
+        "payment": {
+          "Initial": "Refund pending",
+          "Refunded": "Refunded",
+          "NotRefunded": "Not refunded",
+          "NonRefundable": "Not refundable"
+        },
+        "trackingId": "Return tracking {id}"
+      }
+    },
+    "collection": {
+      "title": "Your collection store",
+      "help": "We use this store for live availability and collection orders.",
+      "change": "Change store",
+      "none": "No store chosen yet.",
+      "chooseStore": "Choose a store",
+      "phone": "Phone {phone}",
+      "unavailable": "Your store could not be loaded.",
+      "tile": {
+        "fast": "Fast collection",
+        "fastText": "Ready in about {minutes, number} minutes",
+        "shipping": "Free delivery",
+        "shippingText": "Free shipping over {threshold}",
+        "subscribe": "Subscribe and save",
+        "subscribeText": "Never run out of coffee"
+      }
+    },
+    "addresses": {
+      "title": "Addresses",
+      "empty": "No saved addresses.",
+      "emptyHelp": "Add an address and we will offer it at checkout.",
+      "add": "Add address",
+      "edit": "Edit",
+      "delete": "Delete",
+      "makeDefault": "Make default",
+      "default": "Default",
+      "label": "Name this address (Home, Work)",
+      "addTitle": "Add an address",
+      "editTitle": "Edit address",
+      "deleteConfirm": "Delete this address?",
+      "deleteDefaultPromote": "This is your default address. {label} will become your default.",
+      "deleteDefaultNone": "This is your default address. You will have no default until you choose one.",
+      "deleteAction": "Delete address",
+      "deleteKeep": "Keep it",
+      "deleted": "Address deleted.",
+      "saved": "Address saved.",
+      "failed": "We could not save the address. Try again.",
+      "list": "Saved addresses",
+      "form": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "street": "Street address",
+        "street2": "Apartment, suite, unit (optional)",
+        "city": "City",
+        "state": "State",
+        "statePlaceholder": "Choose a state",
+        "postalCode": "ZIP code",
+        "postalCodeCA": "Postal code",
+        "country": "Country",
+        "phone": "Phone (optional)",
+        "makeDefault": "Make this my default address",
+        "save": "Save address",
+        "cancel": "Cancel",
+        "countries": {
+          "US": "United States",
+          "CA": "Canada"
+        },
+        "error": {
+          "required": "This field is required.",
+          "too_long": "This is too long.",
+          "invalid": "Check this value.",
+          "unsupported": "We do not deliver there."
+        }
+      },
+      "verify": {
+        "title": "Check this address",
+        "unresolved": "We couldn't confirm: {fields}.",
+        "suggestion": "Did you mean: {address}",
+        "useSuggestion": "Use suggestion",
+        "keepMine": "Keep what I typed",
+        "edit": "Edit"
+      }
+    },
+    "payments": {
+      "title": "Payment methods",
+      "empty": "No saved cards.",
+      "emptyHelp": "Cards you choose to save while paying appear here.",
+      "hostedOnly": "Card details are only ever entered in our secure payment form at checkout.",
+      "default": "Default",
+      "remove": "Remove",
+      "makeDefault": "Make default",
+      "shop": "Browse the shop",
+      "removed": "Payment method removed.",
+      "failed": "We could not change this payment method. Try again.",
+      "list": "Saved payment methods",
+      "method": {
+        "card": "Card"
+      }
+    },
+    "profile": {
+      "title": "Profile",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "emailHelp": "To change your email, contact us.",
+      "phone": "Phone",
+      "phoneHelp": "Used for your default delivery address.",
+      "phoneNoAddress": "Add an address to save a phone number.",
+      "defaultAddress": "Default address",
+      "defaultAddressNone": "No saved addresses",
+      "save": "Save changes",
+      "saved": "Changes saved.",
+      "failed": "We could not save your changes. Try again.",
+      "error": {
+        "required": "This field is required.",
+        "too_long": "This is too long.",
+        "invalid": "Check this value.",
+        "no_address": "Add an address first."
+      }
+    },
+    "password": {
+      "title": "Change password",
+      "current": "Current password",
+      "new": "New password",
+      "submit": "Update password",
+      "changed": "Password updated.",
+      "wrongCurrent": "Your current password is incorrect.",
+      "policy": "Your new password does not meet the requirements.",
+      "rateLimited": "Too many attempts. Try again later.",
+      "failed": "We could not update your password. Try again.",
+      "required": "Enter your current password."
+    },
+    "settings": {
+      "title": "Settings",
+      "saveFailed": "Could not save. Try again.",
+      "noPrefs": "There are no email or text message settings: we do not send marketing messages."
+    },
+    "delete": {
+      "button": "Delete account",
+      "title": "Delete your account?",
+      "erased": "This erases your profile, addresses, saved items and saved cards.",
+      "retained": "Order records are kept for legal and tax reasons.",
+      "password": "Enter your password to confirm",
+      "confirm": "Delete my account",
+      "cancel": "Keep my account",
+      "wrong": "That password is not correct.",
+      "rateLimited": "Too many attempts. Try again later.",
+      "failed": "We could not delete your account. Try again.",
+      "done": "Your account was deleted.",
+      "section": "Delete your account"
+    },
+    "saved": {
+      "title": "Saved items",
+      "empty": "Nothing saved yet. Tap the heart on any product.",
+      "browse": "Browse",
+      "fromBag": "Save items from my bag",
+      "addAll": "Add all to bag",
+      "added": "{count, plural, one {# item added to your bag.} other {# items added to your bag.}}",
+      "nothingAdded": "Nothing could be added to your bag.",
+      "skippedTitle": "These items could not be added",
+      "remove": "Remove from saved",
+      "gone": "No longer available",
+      "failed": "We could not add your saved items. Try again.",
+      "fromBagFailed": "We could not save the items from your bag. Try again.",
+      "viewBag": "View bag",
+      "close": "Close"
+    }
   }
 }

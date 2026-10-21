@@ -156,3 +156,11 @@ New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import
 - Only `lib/checkout/hosted-sdk.ts` imports the Checkout Browser SDK (ESLint exception); `lib/checkout/theme.ts` reads design tokens for its `styles`. `lib/ct/checkout-session.ts` is the one raw `fetch` (Sessions API; `CTP_CHECKOUT_APP_KEY`, optional `CTP_SESSION_URL` for the local mock only).
 - Orders: `lib/ct/orders.ts` (`getOrderView`, `ensureOrderState`), `lib/mappers/order.ts`; `components/order/OrderStatusTrack` and `nodeStates` are reusable by L. `lib/checkout/guards.ts` `EXTRA_BLOCKERS` is where N adds its sign-in rule; `lib/checkout/post-order.ts` `postOrderHooks` is N's hook.
 - Mock: `scripts/mock-fixtures/mock-orders.mjs` (orders, Sessions API, `POST /__mock/place-order`); `plans/evidence/K/mock-flow.mjs` drives the whole flow through the API. Dev tool: `cd seed && npm run seed:order -- state --order-number MC-... --to preparing --dry-run`.
+
+## Account area (workstream L)
+
+- Shell: `app/[locale]/account/(shell)/layout.tsx` gives a signed-in customer `AccountShell` (tabs, header); every page calls `requireCustomerPage('/account/<tab>')`. The Collection tab is US only (404 in Canada).
+- Server: `lib/ct/account-orders.ts`, `reorder.ts`, `addresses.ts`, `customer.ts`, `payment-methods.ts`, `shopping-lists.ts`; pure rules in `lib/account/*` (order status, returns window, address policy and validation). Order detail is `/api/orders/number/[orderNumber]`; unknown and foreign orders both answer 404.
+- Payment methods are read only (token never leaves the server); scopes are `view_payment_methods` and `manage_payment_methods`. Remove sets Inactive (a default method is first set to non-default).
+- `useSavedItems` keeps its API: sessionStorage for guests, the server shopping list for signed-in customers (merged once at sign-in).
+- Mock server: `scripts/mock-fixtures/mock-account.mjs` (orders in every state for Maya US, Priya Canada, a foreign order for Liam). Dev tooling: `npm run seed:order-ship` in `seed/`.

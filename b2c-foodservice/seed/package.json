@@ -16,6 +16,7 @@
     "seed:inventory": "tsx src/inventory.ts",
     "seed:cleanup": "tsx src/cleanup.ts",
     "seed:images": "tsx src/images.ts",
+    "seed:order-ship": "tsx src/order-ship.ts",
     "verify": "tsx src/verify.ts",
     "reset": "tsx src/reset.ts",
     "seed:order": "tsx src/order-ops.ts"

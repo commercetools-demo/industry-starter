@@ -33,7 +33,14 @@ export type DomainErrorCode =
   | 'checkout_blocked'
   | 'collect_out_of_stock'
   | 'collect_not_available'
-  | 'order_not_found';
+  | 'order_not_found'
+  // Workstream L: account area.
+  | 'return_window_closed'
+  | 'not_returnable'
+  | 'address_needs_confirmation'
+  | 'current_password_invalid'
+  | 'list_full'
+  | 'list_empty';
 
 const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   invalid_credentials: 'Email or password is incorrect',
@@ -64,6 +71,12 @@ const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   collect_out_of_stock: 'An item is not in stock at the collection store',
   collect_not_available: 'Collection is not available in this market',
   order_not_found: 'Order not found',
+  return_window_closed: 'The return window for this order has closed',
+  not_returnable: 'This order cannot be returned',
+  address_needs_confirmation: 'Please check this address',
+  current_password_invalid: 'The current password is incorrect',
+  list_full: 'Your saved items list is full',
+  list_empty: 'You have no saved items',
 };
 
 /** Same envelope as D: `{ error: { code, message, ...extra } }`. Extras are plain data (rule ids, retryAfterSeconds). */
