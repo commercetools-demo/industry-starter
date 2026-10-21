@@ -17,7 +17,8 @@ export function useCart(options: { initialCart?: Cart | null; enabled?: boolean 
     () => jsonFetcher<{ cart: Cart | null }>('/api/cart'),
     {
       revalidateOnFocus: true,
-      ...(initialCart !== undefined ? { fallbackData: { cart: initialCart } } : {}),
+      // The server just read the cart: no refetch on mount (a late answer could overwrite a faster write). Focus still revalidates.
+      ...(initialCart !== undefined ? { fallbackData: { cart: initialCart }, revalidateOnMount: false } : {}),
     },
   );
   // With a seeded or cached cart there is nothing to wait for (a background refresh is `isValidating`).

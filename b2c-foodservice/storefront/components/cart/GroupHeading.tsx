@@ -12,13 +12,16 @@ import { useMoney } from './use-cart-ui';
  * (no sub-line, no Change store); the page shows the full one.
  */
 export default function GroupHeading({
-  group, freeShipping, compact, onChangeStore,
+  group, freeShipping, compact, onChangeStore, level = 3,
 }: {
   group: CartGroup;
   freeShipping: Cart['freeShipping'];
   compact?: boolean;
   onChangeStore?: () => void;
+  /** Heading level: 3 under the drawer title, 2 under the page title. */
+  level?: 2 | 3;
 }) {
+  const Heading = level === 2 ? 'h2' : 'h3';
   const t = useTranslations('cart.group');
   const money = useMoney();
   const store = group.store;
@@ -46,9 +49,9 @@ export default function GroupHeading({
         <Icon name={icon} size={compact ? 16 : 20} />
       </span>
       <div className="min-w-0 flex-1">
-        <h3 className={`m-0 font-display font-semibold ${compact ? 'text-[13px] uppercase tracking-[0.04em] text-ink-2' : 'text-[17px]'}`}>
+        <Heading className={`m-0 font-display font-semibold ${compact ? 'text-[13px] uppercase tracking-[0.04em] text-ink-2' : 'text-[17px]'}`}>
           {title}
-        </h3>
+        </Heading>
         {line ? <p className="m-0 mt-0.5 text-[13px] text-ink-3">{line}</p> : null}
       </div>
       {!compact && group.kind === 'collect' && onChangeStore ? (

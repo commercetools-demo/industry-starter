@@ -121,7 +121,7 @@ export default function CartDrawer() {
           <FreeShippingProgress freeShipping={cart.freeShipping} />
         </div>
         {cart.groups.map((group) => (
-          <section key={group.key} aria-label={group.key}>
+          <section key={group.key}>
             <GroupHeading group={group} freeShipping={cart.freeShipping} compact />
             <ul className="m-0 list-none p-0">
               {linesOf(cart, group.lineIds).map((line) => (

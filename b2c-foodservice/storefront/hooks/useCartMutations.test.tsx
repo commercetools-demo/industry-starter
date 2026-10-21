@@ -126,7 +126,8 @@ describe('useCartMutations', () => {
     const seeded = renderHook(() => useCart({ initialCart: three }), { wrapper });
     expect(seeded.result.current.cart?.count).toBe(3);
     expect(seeded.result.current.isLoading).toBe(false);
-    await waitFor(() => expect(stub.calls.length).toBeGreaterThan(0)); // revalidates in the background
+    await Promise.resolve();
+    expect(stub.calls.filter((c) => c.url === '/api/cart')).toHaveLength(0); // the server just read it: no refetch on mount
     stub.fn.mockClear();
     renderHook(() => useCart({ enabled: false }), { wrapper });
     await Promise.resolve();
