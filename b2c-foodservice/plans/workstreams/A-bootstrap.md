@@ -352,7 +352,7 @@ Do them in order. Commit after each. Run `cd storefront && npm run check` before
   - Steps: section 3.5, 3.6. Test mocks `@/lib/ct/client` with `vi.mock` returning `{ apiRoot: { get: () => ({ execute: async () => ({ body: { key: 'malva-test' } }) }) } }` and mocks `@/lib/env` for `EXPECTED_PROJECT_KEY`.
   - Tests (spec: Credentials valid, Deploy gate): `Credentials valid: health returns 200 with the project key and no secret` (assert the JSON text does not contain the mocked secret and has only `ok` and `projectKey`), `Health failure returns upstream_unavailable without details`, `Wrong project key from the API is reported`, `Deploy gate fails while app/api/health/route.ts exists`, `Deploy gate passes when the route is removed` (temp dir).
 
-- [ ] **A-09 Images config** `[SKILL: commercetools-storefront]`
+- [x] **A-09 Images config** `[SKILL: commercetools-storefront]`
   - Files: `next.config.ts`, `next.config.test.ts`.
   - Steps: keep `images.unoptimized: true`; replace the `{ hostname: '**' }` pattern by `[{ protocol: 'https', hostname: '**' }]` only (drop `storage.googleapis.com`, redundant; the spec says allow https remote patterns). Import `nextConfig` from the file in a test (export the unwrapped config as `export const baseConfig` and `export default withNextIntl(baseConfig)`).
   - Tests (spec: Image handling): `Images are unoptimized and https remote patterns are allowed`. The "Stored URL with a query" scenario is tested where the URL is written: seed workstream C (`strips query and fragment from stored image URLs`); this file lists it as covered there.

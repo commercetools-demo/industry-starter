@@ -3,14 +3,12 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
-const nextConfig: NextConfig = {
+export const baseConfig: NextConfig = {
   images: {
+    // Images are resized at render time by the image source, never by Next.
     unoptimized: true,
-    remotePatterns: [
-      { protocol: 'https', hostname: 'storage.googleapis.com' },
-      { protocol: 'https', hostname: '**' },
-    ],
+    remotePatterns: [{ protocol: 'https', hostname: '**' }],
   },
 };
 
-export default withNextIntl(nextConfig);
+export default withNextIntl(baseConfig);
