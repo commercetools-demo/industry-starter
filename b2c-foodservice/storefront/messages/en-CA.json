@@ -1169,6 +1169,118 @@
     "reviews": {
       "stub": "No reviews yet."
     },
-    "greetingNoName": "Hi there"
+    "greetingNoName": "Hi there",
+    "orders": {
+      "title": "Order history",
+      "empty": "No orders yet.",
+      "emptyCta": "Shop coffee",
+      "filterLabel": "Filter orders",
+      "filter": {
+        "all": "All",
+        "inProgress": "In progress",
+        "ready": "Ready for collection",
+        "completed": "Completed"
+      },
+      "emptyFiltered": "No orders match this filter.",
+      "orderNumber": "Order {number}",
+      "placedOn": "Placed {date}",
+      "itemsCount": "{count, plural, one {# item} other {# items}}",
+      "pill": {
+        "ordered": "Ordered",
+        "preparing": "Preparing",
+        "ready": "Ready for collection",
+        "shipped": "Shipped",
+        "collected": "Collected",
+        "delivered": "Delivered",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "readyBlock": "Ready at {store} · {hours}. Bring your ID and this order number.",
+      "readyBlockNoHours": "Ready at {store}. Bring your ID and this order number.",
+      "details": "View details",
+      "buyAgain": "Buy again",
+      "directions": "Get directions",
+      "more": "+{count} more",
+      "prev": "Previous",
+      "next": "Next",
+      "page": "Page {page} of {pages}",
+      "pagination": "Orders pages",
+      "notFound": "We couldn't find that order.",
+      "notFoundHelp": "Check the number or go back to your orders.",
+      "backToOrders": "Back to orders",
+      "breadcrumb": "Orders",
+      "reorder": {
+        "added": "{count, plural, one {# item added to your bag.} other {# items added to your bag.}}",
+        "nothingAdded": "Nothing could be added to your bag.",
+        "skippedTitle": "These items could not be added",
+        "reason": {
+          "unavailable": "No longer available",
+          "out_of_stock": "Out of stock",
+          "not_found": "No longer in our range",
+          "price_missing": "No price in your country"
+        },
+        "viewBag": "View bag",
+        "close": "Close",
+        "failed": "We could not add these items. Try again."
+      },
+      "detail": {
+        "deliveries": "Shipments",
+        "parcel": "Parcel {n}",
+        "tracking": "Track parcel",
+        "trackingId": "Tracking number {id}",
+        "noTracking": "Tracking will appear here",
+        "items": "Items",
+        "quantity": "Quantity {count}",
+        "collection": "Collection",
+        "shippingAddress": "Delivery address",
+        "subtotal": "Subtotal",
+        "shipping": "Shipping",
+        "tax": "Tax",
+        "total": "Total",
+        "stateOrdered": "Ordered",
+        "tracker": "Order progress",
+        "fulfilment": {
+          "collect": "Collect in store",
+          "delivery": "Delivery",
+          "subscribe": "Subscription"
+        },
+        "refresh": "This page updates while your order is being prepared."
+      },
+      "return": {
+        "start": "Start a return",
+        "title": "Which items are you returning?",
+        "reason": "Reason",
+        "reasons": {
+          "none": "Choose a reason (optional)",
+          "damaged": "Damaged",
+          "wrong": "Wrong item",
+          "notAsDescribed": "Not as described",
+          "changedMind": "Changed my mind"
+        },
+        "submit": "Start return",
+        "closed": "The return window for this order has closed.",
+        "title2": "Returns",
+        "windowEnds": "You can start a return until {date}.",
+        "quantityLabel": "Quantity to return of {name}",
+        "pickOne": "Choose at least one item.",
+        "failed": "We could not start the return. Try again.",
+        "started": "Return started.",
+        "shipmentLabel": "Goods",
+        "paymentLabel": "Refund",
+        "shipment": {
+          "Advised": "Return announced",
+          "Returned": "Goods received",
+          "BackInStock": "Back in stock",
+          "Unusable": "Cannot be resold"
+        },
+        "payment": {
+          "Initial": "Refund pending",
+          "Refunded": "Refunded",
+          "NotRefunded": "Not refunded",
+          "NonRefundable": "Not refundable"
+        },
+        "trackingId": "Return tracking {id}"
+      }
+    }
   }
 }

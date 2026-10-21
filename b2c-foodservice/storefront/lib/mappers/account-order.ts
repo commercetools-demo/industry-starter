@@ -33,7 +33,7 @@ function collectInfo(order: Order, locale: string, now: Date): OrderCollectInfo 
   const window = todayHours(store, now, store.timeZone);
   return {
     storeName: store.name,
-    hours: window ? `${window.open} to ${window.close}` : null,
+    hours: window ? `${window.open}–${window.close}` : null,
     lat: store.geo?.lat ?? null,
     lng: store.geo?.lng ?? null,
   };

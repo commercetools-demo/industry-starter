@@ -10,7 +10,7 @@ describe('mapOrderListItem', () => {
     expect(o.status).toBe('ready');
     expect(o.hasCollect).toBe(true);
     expect(o.hasShip).toBe(false);
-    expect(o.collect).toEqual({ storeName: 'Malva SoHo', hours: '07:00 to 18:00', lat: 40.72, lng: -74 });
+    expect(o.collect).toEqual({ storeName: 'Malva SoHo', hours: '07:00–18:00', lat: 40.72, lng: -74 });
   });
 
   it('a delivery order has no collect block and counts units', () => {
