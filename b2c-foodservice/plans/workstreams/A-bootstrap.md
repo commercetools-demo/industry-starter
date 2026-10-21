@@ -327,7 +327,7 @@ Do them in order. Commit after each. Run `cd storefront && npm run check` before
   - Steps: install packages of section 3.9; write config exactly as shown; add scripts; `.nvmrc` = `22`; `engines`. Smoke test `it('Fresh clone builds: the test runner starts')` asserting `COUNTRY_CONFIG['en-US'].currency === 'USD'`.
   - Tests: the smoke test; `npm run check` passes (lint may report warnings from the generated code: fix them, do not disable rules).
 
-- [ ] **A-04 Version gate (script and tests)** `[SKILL: commercetools-platform]`
+- [x] **A-04 Version gate (script and tests)** `[SKILL: commercetools-platform]`
   - Files: `scripts/check-versions.mjs`, `scripts/check-versions.test.ts`.
   - Implement per section 3.11. The CLI form is `node scripts/check-versions.mjs` (used in `predeploy` and by hand).
   - Tests (spec: Forbidden version, Fresh clone builds): `Forbidden version: next 15.x fails with the version rule`, `Forbidden version: next-intl 3 fails`, `Forbidden version: platform-sdk 9 fails`, `Forbidden version: missing .nvmrc fails`, `Stack and version gates pass on the real repository`.
