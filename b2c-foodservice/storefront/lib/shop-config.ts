@@ -35,3 +35,10 @@ export const SHIP_DAYS_MAX = 4;
 export const PDP_MAX_QUANTITY = 99;
 /** M's reviews section mounts on the product page when true; until then the slot renders nothing (Q-H-14). */
 export const REVIEWS_ENABLED = false;
+
+// Workstream I: cart.
+
+/** Minimum order value per currency in minor units; 0 means off (Q-I-02, owner decision SO-x2). Compared with the subtotal. */
+export const MIN_ORDER_VALUE: Record<string, number> = { USD: 0, CAD: 0 };
+/** Highest quantity of one cart line (Q-I-12), further limited by stock. */
+export const CART_MAX_LINE_QUANTITY = 99;
