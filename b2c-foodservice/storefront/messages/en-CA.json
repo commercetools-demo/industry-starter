@@ -677,5 +677,253 @@
     "matchedVariant": "Matched SKU {sku}",
     "swatchMore": "+{n}",
     "colours": "Colours: {list}"
+  },
+  "pdp": {
+    "breadcrumb": {
+      "aria": "Breadcrumb",
+      "home": "Home"
+    },
+    "noPhoto": "Photo coming soon",
+    "gallery": {
+      "label": "Product images",
+      "thumb": "Show image {n} of {total}",
+      "alt": "{name}, view {n}"
+    },
+    "priceFrom": "From {amount}",
+    "priceOnRequest": "Price on request",
+    "unitPrice": {
+      "capsule": "{amount} per capsule",
+      "100g": "{amount} per 100 g"
+    },
+    "rating": {
+      "firstReview": "Be the first to review",
+      "summary": "Customer rating",
+      "average": "{value} out of 5",
+      "count": "{count, plural, one {# review} other {# reviews}}",
+      "stars": "{stars} stars",
+      "bar": "{stars} stars: {count, plural, one {# review} other {# reviews}}",
+      "link": "{value} out of 5, {count, plural, one {# review} other {# reviews}}"
+    },
+    "selector": {
+      "choose": "Choose a {choice}",
+      "groupValue": "{label} - {value}",
+      "label": {
+        "capsulesPerPack": "Pack",
+        "sizeGrams": "Size",
+        "grind": "Grind",
+        "colour": "Colour",
+        "bundle": "Bundle"
+      },
+      "choice": {
+        "capsulesPerPack": "pack size",
+        "sizeGrams": "size",
+        "grind": "grind",
+        "colour": "colour",
+        "bundle": "bundle"
+      }
+    },
+    "pack": {
+      "sleeve": "{n} sleeve",
+      "box": "{n} box",
+      "other": "{n} pack"
+    },
+    "size": {
+      "g": "{n} g",
+      "kg": "{n} kg"
+    },
+    "guide": {
+      "close": "Close",
+      "compat": {
+        "link": "Compatibility guide",
+        "title": "Which capsules fit which machine",
+        "intro": "Our capsules are compatible with Nespresso Original and Nespresso Vertuo machines. Malva Coffee is not affiliated with those brands.",
+        "machine": "Machine",
+        "takes": "Takes",
+        "rowOriginal": "Original machines",
+        "rowVertuo": "Vertuo machines",
+        "rowNone": "Bean to cup, espresso, filter machines and grinders",
+        "takesOriginal": "Original capsules",
+        "takesVertuo": "Vertuo capsules",
+        "takesNone": "Does not use capsules",
+        "note": "Original and Vertuo capsules are not interchangeable.",
+        "browseOriginal": "Shop Original pods",
+        "browseVertuo": "Shop Vertuo pods"
+      },
+      "grind": {
+        "link": "Grind guide",
+        "title": "Which grind for which brew",
+        "intro": "Choose the grind that matches how you brew. Whole bean suits every method if you grind it yourself.",
+        "grind": "Grind",
+        "methods": "Best for",
+        "rows": {
+          "whole-bean": "Any method, ground at home just before brewing",
+          "espresso": "Espresso machines",
+          "filter": "Drip machines and pour over",
+          "french-press": "French press and cold brew",
+          "moka": "Moka pots"
+        }
+      }
+    },
+    "option": {
+      "notAvailableForCollection": "Not available for collection at this store",
+      "noPrice": "No price available",
+      "bundleNotForMachine": "Not offered for this machine",
+      "noVariant": "Not available in this combination"
+    },
+    "system": {
+      "original": "Nespresso Original compatible",
+      "vertuo": "Nespresso Vertuo compatible",
+      "browseOther": "Looking for {system} capsules?"
+    },
+    "fulfil": {
+      "title": "How would you like it?",
+      "collect": {
+        "title": "Collect in store",
+        "line": "Free, ready in about {n} minutes",
+        "choose": "Choose a store"
+      },
+      "ship": {
+        "title": "Delivery",
+        "line": "Free over {threshold}, {min} to {max} days",
+        "lineFlat": "Delivered in {min} to {max} days"
+      },
+      "subscribe": {
+        "title": "Subscribe and save",
+        "line": "{interval}, skip or cancel any time",
+        "saving": "Save {percent}%"
+      }
+    },
+    "collect": {
+      "in": "In stock at {store}",
+      "low": "Low stock at {store}",
+      "out": "Unavailable at {store}",
+      "ready": "Ready today, in about {n} minutes",
+      "readyOn": "Ready {day} from {time}",
+      "day": {
+        "today": "today",
+        "tomorrow": "tomorrow"
+      },
+      "change": "Change",
+      "chooseStore": "Choose a store to see availability",
+      "chooseButton": "Choose a store",
+      "refreshing": "Checking this store"
+    },
+    "ship": {
+      "before": "Order in the next {hours, plural, one {# hour} other {# hours}} for delivery by {day}",
+      "after": "Order now for delivery by {day}",
+      "outOnline": "Out of stock online",
+      "backInDays": "Back in about {n, plural, one {# day} other {# days}}",
+      "expected": "Expected {date}"
+    },
+    "interval": {
+      "days": "{count, plural, one {Every day} other {Every # days}}",
+      "weeks": "{count, plural, one {Every week} other {Every # weeks}}",
+      "months": "{count, plural, one {Every month} other {Every # months}}"
+    },
+    "subscribe": {
+      "interval": "Delivery interval",
+      "price": "{amount} per delivery",
+      "oneTime": "{amount} one time",
+      "skipCancel": "Skip or cancel any time in your account"
+    },
+    "add": {
+      "select": "Select a {choice}",
+      "priceOnRequest": "Price on request",
+      "chooseStore": "Choose a store",
+      "unavailableCollect": "Unavailable for collection",
+      "outOfStock": "Out of stock",
+      "stockUnknown": "Stock could not be checked",
+      "reserve": "Reserve for collection",
+      "addToBag": "Add to bag",
+      "subscribe": "Subscribe",
+      "withTotal": "{label} - {total}"
+    },
+    "qty": {
+      "label": "Quantity",
+      "decrease": "Decrease quantity",
+      "increase": "Increase quantity",
+      "limit": "Only {n} available"
+    },
+    "toast": {
+      "reserved": "Reserved for collection"
+    },
+    "error": {
+      "collectGone": "That item just ran out at this store. Choose another store or have it delivered.",
+      "price": "This item has no price right now.",
+      "conflict": "Your bag changed while adding. Please try again.",
+      "market": "Collection is not available in your region.",
+      "generic": "We could not add that to your bag. Please try again.",
+      "stockUnknown": "Stock could not be checked right now.",
+      "title": "We could not load this product",
+      "retry": "Try again"
+    },
+    "trust": {
+      "returns": "{days}-day returns",
+      "quality": "Quality guarantee",
+      "sourced": "Responsibly sourced"
+    },
+    "acc": {
+      "details": "Details",
+      "brewing": "Brewing and care",
+      "shipping": "Shipping and collection"
+    },
+    "facts": {
+      "intensity": "Intensity",
+      "intensityAria": "Intensity {value} of 13",
+      "notes": "Flavour notes",
+      "roast": "Roast",
+      "origin": "Origin",
+      "roastLevels": {
+        "light": "Light",
+        "medium": "Medium",
+        "dark": "Dark"
+      }
+    },
+    "care": {
+      "pods": "Store capsules in a cool, dry place. Descale your machine every three months. Used capsules can be recycled where aluminium capsule recycling is available.",
+      "coffee": "Keep beans in an airtight container away from light and heat. Grind just before brewing and use water just off the boil.",
+      "machine": "Descale every three months, empty the water tank daily and rinse the drip tray. Use filtered water in hard-water areas.",
+      "accessory": "Hand wash with mild soap. Check the label on the product for dishwasher and heat guidance.",
+      "gift": "Store in a cool, dry place until gifting."
+    },
+    "shipping": {
+      "delivery": "Free delivery over {threshold}.",
+      "deliveryFlat": "Standard delivery in {min} to {max} business days.",
+      "collect": "Collect in store, ready in about {minutes} minutes.",
+      "returns": "Returns accepted within {days} days."
+    },
+    "spec": {
+      "system": "System",
+      "pressureBar": "Pressure",
+      "waterTankMl": "Water tank",
+      "powerWatts": "Power",
+      "features": "Features",
+      "warrantyMonths": "Warranty",
+      "decaf": "Decaf",
+      "organic": "Organic",
+      "fairtrade": "Fairtrade",
+      "process": "Process",
+      "brewMethods": "Brew methods",
+      "kind": "Type",
+      "material": "Material",
+      "capacityMl": "Capacity",
+      "contents": "Contents",
+      "occasion": "Occasion",
+      "yes": "Yes"
+    },
+    "specValue": {
+      "pressureBar": "{value} bar",
+      "waterTankMl": "{value} ml",
+      "powerWatts": "{value} W",
+      "warrantyMonths": "{value} months",
+      "capacityMl": "{value} ml"
+    },
+    "related": {
+      "title": "You may also like",
+      "goesWith": "Goes well with"
+    },
+    "reviews": {
+      "heading": "Customer reviews"
+    }
   }
 }

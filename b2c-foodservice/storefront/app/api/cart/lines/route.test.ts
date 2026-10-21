@@ -138,10 +138,9 @@ describe('POST /api/cart/lines', () => {
     }
     expect(ct.created).toHaveLength(0);
   });
-  it('collect and subscribe return 501 until H', async () => {
-    expect((await post({ ...ok, fulfilment: 'collect', storeKey: 'mcf-store-x' })).status).toBe(501);
-    expect((await post({ ...ok, fulfilment: 'subscribe', recurrencePolicyKey: 'mcf-every-month' })).status).toBe(501);
+  it('collect and subscribe need their key (the branches themselves are tested in route-fulfilment.test.ts)', async () => {
     expect((await post({ ...ok, fulfilment: 'collect' })).status).toBe(400);
+    expect((await post({ ...ok, fulfilment: 'subscribe' })).status).toBe(400);
     expect(ct.created).toHaveLength(0);
   });
   it('a second add reuses the cart from the session', async () => {

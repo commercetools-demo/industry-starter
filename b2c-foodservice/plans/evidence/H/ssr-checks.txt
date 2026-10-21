@@ -1,0 +1,8 @@
+Server-rendered HTML of the product route (next dev against the mock), US unless stated.
+
+/en-US/p/ember-ristretto/MCF-POD-EMBER-10   200  h1 "Ember Ristretto"; selectors: capsulesPerPack; cards: collect, delivery, subscribe; add button state addToBag; related strip; canonical http://.../en-US/p/ember-ristretto/MCF-POD-EMBER-10
+/en-US/p/ethiopia-yirgacheffe/MCF-COF-YIRG-250-WB  200  selectors: sizeGrams, grind; add button state "select" (Select a grind); cards: collect, delivery, subscribe
+/en-US/p/pod-one/MCF-MAC-POD1-BLA-M          200  selectors: colour, bundle; cards: collect, delivery (no subscribe); "Goes well with" strip present
+/en-CA/p/ember-ristretto/MCF-POD-EMBER-10   200  cards: delivery, subscribe (no collect)
+/en-US/p/x/NOPE-1                           200 with the not-found page, <meta name="robots" content="noindex">, NEXT_HTTP_ERROR_FALLBACK;404 (see Q-H-16: status is 200 because loading.tsx streams)
+/en-US/p/wrong/MCF-POD-EMBER-10?capsulesPerPack=50  200 streamed redirect to the canonical slug keeping the query (same cause)

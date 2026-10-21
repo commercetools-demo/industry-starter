@@ -4,7 +4,7 @@ import { availabilityState } from '@/lib/availability';
 import { apiRoot } from '@/lib/ct/client';
 import { AppError } from '@/lib/errors';
 import { LOW_STOCK_THRESHOLD } from '@/lib/shop-config';
-import type { SkuAvailability, Store } from '@/lib/types';
+import type { InventoryDetail, SkuAvailability, Store } from '@/lib/types';
 
 export const SKU_PATTERN = /^[A-Za-z0-9._-]{1,64}$/;
 
@@ -64,4 +64,43 @@ export async function getAvailabilityForSkus(
   return unique.map((sku) =>
     mapEntries(sku, body.results.filter((e) => e.sku === sku), storeChannels),
   );
+}
+
+/**
+ * Stock detail for the product page (workstream H, 3.3): per SKU the online entry (no supply channel) with its restock
+ * and cart quantity fields, and the quantity per store channel id. A SKU with no entry is absent from the result.
+ * Strongly consistent source (`variant.availability` is eventually consistent and is not used here); never cached.
+ */
+export async function getInventoryDetail(skus: string[]): Promise<Record<string, InventoryDetail>> {
+  const unique = [...new Set(skus.map(assertValidSku))];
+  if (unique.length === 0) return {};
+  const { body } = await apiRoot
+    .inventory()
+    .get({ queryArgs: { where: `sku in (${unique.map((s) => `"${s}"`).join(', ')})`, limit: 500 } })
+    .execute();
+  const out: Record<string, InventoryDetail> = {};
+  for (const e of body.results) {
+    const entry = (out[e.sku] ??= { online: 0, stores: {} });
+    if (e.supplyChannel) {
+      entry.stores[e.supplyChannel.id] = e.availableQuantity;
+    } else {
+      entry.online = e.availableQuantity;
+      if (e.restockableInDays !== undefined) entry.restockableInDays = e.restockableInDays;
+      if (e.expectedDelivery) entry.expectedDelivery = e.expectedDelivery;
+      if (e.minCartQuantity !== undefined) entry.minQty = e.minCartQuantity;
+      if (e.maxCartQuantity !== undefined) entry.maxQty = e.maxCartQuantity;
+    }
+  }
+  return out;
+}
+
+/** Available quantity of one SKU at one store channel (0 when there is no entry). The binding check before a collect line. */
+export async function getStoreStock(sku: string, channelId: string): Promise<number> {
+  assertValidSku(sku);
+  if (!/^[A-Za-z0-9-]{1,64}$/.test(channelId)) throw new AppError('validation_failed', 400);
+  const { body } = await apiRoot
+    .inventory()
+    .get({ queryArgs: { where: `sku="${sku}" and supplyChannel(id="${channelId}")`, limit: 1 } })
+    .execute();
+  return body.results[0]?.availableQuantity ?? 0;
 }

@@ -14,7 +14,7 @@ Updated 2026-10-21 (owner answers D-030 to D-039 applied to every plan). States:
 | E | Design system | 2 | Ready for review | E-01 to E-12 done; browser recipe run (plans/evidence/E/); owner rows SO-x, M-E-01 to M-E-03 |
 | F | Shell and pickers | 3 | Ready for review (offline) | F-01 to F-12 done; browser recipe run against a local mock upstream (plans/evidence/F/), live re-run blocked: OA-x1; owner rows OA-x1, SO-x1, M-F-01 to M-F-03; questions Q-F-01 to Q-F-18 |
 | G | Browse | 4 | Ready for review (offline) | G-00 to G-13 done against a mock upstream serving the seed data; build passes, three listing routes dynamic; live gates (a), (c), (e) and `limit: 0` pending the seed run: OA-G-a; owner rows OA-x2, SO-x1, M-G-01 to M-G-04; questions Q-G-01 to Q-G-22; see plans/evidence/G/README.md |
-| H | Product detail | 5 | Not started | |
+| H | Product detail | 5 | Ready for review (offline) | H-00 to H-10 done against the mock upstream; build passes, route dynamic; live checks pending: OA-H-a; browser recipe not driven (browser busy): M-H-03; owner rows OA-x2, SO-x1, SO-x2, M-H-01 to M-H-04; questions Q-H-01 to Q-H-21; see plans/evidence/H/README.md |
 | I | Cart | 6 | Not started | |
 | J | Auth and session | 7 | Ready for review (offline) | J-01 to J-08 and J-07b done; browser recipe run against the mock (plans/evidence/J/); J-09 probes blocked: OA-J-c; cart merge uses `AuthCart`, follow-up for I (Q-J-15); owner rows OA-J-a to OA-J-c, SO-J-a, M-J-01 to M-J-03 |
 | K | Checkout and confirmation | 8 | Not started | |
