@@ -15,6 +15,7 @@
     "verify:build": "next build && node scripts/check-bundle-secrets.mjs"
   },
   "dependencies": {
+    "@commercetools/checkout-browser-sdk": "^1.7.5",
     "@commercetools/platform-sdk": "^8.27.0",
     "@commercetools/ts-client": "^4.10.0",
     "jose": "^6.2.13",

@@ -1133,5 +1133,174 @@
       "loadError": "We could not load your reviews. Please try again.",
       "unavailable": "This product is no longer available."
     }
+  },
+  "checkout": {
+    "title": "Checkout",
+    "stepsLabel": "Checkout steps",
+    "steps": {
+      "review": "Review",
+      "pay": "Pay"
+    },
+    "cluster": {
+      "collect": "Pickup at {store}",
+      "delivery": "Delivery",
+      "subscribe": "Subscription",
+      "lineCollect": "Collect at {store}",
+      "lineDelivery": "Delivery",
+      "collectCount": "{count, plural, one {# item ready for collection.} other {# items ready for collection.}}",
+      "deliveryCount": "{count, plural, one {# item shipping to you.} other {# items shipping to you.}} You enter the address next.",
+      "subscribeCount": "{count, plural, one {# subscription, shipped to your delivery address.} other {# subscriptions, shipped to your delivery address.}}"
+    },
+    "delivery": {
+      "freeOver": "Free delivery on orders over {threshold}",
+      "days": "Delivery in {days}"
+    },
+    "pickup": {
+      "change": "Change",
+      "ready": "Ready in about {minutes} minutes",
+      "open": "Open today {hours}",
+      "closed": "Closed today",
+      "who": "Who's picking up?",
+      "me": "It's me",
+      "meHelp": "Bring a photo ID and your order number",
+      "other": "Someone else",
+      "otherHelp": "Add an alternate pickup person",
+      "name": "Pickup name"
+    },
+    "continue": "Continue to secure checkout",
+    "continuing": "Preparing secure checkout…",
+    "backToReview": "Back to review",
+    "payment": {
+      "secure": "Encrypted and secure. Card details are entered in the secure payment form and never reach Malva Coffee.",
+      "loading": "Loading secure checkout…",
+      "region": "Secure checkout",
+      "declined": "Your payment was not accepted. Check your details or try another card.",
+      "generic": "Something went wrong with the payment. Your bag is unchanged, please try again.",
+      "unavailable": "Secure checkout is not available right now. Please try again shortly.",
+      "partOf": "Payment {n} of {total}: {cluster}",
+      "firstDone": "Your collection order is placed. Your delivery order still needs payment.",
+      "placing": "Confirming your order…",
+      "consentIntro": "By placing your order you agree to our",
+      "consentTerms": "terms",
+      "consentJoin": "and",
+      "consentPrivacy": "privacy policy"
+    },
+    "placement": {
+      "retry": "We could not confirm your order. Check your bag and try again.",
+      "retryButton": "Review and try again"
+    },
+    "summary": {
+      "title": "Order summary",
+      "items": "{count, plural, one {# item} other {# items}}",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "shipping": "Shipping",
+      "tax": "Tax",
+      "total": "Total",
+      "free": "Free",
+      "nextStep": "Calculated in secure checkout",
+      "quantity": "x{quantity}",
+      "codes": "Codes"
+    },
+    "promo": {
+      "reasons": {
+        "DoesNotMatchCart": "Your bag doesn't meet this offer yet.",
+        "NotActive": "This offer isn't active.",
+        "NotValid": "This offer isn't valid.",
+        "MaxApplicationReached": "This offer has been used up.",
+        "ApplicationStoppedByPreviousDiscount": "A better offer already applies."
+      }
+    },
+    "issues": {
+      "review": "Review your bag",
+      "unavailable": "{name} is no longer available.",
+      "collectOut": "{name} is not in stock at {store}.",
+      "collectNotAvailable": "{name} can only be collected in the US market. Remove it or switch market.",
+      "priceChanged": "The price of {name} changed.",
+      "toCart": "Back to bag",
+      "currencyMismatch": "{name} is priced in another currency."
+    },
+    "signIn": {
+      "required": "Sign in to check out with this bag.",
+      "cta": "Sign in"
+    },
+    "empty": {
+      "title": "Nothing to check out",
+      "cta": "Shop coffee"
+    },
+    "loadFailed": "We could not load your checkout.",
+    "retry": "Try again",
+    "totalsChanged": "Your total changed. Check the summary and continue again.",
+    "errors": {
+      "pickup_name_required": "Enter the name of the person collecting.",
+      "pickup_name_invalid": "Use letters, spaces, apostrophes, hyphens and full stops only (2 to 80 characters).",
+      "person_invalid": "Choose who is picking up.",
+      "code_malformed": "That code does not look right."
+    }
+  },
+  "order": {
+    "confirmed": "Order confirmed",
+    "track": {
+      "label": "Collection progress",
+      "ordered": "Ordered",
+      "preparing": "Preparing",
+      "ready": "Ready",
+      "collected": "Collected",
+      "done": "done",
+      "current": "current",
+      "upcoming": "upcoming"
+    },
+    "collect": {
+      "title": "Collect at {store}",
+      "bring": "Bring a photo ID and your order number.",
+      "keepNumber": "Keep this number; you will need it to collect your order.",
+      "checkLater": "Check this page or your account for status.",
+      "pickupName": "Pickup name: {name}",
+      "hours": "Open today {hours}",
+      "ready": "Ready in about {minutes} minutes"
+    },
+    "ship": {
+      "title": "Delivery",
+      "estimate": "Estimated {window}",
+      "noTracking": "Tracking will appear here",
+      "track": "Track parcel",
+      "method": "{method}",
+      "to": "Shipping to {address}"
+    },
+    "subscription": {
+      "title": "Subscription",
+      "every": "Delivers {interval}",
+      "manage": "Manage"
+    },
+    "items": "Your items",
+    "total": "Total",
+    "viewAccount": "View in My Account",
+    "keepShopping": "Keep shopping",
+    "guest": {
+      "title": "Create an account with this order",
+      "body": "Keep track of your orders and reorder in a click.",
+      "cta": "Create account"
+    },
+    "none": {
+      "title": "No recent order",
+      "body": "We could not find an order to show here.",
+      "cta": "Shop coffee"
+    },
+    "linked": {
+      "title": "Also part of this purchase",
+      "order": "Order {number}"
+    },
+    "loadFailed": "We could not load this order.",
+    "retry": "Try again",
+    "summary": {
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "shipping": "Shipping",
+      "tax": "Tax"
+    },
+    "line": {
+      "quantity": "x{quantity}"
+    },
+    "numberLabel": "Order"
   }
 }

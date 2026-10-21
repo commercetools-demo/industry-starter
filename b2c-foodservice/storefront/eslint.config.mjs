@@ -69,7 +69,8 @@ const eslintConfig = defineConfig([
     rules: { 'no-restricted-syntax': ['error', CLIENT_BUILDER, ...RAW_HEX] },
   },
   {
-    files: ['lib/ct/**', 'lib/mappers/**', ...TESTS],
+    // lib/checkout/hosted-sdk.ts is the one module that imports the Checkout Browser SDK (workstream K, D-039); it is not the platform SDK.
+    files: ['lib/ct/**', 'lib/mappers/**', 'lib/checkout/hosted-sdk.ts', ...TESTS],
     rules: { 'no-restricted-imports': 'off' },
   },
   {

@@ -6,7 +6,9 @@ export const KEY_CART = 'cart';
 export const KEY_CART_COUNT = 'cart-count';
 export const keyCart = (customerId: string | null) => [KEY_CART, customerId ?? 'guest'] as const;
 
-export const keyOrders = (customerId: string) => ['orders', customerId] as const;
+/** Workstream K: the checkout state of the shopper (user-scoped, evicted at sign-out through USER_SCOPED_KEYS). */
+export const keyCheckout = (customerId: string | null) => ['checkout', customerId ?? 'guest'] as const;
+export const keyOrders =(customerId: string) => ['orders', customerId] as const;
 export const keyOrder = (customerId: string, orderId: string) => ['order', customerId, orderId] as const;
 export const keyAddresses = (customerId: string) => ['addresses', customerId] as const;
 export const keySavedItems = (customerId: string) => ['saved-items', customerId] as const;
