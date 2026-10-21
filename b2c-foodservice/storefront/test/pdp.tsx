@@ -1,4 +1,5 @@
 import type { RenderResult } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { unstable_serialize } from 'swr';
 import { keyChannels } from '@/lib/cache-keys';
 import type { Selection } from '@/lib/product/resolve-variant';
@@ -6,7 +7,7 @@ import { parseSelection } from '@/lib/product/selection';
 import type {
   Money, ProductPageData, RecurrencePolicyView, SelectorDef, Store, VariantStock, VariantView,
 } from '@/lib/types';
-import { renderShell } from '@/test/shell';
+import { renderShell, stubFetch } from '@/test/shell';
 
 /** Test data for the product page (workstream H). Plain objects, no commercetools types. */
 export const usd = (centAmount: number): Money => ({ centAmount, currencyCode: 'USD' });
@@ -115,6 +116,10 @@ export interface RenderPdpOptions {
   /** Key of the chosen store; omit for none. */
   selectedKey?: string | null;
   choose?: string;
+  /** Rendered next to the page inside the providers (probes). */
+  extra?: ReactNode;
+  /** Extra fetch stubs by URL prefix (the channel list and the cart count are always stubbed). */
+  routes?: Record<string, (init?: RequestInit) => unknown>;
 }
 
 /** Renders the whole page composition inside the shell providers with the channel list seeded. */
@@ -122,14 +127,19 @@ export async function renderPdp(data: ProductPageData, opts: RenderPdpOptions = 
   const { default: ProductDetail } = await import('@/components/pdp/ProductDetail');
   const locale = opts.locale ?? 'en-US';
   const us = locale === 'en-US';
+  const channels = { stores: us ? [STORE_SOHO, STORE_BK] : [], selectedKey: opts.selectedKey ?? null };
+  stubFetch({ '/api/channels': () => channels, '/api/cart/count': () => ({ count: 0 }), ...opts.routes });
   const landing = data.product.variants.find((v) => v.sku === (opts.landingSku ?? data.product.defaultSku));
   const initial: Selection = parseSelection(opts.query ?? {}, data.product.selectors, landing);
   return renderShell(
-    <ProductDetail data={data} initialSelection={initial} {...(opts.choose ? { choose: opts.choose } : {})} />,
+    <>
+      <ProductDetail data={data} initialSelection={initial} {...(opts.choose ? { choose: opts.choose } : {})} />
+      {opts.extra}
+    </>,
     {
       locale,
       fallback: {
-        [unstable_serialize(keyChannels(us ? 'US' : 'CA'))]: { stores: us ? [STORE_SOHO, STORE_BK] : [], selectedKey: opts.selectedKey ?? null },
+        [unstable_serialize(keyChannels(us ? 'US' : 'CA'))]: channels,
       },
     },
   );

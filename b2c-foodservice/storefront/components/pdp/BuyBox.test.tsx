@@ -1,9 +1,8 @@
 import { act, fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '@/test/axe';
 import { accessoryPage, coffeePage, machinePage, podPage, renderPdp, stock, variantView } from '@/test/pdp';
-import { stubFetch } from '@/test/shell';
 
 vi.mock('@/i18n/routing', async () => (await import('@/test/shell')).routingMock());
 vi.mock('next/image', () => ({
@@ -11,9 +10,6 @@ vi.mock('next/image', () => ({
   default: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} />,
 }));
 
-beforeEach(() => {
-  stubFetch({ '/api/channels': () => ({ stores: [], selectedKey: null }) });
-});
 afterEach(() => {
   vi.restoreAllMocks();
   vi.useRealTimers();
