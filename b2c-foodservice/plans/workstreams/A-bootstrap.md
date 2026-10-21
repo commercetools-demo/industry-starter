@@ -362,7 +362,7 @@ Do them in order. Commit after each. Run `cd storefront && npm run check` before
   - Steps: section 3.10. Then run `npm run lint` on the whole app, fix real violations in generated code.
   - Tests (spec: Server import in a client file; Quality gates): `Server import in a client file: lib/ct import fails with the boundary rule`, `Server import in a client file: @commercetools import fails`, `use client file importing lib/types passes`, `Bare next/link in locale UI fails`, `useRouter from next/navigation in locale UI fails`, `notFound from next/navigation passes`, `Link from @/i18n/routing passes`, `any fails`, `Raw hex in a component fails`, `Tailwind arbitrary hex fails`, `new ClientBuilder outside lib/ct/client.ts fails`, `new ClientBuilder in lib/ct/client.ts passes`.
 
-- [ ] **A-11 Bundle secret scan and verify:build** `[SKILL: commercetools-platform]`
+- [x] **A-11 Bundle secret scan and verify:build** `[SKILL: commercetools-platform]`
   - Files: `scripts/check-bundle-secrets.mjs`, `scripts/check-bundle-secrets.test.ts`.
   - Steps: section 3.11. Test creates a temp `.next/static/chunks/a.js` containing a fake secret value and expects one problem naming the variable (not the value) and none when absent.
   - Tests (spec: Client bundle scan): `Client bundle scan finds a secret value in .next/static and reports only the name`, `Client bundle scan passes on a clean build output`.
