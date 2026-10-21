@@ -98,7 +98,7 @@ export default function FulfilmentCards() {
                 c.disabled && 'cursor-not-allowed opacity-50',
               )}
             >
-              <span className="flex w-full items-center justify-between gap-2">
+              <span className="flex w-full flex-wrap items-center justify-between gap-x-2 gap-y-1">
                 <span className="flex items-center gap-2 text-[14px] font-semibold text-ink">
                   <Icon name={c.icon} size={18} />
                   {c.title}

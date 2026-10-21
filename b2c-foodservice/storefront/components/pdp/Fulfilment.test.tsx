@@ -34,6 +34,12 @@ const radio = (name: RegExp) => screen.queryByRole('radio', { name });
 const addButton = () => screen.getByTestId('add-to-bag');
 
 describe('fulfilment cards', () => {
+  it('title and saving badge wrap inside a narrow card instead of overflowing it', async () => {
+    await renderPdp(podPage());
+    const row = screen.getByText('Save 10%').parentElement as HTMLElement;
+    expect(row.className).toContain('flex-wrap');
+  });
+
   it('Subscribe appears only for subscribable non-machine variants with a recurring price', async () => {
     const pods = await renderPdp(podPage());
     expect(radio(/Subscribe and save/)).toBeInTheDocument();
