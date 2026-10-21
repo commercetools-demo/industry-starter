@@ -306,7 +306,7 @@ Run `cd storefront && npm run check` before ticking.
   - Implement 3.6. Fake store in the test: `{ version, data }`, `read` returns a copy, `write` throws `{statusCode:409}` when the passed version is stale and otherwise increments.
   - Tests (spec: Cart concurrency; Double click): `Double click: a stale version is re-read and applied once, not twice`, `A second 409 surfaces as conflict`, `A non-409 error is rethrown unchanged and not retried`, `Success on the first try reads once`.
 
-- [ ] **D-06 Image config and image mapper** `[SKILL: commercetools-storefront]`
+- [x] **D-06 Image config and image mapper** `[SKILL: commercetools-storefront]`
   - Files: `lib/ct/image-config.ts`, `lib/mappers/image.ts`, tests.
   - Implement 3.7 and the image row of 3.8.
   - Tests (spec: Image handling via bootstrap): `cleanImageUrl removes query and fragment`, `Transforms add size parameters to a clean URL`, `Transforms never double a query that is already stripped`, `A non-https or invalid URL is returned unchanged`, `mapImages stores and returns the clean URL even if the source has a query`, `Components call the three transforms: listing, detail and thumbnail differ in size`.

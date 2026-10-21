@@ -17,6 +17,8 @@ const rule = {
     const libCt = `${path.sep}lib${path.sep}ct`;
 
     function isServerOnly(source) {
+      // image-config is pure string work (no secrets); components call its transforms (bootstrap spec).
+      if (source === '@/lib/ct/image-config') return false;
       if (source.startsWith('@commercetools/')) return true;
       if (source === 'server-only') return true;
       if (source === '@/lib/ct' || source.startsWith('@/lib/ct/')) return true;

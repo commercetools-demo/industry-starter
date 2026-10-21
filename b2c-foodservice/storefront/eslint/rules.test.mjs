@@ -29,6 +29,10 @@ describe('BFF boundary rules', () => {
     expect(ids(messages)).toContain('no-restricted-imports');
   });
 
+  it('use client file importing lib/ct/image-config passes (the image transforms are shared)', async () => {
+    expect(await lint('image-config.good.tsx', 'components/widget.tsx')).toEqual([]);
+  });
+
   it('use client file importing lib/types passes', async () => {
     expect(await lint('boundary.good.tsx', 'components/widget.tsx')).toEqual([]);
   });
