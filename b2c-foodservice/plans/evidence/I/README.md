@@ -1,0 +1,5 @@
+# Evidence, workstream I
+
+- Unit and route tests: `storefront/app/api/cart/cart-routes.test.ts` (read, ownership, quantity, switch, merge, store change, codes), `app/api/session/market-carry-over.test.ts`, `components/cart/CartDrawer.test.tsx`, `CartPage.test.tsx`, `DroppedLinesNotice.test.tsx`, `lib/mappers/cart.test.ts`, `lib/ct/cart-enrich.test.ts`, `lib/cart/*.test.ts`, `hooks/useCartMutations.test.tsx`. `npm run check` and `npm run build` pass (cart routes dynamic).
+- API walk against the mock server and the dev server (`/tmp/api-check.mjs` flow): add ship and collect lines, GET totals (subtotal 17.50, shipping 6.95, tax 1.96, total 26.41), WELCOME10 applied, NOPE123 and COFFEE15 below 60 refused with reason and unchanged cart, switch to ship merges groups, quantity change, `/en-US/cart` renders (noindex), market switch to CA carried the bag into a CAD cart with collect lines as ship.
+- Not done: Chrome DevTools screenshots (the MCP browser profile was held by another session: "browser already running"), and the live-project checks of I-00 (no credentials). Both are rows OA-I-a and OA-I-b in `plans/notes/todo-I.md`.

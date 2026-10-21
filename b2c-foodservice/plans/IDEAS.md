@@ -41,3 +41,5 @@
 - (H) The bundle 'with milk frother' of the spec is not in the seed `bundle` enum (Q-H-06): seed request for a third value, then it appears with no code change.
 - (H) `tagline` text attribute on products (Q-H-19) and a sibling-system link by product key would let a pod page offer 'also for Vertuo' directly.
 - (H) Mock server gained placeholder images from placehold.co (MOCK_IMAGES=0 to turn off); it also had a duplicate `readBody` that stopped it starting on develop, fixed.
+- (I) Mock server now has a small cart engine plus POST /__mock/price and /__mock/stock hooks; a future K could reuse its reprice() for checkout totals.
+- (I) Cart notice copy could show the previous price ("was $10.00") once priceWas exists; the notice already carries `previous`.

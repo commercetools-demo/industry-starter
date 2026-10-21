@@ -20,3 +20,10 @@ Q-I-12 | Quantity ceiling per line? | 99, clamped to online stock for ship and s
 Q-I-13 | Template's 'Save cart action' and cross-sell block | Not built (saved items are L); machine/capsule nudge is the only cross-sell | No | Open
 Q-I-14 | Route Handler table lists DELETE /api/cart | Unused (405); discount codes use PATCH /api/cart; lead adjusts the table | No | Open
 Q-I-15 | Switching to Collect when no store is chosen | Open the store picker and retry with the chosen store | No | Open
+Q-I-16 | POST /api/cart/lines still answers a CartSummary; the full cart is read again after an add | useAddToCart sets the badge from the summary and revalidates KEY_CART (one extra GET); the drawer reads the cart only when opened | No | Open
+Q-I-17 | "Change store" on a collect group when the shopper picks the store that is already the session store | Nothing moves (a change is detected by the session store key changing); picking another store moves every collect line | No | Open
+Q-I-18 | changeCollectionStore with lines out of stock at the new store (plan lists 409 per line, recipe says keep the flag) | Lines move and carry the collect-unavailable flag (blocks checkout, Ship button offered); no 409 | No | Open
+Q-I-19 | priceWas line field is never written by the storefront (seed has no such field yet) | The price-updated mark shows only on the response that detected the change; a stored priceWas custom field is read when present | No | Open
+Q-I-20 | Discount codes with characters outside A-Z a-z 0-9 _ - | Answered as code_not_applied DoesNotExist without calling commercetools | No | Open
+Q-I-21 | A cart whose shipping mode differs from CART_SHIPPING_MODE | getCartView rebuilds it (new cart, lines and codes carried, old cart expires in 1 day); K must set the constant deliberately | No (K) | Open
+Q-I-22 | Dropped codes after a region switch | Returned as droppedCodes in the market response (only codes that matched in the old bag) but not shown to the shopper | No | Open

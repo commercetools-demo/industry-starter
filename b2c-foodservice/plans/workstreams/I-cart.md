@@ -201,7 +201,7 @@ Input (pill, label "Discount code", visually hidden label allowed), Apply button
 
 Common rules as in G and H. `npm run check` after each task; commit `ws-i: I-0x ...`.
 
-- [ ] **I-00 Preconditions and platform checks.** With the MCP and the running app verify on the live project: `setLineItemSupplyChannel` without a channel removes it; `addDiscountCode` with a bad code returns `DiscountCodeNonApplicable` with a `reason`; `discountCodes[].state` values; `shippingInfo` appears after `setShippingMethod` with `mcf-ship-standard` and respects `freeAbove`; `taxedPrice` exists for a US cart with `shippingAddress.country` only; whether the line custom type has `priceWas` and which attributes have `savedToLineItem`; `recalculate` with `updateProductData: true` updates a changed price. Record in `plans/evidence/I/mcp-checks.md`; surprises to `PROJECT-FINDINGS.md`; missing seed items to `plans/notes/seed-requests.md`. [SKILL: commercetools-storefront] [SKILL: commercetools-commerce-patterns]
+- [ ] **I-00 Preconditions and platform checks.** blocked: OA-I-a (live API client).** With the MCP and the running app verify on the live project: `setLineItemSupplyChannel` without a channel removes it; `addDiscountCode` with a bad code returns `DiscountCodeNonApplicable` with a `reason`; `discountCodes[].state` values; `shippingInfo` appears after `setShippingMethod` with `mcf-ship-standard` and respects `freeAbove`; `taxedPrice` exists for a US cart with `shippingAddress.country` only; whether the line custom type has `priceWas` and which attributes have `savedToLineItem`; `recalculate` with `updateProductData: true` updates a changed price. Record in `plans/evidence/I/mcp-checks.md`; surprises to `PROJECT-FINDINGS.md`; missing seed items to `plans/notes/seed-requests.md`. [SKILL: commercetools-storefront] [SKILL: commercetools-commerce-patterns]
 - [x] **I-01 Types, pure plans and summary rules.** `lib/types.ts`, `lib/cart/plan.ts`, `lib/cart/summary.ts`, `lib/cart/discount-reasons.ts`. Tests: `Switch to ship moves the line to the ship group`, `Merge combines quantities with an identical ship line` (spec "Merge"), `collect twin needs the same store`, `subscribe lines are not switchable`, `group order is collect stores then ship then subscribe`, `variant summary for pods coffee machine accessory` ("Intensity 8 · 10 capsules", "250 g · Whole bean"), `Threshold per market uses the market threshold and currency`, `progress counts only shippable lines`, `Below minimum order value states the shortfall amount`, `minimum zero means off`, `Tax presentation included versus estimated`, `blockers list`.
 - [x] **I-02 Enrichment and mapper.** `lib/ct/cart-enrich.ts`, `lib/mappers/cart.ts`. Tests: `Quantity changed: totals are the engine values verbatim` (total, tax, shipping equal the fixture fields, none recomputed), `subtotal and discount are sums of engine line fields`, `fulfilment read from the custom field and derived when missing`, `collect line gets the store and readiness`, `price-updated flag from price difference`, `out-of-stock and collect-unavailable flags`, `shipping from shippingInfo or from shipping[] in Multiple mode`, `taxedPrice absent gives null tax and engine total`, `one projection call and one inventory call for many lines`, `empty cart makes no enrichment calls`. [SKILL: commercetools-storefront]
 - [x] **I-03 Read, ownership, stale clearing.** `getCartView`, `GET /api/cart`, shipping method sync. Tests: `non active cart clears cartId`, `Two shoppers see only their own cart`, `foreign cart treated as none`, `price check recalculates once and flags the line`, `no check on the count endpoint`, `shipping method standard when any shippable line else collect`, `502 maps to upstream_unavailable`.
@@ -214,34 +214,34 @@ Common rules as in G and H. `npm run check` after each task; commit `ws-i: I-0x 
 - [x] **I-10 Summary, codes, empty, minimum, nudge.** `OrderSummary`, `DiscountCodeForm`, `AppliedCodes`, `GiftNotePrompt`, `EmptyCart`, `CompanionNudge`. Tests: `Tax presentation shows Estimated tax for US and for Canada (GST 5%) and Includes tax only when the rate is included in price`, `Shipping reads Free or the engine amount or Calculated at checkout`, `Empty cart shows the empty state with no summary block`, `Removing the last line renders the empty state`, `Below minimum order value hides Checkout and states the shortfall`, `Starter capsules suggestion adds compatible capsules and totals update in place`, `no nudge for non-capsule machines or when capsules are present`, `sticky summary classes and mobile order`, `no axe violations`.
 - [x] **I-11 Cart-ready for K.** Export `groupKeyOf`, `groupLines`, `CART_SHIPPING_MODE` use, `rebuildCart` signature, document the contract in `lib/cart/README` header comment (not a markdown file: a block comment in `plan.ts`). Tests: `every line has fulfilment groupKey and store for collect`, `Multiple mode maps shipping from shipping[]`, `a bag with collect, ship and subscribe lines yields three groups with the lines assigned to the right group`, `a Canada session cannot create collect lines`.
 - [x] **I-12 Region switch carry-over.** `rebuildCart`, wire into `PUT /api/session/market`, flip `CART_CARRY_OVER_ENABLED` to true, `DroppedLinesNotice`. [SKILL: commercetools-commerce-patterns] Tests: `Region switched with a cart creates a new cart in the new currency and carries over lines with a price`, `Product not sellable in the new region is listed not dropped silently`, `collect lines from another country become ship`, `subscribe lines without a recurring price in the new currency are listed`, `codes re-applied or ignored`, `old cart gets short deletion time`, `Region switched before a cart exists changes nothing in cart`, `notice persists until dismissed`.
-- [ ] **I-13 Messages and gates.** Catalogues for 3.11, parity test, `npm run check`, `npm run build` (cart and drawer are dynamic).
+- [x] **I-13 Messages and gates.** Catalogues for 3.11, parity test, `npm run check`, `npm run build` (cart and drawer are dynamic).
 
 ## 5. Scenarios checklist
 
 `design-cart-drawer`:
-- [ ] Below the threshold: `I-08` test of that name
-- [ ] Threshold reached: `I-08`
-- [ ] Quantity floor: `I-08`
-- [ ] Last line removed: `I-08`
-- [ ] Price changed: `I-08`, `I-02` `price-updated flag...`
+- [x] Below the threshold: `I-08` test of that name
+- [x] Threshold reached: `I-08`
+- [x] Quantity floor: `I-08`
+- [x] Last line removed: `I-08`
+- [x] Price changed: `I-08`, `I-02` `price-updated flag...`
 
 `design-cart-page`:
-- [ ] Mixed bag: `I-09` `Mixed bag shows two groups...`
-- [ ] Switch to ship: `I-09`
-- [ ] Merge: `I-01` and `I-09`
-- [ ] Tax presentation: `I-10`
-- [ ] Removing the last line: `I-10`
-- [ ] Starter capsules: `I-10`
+- [x] Mixed bag: `I-09` `Mixed bag shows two groups...`
+- [x] Switch to ship: `I-09`
+- [x] Merge: `I-01` and `I-09`
+- [x] Tax presentation: `I-10`
+- [x] Removing the last line: `I-10`
+- [x] Starter capsules: `I-10`
 
 `cart-management` (template):
-- [ ] Quantity changed: `I-04`
-- [ ] Discount code rejected: `I-06`
-- [ ] Empty cart: `I-10`
+- [x] Quantity changed: `I-04`
+- [x] Discount code rejected: `I-06`
+- [x] Empty cart: `I-10`
 
 `cart-page` (template):
-- [ ] Discount stops applying: `I-06`
-- [ ] Empty cart: `I-10`
-- [ ] Below minimum order value: `I-01`, `I-10`
+- [x] Discount stops applying: `I-06`
+- [x] Empty cart: `I-10`
+- [x] Below minimum order value: `I-01`, `I-10`
 
 `fulfilment-and-availability-model` (cart side): Threshold per market `I-01`; Collect line is shown with its store `I-09`; US address without state rate (cart has a tax portion): `I-02` plus browser step 10; Mixed bags data shape `I-11`.
 
