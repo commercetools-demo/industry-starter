@@ -257,7 +257,8 @@
       "error": "We could not load the stores.",
       "count": "{count, plural, one {# store} other {# stores}}",
       "retry": "Try again",
-      "selectError": "We could not save your store. Please try again."
+      "selectError": "We could not save your store. Please try again.",
+      "yourLocation": "your location"
     }
   },
   "locale": {

@@ -6,9 +6,9 @@ export function availabilityState(quantity: number, lowThreshold: number): Avail
   return quantity <= lowThreshold ? 'low' : 'in';
 }
 
-/** Message keys for the picker's per-store line. */
+/** Message keys (under `store.picker`) for the per-store availability line. */
 export const AVAILABILITY_LABEL_KEY = {
-  in: 'store.picker.availability.in',
-  low: 'store.picker.availability.low',
-  out: 'store.picker.availability.out',
+  in: 'availability.in',
+  low: 'availability.low',
+  out: 'availability.out',
 } as const satisfies Record<AvailabilityState, string>;

@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import PromiseBar from '@/components/layout/PromiseBar';
 import ShellProviders from '@/components/layout/ShellProviders';
+import StorePicker from '@/components/store/StorePicker';
 import { routing } from '@/i18n/routing';
 import { keyChannels } from '@/lib/cache-keys';
 import { getShellData } from '@/lib/shell-data';
@@ -44,6 +45,8 @@ export default async function LocaleLayout({
         {children}
       </main>
       <Footer categories={shell.categories} />
+      {/* Dialogs sit outside the header's stacking context so no page layer can cover them. */}
+      <StorePicker />
     </ShellProviders>
   );
 }

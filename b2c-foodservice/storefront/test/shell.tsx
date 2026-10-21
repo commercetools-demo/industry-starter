@@ -55,14 +55,14 @@ export function renderShell(ui: ReactElement, { locale = 'en-US', fallback = {} 
 }
 
 /** A fetch stub answering by URL prefix; unknown URLs return 404 with the error body. */
-export function stubFetch(routes: Record<string, (init?: RequestInit) => unknown | Response>) {
+export function stubFetch(routes: Record<string, (init?: RequestInit) => unknown>) {
   const calls: Array<{ url: string; init?: RequestInit }> = [];
   const fn = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
     calls.push({ url, init });
     const key = Object.keys(routes).find((k) => url === k || url.startsWith(k));
     if (!key) return Response.json({ error: { code: 'not_found', message: 'x' } }, { status: 404 });
-    const out = routes[key](init);
+    const out = await routes[key](init);
     return out instanceof Response ? out : Response.json(out);
   });
   vi.stubGlobal('fetch', fn);
