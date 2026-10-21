@@ -25,3 +25,11 @@
 - (J) Rate limiter is per instance (`lib/rate-limit.ts`); move to a shared store when hosting runs several instances (Q-J-12, OA-05).
 - (J) `scripts/mock-ct-server.mjs` now answers `POST /login`, `POST /customers`, `GET /customers/:id` (six demo customers, password `MOCK_DEMO_PASSWORD`, default `mock-demo-pass-1`); remove with the rest of the mock in Q.
 - (P) Product and category entries in `sitemap.ts`; one shared rate limiter for J and P; the browser tool needs the repo path allowed so evidence screenshots can be saved
+
+- (G) A `narrow` width option on the `Drawer` atom (min(360px, 90vw)) for the filter sheet (Q-G-19).
+- (G) Cache the catalogue half of cards by `[locale, ids]` once performance work (Q) shows the id-first read is the cost (Q-G-10).
+- (G) Search suggestions and a real "did you mean" need an external engine; the page only states that typo-tolerant matching is on (Q-G-08).
+- (G) Add `axe-core` to devDependencies (used by every component test, Q-F-13) and zod if the lead wants schema validation in route handlers.
+- (G) `storefront/scripts/mock-ct-server.mjs` now serves the seed catalogue and a Product Search engine; remove it with the dev harness in workstream Q. Re-generate `scripts/mock-fixtures/seed-fixtures.json` with `npx vitest run --config scripts/mock-fixtures/vitest.gen.config.mts` when `seed/src/data` changes.
+- (G) A featuredRank number attribute in the seed would make "Featured" mean something (Q-G-04).
+- (G) The prototype's hover shadow is on the image only; keyboard focus-within gets it too here.

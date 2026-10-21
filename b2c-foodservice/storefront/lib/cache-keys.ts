@@ -36,6 +36,7 @@ export const TAG = {
   channels: 'channels',
   shippingMethods: 'shipping-methods',
   recurrencePolicies: 'recurrence-policies',
+  attributeLabels: 'attribute-labels',
 } as const;
 
 /** Server cache lifetimes in seconds, public data only. */
@@ -45,4 +46,5 @@ export const TTL = {
   channels: 60,
   shippingMethods: 60,
   recurrencePolicies: 300,
+  attributeLabels: 3600,
 } as const;
