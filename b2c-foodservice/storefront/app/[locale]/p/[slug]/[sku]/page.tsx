@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
 import ProductDetail from '@/components/pdp/ProductDetail';
+import RelatedStrip from '@/components/pdp/RelatedStrip';
 import { permanentRedirect } from '@/i18n/routing';
 import { pageMetadata } from '@/lib/content/seo';
 import { loadProductPage } from '@/lib/pdp/load';
@@ -66,6 +68,11 @@ export default async function ProductPage({ params, searchParams }: Props) {
   return (
     <ProductDetail
       data={data}
+      related={
+        <Suspense fallback={null}>
+          <RelatedStrip product={data.product} locale={locale} />
+        </Suspense>
+      }
       initialSelection={parseSelection(query, data.product.selectors, landing)}
       {...(choose ? { choose } : {})}
     />

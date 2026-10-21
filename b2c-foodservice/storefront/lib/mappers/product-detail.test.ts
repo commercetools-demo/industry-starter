@@ -115,7 +115,7 @@ describe('mapProductDetail', () => {
 
   it('breadcrumb follows the deepest category and the tagline is the first sentence', () => {
     const d = mapProductDetail(pods(), ctx());
-    expect(d.breadcrumb).toEqual([{ name: 'Pods', slug: 'pods' }, { name: 'Original', slug: 'pods-original' }]);
+    expect(d.breadcrumb).toEqual([{ id: 'c-pods', name: 'Pods', slug: 'pods' }, { id: 'c-orig', name: 'Original', slug: 'pods-original' }]);
     expect(d.categoryName).toBe('Pods');
     expect(d.tagline).toBe('A dark roast pod.');
   });

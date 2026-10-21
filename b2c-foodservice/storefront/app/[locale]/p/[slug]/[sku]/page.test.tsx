@@ -9,6 +9,7 @@ vi.mock('next/navigation', () => ({
   },
 }));
 vi.mock('next-intl/server', () => ({ setRequestLocale: () => {} }));
+vi.mock('@/components/pdp/RelatedStrip', () => ({ default: () => null }));
 vi.mock('@/i18n/routing', async () => ({
   ...(await (await import('@/test/shell')).routingMock()),
   permanentRedirect: (args: unknown) => {

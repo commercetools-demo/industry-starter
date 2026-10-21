@@ -47,7 +47,7 @@ const BASE: Omit<ProductPageData, 'product'> = {
 };
 
 const baseProduct = (over: Partial<ProductPageData['product']>): ProductPageData['product'] => ({
-  id: 'p-1', slug: 'ember-ristretto', name: 'Ember Ristretto', categoryName: 'Pods', breadcrumb: [{ name: 'Pods', slug: 'pods' }],
+  id: 'p-1', slug: 'ember-ristretto', name: 'Ember Ristretto', categoryName: 'Pods', breadcrumb: [{ id: 'cat-pods', name: 'Pods', slug: 'pods' }],
   tagline: 'A dark roast pod.', description: 'A dark roast pod. Compatible with Original machines.', shape: 'pods', badge: 'bestseller',
   subscribable: true, rating: null, variants: [], defaultSku: '', selectors: [],
   facts: { intensity: 12, roast: 'Dark', roastKey: 'dark', origin: 'Brazil', notes: ['dark chocolate', 'oak'], specs: [{ key: 'system', value: 'Original' }] },

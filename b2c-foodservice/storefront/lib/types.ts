@@ -161,7 +161,7 @@ export interface SelectorDef {
 }
 export interface ProductDetail {
   id: string; slug: string; name: string; categoryName: string;
-  breadcrumb: { name: string; slug: string }[];
+  breadcrumb: { id: string; name: string; slug: string }[];
   tagline: string; description?: string;
   shape: ProductShape;
   badge: CardBadge | null;

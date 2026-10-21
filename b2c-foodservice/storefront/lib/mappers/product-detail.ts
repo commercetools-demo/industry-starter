@@ -211,7 +211,7 @@ export function mapProductDetail(p: ProductProjection, ctx: DetailContext): Prod
     slug: getLocalizedString(p.slug, ctx.locale),
     name,
     categoryName: rootCategoryName(ctx.tree, categoryIds),
-    breadcrumb: deepest.map((c) => ({ name: c.name, slug: c.slug })),
+    breadcrumb: deepest.map((c) => ({ id: c.id, name: c.name, slug: c.slug })),
     tagline: taglineOf(description),
     ...(description ? { description } : {}),
     shape,
