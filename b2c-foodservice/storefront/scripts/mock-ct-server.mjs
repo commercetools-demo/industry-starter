@@ -206,6 +206,16 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
     const skus = one ? [one[1]] : many ? [...many[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]) : [];
     return json(res, 200, list(skus.flatMap(inventoryEntries)));
   }
+  const byKey = new RegExp(`^/${PROJECT}/product-projections/key=([^/]+)$`).exec(path);
+  if (byKey && req.method === 'GET') {
+    const doc = [...DOC_BY_ID.values()].find((d) => d.key === decodeURIComponent(byKey[1]));
+    if (!doc) return json(res, 404, { statusCode: 404, message: 'not found', errors: [{ code: 'ResourceNotFound' }] });
+    return json(res, 200, projectionOf(doc, {
+      currency: url.searchParams.get('priceCurrency') ?? undefined,
+      country: url.searchParams.get('priceCountry') ?? undefined,
+      locales: url.searchParams.getAll('localeProjection'),
+    }));
+  }
   if (path === `/${PROJECT}/product-projections` && req.method === 'GET') {
     const ids = [...(url.searchParams.get('where') ?? '').matchAll(/"([0-9a-f-]{36})"/g)].map((m) => m[1]);
     const locales = url.searchParams.getAll('localeProjection');
