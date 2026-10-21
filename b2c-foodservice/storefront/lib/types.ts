@@ -199,3 +199,18 @@ export interface ProductPageData {
   country: string;
   currency: string;
 }
+
+// Workstream M: reviews and ratings (no moderation, D-037: every review is published on creation).
+export type ReviewSort = 'newest' | 'highest' | 'lowest';
+export interface ReviewView {
+  id: string; rating: 1 | 2 | 3 | 4 | 5; title: string | null; text: string | null; authorName: string;
+  createdAt: string; locale: string | null; verifiedPurchase: boolean;
+}
+export interface MyReviewView extends ReviewView {
+  version: number;
+  product: { id: string; name: string; slug: string; sku: string | null; imageUrl: string | null } | null;
+}
+export interface ReviewPage { reviews: ReviewView[]; total: number; page: number; pageSize: 5; hasMore: boolean }
+/** GET /api/reviews?productId=... answer: the page plus the signed-in customer's own review id for this product. */
+export interface ReviewPageResponse extends ReviewPage { mine: { id: string } | null }
+export interface ReviewInput { rating: number; title?: string; text?: string }
