@@ -2,6 +2,7 @@
 @import './tokens.css';
 @import './typography.css';
 @import './motion.css';
+@import './home.css';
 
 body {
   margin: 0;

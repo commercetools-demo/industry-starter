@@ -22,7 +22,59 @@
     "description": "Coffee beans, capsules and subscriptions, delivered or ready to collect."
   },
   "home": {
-    "placeholder": "Malva Coffee is getting ready."
+    "meta": {
+      "title": "Malva Coffee: pods, coffee and machines",
+      "description": "Compatible capsules, fresh coffee beans and machines. Order online and collect in store or have it delivered."
+    },
+    "hero": {
+      "cta": "Shop the edit",
+      "findStore": "Find your store",
+      "favourite": "Favourite"
+    },
+    "promise": {
+      "aria": "Our promises",
+      "shipping": "Free shipping over {threshold}",
+      "collect": "Free collection, ready in {minutes, number} minutes",
+      "returns": "{days, number}-day returns"
+    },
+    "tiles": {
+      "aria": "Shop by category",
+      "empty": "Shop"
+    },
+    "banner": {
+      "eyebrow": "Order online, collect in store",
+      "titleStore": "Ready in {minutes, number} minutes at {store}.",
+      "titleNoStore": "Collect in store, ready in minutes.",
+      "text": "See live availability as you browse, reserve what you want and skip the queue. Free, always.",
+      "changeStore": "Change store",
+      "chooseStore": "Choose a store",
+      "shopCollect": "Shop collect-eligible",
+      "proofFast": "Fast",
+      "proofFastText": "Your order is ready for pick-up within minutes.",
+      "proofReserved": "Reserved",
+      "proofReservedText": "We set your items aside until you arrive.",
+      "proofNoFees": "No fees",
+      "proofNoFeesText": "Collection is always free."
+    },
+    "bestsellers": {
+      "eyebrow": "Most loved",
+      "title": "Bestsellers"
+    },
+    "new": {
+      "eyebrow": "Just landed",
+      "title": "New arrivals"
+    },
+    "viewAll": "View all",
+    "subscribe": {
+      "eyebrow": "Subscribe & save",
+      "title": "Never run out of coffee",
+      "step1": "Choose your coffee or pods",
+      "step2": "Set how often",
+      "step3": "Skip or cancel any time",
+      "cta": "Shop subscriptions",
+      "stepsAria": "How subscriptions work"
+    },
+    "loading": "Loading products"
   },
   "ui": {
     "stepper": {

@@ -1,0 +1,47 @@
+/* Home page surfaces (workstream O). Every colour is a token or a colour-mix of tokens; no hex. */
+
+@utility home-hero-bg {
+  background: linear-gradient(180deg, var(--canvas), var(--canvas-2));
+}
+
+@utility home-glow {
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 20%, transparent), transparent);
+}
+
+@utility home-glow-dark {
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 50%, transparent), transparent);
+}
+
+@utility home-glass {
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+@utility home-tile-shade {
+  background: linear-gradient(180deg, transparent 40%, color-mix(in srgb, var(--ink) 55%, transparent));
+}
+
+@utility home-banner-body {
+  color: color-mix(in srgb, var(--canvas) 78%, var(--ink));
+}
+
+@utility home-proof {
+  background: color-mix(in srgb, var(--surface) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--surface) 14%, transparent);
+}
+
+@utility home-section {
+  padding-block: 72px;
+
+  @media (width < 820px) {
+    padding-block: 52px;
+  }
+}
+
+@utility home-section-tight {
+  padding-block: 48px;
+
+  @media (width < 820px) {
+    padding-block: 36px;
+  }
+}
