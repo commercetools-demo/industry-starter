@@ -26,7 +26,7 @@ export default function ContactView({ locale, contact = CONTACT }: { locale: str
         <div className="order-1 flex flex-col gap-4 stack:order-2">
           <Card as="section" aria-labelledby="contact-channels">
             <h2 id="contact-channels" className="m-0 mb-3 font-display text-[18px] font-semibold">
-              {t('channels.title')} <span className="text-ink-2">{label}</span>
+              {label === t('channels.title') ? label : `${t('channels.title')}: ${label}`}
             </h2>
             <dl className="m-0 grid gap-3 text-[14px]">
               <div>

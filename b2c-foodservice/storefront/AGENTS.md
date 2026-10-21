@@ -99,3 +99,10 @@ New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import
 - Hooks for G, H and I: `useCollectionStore()` (`store`, `stores`, `select`, `open({ sku })`, `preferShip`), `useAvailability(sku, country)`, `useCartCount()`, `useMarket()` (`switchCountry`, `switchLanguage`), `useShellUi()` (`openCart`, `registerCartDrawer`), `useToast()`. Routes: `GET /api/channels`, `GET /api/availability`, `PUT /api/session/store`, `PUT /api/session/market`, `GET /api/cart/count`, `POST /api/newsletter`.
 - Single source for the free-shipping figure: `getFreeShippingThreshold(country, currency)` in `lib/ct/shipping.ts` (cart and PDP call it too). Listing links: `buildListingHref(slug, { facet: value })` in `lib/nav/listing-href.ts` (`f_<facet>` params).
 - Tests for shell components: `test/shell.tsx` (`renderShell`, `stubFetch`, `routingMock`) and `test/axe.ts`. Local browser checks without credentials: `node scripts/mock-ct-server.mjs` (see its header).
+
+## Content and error pages (workstream P)
+
+- Content is typed data in `content/*.ts` behind `lib/content/` (`resolveLocalized`, `Block`, `renderTokens`). Pages use `ContentPage` and `Blocks`; no raw HTML (the one `dangerouslySetInnerHTML` is `components/content/JsonLd.tsx`). Token figures come from `getPageFigures(locale)`, which never throws (800 ms race).
+- Content hrefs: `lib/routes.ts` (`aboutHref`, `policyHref`, `journalHref`, `signInHref`, `searchHref`). Add a built route to `BUILT_ROUTES` in `lib/nav/footer-config.ts`.
+- Error pages: one `components/error/ErrorPage.tsx` (static, no session or commerce). Policy links in checkout use `components/content/PolicyLink.tsx` (new tab).
+- `POST /api/contact` needs `CONTACT_WEBHOOK_URL`; local stand-in `node scripts/dev/mock-contact-receiver.mjs`. Unknown `/api/*` answers JSON 404.

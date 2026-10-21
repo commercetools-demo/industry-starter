@@ -330,45 +330,45 @@ Common rules: test first; `npm run check` before ticking; commit `ws-p: P-0x sum
 - [ ] **P-12 Wiring.** (footer half done, `PolicyLink` ready; checkout consent half blocked: K has not built the consent text, see `plans/notes/todo-P.md`) F's footer link config: set hrefs for Shipping and returns, FAQ, Contact us, Our story, Journal, Privacy, Terms, Accessibility using `lib/routes.ts`. K's consent text: policy links open in a new tab with `rel="noopener"`. Change **only** hrefs and `target`/`rel`. Tests: `footer links point at content routes`, `checkout consent links open in a new tab`. [SKILL: commercetools-storefront]
 - [x] **P-13 SEO.** `app/sitemap.ts`, `app/robots.ts`. Tests: `sitemap lists content pages in both locales`, `withdrawn articles are not in the sitemap`, `robots disallows api account cart and checkout`.
 - [x] **P-14 Messages, responsive, a11y, gates.** All keys of D11 plus every other key used, in two catalogues (identical key test from E); CSS per D12; `npm run check`; `npm run build` (content routes static, error routes present). Tests: `catalogues have the same content keys`, `no hard coded strings in content components`.
-- [ ] **P-15 Browser and degraded-tier verification** (sections 6 and 7); evidence in `plans/evidence/P/`; owner rows; `STATUS.md` `Ready for review`.
+- [x] **P-15 Browser and degraded-tier verification** (sections 6 and 7); evidence in `plans/evidence/P/`; owner rows; `STATUS.md` `Ready for review`.
 
 ## 5. Scenarios checklist
 
 `about-us` (primary):
 
-- [ ] Editor publishes a correction: `about.test.tsx` `Editor publishes a correction: content change appears in the rendered page from the module only`. **Note**: "without a storefront deployment" is not possible with repository content; the module is the single seam and a CMS swap is Q-P-1. Mark this scenario `partial: content module only` and add the owner sign-off in SO-P2.
-- [ ] Commerce tier degraded: `about.test.tsx` `Commerce tier degraded: About renders with commerce mocked to throw`; recipe 6.9.
-- [ ] Locale without translation: `about.test.tsx` `Locale without translation: About shows the notice in en-CA when only the en-US text exists`.
+- [x] (partial: content module only) Editor publishes a correction: `about.test.tsx` `Editor publishes a correction: content change appears in the rendered page from the module only`. **Note**: "without a storefront deployment" is not possible with repository content; the module is the single seam and a CMS swap is Q-P-1. Mark this scenario `partial: content module only` and add the owner sign-off in SO-P2.
+- [x] Commerce tier degraded: `about.test.tsx` `Commerce tier degraded: About renders with commerce mocked to throw`; recipe 6.9.
+- [x] Locale without translation: `about.test.tsx` `Locale without translation: About shows the notice in en-CA when only the en-US text exists`.
 
 `contact-us`:
 
-- [ ] Enquiry accepted downstream: `contact-route.test.ts` `Enquiry accepted downstream: 202 with reference and channel`; `ContactForm.test.tsx` confirmation test; recipe 6.3.
-- [ ] Routing unavailable: `contact-route.test.ts` (receiver 500, timeout, unset), `ContactForm.test.tsx` `Routing unavailable: text is preserved and phone and email are offered`; recipe 6.4.
-- [ ] Chat script absent: `ContactPage.test.tsx` `Chat script absent: no chat placeholder and no third-party script`.
-- [ ] Region without an office: `ContactPage.test.tsx` `Region without an office: default channels are shown`.
+- [x] Enquiry accepted downstream: `contact-route.test.ts` `Enquiry accepted downstream: 202 with reference and channel`; `ContactForm.test.tsx` confirmation test; recipe 6.3.
+- [x] Routing unavailable: `contact-route.test.ts` (receiver 500, timeout, unset), `ContactForm.test.tsx` `Routing unavailable: text is preserved and phone and email are offered`; recipe 6.4.
+- [x] Chat script absent: `ContactPage.test.tsx` `Chat script absent: no chat placeholder and no third-party script`.
+- [x] Region without an office: `ContactPage.test.tsx` `Region without an office: default channels are shown`.
 
 `faq`:
 
-- [ ] Deep link to one question: `faq.test.tsx` hash and `q` tests; recipe 6.5.
-- [ ] Feedback collector unreachable: `FaqFeedback.test.tsx` `Feedback collector unreachable: vote is discarded and nothing is shown`; recipe 6.5.
-- [ ] Answer not translated: `faq.test.tsx` `Answer not translated: fallback is served with a notice`.
+- [x] Deep link to one question: `faq.test.tsx` hash and `q` tests; recipe 6.5.
+- [x] Feedback collector unreachable: `FaqFeedback.test.tsx` `Feedback collector unreachable: vote is discarded and nothing is shown`; recipe 6.5.
+- [x] Answer not translated: `faq.test.tsx` `Answer not translated: fallback is served with a notice`.
 
 `policy-pages`:
 
 - [ ] Opened from checkout: `policy.test.tsx` `Opened from checkout: policy page needs no session and sets no redirect`, `checkout.links.test.tsx` `checkout consent links open in a new tab`; recipe 6.6 (state intact).
-- [ ] Version superseded: `policy.test.tsx` `Version superseded: the date comes from the same object as the text`.
-- [ ] Policy not translated: `policy.test.tsx` `Policy not translated: fallback text and its own date are shown`.
+- [x] Version superseded: `policy.test.tsx` `Version superseded: the date comes from the same object as the text`.
+- [x] Policy not translated: `policy.test.tsx` `Policy not translated: fallback text and its own date are shown`.
 
 `blog-resources`:
 
-- [ ] Filter matches nothing: `journal.test.tsx` `Filter matches nothing: states it and keeps the applied filters visible`.
-- [ ] Article withdrawn: `article.test.tsx` `Article withdrawn: redirects to its topic and serves no text`; recipe 6.7.
-- [ ] Article without tags: `article.test.tsx` `Article without tags: related block is omitted`.
+- [x] Filter matches nothing: `journal.test.tsx` `Filter matches nothing: states it and keeps the applied filters visible`.
+- [x] Article withdrawn: `article.test.tsx` `Article withdrawn: redirects to its topic and serves no text`; recipe 6.7.
+- [x] Article without tags: `article.test.tsx` `Article without tags: related block is omitted`.
 
 `error-pages`:
 
-- [ ] Address resolves to nothing: `not-found.test.tsx` `Address resolves to nothing: ...`; recipe 6.8 (HTTP status checked).
-- [ ] Upstream fault: `error.test.tsx` `Upstream fault: server error page offers retry and does not touch cookies`; recipe 6.9.
+- [x] Address resolves to nothing: `not-found.test.tsx` `Address resolves to nothing: ...`; recipe 6.8 (HTTP status checked).
+- [x] Upstream fault: `error.test.tsx` `Upstream fault: server error page offers retry and does not touch cookies`; recipe 6.9.
 - [ ] Expired session is not a refusal: `error-routing.test.ts` `Expired session is not a refusal: ...`; recipe 6.10.
 
 ## 6. Browser recipe (Chrome DevTools MCP)

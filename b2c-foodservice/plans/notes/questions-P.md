@@ -22,3 +22,9 @@ Draft for the lead to consolidate into `QUESTIONS.md`.
 | Q-P-13 | Name of the blog section | "Journal" at `/journal` | no | Open |
 | Q-P-14 | Where are superseded policy versions kept so the text in force on an order date can be produced? | Git history; no public archive page | no | Open |
 | Q-P-15 | The footer newsletter (design-storefront-shell) needs a receiver and a route that is not in the route table | F made it a validated no-op (Q-F-07); not built in P | no | Open |
+| Q-P-16 | The contact and feedback codes of the spec (`invalid_request`, `contact_unavailable`, `unsupported_media_type`) are not in D's closed `ErrorCode` union | Kept the body shape `{ error: { code, message } }` and used the spec codes in P's own responses; no change to `lib/errors.ts`. FAQ feedback uses D's `bad_request` and `upstream_unavailable` | no | Open |
+| Q-P-17 | Search route for the 404 page form | `GET /{locale}/search?q=` (G's route); the link goes to a 404 until G merges | no | Open |
+| Q-P-18 | Rate limiter: J's `lib/rate-limit.ts` did not exist when P was built | P ships `lib/contact/rate-limit.ts` with the same call shape; merge into J's when both are on develop | no | Open |
+| Q-P-19 | Next 16.3+ passes `retry` (refetch) to error boundaries besides `reset` | Error pages call `retry` when present, else `reset` | no | Open |
+| Q-P-20 | Content routes cannot be static: the locale layout reads the session for the shell | Left dynamic; content is still plain server content. Revisit if F makes the shell cacheable | no | Open |
+| Q-P-21 | Token figures carry their unit (`30 minutes`, `30 days`) so the neutral fallback phrase reads right | Tokens `{{collectMinutes}}` and `{{returnDays}}` include the unit | no | Open |

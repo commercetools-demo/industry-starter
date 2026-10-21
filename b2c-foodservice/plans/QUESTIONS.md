@@ -141,6 +141,12 @@ Generated from `plans/notes/questions-*.md` by `node plans/consolidate-notes.mjs
 | Q-P-13 | Name of the blog section | "Journal" at `/journal` | no | Open | |
 | Q-P-14 | Where are superseded policy versions kept so the text in force on an order date can be produced? | Git history; no public archive page | no | Open | |
 | Q-P-15 | The footer newsletter (design-storefront-shell) needs a receiver and a route that is not in the route table | F made it a validated no-op (Q-F-07); not built in P | no | Open | |
+| Q-P-16 | The contact and feedback codes of the spec (`invalid_request`, `contact_unavailable`, `unsupported_media_type`) are not in D's closed `ErrorCode` union | Kept the body shape `{ error: { code, message } }` and used the spec codes in P's own responses; no change to `lib/errors.ts`. FAQ feedback uses D's `bad_request` and `upstream_unavailable` | no | Open | |
+| Q-P-17 | Search route for the 404 page form | `GET /{locale}/search?q=` (G's route); the link goes to a 404 until G merges | no | Open | |
+| Q-P-18 | Rate limiter: J's `lib/rate-limit.ts` did not exist when P was built | P ships `lib/contact/rate-limit.ts` with the same call shape; merge into J's when both are on develop | no | Open | |
+| Q-P-19 | Next 16.3+ passes `retry` (refetch) to error boundaries besides `reset` | Error pages call `retry` when present, else `reset` | no | Open | |
+| Q-P-20 | Content routes cannot be static: the locale layout reads the session for the shell | Left dynamic; content is still plain server content. Revisit if F makes the shell cacheable | no | Open | |
+| Q-P-21 | Token figures carry their unit (`30 minutes`, `30 days`) so the neutral fallback phrase reads right | Tokens `{{collectMinutes}}` and `{{returnDays}}` include the unit | no | Open | |
 | Q-Q-1 | Is a clean-clone `npm ci` run required on the release commit, besides the working-tree run? | Yes, once, before the deploy | no | Open | |
 | Q-Q-2 | Accessibility target | WCAG 2.2 AA (the token spec says AA) | no | Open | |
 | Q-Q-3 | Token value changes for contrast (`--ink-3`, `--teal-text`, `--danger-text`) | Already decided by workstream E (Q-E-1, M-E-02); Q only verifies that the pages use them | no | Open | |
