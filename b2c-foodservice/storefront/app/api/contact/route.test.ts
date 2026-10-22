@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { resetRateLimits } from '@/lib/contact/rate-limit';
+import { resetRateLimits } from '@/lib/rate-limit';
 import { FORWARD_TIMEOUT_MS } from '@/lib/contact/forward';
 import { POST } from './route';
 
@@ -151,6 +151,15 @@ describe('POST /api/contact', () => {
     expect((await sixth.json()).error.code).toBe('rate_limited');
     // another client is not affected
     expect((await send(VALID, { 'x-forwarded-for': '198.51.100.9' })).status).toBe(202);
+  });
+
+  it('contact route uses the shared limiter: resetting the shared store frees the sixth submission', async () => {
+    vi.stubGlobal('fetch', okFetch());
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    for (let i = 0; i < 5; i += 1) expect((await send(VALID)).status).toBe(202);
+    expect((await send(VALID)).status).toBe(429);
+    resetRateLimits(); // the shared module's store, the one login, review and cart routes count in
+    expect((await send(VALID)).status).toBe(202);
   });
 
   it('non-JSON body is 415', async () => {

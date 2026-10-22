@@ -2,7 +2,7 @@ import 'server-only';
 import { randomInt } from 'node:crypto';
 import { channelFor } from '@/content/contact';
 import { forwardContact } from '@/lib/contact/forward';
-import { clientKey, rateLimit } from '@/lib/contact/rate-limit';
+import { limitClient } from '@/lib/http/limit';
 import { validateContact } from '@/lib/contact/validate';
 import { resolveLocalized } from '@/lib/content/localized';
 import { isLocaleKey, marketForLocale } from '@/lib/utils';
@@ -18,8 +18,8 @@ export function makeReference(now = new Date()): string {
 }
 
 /** Same body shape as the rest of the API: `{ error: { code, message } }`. */
-function fail(code: string, message: string, status: number, headers?: Record<string, string>): Response {
-  return Response.json({ error: { code, message } }, { status, headers });
+function fail(code: string, message: string, status: number): Response {
+  return Response.json({ error: { code, message } }, { status });
 }
 
 function log(line: { reference?: string; topic?: string; status: number; correlationId: string }): void {
@@ -38,10 +38,10 @@ export async function handleContact(req: Request): Promise<Response> {
     return fail('unsupported_media_type', 'Unsupported media type', 415);
   }
 
-  const limited = rateLimit(clientKey(req), LIMIT);
-  if (!limited.ok) {
+  const limited = limitClient(req, 'contact', LIMIT);
+  if (limited) {
     log({ status: 429, correlationId });
-    return fail('rate_limited', 'Too many requests. Please try again shortly', 429, { 'retry-after': String(limited.retryAfterSec) });
+    return limited;
   }
 
   const raw: unknown = await req.json().catch(() => null);
