@@ -146,6 +146,20 @@ describe('POST /api/checkout/complete', () => {
     expect(cookieOf(res, SESSION_COOKIE)).toBeUndefined();
     expect(h.poll).toHaveBeenCalledWith({ orderNumber: `${NUMBER}-A` });
   });
+  it('the last of two payments also removes its lines from the old bag, so nothing paid comes back at the next sign-in', async () => {
+    h.jar.set(PAY_CARTS_COOKIE, JSON.stringify([{ id: 'clone-a', clusterKey: 'collect:mcf-store-nyc-soho', label: 'SoHo', totalCents: 1000 }, { id: 'clone-b', clusterKey: 'delivery', label: null, totalCents: 1815 }]));
+    h.poll.mockResolvedValue(orderView({ orderNumber: `${NUMBER}-B` }));
+    const res = await post(complete, { part: 1 });
+    expect(await res.json()).toEqual({ orderId: 'ord-1', next: null });
+    expect(h.removePaid).toHaveBeenCalledWith(expect.objectContaining({ cartId: 'cart-1' }), 'clone-b');
+    const sessionCookie = cookieOf(res, SESSION_COOKIE) ?? '';
+    expect((await verifySessionToken(sessionCookie.split(';')[0]?.slice(SESSION_COOKIE.length + 1))).cartId).toBeUndefined();
+  });
+  it('a bag paid in one piece removes nothing (the hosted flow orders the cart itself)', async () => {
+    h.poll.mockResolvedValue(orderView());
+    await post(complete, {});
+    expect(h.removePaid).not.toHaveBeenCalled();
+  });
   it('an order that is not this bag changes nothing', async () => {
     h.poll.mockResolvedValue(orderView({ orderNumber: 'MC-ZZZZZZZZZZ' }));
     expect(cookieOf(await post(complete, {}), SESSION_COOKIE)).toBeUndefined();

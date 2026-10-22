@@ -31,23 +31,25 @@ export function partOf(orderNumber: string): number {
 /**
  * What a placed order does to the shopper's session (workstream K 3.7 "Placement"). Only an order of THIS bag changes anything:
  * its number must be the bag's number (or one of its part numbers), so an order id taken from a query string can never empty
- * somebody's cart. A part that is not the last removes its lines from the bag (the bag then holds what still needs payment);
- * the last one removes `cartId` from the session.
+ * somebody's cart. A part removes its lines from the bag (the bag then holds what still needs payment); the last one also
+ * removes `cartId` from the session.
  */
 export async function afterPlacement(session: Session, parts: readonly PayPart[], order: OrderView): Promise<Placement> {
   const unchanged: Placement = { session, next: null, clearParts: false, guestEmail: null, matched: false };
   if (!session.cartId || baseOrderNumber(order.orderNumber) !== orderNumberForCart(session.cartId)) return unchanged;
   const index = partOf(order.orderNumber);
   const guestEmail = !session.customerId && order.customerId === null && order.email ? order.email : null;
-  if (parts.length > 0 && index < parts.length - 1) {
-    const paid = parts[index];
-    if (paid) {
-      try {
-        await removePaidLines(session, paid.id);
-      } catch {
-        console.warn(JSON.stringify({ event: 'remove_paid_lines_failed', orderId: order.id }));
-      }
+  // Every paid part leaves the old bag, the last one too: the bag stays an Active cart in the project, and one that still held
+  // paid lines would come back at the next sign-in (found by Q, J2).
+  const paid = parts[index];
+  if (paid) {
+    try {
+      await removePaidLines(session, paid.id);
+    } catch {
+      console.warn(JSON.stringify({ event: 'remove_paid_lines_failed', orderId: order.id }));
     }
+  }
+  if (parts.length > 0 && index < parts.length - 1) {
     return { session, next: index + 1, clearParts: false, guestEmail, matched: true };
   }
   const next = { ...session };
