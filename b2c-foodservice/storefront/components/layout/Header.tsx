@@ -14,7 +14,7 @@ export default function Header({ categories }: { categories: Category[] }) {
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-canvas/86 backdrop-blur-[12px]" />
       <div className="wrap flex h-[72px] items-center gap-6 max-mobile:gap-2">
         <MobileNav categories={categories} />
-        <Link href="/" className="wordmark whitespace-nowrap text-ink no-underline">
+        <Link prefetch={false} href="/" className="wordmark whitespace-nowrap text-ink no-underline">
           {t('brand')}
         </Link>
         <PrimaryNav categories={categories} />

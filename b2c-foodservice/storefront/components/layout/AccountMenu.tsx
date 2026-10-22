@@ -42,7 +42,7 @@ export default function AccountMenu() {
 
   if (!customer) {
     return (
-      <Link href="/account/sign-in" aria-label={t('signIn')} className={ICON_LINK}>
+      <Link prefetch={false} href="/account/sign-in" aria-label={t('signIn')} className={ICON_LINK}>
         <Icon name="user" size={20} />
       </Link>
     );
@@ -108,6 +108,7 @@ export default function AccountMenu() {
           </div>
           <Link
             role="menuitem"
+            prefetch={false}
             href="/account"
             className="block rounded-field px-3 py-2.5 text-[14px] hover:bg-canvas-2"
           >

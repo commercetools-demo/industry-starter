@@ -19,7 +19,7 @@ export default function Breadcrumbs({ items }: { items: Crumb[] }) {
                   {item.label}
                 </span>
               ) : (
-                <Link href={item.href} className="text-ink-3 no-underline hover:text-ink">
+                <Link prefetch={false} href={item.href} className="text-ink-3 no-underline hover:text-ink">
                   {item.label}
                 </Link>
               )}

@@ -78,6 +78,7 @@ export default function PrimaryNav({ categories }: { categories: Category[] }) {
         return (
           <Link
             key={item.id}
+            prefetch={false}
             href={href}
             data-menu={menu ?? undefined}
             aria-current={active ? 'page' : undefined}
