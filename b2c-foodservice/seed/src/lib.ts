@@ -59,6 +59,9 @@ export function assertRemoteKey(remoteKey: string, configured: string, expected:
   assertSafeProject(remoteKey, expected);
 }
 
+/** True for exactly one local part and the domain example.com (case-insensitive): the reserved domain test customers use. */
+export const isExampleEmail = (email: string | undefined): boolean => !!email && /^[^@\s]+@example\.com$/i.test(email.trim());
+
 export interface Args {
   dryRun: boolean;
   offline: boolean;

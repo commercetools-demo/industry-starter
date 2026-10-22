@@ -18,7 +18,9 @@
     "seed:images": "tsx src/images.ts",
     "verify": "tsx src/verify.ts",
     "reset": "tsx src/reset.ts",
-    "seed:order": "tsx src/order-ops.ts"
+    "seed:order": "tsx src/order-ops.ts",
+    "seed:advance-order": "tsx src/advance-order.ts",
+    "seed:cleanup-tests": "tsx src/cleanup-tests.ts"
   },
   "dependencies": {
     "@commercetools/platform-sdk": "^8.0.0",

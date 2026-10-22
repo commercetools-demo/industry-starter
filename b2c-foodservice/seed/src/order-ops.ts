@@ -54,8 +54,11 @@ export interface OrdersPort {
   transition(id: string, version: number, stateKey: string): Promise<void>;
 }
 
+/** The order numbers of this app: `MC-` plus ten characters, optionally a letter suffix for a split order. */
+export const ORDER_NUMBER_RE = /^MC-[0-9A-Z]{10}(-[A-H])?$/;
+
 export async function runState(port: OrdersPort, args: { orderNumber: string; to: string; dryRun: boolean }, log: (line: string) => void = console.log): Promise<number> {
-  if (!/^MC-[0-9A-Z]{10}(-[A-H])?$/.test(args.orderNumber)) {
+  if (!ORDER_NUMBER_RE.test(args.orderNumber)) {
     log(`REFUSED "${args.orderNumber}" is not an order number of this shop`);
     return 1;
   }
@@ -225,7 +228,7 @@ export function resolveEnv(raw: Record<string, string | undefined>): SeedEnv {
 }
 
 /** One authenticated API root; the second guard (the project reports the key we expect) runs here. */
-async function connectRoot(env: SeedEnv) {
+export async function connectRoot(env: SeedEnv) {
   const client = new ClientBuilder()
     .withProjectKey(env.projectKey)
     .withClientCredentialsFlow({
@@ -242,7 +245,7 @@ async function connectRoot(env: SeedEnv) {
   return root;
 }
 
-type ApiRoot = Awaited<ReturnType<typeof connectRoot>>;
+export type ApiRoot = Awaited<ReturnType<typeof connectRoot>>;
 
 /** The commercetools side of `OrderClient` (ship, deliver, return). */
 export function sdkOrderClient(root: ApiRoot): OrderClient {

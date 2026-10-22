@@ -34,6 +34,8 @@ Idempotent scripts that put everything the Malva Coffee shop (B2C online coffee 
 | `npm run seed:images` | GETs `IMAGE_SOURCE_URL`, records clean image URLs into `src/data/images.json` (no commercetools access) |
 | `npm run verify` | read-back checks, exit 1 on any mismatch (including prices and review statistics) |
 | `npm run reset -- --confirm <projectKey>` | deletes the seed's own resources so `seed` can rebuild from nothing |
+| `npm run seed:advance-order -- --order <orderNumber> --to <state> --confirm <projectKey>` | moves a test order along the collection states (see "Test helpers" below) |
+| `npm run seed:cleanup-tests -- --register <test-data.md>` | dry run of the removal of the test records a register names; `--apply --confirm <projectKey>` deletes them |
 
 Seed steps (`--only a,b`): `settings tax shipping states types product-types categories channels recurrence products prices inventory discounts customers shopping-lists reviews`. A step whose prerequisites are neither in the run nor in the project is skipped and reported, never created silently. `products` creates products (names, descriptions, attributes, images); `prices` sets the embedded prices of every variant including the recurrence prices of subscribable products.
 
@@ -57,6 +59,12 @@ npm run verify                                # 10.
 
 No credentials? `npm run seed -- --dry-run --offline` runs the whole seed against an in-memory API and prints the plan a fresh project would get (1112 changes: 41 products, 41 price updates, 805 inventory entries, 162 reviews, 20 categories, 6 stores, 6 customers, ...).
 
+## Test helpers for the end-to-end journeys
+
+`npm run seed:advance-order -- --order <orderNumber> --to preparing|ready-for-collection|collected --confirm <projectKey> [--dry-run]` moves an order one `mcf-order-*` state forward (the rules of `seed:order -- state`: no skipping, no going back) so the confirmation tracker can be seen end to end. Besides the two project guards it refuses a `--confirm` that is not the project key (a dry run needs it too), an order number that is not this shop's, and any order whose customer is not an `@example.com` address (a member order: the customer is read; a guest order: the email on the order; when both exist both must match). It prints order numbers and states only, never an email, and `--dry-run` writes nothing.
+
+`npm run seed:cleanup-tests -- --register ../plans/evidence/Q/test-data.md [--apply --confirm <projectKey>]` removes the test records the journeys created, and only those named in the register, a markdown file with one table row `| kind | id | note |` per record (`customer`, `review`, `recurring-order`, `shopping-list`, `order`, `cart`; header, separator and prose lines are ignored). It is a dry run unless `--apply` is given, and `--apply` needs `--confirm` equal to the project key and to `EXPECTED_PROJECT_KEY`. Orders and carts are listed as "cannot be deleted" and skipped; a record that is already gone is reported as such; it refuses a customer that is not an `@example.com` address and any record whose key starts with `mcf-` (seed data); an Active or Paused recurring order is canceled first, because commercetools only deletes Canceled or Expired ones. Output has ids only and ends with `N deletion(s), N skipped, N refused`.
+
 ## Images
 
 `seed:images` sends exactly one `GET <IMAGE_SOURCE_URL>` (never a browser, never a retry, never a bypass). The response must have the shape of `sample-data/image.json`: `pageProps.initialData.data[].attributes.image.download_link` (fallback `image.large`), `attributes.width`, `attributes.height`, `attributes.description`. It stores **clean** URLs (scheme, host and path only: query and fragment are stripped) with width, height and description in `src/data/images.json`. On HTTP 403 or an answer that is not JSON it stops with a message that points to OA-03 in `plans/TODO-MANUAL-TESTING.md`. `seed` uses the recorded file when present and otherwise seeds without images; re-running `seed` after the file exists adds images to the existing products (variant images) and categories (assets), round-robin by tag (capsule, coffee, machine, cup) matched from the photo description. Resizing happens at render time only.
@@ -71,7 +79,7 @@ Created already verified (`isEmailVerified: true`, no email flow, D-032): `maya.
 
 ## Files
 
-`src/lib.ts` env, guards, runner · `src/api.ts` thin API layer over the SDK · `src/fake-api.ts` in-memory API for tests and `--offline` · `src/sync.ts` pure "what differs" planners · `src/seed.ts` · `src/settings.ts` · `src/inventory.ts` · `src/cleanup.ts` · `src/reset.ts` · `src/verify.ts` · `src/images.ts` · `src/data/*` the data · tests next to the code · `src/fixtures/image-source.json` complete invented fixture of the documented image endpoint shape.
+`src/lib.ts` env, guards, runner · `src/api.ts` thin API layer over the SDK · `src/fake-api.ts` in-memory API for tests and `--offline` · `src/sync.ts` pure "what differs" planners · `src/seed.ts` · `src/settings.ts` · `src/inventory.ts` · `src/cleanup.ts` · `src/reset.ts` · `src/verify.ts` · `src/order-ops.ts` · `src/advance-order.ts` · `src/cleanup-tests.ts` · `src/images.ts` · `src/data/*` the data · tests next to the code · `src/fixtures/image-source.json` complete invented fixture of the documented image endpoint shape.
 
 ## Markets, tax, shipping and stores (D-030, D-035, D-036)
 
