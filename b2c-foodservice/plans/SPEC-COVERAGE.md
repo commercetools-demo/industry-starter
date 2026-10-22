@@ -112,7 +112,7 @@ Scenarios whose title is not named in the primary workstream's Scenarios checkli
 | design-account-area | Nothing sensitive in the page | `Nothing sensitive in the page: the list carries keys, names and markets, never an email or the password` (app/api/auth/demo-login-gate.test.ts) |
 | design-account-area | Disabled | `Disabled: DEMO_LOGIN_ENABLED not true answers 404 on demo-login` (app/api/auth/demo-login-gate.test.ts) |
 | design-account-area | Canada market | `Collection tab and nav entry are hidden in the Canada market` (components/account/AccountShell.test.tsx) |
-| design-account-area | Toggle | blocked: M-L-browser — the 44x26 animation is visual; the save-on-press behaviour is tested in SettingsTab tests |
+| design-account-area | Toggle | n/a: the Settings tab has no preference switches (no email to opt into or out of, D-032); it holds Sign out and Delete account only (browser check, plans/evidence/Q/journeys.md J9) |
 | reviews-and-ratings | Immediate visibility | `New review is published at once` (components/reviews/ReviewsSection.test.tsx) |
 | reviews-and-ratings | New review is live | `Valid review` (components/reviews/ReviewsSection.test.tsx) |
 | design-home-page | Canada market | `Canada market hides store button and collect promise` (components/home/Hero.test.tsx) |
