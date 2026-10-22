@@ -47,7 +47,7 @@ export function focusAfterRemove(container: HTMLElement | null, index: number): 
  * generic), the quantity floor, and the switch to Collect that opens the store picker when no store is chosen and retries
  * with the chosen one (Q-I-15). Every request goes through `useCartMutations`: totals always come from the response.
  */
-export function useCartUi() {
+export function useCartUi({ onStoreChanged }: { onStoreChanged?: () => void } = {}) {
   const t = useTranslations('cart');
   const mutations = useCartMutations();
   const { store, open, isOpen } = useCollectionStore();
@@ -56,6 +56,10 @@ export function useCartUi() {
   const awaiting = useRef<{ lineId: string; sku: string } | null>(null);
   const changing = useRef(false);
   const wasOpen = useRef(false);
+  const storeChangedRef = useRef(onStoreChanged);
+  useEffect(() => {
+    storeChangedRef.current = onStoreChanged;
+  }, [onStoreChanged]);
 
   const report = useCallback(
     (e: unknown) => {
@@ -105,7 +109,14 @@ export function useCartUi() {
   );
   const collect = useCallback((line: CartLine) => collectWith(line, store?.key), [collectWith, store?.key]);
 
-  const changeStore = useCallback((storeKey: string) => guarded(() => mutations.changeStore(storeKey)), [guarded, mutations]);
+  const changeStore = useCallback(
+    async (storeKey: string) => {
+      const out = await guarded(() => mutations.changeStore(storeKey));
+      storeChangedRef.current?.();
+      return out;
+    },
+    [guarded, mutations],
+  );
   const lastKey = useRef<string | undefined>(store?.key);
   // The picker was opened for a switch to Collect or for "Change store": a chosen store completes it (once); closing the
   // picker without a choice cancels it.

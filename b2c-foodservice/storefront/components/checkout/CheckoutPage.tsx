@@ -36,8 +36,13 @@ export default function CheckoutPage({ resumePart }: { resumePart?: number }) {
   const t = useTranslations('checkout');
   const router = useRouter();
   const { customer } = useAccount();
-  const ui = useCartUi();
+  // A store chosen from "Change" moves the collect lines of the bag: the Review reads the checkout state again.
+  const reloadRef = useRef<() => unknown>(() => undefined);
+  const ui = useCartUi({ onStoreChanged: () => void reloadRef.current() });
   const { state, error, isLoading, reload, savePickup, createSession, complete } = useCheckout(resumePart === undefined ? {} : { resume: true });
+  useEffect(() => {
+    reloadRef.current = reload;
+  }, [reload]);
 
   const [stage, setStage] = useState<1 | 2>(1);
   const [person, setPerson] = useState<PickupPersonChoice>('me');

@@ -234,6 +234,18 @@ describe('Pickup card and issues (K-11)', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Change' }));
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
   });
+  it('a store chosen from Change moves the collect lines and the Review reads the bag again (found by Q in the browser: it kept the old store until a reload)', async () => {
+    const { stub } = setup(checkoutState(viewCart([collect('c')])), {
+      routes: { '/api/session/store': () => ({ storeKey: STORE_BK.key }) },
+    });
+    await ready();
+    const reads = () => stub.calls.filter((c) => c.url === '/api/checkout' && (c.init?.method ?? 'GET') === 'GET').length;
+    const before = reads();
+    await userEvent.click(screen.getByRole('button', { name: 'Change' }));
+    await userEvent.click(await within(await screen.findByRole('dialog')).findByRole('radio', { name: new RegExp(STORE_BK.name) }));
+    await waitFor(() => expect(stub.calls.some((c) => c.url === '/api/cart' && c.init?.method === 'PATCH')).toBe(true));
+    await waitFor(() => expect(reads()).toBeGreaterThan(before));
+  });
 });
 const toPay = async (state: CheckoutState = checkoutState(viewCart([ship('d')])), opts: Parameters<typeof setup>[1] = {}) => {
   const out = setup(state, opts);
