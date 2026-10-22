@@ -29,14 +29,14 @@ export default function AddressCard({
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h4 className="m-0 flex items-center gap-2 font-display text-[16px] font-bold text-ink">
+          <h3 className="m-0 flex items-center gap-2 font-display text-[16px] font-bold text-ink">
             {address.label ?? `${address.firstName} ${address.lastName}`}
             {isDefault ? (
               <span className="rounded-pill bg-accent/10 px-2.5 py-0.5 text-[11.5px] font-semibold text-accent-press" data-testid="default-pill">
                 {t('default')}
               </span>
             ) : null}
-          </h4>
+          </h3>
           <p className="m-0 mt-1 text-[14px] text-ink-2">
             {address.firstName} {address.lastName}
             <br />

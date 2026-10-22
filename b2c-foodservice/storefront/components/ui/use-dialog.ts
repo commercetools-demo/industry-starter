@@ -6,6 +6,22 @@ const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
+ * What Tab visits inside `container`, in order. A radio group is one stop (its checked radio, or the first when none is checked),
+ * so the last radio in the markup is not a place Tab ever lands; treating it as the last stop let focus leave the dialog from the
+ * store picker, whose last control is a group of radios (found by Q).
+ */
+function tabStops(container: HTMLElement): HTMLElement[] {
+  const all = Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE));
+  return all.filter((el) => {
+    if (!(el instanceof HTMLInputElement) || el.type !== 'radio' || !el.name) return true;
+    const group = all.filter(
+      (o): o is HTMLInputElement => o instanceof HTMLInputElement && o.type === 'radio' && o.name === el.name && o.form === el.form,
+    );
+    return (group.find((r) => r.checked) ?? group[0]) === el;
+  });
+}
+
+/**
  * The control last pressed with a pointer. Safari and Firefox on macOS and every touch browser do not focus a button on click,
  * so `document.activeElement` is `body` when a dialog opens from one; this is where focus goes back to on close.
  */
@@ -65,7 +81,7 @@ export function useDialog({
         return;
       }
       if (event.key !== 'Tab') return;
-      const items = focusables();
+      const items = tabStops(container);
       if (items.length === 0) {
         event.preventDefault();
         container.focus();

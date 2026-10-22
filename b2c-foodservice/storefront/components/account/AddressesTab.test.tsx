@@ -42,6 +42,14 @@ describe('Addresses tab', () => {
     expect(within(cards[0]).getByTestId('default-pill')).toBeInTheDocument();
   });
 
+  it('address names are level 3 headings under the level 2 section title (no skipped level)', async () => {
+    stubFetch({ '/api/auth/me': me, '/api/account/addresses': () => ({ addresses: TWO }) });
+    renderShell(<AddressesTab />);
+    const cards = await screen.findAllByTestId('address-card');
+    expect(within(cards[0]).getByRole('heading', { level: 3, name: /Home/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument();
+  });
+
   it('No saved addresses shows an explicit empty state with Add address', async () => {
     stubFetch({ '/api/auth/me': me, '/api/account/addresses': () => ({ addresses: [] }) });
     renderShell(<AddressesTab />);

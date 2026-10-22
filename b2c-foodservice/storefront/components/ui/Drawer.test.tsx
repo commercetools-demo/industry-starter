@@ -31,6 +31,20 @@ function ModalHarness() {
   );
 }
 
+function RadioModalHarness() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Open stores</button>
+      <Modal open={open} onClose={() => setOpen(false)} title="Choose a store">
+        <input type="radio" name="store" aria-label="Store A" />
+        <input type="radio" name="store" aria-label="Store B" />
+        <input type="radio" name="store" aria-label="Store C" />
+      </Modal>
+    </>
+  );
+}
+
 describe('Drawer', () => {
   it('Drawer opens with focus inside and a dialog role', async () => {
     renderWithIntl(<DrawerHarness />);
@@ -116,6 +130,20 @@ describe('Drawer', () => {
 });
 
 describe('Modal', () => {
+  it('Tab stays inside a dialog whose last control is a radio group (a group is one tab stop, not one per radio)', async () => {
+    renderWithIntl(<RadioModalHarness />);
+    await userEvent.click(screen.getByRole('button', { name: 'Open stores' }));
+    const dialog = screen.getByRole('dialog');
+    for (let i = 0; i < 8; i++) {
+      await userEvent.tab();
+      expect(dialog.contains(document.activeElement), `tab ${i}`).toBe(true);
+    }
+    for (let i = 0; i < 8; i++) {
+      await userEvent.tab({ shift: true });
+      expect(dialog.contains(document.activeElement), `shift tab ${i}`).toBe(true);
+    }
+  });
+
   it('Modal title labels the dialog', async () => {
     renderWithIntl(<ModalHarness />);
     await userEvent.click(screen.getByRole('button', { name: 'Open store' }));
