@@ -30,6 +30,12 @@ describe('Footer', () => {
     expect(screen.getByRole('button', { name: 'Choose your store' })).toBeInTheDocument();
   });
 
+  it('the Choose your store button is at least a 24 px target (WCAG 2.5.8)', () => {
+    stubFetch({});
+    renderShell(<Footer categories={TREE} />);
+    expect(screen.getByRole('button', { name: 'Choose your store' }).className).toMatch(/\bmin-h-6\b/);
+  });
+
   it('shop links resolve through the category tree and fall back to home', () => {
     stubFetch({});
     renderShell(<Footer categories={TREE} />);

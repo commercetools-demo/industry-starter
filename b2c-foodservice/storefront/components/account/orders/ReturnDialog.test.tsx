@@ -31,6 +31,14 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('ReturnDialog', () => {
+  it('the line checkboxes are 24 px targets (WCAG 2.5.8)', () => {
+    renderShell(<ReturnDialog order={order()} open onClose={() => {}} onSubmit={vi.fn()} />);
+    for (const box of within(screen.getByRole('dialog')).getAllByRole('checkbox')) {
+      expect(box.className).toMatch(/\bh-6\b/);
+      expect(box.className).toMatch(/\bw-6\b/);
+    }
+  });
+
   it('Return dialog needs at least one item and a quantity within range', async () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined);
     renderShell(<ReturnDialog order={order()} open onClose={() => {}} onSubmit={onSubmit} />);

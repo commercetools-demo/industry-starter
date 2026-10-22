@@ -26,6 +26,11 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('ContactForm', () => {
+  it('the consent checkbox is a 24 px target (WCAG 2.5.8)', () => {
+    renderWithIntl(<ContactForm locale="en-US" channel={CHANNEL} />);
+    expect(screen.getByRole('checkbox').className).toMatch(/\bsize-6\b/);
+  });
+
   it('Enquiry accepted downstream: confirmation names the channel and shows the reference', async () => {
     const fetchMock = vi.fn().mockResolvedValue(Response.json({ reference: 'MC-20261021-K7P2QX', channel: 'Customer care' }, { status: 202 }));
     vi.stubGlobal('fetch', fetchMock);

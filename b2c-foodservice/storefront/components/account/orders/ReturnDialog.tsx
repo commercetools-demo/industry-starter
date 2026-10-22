@@ -73,7 +73,7 @@ export default function ReturnDialog({
             return (
               <li key={l.id} className="rounded-field border border-line p-3.5">
                 <label className="flex min-h-11 cursor-pointer items-center gap-3 text-[14.5px] font-semibold text-ink">
-                  <input type="checkbox" checked={p.checked} onChange={(e) => set(l.id, { checked: e.target.checked })} className="h-5 w-5 accent-accent" />
+                  <input type="checkbox" checked={p.checked} onChange={(e) => set(l.id, { checked: e.target.checked })} className="h-6 w-6 accent-accent" />
                   {l.name}
                 </label>
                 {p.checked ? (

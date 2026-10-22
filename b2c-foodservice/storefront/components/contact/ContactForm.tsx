@@ -164,7 +164,7 @@ export default function ContactForm({ locale, channel }: ContactFormProps) {
             aria-invalid={errors.consent ? true : undefined}
             aria-describedby={describedBy('contact-consent')}
             onChange={(e) => set('consent', e.target.checked)}
-            className="mt-1 size-5 shrink-0 accent-accent"
+            className="mt-0.5 size-6 shrink-0 accent-accent"
           />
           <label htmlFor="contact-consent" className="text-[14px] text-ink-2">
             {consentParts[0]}

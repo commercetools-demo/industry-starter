@@ -139,7 +139,7 @@ export default function AddressForm({ address, serverFields, pending, onCancel, 
         <Input {...props('phone')} type="tel" autoComplete="tel" />
       </Field>
       <label className="mb-5 flex min-h-11 cursor-pointer items-center gap-3 text-[14px] text-ink">
-        <input type="checkbox" checked={makeDefault} onChange={(e) => setMakeDefault(e.target.checked)} className="h-5 w-5 accent-accent" />
+        <input type="checkbox" checked={makeDefault} onChange={(e) => setMakeDefault(e.target.checked)} className="h-6 w-6 accent-accent" />
         {t('form.makeDefault')}
       </label>
       <div className="flex flex-wrap justify-end gap-3">

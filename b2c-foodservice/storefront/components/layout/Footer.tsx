@@ -40,7 +40,7 @@ export default function Footer({ categories }: { categories: Category[] }) {
               {column.links.map((link) => (
                 <li key={link.labelKey}>
                   {link.action === 'choose-store' ? (
-                    <FooterStoreButton label={t(`link.${link.labelKey}`)} className={`${LINK} cursor-pointer border-0 bg-transparent p-0`} />
+                    <FooterStoreButton label={t(`link.${link.labelKey}`)} className={`${LINK} inline-flex min-h-6 cursor-pointer items-center border-0 bg-transparent p-0`} />
                   ) : (
                     <Link prefetch={false} href={hrefFor(link)} className={LINK}>
                       {t(`link.${link.labelKey}`)}
