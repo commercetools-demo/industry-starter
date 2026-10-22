@@ -1,0 +1,142 @@
+{
+ "home-1440": [
+  {
+   "text": "The Autumn Edit",
+   "color": "rgb(66, 66, 178)",
+   "size": 11,
+   "worstRatio": 7.35,
+   "min": 4.5,
+   "pass": true
+  },
+  {
+   "text": "Great coffee,",
+   "color": "rgb(25, 23, 65)",
+   "size": 80.64,
+   "worstRatio": 15.57,
+   "min": 3,
+   "pass": true
+  },
+  {
+   "text": "your way.",
+   "color": "rgb(25, 23, 65)",
+   "size": 80.64,
+   "worstRatio": 15.42,
+   "min": 3,
+   "pass": true
+  },
+  {
+   "text": "Compatible pods, fresh beans",
+   "color": "rgb(79, 79, 153)",
+   "size": 18,
+   "worstRatio": 6.53,
+   "min": 4.5,
+   "pass": true
+  },
+  {
+   "text": "Find your store",
+   "color": "rgb(25, 23, 65)",
+   "size": 15,
+   "worstRatio": 15.18,
+   "min": 4.5,
+   "pass": true
+  },
+  {
+   "text": "Free shipping over $75.00",
+   "color": "rgb(79, 79, 153)",
+   "size": 13.5,
+   "worstRatio": 6.45,
+   "min": 4.5,
+   "pass": true
+  },
+  {
+   "text": "Free collection, ready in 30",
+   "color": "rgb(79, 79, 153)",
+   "size": 13.5,
+   "worstRatio": 6.45,
+   "min": 4.5,
+   "pass": true
+  },
+  {
+   "text": "30-day returns",
+   "color": "rgb(79, 79, 153)",
+   "size": 13.5,
+   "worstRatio": 6.45,
+   "min": 4.5,
+   "pass": true
+  }
+ ],
+ "home-375": [
+  {
+   "text": "The Autumn Edit",
+   "color": "rgb(66, 66, 178)",
+   "size": 11,
+   "worstRatio": 7.46,
+   "min": 4.5,
+   "pass": true
+  },
+  {
+   "text": "Great coffee,",
+   "color": "rgb(25, 23, 65)",
+   "size": 44,
+   "worstRatio": 15.82,
+   "min": 3,
+   "pass": true
+  },
+  {
+   "text": "your way.",
+   "color": "rgb(25, 23, 65)",
+   "size": 44,
+   "worstRatio": 15.71,
+   "min": 3,
+   "pass": true
+  },
+  {
+   "text": "Compatible pods, fresh beans",
+   "color": "rgb(79, 79, 153)",
+   "size": 18,
+   "worstRatio": 6.62,
+   "min": 4.5,
+   "pass": true
+  },
+  {
+   "text": "Find your store",
+   "color": "rgb(25, 23, 65)",
+   "size": 15,
+   "worstRatio": 15.18,
+   "min": 4.5,
+   "pass": true
+  },
+  {
+   "text": "Free shipping over $75.00",
+   "color": "rgb(79, 79, 153)",
+   "size": 13.5,
+   "worstRatio": 6.41,
+   "min": 4.5,
+   "pass": true
+  },
+  {
+   "text": "Free collection, ready in 30",
+   "color": "rgb(79, 79, 153)",
+   "size": 13.5,
+   "worstRatio": 6.39,
+   "min": 4.5,
+   "pass": true
+  },
+  {
+   "text": "30-day returns",
+   "color": "rgb(79, 79, 153)",
+   "size": 13.5,
+   "worstRatio": 6.35,
+   "min": 4.5,
+   "pass": true
+  }
+ ],
+ "pods-1440": [],
+ "pods-375": [],
+ "pdp-1440": [],
+ "pdp-375": [],
+ "about-1440": [],
+ "about-375": [],
+ "journal-1440": [],
+ "journal-375": []
+}

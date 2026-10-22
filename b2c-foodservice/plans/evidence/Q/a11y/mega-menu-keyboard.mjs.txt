@@ -1,0 +1,15 @@
+import { createRequire } from 'node:module';
+const require = createRequire('/Users/behnam/.npm/_npx/0f94ee7615faf582/node_modules/');
+const puppeteer = require('puppeteer-core');
+const browser = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new', args: ['--no-sandbox'] });
+const page = await browser.newPage();
+await page.setViewport({ width: 1440, height: 900 });
+await page.goto('http://localhost:3100/en-US', { waitUntil: 'networkidle0' });
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+for (let i = 0; i < 3; i++) await page.keyboard.press('Tab');
+await page.keyboard.press('ArrowDown');
+for (const ms of [0, 50, 200, 600]) {
+  await sleep(ms === 0 ? 0 : ms);
+  console.log(ms, JSON.stringify(await page.evaluate(() => { const p = document.getElementById('mega-pods'); const a = p?.querySelector('a'); const cs = p ? getComputedStyle(p) : null; return { exists: !!p, inert: p?.hasAttribute('inert'), ariaHidden: p?.getAttribute('aria-hidden'), visibility: cs?.visibility, display: cs?.display, opacity: cs?.opacity, links: p ? p.querySelectorAll('a').length : 0, firstLinkVisibility: a ? getComputedStyle(a).visibility : null, active: document.activeElement.tagName + ':' + (document.activeElement.textContent || '').trim().slice(0, 20), activeInPanel: !!p?.contains(document.activeElement) }; })));
+}
+await browser.close();

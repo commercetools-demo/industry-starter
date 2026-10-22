@@ -59,7 +59,7 @@ Read-back (MCP): the order exists with `customerEmail` the test address and no `
 Specs: `fulfilment-and-availability-model` (mixed bags), `design-cart-page`, `design-cart-drawer`, `cart-management`, `design-checkout-page`, `policy-pages` (consent link).
 
 1. Sign in as `maya.okonkwo@example.com` (US). Empty the bag if it has lines.
-2. Add `{PDP:machine}` (choose a colour; bundle `machine only`), Ship card, `Add to bag`. Add `{PDP:pod}` capsules compatible with that machine (the `Goes well with` strip leads with compatible capsules; press its add button), Collect at Brooklyn.
+2. Add `{PDP:machine}` (choose a colour; the bundle selector, where a machine has one, defaults to `Machine only`; a bean-to-cup machine has colours only), Ship card, `Add to bag`. Add `{PDP:pod}` capsules compatible with that machine (the `Goes well with` strip leads with compatible capsules; press its add button), Collect at Brooklyn.
 3. `/en-US/cart`: two groups, `Collect · Brooklyn` and `Shipping to you`, each with its promise, and **every line sits inside its cluster with its fulfilment chip** (`Collect` or `Ship`) and its own line total; no line is outside a cluster; the starter-capsule nudge is absent because capsules are present (remove them and confirm the nudge appears, then add them back).
 4. Apply `WELCOME10`: discount line; apply `FREESHIP` too (stackable): shipping shows `Free`. Remove `FREESHIP`.
 5. Checkout (full hosted Checkout): saved address preselected; the shipping step shows the standard carrier for the ship group and collection for the collect group, each with its price; consent text links to Terms and Privacy and **opens in a new tab**; close it, the checkout state is intact.
@@ -72,7 +72,7 @@ Read-back: order (or orders) with `shippingMode Multiple` or the documented fall
 Specs: `subscriptions-and-recurring-orders`, `fulfilment-and-availability-model` (Subscriptions), `design-product-detail-page` (Subscribe), `design-cart-page` (Subscriptions group).
 
 1. Signed in as `liam.carter@example.com`. Open `{PDP:pod}` that is subscribable. Subscribe card: interval select lists only policies with a price, `Save <n>%` chip, price lock sentence. A machine page shows no Subscribe card.
-2. Choose `Every 2 months`, quantity 2, `Subscribe`. Cart: group `Subscriptions` with `Delivered every 2 months`, interval select, `Buy once instead`. Add one ship accessory.
+2. Choose `Every 2 months`, quantity 2, `Subscribe`. Cart: group `Subscriptions` (`Delivered on the schedule you chose`, the price-lock sentence, the line reads `Every 2 months` and the first delivery date). The bag has no interval select and no `Buy once instead`: the interval is changed in the account (J4). Add one ship accessory.
 3. Checkout, pay. Confirmation says `Next delivery <date>, then every 2 months`.
 4. `/en-US/account/subscriptions`: one card with the lines, interval, next date, per-delivery price and status `Active`.
 5. Sign out; with a guest bag containing a subscribe line open `/en-US/checkout`: no guest option, sign-in prompt.
@@ -83,7 +83,7 @@ Read-back: the order has a line with `recurrenceInfo` (`priceSelectionMode Fixed
 
 Specs: `subscriptions-and-recurring-orders`, `design-account-area` (Subscriptions).
 
-On the card from J3: (1) `Skip next`: toast, label `Next delivery skipped`, button disabled. (2) `Change interval` to `Every month`: dialog, save, toast, same card updated in place (card id unchanged). (3) `Pause`: pill `Paused`, text `No further orders until you resume.` (4) `Resume`: pill `Active`, next date shown. (5) `Cancel`: dialog states the last order date or that none exists; confirm: pill `Canceled`, `Subscribe again`. Each action is one `PUT /api/recurring-orders/<id>` with 200.
+On the card from J3: (1) `Change interval` to `Every month`: dialog, save, toast, same card updated in place (card id unchanged). (2) `Skip next`: toast, label `Next delivery skipped`, button disabled; while a skip is pending `Change interval` is off (the API answers 422 `invalid_state`), so the interval is changed first. (3) `Pause`: pill `Paused`, text `No further orders until you resume.` (4) `Resume`: pill `Active`, next date shown. (5) `Cancel`: dialog states the last order date or that none exists; confirm: pill `Canceled`, `Subscribe again`. Each action is one `PUT /api/recurring-orders/<id>` with 200.
 
 Read-back after each step: `recurringOrderState` `Active` or `Paused` or `Canceled` (single l), `skipConfiguration` counter, `schedule` value, `nextOrderAt`. A renewal order (second order from the recurring order) is not expected within the run; the daily test policy check is `M-N-01`.
 
@@ -177,7 +177,7 @@ Specs: `error-pages`, `server-architecture-and-data-flow` (Errors), `about-us` (
 
 1. `/en-US/does-not-exist`, `/en-CA/does-not-exist`, a product route with an unknown slug: localized 404 with shell, search field and category links; document status 404 (`get_network_request`); search from the page works.
 2. `/api/nothing`: JSON 404 in the stable shape. Unauthenticated `GET /api/orders`: 401 with no body detail.
-3. Second server on port 3002 with `CTP_API_URL=http://127.0.0.1:9` (separate env file, not committed): About, Contact, FAQ, policies, Journal render completely; a listing shows the localized server-error page with `Try again` and a reference; the header cart count is unchanged; the page never shows a stack trace or a commercetools message.
+3. Second server on port 3002 with `CTP_API_URL=https://127.0.0.1:9` (separate env file, not committed; the SDK talks `https` only): About, Contact, FAQ, policies, Journal render completely; a listing shows the localized server-error page with `Try again` (no reference number today, idea in `IDEAS.md`); the header cart count reads 0 while the commerce tier is down (idea); the page never shows a stack trace or a commercetools message.
 4. Kill the dev API briefly while checkout is open (same second server): checkout shows the retry state, the bag is intact after recovery.
 
 ## J13 Content pages and contact
@@ -218,4 +218,4 @@ Specs: `checkout`, `design-checkout-page`.
 
 ## Status
 
-Not run yet. Blocked by OA-01 (`.env` files with API clients), OA-04 (full hosted Checkout, Stripe and test card), OA-02 (recurring orders), Chrome DevTools MCP availability, and workstreams A to P reaching `Done`.
+Run 2026-10-22 by workstream Q on commit `5584c8be` of branch `ws/q-quality`: J0 to J14 walked at 1440 px and, where the script asks, at 375 px, against a release build and the local mock commercetools (`plans/evidence/Q/journeys.md`, screenshots `J<n>-<step>-<width>.png`, test records in `test-data.md`). J15 (declined card) and the payment step of J1 to J3 need the hosted Checkout with Stripe, which the mock cannot run: the payment is simulated the way the platform does it and every journey says so. Defects found and fixed: `fixes.md` (QFX-01 to QFX-42); the rest is handed over in `plans/OWNER-HANDOFF.md` (live checks M-Q-03, M-Q-08, M-Q-09, device rows M-Q-01, M-Q-02).

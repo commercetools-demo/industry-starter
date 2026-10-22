@@ -65,4 +65,5 @@
 - (Q) Load the review form and the sort control on demand to take the product page under 200 kB of JavaScript (Q-Q-19).
 - (Q) Login limit per email across all client addresses, and a session version claim so a sign-out can revoke a copied token (security.md H2 and H10); a shared limiter store when the host runs several instances (same as J and M above).
 - (Q) The remaining hardening items H1, H8, H9, H11, H12, H14 to H17 of `plans/evidence/Q/security.md`.
-
+- (Q) `GET /api/checkout` answers 404 `cart_not_found` for a shopper with no bag (checkout opened by URL), so the browser logs a console error (Lighthouse best practices 96 on checkout). Answer 200 with an empty state or have the page skip the call without a bag cookie.
+- (Q) Product images are larger than they are shown (trace insight `ImageDelivery`: 90 to 160 kB too many on the listing and the product page). Check the `sizes` of `CardImage` and the gallery once the real image endpoint exists (OA-03).

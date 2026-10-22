@@ -7,7 +7,7 @@
 
 | Step | Result |
 | --- | --- |
-| A1 | Signed out `/en-US/account/orders` goes to `/en-US/account/sign-in?redirect=%2Faccount%2Forders`; after the demo sign-in the shopper is on Orders; the tab title is now `Orders: my account` (it had none: Q-F-19) |
+| A1 | Signed out `/en-US/account/orders` goes to `/en-US/account/sign-in?redirect=%2Faccount%2Forders`; after the demo sign-in the shopper is on Orders; the tab title is now `Orders: my account` (it had none: QFX-19) |
 | A2 | New customer and empty states: journey J9 (1440). At 375 the tab strip scrolls (the third tab is cut off, which signals more) and the active tab is in view; no overflow; no target under 24 px. `L-orders-375.png` |
 | A3 to A5 | Orders list with pills, details, collect tracker, ready block with directions, Collected and Buy again: journey J11 |
 | A6 | Buy again with a line that is out of stock (stock of `MCF-POD-EMBER-50` set to 0 in the mock): the available line was added to the bag (earlier line intact), a dialog `These items could not be added` lists `Ember Ristretto, Out of stock`. The dialog names the product but not the pack, so two packs of one product read alike (idea). `L-A6-buy-again-375.png` |
@@ -16,5 +16,5 @@
 | A9 | Another customer's order MCF-3001 and a made-up number MCF-9999: both HTTP 404, the same card, same response length, no name or email in the page |
 | A10 to A17 | Collection, Saved, Addresses, Payment methods, Profile, Settings, Delete: journey J9 (1440) |
 | A18 | Canadian customer `/en-CA/account/orders`: tabs Orders, Subscriptions, Saved, Addresses, Payment methods, Reviews, Profile, Settings (no Collection; `/en-CA/account/collection` is a 404), filters All, In progress, Completed, delivery orders only. `L-A18-ca-orders-375.png` |
-| A19 | Focus ring on every control checked in the K recipe (R19) and in the dialogs (trap and return fixed, Q-F-14 and Q-F-15) |
+| A19 | Focus ring on every control checked in the K recipe (R19) and in the dialogs (trap and return fixed, QFX-14 and QFX-15) |
 | A20 | `/api/account/payment-methods` made to answer 503: the panel shows `Payment methods is unavailable right now.` with `Try again`, the rest of the account renders; after `Try again` the saved methods show. `L-A20-panel-error-375.png` |

@@ -1,0 +1,55 @@
+import { createRequire } from 'node:module';
+import { writeFileSync } from 'node:fs';
+const require = createRequire('/Users/behnam/.npm/_npx/0f94ee7615faf582/node_modules/');
+const puppeteer = require('puppeteer-core');
+const base = process.argv[2] ?? 'http://localhost:3100';
+const out = process.argv[3] ?? 'dialogs.json';
+const browser = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new', args: ['--no-sandbox'] });
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const res = [];
+
+const visibleDialog = () => {
+  const cands = [...document.querySelectorAll('[role="dialog"], [role="alertdialog"], dialog[open]')];
+  const d = cands.find((e) => { const r = e.getBoundingClientRect(); const cs = getComputedStyle(e); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && !e.closest('[aria-hidden="true"]'); });
+  if (!d) return null;
+  d.setAttribute('data-q-dialog', '1');
+  return { modal: d.getAttribute('aria-modal') || (d.tagName === 'DIALOG' ? 'native' : null), labelled: !!(d.getAttribute('aria-label') || d.getAttribute('aria-labelledby')), name: (d.getAttribute('aria-label') || document.getElementById(d.getAttribute('aria-labelledby') || '')?.textContent || '').trim().slice(0, 40) };
+};
+
+async function run(name, vp, setup, openerFn) {
+  const ctx = await browser.createBrowserContext();
+  const page = await ctx.newPage();
+  await page.setViewport(vp);
+  await page.goto(base + '/en-US', { waitUntil: 'networkidle0' });
+  if (setup) await setup(page);
+  const opener = await page.evaluate(openerFn);
+  if (!opener) { res.push({ name, vp: vp.width, opener: null }); await ctx.close(); return; }
+  await page.focus('[data-q-opener]');
+  await page.keyboard.press('Enter');
+  await sleep(800);
+  const dlg = await page.evaluate(visibleDialog);
+  if (!dlg) { res.push({ name, vp: vp.width, opener, dialog: false }); await ctx.close(); return; }
+  const focusInside0 = await page.evaluate(() => { const d = document.querySelector('[data-q-dialog]'); return d.contains(document.activeElement); });
+  let outside = 0;
+  for (let i = 0; i < 25; i++) { await page.keyboard.press('Tab'); if (!(await page.evaluate(() => document.querySelector('[data-q-dialog]').contains(document.activeElement)))) outside++; }
+  for (let i = 0; i < 5; i++) { await page.keyboard.down('Shift'); await page.keyboard.press('Tab'); await page.keyboard.up('Shift'); if (!(await page.evaluate(() => document.querySelector('[data-q-dialog]').contains(document.activeElement)))) outside++; }
+  const pageInert = await page.evaluate(() => { const m = document.querySelector('main'); return !!(m && (m.hasAttribute('inert') || m.closest('[inert]') || m.closest('[aria-hidden="true"]'))); });
+  await page.keyboard.press('Escape');
+  await sleep(600);
+  const after = await page.evaluate(() => ({ closed: ![...document.querySelectorAll('[role="dialog"], dialog[open]')].some((e) => e.getBoundingClientRect().width > 0 && getComputedStyle(e).visibility !== 'hidden'), returned: document.activeElement?.hasAttribute('data-q-opener') === true, active: (document.activeElement?.getAttribute('aria-label') || document.activeElement?.textContent || document.activeElement?.tagName || '').trim().slice(0, 40) }));
+  res.push({ name, vp: vp.width, opener, dialog: true, ...dlg, focusMovedIn: focusInside0, tabEscapes: outside, pageBehindInert: pageInert, ...after });
+  await ctx.close();
+}
+const mark = (re) => `() => { const b = [...document.querySelectorAll('button, a[href]')].find((e) => ${re}.test(e.getAttribute('aria-label') || e.textContent || '') && e.getBoundingClientRect().width > 0 && !e.closest('[aria-hidden="true"]')); if (!b) return null; b.setAttribute('data-q-opener', '1'); return (b.getAttribute('aria-label') || b.textContent).trim().slice(0, 40); }`;
+const D = { width: 1440, height: 900 };
+const M = { width: 375, height: 812, isMobile: true, hasTouch: true };
+await run('store picker (header)', D, null, eval(mark('/store/i')));
+await run('country and language chooser', D, null, eval(mark('/change country|country and language/i')));
+await run('store picker (header)', M, null, eval(mark('/store/i')));
+await run('mobile navigation', M, null, eval(mark('/open menu|menu|navigation/i')));
+await run('filter sheet', M, async (p) => { await p.goto(base + '/en-US/category/pods', { waitUntil: 'networkidle0' }); }, eval(mark('/^filter/i')));
+await run('quick add (coffee grind)', D, async (p) => { await p.goto(base + '/en-US/category/coffee', { waitUntil: 'networkidle0' }); }, eval(`() => { const b = [...document.querySelectorAll('[data-testid="product-card"] button')].find((e) => /quick add/i.test(e.textContent || '')); if (!b) return null; b.setAttribute('data-q-opener', '1'); b.style.opacity = '1'; return b.textContent.trim().slice(0, 40); }`));
+await run('cart drawer', D, async (p) => { await p.goto(base + '/en-US/category/pods', { waitUntil: 'networkidle0' }); await p.evaluate(async () => { await fetch('/api/cart/lines', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ sku: 'MCF-POD-ANDES-10', quantity: 1, fulfilment: 'delivery' }) }); }); await p.reload({ waitUntil: 'networkidle0' }); }, eval(`() => { const b = [...document.querySelectorAll('header button, header a')].find((e) => /cart/i.test(e.getAttribute('aria-label') || '') && e.getBoundingClientRect().width > 0); if (!b) return null; b.setAttribute('data-q-opener', '1'); return b.getAttribute('aria-label') + ' ' + b.tagName; }`));
+await browser.close();
+writeFileSync(out, JSON.stringify(res, null, 1));
+for (const r of res) console.log(JSON.stringify(r));

@@ -1,0 +1,58 @@
+// Text over a background image or gradient: render the page with the text made transparent, read the pixels behind each text
+// box, and take the worst contrast between the text colour and any pixel behind it.
+import { createRequire } from 'node:module';
+import { writeFileSync } from 'node:fs';
+const require = createRequire('/Users/behnam/.npm/_npx/0f94ee7615faf582/node_modules/');
+const puppeteer = require('puppeteer-core');
+const base = process.argv[2] ?? 'http://localhost:3100';
+const browser = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new', args: ['--no-sandbox'] });
+const out = {};
+for (const [name, path] of [['home', '/en-US'], ['pods', '/en-US/category/pods'], ['pdp', '/en-US/p/ember-ristretto/MCF-POD-EMBER-50'], ['about', '/en-US/about'], ['journal', '/en-US/journal']]) {
+  for (const w of [1440, 375]) {
+    const page = await browser.newPage();
+    await page.setViewport({ width: w, height: 900, isMobile: w < 520, hasTouch: w < 520 });
+    await page.goto(base + path, { waitUntil: 'networkidle0' });
+    // 1. find text nodes whose background is an image or gradient; record colour, size and box (document coordinates)
+    const items = await page.evaluate(() => {
+      const parse = (c) => { const m = c.match(/rgba?\(([^)]+)\)/); if (!m) return null; const [r, g, b, a = 1] = m[1].split(/[ ,\/]+/).filter(Boolean).map(Number); return { r, g, b, a }; };
+      const hasImage = (el) => { for (let e = el; e; e = e.parentElement) { const cs = getComputedStyle(e); if (cs.backgroundImage !== 'none') return true; const c = parse(cs.backgroundColor); if (c && c.a > 0.95) return false; } return false; };
+      const res = []; const walker = document.createTreeWalker(document.querySelector('main') ?? document.body, NodeFilter.SHOW_TEXT);
+      for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+        const t = n.textContent.trim(); const el = n.parentElement;
+        if (!t || !el || el.closest('script,style,.sr-only,[aria-hidden="true"]')) continue;
+        const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || +cs.opacity === 0) continue;
+        if (!hasImage(el)) continue;
+        const range = document.createRange(); range.selectNodeContents(n); const r = range.getBoundingClientRect(); if (!r.width || !r.height) continue;
+        el.setAttribute('data-q-img', String(res.length));
+        res.push({ text: t.slice(0, 28), color: cs.color, size: parseFloat(cs.fontSize), bold: parseInt(cs.fontWeight, 10) >= 700, x: r.left + scrollX, y: r.top + scrollY, w: r.width, h: r.height });
+      }
+      return res;
+    });
+    if (!items.length) { out[`${name}-${w}`] = []; await page.close(); continue; }
+    // 2. hide all text, screenshot the full page, read the pixels behind each box
+    await page.addStyleTag({ content: '*{color:transparent !important;text-shadow:none !important}' });
+    // an element with its own important colour (the eyebrow) beats the rule above, so hide the measured ones inline
+    await page.evaluate(() => { for (const el of document.querySelectorAll('[data-q-img]')) { el.style.setProperty('color', 'transparent', 'important'); el.style.setProperty('-webkit-text-fill-color', 'transparent', 'important'); } });
+    const shot = await page.screenshot({ fullPage: true, encoding: 'base64' });
+    const results = await page.evaluate(async (b64, items) => {
+      const img = new Image(); img.src = 'data:image/png;base64,' + b64; await img.decode();
+      const scale = img.naturalWidth / document.documentElement.scrollWidth;
+      const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight; const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0);
+      const parse = (s) => { const m = s.match(/rgba?\(([^)]+)\)/); const [r, g, b] = m[1].split(/[ ,\/]+/).filter(Boolean).map(Number); return [r, g, b]; };
+      const lum = ([r, g, b]) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+      return items.map((it) => {
+        const fg = parse(it.color); const lf = lum(fg);
+        const x0 = Math.max(0, Math.floor(it.x * scale)), y0 = Math.max(0, Math.floor(it.y * scale)), w = Math.max(1, Math.min(c.width - x0, Math.ceil(it.w * scale))), h = Math.max(1, Math.min(c.height - y0, Math.ceil(it.h * scale)));
+        const d = ctx.getImageData(x0, y0, w, h).data; let worst = 99;
+        for (let i = 0; i < d.length; i += 4 * 3) { const lb = lum([d[i], d[i + 1], d[i + 2]]); const [hi, lo] = lf > lb ? [lf, lb] : [lb, lf]; const r = (hi + 0.05) / (lo + 0.05); if (r < worst) worst = r; }
+        const large = it.size >= 24 || (it.size >= 18.66 && it.bold);
+        return { text: it.text, color: it.color, size: it.size, worstRatio: +worst.toFixed(2), min: large ? 3 : 4.5, pass: worst >= (large ? 3 : 4.5) };
+      });
+    }, shot, items);
+    out[`${name}-${w}`] = results;
+    await page.close();
+  }
+}
+await browser.close();
+writeFileSync(process.argv[3] ?? 'image-contrast.json', JSON.stringify(out, null, 1));
+for (const [k, v] of Object.entries(out)) console.log(k, v.length, 'nodes, failing', v.filter((x) => !x.pass).map((x) => x.text + ' ' + x.worstRatio + '<' + x.min).join('; ') || 'none', '| worst', v.length ? Math.min(...v.map((x) => x.worstRatio)) : '-');
