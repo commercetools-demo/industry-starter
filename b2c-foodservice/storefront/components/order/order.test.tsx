@@ -1,9 +1,10 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '@/test/axe';
 import { orderView } from '@/test/checkout';
 import { renderWithIntl } from '@/test/render';
+import { stubFetch } from '@/test/shell';
 import enUS from '@/messages/en-US.json';
 import enCA from '@/messages/en-CA.json';
 import type { OrderState, OrderView } from '@/lib/types';
@@ -126,6 +127,24 @@ describe('collection tracker', () => {
   it('Ready: the confirmation shows the tracker from the order state', () => {
     render(orderView({ collect: [store], lines: [collectLine], ship: null, state: 'ready-for-collection' }));
     expect(screen.getByTestId('order-track')).toHaveAttribute('data-state', 'ready-for-collection');
+  });
+  it('the open page reads the order again after 30 s while a collection is under way, starting from the server-rendered value (found by Q in the browser: with fallback data SWR gave the interval no data, so it never polled)', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const order = orderView({ collect: [store], lines: [collectLine], state: 'ordered' });
+      const stub = stubFetch({
+        '/api/auth/me': () => ({ customer: null }),
+        [`/api/orders/${order.id}`]: () => ({ order: { ...order, state: 'ready-for-collection' } }),
+      });
+      render(order);
+      expect(screen.getByTestId('order-track')).toHaveAttribute('data-state', 'ordered');
+      await vi.advanceTimersByTimeAsync(ORDER_POLL_MS + 200);
+      await waitFor(() => expect(stub.calls.some((c) => c.url === `/api/orders/${order.id}`)).toBe(true));
+      await waitFor(() => expect(screen.getByTestId('order-track')).toHaveAttribute('data-state', 'ready-for-collection'));
+    } finally {
+      vi.useRealTimers();
+      vi.unstubAllGlobals();
+    }
   });
   it('Polling stops at collected, never starts for a delivery-only order', () => {
     expect(pollInterval({ state: 'ordered', collect: [store] })).toBe(ORDER_POLL_MS);

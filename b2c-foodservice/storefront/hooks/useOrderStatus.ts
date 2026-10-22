@@ -44,7 +44,8 @@ export function useOrderStatus(orderId: string, initial?: OrderView | null): Ord
       ...(initial ? { fallbackData: { order: initial } } : {}),
       revalidateOnMount: !initial,
       revalidateOnFocus: false,
-      refreshInterval: (latest) => pollInterval(latest?.order),
+      // `latest` is the cache, which holds nothing until the first read: until then the server-rendered order decides.
+      refreshInterval: (latest) => pollInterval(latest?.order ?? initial ?? undefined),
       shouldRetryOnError: false,
     },
   );
