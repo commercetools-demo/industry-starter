@@ -22,4 +22,12 @@ describe('listing metadata', () => {
     expect((await listingMetadata('en-US', ok('all'))).description).toBe('description.all');
     expect((await listingMetadata('en-US', ok('search'))).description).toBe('description.search');
   });
+  it('a category or all-products page names itself as the canonical address, without filters or sort; a later page keeps its number; search has none', async () => {
+    const page = (scope: 'category' | 'all', n: number, facets: Record<string, string[]> = {}) =>
+      ({ kind: 'ok', scope, params: { facets, sort: 'price-asc', page: n }, basePath: '/category/pods', page: n, pageCount: 4, category: { name: 'Pods' } }) as unknown as ListingResult;
+    expect((await listingMetadata('en-US', page('category', 1))).alternates?.canonical).toBe('/en-US/category/pods');
+    expect((await listingMetadata('en-US', page('category', 3, { roast: ['dark'] }))).alternates?.canonical).toBe('/en-US/category/pods?page=3');
+    expect((await listingMetadata('en-CA', page('all', 1))).alternates?.canonical).toBe('/en-CA/category/pods');
+    expect((await listingMetadata('en-US', ok('search'))).alternates).toBeUndefined();
+  });
 });

@@ -34,6 +34,9 @@ export async function listingMetadata(locale: string, result: ListingResult): Pr
     title,
     description,
     robots: params.q || activeFilterCount(params) > 0 ? { index: false } : undefined,
+    // The address of the page itself: no filters and no sort (those pages are noindex or duplicates), the page number kept.
+    // Search results have none (they are noindex).
+    ...(scope === 'search' ? {} : { alternates: { canonical: `/${locale}${result.basePath}${result.page > 1 ? `?page=${result.page}` : ''}` } }),
     pagination: {
       ...(result.page > 1 ? { previous: url(result.page - 1) } : {}),
       ...(result.page < result.pageCount ? { next: url(result.page + 1) } : {}),
