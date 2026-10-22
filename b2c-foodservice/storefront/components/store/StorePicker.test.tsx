@@ -153,6 +153,14 @@ describe('StorePicker', () => {
     expect(within(dialog()).getByText(/Malva Brooklyn Street 1, New York · 0\.\d mi/)).toBeInTheDocument();
   });
 
+  it('the search box keeps room for its placeholder: the location button wraps below it on a narrow screen', async () => {
+    setup();
+    await openPicker();
+    const search = within(dialog()).getByRole('searchbox', { name: 'Search stores' });
+    expect(search.parentElement?.className).toMatch(/min-w-\[200px\]/);
+    expect(search.parentElement?.parentElement?.className).toMatch(/\bflex-wrap\b/);
+  });
+
   it('a postcode prefix narrows the list', async () => {
     setup();
     await openPicker();

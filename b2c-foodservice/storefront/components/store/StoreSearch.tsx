@@ -31,8 +31,8 @@ const StoreSearch = forwardRef<HTMLInputElement, StoreSearchProps>(function Stor
 
   return (
     <div className="mb-4">
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative min-w-[200px] flex-1">
           <Icon name="search" size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-3" />
           <Input
             ref={ref}
