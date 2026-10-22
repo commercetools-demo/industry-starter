@@ -6,13 +6,18 @@ const LOCALES = Object.keys(COUNTRY_CONFIG);
 const LOCALE_HEADER = 'x-next-intl-locale';
 
 /**
- * A prefetch (next/link in the viewport, or the browser) must have no side effect. Without this a market switch with a bag
- * lost the bag: links of the old market in the page were prefetched after the switch, and the answer to that prefetch
- * moved the session back to the old market and dropped the cart (found by Q in journey J6).
+ * Only a page load may move the session to the market of the URL. A background fetch (next/link prefetch, soft navigation)
+ * must have no side effect: without this a market switch with a bag lost the bag, because links of the old market in the page
+ * were prefetched after the switch and the answer to that prefetch moved the session back and dropped the cart (found by Q
+ * in journey J6). Next removes its own prefetch headers before the proxy runs, so the proxy reads what the browser sends:
+ * `Sec-Fetch-Dest` is `document` for a page load and `empty` for a fetch. A client that sends neither (curl, an old browser)
+ * keeps the old behaviour.
  */
-function isPrefetch(request: NextRequest): boolean {
+function mayWriteCookies(request: NextRequest): boolean {
   const h = request.headers;
-  return h.get('next-router-prefetch') === '1' || /prefetch/i.test(h.get('sec-purpose') ?? '') || h.get('purpose') === 'prefetch';
+  if (/prefetch/i.test(h.get('sec-purpose') ?? '') || h.get('purpose') === 'prefetch') return false;
+  const dest = h.get('sec-fetch-dest');
+  return dest === null || dest === 'document' || dest === 'iframe';
 }
 // A first path segment shaped like a locale, for example fr-FR or de.
 const LOCALE_SHAPE = /^[a-z]{2}(-[A-Z]{2})?$/;
@@ -46,8 +51,8 @@ export async function proxy(request: NextRequest) {
     headers.set(LOCALE_HEADER, first);
     const response = NextResponse.next({ request: { headers } });
     response.headers.set(LOCALE_HEADER, first);
-    // The render of a prefetch still sees the URL market through the request cookies above; only a real visit writes them.
-    for (const c of isPrefetch(request) ? [] : (reconciled?.cookies ?? [])) {
+    // The render of a background fetch still sees the URL market through the request cookies above; only a page load writes them.
+    for (const c of mayWriteCookies(request) ? (reconciled?.cookies ?? []) : []) {
       response.cookies.set(c.name, c.value, {
         httpOnly: true,
         sameSite: 'lax',
