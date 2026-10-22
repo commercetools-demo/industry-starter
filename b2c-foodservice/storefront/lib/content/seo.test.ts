@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import robots from '@/app/robots';
 import sitemap from '@/app/sitemap';
 import { ARTICLES } from '@/content/journal';
@@ -6,6 +6,12 @@ import { buildSitemap } from './sitemap';
 import { siteOrigin } from './seo';
 
 describe('SEO', () => {
+  // The origin comes from the environment; a shell with a site URL set (a developer's, a host's build) must not change the result.
+  beforeEach(() => {
+    for (const name of ['NEXT_PUBLIC_SITE_URL', 'URL', 'DEPLOY_PRIME_URL']) vi.stubEnv(name, '');
+  });
+  afterEach(() => vi.unstubAllEnvs());
+
   it('sitemap lists content pages in both locales', () => {
     const urls = sitemap().map((e) => e.url);
     for (const locale of ['en-US', 'en-CA']) {
