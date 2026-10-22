@@ -79,7 +79,8 @@ export default function AddToBag() {
     if (cart) toast.show(fulfilment === 'collect' ? t('toast.reserved') : tShell('added'));
   };
 
-  const limited = maxQty < PDP_MAX_QUANTITY && quantity >= maxQty;
+  // A disabled button already says why (unavailable for collection, out of stock); "Only 1 available" under it would contradict it.
+  const limited = maxQty < PDP_MAX_QUANTITY && quantity >= maxQty && !state.disabled;
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex flex-wrap items-center gap-3">

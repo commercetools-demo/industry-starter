@@ -117,6 +117,16 @@ describe('add to bag', () => {
     expect(screen.getByRole('button', { name: 'Increase quantity' })).toBeEnabled();
   });
 
+  it('an empty store shows Unavailable for collection and no stock limit line', async () => {
+    const data = podPage();
+    data.product.variants[0] = variantView('POD-10', { capsulesPerPack: 10 }, 590, { stock: stock({ online: 40, stores: { 'ch-soho': 0 } }) });
+    await render(data, { selectedKey: 'mcf-store-nyc-soho' });
+    fireEvent.click(screen.getByRole('radio', { name: /Collect in store/ }));
+    expect(add()).toBeDisabled();
+    expect(add()).toHaveTextContent('Unavailable for collection');
+    expect(screen.queryByText(/Only \d+ available/)).not.toBeInTheDocument();
+  });
+
   it('409 not_available_for_collection refreshes and explains', async () => {
     const user = userEvent.setup();
     answer = error(409, 'not_available_for_collection');
