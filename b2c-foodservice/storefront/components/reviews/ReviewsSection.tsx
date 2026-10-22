@@ -6,6 +6,7 @@ import ReviewForm from '@/components/reviews/ReviewForm';
 import ReviewListPanel from '@/components/reviews/ReviewListPanel';
 import WriteReviewCta, { type CtaState } from '@/components/reviews/WriteReviewCta';
 import { useAccount } from '@/hooks/useAccount';
+import { useRouter } from '@/i18n/routing';
 import { useMyReviews } from '@/hooks/useMyReviews';
 import { useReviews } from '@/hooks/useReviews';
 import { authorName } from '@/lib/reviews/validate';
@@ -28,6 +29,7 @@ type Mode = 'closed' | 'create' | 'edit';
  */
 export default function ReviewsSection({ productId, productSlug, sku }: ReviewsSectionProps) {
   const t = useTranslations('reviews');
+  const router = useRouter();
   const formId = useId();
   const { customer } = useAccount();
   const [sort, setSort] = useState<ReviewSort>('newest');
@@ -89,6 +91,8 @@ export default function ReviewsSection({ productId, productSlug, sku }: ReviewsS
                 setMode('closed');
                 setHint('');
                 setNotice(kind === 'created' ? t('form.published') : t('form.edited'));
+                // the average, count and bars above the list come from the page (the product statistics): read them again
+                router.refresh();
               }}
               onAlreadyReviewed={() => {
                 setHint(t('form.alreadyReviewed'));

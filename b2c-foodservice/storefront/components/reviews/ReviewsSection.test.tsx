@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ReviewsSection from '@/components/reviews/ReviewsSection';
-import { renderShell, stubFetch } from '@/test/shell';
+import { nav, renderShell, stubFetch } from '@/test/shell';
 import type { MyReviewView } from '@/lib/types';
 
 vi.mock('@/i18n/routing', async () => (await import('@/test/shell')).routingMock());
@@ -92,6 +92,17 @@ describe('ReviewsSection', () => {
     expect(await screen.findByText('Instant')).toBeInTheDocument();
     expect(screen.queryByText(/pending/i)).toBeNull();
     expect(await screen.findByText(/You reviewed this product on/)).toBeInTheDocument();
+  });
+
+  it('The rating summary above the list is read again after a review is saved (it is rendered by the page, not by the list)', async () => {
+    nav.refresh.mockClear();
+    install({ customer, reviews: [] });
+    mount();
+    await userEvent.click(await screen.findByRole('button', { name: 'Write a review' }));
+    await userEvent.click(screen.getByRole('radio', { name: '4 stars' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Submit review' }));
+    await screen.findByText(/You reviewed this product on/);
+    expect(nav.refresh).toHaveBeenCalledTimes(1);
   });
 
   it('Missing rating', async () => {

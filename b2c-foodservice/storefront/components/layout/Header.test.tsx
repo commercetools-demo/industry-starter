@@ -67,7 +67,7 @@ describe('Header', () => {
     renderShell(<Header categories={TREE} />, { fallback: fallbackFor(null) });
     const link = await screen.findByRole('link', { name: 'Sign in' });
     expect(link).toHaveAttribute('href', '/account/sign-in');
-    expect(screen.queryByRole('button', { name: 'Account menu' })).toBeNull();
+    expect(screen.queryByRole('button', { name: /Account menu$/ })).toBeNull();
   });
 
   it('Signed in shows initials avatar and dropdown with name email dashboard sign out', async () => {
@@ -77,11 +77,10 @@ describe('Header', () => {
       '/api/auth/logout': () => ({ ok: true }),
     });
     renderShell(<Header categories={TREE} />, { fallback: fallbackFor(null) });
-    const trigger = await screen.findByRole('button', { name: 'Account menu' });
+    const trigger = await screen.findByRole('button', { name: /Account menu$/ });
     expect(trigger).toHaveTextContent('MO');
-    // The initials are a picture of the name, not a label: hidden from the accessible name so the visible text and the
-    // name cannot disagree (WCAG 2.5.3, Lighthouse label-content-name-mismatch).
-    expect(trigger.querySelector('[aria-hidden="true"]')).toHaveTextContent('MO');
+    // The accessible name starts with the visible text (WCAG 2.5.3 Label in Name, Lighthouse label-content-name-mismatch).
+    expect(trigger).toHaveAccessibleName('MO, Account menu');
     expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
     expect(trigger).toHaveAttribute('aria-expanded', 'false');
     await userEvent.click(trigger);
@@ -102,7 +101,7 @@ describe('Header', () => {
       '/api/auth/me': () => ({ customer: { firstName: 'A', lastName: 'B', email: 'a@example.com' } }),
     });
     renderShell(<Header categories={TREE} />, { fallback: fallbackFor(null) });
-    const trigger = await screen.findByRole('button', { name: 'Account menu' });
+    const trigger = await screen.findByRole('button', { name: /Account menu$/ });
     await userEvent.click(trigger);
     await userEvent.keyboard('{Escape}');
     expect(screen.queryByRole('menu')).toBeNull();
