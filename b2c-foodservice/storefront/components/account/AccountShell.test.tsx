@@ -27,6 +27,11 @@ const shell = (collection = true) =>
   );
 
 describe('Account shell', () => {
+  it('the frame is a screen tall so the footer starts below the fold while a panel is still loading', () => {
+    shell();
+    expect(screen.getByTestId('account-frame').className).toContain('min-h-[calc(100svh-7rem)]');
+  });
+
   it('Loyalty not offered', async () => {
     stubFetch({ '/api/auth/me': me, '/api/account/summary': () => ({ openOrders: 0, readyForCollection: 0, savedItems: 0 }) });
     const { container } = shell();
