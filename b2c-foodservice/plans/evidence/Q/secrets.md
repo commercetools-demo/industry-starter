@@ -3,7 +3,7 @@
 
 # Secrets inventory, bundle guard and logging review (Q-10, Q-13; S2, S3, S11)
 
-Written 2026-10-22 by workstream Q at commit `70f34305` (branch `ws/q-quality`). **Names only.** No value was read, printed or copied. I did not open `storefront/.env.local` or `seed/.env`. The names come from `storefront/.env.example`, `seed/.env.example` and a grep for `process.env` in the application code.
+Written 2026-10-22 by workstream Q at commit `e3bf8f29` (branch `ws/q-quality`). **Names only.** No value was read, printed or copied. I did not open `storefront/.env.local` or `seed/.env`. The names come from `storefront/.env.example`, `seed/.env.example` and a grep for `process.env` in the application code.
 
 ## 1. Result in one table
 
@@ -15,7 +15,7 @@ Written 2026-10-22 by workstream Q at commit `70f34305` (branch `ws/q-quality`).
 | A secret name appears in the client build output | **no.** I searched the 67 files of `.next/static` (production build of 2026-10-22 11:47) for the 10 secret variable names: no hit |
 | `node scripts/check-secrets.mjs` (in `storefront`) | `secret check: ok`, exit 0 |
 | `node scripts/check-versions.mjs` (in `storefront`) | `version gate: ok`, exit 0 |
-| Logging grep of `storefront/app`, `lib`, `components`, `hooks`, `context` | 20 `console.*` statements in 17 files, all one-line JSON with ids and counts, none with a secret, token, email, cookie, authorization header or session value (section 5) |
+| Logging grep of `storefront/app`, `lib`, `components`, `hooks`, `context`, `instrumentation.ts`, `proxy.ts` | 21 `console.*` statements in 18 files, all one-line JSON with ids and counts (one prints an environment error message that names a variable), none with a secret, token, email, cookie, authorization header or session value (section 6) |
 | Secret value scan of the build (`node scripts/check-bundle-secrets.mjs`) | **not run by me**: the script loads `.env.local`, which I must not read. Its 6 unit tests pass. `npm run verify:build` runs it after `next build` (`package.json`). The lead runs it with the real values |
 
 ## 2. Storefront names (`storefront/.env.example`, 19 names)
@@ -104,6 +104,7 @@ Command: `rg -n "console\.(log|error|warn|info|debug|trace)|logger\.|\blog\(" ap
 | 9 | `lib/pdp/load.ts:17`, `lib/listing/load.ts:142`, `lib/home-data.ts:34`, `lib/ct/promise.ts:20`, `lib/ct/market.ts:34,36`, `lib/shell-data.ts:31,37`, `components/pdp/RelatedStrip.tsx:7` (a server component) | `event` and the upstream `status` number | clean |
 | 10 | `lib/shell-data.ts:45`, `lib/mappers/channel.ts:55` `console.warn` | `event` with category keys or a channel key | clean (catalogue keys) |
 | 11 | `lib/mappers/cart.ts:215` `console.warn` | a sentence with a number of minor units | clean, and development only (guarded by `NODE_ENV === 'development'`, line 213) |
+| 12 | `instrumentation.ts` `console.error` (new in `eeacce1b`, production only, then `process.exit(1)`) | the message of an invalid environment: it names the variable (`Missing environment variable X`, `X must be at least 32 characters`, `X must not be public`); for a project key mismatch it names both project keys (not secrets) | clean: never a value of a secret. Tests: `instrumentation.test.ts` (names the variable, prints no stack), `lib/env.test.ts` (`Missing secret: SESSION_SECRET shorter than 32 names the variable and not the value`) |
 
 Other facts that matter for logs:
 
@@ -112,7 +113,7 @@ Other facts that matter for logs:
 - **Newsletter:** `newsletter/route.test.ts` `202 and the address is not logged`.
 - **Rate limit keys:** `lib/rate-limit.ts`, `lib/http/limit.ts` and `lib/auth/login-flow.ts` contain no log call. The keys are SHA-256 hashes (`hashKey`).
 - **Not under the app's control:** Next prints uncaught Server Component errors itself. The thrown commercetools SDK object carries `originalRequest` with the `Authorization` header unless the client masks it (hardening H3).
-- **Seed:** 20 `console.*` calls print counts and plan lines. `seed/src/lib.ts:157` `fail()` prints `e.message` for an `Error` and the whole object otherwise (hardening H3). The demo customers it names are `@example.com` addresses.
+- **Seed:** 25 `console.*` references in 11 files print counts and plan lines. `seed/src/lib.ts:157` `fail()` prints `e.message` for an `Error` and the whole object otherwise (hardening H3). The demo customers it names are `@example.com` addresses.
 
 ## 7. Where each secret may live
 

@@ -10,9 +10,9 @@ Spec: `openspec/specs/bootstrap-and-structure/spec.md`. Every proof ran in a scr
 | Fresh clone builds | pass (`clean-clone.md`) |
 | Forbidden version | pass: `next` 15, `react` 18 and `next-intl` 3 each fail the gate with its message |
 | Scaffold evidence | pass: 7 tracked files in `plans/evidence/A/` (the health response is the 502 shape, blocked by OA-01) |
-| Missing secret | pass with a note: the message names the variable only; `next start` stays up and answers 500 (S1) |
+| Missing secret | pass: the message names the variable only; `next start` printed it and exited with 1 (S1 found by this run and fixed in `eeacce1b`: it used to stay up and answer 500) |
 | Client bundle scan | pass: clean build passes; a planted fake secret is found |
-| Wrong project | pass with the same note (S1): both keys named, zero connections to the fake endpoint |
+| Wrong project | pass: both keys named, zero connections to the fake endpoint; the server exits with 1 (S1, fixed) |
 | Stored URL with a query | pass: unit tests and a direct call; no recorded image file exists yet (OA-03) |
 | Deploy gate | pass: fails and lists exactly what to remove; passes once removed (scratch only) |
 | Server import in a client file | pass: lint fails with the boundary rule; the build fails too when the import is used |
@@ -174,7 +174,7 @@ all variables valid:    env ok   exit=0
 
 ### Result: pass, with one surprise
 
-**S1.** The message names the variable and never a value. But `next start` does not exit. It prints "Ready", then the error, stays listening, and answers every request with a plain 500 (`Internal Server Error`). No page is rendered. It is fail-fast in the sense that nothing is served, not in the sense of a process exit. The build and the loader do exit with 1. On Netlify the hosting runtime starts the app, so the same 500 would be seen there; this was not tested. If an exit is wanted, the register hook in `instrumentation.ts` could call `process.exit(1)` in production. Not changed.
+**S1 (fixed).** Before the fix `next start` printed "Ready", then the error, stayed listening and answered every request with a plain 500. It is now fail-fast in the sense of the spec: `instrumentation.ts` prints the message (the variable name only, no stack) and calls `process.exit(1)` in production; in development it throws, so the overlay shows the error and a corrected `.env.local` is read without a restart. Re-run after the fix on a fresh build, port 3302, `SESSION_SECRET=short`: `Ready in 75ms`, `SESSION_SECRET must be at least 32 characters`, `exit=1`. Test: `instrumentation.test.ts` (4 tests). On Netlify the hosting runtime starts the app, so a bad environment there ends the function with this message in its log (not tested: no deployment, OA-05).
 
 ## Client bundle scan
 
@@ -233,7 +233,7 @@ Control (keys equal, `next start -p 3303`): `GET /en-US -> 200`, `GET /api/healt
 
 The env loader (`lib/env.ts`) throws this error before `lib/ct/client.ts` builds the client, so no token request can be made. Project keys are not secrets, so naming both is allowed. The same message appears in A's `startup-guard.txt` for `npm run dev`.
 
-Result: pass. The same surprise as S1 applies: the process stays up and answers 500.
+Result: pass. The S1 fix applies: the process exits with 1.
 
 ## Stored URL with a query
 

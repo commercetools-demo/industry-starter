@@ -3,7 +3,7 @@
 
 # 401 matrix: every Route Handler (Q-11, S5, S7, S10)
 
-Written 2026-10-22 by workstream Q from the handlers in `storefront/app/api/**/route.ts` and from `storefront/app/api/api-matrix.test.ts`, at commit `70f34305` (branch `ws/q-quality`).
+Written 2026-10-22 by workstream Q from the handlers in `storefront/app/api/**/route.ts` and from `storefront/app/api/api-matrix.test.ts`, at commit `e3bf8f29` (branch `ws/q-quality`).
 
 ## Count
 
@@ -79,12 +79,12 @@ Written 2026-10-22 by workstream Q from the handlers in `storefront/app/api/**/r
 
 ## What proves what
 
-1. **Every route has an entry.** `app/api/api-matrix.test.ts` has four tests, all passing at `70f34305`: `a new route without a table entry fails`, `a table entry without a route fails`, `every customer route calls requireCustomer in each exported method, public routes never read the customer id`, `the dev routes are exactly the ones the deploy gate names`.
-2. **The matrix test reads source text. It does not call the routes.** The 401 answers themselves are proven by the route tests named in the last column. Both layers passed in my run (Vitest, 67 files, 540 tests, security set).
+1. **Every route has an entry.** `app/api/api-matrix.test.ts` has four tests, all passing at `e3bf8f29`: `a new route without a table entry fails`, `a table entry without a route fails`, `every customer route calls requireCustomer in each exported method, public routes never read the customer id`, `the dev routes are exactly the ones the deploy gate names`.
+2. **The matrix test reads source text. It does not call the routes.** The 401 answers themselves are proven by the route tests named in the last column. Both layers passed in my run (Vitest, 69 files, 550 tests, security set).
 3. **I checked each customer file by script.** In all 17 `customer` files the number of `requireCustomer(` calls equals the number of exported handlers (for example `shopping-lists/route.ts`: 3 handlers, 3 calls), and `reviews/route.ts` has 2 and 2 (GET only for `?mine=1`). So no customer method is missing its guard today.
 4. **The matrix test is weaker than it looks.** For a customer route it only requires at least one call and at most two per handler (`api-matrix.test.ts:95-96`). If someone removed the call from one method of a multi-method route the test would still pass. Suggested fix: for the 17 `customer` routes require `guards >= handlers` (the test already has both numbers).
 5. **Three 401 branches have no test** (rows 7, 8 and the GET of row 38). The code is correct (first statement of each handler). Add three one-line tests.
-6. **A browser run with no cookie** (every per-person route answers 401, no body detail) is journey J12 step 2 and J14 step 1 in `journeys.md`. At the time of writing `journeys.md` holds J0 and J1 only, so that run is recorded as: browser: see journeys.md J12 and J14.
+6. **The browser run with no cookie** is recorded in `journeys.md` J14 step 1 (20 per-person routes without a cookie: 401 `unauthorized` / `Sign in required`, one body shape, `Cache-Control: no-store`; a guest asking for an order by id gets the same 404 as an unknown id) and J12 step 2 (`GET /api/orders` 401, `/api/nothing` JSON 404, a cross-site `Origin` 403 `forbidden_origin`). I cite it and did not rerun it. J14 step 1 also notes that a PUT or PATCH to a route that does not take it is a plain 405 from Next.
 7. `/api/shipping-methods` is named in the spec text for S5 but no such route exists. Shipping methods are read on the server (`lib/ct/shipping.ts`). Nothing to do.
 
 ## Notes on the guard (S7)
