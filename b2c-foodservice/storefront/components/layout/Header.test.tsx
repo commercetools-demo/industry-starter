@@ -79,6 +79,9 @@ describe('Header', () => {
     renderShell(<Header categories={TREE} />, { fallback: fallbackFor(null) });
     const trigger = await screen.findByRole('button', { name: 'Account menu' });
     expect(trigger).toHaveTextContent('MO');
+    // The initials are a picture of the name, not a label: hidden from the accessible name so the visible text and the
+    // name cannot disagree (WCAG 2.5.3, Lighthouse label-content-name-mismatch).
+    expect(trigger.querySelector('[aria-hidden="true"]')).toHaveTextContent('MO');
     expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
     expect(trigger).toHaveAttribute('aria-expanded', 'false');
     await userEvent.click(trigger);

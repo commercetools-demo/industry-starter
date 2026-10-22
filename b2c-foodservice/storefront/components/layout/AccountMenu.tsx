@@ -86,7 +86,10 @@ export default function AccountMenu() {
         onClick={() => setOpen((o) => !o)}
         className="transition-state inline-flex h-10 items-center gap-1 rounded-pill pl-1 pr-2 text-ink hover:bg-ink/6"
       >
-        <span className="flex h-8 w-8 items-center justify-center rounded-pill bg-ink font-display text-[12px] font-bold text-surface">
+        <span
+          aria-hidden="true"
+          className="flex h-8 w-8 items-center justify-center rounded-pill bg-ink font-display text-[12px] font-bold text-surface"
+        >
           {initials}
         </span>
         <Icon name="chevD" size={14} />
