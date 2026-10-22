@@ -61,7 +61,7 @@ export async function afterPlacement(session: Session, parts: readonly PayPart[]
 export async function applyPlacement<T extends NextResponse>(res: T, p: Placement): Promise<T> {
   if (!p.matched || p.next !== null) return res;
   if (p.clearParts) clearPayParts(res);
-  if (p.guestEmail) res.cookies.set(GUEST_EMAIL_COOKIE, p.guestEmail, { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 3600 });
+  if (p.guestEmail) res.cookies.set(GUEST_EMAIL_COOKIE, p.guestEmail, { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 3600, secure: process.env.NODE_ENV === 'production' });
   setSessionCookie(res, await createSessionToken(p.session));
   return res;
 }

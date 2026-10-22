@@ -21,7 +21,7 @@ const BADGE_KEY: Record<CardBadge, 'bestseller' | 'new' | 'limitedEdition' | 'su
  * One click target: the name link is stretched over the card with ::after; the heart, Quick add and "Choose a store" are
  * siblings above it (z-20), so no interactive element sits inside an anchor. `data-price` is the amount to pay in minor units.
  */
-export default function ProductCard({ product }: { product: ProductSummary }) {
+export default function ProductCard({ product, imagePriority = false }: { product: ProductSummary; imagePriority?: boolean }) {
   const t = useTranslations('card');
   const tPlp = useTranslations('plp');
   const href = `/p/${encodeURIComponent(product.slug)}/${encodeURIComponent(product.sku)}`;
@@ -33,7 +33,7 @@ export default function ProductCard({ product }: { product: ProductSummary }) {
       className="group relative flex min-w-0 flex-col"
     >
       <div className="transition-state relative aspect-[5/6] overflow-hidden rounded-card bg-canvas-2 group-hover:shadow-card-hover group-focus-within:shadow-card-hover motion-reduce:transition-none">
-        <CardImage url={product.imageUrl} alt={product.imageAlt} placeholder={tPlp('noPhoto')} />
+        <CardImage url={product.imageUrl} alt={product.imageAlt} placeholder={tPlp('noPhoto')} priority={imagePriority} />
         {product.badge ? (
           <Badge
             variant={product.badge === 'new' || product.badge === 'limited-edition' ? 'accent' : 'ink'}

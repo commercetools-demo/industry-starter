@@ -16,7 +16,7 @@ export const WRITE_LIMIT = { limit: 30, windowMs: HOUR };
 
 export function assertWithinLimit(kind: 'create' | 'write', customerId: string): void {
   const result = rateLimit(hashKey('reviews', kind, customerId), kind === 'create' ? CREATE_LIMIT : WRITE_LIMIT);
-  if (!result.allowed) throw new AppError('rate_limited', 429);
+  if (!result.allowed) throw new AppError('rate_limited', 429, undefined, undefined, result.retryAfterSeconds);
 }
 
 export function validationResponse(fields: Partial<Record<'rating' | 'title' | 'text', ReviewFieldCode>>): Response {

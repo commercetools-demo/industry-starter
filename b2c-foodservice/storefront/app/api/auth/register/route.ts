@@ -44,6 +44,6 @@ export const POST = handle('/api/auth/register', async (req) => {
   const result = await signIn(email, password, { cartId: session.cartId, anonymousId: session.anonymousId });
   const res = await signedInResponse(result, session, 201);
   // The guest-order email prefill (set by checkout) has done its job; only a route can remove the cookie.
-  res.cookies.set(GUEST_EMAIL_COOKIE, '', { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 0 });
+  res.cookies.set(GUEST_EMAIL_COOKIE, '', { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 0, secure: process.env.NODE_ENV === 'production' });
   return res;
 });

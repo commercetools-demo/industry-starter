@@ -12,7 +12,9 @@ import { nav, renderShell, stubFetch } from '@/test/shell';
 vi.mock('@/i18n/routing', async () => (await import('@/test/shell')).routingMock());
 vi.mock('next/image', () => ({
   // eslint-disable-next-line @next/next/no-img-element
-  default: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} />,
+  default: ({ src, alt, priority }: { src: string; alt: string; priority?: boolean }) => (
+    <img src={src} alt={alt} data-priority={priority ? 'true' : undefined} />
+  ),
 }));
 
 import ListingPage from '@/components/listing/ListingPage';
@@ -58,6 +60,15 @@ describe('ListingPage', () => {
     expect(screen.getAllByTestId('product-card')).toHaveLength(2);
     expect(screen.getByRole('combobox')).toBeInTheDocument();
     expect(document.querySelector('main')).toBeNull();
+  });
+
+  it('The first card image is the one the page waits for: it loads at once, the others stay lazy (LCP, perf.md)', () => {
+    renderShell(<ListingPage result={view({ items: [1, 2, 3].map((n) => product(n, { imageUrl: `https://img.example/p-${n}.jpg` })) })} />, { fallback: fb(null) });
+    const images = screen.getAllByTestId('product-grid')[0]!.querySelectorAll('img');
+    expect(images).toHaveLength(3);
+    expect(images[0]).toHaveAttribute('data-priority', 'true');
+    expect(images[1]).not.toHaveAttribute('data-priority');
+    expect(images[2]).not.toHaveAttribute('data-priority');
   });
 
   it('B2C only: a card grid, no variant table or pack selector', () => {

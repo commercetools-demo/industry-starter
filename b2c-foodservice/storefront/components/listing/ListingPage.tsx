@@ -65,7 +65,7 @@ export default function ListingPage({ result }: { result: Exclude<ListingResult,
           {!noMatch ? (
             <>
               <h2 className="sr-only">{t('results')}</h2>
-              <ProductGrid products={result.items} />
+              <ProductGrid products={result.items} eagerFirst />
               <Pagination page={result.page} pageCount={result.pageCount} basePath={result.basePath} params={params} scope={scope} />
             </>
           ) : params.q && result.noResults ? (

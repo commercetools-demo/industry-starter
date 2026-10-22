@@ -44,7 +44,7 @@ export async function readPayParts(): Promise<PayPart[]> {
 
 export function setPayParts<T extends NextResponse>(res: T, parts: readonly PayPart[]): T {
   const value = JSON.stringify(parts.map(({ id, clusterKey, label, totalCents }) => ({ id, clusterKey, label, totalCents })));
-  res.cookies.set(PAY_CARTS_COOKIE, parts.length ? value : '', { httpOnly: true, sameSite: 'lax', path: '/', maxAge: parts.length ? MAX_AGE : 0 });
+  res.cookies.set(PAY_CARTS_COOKIE, parts.length ? value : '', { httpOnly: true, sameSite: 'lax', path: '/', maxAge: parts.length ? MAX_AGE : 0, secure: process.env.NODE_ENV === 'production' });
   return res;
 }
 

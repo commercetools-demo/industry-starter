@@ -8,6 +8,8 @@ export class AppError extends Error {
     readonly status: number,
     message?: string,
     readonly correlationId?: string,
+    /** For a 429: the seconds to wait, sent as `Retry-After`. */
+    readonly retryAfterSeconds?: number,
   ) {
     super(message ?? SAFE_MESSAGES[code]);
     this.name = 'AppError';
@@ -92,6 +94,9 @@ export function errorResponse(e: unknown, route: string): Response {
   console.error(JSON.stringify(line));
   return Response.json(
     { error: { code: err.code, message: SAFE_MESSAGES[err.code] } },
-    { status: err.status },
+    {
+      status: err.status,
+      ...(err.retryAfterSeconds ? { headers: { 'Retry-After': String(err.retryAfterSeconds) } } : {}),
+    },
   );
 }

@@ -83,6 +83,7 @@ describe('POST /api/reviews', () => {
     for (let i = 0; i < 5; i++) expect((await POST(req('POST', { productId: PID, rating: 5 }), ctx)).status).toBe(201);
     const sixth = await POST(req('POST', { productId: PID, rating: 5 }), ctx);
     expect(sixth.status).toBe(429);
+    expect(Number(sixth.headers.get('Retry-After'))).toBeGreaterThan(0);
     expect((await sixth.json()).error.code).toBe('rate_limited');
   });
 
