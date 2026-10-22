@@ -60,6 +60,17 @@ export default function PrimaryNav({ categories }: { categories: Category[] }) {
     return () => document.removeEventListener('pointerdown', onPointerDown);
   }, [openId]);
 
+  /**
+   * Moves focus to the first link of a panel that has just opened. The panel fades in with a `visibility` transition, and a
+   * hidden element takes no focus, so the first frame can miss; keep trying for a few frames (found by Q: ArrowDown opened the
+   * panel but focus stayed on the link).
+   */
+  const focusPanel = (id: MenuId, attempt = 0) => {
+    const first = root.current?.querySelector<HTMLElement>(`#mega-${id} a`);
+    first?.focus();
+    if (first && document.activeElement !== first && attempt < 10) requestAnimationFrame(() => focusPanel(id, attempt + 1));
+  };
+
   const onKeyDown = (e: KeyboardEvent<HTMLElement>) => {
     if (e.key !== 'Escape' || !openId) return;
     e.stopPropagation();
@@ -94,10 +105,8 @@ export default function PrimaryNav({ categories }: { categories: Category[] }) {
                     if (e.key !== 'ArrowDown') return;
                     e.preventDefault();
                     open(menu);
-                    // Focus moves in once the panel is no longer inert.
-                    requestAnimationFrame(() => {
-                      root.current?.querySelector<HTMLElement>(`#mega-${menu} a`)?.focus();
-                    });
+                    // Focus moves in once the panel is no longer inert or hidden.
+                    requestAnimationFrame(() => focusPanel(menu));
                   }
                 : undefined
             }

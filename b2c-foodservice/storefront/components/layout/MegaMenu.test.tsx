@@ -105,6 +105,24 @@ describe('MegaMenu', () => {
     expect(panel('coffee').contains(document.activeElement)).toBe(true);
   });
 
+  it('ArrowDown keeps trying to focus the panel while it is still fading in (a hidden element takes no focus)', async () => {
+    const user = setup();
+    top('Coffee').focus();
+    const first = panel('coffee').querySelector('a') as HTMLElement;
+    const realFocus = first.focus.bind(first);
+    let attempts = 0;
+    first.focus = () => {
+      attempts += 1;
+      if (attempts >= 3) realFocus();
+    };
+    await user.keyboard('{ArrowDown}');
+    await act(async () => {
+      vi.advanceTimersByTime(300);
+    });
+    expect(attempts).toBeGreaterThanOrEqual(3);
+    expect(first).toHaveFocus();
+  });
+
   it('outside pointer down closes', async () => {
     const user = setup();
     await user.hover(top('Pods'));
