@@ -25,4 +25,18 @@ describe('handle applies the request guard', () => {
     );
     expect(good.status).toBe(200);
   });
+
+  it('every handled answer is no-store unless the handler chose its own cache header (S-caching)', async () => {
+    const ctx = { params: Promise.resolve({}) };
+    const plain = await ok(new Request('http://localhost:3000/api/x'), ctx);
+    expect(plain.headers.get('cache-control')).toBe('no-store');
+    const failing = handle('/api/test', async () => {
+      throw new Error('boom');
+    });
+    expect((await failing(new Request('http://localhost:3000/api/x'), ctx)).headers.get('cache-control')).toBe('no-store');
+    const refused = await ok(new Request('http://localhost:3000/api/x', { method: 'POST', headers: { origin: 'https://evil.example' }, body: '{}' }), ctx);
+    expect(refused.headers.get('cache-control')).toBe('no-store');
+    const own = handle('/api/test', async () => Response.json({ ok: true }, { headers: { 'Cache-Control': 'public, max-age=300' } }));
+    expect((await own(new Request('http://localhost:3000/api/x'), ctx)).headers.get('cache-control')).toBe('public, max-age=300');
+  });
 });
