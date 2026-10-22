@@ -41,6 +41,12 @@ beforeEach(() => {
 });
 
 describe('add to bag', () => {
+  it('the button never shrinks below its label and padding, so a long label wraps under the stepper at 375 px', async () => {
+    await render();
+    expect(add().className).toMatch(/\bmin-w-fit\b/);
+    expect(add().className).not.toMatch(/min-w-\[/);
+  });
+
   it('Add sends a delivery line, toasts and updates the header count', async () => {
     const user = userEvent.setup();
     await render();

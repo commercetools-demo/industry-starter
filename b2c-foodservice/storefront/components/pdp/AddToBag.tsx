@@ -94,7 +94,7 @@ export default function AddToBag() {
           onClick={onClick}
           data-testid="add-to-bag"
           data-state={state.key}
-          className="min-w-[200px] flex-1"
+          className="min-w-fit flex-1"
         >
           {label}
         </Button>
