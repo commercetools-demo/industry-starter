@@ -63,7 +63,10 @@ export default function DiscountCodeForm({ ui, appliedCodes = [] }: { ui: CartUi
           placeholder={t('code.label')}
           invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : undefined}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            setValue(e.target.value);
+            if (error) setError(null); // the refusal belonged to the previous text
+          }}
         />
         <Button type="submit" variant="ghost" loading={busy} className="shrink-0 !px-5 !py-3">
           {t('code.apply')}

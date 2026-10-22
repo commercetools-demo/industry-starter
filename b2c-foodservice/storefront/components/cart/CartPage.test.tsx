@@ -208,6 +208,17 @@ describe('order summary (I-10)', () => {
     expect(screen.queryByText('Estimated tax')).toBeNull();
   });
 
+  it('Subtotal is shown before the discount so Subtotal minus Discount plus Shipping plus Tax equals Total', () => {
+    // The engine's line totals are already net of the cart discount: 2000 list, 200 saved, 1800 net.
+    setup(viewCart([ship('d', { unitPrice: usd(2000) })], {
+      subtotal: usd(1800), discount: usd(200), shipping: { amount: usd(0), isFree: true }, tax: { amount: usd(144), included: false }, total: usd(1944),
+    }));
+    const row = (label: string) => screen.getByText(label).closest('div')!;
+    expect(row('Subtotal')).toHaveTextContent('$20.00');
+    expect(row('Discount')).toHaveTextContent('-$2.00');
+    expect(screen.getByTestId('order-total')).toHaveTextContent('$19.44'); // 20.00 - 2.00 + 0 + 1.44
+  });
+
   it('Shipping reads Free or the engine amount or Calculated at checkout', () => {
     const a = setup(viewCart([ship('d')], { shipping: { amount: usd(0), isFree: true } }));
     expect(screen.getByText('Free')).toBeInTheDocument();
@@ -316,6 +327,28 @@ describe('discount codes (I-10)', () => {
     await userEvent.type(screen.getByLabelText('Discount code'), 'welcome10{Enter}');
     expect(await screen.findByRole('alert')).toHaveTextContent('That code is already applied');
     expect(stub.calls.some((c) => c.init?.method === 'PATCH')).toBe(false);
+  });
+
+  it('the refusal message goes away when the shopper edits the code', async () => {
+    setup(viewCart([ship('d')]), {
+      routes: {
+        '/api/cart': (init) =>
+          init?.method === 'PATCH'
+            ? Response.json({ error: { code: 'code_not_applied', message: 'x', details: { reason: 'NotActive', cart: viewCart([ship('d')]) } } }, { status: 422 })
+            : { cart: viewCart([ship('d')]) },
+      },
+    });
+    await userEvent.type(screen.getByLabelText('Discount code'), 'OLD{Enter}');
+    expect(await screen.findByRole('alert')).toHaveTextContent('That code has expired');
+    await userEvent.type(screen.getByLabelText('Discount code'), 'X');
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('the remove-code button is a 24 px target (WCAG 2.5.8)', () => {
+    setup(viewCart([ship('d')], { codes: [{ id: 'c-1', code: 'WELCOME10', name: 'Welcome', state: 'MatchesCart' }] }));
+    const remove = screen.getByRole('button', { name: /Remove code WELCOME10/ });
+    expect(remove.className).toMatch(/\bh-6\b/);
+    expect(remove.className).toMatch(/\bw-6\b/);
   });
 
   it('Discount code rejected tells why and leaves totals unchanged', async () => {

@@ -22,7 +22,7 @@ function Row({ label, value, tone }: { label: string; value: string; tone?: 'dis
 
 /**
  * Order summary (sticky beside the lines on wide screens). Every figure is the engine's: subtotal and discount are display
- * sums of the engine's line fields, shipping, tax and total are read verbatim. Tax reads "Estimated tax" for net prices
+ * sums of the engine's line fields (the subtotal shown is the list sum, so Subtotal - Discount + Shipping + Tax = Total), shipping, tax and total are read verbatim. Tax reads "Estimated tax" for net prices
  * (US and Canada) and "Includes {tax} tax" only when the rate is included in the price. Below the minimum order value the
  * Checkout button is not rendered and the shortfall is stated.
  */
@@ -40,7 +40,11 @@ export default function OrderSummary({ cart, ui }: { cart: Cart; ui: CartUi }) {
         {t('summary.title')}
       </h2>
       <dl className="m-0 flex flex-col gap-2.5">
-        <Row label={t('summary.subtotal')} value={money(cart.subtotal)} />
+        {/* The engine's line totals are already net of the cart discount; shown with a Discount row they would be subtracted twice. */}
+        <Row
+          label={t('summary.subtotal')}
+          value={money(cart.discount ? { ...cart.subtotal, centAmount: cart.subtotal.centAmount + cart.discount.centAmount } : cart.subtotal)}
+        />
         {cart.discount ? <Row label={t('summary.discount')} value={`-${money(cart.discount)}`} tone="discount" /> : null}
         <Row
           label={t('summary.shipping')}

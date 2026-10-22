@@ -33,7 +33,7 @@ export default function AppliedCodes({ cart, ui }: { cart: Cart; ui: CartUi }) {
               onClick={() => {
                 if (!ui.mutations.isPending(CART_PENDING)) void ui.mutations.removeCode(c.id).catch(ui.report);
               }}
-              className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-pill border-0 bg-transparent p-0 text-current"
+              className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-pill border-0 bg-transparent p-0 text-current"
             >
               <Icon name="x" size={12} />
             </button>
