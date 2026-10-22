@@ -35,7 +35,7 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        aria-hidden={!open}
+        aria-hidden="true"
         inert={!open}
         data-open={open}
         tabIndex={-1}

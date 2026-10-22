@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
@@ -80,6 +80,7 @@ describe('Drawer', () => {
     renderWithIntl(<DrawerHarness />);
     const panel = document.querySelector('[role="dialog"]') as HTMLElement;
     expect(panel).toHaveAttribute('inert');
+    expect(panel).toHaveAttribute('inert');
     expect(panel).toHaveAttribute('aria-hidden', 'true');
     expect(panel.className).toContain('invisible');
     expect(screen.queryByRole('dialog')).toBeNull();
@@ -137,5 +138,49 @@ describe('Modal', () => {
     await userEvent.keyboard('{Escape}');
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(opener).toHaveFocus();
+  });
+
+  it('focus goes back to the button that opened the dialog even when the browser did not focus it on click (Safari, found by Q)', async () => {
+    renderWithIntl(<ModalHarness />);
+    const opener = screen.getByRole('button', { name: 'Open store' });
+    // fireEvent.click does not move focus, like a click on a button in Safari; the pointer event comes first in a real tap
+    fireEvent.pointerDown(opener);
+    fireEvent.click(opener);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(opener).not.toHaveFocus();
+    await userEvent.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(opener).toHaveFocus();
+  });
+
+  it('a closing dialog gets aria-hidden only after focus has left it (the browser blocks aria-hidden on a focused subtree, found by Q)', async () => {
+    renderWithIntl(<ModalHarness />);
+    await userEvent.click(screen.getByRole('button', { name: 'Open store' }));
+    const panel = screen.getByRole('dialog');
+    expect(panel.contains(document.activeElement)).toBe(true);
+    const violations: string[] = [];
+    const original = panel.setAttribute.bind(panel);
+    panel.setAttribute = (name: string, value: string) => {
+      if (name === 'aria-hidden' && value === 'true' && panel.contains(document.activeElement)) violations.push('aria-hidden set while focus is inside');
+      original(name, value);
+    };
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(panel).toHaveAttribute('aria-hidden', 'true'));
+    expect(violations).toEqual([]);
+  });
+
+  it('the same for the drawer', async () => {
+    renderWithIntl(<DrawerHarness />);
+    await userEvent.click(screen.getByRole('button', { name: 'Open bag' }));
+    const panel = screen.getByRole('dialog');
+    const violations: string[] = [];
+    const original = panel.setAttribute.bind(panel);
+    panel.setAttribute = (name: string, value: string) => {
+      if (name === 'aria-hidden' && value === 'true' && panel.contains(document.activeElement)) violations.push('aria-hidden set while focus is inside');
+      original(name, value);
+    };
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(panel).toHaveAttribute('aria-hidden', 'true'));
+    expect(violations).toEqual([]);
   });
 });

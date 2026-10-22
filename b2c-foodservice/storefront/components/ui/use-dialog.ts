@@ -6,9 +6,30 @@ const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
+ * The control last pressed with a pointer. Safari and Firefox on macOS and every touch browser do not focus a button on click,
+ * so `document.activeElement` is `body` when a dialog opens from one; this is where focus goes back to on close.
+ */
+let lastPressed: HTMLElement | null = null;
+if (typeof document !== 'undefined') {
+  document.addEventListener(
+    'pointerdown',
+    (event) => {
+      const target = event.target instanceof Element ? event.target.closest<HTMLElement>('button, a[href], [role="button"], summary') : null;
+      lastPressed = target;
+    },
+    true,
+  );
+}
+
+/**
  * Dialog behaviour shared by Drawer and Modal. While `open`: focus moves inside `ref`, Tab and
  * Shift+Tab stay inside, Escape calls `onClose`, and body scroll is locked. On close the previous
  * focus is restored and scroll is unlocked.
+ *
+ * The panel renders `aria-hidden="true"` (a closed dialog) and this hook sets it to `false` while the dialog is open and
+ * puts it back after focus has returned to the opener. React cannot do that ordering: a browser refuses `aria-hidden` on an
+ * element that still holds focus (console warning "Blocked aria-hidden ... descendant retained focus", found by Q), and the
+ * commit that sets the attribute runs before the effect cleanup that moves focus. The panel is `inert` meanwhile.
  */
 export function useDialog({
   open,
@@ -28,7 +49,9 @@ export function useDialog({
     const container = ref.current;
     if (!open || !container) return;
 
-    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const opener = active && active !== document.body ? active : lastPressed?.isConnected ? lastPressed : null;
+    container.setAttribute('aria-hidden', 'false');
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
@@ -65,6 +88,7 @@ export function useDialog({
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = previousOverflow;
       opener?.focus();
+      container.setAttribute('aria-hidden', 'true');
     };
   }, [open, ref]);
 }
