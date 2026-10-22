@@ -24,4 +24,9 @@ describe('security headers', () => {
     expect(keys).toContain('Content-Security-Policy-Report-Only');
     expect(keys).not.toContain('Content-Security-Policy');
   });
+  it('production tells browsers to use https for a year; development (plain http) does not', () => {
+    const prod = securityHeaders({ dev: false }).find((h) => h.key === 'Strict-Transport-Security');
+    expect(prod?.value).toBe('max-age=31536000');
+    expect(securityHeaders({ dev: true }).map((h) => h.key)).not.toContain('Strict-Transport-Security');
+  });
 });

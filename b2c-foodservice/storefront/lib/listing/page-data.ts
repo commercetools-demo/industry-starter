@@ -2,6 +2,7 @@ import 'server-only';
 import { cache } from 'react';
 import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
+import { siteOrigin } from '@/lib/content/seo';
 import { loadListing, type ListingResult } from '@/lib/listing/load';
 import { activeFilterCount, listingHref, type ListingScope } from '@/lib/search/params';
 
@@ -36,6 +37,8 @@ export async function listingMetadata(locale: string, result: ListingResult): Pr
     robots: params.q || activeFilterCount(params) > 0 ? { index: false } : undefined,
     // The address of the page itself: no filters and no sort (those pages are noindex or duplicates), the page number kept.
     // Search results have none (they are noindex).
+    // Without a base the canonical stays a relative path, which crawlers and Lighthouse reject (found by Q in the audit).
+    metadataBase: new URL(siteOrigin()),
     ...(scope === 'search' ? {} : { alternates: { canonical: `/${locale}${result.basePath}${result.page > 1 ? `?page=${result.page}` : ''}` } }),
     pagination: {
       ...(result.page > 1 ? { previous: url(result.page - 1) } : {}),

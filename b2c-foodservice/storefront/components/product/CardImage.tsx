@@ -17,7 +17,7 @@ export default function CardImage({ url, alt, placeholder, priority = false }: {
       fill
       sizes="(min-width: 1081px) 28vw, (min-width: 560px) 44vw, 46vw"
       className="object-cover"
-      {...(priority ? { priority: true } : {})}
+      {...(priority ? { priority: true, fetchPriority: 'high' as const } : {})}
     />
   );
 }

@@ -29,5 +29,7 @@ describe('listing metadata', () => {
     expect((await listingMetadata('en-US', page('category', 3, { roast: ['dark'] }))).alternates?.canonical).toBe('/en-US/category/pods?page=3');
     expect((await listingMetadata('en-CA', page('all', 1))).alternates?.canonical).toBe('/en-CA/category/pods');
     expect((await listingMetadata('en-US', ok('search'))).alternates).toBeUndefined();
+    // a canonical is resolved against the site origin, so the page carries an absolute address (a relative one is invalid)
+    expect((await listingMetadata('en-US', page('category', 1))).metadataBase).toBeInstanceOf(URL);
   });
 });

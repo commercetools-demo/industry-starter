@@ -29,7 +29,8 @@ function walk(dir, accept) {
 export function checkBundleSecrets(root, env) {
   const files = [
     ...walk(join(root, '.next', 'static'), () => true),
-    ...walk(join(root, '.next', 'server', 'app'), (p) => p.endsWith('.html')),
+    // the HTML and the .rsc payloads: what a server component sends to the browser on a visit or a navigation
+    ...walk(join(root, '.next', 'server', 'app'), (p) => p.endsWith('.html') || p.endsWith('.rsc')),
   ];
   const problems = [];
   const secrets = SECRET_NAMES.map((name) => [name, env[name]]).filter(

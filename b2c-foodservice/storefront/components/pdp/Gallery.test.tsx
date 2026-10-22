@@ -6,8 +6,10 @@ import { machinePage, podPage, renderPdp, variantView } from '@/test/pdp';
 
 vi.mock('@/i18n/routing', async () => (await import('@/test/shell')).routingMock());
 vi.mock('next/image', () => ({
-  // eslint-disable-next-line @next/next/no-img-element
-  default: ({ src, alt, priority }: { src: string; alt: string; priority?: boolean }) => <img src={src} alt={alt} data-priority={priority ? 'true' : 'false'} />,
+  default: ({ src, alt, priority, fetchPriority }: { src: string; alt: string; priority?: boolean; fetchPriority?: string }) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={alt} data-priority={priority ? 'true' : 'false'} data-fetchpriority={fetchPriority ?? 'auto'} />
+  ),
 }));
 
 const mainImage = () => within(screen.getByTestId('pdp-main-image')).queryByRole('img') as HTMLImageElement | null;
@@ -64,6 +66,8 @@ describe('Gallery', () => {
   it('first image has priority, thumbnails are lazy', async () => {
     await renderPdp(podPage());
     expect(mainImage()).toHaveAttribute('data-priority', 'true');
+    // the hint the browser reads: the picture the page waits for is fetched before the rest (Lighthouse lcp-discovery)
+    expect(mainImage()).toHaveAttribute('data-fetchpriority', 'high');
     for (const thumb of screen.getAllByRole('button', { name: /Show image/ })) {
       expect(within(thumb).getByRole('presentation', { hidden: true })).toHaveAttribute('data-priority', 'false');
     }

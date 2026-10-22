@@ -69,6 +69,7 @@ export default function Hero({
                 alt={pick(content.imageAlt, locale)}
                 fill
                 priority
+                fetchPriority="high"
                 sizes="560px"
                 className="object-cover"
               />

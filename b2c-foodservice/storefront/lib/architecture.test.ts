@@ -87,4 +87,11 @@ describe('architecture guards', () => {
     expect(files.length).toBeGreaterThan(10);
     expect(files.some((f) => f.path === 'lib/ct/client.ts')).toBe(true);
   });
+
+  it('every commercetools client masks sensitive headers, so an error that is thrown or logged never carries the bearer token', () => {
+    const builders = files.filter((f) => /\.withHttpMiddleware\(/.test(f.text));
+    expect(builders.length).toBeGreaterThanOrEqual(2);
+    const offenders = builders.filter((f) => !/maskSensitiveHeaderData:\s*true/.test(f.text)).map((f) => f.path);
+    expect(offenders).toEqual([]);
+  });
 });

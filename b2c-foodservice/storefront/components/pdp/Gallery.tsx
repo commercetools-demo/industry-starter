@@ -57,6 +57,7 @@ export default function Gallery() {
             alt={current.alt && current.alt !== product.name ? current.alt : t('gallery.alt', { name: product.name, n: index + 1 })}
             fill
             priority={index === 0}
+            {...(index === 0 ? { fetchPriority: 'high' as const } : {})}
             sizes="(min-width: 900px) 50vw, 100vw"
             className="object-cover"
           />

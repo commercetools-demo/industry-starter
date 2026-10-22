@@ -74,6 +74,15 @@ export function checkPredeployEnv(env) {
       if (scopes.includes(admin)) problems.push(`CTP_SCOPES contains the admin scope ${admin}; the storefront client must not hold it`);
     }
   }
+  if (env.CTP_SESSION_URL) problems.push('CTP_SESSION_URL is set; it is for the local mock only (leave it empty)');
+  for (const name of ['CONTACT_WEBHOOK_URL', 'FEEDBACK_WEBHOOK_URL']) {
+    if (env[name] && !env[name].startsWith('https://')) problems.push(`${name} must start with https://`);
+  }
+  if (env.CTP_REVIEWS_SCOPES) {
+    for (const scope of env.CTP_REVIEWS_SCOPES.split(/\s+/).filter(Boolean).map((s) => s.split(':')[0])) {
+      if (scope !== 'manage_products') problems.push(`CTP_REVIEWS_SCOPES holds ${scope}; the reviews client may hold manage_products only`);
+    }
+  }
   for (const name of Object.keys(env)) {
     if (name.startsWith('NEXT_PUBLIC_') && !PUBLIC_NAME_OK.has(name) && /SECRET|TOKEN|PASSWORD|KEY|CLIENT/i.test(name)) {
       problems.push(`${name} is public to the browser but is named like a secret`);

@@ -96,4 +96,23 @@ describe('deploy gate: environment and files', () => {
     mkdirSync(join(root, 'app', 'api', 'debug'), { recursive: true });
     expect(checkDebugRoutes(root)).toEqual(['Remove app/api/debug: a route named debug must not ship']);
   });
+
+  it('CTP_SESSION_URL set fails: it is for the local mock only and would send the payment-session token to another host', () => {
+    expect(checkPredeployEnv({ ...GOOD_ENV, CTP_SESSION_URL: 'https://localhost:9443' })).toEqual([
+      'CTP_SESSION_URL is set; it is for the local mock only (leave it empty)',
+    ]);
+  });
+
+  it('a receiver URL that is not https fails (the contact token goes out as a bearer header)', () => {
+    expect(checkPredeployEnv({ ...GOOD_ENV, CONTACT_WEBHOOK_URL: 'http://hooks.example/x' })).toEqual(['CONTACT_WEBHOOK_URL must start with https://']);
+    expect(checkPredeployEnv({ ...GOOD_ENV, FEEDBACK_WEBHOOK_URL: 'http://hooks.example/y' })).toEqual(['FEEDBACK_WEBHOOK_URL must start with https://']);
+    expect(checkPredeployEnv({ ...GOOD_ENV, CONTACT_WEBHOOK_URL: 'https://hooks.example/x', FEEDBACK_WEBHOOK_URL: 'https://hooks.example/y' })).toEqual([]);
+  });
+
+  it('the reviews client may hold manage_products and nothing else', () => {
+    expect(checkPredeployEnv({ ...GOOD_ENV, CTP_REVIEWS_SCOPES: 'manage_products:shop-key' })).toEqual([]);
+    expect(checkPredeployEnv({ ...GOOD_ENV, CTP_REVIEWS_SCOPES: 'manage_products:shop-key manage_orders:shop-key' })).toEqual([
+      'CTP_REVIEWS_SCOPES holds manage_orders; the reviews client may hold manage_products only',
+    ]);
+  });
 });

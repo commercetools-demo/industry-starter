@@ -11,9 +11,9 @@ import { nav, renderShell, stubFetch } from '@/test/shell';
 
 vi.mock('@/i18n/routing', async () => (await import('@/test/shell')).routingMock());
 vi.mock('next/image', () => ({
-  default: ({ src, alt, priority }: { src: string; alt: string; priority?: boolean }) => (
+  default: ({ src, alt, priority, fetchPriority }: { src: string; alt: string; priority?: boolean; fetchPriority?: string }) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} data-priority={priority ? 'true' : undefined} />
+    <img src={src} alt={alt} data-priority={priority ? 'true' : undefined} data-fetchpriority={fetchPriority} />
   ),
 }));
 
@@ -67,6 +67,8 @@ describe('ListingPage', () => {
     const images = screen.getAllByTestId('product-grid')[0]!.querySelectorAll('img');
     expect(images).toHaveLength(3);
     expect(images[0]).toHaveAttribute('data-priority', 'true');
+    expect(images[0]).toHaveAttribute('data-fetchpriority', 'high');
+    expect(images[1]).not.toHaveAttribute('data-fetchpriority');
     expect(images[1]).not.toHaveAttribute('data-priority');
     expect(images[2]).not.toHaveAttribute('data-priority');
   });

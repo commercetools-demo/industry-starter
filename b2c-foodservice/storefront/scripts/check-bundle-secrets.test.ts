@@ -42,6 +42,18 @@ describe('Client bundle scan', () => {
   });
 });
 
+describe('Server component payloads', () => {
+  it('the .rsc payloads under .next/server/app are scanned too (they are sent to the browser on navigation)', () => {
+    const root = build('x');
+    mkdirSync(join(root, '.next', 'server', 'app', 'en-US'), { recursive: true });
+    writeFileSync(join(root, '.next', 'server', 'app', 'en-US', 'about.rsc'), `1:"${VALUE}"`);
+    const problems = checkBundleSecrets(root, { CTP_CLIENT_ID: VALUE });
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain('CTP_CLIENT_ID');
+    expect(problems[0]).toContain('about.rsc');
+  });
+});
+
 describe('Secret list', () => {
   it('contact webhook token in the bundle is found', () => {
     const problems = checkBundleSecrets(build(`var t="${VALUE}";`), { CONTACT_WEBHOOK_TOKEN: VALUE });
@@ -56,7 +68,7 @@ describe('Secret list', () => {
     // Names that are settings, keys of public things or URLs of the project, not secrets.
     const notSecret = new Set([
       'CTP_PROJECT_KEY', 'EXPECTED_PROJECT_KEY', 'CTP_AUTH_URL', 'CTP_API_URL', 'CTP_SCOPES', 'CTP_REVIEWS_SCOPES', 'DEMO_LOGIN_ENABLED',
-      'NEXT_PUBLIC_SITE_URL', 'CTP_CHECKOUT_APP_KEY', 'CTP_SESSION_URL',
+      'NEXT_PUBLIC_SITE_URL', 'CTP_CHECKOUT_APP_KEY', 'CTP_SESSION_URL', 'CSP_REPORT_ONLY',
     ]);
     const missing = names.filter((n) => !notSecret.has(n) && !SECRET_NAMES.includes(n));
     expect(missing).toEqual([]);

@@ -13,7 +13,7 @@ const client = new ClientBuilder()
     credentials: { clientId: env.CTP_CLIENT_ID, clientSecret: env.CTP_CLIENT_SECRET },
     scopes: env.CTP_SCOPES.split(/\s+/).filter(Boolean),
   })
-  .withHttpMiddleware({ host: env.CTP_API_URL })
+  .withHttpMiddleware({ host: env.CTP_API_URL, maskSensitiveHeaderData: true })
   .build();
 
 export const apiRoot = createApiBuilderFromCtpClient(client).withProjectKey({

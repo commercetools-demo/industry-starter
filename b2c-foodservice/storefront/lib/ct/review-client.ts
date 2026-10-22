@@ -28,7 +28,7 @@ function build() {
       credentials: { clientId, clientSecret },
       scopes,
     })
-    .withHttpMiddleware({ host: env.CTP_API_URL })
+    .withHttpMiddleware({ host: env.CTP_API_URL, maskSensitiveHeaderData: true })
     .build();
   return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: env.CTP_PROJECT_KEY });
 }

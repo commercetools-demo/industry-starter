@@ -54,3 +54,15 @@
 - (N) `requestOrderNow` (documented update action) could back an "Order now" button on a subscription card.
 - (N) A seeded demo subscription per customer (Q-N-16 / SR-N1) would let the tab be shown without a checkout; the mock already has `POST /__mock/recurring/seed`.
 - (N) Localise the variant label of a subscription card ("50 capsules", "250 g") through the message catalogues; it is English text built in `lib/mappers/recurring-order.ts` (both markets are English today).
+- (Q) Replace `'unsafe-inline'` in the CSP `script-src` with a per-request nonce set in `proxy.ts` (needs dynamic rendering of every page); narrow `https://*.commercetools.com` to the real Checkout hosts after M-Q-08.
+- (Q) Product structured data (JSON-LD `Product` with price, availability and rating) on product pages and `BreadcrumbList` on listings; both use `components/content/JsonLd.tsx`.
+- (Q) The Buy again dialog for skipped lines names the product but not the pack or variant, so two packs of one product read alike.
+- (Q) The confirmation page shows `Shipping $0.00` where the cart says `Free`; use the same word.
+- (Q) The header cart count shows 0 while the commerce tier is down; show the last known count or hide the badge.
+- (Q) The listing error page has no reference number (journey J12 expects one).
+- (Q) On a subscription card, say why `Change interval` is off while a skip is pending or the subscription is paused.
+- (Q) The account tab strip shows a thin scrollbar at 375 px; hide the bar and keep the scroll (`scrollbar-width: none`).
+- (Q) Load the review form and the sort control on demand to take the product page under 200 kB of JavaScript (Q-Q-19).
+- (Q) Login limit per email across all client addresses, and a session version claim so a sign-out can revoke a copied token (security.md H2 and H10); a shared limiter store when the host runs several instances (same as J and M above).
+- (Q) The remaining hardening items H1, H8, H9, H11, H12, H14 to H17 of `plans/evidence/Q/security.md`.
+

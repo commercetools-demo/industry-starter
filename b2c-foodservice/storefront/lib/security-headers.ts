@@ -42,5 +42,8 @@ export function securityHeaders(opts: { dev: boolean; reportOnly?: boolean }): H
     // The store picker has an opt-in "use my position" button, so geolocation stays allowed for the page itself.
     { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(self)' },
     { key: 'X-Frame-Options', value: 'DENY' },
+    // https for a year. No includeSubDomains (the owner's other sites under the domain are not ours to decide) and no preload.
+    // Browsers ignore it over plain http, so a local production build is not affected; development leaves it out.
+    ...(opts.dev ? [] : [{ key: 'Strict-Transport-Security', value: 'max-age=31536000' }]),
   ];
 }
