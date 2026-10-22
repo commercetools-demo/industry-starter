@@ -32,6 +32,14 @@ describe('errors', () => {
     expect([e.code, e.status]).toEqual(['upstream_unavailable', 503]);
   });
 
+  it('the shape the SDK throws for a refused or timed out connection ({ body: null, error: { statusCode: 0 } }) is upstream_unavailable, not internal_error (found by Q, J12)', () => {
+    const refused = { body: null, error: { code: 'NetworkError', statusCode: 0, status: 0, message: 'fetch failed' } };
+    expect(toAppError(refused)).toMatchObject({ code: 'upstream_unavailable', status: 503 });
+    expect(toAppError({ body: null, error: { code: 'NetworkError', statusCode: 0, message: 'connect ETIMEDOUT 10.0.0.1:443' } })).toMatchObject({ code: 'upstream_unavailable', status: 503 });
+    // a wrapped HTTP error keeps its own status
+    expect(toAppError({ body: null, error: { statusCode: 404, message: 'x' } })).toMatchObject({ code: 'not_found', status: 404 });
+  });
+
   it('Error body is exactly code and message with no stack and no commercetools text', async () => {
     const err = Object.assign(new Error('Project foo ct-secret-detail'), {
       statusCode: 400, body: { message: 'ct-secret-detail' }, stack: 'STACKTRACE',

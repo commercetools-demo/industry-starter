@@ -37,8 +37,16 @@ interface UpstreamLike {
   originalRequest?: { headers?: Record<string, unknown> };
 }
 
+/**
+ * The SDK throws an HTTP error as the error itself (`statusCode` on it) but a connection that was refused or timed out as
+ * `{ body: null, error: { code: 'NetworkError', statusCode: 0, message } }`: read the inner error when the outer has no status.
+ */
 function asUpstream(e: unknown): UpstreamLike {
-  return typeof e === 'object' && e !== null ? (e as UpstreamLike) : {};
+  if (typeof e !== 'object' || e === null) return {};
+  const outer = e as UpstreamLike & { error?: unknown };
+  const inner = outer.error;
+  if (outer.statusCode === undefined && typeof inner === 'object' && inner !== null) return inner as UpstreamLike;
+  return outer;
 }
 
 function readCorrelationId(e: unknown): string | undefined {
@@ -53,7 +61,8 @@ export function toAppError(e: unknown): AppError {
   if (e instanceof AppError) return e;
   const u = asUpstream(e);
   const correlationId = readCorrelationId(e) ?? crypto.randomUUID();
-  const status = typeof u.statusCode === 'number' ? u.statusCode : undefined;
+  // 0 is the SDK's "no response at all"
+  const status = typeof u.statusCode === 'number' && u.statusCode > 0 ? u.statusCode : undefined;
   if (status === 400) return new AppError('validation_failed', 400, undefined, correlationId);
   if (status === 404) return new AppError('not_found', 404, undefined, correlationId);
   if (status === 409) return new AppError('conflict', 409, undefined, correlationId);
