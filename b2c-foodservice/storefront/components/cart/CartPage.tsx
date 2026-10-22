@@ -83,7 +83,7 @@ export default function CartPage({ initialCart }: { initialCart?: Cart | null })
             <FulfilmentGroup key={group.key} cart={cart} group={group} ui={ui} />
           ))}
         </div>
-        <div>
+        <div className="stack:sticky stack:top-24">
           <CompanionNudge nudge={cart.nudge} />
           <OrderSummary cart={cart} ui={ui} />
         </div>

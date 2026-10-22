@@ -300,7 +300,11 @@ describe('order summary (I-10)', () => {
   it('sticky summary classes and mobile order', () => {
     setup(mixed());
     const summary = screen.getByRole('complementary');
-    expect(summary).toHaveClass('stack:sticky', 'stack:top-24');
+    // The sticky box is the grid item that holds the summary: a sticky element inside a grid item that is only as tall as itself never sticks (found by Q in the browser, I recipe step 4).
+    const sticky = summary.parentElement!;
+    expect(sticky).toHaveClass('stack:sticky', 'stack:top-24');
+    expect(sticky.parentElement).toHaveClass('grid', 'items-start');
+    expect(summary).not.toHaveClass('stack:sticky');
     const grid = summary.closest('.grid')!;
     expect(grid).toHaveClass('stack:grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)]'); // one column below 900px
     // On one column the summary follows the lines.

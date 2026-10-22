@@ -35,7 +35,7 @@ export default function OrderSummary({ cart, ui }: { cart: Cart; ui: CartUi }) {
   const tax = taxLabel(cart.tax);
 
   return (
-    <aside aria-labelledby="order-summary-title" className="rounded-card border border-line bg-surface p-6 stack:sticky stack:top-24">
+    <aside aria-labelledby="order-summary-title" className="rounded-card border border-line bg-surface p-6">
       <h2 id="order-summary-title" className="m-0 mb-4 font-display text-[18px] font-bold">
         {t('summary.title')}
       </h2>
