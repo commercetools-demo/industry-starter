@@ -11,8 +11,8 @@ import { nav, renderShell, stubFetch } from '@/test/shell';
 
 vi.mock('@/i18n/routing', async () => (await import('@/test/shell')).routingMock());
 vi.mock('next/image', () => ({
-  // eslint-disable-next-line @next/next/no-img-element
   default: ({ src, alt, priority }: { src: string; alt: string; priority?: boolean }) => (
+    // eslint-disable-next-line @next/next/no-img-element
     <img src={src} alt={alt} data-priority={priority ? 'true' : undefined} />
   ),
 }));
