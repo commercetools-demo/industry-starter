@@ -36,6 +36,19 @@ describe('Error pages', () => {
     }
   });
 
+  it('every error page sets a document title (WCAG 2.4.2): not found, server error and the listing and product read failures', async () => {
+    renderWithIntl(<LocaleNotFound />);
+    expect(document.title).toBe("We can't find that page.");
+    renderWithIntl(<LocaleError error={new Error('x')} reset={() => {}} />);
+    expect(document.title).toBe('Something went wrong on our side.');
+    const ListingError = (await import('@/app/[locale]/(listing)/error')).default;
+    renderWithIntl(<ListingError error={new Error('x')} reset={() => {}} />);
+    expect(document.title).toBe('We couldn’t load the products.');
+    const ProductError = (await import('@/app/[locale]/p/[slug]/[sku]/error')).default;
+    renderWithIntl(<ProductError error={new Error('x')} reset={() => {}} />);
+    expect(document.title).not.toBe('');
+  });
+
   it('Upstream fault: server error page offers retry and does not touch cookies', () => {
     const before = document.cookie;
     const fetchSpy = vi.fn();

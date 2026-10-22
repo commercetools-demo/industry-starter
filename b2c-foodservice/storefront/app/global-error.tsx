@@ -28,6 +28,7 @@ export default function GlobalError({
   return (
     <html lang={locale}>
       <body className="bg-canvas text-ink font-body">
+        <title>{t.title}</title>
         <main className="wrap py-24">
           <div className="max-w-[640px]">
             <p className="eyebrow m-0 mb-3">500</p>

@@ -39,6 +39,8 @@ export default function ErrorPage({ kind, reference, onRetry }: ErrorPageProps) 
 
   return (
     <div className="wrap py-14 mobile:py-24">
+      {/* React hoists this into the head: a page without a title is announced by its address (WCAG 2.4.2). */}
+      <title>{t(`${key}.title`)}</title>
       <div className="max-w-[640px]">
         <p className="eyebrow m-0 mb-3">{STATUS[kind]}</p>
         <div role={kind === 'server-error' ? 'alert' : undefined}>
