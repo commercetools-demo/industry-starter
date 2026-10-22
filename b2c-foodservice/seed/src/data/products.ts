@@ -136,7 +136,7 @@ const MACHINES: MachineRow[] = [
 
 function machineProduct(r: MachineRow): ProductDef {
   const [code, name, system, cat, pressure, tank, watts, features, colours, starter, usd, badge] = r;
-  const en = (colour: string) => `${name}: ${system === 'grinder' ? 'a burr grinder' : `a ${system.replace('-', ' ')} coffee machine`}${pressure ? ` with ${pressure} bar pressure` : ''}${tank ? ` and a ${tank} ml water tank` : ''}. ${list(features, 'and')}. ${colour === 'colour' ? 'Colour' : 'Color'} options: ${colours.join(' and ')}.`;
+  const en = (colour: string) => `${name}: ${system === 'grinder' ? 'a burr grinder' : `${/^[aeiou]/.test(system) ? 'an' : 'a'} ${system.replace('-', ' ')} coffee machine`}${pressure ? ` with ${pressure} bar pressure` : ''}${tank ? ` and a ${tank} ml water tank` : ''}. ${list(features, 'and')}. ${colour === 'colour' ? 'Colour' : 'Color'} options: ${colours.join(' and ')}.`;
   const common: Record<string, unknown> = { system, powerWatts: watts, features, warrantyMonths: 24, badge: badge, subscribable: false };
   if (pressure) common.pressureBar = pressure;
   if (tank) common.waterTankMl = tank;

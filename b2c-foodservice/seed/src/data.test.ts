@@ -237,3 +237,12 @@ describe('seed data (SEED-PLAN)', () => {
     expect(readFileSync(path.join(SEED_DIR, '.gitignore'), 'utf8')).toMatch(/\.env\.\*[\s\S]*cleanup-manifest\.json|cleanup-manifest\.json[\s\S]*\.env\.\*/);
   });
 });
+
+describe('product copy grammar', () => {
+  it('machine descriptions use "an" before a vowel sound (an original, an espresso)', () => {
+    const texts = PRODUCTS.filter((p) => p.productType.includes('machine')).map((p) => JSON.stringify(p.description));
+    expect(texts.length).toBeGreaterThan(0);
+    for (const t of texts) expect(t).not.toMatch(/\ba (original|espresso)\b/);
+    expect(texts.some((t) => /an original coffee machine/.test(t))).toBe(true);
+  });
+});

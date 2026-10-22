@@ -251,17 +251,18 @@ export function createAccountMock({ PROJECT, CUSTOMERS, STORES, demoLine, baseCa
     // ---- orders (the verified-purchase lookup of M keeps var.p and falls through)
     if (path === `${base}/orders` && req.method === 'GET') {
       if (url.searchParams.get('var.p')) return false;
+      if (/orderNumber in/.test(url.searchParams.get('where') ?? '')) return false; // the linked-orders lookup of K (mock-orders.mjs)
       return json(res, 200, filterOrders(url));
     }
     const byNumber = new RegExp(`^${base}/orders/order-number=([^/]+)$`).exec(path);
     if (byNumber && req.method === 'GET') {
       const o = orderBy(decodeURIComponent(byNumber[1]));
-      return o ? json(res, 200, o) : notFound(res);
+      return o ? json(res, 200, o) : false; // not ours: K's placed orders (mock-orders.mjs) answer next
     }
     const orderMatch = new RegExp(`^${base}/orders/([^/]+)$`).exec(path);
     if (orderMatch) {
       const o = ORDERS.get(orderMatch[1]);
-      if (!o) return notFound(res);
+      if (!o) return false; // not ours: K's placed orders (mock-orders.mjs) answer next
       if (req.method === 'GET') return json(res, 200, o);
       if (req.method === 'POST') return updateOrder(o, await readBody(req)) ? json(res, 200, o) : conflict(res);
     }
