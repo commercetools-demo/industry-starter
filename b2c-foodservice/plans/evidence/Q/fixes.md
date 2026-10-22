@@ -51,8 +51,10 @@
 | QFX-40 | accessibility, signed-in audit of the account pages | the addresses page jumped from a level 2 section title to level 4 address names | L | `1afc53f2` (level 3) |
 | QFX-41 | accessibility, contrast behind the hero gradient (pixel measure) | the hero eyebrow `The Autumn Edit` (11 px, `--accent`) was 4.43:1 at 1440 and 4.49:1 at 375 on the warm glow, under the 4.5 AA minimum; axe cannot see text on a gradient | O | `5584c8be` (`--accent-press`, 7.4:1; test) |
 | QFX-42 | accessibility, keyboard run of the mega menu | ArrowDown on `Pods`, `Coffee`, `Machines` or `Accessories` opened the panel but left focus on the link (the panel fades in with a `visibility` transition and a hidden element takes no focus) | F | `7c881d4a` (focus is retried for up to ten frames; test fails without it) |
+| QFX-43 | performance, Lighthouse mobile on the account Orders page | the footer was on screen while the list was still loading and jumped down when it arrived: layout shift 0.07 to 0.21 against the 0.1 budget | L | `b1d41659` (the frame is a screen tall; test; CLS 0 in three runs) |
+| QFX-44 | clean-clone run with the build environment | two SEO tests (`sitemap lists content pages in both locales`, `robots disallows ...`) failed in a shell that has `NEXT_PUBLIC_SITE_URL` set, so `npm run check` was not independent of the environment | P | `aca6adcd` (the tests set the site origin variables themselves) |
 
-42 fixed. The two files of `plans/evidence/Q/` that tell the story are `journeys.md` (symptoms in context) and `perf.md` (the numbers).
+44 fixed. The two files of `plans/evidence/Q/` that tell the story are `journeys.md` (symptoms in context) and `perf.md` (the numbers).
 
 ## Open or handed over
 

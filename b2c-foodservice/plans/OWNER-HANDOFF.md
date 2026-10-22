@@ -5,7 +5,7 @@
 
 Written by workstream Q on 2026-10-22. Every storefront workstream is built and checked against a local mock of commercetools (`storefront/scripts/mock-ct-server.mjs`); the checks that need your credentials, your Merchant Center or a real device are listed here in the order that unblocks the most work. Each item names its row in `plans/TODO-MANUAL-TESTING.md` (the full steps and the expected result are in that row; this page does not repeat them). **Never paste a secret into chat, an issue or a file in git:** values go into the git-ignored `.env.local` files and into Netlify's settings.
 
-What the team can say today (details in `plans/evidence/Q/FINAL-REPORT.md`): the unit tests, lint and types pass (storefront and seed), a clean clone builds, all 15 journeys were walked against the mock at 375 and 1440 px except the hosted payment (J15), the security review has no open high finding, accessibility and SEO score 100 on the audited pages, and 42 defects found on the way are fixed. What nobody has seen yet is the real thing: the real project data, the hosted Checkout with Stripe, real recurring orders and a real phone.
+What the team can say today (details in `plans/evidence/Q/FINAL-REPORT.md`): the unit tests, lint and types pass (storefront and seed), a clean clone builds, all 15 journeys were walked against the mock at 375 and 1440 px except the hosted payment (J15), the security review has no open high finding, accessibility scores 100 on all 20 audited pages and SEO 100 on every public page, and 44 defects found on the way are fixed. What nobody has seen yet is the real thing: the real project data, the hosted Checkout with Stripe, real recurring orders and a real phone.
 
 ## At a glance
 

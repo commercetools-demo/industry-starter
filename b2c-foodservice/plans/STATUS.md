@@ -23,7 +23,7 @@ Updated 2026-10-21 (owner answers D-030 to D-039 applied to every plan). States:
 | N | Subscriptions | 10 | Ready for review (offline) | N-00, N-01, N-03 to N-07, N-10 done; N-08 and N-09 closed as not built (documented Method A; quantity edits unproven); N-02 documentation pass only and N-11 offline part only: live spike blocked on OA-02 and OA-04, browser recipe blocked (Chrome profile held), rows M-N-04, M-N-05, M-N-06; mock server now creates recurring orders (`mock-recurring.mjs`) |
 | O | Home page | 10 | Ready for review | O-00 to O-10 done against the mock catalogue; FIX-1 header overflow and FIX-2 URL market rule done; live read-back is OA-O-1; see plans/evidence/O/README.md |
 | P | Content and error pages | 10 | Ready for review (partial) | P-00 to P-11, P-13 to P-15 done; P-12 consent-link half blocked on K; scenario "Expired session is not a refusal" blocked on L; evidence plans/evidence/P/; owner rows SO-P1 to SO-P5, OA-P1, M-P-01, M-P-02, M-P-04, OA-P2, OA-P3 |
-| Q | Quality and release | 11 | Not started | |
+| Q | Quality and release | 11 | Ready for review | Q-00 to Q-16 done against the mock (44 defects fixed, evidence in plans/evidence/Q/); open: live checks, hosted Checkout and Stripe (OA-K-a, M-Q-08, M-Q-09), VoiceOver (M-Q-02), Q-17 after the deploy; the owner's list is plans/OWNER-HANDOFF.md, the runbook plans/DEPLOY-NETLIFY.md |
 
 ## Environment
 

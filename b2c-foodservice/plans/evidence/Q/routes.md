@@ -3,7 +3,7 @@
 
 # Routes (Q-00)
 
-Inventory taken on 2026-10-22 from `storefront/app/**/page.tsx` and `app/**/route.ts` at commit `5584c8be` of branch `ws/q-quality`. Node v22.21.1, `next` 16.4.2, React 19.2.4, `next-intl` 4.14.9, SWR 2.5.1, `@commercetools/platform-sdk` 8.27. Every page below exists under both locales (`/en-US`, `/en-CA`); the market follows the URL (`proxy.ts` moves the session to the market of the page that is loaded, never on a prefetch).
+Inventory taken on 2026-10-22 from `storefront/app/**/page.tsx` and `app/**/route.ts` at commit `aca6adcd` of branch `ws/q-quality`. Node v22.21.1, `next` 16.4.2, React 19.2.4, `next-intl` 4.14.9, SWR 2.5.1, `@commercetools/platform-sdk` 8.27. Every page below exists under both locales (`/en-US`, `/en-CA`); the market follows the URL (`proxy.ts` moves the session to the market of the page that is loaded, never on a prefetch).
 
 ## Placeholders of `plans/E2E-JOURNEYS.md`
 

@@ -29,6 +29,21 @@
 
 Open: **S4** (two cookies without `Secure`), **S10** (the review 429 has no `Retry-After`), **S18** (the health and dev routes still exist until Q-15). Manual: **S17** (SO-Q2). Sub-items of other rows that still wait: HSTS and the real Checkout origins (S12), a full live header list (S12), browser payload runs for fields other than reviews (S9), and the live card path (S16, blocked: OA-04).
 
+## Status at the end of the workstream (2026-10-22)
+
+The tables below were written at commit `e3bf8f29` and describe that commit; the findings were handled afterwards:
+
+| Finding | Now |
+| --- | --- |
+| F-1 (S4, cookies without `Secure`) | **fixed** in `02de3891`: the guest email cookie, the pay cookie and the register cookie are `Secure` in production (`lib/checkout/cookies-secure.test.ts`). S4 passes |
+| F-2 (S10, review 429 without `Retry-After`) | **fixed** in `02de3891` (`AppError` carries `retryAfterSeconds`, `errorResponse` sets the header; test in `reviews-routes.test.ts`). S10 passes |
+| F-3 (S18, health and dev routes) | **open by design** until the hand tests end: `npm run predeploy` fails and names the paths; the runbook `plans/DEPLOY-NETLIFY.md` section 3 says exactly what to remove and when |
+| F-4 (S17, shared demo password) | owner decision SO-Q2 (question Q-Q-8) |
+| F-5 (CSP nonce comment) | the idea is in `plans/IDEAS.md`; the real Checkout origins are owner row M-Q-08 |
+| F-6 (secret-like lines in other projects) | for the owner before the repository is published; the history scan of this project alone is in `secrets.md` section 6 and is clean |
+| H3, H4, H6, H7, H13 | **done** in `46d79193`: masked SDK error headers (test over every client), HSTS in production, the deploy gate checks `CTP_SESSION_URL`, `https` webhooks and the reviews scope, the bundle scan reads the `.rsc` payloads, `CSP_REPORT_ONLY` is in `.env.example` |
+| H1, H2, H5, H8 to H12, H14 to H17 | not done; recorded in `plans/IDEAS.md` (none blocks the release) |
+
 ---
 
 ## Group Q-10: boundary and secrets

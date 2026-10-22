@@ -119,3 +119,23 @@ Observed with `NEXT_PUBLIC_SITE_URL` exported: `expected 'https://shop.example.t
 - No browser test and no live commercetools call (not part of this task).
 - A cold-cache `npm ci` timing: the cache was warm.
 - No other Node version: only 22.21.1 was available and tested.
+
+## Final run (commit `aca6adcd`, 2026-10-22)
+
+The last code commit of the workstream, cloned with `git clone --no-hardlinks --branch ws/q-quality --single-branch` into a scratch folder outside the worktree, with the same fake build environment as above (names only; nothing from `.env.local`).
+
+| Step | Exit | Time | Result |
+| --- | --- | --- | --- |
+| `storefront: npm ci` | 0 | 4 s | |
+| `storefront: npm run check` | 0 | 28 s | lint, typecheck, 230 test files, 1933 tests, 0 failed |
+| `storefront: npm run verify:build` | 0 | 8 s | build, then `bundle scan: ok (checked 9 of 9 secret values)` |
+| `storefront: npm run build` (cold) | 0 | 3 s | |
+| `storefront: node scripts/check-bundle-secrets.mjs` | 0 | under 1 s | `bundle scan: ok (checked 9 of 9 secret values)` |
+| `storefront: npm audit --omit=dev` | 0 | | `found 0 vulnerabilities` |
+| `seed: npm ci` | 0 | | |
+| `seed: npm run check` | 0 | 4 s | 12 files, 143 passed, 4 todo |
+| `seed: npm audit --omit=dev` | 0 | | `found 0 vulnerabilities` |
+
+**This run found one more defect (QFX-44):** with the fake environment loaded, which includes `NEXT_PUBLIC_SITE_URL`, two SEO tests failed at the previous commit (`b1d41659`: 1931 passed, 2 failed) because they assumed the variable was unset. They now set the site origin variables themselves (`aca6adcd`). The earlier statement above, "`npm run check` needs no environment at all", is now true for every shell, not only for an empty one.
+
+`npm ci` prints an advisory summary for the development dependencies (the lint and test toolchains); `npm audit --omit=dev` is clean. See `npm-audit.txt` section 3.

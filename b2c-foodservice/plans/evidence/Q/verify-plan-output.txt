@@ -1,0 +1,196 @@
+note: 16 quoted reference(s) in ticked lines are not titles of a test in the report (commands, other packages or paraphrases):
+  bootstrap-and-structure / Adding a market: Adding a market: every COUNTRY_CONFIG key has a message file with the same keys
+  bootstrap-and-structure / Client bundle scan: npm run verify:build
+  bootstrap-and-structure / Stored URL with a query: strips query and fragment from stored image URLs
+  platform-project-setup-and-seed / Review before delete: Review before delete
+  platform-project-setup-and-seed / Seed data protected: Seed data protected
+  platform-project-setup-and-seed / URL with query: URL with query
+  platform-project-setup-and-seed / No credentials: npm run check
+  design-product-detail-page / Variant out of stock at store: ...disables the option with the title
+  design-cart-page / Mixed bag: Mixed bag shows two groups...
+  reviews-and-ratings / Statistics match: cd seed && npm run verify
+  about-us / Editor publishes a correction: partial: content module only
+  error-pages / Expired session is not a refusal: Expired session is not a refusal: ...
+  policy-pages / Opened from checkout: checkout consent links open in a new tab
+  product-detail-page / Variant out of stock: outOnline backInDays expected
+  subscriptions-and-recurring-orders / Schedule changed in place: Schedule changed in place: quantity change keeps the recurring order id
+  switching-region-or-language / Region switched with a cart: session cartId reset
+note: 16 owner row(s) still carry a placeholder id (the lead numbers them): OA-x (B1), OA-x (C1), OA-x (D1), OA-x1, OA-x2, OA-x2, SO-x (B1), SO-x (B2), SO-x (C1), SO-x (E1), SO-x1, SO-x1, SO-x1, SO-x2, SO-x1, SO-x2
+plan ok: 17 workstreams, 50 specs, strict
+--- release gate (expected to fail today)
+note: 16 owner row(s) still carry a placeholder id (the lead numbers them): OA-x (B1), OA-x (C1), OA-x (D1), OA-x1, OA-x2, OA-x2, SO-x (B1), SO-x (B2), SO-x (C1), SO-x (E1), SO-x1, SO-x1, SO-x1, SO-x2, SO-x1, SO-x2
+plan check failed (174):
+ - owner row OA-01 is TODO
+ - owner row OA-02 is TODO
+ - owner row OA-03 is TODO
+ - owner row OA-04 is TODO
+ - owner row OA-05 is TODO
+ - owner row OA-07 is TODO
+ - owner row OA-08 is TODO
+ - owner row SO-01 is TODO
+ - owner row SO-02 is TODO
+ - owner row SO-04 is TODO
+ - owner row OA-A-b is TODO
+ - owner row OA-A-c is TODO
+ - owner row OA-x (B1) has no number yet
+ - owner row OA-x is TODO
+ - owner row OA-x (C1) has no number yet
+ - owner row OA-x is TODO
+ - owner row OA-x (D1) has no number yet
+ - owner row OA-x is TODO
+ - owner row OA-x1 has no number yet
+ - owner row OA-x1 is TODO
+ - owner row OA-x2 has no number yet
+ - owner row OA-x2 is TODO
+ - owner row OA-G-a is TODO
+ - owner row OA-x2 has no number yet
+ - owner row OA-x2 is TODO
+ - owner row OA-H-a is TODO
+ - owner row OA-I-a is TODO
+ - owner row OA-I-b is TODO
+ - owner row OA-J-a is TODO
+ - owner row OA-J-b is TODO
+ - owner row OA-J-c is TODO
+ - owner row OA-K-a is TODO
+ - owner row OA-K-b is TODO
+ - owner row OA-K-d is TODO
+ - owner row OA-K-e is TODO
+ - owner row OA-K-f is TODO
+ - owner row OA-K-g is TODO
+ - owner row OA-L-a is TODO
+ - owner row OA-L-b is TODO
+ - owner row OA-L-c is TODO
+ - owner row OA-L-d is TODO
+ - owner row OA-M-a is TODO
+ - owner row OA-02 is TODO
+ - owner row OA-N1 is TODO
+ - owner row OA-O-1 is TODO
+ - owner row OA-P1 is TODO
+ - owner row OA-P2 is TODO
+ - owner row OA-P3 is TODO
+ - owner row OA-05 is TODO
+ - owner row OA-N-Q1 is TODO
+ - owner row OA-S-01 is TODO
+ - owner row OA-S-02 is TODO
+ - owner row OA-S-03 is TODO
+ - owner row OA-S-04 is TODO
+ - owner row OA-S-05 is TODO
+ - owner row SO-x (B1) has no number yet
+ - owner row SO-x is TODO
+ - owner row SO-x (B2) has no number yet
+ - owner row SO-x is TODO
+ - owner row SO-x (C1) has no number yet
+ - owner row SO-x is TODO
+ - owner row SO-x (E1) has no number yet
+ - owner row SO-x is TODO
+ - owner row SO-x1 has no number yet
+ - owner row SO-x1 is TODO
+ - owner row SO-x1 has no number yet
+ - owner row SO-x1 is TODO
+ - owner row SO-x1 has no number yet
+ - owner row SO-x1 is TODO
+ - owner row SO-x2 has no number yet
+ - owner row SO-x2 is TODO
+ - owner row SO-x1 has no number yet
+ - owner row SO-x1 is TODO
+ - owner row SO-x2 has no number yet
+ - owner row SO-x2 is TODO
+ - owner row SO-J-a is TODO
+ - owner row SO-K-a is TODO
+ - owner row SO-K-b is TODO
+ - owner row SO-L-a is TODO
+ - owner row SO-L-b is TODO
+ - owner row SO-M-a is TODO
+ - owner row SO-N1 is TODO
+ - owner row SO-N2 is TODO
+ - owner row SO-O1 is TODO
+ - owner row SO-O2 is TODO
+ - owner row SO-02 is TODO
+ - owner row SO-01 is TODO
+ - owner row SO-P1 is TODO
+ - owner row SO-P2 is TODO
+ - owner row SO-P3 is TODO
+ - owner row SO-P4 is TODO
+ - owner row SO-P5 is TODO
+ - owner row SO-Q2 is TODO
+ - owner row SO-S-01 is TODO
+ - owner row M-A-01 is TODO
+ - owner row M-A-02 is TODO
+ - owner row M-A-03 is TODO
+ - owner row M-B-01 is TODO
+ - owner row M-C-01 is TODO
+ - owner row M-D-01 is TODO
+ - owner row M-E-01 is TODO
+ - owner row M-E-02 is TODO
+ - owner row M-E-03 is TODO
+ - owner row M-F-01 is TODO
+ - owner row M-F-02 is TODO
+ - owner row M-F-03 is TODO
+ - owner row M-G-01 is TODO
+ - owner row M-G-02 is TODO
+ - owner row M-G-03 is TODO
+ - owner row M-G-04 is TODO
+ - owner row M-H-01 is TODO
+ - owner row M-H-02 is TODO
+ - owner row M-H-03 is TODO
+ - owner row M-H-04 is TODO
+ - owner row M-I-01 is TODO
+ - owner row M-I-02 is TODO
+ - owner row M-J-01 is TODO
+ - owner row M-J-02 is TODO
+ - owner row M-J-03 is TODO
+ - owner row M-K-01 is TODO
+ - owner row M-K-02 is TODO
+ - owner row M-K-03 is TODO
+ - owner row M-K-04 is TODO
+ - owner row M-K-05 is TODO
+ - owner row M-K-06 is TODO
+ - owner row M-K-07 is TODO
+ - owner row M-L-01 is TODO
+ - owner row M-L-02 is TODO
+ - owner row M-L-03 is TODO
+ - owner row M-L-04 is TODO
+ - owner row M-M-01 is TODO
+ - owner row M-M-02 is TODO
+ - owner row M-M-03 is TODO
+ - owner row M-M-04 is TODO
+ - owner row M-N-01 is TODO
+ - owner row M-N-02 is TODO
+ - owner row M-N-03 is TODO
+ - owner row M-N-04 is TODO
+ - owner row M-N-05 is TODO
+ - owner row M-N-06 is TODO
+ - owner row M-O-01 is TODO
+ - owner row M-O-02 is TODO
+ - owner row M-P-01 is TODO
+ - owner row M-P-02 is TODO
+ - owner row M-P-04 is TODO
+ - owner row M-Q-01 is TODO
+ - owner row M-Q-02 is TODO
+ - owner row M-Q-04 is TODO
+ - owner row M-Q-05 is TODO
+ - owner row M-Q-06 is TODO
+ - owner row M-Q-07 is TODO
+ - owner row M-Q-03 is TODO
+ - owner row M-Q-08 is TODO
+ - owner row M-Q-09 is TODO
+ - owner row M-Q-10 is TODO
+ - owner row M-S-01 is TODO
+ - workstream A is "Ready for review", not Done
+ - workstream B is "Ready for review (offline)", not Done
+ - workstream C is "Ready for review (offline)", not Done
+ - workstream D is "Ready for review (offline)", not Done
+ - workstream E is "Ready for review", not Done
+ - workstream F is "Ready for review (offline)", not Done
+ - workstream G is "Ready for review (offline)", not Done
+ - workstream H is "Ready for review (offline)", not Done
+ - workstream I is "Ready for review", not Done
+ - workstream J is "Ready for review (offline)", not Done
+ - workstream K is "Ready for review (offline)", not Done
+ - workstream L is "Ready for review", not Done
+ - workstream M is "Ready for review (offline)", not Done
+ - workstream N is "Ready for review (offline)", not Done
+ - workstream O is "Ready for review", not Done
+ - workstream P is "Ready for review (partial)", not Done
+ - workstream Q is "Ready for review", not Done
+ - 144 scenario or owner row open

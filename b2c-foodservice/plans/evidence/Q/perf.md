@@ -33,17 +33,17 @@ Insights the traces raised (none changes a budget): `ImageDelivery` says the pic
 
 Before = the first CLI run of this workstream (`a11y/lighthouse-core.json`, `lighthouse-d2.json` for the account page). After = the final build (`a11y/lighthouse-cli.json`, `final` block for the six pages measured last, `batch1` for the rest). Scores are performance / accessibility / best practices / SEO.
 
-| Page | Device | Before | After | What changed |
+| Page | Device | Before | After (two runs: the first batch and the final build) | What changed |
 | --- | --- | --- | --- | --- |
-| Home | mobile | 92 / 100 / 100 / 100, LCP 3368 ms | 94 / 100 / 100 / 100, LCP 3067 ms | prefetch off (30 instead of 49 requests), fetch priority on the hero |
-| Home | desktop | 99 / 100 / 100 / 100, LCP 867 ms | 99 / 100 / 100 / 100, LCP 867 ms | account button name (Lighthouse `label-content-name-mismatch` gone, QFX-03 and QFX-29) |
-| Listing | mobile | 90 / 100 / 100 / 92, LCP 3670 ms | 84 / 100 / 100 / 100, LCP 4497 ms (91 in the first batch, LCP 3540 ms) | SEO 92 to 100 (meta description in the head, canonical); the performance number moves 84 to 91 between runs with the placeholder image |
-| Listing | desktop | 99 / 100 / 100 / 92 | 97 / 100 / 100 / 100, LCP 1243 ms | same |
-| Product (pod) | mobile | 92 / 100 / 100 / 92, LCP 3369 ms | 84 / 100 / 100 / 100, LCP 4640 ms | SEO 92 to 100; the LCP is the placeholder download |
-| Product (pod) | desktop | 100 / 100 / 100 / 92 | 98 / 100 / 100 / 100, LCP 1098 ms | same |
-| Cart | mobile | 92 / 100 / 100 / 54 | 87 / 100 / 100 / 54, LCP 4145 ms | SEO 54 is `noindex` on purpose (the cart is private) |
+| Home | mobile | 92 / 100 / 100 / 100, LCP 3368 ms | 92 to 94 / 100 / 100 / 100, LCP 3063 to 3368 ms | prefetch off (about half the requests), fetch priority on the hero |
+| Home | desktop | 99 / 100 / 100 / 100, LCP 867 ms | 99 / 100 / 100 / 100, LCP 867 to 924 ms | account button name (Lighthouse `label-content-name-mismatch` gone, QFX-03 and QFX-29) |
+| Listing | mobile | 90 / 100 / 100 / 92, LCP 3670 ms | 84 to 91 / 100 / 100 / 100, LCP 3534 to 4497 ms | SEO 92 to 100 (meta description in the head, canonical); the performance number moves with the placeholder image |
+| Listing | desktop | 99 / 100 / 100 / 92 | 97 to 98 / 100 / 100 / 100, LCP 1147 to 1243 ms | same |
+| Product (pod) | mobile | 92 / 100 / 100 / 92, LCP 3369 ms | 84 to 86 / 100 / 100 / 100, LCP 4182 to 4640 ms | SEO 92 to 100; the LCP is the placeholder download |
+| Product (pod) | desktop | 100 / 100 / 100 / 92 | 98 to 99 / 100 / 100 / 100, LCP 980 to 1098 ms | same |
+| Cart | mobile | 92 / 100 / 100 / 54 | 87 to 90 / 100 / 100 / 54, LCP 3686 to 4145 ms | SEO 54 is `noindex` on purpose (the cart is private) |
 | Cart | desktop | 100 / 100 / 100 / 54 | 99 / 100 / 100 / 54 | same |
-| Account, Orders | mobile | 93 / 96 / 100 / 45 | 90 / 100 / 100 / 54, CLS 0.072 | accessibility 96 to 100 (the account pages had no document title, QFX-19), SEO 45 to 54 (`noindex` by design; the missing title is gone) |
+| Account, Orders | mobile | 93 / 96 / 100 / 45, CLS 0.028 | 90 to 93 / 100 / 100 / 54, **CLS 0** in three runs after QFX-43 (0.072 and 0.206 before it) | accessibility 96 to 100 (the account pages had no document title, QFX-19), SEO 45 to 54 (`noindex` by design; the missing title is gone), footer no longer jumps when the list arrives |
 | Account, Orders | desktop | 100 / 96 / 100 / 45 | 100 / 100 / 100 / 54 | same |
 | Account, Subscriptions | mobile / desktop | not measured (tab did not exist) | 90 / 100 / 100 / 54 and 99 / 100 / 100 / 54 | |
 
@@ -91,7 +91,7 @@ Total blocking time in Lighthouse: 0 to 14 ms on every page (budget 200 ms). INP
 | Budget | Result |
 | --- | --- |
 | LCP at most 2.5 s mobile, 1.8 s desktop | met in the traces (0.55 to 0.63 s and 0.10 to 0.12 s); Lighthouse's slower simulation shows 3.1 to 4.6 s on mobile because of the placeholder image: **accepted for now, M-Q-05, re-measure with real images (Q-17)** |
-| CLS at most 0.1 | met everywhere (0 to 0.072; the 0.072 is the account Orders page on mobile in Lighthouse only; the browser traces and the headless runs show 0 on the pages they cover) |
+| CLS at most 0.1 | met everywhere (0 on every Lighthouse run of the final build; the traces and the headless runs show 0 to 0.037). The account Orders page had 0.07 to 0.21 on a phone until QFX-43 (the footer jumped down when the list arrived) |
 | TBT/INP at most 200 ms | met (TBT 0 to 14 ms) |
 | TTFB at most 400 ms local | met (7 to 21 ms); the real figure on the host comes from Q-17 |
 | First Load JS 200 kB for home, listing, product, cart; 250 kB checkout and account | met except the **product page at 212 kB** (Q-Q-19; idea: load the review form on demand) |

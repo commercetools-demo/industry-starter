@@ -50,3 +50,11 @@ seed/package-lock.json: lockfileVersion 3, 129 packages
 
 Version gate: node scripts/check-versions.mjs in storefront prints "version gate: ok"
 (next major 16 and above 16.0.0, next-intl 4, platform-sdk 8, ts-client 4, react 19, tailwindcss 4, no tailwind config file, .nvmrc starts with 22).
+
+======================================================================
+Section 3: development dependencies (not part of the S15 check), 2026-10-22, commit aca6adcd
+======================================================================
+`npm audit` without `--omit=dev` reports advisories that exist only in the tooling and never ship to the browser or the server:
+- storefront, 5 high: `eslint-config-next` (direct) -> `@next/eslint-plugin-next` -> `fast-glob` -> `micromatch` -> `braces` (stack exhaustion on deeply nested glob patterns; the linter reads our own files only).
+- seed, 6 (3 moderate, 1 high, 2 critical): `vitest` 2.x (direct; the critical advisory applies "when the Vitest UI server is listening", which no script here starts), `tinypool`, `vite`, `vite-node`, `@vitest/mocker`, `esbuild` (dev server advisories; the test run starts no server).
+Decision: accepted as dev-only (owner reads it with M-Q-05); upgrade the two toolchains when their fixed releases fit the pinned stack (idea in plans/IDEAS.md). `npm audit --omit=dev` is 0 in both apps (also in the clean clone at aca6adcd).

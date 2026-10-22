@@ -3,7 +3,7 @@
 
 # Responsive matrix (Q-05, Q-06)
 
-24 page entries at 7 widths = 168 runs, 2026-10-22, release build at commit `5584c8be` against the mock. `ok` means: no horizontal overflow (`scrollWidth - innerWidth <= 0`), no element past the right edge that is not inside a scroller or clipped, no control under 24 px without the WCAG 2.5.8 spacing exception, one `h1`, no skipped heading level, every image with an `alt`, one `main` and one `footer`, HTTP 200 (404 on the not-found page) and no console error. The number in brackets is the product grid's column count where the page has one. Raw data: `results.json`; the runner is `matrix-runner.mjs.txt`.
+24 page entries at 7 widths = 168 runs, 2026-10-22, release build of commit `5584c8be` against the mock (the later commits change the account frame, one dialog test and docs, none of the 24 pages). `ok` means: no horizontal overflow (`scrollWidth - innerWidth <= 0`), no element past the right edge that is not inside a scroller or clipped, no control under 24 px without the WCAG 2.5.8 spacing exception, one `h1`, no skipped heading level, every image with an `alt`, one `main` and one `footer`, HTTP 200 (404 on the not-found page) and no console error. The number in brackets is the product grid's column count where the page has one. Raw data: `results.json`; the runner is `matrix-runner.mjs.txt`.
 
 | Page | 1440 | 1080 | 900 | 820 | 700 | 520 | 375 |
 | --- | --- | --- | --- | --- | --- | --- | --- |

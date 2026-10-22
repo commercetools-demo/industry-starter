@@ -131,3 +131,13 @@ Other facts that matter for logs:
 | `node scripts/check-versions.mjs` | `version gate: ok` (Node v22.21.1; next 16.4.2, next-intl 4.14.9, platform-sdk 8.27.0, ts-client 4.10.0, react 19.2.4) |
 | `env -i PATH=$PATH node scripts/predeploy-check.mjs` (an empty environment, so only names appear) | exit 1, as designed while the dev routes exist: `Remove app/api/health/route.ts`, `Remove app/api/dev`, `Remove app/[locale]/dev`, and the 10 required variable names reported as "is not set". No value was involved |
 | `npm audit --omit=dev --audit-level=high` in both apps | found 0 vulnerabilities (`npm-audit.txt`) |
+
+## 6. History scan (Q-10, checklist A)
+
+Run at the end of the work on 2026-10-22 over the history of this project's folder `b2c-foodservice/` (every commit and branch of the repository, 1229 commits, restricted to the folder; the other sample projects of the repository are finding F-6 in `security.md`), values never printed:
+
+- Files named `.env*` that were ever tracked anywhere in the repository: only `.env.example` and `.env.seed.example` files (12 paths, two of them in this project). No `.env`, `.env.local` or `.env.production` was ever committed.
+- Added lines that assign a value of 16 or more characters to `CLIENT_SECRET`, `SESSION_SECRET`, `DEMO_LOGIN_PASSWORD`, `SEED_DEMO_PASSWORD`, `WEBHOOK_TOKEN`, `API_KEY` or `PRIVATE_KEY`: one hit, a sentence in `clean-clone.md` that quotes the obviously fake value used for the scratch build (`dummy-not-a-secret`).
+- Added lines that look like a Stripe key (`sk_live_`, `sk_test_`), an AWS key id or a PEM private key block: none.
+
+`git ls-files` shows only `storefront/.env.example` and `seed/.env.example` for this project.
