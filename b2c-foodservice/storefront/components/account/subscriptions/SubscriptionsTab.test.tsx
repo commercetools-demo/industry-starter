@@ -83,6 +83,12 @@ describe('Subscriptions tab', () => {
     expect(screen.getByTestId('subscription-skipped')).toHaveTextContent('Next delivery skipped');
   });
 
+  it('a canceled subscription does not claim a skipped delivery (found by Q in the browser, J4)', async () => {
+    setup({ list: [subscription({ state: 'canceled', pendingSkips: 1, nextOrderDate: null })] });
+    expect(await screen.findByRole('link', { name: 'Subscribe again' })).toBeInTheDocument();
+    expect(screen.queryByTestId('subscription-skipped')).toBeNull();
+  });
+
   it('Paused: card says no further orders and offers Resume', async () => {
     const user = userEvent.setup();
     const { calls } = setup({

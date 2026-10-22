@@ -84,7 +84,7 @@ export default function SubscriptionCard({ subscription: s }: { subscription: Su
               {t('account.next', { date: date(s.nextOrderDate) })}
             </p>
           ) : null}
-          {skipPending ? (
+          {skipPending && (s.state === 'active' || s.state === 'paused') ? (
             <p className="m-0 mt-0.5 text-[13.5px] font-semibold text-ink-2" data-testid="subscription-skipped">
               {t('account.skippedLabel')}
             </p>
