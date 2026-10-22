@@ -3,8 +3,10 @@ import { setRequestLocale } from 'next-intl/server';
 import OrderDetail from '@/components/account/orders/OrderDetail';
 import { loadAccountOrder } from '@/lib/account/load-order';
 import { requireCustomerPage } from '@/lib/auth/require-customer';
+import { accountOrderMetadata } from '@/lib/auth/account-metadata';
 
 export const dynamic = 'force-dynamic';
+export const generateMetadata = accountOrderMetadata;
 
 /**
  * Order detail. The order is read on the server with the ownership check: an unknown and a foreign number both end in

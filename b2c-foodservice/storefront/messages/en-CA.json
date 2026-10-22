@@ -1311,6 +1311,8 @@
   },
   "account": {
     "eyebrow": "My account",
+    "pageTitle": "{tab}: my account",
+    "orderPageTitle": "Order {number}: my account",
     "greeting": "Hi, {first}",
     "status": {
       "open": "{count, plural, one {# open order} other {# open orders}}",

@@ -1,9 +1,11 @@
 import { setRequestLocale } from 'next-intl/server';
 import MyReviews from '@/components/reviews/MyReviews';
 import { requireCustomerPage } from '@/lib/auth/require-customer';
+import { accountMetadata } from '@/lib/auth/account-metadata';
 
 // Reads the session cookie: rendered fresh on every request.
 export const dynamic = 'force-dynamic';
+export const generateMetadata = accountMetadata('reviews');
 
 /**
  * Account, Reviews tab (workstream M). Workstream L's shell layout (`(shell)/layout.tsx`) wraps it with the account
