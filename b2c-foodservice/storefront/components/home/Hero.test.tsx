@@ -36,6 +36,13 @@ describe('Hero', () => {
     expect(screen.queryByTestId('hero-featured-card')).toBeNull();
   });
 
+  it('the eyebrow uses accent-press: accent text on the warm glow behind the hero is 4.4 to 4.5:1, under the AA minimum for 11 px text', () => {
+    renderShell(<Hero locale="en-US" figures={FIGURES} featured={product()} collection />);
+    const eyebrow = document.querySelector('.eyebrow') as HTMLElement;
+    expect(eyebrow.className).toContain('!text-accent-press');
+    expect(eyebrow.className).not.toMatch(/!text-accent(?!-)/);
+  });
+
   it('hero has exactly one h1', () => {
     renderShell(<Hero locale="en-US" figures={FIGURES} featured={product()} collection />);
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);

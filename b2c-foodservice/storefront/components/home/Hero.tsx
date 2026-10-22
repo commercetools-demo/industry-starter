@@ -34,7 +34,7 @@ export default function Hero({
     <section aria-labelledby="home-hero-title" className="home-hero-bg overflow-x-clip">
       <div className="wrap grid min-h-[520px] items-center gap-10 py-10 stack:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] max-xs:py-8">
         <div className="fade-up">
-          <p className="eyebrow m-0 mb-4 !text-accent">{pick(content.eyebrow, locale)}</p>
+          <p className="eyebrow m-0 mb-4 !text-accent-press">{pick(content.eyebrow, locale)}</p>
           <h1
             id="home-hero-title"
             className="hero-title m-0 text-ink [letter-spacing:-0.03em] [line-height:0.98]"
