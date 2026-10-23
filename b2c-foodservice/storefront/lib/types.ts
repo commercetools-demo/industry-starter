@@ -340,6 +340,8 @@ export interface OrderReturn { id: string; createdAt: string; trackingId: string
 /** The one order model: the confirmation page, the account list and the account detail all read this (workstreams K and L). */
 export interface OrderView {
   id: string; orderNumber: string; createdAt: string; email: string | null; locale: string; currency: string; customerId: string | null;
+  /** `orderType` custom field (workstream R, D-042); absent on orders that never had one. */
+  orderType?: 'in-store-purchase' | 'online' | null;
   state: OrderState | null; paymentState: string | null; shipmentState: string | null;
   status: OrderStatusKind;
   /** Derived from the lines: some line is collected / some line is shipped or subscribed. */

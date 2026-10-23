@@ -138,6 +138,12 @@ export function returnableUnits(order: Pick<Order, 'lineItems' | 'returnInfo'>):
 }
 
 /** A stored order to the view. Pure: works from the order alone (an order revisited later needs no cart). */
+/** The `orderType` custom field of the In-store companion (D-042), when it holds one of the two known values. */
+export function orderTypeOf(custom: Pick<NonNullable<Order['custom']>, 'fields'> | undefined): 'in-store-purchase' | 'online' | null {
+  const v = custom?.fields?.['orderType'];
+  return v === 'in-store-purchase' || v === 'online' ? v : null;
+}
+
 export function mapOrder(o: Order, ctx: OrderMapContext): OrderView {
   const lines = o.lineItems.map((l) => mapLine(l, ctx.locale));
   const methodKey = o.shippingInfo?.shippingMethod?.obj?.key;
@@ -212,6 +218,7 @@ export function mapOrder(o: Order, ctx: OrderMapContext): OrderView {
     locale: o.locale ?? '',
     currency: o.totalPrice.currencyCode,
     customerId: o.customerId ?? null,
+    ...(orderTypeOf(o.custom) ? { orderType: orderTypeOf(o.custom) } : {}),
     state,
     paymentState: o.paymentState ?? null,
     shipmentState: o.shipmentState ?? null,
