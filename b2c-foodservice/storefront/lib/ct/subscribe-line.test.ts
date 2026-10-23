@@ -5,7 +5,7 @@ vi.mock('@/lib/env', () => ({ getEnv: () => ({ SESSION_SECRET: 'a'.repeat(40) })
 vi.mock('@/lib/ct/client', () => ({ apiRoot: {} }));
 
 import { groupLines } from '@/lib/cart/plan';
-import { buildAddLineAction } from '@/lib/ct/cart';
+import { buildAddLineAction, isSubscribable } from '@/lib/ct/cart';
 import { viewLine } from '@/test/cart';
 
 describe('subscribe lines in the add action', () => {
@@ -31,5 +31,13 @@ describe('subscribe lines in the add action', () => {
     const two = viewLine({ id: 'b', sku: 'POD-10', fulfilment: 'subscribe', recurrence: { policyId: 'rp', schedule: { unit: 'Months', value: 1 } } });
     const groups = groupLines([one, two]);
     expect(groups.map((g) => [g.kind, g.lineIds])).toEqual([['delivery', ['a']], ['subscribe', ['b']]]);
+  });
+
+  it('subscribable is read from the variant (the live shape), with the product-level attribute as a fallback', () => {
+    expect(isSubscribable({ attributes: [{ name: 'subscribable', value: true }] }, [])).toBe(true);
+    expect(isSubscribable({ attributes: [{ name: 'subscribable', value: false }] }, [{ name: 'subscribable', value: true }])).toBe(false);
+    expect(isSubscribable({ attributes: [] }, [{ name: 'subscribable', value: true }])).toBe(true);
+    expect(isSubscribable({ attributes: [] }, [])).toBe(false);
+    expect(isSubscribable(undefined)).toBe(false);
   });
 });

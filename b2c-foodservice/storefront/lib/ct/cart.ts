@@ -161,7 +161,7 @@ async function resolveTargets(market: CartMarket, input: AddLineInput): Promise<
   const projection = await getProductBySku(input.sku, market);
   if (!projection) throw new AppError('not_found', 404);
   const variant = [projection.masterVariant, ...projection.variants].find((v) => v.sku === input.sku);
-  const subscribable = projection.attributes?.find((a) => a.name === 'subscribable')?.value === true;
+  const subscribable = isSubscribable(variant, projection.attributes);
   const hasPrice = (variant?.recurrencePrices ?? []).some(
     (p) =>
       p.recurrencePolicy?.id === policy.id &&
@@ -171,6 +171,15 @@ async function resolveTargets(market: CartMarket, input: AddLineInput): Promise<
   );
   if (!subscribable || !hasPrice) throw new LineRejected('price_unavailable', 422);
   return { policyId: policy.id };
+}
+
+/** `subscribable` is a variant attribute (the seed writes it into every variant, product-level `attributes` is empty); a product-level one is accepted too. */
+export function isSubscribable(
+  variant: { attributes?: { name: string; value?: unknown }[] } | undefined,
+  productAttributes?: { name: string; value?: unknown }[],
+): boolean {
+  const flag = (xs?: { name: string; value?: unknown }[]) => xs?.find((a) => a.name === 'subscribable')?.value;
+  return (flag(variant?.attributes) ?? flag(productAttributes)) === true;
 }
 
 export async function addLine(
