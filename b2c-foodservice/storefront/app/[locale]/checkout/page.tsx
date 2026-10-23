@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import CheckoutPage from '@/components/checkout/CheckoutPage';
+import { isInstore } from '@/lib/app-mode';
 
 /** The checkout is per person and changes with every write: rendered per request, never cached, never indexed. */
 export const dynamic = 'force-dynamic';
@@ -27,5 +28,5 @@ export default async function CheckoutRoute({
   const { resume, part } = await searchParams;
   const n = Number(part);
   const resumePart = resume === '1' && Number.isInteger(n) && n >= 0 && n < 8 ? n : undefined;
-  return <CheckoutPage {...(resumePart === undefined ? {} : { resumePart })} />;
+  return <CheckoutPage {...(resumePart === undefined ? {} : { resumePart })} {...(isInstore() ? { instore: true } : {})} />;
 }
