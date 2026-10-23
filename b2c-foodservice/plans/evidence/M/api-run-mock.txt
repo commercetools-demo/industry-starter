@@ -1,0 +1,23 @@
+R6 create (customer 1, has order => verified):
+{"review":{"id":"rev-mock-1","rating":4,"title":null,"text":"<script>alert(1)</script> <b>x</b>","authorName":"Maya O.","createdAt":"2026-10-21T18:23:38.535Z","locale":"en-US","verifiedPurchase":true,"version":1,"product":{"id":"00000000-0000-4000-8000-000000000001","name":"Ember Ristretto","slug":"ember-ristretto","sku":"MCF-POD-EMBER-10","imageUrl":"https://placehold.co/1200x1440/6359ff/ffffff.png?auto=compress&fit=crop&w=160&h=192"}}} [201]
+stats after (count should be 13):
+13 {'id': 'rev-mock-1'} <script>alert(1)</script> <b>x</b> True
+R8 duplicate:
+{"error":{"code":"already_reviewed","message":"You have already reviewed this product","reviewId":"rev-mock-1"}} [409]
+R9 missing rating:
+{"error":{"code":"validation_failed","message":"Some of the information is not valid","fields":{"rating":"rating_required"}}} [422]
+own list id: rev-mock-1
+R10 edit:
+{"review":{"id":"rev-mock-1","rating":5,"title":null,"text":"edited text","authorName":"Maya O.","createdAt":"2026-10-21T18:23:38.535Z","locale":"en-US","verifiedPurchase":true,"version":2,"product":{
+foreign edit/delete vs unknown (identical 404 body expected):
+{"error":{"code":"not_found","message":"Not found"}} [404]
+{"error":{"code":"not_found","message":"Not found"}} [404]
+401 unauthenticated:
+{"error":{"code":"unauthorized","message":"Sign in required"}} [401]
+R13 delete:
+{"ok":true} [200]
+total after delete 12
+R14 rate limit (customer 2, products 2..7):
+201 201 201 201 201 429 
+R16 no email/customer id in public list:
+0

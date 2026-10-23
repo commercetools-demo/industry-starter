@@ -1,0 +1,22 @@
+state 200  {"cartId":"cart-5","version":4,"strategy":"complete-per-group","cart":{"id":"cart-5","version":4,"currency":"USD","country":"US","shippingMode":"Single","count":3,"lines":[{"id":"li-7-5","sku":"MCF-POD-EMBER-10","productId":"00000000-0000-4000-8000-00000000000
+pickup empty 422  {"error":{"code":"validation_failed","message":"Some of the information is not valid","fields":{"pickupName":"pickup_name_required"}}}
+payments [{"part":0,"clusterKey":"collect:mcf-store-nyc-soho","label":"Malva Coffee SoHo","totalCents":616},{"part":1,"clusterKey":"delivery","label":null,"totalCents":1274}] cookie true
+session stale 409  {"error":{"code":"totals_changed","message":"The totals changed. Please review your bag","totalCents":616}}
+session part 0 200  {"sessionId":"mock-session-5","projectKey":"mock-project","region":"https://localhost:9455","orderNumber":"MC-03JSHCXFC2-A","expiresAt":"2026-10-21T20:12:13.295Z"}
+session part 1 200  {"sessionId":"mock-session-6","projectKey":"mock-project","region":"https://localhost:9455","orderNumber":"MC-03JSHCXFC2-B","expiresAt":"2026-10-21T20:12:13.305Z"}
+clone ids [ 'cart-6', 'cart-7' ] bag cart-5
+base MC-03JSHCXFC2
+placed A ord-7
+complete A 200  {"orderId":"ord-7","next":1}
+bag after A 200  {"cart":{"id":"cart-5","version":5,"currency":"USD","country":"US","shippingMode":"Single","count":2,"lines":[{"id":"li-7-5","sku":"MCF-POD-EMBER-10","productId":"00000000-0000-4000-8000-000000000001","slug":"ember-ristretto","name":"Ember Ristretto","imageUrl
+placed B ord-8
+complete B 200  {"orderId":"ord-8","next":null}
+bag after B 200  {"cart":null}
+guest cookie maya%40example.com
+return 303 http://localhost:3055/en-US/checkout/confirmation/ord-7 ""
+order MC-10TR0AGZDF-A 200  {"collect":1,"ship":false,"state":"ordered","linked":[{"id":"ord-4","orderNumber":"MC-10TR0AGZDF-B"}],"lines":["collect"]}
+order MC-10TR0AGZDF-B 200  {"collect":0,"ship":false,"state":"ordered","linked":[{"id":"ord-3","orderNumber":"MC-10TR0AGZDF-A"}],"lines":["delivery"]}
+order MC-03JSHCXFC2-A 200  {"collect":1,"ship":false,"state":"ordered","linked":[{"id":"ord-8","orderNumber":"MC-03JSHCXFC2-B"}],"lines":["collect"]}
+order MC-03JSHCXFC2-B 200  {"collect":0,"ship":false,"state":"ordered","linked":[{"id":"ord-7","orderNumber":"MC-03JSHCXFC2-A"}],"lines":["delivery"]}
+confirmation 200 true true true
+no recent 200 true

@@ -1,0 +1,36 @@
+{
+  "name": "@commercetools-labs/malva-coffee-seed",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Idempotent seed, manifest-based cleanup and verify scripts for the Malva Coffee commercetools project.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "check": "tsc --noEmit && vitest run",
+    "test": "vitest run",
+    "lint": "tsc --noEmit",
+    "seed": "tsx src/seed.ts",
+    "seed:settings": "tsx src/settings.ts",
+    "seed:inventory": "tsx src/inventory.ts",
+    "seed:cleanup": "tsx src/cleanup.ts",
+    "seed:images": "tsx src/images.ts",
+    "verify": "tsx src/verify.ts",
+    "reset": "tsx src/reset.ts",
+    "seed:order": "tsx src/order-ops.ts",
+    "seed:advance-order": "tsx src/advance-order.ts",
+    "seed:cleanup-tests": "tsx src/cleanup-tests.ts"
+  },
+  "dependencies": {
+    "@commercetools/platform-sdk": "^8.0.0",
+    "@commercetools/ts-client": "^4.0.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

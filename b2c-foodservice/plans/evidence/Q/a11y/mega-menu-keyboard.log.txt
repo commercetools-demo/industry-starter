@@ -1,0 +1,4 @@
+0 {"exists":true,"inert":false,"ariaHidden":"false","visibility":"hidden","display":"block","opacity":"0","links":19,"firstLinkVisibility":"hidden","active":"A:Pods","activeInPanel":false}
+50 {"exists":true,"inert":false,"ariaHidden":"false","visibility":"visible","display":"block","opacity":"0.236695","links":19,"firstLinkVisibility":"visible","active":"A:New in","activeInPanel":true}
+200 {"exists":true,"inert":false,"ariaHidden":"false","visibility":"visible","display":"block","opacity":"1","links":19,"firstLinkVisibility":"visible","active":"A:New in","activeInPanel":true}
+600 {"exists":true,"inert":false,"ariaHidden":"false","visibility":"visible","display":"block","opacity":"1","links":19,"firstLinkVisibility":"visible","active":"A:New in","activeInPanel":true}

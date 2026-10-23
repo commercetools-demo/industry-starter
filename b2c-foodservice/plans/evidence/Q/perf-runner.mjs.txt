@@ -1,0 +1,68 @@
+// Page weight and request count per route on the running release build (cold cache, desktop 1440 and mobile 375).
+import { createRequire } from 'node:module';
+import { writeFileSync } from 'node:fs';
+const require = createRequire('/Users/behnam/.npm/_npx/0f94ee7615faf582/node_modules/');
+const puppeteer = require('puppeteer-core');
+const base = process.argv[2] ?? 'http://localhost:3100';
+const out = process.argv[3] ?? 'perf-after.json';
+const PAGES = {
+  home: '/en-US',
+  listing: '/en-US/category/pods',
+  pdp: '/en-US/p/ember-ristretto/MCF-POD-EMBER-50',
+  cart: '/en-US/cart',
+  checkout: '/en-US/checkout',
+  'sign-in': '/en-US/account/sign-in',
+  about: '/en-US/about',
+};
+const browser = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new', args: ['--no-sandbox'] });
+const results = [];
+for (const [device, vp] of [['desktop', { width: 1440, height: 900, deviceScaleFactor: 1 }], ['mobile', { width: 375, height: 812, deviceScaleFactor: 2, isMobile: true, hasTouch: true }]]) {
+  for (const [name, path] of Object.entries(PAGES)) {
+    const ctx = await browser.createBrowserContext();
+    const page = await ctx.newPage();
+    await page.setViewport(vp);
+    if (name === 'cart' || name === 'checkout') {
+      await page.goto(base + '/en-US', { waitUntil: 'networkidle0' });
+      await page.evaluate(async () => {
+        for (const sku of ['MCF-POD-ANDES-10', 'MCF-COF-SANTOS-250-WB']) {
+          await fetch('/api/cart/lines', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ sku, quantity: 2, fulfilment: 'delivery' }) });
+        }
+      });
+    }
+    const cdp = await page.createCDPSession();
+    await cdp.send('Network.enable');
+    await cdp.send('Network.setCacheDisabled', { cacheDisabled: true });
+    const reqs = new Map();
+    cdp.on('Network.requestWillBeSent', (e) => reqs.set(e.requestId, { url: e.request.url, type: e.type }));
+    cdp.on('Network.responseReceived', (e) => { const r = reqs.get(e.requestId); if (r) { r.status = e.response.status; r.mime = e.response.mimeType; r.cc = e.response.headers['cache-control'] ?? e.response.headers['Cache-Control']; } });
+    cdp.on('Network.loadingFinished', (e) => { const r = reqs.get(e.requestId); if (r) r.bytes = e.encodedDataLength; });
+    await page.evaluateOnNewDocument(() => {
+      window.__lcp = 0; window.__cls = 0;
+      new PerformanceObserver((l) => { for (const e of l.getEntries()) window.__lcp = e.startTime; }).observe({ type: 'largest-contentful-paint', buffered: true });
+      new PerformanceObserver((l) => { for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls += e.value; }).observe({ type: 'layout-shift', buffered: true });
+    });
+    await page.goto(base + path, { waitUntil: 'networkidle0' });
+    await new Promise((r) => setTimeout(r, 800));
+    const rt = await page.evaluate(() => {
+      const kb = (n) => Math.round(n / 100) / 10;
+      const sum = (f) => kb(performance.getEntriesByType('resource').filter(f).reduce((a, e) => a + e.encodedBodySize, 0));
+      const nav = performance.getEntriesByType('navigation')[0];
+      return { jsBody: sum((e) => e.initiatorType === 'script' || /\.js(\?|$)/.test(e.name)), cssBody: sum((e) => /\.css(\?|$)/.test(e.name)), fontBody: sum((e) => /\.woff2?(\?|$)/.test(e.name)), imgBody: sum((e) => /\/_next\/image|\.(png|jpe?g|webp|avif|svg)(\?|$)/.test(e.name)), apiBody: sum((e) => e.initiatorType === 'fetch' || e.initiatorType === 'xmlhttprequest'), htmlBody: kb(nav.encodedBodySize) };
+    });
+    const m = await page.evaluate(() => ({ lcp: Math.round(window.__lcp), cls: +window.__cls.toFixed(3), ttfb: Math.round(performance.getEntriesByType('navigation')[0].responseStart), imgs: document.images.length, lazy: [...document.images].filter((i) => i.loading === 'lazy').length }));
+    const all = [...reqs.values()].filter((r) => r.url.startsWith(base));
+    const sum = (f) => Math.round(all.filter(f).reduce((a, r) => a + (r.bytes || 0), 0) / 100) / 10;
+    const rsc = all.filter((r) => /[?&]_rsc=/.test(r.url)).length;
+    results.push({
+      page: name, device, requests: all.length, rscPrefetch: rsc,
+      jsKB: sum((r) => r.type === 'Script'), cssKB: sum((r) => r.type === 'Stylesheet'), fontKB: sum((r) => r.type === 'Font'),
+      htmlKB: sum((r) => r.type === 'Document'), imageKB: sum((r) => r.type === 'Image'), apiKB: sum((r) => r.type === 'Fetch' || r.type === 'XHR'),
+      totalKB: sum(() => true), api: all.filter((r) => /\/api\//.test(r.url)).map((r) => r.url.replace(base, '').split('?')[0]),
+      ...rt, ...m,
+    });
+    await ctx.close();
+  }
+}
+await browser.close();
+writeFileSync(out, JSON.stringify(results, null, 1));
+for (const r of results) console.log(`${r.device} ${r.page}: ${r.requests} req (rsc ${r.rscPrefetch}), JS ${r.jsKB} CSS ${r.cssKB} font ${r.fontKB} html ${r.htmlKB} img ${r.imageKB} api ${r.apiKB} total ${r.totalKB} kB, TTFB ${r.ttfb} LCP ${r.lcp} CLS ${r.cls}`);

@@ -1,0 +1,84 @@
+// Account pages (signed in as a seeded demo customer) and the contrast audit of D4.1 on every page, at 1440 and 375.
+import { createRequire } from 'node:module';
+import { writeFileSync } from 'node:fs';
+const require = createRequire('/Users/behnam/.npm/_npx/0f94ee7615faf582/node_modules/');
+const puppeteer = require('puppeteer-core');
+const base = process.argv[2] ?? 'http://localhost:3100';
+const out = process.argv[3] ?? 'account-audit.json';
+const KEY = process.argv[4] ?? 'mcf-customer-maya';
+
+const audit = () => {
+  const vw = innerWidth;
+  const parse = (c) => { const m = c.match(/rgba?\(([^)]+)\)/); if (!m) return null; const [r, g, b, a = 1] = m[1].split(/[ ,\/]+/).filter(Boolean).map(Number); return { r, g, b, a }; };
+  const lum = ({ r, g, b }) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+  const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+  const bgOf = (el) => { for (let e = el; e; e = e.parentElement) { const cs = getComputedStyle(e); if (cs.backgroundImage !== 'none') return 'image'; const c = parse(cs.backgroundColor); if (c && c.a > 0.95) return c; } return { r: 255, g: 255, b: 255, a: 1 }; };
+  const contrast = []; const seen = new Set(); let texts = 0; let unparsed = 0;
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+    const t = n.textContent.trim(); const el = n.parentElement;
+    if (!t || !el || el.closest('script,style,noscript') || el.closest('.sr-only')) continue;
+    const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || cs.display === 'none' || +cs.opacity === 0) continue;
+    const rect = el.getBoundingClientRect(); if (!rect.width || !rect.height) continue;
+    texts++;
+    const fg = parse(cs.color); const bg = bgOf(el);
+    if (!fg) { unparsed++; continue; }
+    if (bg === 'image') { contrast.push({ text: t.slice(0, 24), note: 'background image: check by eye' }); continue; }
+    const size = parseFloat(cs.fontSize); const bold = parseInt(cs.fontWeight, 10) >= 700;
+    const large = size >= 24 || (size >= 18.66 && bold); const min = large ? 3 : 4.5; const r = ratio(fg, bg);
+    const key = cs.color + '|' + JSON.stringify(bg) + t; if (r < min && !seen.has(key)) { seen.add(key); contrast.push({ text: t.slice(0, 24), color: cs.color, ratio: +r.toFixed(2), min, size, disabled: !!el.closest('[disabled],[aria-disabled="true"]') }); }
+  }
+  const SEL = 'a[href],button,input:not([type=hidden]),select,textarea,summary,[role=button],[role=checkbox],[role=radio],[role=tab],[role=switch]';
+  const hidden = (e) => e.closest('.sr-only,[aria-hidden="true"],[inert]') || e.closest('dialog:not([open])');
+  const all = [...document.querySelectorAll(SEL)].filter((e) => { const r = e.getBoundingClientRect(); if (!r.width || !r.height) return false; const cs = getComputedStyle(e); return cs.visibility !== 'hidden' && cs.display !== 'none' && !hidden(e); });
+  const label = (e) => (e.getAttribute('aria-label') || e.textContent || e.tagName).trim().slice(0, 28);
+  const small = [];
+  for (const t of all) {
+    if (t.tagName === 'A' && getComputedStyle(t).display === 'inline') continue;
+    if (getComputedStyle(t, '::after').position === 'absolute') continue;
+    const r = t.getBoundingClientRect(); if (r.width >= 24 && r.height >= 24) continue;
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    const clash = all.find((o) => { if (o === t || t.contains(o) || o.contains(t)) return false; const q = o.getBoundingClientRect(); return q.left < cx + 12 && q.right > cx - 12 && q.top < cy + 12 && q.bottom > cy - 12; });
+    if (clash) small.push(label(t) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height) + ' near ' + label(clash));
+  }
+  const clipped = (e) => { for (let p = e.parentElement; p && p !== document.body; p = p.parentElement) { const cs = getComputedStyle(p); if (['hidden', 'clip', 'auto', 'scroll'].includes(cs.overflowX) && p.getBoundingClientRect().right <= vw + 1) return true; } return false; };
+  const offenders = [...document.querySelectorAll('body *')].filter((e) => { const r = e.getBoundingClientRect(); const cs = getComputedStyle(e); return r.width && r.height && cs.position !== 'fixed' && cs.visibility !== 'hidden' && cs.display !== 'none' && r.right > vw + 1 && !hidden(e) && !clipped(e); }).slice(0, 4).map((e) => e.tagName.toLowerCase() + '.' + String(e.className).slice(0, 40));
+  const hs = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].map((h) => +h.tagName[1]); let skip = false; for (let i = 1; i < hs.length; i++) if (hs[i] - hs[i - 1] > 1) skip = true;
+  const unnamed = [...document.querySelectorAll('button,a[href],input:not([type=hidden]),select,textarea')].filter((e) => { const r = e.getBoundingClientRect(); if (!r.width || hidden(e)) return false; const name = e.getAttribute('aria-label') || e.getAttribute('aria-labelledby') || (e.labels && e.labels.length) || (e.textContent || '').trim() || e.getAttribute('title') || e.querySelector('img[alt]:not([alt=""])'); return !name; }).length;
+  return {
+    title: document.title, w: vw, overflowPx: document.documentElement.scrollWidth - vw, offenders, targets: all.length, smallTargets: small.slice(0, 6),
+    h1: hs.filter((x) => x === 1).length, headingSkip: skip, imgNoAlt: document.querySelectorAll('img:not([alt])').length, unnamed,
+    main: document.querySelectorAll('main').length, lang: document.documentElement.lang, texts, unparsed, contrast: contrast.slice(0, 12),
+  };
+};
+
+const browser = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new', args: ['--no-sandbox'] });
+const results = {};
+for (const w of [1440, 375]) {
+  const ctx = await browser.createBrowserContext();
+  const page = await ctx.newPage();
+  await page.setViewport({ width: w, height: 900, deviceScaleFactor: 1, isMobile: w <= 520, hasTouch: w <= 520 });
+  await page.goto(base + '/en-US', { waitUntil: 'networkidle0' });
+  const status = await page.evaluate(async (key) => (await fetch('/api/auth/demo-login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ key }) })).status, KEY);
+  if (status !== 200) { console.error('sign-in status', status); process.exit(1); }
+  await page.goto(base + '/en-US/account/orders', { waitUntil: 'networkidle0' });
+  const orderHref = await page.evaluate(() => [...document.querySelectorAll('a[href*="/account/orders/"]')].map((a) => a.getAttribute('href'))[0] ?? null);
+  const pages = {
+    orders: '/en-US/account/orders', 'order-detail': orderHref, subscriptions: '/en-US/account/subscriptions', saved: '/en-US/account/saved', reviews: '/en-US/account/reviews',
+    addresses: '/en-US/account/addresses', 'payment-methods': '/en-US/account/payment-methods', profile: '/en-US/account/profile', settings: '/en-US/account/settings', collection: '/en-US/account/collection',
+    home: '/en-US', pods: '/en-US/category/pods', 'pdp-pod': '/en-US/p/ember-ristretto/MCF-POD-EMBER-50', 'pdp-machine': '/en-US/p/barista-compact/MCF-MAC-B2C2-BLA-M', cart: '/en-US/cart', checkout: '/en-US/checkout',
+    about: '/en-US/about', contact: '/en-US/contact', faq: '/en-US/faq', policy: '/en-US/policies/shipping-returns', journal: '/en-US/journal', article: '/en-US/journal/brew-a-better-cup', notfound: '/en-US/does-not-exist',
+  };
+  for (const [name, path] of Object.entries(pages)) {
+    if (!path) { results[`${name}-${w}`] = { skipped: 'no link' }; continue; }
+    try {
+      const res = await page.goto(base + path, { waitUntil: 'networkidle0', timeout: 30000 });
+      await new Promise((r) => setTimeout(r, 500));
+      results[`${name}-${w}`] = { path, status: res?.status(), ...(await page.evaluate(audit)) };
+    } catch (e) { results[`${name}-${w}`] = { path, error: String(e.message).slice(0, 100) }; }
+  }
+  await ctx.close();
+  console.error('width', w, 'done');
+}
+await browser.close();
+writeFileSync(out, JSON.stringify(results, null, 1));

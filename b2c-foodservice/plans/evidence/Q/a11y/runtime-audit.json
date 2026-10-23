@@ -1,0 +1,1050 @@
+{
+ "home-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": [
+   {
+    "text": "The Autumn Edit",
+    "note": "background image: check by eye",
+    "color": "rgb(99, 89, 255)"
+   },
+   {
+    "text": "Great coffee,",
+    "note": "background image: check by eye",
+    "color": "rgb(25, 23, 65)"
+   },
+   {
+    "text": "Compatible pods, fresh b",
+    "note": "background image: check by eye",
+    "color": "rgb(79, 79, 153)"
+   }
+  ]
+ },
+ "home-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": [
+   {
+    "text": "The Autumn Edit",
+    "note": "background image: check by eye",
+    "color": "rgb(99, 89, 255)"
+   },
+   {
+    "text": "Great coffee,",
+    "note": "background image: check by eye",
+    "color": "rgb(25, 23, 65)"
+   },
+   {
+    "text": "Compatible pods, fresh b",
+    "note": "background image: check by eye",
+    "color": "rgb(79, 79, 153)"
+   }
+  ]
+ },
+ "home-ca-1440": {
+  "structure": {
+   "lang": "en-CA",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Shop",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": [
+   {
+    "text": "The Autumn Edit",
+    "note": "background image: check by eye",
+    "color": "rgb(99, 89, 255)"
+   },
+   {
+    "text": "Great coffee,",
+    "note": "background image: check by eye",
+    "color": "rgb(25, 23, 65)"
+   },
+   {
+    "text": "Compatible pods, fresh b",
+    "note": "background image: check by eye",
+    "color": "rgb(79, 79, 153)"
+   }
+  ]
+ },
+ "home-ca-500": {
+  "structure": {
+   "lang": "en-CA",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Shop",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": [
+   {
+    "text": "The Autumn Edit",
+    "note": "background image: check by eye",
+    "color": "rgb(99, 89, 255)"
+   },
+   {
+    "text": "Great coffee,",
+    "note": "background image: check by eye",
+    "color": "rgb(25, 23, 65)"
+   },
+   {
+    "text": "Compatible pods, fresh b",
+    "note": "background image: check by eye",
+    "color": "rgb(79, 79, 153)"
+   }
+  ]
+ },
+ "listing-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "listing-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "search-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "search-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "pdp-pod-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "pdp-pod-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "pdp-coffee-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "pdp-coffee-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "pdp-machine-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "pdp-machine-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "pdp-acc-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "pdp-acc-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "cart-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "cart-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "checkout-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Checkout steps",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "checkout-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Checkout steps",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "sign-in-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "sign-in-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "register-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "register-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "about-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "about-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "contact-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "contact-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "faq-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Topics",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "faq-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Topics",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "policy-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "On this page",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "policy-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "On this page",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "journal-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Filter by topic",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "journal-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Filter by topic",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "article-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "article-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 2,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Breadcrumb",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "notfound-1440": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Browse the shop",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ },
+ "notfound-500": {
+  "structure": {
+   "lang": "en-US",
+   "h1": 1,
+   "headingSkips": false,
+   "main": 1,
+   "header": 1,
+   "footer": 1,
+   "navs": [
+    "Main",
+    "Main",
+    "Browse the shop",
+    "Shop",
+    "Collect",
+    "Help",
+    "Company"
+   ],
+   "skipLink": "Skip to content",
+   "unnamed": 0,
+   "noAlt": 0,
+   "unlabeled": [],
+   "autocompleteMissing": [],
+   "scrollPad": "auto"
+  },
+  "contrast": []
+ }
+}

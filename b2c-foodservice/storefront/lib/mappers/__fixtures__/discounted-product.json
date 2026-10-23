@@ -1,0 +1,23 @@
+{
+  "id": "p-disc-1",
+  "version": 2,
+  "productType": { "typeId": "product-type", "id": "pt-1" },
+  "name": { "en-US": "Discounted Beans", "en-CA": "Discounted Beans CA" },
+  "slug": { "en-US": "discounted-beans" },
+  "categories": [{ "typeId": "category", "id": "cat-beans" }],
+  "attributes": [],
+  "masterVariant": {
+    "id": 1,
+    "sku": "MCF-BEAN-1",
+    "price": {
+      "id": "pr-d",
+      "value": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 1800, "fractionDigits": 2 },
+      "discounted": {
+        "value": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 1500, "fractionDigits": 2 },
+        "discount": { "typeId": "product-discount", "id": "d1", "obj": { "name": { "en-US": "Spring sale" } } }
+      }
+    },
+    "attributes": []
+  },
+  "variants": []
+}

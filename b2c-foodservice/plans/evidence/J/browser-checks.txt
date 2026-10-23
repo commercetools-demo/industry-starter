@@ -1,0 +1,18 @@
+Workstream J browser run against scripts/mock-ct-server.mjs (no live credentials), dev server on :3100, Chrome DevTools MCP.
+Note: the Chrome window minimum is 500 px wide, so the "375" runs were 500 px; no horizontal scroll (scrollWidth 500).
+
+B1  /en-US/account/sign-in: H1 "Sign in", email + password, no SSO control, no forgot-password link, demo card below. See B1-sign-in-demo-1440.png
+Demo sign in: guest bag of 3 units (cart-active) -> chose "Maya Okonkwo (US)" -> signed in, account menu initials MO, header bag 4 items
+   (guest 3 + customer 1, merged by the mock login), landed on /en-US/account (page not built yet: workstream L, 404 is expected).
+Sign-in page source before login searched for seeded emails and the demo password: only the newsletter placeholder you@example.com found.
+B4  Wrong password for a known address and an unknown address: identical status (401) and identical byte body:
+    {"error":{"code":"invalid_credentials","message":"Email or password is incorrect"}}
+Logout: 200, session after logout is {} (no market was set in this run), /api/auth/me -> {"customer":null}
+B8  /en-US/account/forgot-password, /reset-password, /verify-email -> 404, 404, 404
+B5  /en-CA/account/register: weak password shows unmet rules (B5-register-weak-500.png); a strong password registered
+    qa-j-20261021-1@example.com (mock only), signed in at once (/api/auth/me returns the customer), redirected to /en-CA/account.
+B7  en-CA register and sign-in render the same English copy with the CAD promise bar.
+B9  A signed-in visitor opening /en-CA/account/sign-in?redirect=https://evil.example lands on /en-CA/account, not the external URL.
+Console: only 404s for /account (L not built). No errors from the auth pages.
+Dev server log grep for the synthetic password, a wrong password, the demo password and a seeded email: 0 matches.
+Not run in the browser: B3 (covered by unit test), B10 tab order (see todo-J), B6 with a real guest bag from the cart UI (cart workstream I not merged; simulated with /api/dev/session).

@@ -1,0 +1,336 @@
+{
+ "skipLink": {
+  "home": {
+   "first": {
+    "text": "Skip to content",
+    "visible": true,
+    "tag": "A"
+   },
+   "landed": {
+    "id": "main-content",
+    "tag": "MAIN",
+    "insideMain": true,
+    "hash": "#main-content"
+   }
+  },
+  "pods": {
+   "first": {
+    "text": "Skip to content",
+    "visible": true,
+    "tag": "A"
+   },
+   "landed": {
+    "id": "main-content",
+    "tag": "MAIN",
+    "insideMain": true,
+    "hash": "#main-content"
+   }
+  },
+  "pdp": {
+   "first": {
+    "text": "Skip to content",
+    "visible": true,
+    "tag": "A"
+   },
+   "landed": {
+    "id": "main-content",
+    "tag": "MAIN",
+    "insideMain": true,
+    "hash": "#main-content"
+   }
+  },
+  "cart": {
+   "first": {
+    "text": "Skip to content",
+    "visible": true,
+    "tag": "A"
+   },
+   "landed": {
+    "id": "main-content",
+    "tag": "MAIN",
+    "insideMain": true,
+    "hash": "#main-content"
+   }
+  }
+ },
+ "focus": {
+  "home": {
+   "stops": 70,
+   "noRing": [],
+   "obscured": [
+    "Skip to content",
+    "Malva Coffee",
+    "Pods",
+    "Coffee",
+    "Machines",
+    "Accessories",
+    "Gifts",
+    "Collection store: Choose a sto",
+    "US (USD) | EN: change country ",
+    "Open search",
+    "Sign in",
+    "Cart, 0 items"
+   ],
+   "sample": [
+    {
+     "label": "Skip to content",
+     "outline": "2px solid rgb(99, 89, 255)",
+     "shadow": null,
+     "topBelowHeader": false,
+     "inViewport": true
+    },
+    {
+     "label": "Malva Coffee",
+     "outline": "2px solid rgb(99, 89, 255)",
+     "shadow": null,
+     "topBelowHeader": false,
+     "inViewport": true
+    },
+    {
+     "label": "Pods",
+     "outline": "2px solid rgb(99, 89, 255)",
+     "shadow": null,
+     "topBelowHeader": false,
+     "inViewport": true
+    }
+   ]
+  },
+  "pods": {
+   "stops": 70,
+   "noRing": [],
+   "obscured": [
+    "Skip to content",
+    "Malva Coffee",
+    "Pods",
+    "Coffee",
+    "Machines",
+    "Accessories",
+    "Gifts",
+    "Collection store: Choose a sto",
+    "US (USD) | EN: change country ",
+    "Open search",
+    "Sign in",
+    "Cart, 0 items"
+   ],
+   "sample": [
+    {
+     "label": "Skip to content",
+     "outline": "2px solid rgb(99, 89, 255)",
+     "shadow": null,
+     "topBelowHeader": false,
+     "inViewport": true
+    },
+    {
+     "label": "Malva Coffee",
+     "outline": "2px solid rgb(99, 89, 255)",
+     "shadow": null,
+     "topBelowHeader": false,
+     "inViewport": true
+    },
+    {
+     "label": "Pods",
+     "outline": "2px solid rgb(99, 89, 255)",
+     "shadow": null,
+     "topBelowHeader": false,
+     "inViewport": true
+    }
+   ]
+  },
+  "pdp": {
+   "stops": 69,
+   "noRing": [],
+   "obscured": [
+    "Skip to content",
+    "Malva Coffee",
+    "Pods",
+    "Coffee",
+    "Machines",
+    "Accessories",
+    "Gifts",
+    "Collection store: Choose a sto",
+    "US (USD) | EN: change country ",
+    "Open search",
+    "Sign in",
+    "Cart, 0 items",
+    "Skip to content"
+   ],
+   "sample": [
+    {
+     "label": "Skip to content",
+     "outline": "2px solid rgb(99, 89, 255)",
+     "shadow": null,
+     "topBelowHeader": false,
+     "inViewport": true
+    },
+    {
+     "label": "Malva Coffee",
+     "outline": "2px solid rgb(99, 89, 255)",
+     "shadow": null,
+     "topBelowHeader": false,
+     "inViewport": true
+    },
+    {
+     "label": "Pods",
+     "outline": "2px solid rgb(99, 89, 255)",
+     "shadow": null,
+     "topBelowHeader": false,
+     "inViewport": true
+    }
+   ]
+  }
+ },
+ "scrollPadding": {
+  "scrollPaddingTop": "88px",
+  "header": 73
+ },
+ "reducedMotion": {
+  "home-reduce": {
+   "running": 0,
+   "infinite": 0,
+   "invisible": 8
+  },
+  "home-no-preference": {
+   "running": 0,
+   "infinite": 0,
+   "invisible": 8
+  },
+  "pods-reduce": {
+   "running": 0,
+   "infinite": 0,
+   "invisible": 12
+  },
+  "pods-no-preference": {
+   "running": 0,
+   "infinite": 0,
+   "invisible": 12
+  },
+  "pdp-reduce": {
+   "running": 0,
+   "infinite": 0,
+   "invisible": 4
+  },
+  "pdp-no-preference": {
+   "running": 0,
+   "infinite": 0,
+   "invisible": 4
+  }
+ },
+ "reflow": {
+  "home-640": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "pods-640": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "pdp-640": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "cart-640": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "sign-in-640": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "faq-640": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "contact-640": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "article-640": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "home-320": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "pods-320": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "pdp-320": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "cart-320": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "sign-in-320": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "faq-320": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "contact-320": {
+   "overflowPx": 0,
+   "offenders": []
+  },
+  "article-320": {
+   "overflowPx": 0,
+   "offenders": []
+  }
+ },
+ "textSpacing": {
+  "home-1440": {
+   "overflowPx": 0,
+   "clippedText": []
+  },
+  "home-375": {
+   "overflowPx": 0,
+   "clippedText": []
+  },
+  "pods-1440": {
+   "overflowPx": 0,
+   "clippedText": []
+  },
+  "pods-375": {
+   "overflowPx": 0,
+   "clippedText": [
+    "span:Sort by"
+   ]
+  },
+  "pdp-1440": {
+   "overflowPx": 0,
+   "clippedText": []
+  },
+  "pdp-375": {
+   "overflowPx": 0,
+   "clippedText": []
+  },
+  "cart-1440": {
+   "overflowPx": 0,
+   "clippedText": []
+  },
+  "cart-375": {
+   "overflowPx": 0,
+   "clippedText": []
+  },
+  "faq-1440": {
+   "overflowPx": 0,
+   "clippedText": []
+  },
+  "faq-375": {
+   "overflowPx": 0,
+   "clippedText": []
+  },
+  "contact-1440": {
+   "overflowPx": 0,
+   "clippedText": []
+  },
+  "contact-375": {
+   "overflowPx": 0,
+   "clippedText": []
+  }
+ }
+}

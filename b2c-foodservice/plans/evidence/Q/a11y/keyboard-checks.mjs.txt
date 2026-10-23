@@ -1,0 +1,130 @@
+// D4.2 checks that need a keyboard or a media feature: skip link, focus visible, focus not obscured, reduced motion, reflow, text spacing.
+import { createRequire } from 'node:module';
+import { writeFileSync } from 'node:fs';
+const require = createRequire('/Users/behnam/.npm/_npx/0f94ee7615faf582/node_modules/');
+const puppeteer = require('puppeteer-core');
+const base = process.argv[2] ?? 'http://localhost:3100';
+const out = process.argv[3] ?? 'a11y-checks.json';
+const browser = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new', args: ['--no-sandbox'] });
+const res = {};
+
+async function fresh(vp = { width: 1440, height: 900 }, media = []) {
+  const ctx = await browser.createBrowserContext();
+  const page = await ctx.newPage();
+  await page.setViewport(vp);
+  if (media.length) await page.emulateMediaFeatures(media);
+  return { ctx, page };
+}
+
+// 1. Skip link and focus order on home, pods and the product page.
+res.skipLink = {};
+for (const [name, path] of [['home', '/en-US'], ['pods', '/en-US/category/pods'], ['pdp', '/en-US/p/ember-ristretto/MCF-POD-EMBER-50'], ['cart', '/en-US/cart']]) {
+  const { ctx, page } = await fresh();
+  await page.goto(base + path, { waitUntil: 'networkidle0' });
+  await page.keyboard.press('Tab');
+  const first = await page.evaluate(() => { const a = document.activeElement; const r = a.getBoundingClientRect(); return { text: (a.textContent || '').trim(), visible: r.width > 0 && r.height > 0 && r.top >= 0, tag: a.tagName }; });
+  await page.keyboard.press('Enter');
+  await new Promise((r) => setTimeout(r, 300));
+  const landed = await page.evaluate(() => { const a = document.activeElement; return { id: a.id, tag: a.tagName, insideMain: !!a.closest('main') || a.tagName === 'MAIN', hash: location.hash }; });
+  res.skipLink[name] = { first, landed };
+  await ctx.close();
+}
+
+// 2. Focus indicator: tab through the first 40 stops of home, pods, pdp and check the ring exists and is not hidden by the sticky header.
+res.focus = {};
+for (const [name, path] of [['home', '/en-US'], ['pods', '/en-US/category/pods'], ['pdp', '/en-US/p/ember-ristretto/MCF-POD-EMBER-50']]) {
+  const { ctx, page } = await fresh();
+  await page.goto(base + path, { waitUntil: 'networkidle0' });
+  const stops = [];
+  for (let i = 0; i < 70; i++) {
+    await page.keyboard.press('Tab');
+    const s = await page.evaluate(() => {
+      const a = document.activeElement;
+      if (!a || a === document.body) return null;
+      const cs = getComputedStyle(a);
+      const r = a.getBoundingClientRect();
+      const header = document.querySelector('header');
+      const hb = header ? header.getBoundingClientRect() : { bottom: 0 };
+      const sticky = header && getComputedStyle(header).position === 'sticky' || header && getComputedStyle(header).position === 'fixed';
+      return {
+        label: (a.getAttribute('aria-label') || a.textContent || a.tagName).trim().slice(0, 30),
+        outline: cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0 ? `${cs.outlineWidth} ${cs.outlineStyle} ${cs.outlineColor}` : null,
+        shadow: cs.boxShadow !== 'none' ? cs.boxShadow.slice(0, 80) : null,
+        topBelowHeader: sticky ? r.top >= hb.bottom - 1 : true,
+        inViewport: r.bottom > 0 && r.top < innerHeight,
+      };
+    });
+    if (s) stops.push(s);
+  }
+  const noRing = stops.filter((s) => !s.outline && !s.shadow);
+  const obscured = stops.filter((s) => !s.topBelowHeader);
+  res.focus[name] = { stops: stops.length, noRing: noRing.map((s) => s.label), obscured: obscured.map((s) => s.label), sample: stops.slice(0, 3) };
+  await ctx.close();
+}
+
+// 3. Scroll padding under the sticky header.
+{
+  const { ctx, page } = await fresh();
+  await page.goto(base + '/en-US', { waitUntil: 'networkidle0' });
+  res.scrollPadding = await page.evaluate(() => ({ scrollPaddingTop: getComputedStyle(document.documentElement).scrollPaddingTop, header: Math.round(document.querySelector('header').getBoundingClientRect().height) }));
+  await ctx.close();
+}
+
+// 4. Reduced motion: no running animation and all content visible after load.
+res.reducedMotion = {};
+for (const [name, path] of [['home', '/en-US'], ['pods', '/en-US/category/pods'], ['pdp', '/en-US/p/ember-ristretto/MCF-POD-EMBER-50']]) {
+  for (const mode of ['reduce', 'no-preference']) {
+    const { ctx, page } = await fresh({ width: 1440, height: 900 }, [{ name: 'prefers-reduced-motion', value: mode }]);
+    await page.goto(base + path, { waitUntil: 'networkidle0' });
+    const r = await page.evaluate(() => {
+      const running = document.getAnimations().filter((a) => a.playState === 'running' && a.effect && a.effect.getTiming().iterations !== Infinity).length;
+      const invisible = [...document.querySelectorAll('main *')].filter((e) => getComputedStyle(e).opacity === '0' && e.getBoundingClientRect().width > 0 && !e.closest('[aria-hidden="true"],.sr-only')).length;
+      const infinite = document.getAnimations().filter((a) => a.effect && a.effect.getTiming().iterations === Infinity).length;
+      return { running, infinite, invisible };
+    });
+    res.reducedMotion[`${name}-${mode}`] = r;
+    await ctx.close();
+  }
+}
+
+// 5. Reflow at 640 px (200 percent of 1280) and 320 px (400 percent).
+res.reflow = {};
+for (const w of [640, 320]) {
+  for (const [name, path] of [['home', '/en-US'], ['pods', '/en-US/category/pods'], ['pdp', '/en-US/p/ember-ristretto/MCF-POD-EMBER-50'], ['cart', '/en-US/cart'], ['sign-in', '/en-US/account/sign-in'], ['faq', '/en-US/faq'], ['contact', '/en-US/contact'], ['article', '/en-US/journal/brew-a-better-cup']]) {
+    const { ctx, page } = await fresh({ width: w, height: 800, isMobile: w < 520, hasTouch: w < 520, deviceScaleFactor: 1 });
+    await page.goto(base + path, { waitUntil: 'networkidle0' });
+    res.reflow[`${name}-${w}`] = await page.evaluate(() => {
+      const vw = innerWidth;
+      const clipped = (e) => { for (let p = e.parentElement; p && p !== document.body; p = p.parentElement) { const cs = getComputedStyle(p); if (['hidden', 'clip', 'auto', 'scroll'].includes(cs.overflowX) && p.getBoundingClientRect().right <= vw + 1) return true; } return false; };
+      const off = [...document.querySelectorAll('body *')].filter((e) => { const r = e.getBoundingClientRect(); const cs = getComputedStyle(e); return r.width && r.height && cs.position !== 'fixed' && cs.visibility !== 'hidden' && cs.display !== 'none' && r.right > vw + 1 && !e.closest('[aria-hidden="true"],.sr-only') && !clipped(e); }).slice(0, 4).map((e) => e.tagName.toLowerCase() + '.' + String(e.className).slice(0, 30));
+      return { overflowPx: document.documentElement.scrollWidth - vw, offenders: off };
+    });
+    await ctx.close();
+  }
+}
+
+// 6. Text spacing override (WCAG 1.4.12): no text is cut off by a fixed height or overflow clip.
+res.textSpacing = {};
+for (const [name, path] of [['home', '/en-US'], ['pods', '/en-US/category/pods'], ['pdp', '/en-US/p/ember-ristretto/MCF-POD-EMBER-50'], ['cart', '/en-US/cart'], ['faq', '/en-US/faq'], ['contact', '/en-US/contact']]) {
+  for (const w of [1440, 375]) {
+    const { ctx, page } = await fresh({ width: w, height: 900, isMobile: w < 520, hasTouch: w < 520 });
+    await page.goto(base + path, { waitUntil: 'networkidle0' });
+    await page.addStyleTag({ content: '*{line-height:1.5 !important;letter-spacing:0.12em !important;word-spacing:0.16em !important} p{margin-bottom:2em !important}' });
+    await new Promise((r) => setTimeout(r, 300));
+    res.textSpacing[`${name}-${w}`] = await page.evaluate(() => {
+      const vw = innerWidth;
+      const clippedText = [...document.querySelectorAll('main *, header *, footer *')].filter((e) => {
+        if (!e.children.length && e.textContent.trim()) {
+          const cs = getComputedStyle(e);
+          return (cs.overflow === 'hidden' || cs.overflowY === 'hidden') && e.scrollHeight > e.clientHeight + 1 && !e.closest('[aria-hidden="true"],.sr-only') && cs.textOverflow !== 'ellipsis';
+        }
+        return false;
+      }).slice(0, 5).map((e) => e.tagName.toLowerCase() + ':' + e.textContent.trim().slice(0, 20));
+      return { overflowPx: document.documentElement.scrollWidth - vw, clippedText };
+    });
+    await ctx.close();
+  }
+}
+await browser.close();
+writeFileSync(out, JSON.stringify(res, null, 1));
+console.log(JSON.stringify(res).slice(0, 3000));

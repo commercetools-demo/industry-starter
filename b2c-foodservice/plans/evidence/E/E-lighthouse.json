@@ -1,0 +1,10 @@
+{
+  "page": "/en-US/dev/design (dev server)",
+  "desktop": { "accessibility": 96, "bestPractices": 100, "seo": 80 },
+  "mobile": { "accessibility": 96, "bestPractices": 100, "seo": 80 },
+  "failedAccessibilityAudits": {
+    "document-title": "page chrome only: the root layout has no metadata yet (workstream F adds it); not an atom",
+    "label-content-name-mismatch": "FIXED: IconButton with badgeCount now puts the count in its accessible name, for example 'Bag (3)'"
+  },
+  "note": "Scores above are from before the label fix; no contrast failures were reported."
+}

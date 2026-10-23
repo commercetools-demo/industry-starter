@@ -1,0 +1,154 @@
+{
+ "forms": {
+  "sign-in": {
+   "didClick": true,
+   "invalidCount": 2,
+   "described": [
+    {
+     "field": "email",
+     "describedByText": "This field is required."
+    },
+    {
+     "field": "password",
+     "describedByText": "This field is required."
+    }
+   ],
+   "firstInvalidFocused": true,
+   "active": "email",
+   "alerts": [],
+   "requiredMarked": 0,
+   "unlabelledControls": 0,
+   "autocomplete": [
+    "email=email",
+    "password=current-password"
+   ]
+  },
+  "register": {
+   "didClick": true,
+   "invalidCount": 4,
+   "described": [
+    {
+     "field": "firstName",
+     "describedByText": "This field is required."
+    },
+    {
+     "field": "lastName",
+     "describedByText": "This field is required."
+    },
+    {
+     "field": "email",
+     "describedByText": "This field is required."
+    },
+    {
+     "field": "password",
+     "describedByText": "This field is required."
+    }
+   ],
+   "firstInvalidFocused": true,
+   "active": "firstName",
+   "alerts": [],
+   "requiredMarked": 0,
+   "unlabelledControls": 0,
+   "autocomplete": [
+    "firstName=given-name",
+    "lastName=family-name",
+    "email=email",
+    "password=new-password"
+   ]
+  },
+  "contact": {
+   "didClick": true,
+   "invalidCount": 5,
+   "described": [
+    {
+     "field": "name",
+     "describedByText": "This field is required."
+    },
+    {
+     "field": "email",
+     "describedByText": "This field is required."
+    },
+    {
+     "field": "topic",
+     "describedByText": "This field is required."
+    },
+    {
+     "field": "message",
+     "describedByText": "This field is required."
+    },
+    {
+     "field": "consent",
+     "describedByText": "Please confirm to continue."
+    }
+   ],
+   "firstInvalidFocused": true,
+   "active": "name",
+   "alerts": [],
+   "requiredMarked": 0,
+   "unlabelledControls": 0,
+   "autocomplete": [
+    "name=name",
+    "email=email",
+    "orderNumber=off",
+    "website=off",
+    "consent=-"
+   ]
+  }
+ },
+ "status": {
+  "clicked": true,
+  "liveRegionsBefore": 3,
+  "status": [
+   {
+    "role": "status",
+    "live": "polite",
+    "text": "12 products"
+   },
+   {
+    "role": null,
+    "live": "polite",
+    "text": "6 stores"
+   },
+   {
+    "role": "status",
+    "live": "polite",
+    "text": "Added to bag"
+   }
+  ]
+ },
+ "keyboardOrder": {
+  "cart": {
+   "stops": 48,
+   "mainStops": [
+    "Home",
+    "Andes Organic",
+    "Collect",
+    "Ship",
+    "Decrease quantity",
+    "Increase quantity",
+    "Remove Andes Organic",
+    "Brazil Santos",
+    "Collect",
+    "Ship",
+    "Decrease quantity",
+    "Increase quantity",
+    "Remove Brazil Santos",
+    "INPUT",
+    "Apply",
+    "Checkout",
+    "You can add a gift note at c"
+   ],
+   "noRing": [],
+   "invisible": []
+  },
+  "checkout": {
+   "stops": 32,
+   "mainStops": [
+    "Continue to secure checkout"
+   ],
+   "noRing": [],
+   "invisible": []
+  }
+ },
+ "_note": "Form errors, status message and keyboard order of cart and checkout. The dialog and mega menu probes of the first run matched a hidden dialog by mistake and were replaced by dialogs.json and mega-menu-keyboard.json."
+}

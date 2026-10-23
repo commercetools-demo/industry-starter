@@ -1,0 +1,9 @@
+[
+  { "id": "c-root-b", "key": "mcf-machines", "name": { "en-US": "Machines" }, "slug": { "en-US": "machines" }, "orderHint": "0.2", "ancestors": [] },
+  { "id": "c-root-a", "key": "mcf-coffee", "name": { "en-US": "Coffee" }, "slug": { "en-US": "coffee" }, "orderHint": "0.1", "description": { "en-US": "All coffee" },
+    "assets": [{ "id": "a1", "sources": [{ "uri": "https://img.example.com/coffee.jpg?w=99#x" }], "name": { "en-US": "hero" } }], "ancestors": [] },
+  { "id": "c-pods", "key": "mcf-pods", "name": { "en-US": "Pods" }, "slug": { "en-US": "pods" }, "orderHint": "0.2", "parent": { "typeId": "category", "id": "c-root-a" }, "ancestors": [{ "typeId": "category", "id": "c-root-a" }] },
+  { "id": "c-beans", "key": "mcf-beans", "name": { "en-US": "Beans" }, "slug": { "en-US": "beans" }, "orderHint": "0.1", "parent": { "typeId": "category", "id": "c-root-a" }, "ancestors": [{ "typeId": "category", "id": "c-root-a" }] },
+  { "id": "c-decaf", "key": "mcf-decaf-pods", "name": { "en-US": "Decaf" }, "slug": { "en-US": "decaf" }, "orderHint": "0.5", "parent": { "typeId": "category", "id": "c-pods" }, "ancestors": [{ "typeId": "category", "id": "c-root-a" }, { "typeId": "category", "id": "c-pods" }] },
+  { "id": "c-orphan", "key": "mcf-orphan", "name": { "en-US": "Orphan" }, "slug": { "en-US": "orphan" }, "orderHint": "0.9", "parent": { "typeId": "category", "id": "missing" }, "ancestors": [] }
+]

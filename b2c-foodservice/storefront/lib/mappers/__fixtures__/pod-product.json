@@ -1,0 +1,49 @@
+{
+  "id": "p-pod-1",
+  "version": 4,
+  "key": "mcf-pod-ristretto",
+  "productType": { "typeId": "product-type", "id": "pt-1", "obj": { "key": "mcf-pods" } },
+  "name": { "en-US": "Ristretto Pods" },
+  "description": { "en-US": "Intense espresso capsules." },
+  "slug": { "en-US": "ristretto-pods" },
+  "categories": [{ "typeId": "category", "id": "cat-pods" }],
+  "reviewRatingStatistics": {
+    "averageRating": 4.58333,
+    "highestRating": 5,
+    "lowestRating": 3,
+    "count": 12,
+    "ratingsDistribution": { "3": 1, "4": 3, "5": 8 }
+  },
+  "attributes": [
+    { "name": "badge", "value": { "key": "bestseller", "label": { "en-US": "Bestseller", "en-CA": "Best seller" } } }
+  ],
+  "masterVariant": {
+    "id": 1,
+    "sku": "MCF-POD-RIS-10",
+    "images": [{ "url": "https://img.example.com/ris.jpg?w=2000", "dimensions": { "w": 1000, "h": 1200 }, "label": "Pack shot" }],
+    "price": { "id": "pr1", "value": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 495, "fractionDigits": 2 }, "country": "US" },
+    "attributes": [
+      { "name": "capsules", "value": 10 },
+      { "name": "roast", "value": { "key": "dark", "label": "Dark" } },
+      { "name": "intensity", "value": { "key": "11", "label": { "en-US": "Eleven" } } },
+      { "name": "notes", "value": [{ "en-US": "cocoa" }, { "en-US": "spice" }] },
+      { "name": "subscribable", "value": true },
+      { "name": "badge", "value": { "key": "new", "label": "New" } },
+      { "name": "origin", "value": { "typeId": "category", "id": "x" } },
+      { "name": "cost", "value": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 1, "fractionDigits": 2 } }
+    ],
+    "availability": { "isOnStock": true, "availableQuantity": 40 }
+  },
+  "variants": [
+    {
+      "id": 2,
+      "sku": "MCF-POD-RIS-50",
+      "images": [],
+      "prices": [
+        { "id": "pr-ca", "value": { "type": "centPrecision", "currencyCode": "CAD", "centAmount": 2400, "fractionDigits": 2 }, "country": "CA" },
+        { "id": "pr-us", "value": { "type": "centPrecision", "currencyCode": "USD", "centAmount": 2000, "fractionDigits": 2 }, "country": "US" }
+      ],
+      "attributes": [{ "name": "capsules", "value": 50 }]
+    }
+  ]
+}

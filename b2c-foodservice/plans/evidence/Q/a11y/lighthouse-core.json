@@ -1,0 +1,280 @@
+{
+ "home-desktop": {
+  "scores": {
+   "performance": 99,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp": 867,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 34,
+  "fcp": 414,
+  "bytes": 682,
+  "failing": [
+   {
+    "id": "label-content-name-mismatch",
+    "title": "Elements with visible text labels do not have matching accessible names.",
+    "items": [
+     "<button type=\"button\" aria-haspopup=\"dialog\" aria-label=\"Country and language: US, USD. Change\" class=\"transition-state inline-flex shrink-0 items-center gap-2 rounded-pill bord…\">"
+    ]
+   }
+  ]
+ },
+ "home-mobile": {
+  "scores": {
+   "performance": 92,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp": 3368,
+  "cls": 0,
+  "tbt": 6,
+  "ttfb": 15,
+  "fcp": 904,
+  "bytes": 528,
+  "failing": []
+ },
+ "listing-desktop": {
+  "scores": {
+   "performance": 99,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "lcp": 993,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 11,
+  "fcp": 292,
+  "bytes": 685,
+  "failing": [
+   {
+    "id": "label-content-name-mismatch",
+    "title": "Elements with visible text labels do not have matching accessible names.",
+    "items": [
+     "<button type=\"button\" aria-haspopup=\"dialog\" aria-label=\"Country and language: US, USD. Change\" class=\"transition-state inline-flex shrink-0 items-center gap-2 rounded-pill bord…\">"
+    ]
+   },
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   }
+  ]
+ },
+ "listing-mobile": {
+  "scores": {
+   "performance": 90,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "lcp": 3670,
+  "cls": 0,
+  "tbt": 8,
+  "ttfb": 9,
+  "fcp": 903,
+  "bytes": 561,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   }
+  ]
+ },
+ "pdp-desktop": {
+  "scores": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "lcp": 817,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 9,
+  "fcp": 367,
+  "bytes": 730,
+  "failing": [
+   {
+    "id": "label-content-name-mismatch",
+    "title": "Elements with visible text labels do not have matching accessible names.",
+    "items": [
+     "<button type=\"button\" aria-haspopup=\"dialog\" aria-label=\"Country and language: US, USD. Change\" class=\"transition-state inline-flex shrink-0 items-center gap-2 rounded-pill bord…\">"
+    ]
+   },
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   }
+  ]
+ },
+ "pdp-mobile": {
+  "scores": {
+   "performance": 92,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "lcp": 3369,
+  "cls": 0,
+  "tbt": 11,
+  "ttfb": 10,
+  "fcp": 903,
+  "bytes": 632,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   }
+  ]
+ },
+ "cart-desktop": {
+  "scores": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 54
+  },
+  "lcp": 702,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 11,
+  "fcp": 367,
+  "bytes": 524,
+  "failing": [
+   {
+    "id": "label-content-name-mismatch",
+    "title": "Elements with visible text labels do not have matching accessible names.",
+    "items": [
+     "<button type=\"button\" aria-haspopup=\"dialog\" aria-label=\"Country and language: US, USD. Change\" class=\"transition-state inline-flex shrink-0 items-center gap-2 rounded-pill bord…\">"
+    ]
+   },
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   },
+   {
+    "id": "is-crawlable",
+    "title": "Page is blocked from indexing",
+    "items": [
+     "{\"source\":{\"type\":\"node\",\"lhId\":\"1-166-META\",\"path\":\"1,HTML,0,HEAD,18,META\",\"selector\":\"head > meta\",\"boundingRect\":{\"to",
+     "{\"source\":{\"type\":\"source-location\",\"url\":\"http://localhost:3100/robots.txt\",\"urlProvider\":\"network\",\"line\":4,\"column\":0"
+    ]
+   }
+  ]
+ },
+ "cart-mobile": {
+  "scores": {
+   "performance": 92,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 54
+  },
+  "lcp": 3371,
+  "cls": 0,
+  "tbt": 7,
+  "ttfb": 9,
+  "fcp": 906,
+  "bytes": 403,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   },
+   {
+    "id": "is-crawlable",
+    "title": "Page is blocked from indexing",
+    "items": [
+     "{\"source\":{\"type\":\"node\",\"lhId\":\"1-165-META\",\"path\":\"1,HTML,0,HEAD,18,META\",\"selector\":\"head > meta\",\"boundingRect\":{\"to",
+     "{\"source\":{\"type\":\"source-location\",\"url\":\"http://localhost:3100/robots.txt\",\"urlProvider\":\"network\",\"line\":4,\"column\":0"
+    ]
+   }
+  ]
+ },
+ "account-desktop": {
+  "scores": {
+   "performance": 100,
+   "accessibility": 96,
+   "best-practices": 100,
+   "seo": 45
+  },
+  "lcp": 704,
+  "cls": 0.046,
+  "tbt": 0,
+  "ttfb": 9,
+  "fcp": 368,
+  "bytes": 515,
+  "failing": [
+   {
+    "id": "document-title",
+    "title": "Document doesn't have a `<title>` element",
+    "items": [
+     "<html lang=\"en-US\" class=\"pxR-ia_variable vFRkmq_variable B-a2UW_variable\">"
+    ]
+   },
+   {
+    "id": "label-content-name-mismatch",
+    "title": "Elements with visible text labels do not have matching accessible names.",
+    "items": [
+     "<button type=\"button\" aria-haspopup=\"dialog\" aria-label=\"Country and language: US, USD. Change\" class=\"transition-state inline-flex shrink-0 items-center gap-2 rounded-pill bord…\">"
+    ]
+   },
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   },
+   {
+    "id": "is-crawlable",
+    "title": "Page is blocked from indexing",
+    "items": [
+     "{\"source\":{\"type\":\"source-location\",\"url\":\"http://localhost:3100/robots.txt\",\"urlProvider\":\"network\",\"line\":3,\"column\":0"
+    ]
+   }
+  ]
+ },
+ "account-mobile": {
+  "scores": {
+   "performance": 93,
+   "accessibility": 96,
+   "best-practices": 100,
+   "seo": 45
+  },
+  "lcp": 3215,
+  "cls": 0.028,
+  "tbt": 5,
+  "ttfb": 8,
+  "fcp": 903,
+  "bytes": 401,
+  "failing": [
+   {
+    "id": "document-title",
+    "title": "Document doesn't have a `<title>` element",
+    "items": [
+     "<html lang=\"en-US\" class=\"pxR-ia_variable vFRkmq_variable B-a2UW_variable\">"
+    ]
+   },
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   },
+   {
+    "id": "is-crawlable",
+    "title": "Page is blocked from indexing",
+    "items": [
+     "{\"source\":{\"type\":\"source-location\",\"url\":\"http://localhost:3100/robots.txt\",\"urlProvider\":\"network\",\"line\":3,\"column\":0"
+    ]
+   }
+  ]
+ }
+}

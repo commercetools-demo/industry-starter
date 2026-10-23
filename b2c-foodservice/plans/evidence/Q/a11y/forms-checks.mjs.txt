@@ -1,0 +1,111 @@
+// D4.2 form errors, dialog focus trap and return, status messages, keyboard order of checkout.
+import { createRequire } from 'node:module';
+import { writeFileSync } from 'node:fs';
+const require = createRequire('/Users/behnam/.npm/_npx/0f94ee7615faf582/node_modules/');
+const puppeteer = require('puppeteer-core');
+const base = process.argv[2] ?? 'http://localhost:3100';
+const out = process.argv[3] ?? 'forms-checks.json';
+const browser = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new', args: ['--no-sandbox'] });
+const res = {};
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const newPage = async (vp = { width: 1440, height: 900 }) => { const ctx = await browser.createBrowserContext(); const page = await ctx.newPage(); await page.setViewport(vp); return { ctx, page }; };
+
+const describeActive = () => {
+  const a = document.activeElement;
+  return a ? { tag: a.tagName, name: (a.getAttribute('aria-label') || a.getAttribute('name') || a.id || a.textContent || '').trim().slice(0, 40), type: a.getAttribute('type') } : null;
+};
+
+// 1. Form errors: submit empty, then read the field state.
+res.forms = {};
+for (const [name, path, submitText] of [['sign-in', '/en-US/account/sign-in', /sign in/i], ['register', '/en-US/account/register', /create/i], ['contact', '/en-US/contact', /send/i]]) {
+  const { ctx, page } = await newPage();
+  await page.goto(base + path, { waitUntil: 'networkidle0' });
+  const clicked = await page.evaluate((src) => {
+    const re = new RegExp(src.source, src.flags);
+    const forms = [...document.querySelectorAll('main form')];
+    for (const f of forms) { const b = [...f.querySelectorAll('button[type=submit], button:not([type])')].find((x) => re.test(x.textContent || '')); if (b) { b.click(); return true; } }
+    return false;
+  }, { source: submitText.source, flags: submitText.flags });
+  await sleep(600);
+  res.forms[name] = await page.evaluate((didClick) => {
+    const invalid = [...document.querySelectorAll('main [aria-invalid="true"]')];
+    const described = invalid.map((e) => { const ids = (e.getAttribute('aria-describedby') || '').split(' ').filter(Boolean); const texts = ids.map((i) => (document.getElementById(i)?.textContent || '').trim()).filter(Boolean); return { field: e.getAttribute('name') || e.id, describedByText: texts[0] || null }; });
+    const required = [...document.querySelectorAll('main input[required], main input[aria-required="true"], main select[required], main textarea[required]')].length;
+    const labelled = [...document.querySelectorAll('main input:not([type=hidden]), main select, main textarea')].filter((e) => !(e.labels && e.labels.length) && !e.getAttribute('aria-label') && !e.getAttribute('aria-labelledby')).length;
+    const a = document.activeElement;
+    return { didClick, invalidCount: invalid.length, described, firstInvalidFocused: !!invalid.length && a === invalid[0], active: a ? (a.getAttribute('name') || a.id || a.tagName) : null, alerts: [...document.querySelectorAll('main [role="alert"], main [role="status"]')].map((e) => e.textContent.trim().slice(0, 50)).slice(0, 4), requiredMarked: required, unlabelledControls: labelled, autocomplete: [...document.querySelectorAll('main input:not([type=hidden])')].map((e) => (e.getAttribute('name') || e.id) + '=' + (e.getAttribute('autocomplete') || '-')).slice(0, 12) };
+  }, clicked);
+  await ctx.close();
+}
+
+// 2. Dialog: store picker from the header. Focus moves in, stays in, Escape closes, focus returns to the opener.
+res.dialog = {};
+for (const w of [1440, 375]) {
+  const { ctx, page } = await newPage({ width: w, height: 812, isMobile: w < 520, hasTouch: w < 520 });
+  await page.goto(base + '/en-US', { waitUntil: 'networkidle0' });
+  const opener = await page.evaluate(() => { const b = [...document.querySelectorAll('header button, header a')].find((e) => /store/i.test(e.getAttribute('aria-label') || e.textContent || '') && e.getBoundingClientRect().width > 0); if (!b) return null; b.setAttribute('data-q-opener', '1'); return (b.getAttribute('aria-label') || b.textContent).trim().slice(0, 40); });
+  if (!opener) { res.dialog[w] = { opener: null }; await ctx.close(); continue; }
+  await page.focus('[data-q-opener]');
+  await page.keyboard.press('Enter');
+  await sleep(700);
+  const opened = await page.evaluate(() => { const d = document.querySelector('[role="dialog"], dialog[open]'); const a = document.activeElement; return { dialog: !!d, modal: d ? (d.getAttribute('aria-modal') || (d.tagName === 'DIALOG' ? 'native' : null)) : null, labelled: d ? !!(d.getAttribute('aria-label') || d.getAttribute('aria-labelledby')) : false, focusInside: !!(d && a && d.contains(a)) }; });
+  let escaped = 0;
+  for (let i = 0; i < 25; i++) { await page.keyboard.press('Tab'); const inside = await page.evaluate(() => { const d = document.querySelector('[role="dialog"], dialog[open]'); return !!(d && d.contains(document.activeElement)); }); if (!inside) escaped++; }
+  await page.keyboard.press('Escape');
+  await sleep(500);
+  const closed = await page.evaluate(() => ({ dialogGone: !document.querySelector('[role="dialog"], dialog[open]'), returnedToOpener: document.activeElement?.hasAttribute('data-q-opener') === true, active: (document.activeElement?.getAttribute('aria-label') || document.activeElement?.textContent || '').trim().slice(0, 40) }));
+  res.dialog[w] = { opener, ...opened, tabsOutsideDialog: escaped, ...closed };
+  await ctx.close();
+}
+
+// 3. Status message: add to bag with Quick add, then read the live region.
+{
+  const { ctx, page } = await newPage();
+  await page.goto(base + '/en-US/category/pods', { waitUntil: 'networkidle0' });
+  const before = await page.evaluate(() => ({ live: [...document.querySelectorAll('[role="status"], [aria-live]')].length }));
+  await page.hover('[data-testid="product-card"]');
+  const clicked = await page.evaluate(() => { const b = [...document.querySelectorAll('[data-testid="product-card"] button')].find((x) => /quick add/i.test(x.textContent || '')); if (!b) return false; b.click(); return true; });
+  await sleep(1200);
+  res.status = await page.evaluate((c, b) => ({ clicked: c, liveRegionsBefore: b.live, status: [...document.querySelectorAll('[role="status"], [aria-live]')].map((e) => ({ role: e.getAttribute('role'), live: e.getAttribute('aria-live'), text: e.textContent.trim().slice(0, 80) })).filter((e) => e.text).slice(0, 4), dialogOpen: !!document.querySelector('[role="dialog"]'), active: document.activeElement?.tagName }), clicked, before);
+  await ctx.close();
+}
+
+// 4. Checkout tab order with a bag, keyboard only.
+{
+  const { ctx, page } = await newPage();
+  await page.goto(base + '/en-US', { waitUntil: 'networkidle0' });
+  await page.evaluate(async () => { for (const sku of ['MCF-POD-ANDES-10', 'MCF-COF-SANTOS-250-WB']) await fetch('/api/cart/lines', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ sku, quantity: 1, fulfilment: 'delivery' }) }); });
+  const order = {};
+  for (const [name, path] of [['cart', '/en-US/cart'], ['checkout', '/en-US/checkout']]) {
+    await page.goto(base + path, { waitUntil: 'networkidle0' });
+    await sleep(500);
+    await page.focus('body').catch(() => {});
+    const stops = [];
+    for (let i = 0; i < 80; i++) {
+      await page.keyboard.press('Tab');
+      const s = await page.evaluate(() => { const a = document.activeElement; if (!a || a === document.body) return null; const cs = getComputedStyle(a); const r = a.getBoundingClientRect(); return { label: (a.getAttribute('aria-label') || a.getAttribute('name') || a.textContent || a.tagName).trim().slice(0, 28), inMain: !!a.closest('main'), ring: (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0) || cs.boxShadow !== 'none', visible: r.width > 0 && r.height > 0 }; });
+      if (s) stops.push(s);
+      if (stops.length > 2 && stops[stops.length - 1].label === stops[0].label && i > 5) break;
+    }
+    order[name] = { stops: stops.length, mainStops: stops.filter((s) => s.inMain).map((s) => s.label), noRing: stops.filter((s) => !s.ring).map((s) => s.label), invisible: stops.filter((s) => !s.visible).map((s) => s.label) };
+  }
+  res.keyboardOrder = order;
+  await ctx.close();
+}
+
+// 5. Mega menu opens from the keyboard at 1440.
+{
+  const { ctx, page } = await newPage();
+  await page.goto(base + '/en-US', { waitUntil: 'networkidle0' });
+  const r = [];
+  for (let i = 0; i < 12; i++) {
+    await page.keyboard.press('Tab');
+    const s = await page.evaluate(() => { const a = document.activeElement; return { label: (a.getAttribute('aria-label') || a.textContent || '').trim().slice(0, 24), expanded: a.getAttribute('aria-expanded'), haspopup: a.getAttribute('aria-haspopup'), panelVisible: [...document.querySelectorAll('header [role="menu"], header [data-testid*="mega"], header nav ~ div')].some((e) => e.getBoundingClientRect().height > 40) }; });
+    r.push(s);
+  }
+  res.megaMenu = r;
+  await ctx.close();
+}
+await browser.close();
+writeFileSync(out, JSON.stringify(res, null, 1));
+console.log(JSON.stringify(res, null, 1).slice(0, 6000));

@@ -1,0 +1,270 @@
+{
+  "pageProps": {
+    "initialData": {
+      "data": [
+        {
+          "id": "27860000",
+          "type": "photo",
+          "attributes": {
+            "id": 27860000,
+            "slug": "coffee-cup",
+            "description": "A beautifully crafted cappuccino with latte art on a rustic wooden table.",
+            "width": 2763,
+            "height": 3683,
+            "status": "approved",
+            "title": "coffee cup",
+            "image": {
+              "small": "https://images.example.com/photos/27860000/photo-27860000.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860000/photo-27860000.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860000/photo-27860000.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860000/download/",
+              "download_link": "https://images.example.com/photos/27860000/photo-27860000.jpeg"
+            }
+          }
+        },
+        {
+          "id": "27860001",
+          "type": "photo",
+          "attributes": {
+            "id": 27860001,
+            "slug": "coffee-beans",
+            "description": "Close-up of roasted coffee beans in a burlap sack.",
+            "width": 4000,
+            "height": 2667,
+            "status": "approved",
+            "title": "coffee beans",
+            "image": {
+              "small": "https://images.example.com/photos/27860001/photo-27860001.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860001/photo-27860001.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860001/photo-27860001.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860001/download/",
+              "download_link": "https://images.example.com/photos/27860001/photo-27860001.jpeg"
+            }
+          }
+        },
+        {
+          "id": "27860002",
+          "type": "photo",
+          "attributes": {
+            "id": 27860002,
+            "slug": "espresso-machine",
+            "description": "A silver espresso machine pulling a shot in a bright kitchen.",
+            "width": 3840,
+            "height": 2160,
+            "status": "approved",
+            "title": "espresso machine",
+            "image": {
+              "small": "https://images.example.com/photos/27860002/photo-27860002.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860002/photo-27860002.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860002/photo-27860002.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860002/download/",
+              "download_link": "https://images.example.com/photos/27860002/photo-27860002.jpeg"
+            }
+          }
+        },
+        {
+          "id": "27860003",
+          "type": "photo",
+          "attributes": {
+            "id": 27860003,
+            "slug": "capsules",
+            "description": "Colourful coffee capsules arranged in a wooden drawer.",
+            "width": 3200,
+            "height": 2133,
+            "status": "approved",
+            "title": "capsules",
+            "image": {
+              "small": "https://images.example.com/photos/27860003/photo-27860003.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860003/photo-27860003.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860003/photo-27860003.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860003/download/",
+              "download_link": "https://images.example.com/photos/27860003/photo-27860003.jpeg"
+            }
+          }
+        },
+        {
+          "id": "27860004",
+          "type": "photo",
+          "attributes": {
+            "id": 27860004,
+            "slug": "pour-over",
+            "description": "Pour over coffee brewing into a glass carafe.",
+            "width": 3000,
+            "height": 2000,
+            "status": "approved",
+            "title": "pour over",
+            "image": {
+              "small": "https://images.example.com/photos/27860004/photo-27860004.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860004/photo-27860004.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860004/photo-27860004.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860004/download/",
+              "download_link": "https://images.example.com/photos/27860004/photo-27860004.jpeg"
+            }
+          }
+        },
+        {
+          "id": "27860005",
+          "type": "photo",
+          "attributes": {
+            "id": 27860005,
+            "slug": "ceramic-mug",
+            "description": "A white ceramic mug of black coffee next to a notebook.",
+            "width": 2800,
+            "height": 2800,
+            "status": "approved",
+            "title": "ceramic mug",
+            "image": {
+              "small": "https://images.example.com/photos/27860005/photo-27860005.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860005/photo-27860005.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860005/photo-27860005.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860005/download/",
+              "download_link": "https://images.example.com/photos/27860005/photo-27860005.jpeg"
+            }
+          }
+        },
+        {
+          "id": "27860006",
+          "type": "photo",
+          "attributes": {
+            "id": 27860006,
+            "slug": "grinder",
+            "description": "A burr grinder filling a portafilter with fresh grounds.",
+            "width": 3600,
+            "height": 2400,
+            "status": "approved",
+            "title": "grinder",
+            "image": {
+              "small": "https://images.example.com/photos/27860006/photo-27860006.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860006/photo-27860006.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860006/photo-27860006.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860006/download/",
+              "download_link": "https://images.example.com/photos/27860006/photo-27860006.jpeg"
+            }
+          }
+        },
+        {
+          "id": "27860007",
+          "type": "photo",
+          "attributes": {
+            "id": 27860007,
+            "slug": "capsule-machine",
+            "description": "A red capsule coffee machine on a marble counter.",
+            "width": 3500,
+            "height": 2333,
+            "status": "approved",
+            "title": "capsule machine",
+            "image": {
+              "small": "https://images.example.com/photos/27860007/photo-27860007.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860007/photo-27860007.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860007/photo-27860007.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860007/download/",
+              "download_link": "https://images.example.com/photos/27860007/photo-27860007.jpeg"
+            }
+          }
+        },
+        {
+          "id": "27860008",
+          "type": "photo",
+          "attributes": {
+            "id": 27860008,
+            "slug": "cafe-table",
+            "description": "Two cups of coffee on a cafe table by the window.",
+            "width": 4200,
+            "height": 2800,
+            "status": "approved",
+            "title": "cafe table",
+            "image": {
+              "small": "https://images.example.com/photos/27860008/photo-27860008.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860008/photo-27860008.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860008/photo-27860008.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860008/download/",
+              "download_link": "https://images.example.com/photos/27860008/photo-27860008.jpeg"
+            }
+          }
+        },
+        {
+          "id": "27860009",
+          "type": "photo",
+          "attributes": {
+            "id": 27860009,
+            "slug": "coffee-pods-box",
+            "description": "A box of coffee pods beside a small machine.",
+            "width": 3300,
+            "height": 2200,
+            "status": "approved",
+            "title": "coffee pods box",
+            "image": {
+              "small": "https://images.example.com/photos/27860009/photo-27860009.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860009/photo-27860009.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860009/photo-27860009.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860009/download/",
+              "download_link": "https://images.example.com/photos/27860009/photo-27860009.jpeg"
+            }
+          }
+        },
+        {
+          "id": "27860010",
+          "type": "photo",
+          "attributes": {
+            "id": 27860010,
+            "slug": "latte",
+            "description": "Latte in a glass cup with milk foam.",
+            "width": 2500,
+            "height": 3750,
+            "status": "approved",
+            "title": "latte",
+            "image": {
+              "small": "https://images.example.com/photos/27860010/photo-27860010.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860010/photo-27860010.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860010/photo-27860010.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860010/download/"
+            }
+          }
+        },
+        {
+          "id": "27860011",
+          "type": "photo",
+          "attributes": {
+            "id": 27860011,
+            "slug": "filter-coffee",
+            "description": "Filter coffee dripping into a pot, morning light.",
+            "width": 3100,
+            "height": 2067,
+            "status": "approved",
+            "title": "filter coffee",
+            "image": {
+              "small": "https://images.example.com/photos/27860011/photo-27860011.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860011/photo-27860011.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860011/photo-27860011.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860011/download/",
+              "download_link": "https://images.example.com/photos/27860011/photo-27860011.jpeg"
+            }
+          }
+        },
+        {
+          "id": "27860000",
+          "type": "photo",
+          "attributes": {
+            "id": 27860000,
+            "slug": "coffee-cup",
+            "description": "A beautifully crafted cappuccino with latte art on a rustic wooden table.",
+            "width": 2763,
+            "height": 3683,
+            "status": "approved",
+            "title": "coffee cup",
+            "image": {
+              "small": "https://images.example.com/photos/27860000/photo-27860000.jpeg?auto=compress&cs=tinysrgb&h=130",
+              "medium": "https://images.example.com/photos/27860000/photo-27860000.jpeg?auto=compress&cs=tinysrgb&w=750",
+              "large": "https://images.example.com/photos/27860000/photo-27860000.jpeg?auto=compress&cs=tinysrgb&w=1440",
+              "download": "https://www.images.example.com/photo/27860000/download/",
+              "download_link": "https://images.example.com/photos/27860000/photo-27860000.jpeg"
+            }
+          }
+        }
+      ],
+      "meta": {
+        "total": 13
+      }
+    }
+  }
+}

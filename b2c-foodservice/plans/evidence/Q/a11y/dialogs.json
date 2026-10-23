@@ -1,0 +1,89 @@
+{
+ "note": "Keyboard run on the release build after commit 1afc53f2 (radio groups are one Tab stop): Enter on the opener, 25 Tab and 5 Shift+Tab presses inside, Escape. tabEscapes counts presses that left the dialog. Quick add on a coffee card is not a dialog (it opens the product page), so it is not listed.",
+ "results": [
+  {
+   "name": "Choose your store",
+   "vp": 1440,
+   "opener": "Collection store: Choose a store. Change",
+   "dialog": true,
+   "modal": "true",
+   "labelled": true,
+   "focusMovedIn": true,
+   "tabEscapes": 0,
+   "pageBehindInert": false,
+   "closed": true,
+   "returned": true,
+   "active": "Collection store: Choose a store. Change"
+  },
+  {
+   "name": "Country and language",
+   "vp": 1440,
+   "opener": "US (USD) | EN: change country and langua",
+   "dialog": true,
+   "modal": "true",
+   "labelled": true,
+   "focusMovedIn": true,
+   "tabEscapes": 0,
+   "pageBehindInert": false,
+   "closed": true,
+   "returned": true,
+   "active": "US (USD) | EN: change country and langua"
+  },
+  {
+   "name": "Choose your store",
+   "vp": 375,
+   "opener": "Find your store",
+   "dialog": true,
+   "modal": "true",
+   "labelled": true,
+   "focusMovedIn": true,
+   "tabEscapes": 0,
+   "pageBehindInert": false,
+   "closed": true,
+   "returned": true,
+   "active": "Find your store"
+  },
+  {
+   "name": "Menu",
+   "vp": 375,
+   "opener": "Open menu",
+   "dialog": true,
+   "modal": "true",
+   "labelled": true,
+   "focusMovedIn": true,
+   "tabEscapes": 0,
+   "pageBehindInert": false,
+   "closed": true,
+   "returned": true,
+   "active": "Open menu"
+  },
+  {
+   "name": "Filters",
+   "vp": 375,
+   "opener": "Filters",
+   "dialog": true,
+   "modal": "true",
+   "labelled": true,
+   "focusMovedIn": true,
+   "tabEscapes": 0,
+   "pageBehindInert": false,
+   "closed": true,
+   "returned": true,
+   "active": "Filters"
+  },
+  {
+   "name": "Your bag (1)",
+   "vp": 1440,
+   "opener": "Cart, 1 item BUTTON",
+   "dialog": true,
+   "modal": "true",
+   "labelled": true,
+   "focusMovedIn": true,
+   "tabEscapes": 0,
+   "pageBehindInert": false,
+   "closed": true,
+   "returned": true,
+   "active": "Cart, 1 item"
+  }
+ ]
+}

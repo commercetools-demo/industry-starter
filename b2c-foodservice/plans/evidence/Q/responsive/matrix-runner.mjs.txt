@@ -1,0 +1,157 @@
+// Responsive and accessibility matrix: every page at every width against the running release build.
+// usage: node matrix.mjs <base> <out.json>
+import { createRequire } from 'node:module';
+import { writeFileSync } from 'node:fs';
+const require = createRequire('/Users/behnam/.npm/_npx/0f94ee7615faf582/node_modules/');
+const puppeteer = require('puppeteer-core');
+
+const base = process.argv[2] ?? 'http://localhost:3100';
+const outFile = process.argv[3] ?? 'results.json';
+const PAGES = {
+  home: '/en-US',
+  pods: '/en-US/category/pods',
+  'pods-filtered': '/en-US/category/pods?f_intensity=9',
+  shop: '/en-US/shop',
+  search: '/en-US/search?q=espresso',
+  'search-empty': '/en-US/search?q=zzzzqq',
+  'pdp-pod': '/en-US/p/ember-ristretto/MCF-POD-EMBER-50',
+  'pdp-coffee': '/en-US/p/brazil-santos/MCF-COF-SANTOS-250-WB',
+  'pdp-machine': '/en-US/p/barista-compact/MCF-MAC-B2C2-BLA-M',
+  'pdp-accessory': '/en-US/p/descaling-kit-3-uses/MCF-ACC-DESCALE-WHI',
+  cart: '/en-US/cart',
+  checkout: '/en-US/checkout',
+  'sign-in': '/en-US/account/sign-in',
+  register: '/en-US/account/register',
+  about: '/en-US/about',
+  contact: '/en-US/contact',
+  faq: '/en-US/faq',
+  policy: '/en-US/policies/shipping-returns',
+  journal: '/en-US/journal',
+  article: '/en-US/journal/brew-a-better-cup',
+  notfound: '/en-US/does-not-exist',
+  'home-ca': '/en-CA',
+  'pods-ca': '/en-CA/category/pods',
+  'pdp-pod-ca': '/en-CA/p/ember-ristretto/MCF-POD-EMBER-50',
+};
+const WIDTHS = [1440, 1080, 900, 820, 700, 520, 375];
+
+const measure = () => {
+  const vw = innerWidth;
+  const SEL = 'a[href],button,input:not([type=hidden]),select,textarea,summary,[role=button],[role=checkbox],[role=radio],[role=tab],[role=switch]';
+  const hiddenAncestor = (e) => e.closest('.sr-only,[aria-hidden="true"],[inert]') || e.closest('dialog:not([open])');
+  const vis = (e) => {
+    const r = e.getBoundingClientRect();
+    if (!r.width || !r.height) return false;
+    const cs = getComputedStyle(e);
+    if (cs.visibility === 'hidden' || cs.display === 'none') return false;
+    return !hiddenAncestor(e);
+  };
+  const all = [...document.querySelectorAll(SEL)].filter(vis);
+  const inline = (e) => e.tagName === 'A' && getComputedStyle(e).display === 'inline';
+  const label = (e) => (e.getAttribute('aria-label') || e.textContent || e.tagName).trim().slice(0, 28);
+  const small = [];
+  const naiveSmall = [];
+  for (const t of all) {
+    if (inline(t)) continue;
+    // A link stretched over its card with ::after (the product name) is hit anywhere on the card.
+    if (getComputedStyle(t, '::after').position === 'absolute') continue;
+    const r = t.getBoundingClientRect();
+    if (r.width >= 24 && r.height >= 24) continue;
+    naiveSmall.push(label(t) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height));
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const clash = all.find((o) => {
+      if (o === t || t.contains(o) || o.contains(t)) return false;
+      const q = o.getBoundingClientRect();
+      return q.left < cx + 12 && q.right > cx - 12 && q.top < cy + 12 && q.bottom > cy - 12;
+    });
+    if (clash) small.push(label(t) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height) + ' near ' + label(clash));
+  }
+  const clipped = (e) => {
+    for (let p = e.parentElement; p && p !== document.body; p = p.parentElement) {
+      const cs = getComputedStyle(p);
+      if ((cs.overflowX === 'hidden' || cs.overflowX === 'clip' || cs.overflowX === 'auto' || cs.overflowX === 'scroll') && p.getBoundingClientRect().right <= vw + 1) return true;
+    }
+    return false;
+  };
+  const offenders = [...document.querySelectorAll('body *')]
+    .filter((e) => {
+      const r = e.getBoundingClientRect();
+      if (!r.width || !r.height) return false;
+      const cs = getComputedStyle(e);
+      if (cs.position === 'fixed' || cs.visibility === 'hidden' || cs.display === 'none') return false;
+      return r.right > vw + 1 && !hiddenAncestor(e) && !clipped(e);
+    })
+    .slice(0, 6)
+    .map((e) => e.tagName.toLowerCase() + '.' + String(e.className).slice(0, 40));
+  const hs = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].map((h) => +h.tagName[1]);
+  let skip = false;
+  for (let i = 1; i < hs.length; i++) if (hs[i] - hs[i - 1] > 1) skip = true;
+  const grid = document.querySelector('[data-testid="product-grid"]');
+  const header = document.querySelector('body > header, header');
+  return {
+    w: vw,
+    overflowPx: document.documentElement.scrollWidth - vw,
+    offenders,
+    targets: all.length,
+    smallTargets: small.slice(0, 8),
+    naiveSmallCount: naiveSmall.length,
+    h1: hs.filter((x) => x === 1).length,
+    headingSkip: skip,
+    imgNoAlt: document.querySelectorAll('img:not([alt])').length,
+    grid: grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : null,
+    lang: document.documentElement.lang,
+    landmarks: {
+      header: document.querySelectorAll('header').length,
+      nav: document.querySelectorAll('nav').length,
+      main: document.querySelectorAll('main').length,
+      footer: document.querySelectorAll('footer').length,
+    },
+    headerHeight: header ? Math.round(header.getBoundingClientRect().height) : null,
+    title: document.title,
+  };
+};
+
+const browser = await puppeteer.launch({
+  executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  headless: 'new',
+  args: ['--no-sandbox'],
+});
+const results = {};
+for (const w of WIDTHS) {
+  const ctx = await browser.createBrowserContext();
+  const page = await ctx.newPage();
+  await page.setViewport({ width: w, height: w <= 375 ? 812 : 900, deviceScaleFactor: 1, isMobile: w <= 520, hasTouch: w <= 520 });
+  // A bag, so cart and checkout show their real layout.
+  await page.goto(base + '/en-US', { waitUntil: 'networkidle0' });
+  await page.evaluate(async () => {
+    for (const sku of ['MCF-POD-ANDES-10', 'MCF-COF-SANTOS-250-WB']) {
+      await fetch('/api/cart/lines', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ sku, quantity: 2, fulfilment: 'delivery' }) });
+    }
+  });
+  for (const [name, path] of Object.entries(PAGES)) {
+    const errors = [];
+    const failed = [];
+    const onConsole = (m) => { if (m.type() === 'error') errors.push(m.text().slice(0, 140)); };
+    const onFail = (r) => failed.push(r.url().replace(base, '').slice(0, 80));
+    page.on('console', onConsole);
+    page.on('requestfailed', onFail);
+    let status = 0;
+    try {
+      const res = await page.goto(base + path, { waitUntil: 'networkidle0', timeout: 30000 });
+      status = res?.status() ?? 0;
+      await new Promise((r) => setTimeout(r, 400));
+      const m = await page.evaluate(measure);
+      results[`${name}-${w}`] = { ...m, status, errors, failed };
+    } catch (e) {
+      results[`${name}-${w}`] = { status, error: String(e.message).slice(0, 120), errors, failed };
+    }
+    page.off('console', onConsole);
+    page.off('requestfailed', onFail);
+  }
+  await ctx.close();
+  console.error('width', w, 'done');
+}
+await browser.close();
+writeFileSync(outFile, JSON.stringify(results, null, 1));
+console.error('written', outFile, Object.keys(results).length);

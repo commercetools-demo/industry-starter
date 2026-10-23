@@ -1,0 +1,49 @@
+'use client';
+
+import { useLocale } from 'next-intl';
+import { useCallback } from 'react';
+import { fetchJson } from '@/hooks/fetcher';
+import { usePathname, useRouter } from '@/i18n/routing';
+import { storeDroppedLines } from '@/lib/cart/dropped';
+import type { DroppedLine } from '@/lib/types';
+import { marketForLocale } from '@/lib/utils';
+
+export interface MarketSwitchResult {
+  country: string; currency: string; locale: string;
+  cartCarriedOver: boolean;
+  /** Lines the new market could not take (workstream I); the notice stays until dismissed. */
+  droppedLines: DroppedLine[];
+}
+
+/**
+ * The current market (from the route locale) and the one-step switch, for the locale chooser and any page that needs it.
+ * `switchCountry(country)` calls PUT /api/session/market, then replaces the route locale and refreshes server data, so every
+ * page re-reads currency from the session. It rejects with ApiError when the server refuses the market.
+ */
+export function useMarket() {
+  const locale = useLocale();
+  const market = marketForLocale(locale);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const switchCountry = useCallback(
+    async (country: string, language?: string): Promise<MarketSwitchResult> => {
+      const result = await fetchJson<MarketSwitchResult>('/api/session/market', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(language ? { country, locale: language } : { country }),
+      });
+      storeDroppedLines(result.droppedLines ?? []);
+      const search = typeof window === 'undefined' ? '' : window.location.search;
+      router.replace(`${pathname}${search}`, { locale: result.locale });
+      router.refresh();
+      return result;
+    },
+    [router, pathname],
+  );
+
+  /** A language change inside the current country: the cart is untouched (same currency). */
+  const switchLanguage = useCallback((language: string) => switchCountry(market.country, language), [switchCountry, market.country]);
+
+  return { country: market.country, currency: market.currency, locale: market.locale, switchCountry, switchLanguage };
+}

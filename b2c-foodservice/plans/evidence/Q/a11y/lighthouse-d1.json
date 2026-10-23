@@ -1,0 +1,17 @@
+{
+ "home-mobile": {
+  "scores": {
+   "performance": 92,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp": 3369,
+  "cls": 0,
+  "tbt": 7,
+  "ttfb": 15,
+  "fcp": 904,
+  "bytes": 530,
+  "failing": []
+ }
+}

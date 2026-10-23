@@ -1,0 +1,1698 @@
+{
+  "common": {
+    "brand": "Malva Coffee",
+    "skipToContent": "Skip to content",
+    "close": "Close",
+    "open": "Open",
+    "back": "Back",
+    "next": "Next",
+    "save": "Save",
+    "cancel": "Cancel",
+    "remove": "Remove",
+    "edit": "Edit",
+    "loading": "Loading",
+    "retry": "Try again",
+    "yes": "Yes",
+    "no": "No",
+    "colour": "Color",
+    "favourite": "Favorite"
+  },
+  "meta": {
+    "title": "Malva Coffee",
+    "description": "Coffee beans, capsules and subscriptions, delivered or ready to collect."
+  },
+  "home": {
+    "meta": {
+      "title": "Malva Coffee: pods, coffee and machines",
+      "description": "Compatible capsules, fresh coffee beans and machines. Order online and collect in store or have it delivered."
+    },
+    "hero": {
+      "cta": "Shop the edit",
+      "findStore": "Find your store",
+      "favourite": "Favourite"
+    },
+    "promise": {
+      "aria": "Our promises",
+      "shipping": "Free shipping over {threshold}",
+      "collect": "Free collection, ready in {minutes, number} minutes",
+      "returns": "{days, number}-day returns"
+    },
+    "tiles": {
+      "aria": "Shop by category",
+      "empty": "Shop"
+    },
+    "banner": {
+      "eyebrow": "Order online, collect in store",
+      "titleStore": "Ready in {minutes, number} minutes at {store}.",
+      "titleNoStore": "Collect in store, ready in minutes.",
+      "text": "See live availability as you browse, reserve what you want and skip the queue. Free, always.",
+      "changeStore": "Change store",
+      "chooseStore": "Choose a store",
+      "shopCollect": "Shop collect-eligible",
+      "proofFast": "Fast",
+      "proofFastText": "Your order is ready for pick-up within minutes.",
+      "proofReserved": "Reserved",
+      "proofReservedText": "We set your items aside until you arrive.",
+      "proofNoFees": "No fees",
+      "proofNoFeesText": "Collection is always free."
+    },
+    "bestsellers": {
+      "eyebrow": "Most loved",
+      "title": "Bestsellers"
+    },
+    "new": {
+      "eyebrow": "Just landed",
+      "title": "New arrivals"
+    },
+    "viewAll": "View all",
+    "subscribe": {
+      "eyebrow": "Subscribe & save",
+      "title": "Never run out of coffee",
+      "step1": "Choose your coffee or pods",
+      "step2": "Set how often",
+      "step3": "Skip or cancel any time",
+      "cta": "Shop subscriptions",
+      "stepsAria": "How subscriptions work"
+    },
+    "loading": "Loading products"
+  },
+  "ui": {
+    "stepper": {
+      "decrease": "Decrease quantity",
+      "increase": "Increase quantity"
+    },
+    "rating": {
+      "label": "{value} out of 5, {count, plural, one {# review} other {# reviews}}",
+      "reviews": "{count, plural, one {# review} other {# reviews}}"
+    },
+    "option": {
+      "unavailable": "Not available"
+    },
+    "toast": {
+      "dismiss": "Dismiss"
+    },
+    "drawer": {
+      "close": "Close panel"
+    },
+    "modal": {
+      "close": "Close dialog"
+    },
+    "steps": {
+      "done": "completed",
+      "current": "current step"
+    },
+    "field": {
+      "required": "Required",
+      "optional": "Optional"
+    }
+  },
+  "a11y": {
+    "menu": "Menu",
+    "cart": "Bag",
+    "search": "Search",
+    "account": "Account",
+    "store": "Store",
+    "language": "Language",
+    "filters": "Filters",
+    "previousImage": "Previous image",
+    "nextImage": "Next image"
+  },
+  "errors": {
+    "title": "Something went wrong",
+    "retry": "Try again",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "We could not find the page you were looking for.",
+    "generic": "Something went wrong. Please try again.",
+    "bad_request": "That request could not be understood.",
+    "validation_failed": "Please check the highlighted fields and try again.",
+    "unauthorized": "Please sign in to continue.",
+    "forbidden": "You do not have access to this.",
+    "not_found": "We could not find what you were looking for.",
+    "conflict": "That changed while you were working. Please refresh and try again.",
+    "rate_limited": "Too many requests. Please wait a moment and try again.",
+    "upstream_unavailable": "We cannot reach our systems right now. Please try again shortly.",
+    "wrong_project": "This site is not connected to the expected store.",
+    "internal_error": "Something went wrong on our side. Please try again."
+  },
+  "shell": {
+    "promise": {
+      "shipping": "Free shipping over {threshold}",
+      "collection": "Free café collection, ready in {minutes, number} min",
+      "returns": "{days, number}-day returns"
+    },
+    "nav": {
+      "label": "Main",
+      "pods": "Pods",
+      "coffee": "Coffee",
+      "machines": "Machines",
+      "accessories": "Accessories",
+      "gifts": "Gifts"
+    },
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu",
+      "title": "Menu"
+    },
+    "search": {
+      "label": "Search",
+      "placeholder": "Search coffee, pods, machines",
+      "submit": "Search",
+      "open": "Open search",
+      "close": "Close search"
+    },
+    "account": {
+      "signIn": "Sign in",
+      "menu": "Account menu",
+      "dashboard": "Dashboard",
+      "signOut": "Sign out",
+      "myAccount": "My account"
+    },
+    "cart": {
+      "aria": "Cart, {count, plural, one {# item} other {# items}}"
+    },
+    "storePill": {
+      "collectAt": "Collect at {store}",
+      "choose": "Choose a store",
+      "aria": "Collection store: {store}. Change store"
+    },
+    "localePill": {
+      "aria": "{country} ({currency}) | {language}: change country and language"
+    },
+    "mega": {
+      "brewLabel": "Brew methods",
+      "shopAll": "Shop all {category}",
+      "heading": "Shop {category}",
+      "moreHeading": "More from Malva",
+      "expand": "Show {category} categories",
+      "collapse": "Hide {category} categories",
+      "feature": {
+        "newIn": "New in",
+        "bestsellers": "Bestsellers",
+        "sets": "Sets"
+      },
+      "link": {
+        "original": "Original",
+        "vertuo": "Vertuo",
+        "intensity": "Intensity 8 and up",
+        "limited": "Limited editions",
+        "decaf": "Decaf",
+        "beans": "Beans",
+        "ground": "Ground",
+        "singleOrigin": "Single origin",
+        "blends": "Blends",
+        "subscriptions": "Subscriptions",
+        "capsule": "Capsule machines",
+        "beanToCup": "Bean-to-cup",
+        "espresso": "Espresso machines",
+        "filter": "Filter machines",
+        "grinders": "Grinders",
+        "cupsMugs": "Cups and mugs",
+        "frothers": "Milk frothers",
+        "care": "Descaling and care",
+        "storage": "Storage"
+      },
+      "brew": {
+        "espresso": "Espresso",
+        "filter": "Filter",
+        "frenchPress": "French press",
+        "moka": "Moka",
+        "coldBrew": "Cold brew"
+      },
+      "pods": {
+        "compat": "Compatible with Nespresso Original and Vertuo",
+        "promo": {
+          "title": "Capsules for every cup",
+          "line": "Original and Vertuo compatible, from light to dark.",
+          "cta": "Shop pods"
+        }
+      },
+      "coffee": {
+        "promo": {
+          "title": "Freshly roasted",
+          "line": "Beans and ground coffee, roasted for the way you brew.",
+          "cta": "Shop coffee"
+        }
+      },
+      "machines": {
+        "promo": {
+          "title": "Find your machine",
+          "line": "From capsule to bean-to-cup, with the right filter for you.",
+          "cta": "Shop machines"
+        }
+      },
+      "accessories": {
+        "promo": {
+          "title": "The finishing touches",
+          "line": "Cups, frothers and everything to keep your machine happy.",
+          "cta": "Shop accessories"
+        }
+      }
+    },
+    "footer": {
+      "tagline": "Coffee, capsules and machines, delivered or ready to collect.",
+      "col": {
+        "shop": "Shop",
+        "collect": "Collect",
+        "help": "Help",
+        "company": "Company"
+      },
+      "link": {
+        "pods": "Pods",
+        "coffee": "Coffee",
+        "machines": "Machines",
+        "accessories": "Accessories",
+        "gifts": "Gifts",
+        "chooseStore": "Choose your store",
+        "howCollectionWorks": "How collection works",
+        "contact": "Contact us",
+        "faq": "Questions and answers",
+        "shippingReturns": "Shipping and returns",
+        "trackOrder": "Your orders",
+        "about": "About Malva",
+        "journal": "Journal"
+      },
+      "copyright": "© {year} Malva Coffee",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "accessibility": "Accessibility"
+    },
+    "newsletter": {
+      "heading": "Join the list",
+      "label": "Email address",
+      "placeholder": "you@example.com",
+      "join": "Join",
+      "invalid": "Enter a valid email address",
+      "error": "Something went wrong, try again",
+      "success": "Thanks, you're on the list"
+    },
+    "toast": {
+      "added": "Added to bag"
+    }
+  },
+  "cart": {
+    "variant": {
+      "intensity": "Intensity {n}",
+      "capsules": "{count, plural, one {# capsule} other {# capsules}}",
+      "grams": "{n} g"
+    },
+    "drawer": {
+      "title": "Your bag ({count})",
+      "close": "Close",
+      "view": "View bag",
+      "checkout": "Checkout",
+      "subtotal": "Subtotal",
+      "loadError": "We couldn't load your bag",
+      "retry": "Retry",
+      "loading": "Loading your bag"
+    },
+    "progress": {
+      "remaining": "Add {amount} for free shipping",
+      "unlocked": "You've unlocked free shipping",
+      "label": "Progress to free shipping"
+    },
+    "empty": {
+      "title": "Your bag is empty",
+      "line": "Let's find something to brew.",
+      "drawerCta": "Start shopping",
+      "pageCta": "Shop coffee"
+    },
+    "page": {
+      "title": "Your bag",
+      "breadcrumb": "Bag",
+      "home": "Home",
+      "breadcrumbLabel": "Breadcrumb",
+      "loadError": "We couldn't load your bag"
+    },
+    "group": {
+      "collect": "Collect · {store}",
+      "collectLine": "{address} · ready in about {minutes, plural, one {# minute} other {# minutes}}",
+      "changeStore": "Change store",
+      "ship": "Shipping to you",
+      "shipLine": "Free standard over {threshold} · {minDays} to {maxDays} business days",
+      "shipLineNoThreshold": "Standard delivery · {minDays} to {maxDays} business days",
+      "subscribe": "Subscriptions",
+      "subscribeLine": "Delivered on the schedule you chose"
+    },
+    "line": {
+      "fulfil": {
+        "collect": "Collect at {store}",
+        "delivery": "Ship to me",
+        "subscribe": "Delivers {interval}"
+      },
+      "badge": {
+        "collect": "Collect · {store}",
+        "ship": "Ships to you",
+        "subscribe": "{interval}"
+      },
+      "chip": {
+        "label": "How you get this item",
+        "collect": "Collect",
+        "delivery": "Ship",
+        "collectDisabled": "Not available for collection at {store}"
+      },
+      "qty": {
+        "decrease": "Decrease quantity",
+        "increase": "Increase quantity",
+        "label": "Quantity of {name}",
+        "value": "Quantity {count}"
+      },
+      "remove": "Remove",
+      "removeNamed": "Remove {name}",
+      "firstDelivery": "First delivery by {day}, then {interval}"
+    },
+    "notice": {
+      "priceUpdated": "Price updated",
+      "outOfStock": "Out of stock",
+      "collectUnavailable": "Not in stock at {store}, try shipping",
+      "tryShipping": "Ship instead",
+      "quantityLimit": "Only {n} available"
+    },
+    "summary": {
+      "title": "Order summary",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "shipping": "Shipping",
+      "shippingFree": "Free",
+      "shippingLater": "Calculated at checkout",
+      "taxEstimated": "Estimated tax",
+      "taxIncluded": "Includes {tax} tax",
+      "taxLater": "Calculated at checkout",
+      "total": "Total",
+      "checkout": "Checkout",
+      "secure": "Secure checkout",
+      "gift": "You can add a gift note at checkout"
+    },
+    "minimum": {
+      "shortfall": "Add {shortfall} to reach the {minimum} minimum order"
+    },
+    "blocker": {
+      "outOfStock": "Remove or replace out-of-stock items to check out",
+      "collectUnavailable": "Ship the items that aren't in stock at your store to check out",
+      "priceUnavailable": "An item in your bag has no price"
+    },
+    "code": {
+      "label": "Discount code",
+      "apply": "Apply",
+      "remove": "Remove code {code}",
+      "applied": "Applied codes",
+      "error": {
+        "DoesNotExist": "That code isn't valid",
+        "NotActive": "That code has expired",
+        "NotValid": "That code isn't valid",
+        "DoesNotMatchCart": "This code doesn't apply to your bag",
+        "MaxApplicationReached": "This code has already been used",
+        "alreadyApplied": "That code is already applied",
+        "ApplicationStoppedByPreviousDiscount": "This code can't be combined with your other discounts",
+        "generic": "We couldn't apply that code"
+      },
+      "reason": {
+        "NotActive": "Expired",
+        "NotValid": "Not valid",
+        "DoesNotMatchCart": "No longer applies to your bag",
+        "MaxApplicationReached": "Already used",
+        "ApplicationStoppedByPreviousDiscount": "Can't be combined with other offers"
+      }
+    },
+    "nudge": {
+      "text": "{machine} needs capsules. Add starter capsules?",
+      "add": "Add",
+      "addNamed": "Add {capsule} for {price}",
+      "added": "Capsules added to your bag"
+    },
+    "dropped": {
+      "title": "{count, plural, one {# item} other {# items}} could not be moved to your new region: {names}",
+      "dismiss": "Dismiss"
+    },
+    "error": {
+      "conflict": "Your bag changed, we've refreshed it",
+      "generic": "Something went wrong. Please try again.",
+      "storeRequired": "Choose a store to collect from",
+      "collectUnavailable": "That item isn't available for collection there"
+    }
+  },
+  "store": {
+    "picker": {
+      "title": "Choose your store",
+      "intro": "Set your pickup location to see real-time availability across the site.",
+      "searchLabel": "Search stores",
+      "searchPlaceholder": "Town, neighbourhood or postcode",
+      "useLocation": "Use my location",
+      "locationOff": "Location is off, search by town or postcode",
+      "nearest": "Nearest",
+      "openToday": "Open today {open}–{close}",
+      "closedToday": "Closed today",
+      "availability": {
+        "in": "In stock for this item",
+        "low": "Low stock for this item",
+        "out": "Unavailable for this item"
+      },
+      "loading": "Checking stock",
+      "noMatch": "No stores near {query}.",
+      "shipInstead": "Ship to me instead",
+      "selected": "Collecting from {store}",
+      "error": "We could not load the stores.",
+      "count": "{count, plural, one {# store} other {# stores}}",
+      "retry": "Try again",
+      "selectError": "We could not save your store. Please try again.",
+      "yourLocation": "your location"
+    }
+  },
+  "locale": {
+    "title": "Country and language",
+    "billing": "Your current selected location is {country} and your order will be billed in {currency}.",
+    "heading": "{country} ({currency})",
+    "language": "Language",
+    "languageHint": "More languages are coming",
+    "chooseLocation": "Choose your location",
+    "region": {
+      "northAmerica": "North America"
+    },
+    "country": {
+      "US": "United States",
+      "CA": "Canada"
+    },
+    "cartNotice": "Your bag is priced in {oldCurrency}. Items will be moved to {newCurrency} where they are available; others will be listed.",
+    "cartResetNotice": "Your bag will be emptied because it is priced in {oldCurrency}.",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "close": "Close",
+    "switchError": "We could not change the country. Please try again.",
+    "english": "English"
+  },
+  "auth": {
+    "signIn": {
+      "eyebrow": "Your account",
+      "title": "Sign in",
+      "intro": "Welcome back. Sign in to see your orders and saved items.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "pending": "Signing in…",
+      "invalidCredentials": "Email or password is incorrect.",
+      "tooMany": "Too many attempts. Try again in {seconds} seconds.",
+      "create": "Create an account",
+      "cartMerged": "Your bag was added to your account."
+    },
+    "demo": {
+      "title": "Demo customers",
+      "label": "Choose a demo customer",
+      "submit": "Sign in as",
+      "hint": "For demonstration only. These customers are created by the seed.",
+      "groupUS": "United States",
+      "groupCA": "Canada",
+      "nameUS": "{name} (US)",
+      "nameCA": "{name} (Canada)"
+    },
+    "notice": {
+      "registered": "Account created.",
+      "signedOut": "You are signed out."
+    },
+    "register": {
+      "eyebrow": "Your account",
+      "title": "Create your account",
+      "intro": "Save your bag, track orders and check out faster.",
+      "submit": "Create account",
+      "pending": "Creating account…",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "consent": "By creating an account you agree to the {terms} and {privacy}.",
+      "failed": "We could not create the account with these details. If you already have one, sign in.",
+      "created": "Welcome to Malva Coffee.",
+      "haveAccount": "Already have an account? Sign in",
+      "terms": "terms",
+      "privacy": "privacy policy"
+    },
+    "password": {
+      "show": "Show password",
+      "hide": "Hide password",
+      "rulesMet": "{met} of {total} rules met",
+      "rulesLabel": "Password rules",
+      "rules": {
+        "min_length": "At least 10 characters",
+        "letter": "Contains a letter",
+        "digit": "Contains a number",
+        "not_email": "Is not your email address",
+        "max_length": "At most 128 characters"
+      }
+    },
+    "errors": {
+      "unavailable": "Something went wrong on our side. Please try again.",
+      "retry": "Try again",
+      "required": "This field is required.",
+      "emailShape": "Enter a valid email address."
+    }
+  },
+  "content": {
+    "fallbackNotice": "This page is shown in English because it is not available in {language} yet.",
+    "draftBanner": "This text is a draft and not final legal text.",
+    "toc": "On this page",
+    "home": "Home",
+    "breadcrumb": "Breadcrumb",
+    "tokenFallback": {
+      "freeShipping": "our free-shipping threshold",
+      "collectMinutes": "a short time",
+      "returnDays": "the return period"
+    }
+  },
+  "about": {
+    "shop": "Shop coffee",
+    "contact": "Contact us",
+    "findStore": "Find your store"
+  },
+  "contact": {
+    "title": "Contact us",
+    "intro": "Questions about an order, a collection or a product? Send us a message and we will get back to you.",
+    "field": {
+      "name": "Name",
+      "email": "Email",
+      "topic": "Topic",
+      "orderNumber": "Order number (optional)",
+      "message": "Message",
+      "website": "Website"
+    },
+    "topic": {
+      "choose": "Choose a topic",
+      "order": "My order",
+      "collection": "Collection in store",
+      "subscription": "A subscription",
+      "product": "A product",
+      "other": "Something else"
+    },
+    "noSecrets": "Please do not include card numbers or passwords.",
+    "consent": "I have read the {link}.",
+    "privacyLink": "privacy policy",
+    "counter": "{count} of {max} characters",
+    "submit": "Send message",
+    "sending": "Sending...",
+    "sent": {
+      "title": "Thank you. We have your message.",
+      "reference": "Reference {reference}",
+      "channel": "Received by {channel}",
+      "reply": "We usually reply within {replyWithin}."
+    },
+    "failed": "We could not send your message. What you wrote is still here. Try again, or reach us at {email} or {phone}.",
+    "failedNoPhone": "We could not send your message. What you wrote is still here. Try again, or reach us at {email}.",
+    "failedRate": "Please wait a few minutes before trying again.",
+    "error": {
+      "required": "This field is required.",
+      "emailInvalid": "Enter a valid email address.",
+      "tooShort": "Please write a little more.",
+      "tooLong": "Please shorten your message.",
+      "orderNumberInvalid": "Use letters, numbers and dashes only (3 to 40 characters).",
+      "consentRequired": "Please confirm to continue."
+    },
+    "channels": {
+      "title": "Customer care",
+      "email": "Email",
+      "phone": "Phone",
+      "hours": "Opening hours",
+      "reply": "Reply time"
+    },
+    "store": {
+      "title": "Looking for a store?",
+      "text": "Collection is available at our New York City stores.",
+      "button": "Find your store"
+    }
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "intro": "Quick answers about ordering, collection, subscriptions and capsules.",
+    "topics": "Topics",
+    "helpful": "Was this helpful?",
+    "yes": "Yes",
+    "no": "No",
+    "thanks": "Thanks for your feedback.",
+    "stillNeedHelp": "Still need help?",
+    "contactLink": "Contact us"
+  },
+  "policy": {
+    "effective": "Effective from {date}",
+    "shipping-returns": "Shipping and returns",
+    "terms": "Terms of sale",
+    "privacy": "Privacy policy",
+    "accessibility": "Accessibility statement"
+  },
+  "journal": {
+    "title": "Journal",
+    "intro": "Brewing guides, capsule know-how and stories from the roastery.",
+    "search": "Search articles",
+    "searchSubmit": "Search",
+    "clear": "Clear all",
+    "empty": "No articles match your filters.",
+    "removeFilter": "Remove filter {label}",
+    "related": "Keep reading",
+    "filters": "Filter by topic",
+    "applied": "Applied filters",
+    "searchChip": "Search: {query}",
+    "published": "Published {date}",
+    "pagination": "Pages",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "tags": {
+      "brewing": "Brewing",
+      "capsules": "Capsules",
+      "machines": "Machines",
+      "sourcing": "Sourcing",
+      "subscriptions": "Subscriptions",
+      "care": "Care"
+    }
+  },
+  "error": {
+    "notFound": {
+      "title": "We can't find that page.",
+      "text": "The address may be mistyped, or the product may no longer be available."
+    },
+    "server": {
+      "title": "Something went wrong on our side.",
+      "text": "Your bag and your account are safe. Please try again."
+    },
+    "forbidden": {
+      "title": "You don't have access to this page.",
+      "text": "If you think this is a mistake, contact us."
+    },
+    "unauthorized": {
+      "title": "Please sign in to continue.",
+      "text": "Sign in to see this page."
+    },
+    "retry": "Try again",
+    "home": "Back to home",
+    "contact": "Contact us",
+    "account": "Go to my account",
+    "signIn": "Sign in",
+    "reference": "Reference {reference}",
+    "searchLabel": "Search the shop",
+    "searchSubmit": "Search",
+    "browse": "Browse the shop"
+  },
+  "plp": {
+    "title": {
+      "all": "All products",
+      "search": "Results for \"{query}\""
+    },
+    "description": {
+      "category": "Shop {name} at Malva Coffee: compatible pods, fresh coffee and machines, delivered or ready to collect.",
+      "all": "Shop every Malva Coffee product: compatible pods, fresh coffee, machines and accessories.",
+      "search": "Search results from Malva Coffee."
+    },
+    "count": "{count, plural, one {# product} other {# products}}",
+    "breadcrumb": {
+      "aria": "Breadcrumb",
+      "home": "Home",
+      "search": "Search",
+      "all": "All products"
+    },
+    "search": {
+      "label": "Search products",
+      "placeholder": "Search coffee, pods, machines",
+      "clear": "Clear search",
+      "prompt": "Enter a coffee, a machine or a product code",
+      "submit": "Search"
+    },
+    "sort": {
+      "label": "Sort by",
+      "featured": "Featured",
+      "bestMatch": "Best match",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low",
+      "rating": "Top rated"
+    },
+    "filters": {
+      "title": "Filters",
+      "open": "Filters",
+      "close": "Close filters",
+      "clearAll": "Clear all",
+      "showAll": "Show all {n}",
+      "showLess": "Show less",
+      "apply": "Show {n, plural, one {# result} other {# results}}",
+      "unavailable": "Filters are unavailable right now.",
+      "groupOpen": "Collapse {name}",
+      "groupClosed": "Expand {name}",
+      "selected": "{n} selected"
+    },
+    "chip": {
+      "remove": "Remove filter {label}",
+      "avail": "Available at {store}"
+    },
+    "facet": {
+      "category": "Category",
+      "system": "Machine system",
+      "intensity": "Intensity",
+      "roast": "Roast",
+      "brew": "Brew method",
+      "origin": "Origin",
+      "decaf": "Decaf",
+      "organic": "Organic",
+      "fairtrade": "Fairtrade",
+      "colour": "Color",
+      "price": "Price",
+      "rating": "Rating",
+      "collection": "Collection"
+    },
+    "facetValue": {
+      "collection": {
+        "bestseller": "Bestsellers",
+        "new": "New",
+        "limitedEdition": "Limited edition",
+        "subscribable": "Subscribe & save"
+      },
+      "rating": {
+        "4_5": "4.5 and up",
+        "4_0": "4.0 and up"
+      },
+      "price": {
+        "under": "Under {max}",
+        "between": "{min} to {max}",
+        "over": "{min} and up"
+      },
+      "intensity": "Intensity {n}"
+    },
+    "availableAt": "Available at {store}",
+    "availableChoose": "Available at my store",
+    "empty": {
+      "title": "No products match these filters.",
+      "clear": "Clear all filters"
+    },
+    "noResults": {
+      "title": "We couldn’t find anything for \"{query}\"",
+      "hint": "Typo-tolerant matching was already applied. Try fewer words, a different spelling or a product code.",
+      "browse": "Browse by category",
+      "bestsellers": "Bestsellers"
+    },
+    "unsupportedLanguage": "Browsing is not available in this language yet.",
+    "error": {
+      "title": "We couldn’t load the products.",
+      "retry": "Try again"
+    },
+    "noPhoto": "Photo coming soon",
+    "pagination": {
+      "aria": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {n}"
+    },
+    "results": "Product results",
+    "loading": "Loading products"
+  },
+  "card": {
+    "badge": {
+      "bestseller": "Bestseller",
+      "new": "New",
+      "limitedEdition": "Limited edition",
+      "subscribe": "Subscribe & save"
+    },
+    "from": "From {price}",
+    "noPrice": "No price available",
+    "perCapsule": "{price} per capsule",
+    "per100g": "{price} per 100 g",
+    "intensity": "Intensity {n}",
+    "rating": "{avg} out of 5, {count, plural, one {# review} other {# reviews}}",
+    "availability": {
+      "in": "In stock at {store}",
+      "low": "Low stock at {store}",
+      "out": "Not available at {store}",
+      "choose": "Choose a store"
+    },
+    "quickAdd": "Quick add",
+    "quickAddNamed": "Quick add {name}",
+    "chooseOptions": "Choose options for {name}",
+    "addError": "We couldn’t add that to your bag. Please try again.",
+    "save": "Save",
+    "saved": "Saved",
+    "saveNamed": "Save {name}",
+    "matchedVariant": "Matched SKU {sku}",
+    "swatchMore": "+{n}",
+    "colours": "Colours: {list}"
+  },
+  "pdp": {
+    "breadcrumb": {
+      "aria": "Breadcrumb",
+      "home": "Home"
+    },
+    "noPhoto": "Photo coming soon",
+    "gallery": {
+      "label": "Product images",
+      "thumb": "Show image {n} of {total}",
+      "alt": "{name}, view {n}"
+    },
+    "priceFrom": "From {amount}",
+    "priceOnRequest": "Price on request",
+    "unitPrice": {
+      "capsule": "{amount} per capsule",
+      "100g": "{amount} per 100 g"
+    },
+    "rating": {
+      "firstReview": "Be the first to review",
+      "summary": "Customer rating",
+      "average": "{value} out of 5",
+      "count": "{count, plural, one {# review} other {# reviews}}",
+      "stars": "{stars} stars",
+      "bar": "{stars} stars: {count, plural, one {# review} other {# reviews}}",
+      "link": "{value} out of 5, {count, plural, one {# review} other {# reviews}}"
+    },
+    "selector": {
+      "choose": "Choose a {choice}",
+      "groupValue": "{label} - {value}",
+      "label": {
+        "capsulesPerPack": "Pack",
+        "sizeGrams": "Size",
+        "grind": "Grind",
+        "colour": "Color",
+        "bundle": "Bundle"
+      },
+      "choice": {
+        "capsulesPerPack": "pack size",
+        "sizeGrams": "size",
+        "grind": "grind",
+        "colour": "color",
+        "bundle": "bundle"
+      }
+    },
+    "pack": {
+      "sleeve": "{n} sleeve",
+      "box": "{n} box",
+      "other": "{n} pack"
+    },
+    "size": {
+      "g": "{n} g",
+      "kg": "{n} kg"
+    },
+    "guide": {
+      "close": "Close",
+      "compat": {
+        "link": "Compatibility guide",
+        "title": "Which capsules fit which machine",
+        "intro": "Our capsules are compatible with Nespresso Original and Nespresso Vertuo machines. Malva Coffee is not affiliated with those brands.",
+        "machine": "Machine",
+        "takes": "Takes",
+        "rowOriginal": "Original machines",
+        "rowVertuo": "Vertuo machines",
+        "rowNone": "Bean to cup, espresso, filter machines and grinders",
+        "takesOriginal": "Original capsules",
+        "takesVertuo": "Vertuo capsules",
+        "takesNone": "Does not use capsules",
+        "note": "Original and Vertuo capsules are not interchangeable.",
+        "browseOriginal": "Shop Original pods",
+        "browseVertuo": "Shop Vertuo pods"
+      },
+      "grind": {
+        "link": "Grind guide",
+        "title": "Which grind for which brew",
+        "intro": "Choose the grind that matches how you brew. Whole bean suits every method if you grind it yourself.",
+        "grind": "Grind",
+        "methods": "Best for",
+        "rows": {
+          "whole-bean": "Any method, ground at home just before brewing",
+          "espresso": "Espresso machines",
+          "filter": "Drip machines and pour over",
+          "french-press": "French press and cold brew",
+          "moka": "Moka pots"
+        }
+      }
+    },
+    "option": {
+      "notAvailableForCollection": "Not available for collection at this store",
+      "noPrice": "No price available",
+      "bundleNotForMachine": "Not offered for this machine",
+      "noVariant": "Not available in this combination"
+    },
+    "system": {
+      "original": "Nespresso Original compatible",
+      "vertuo": "Nespresso Vertuo compatible",
+      "browseOther": "Looking for {system} capsules?"
+    },
+    "fulfil": {
+      "title": "How would you like it?",
+      "collect": {
+        "title": "Collect in store",
+        "line": "Free, ready in about {n} minutes",
+        "choose": "Choose a store"
+      },
+      "ship": {
+        "title": "Delivery",
+        "line": "Free over {threshold}, {min} to {max} days",
+        "lineFlat": "Delivered in {min} to {max} days"
+      },
+      "subscribe": {
+        "title": "Subscribe and save",
+        "line": "{interval}, skip or cancel any time",
+        "saving": "Save {percent}%"
+      }
+    },
+    "collect": {
+      "in": "In stock at {store}",
+      "low": "Low stock at {store}",
+      "out": "Unavailable at {store}",
+      "ready": "Ready today, in about {n} minutes",
+      "readyOn": "Ready {day} from {time}",
+      "day": {
+        "today": "today",
+        "tomorrow": "tomorrow"
+      },
+      "change": "Change",
+      "chooseStore": "Choose a store to see availability",
+      "chooseButton": "Choose a store",
+      "refreshing": "Checking this store"
+    },
+    "ship": {
+      "before": "Order in the next {hours, plural, one {# hour} other {# hours}} for delivery by {day}",
+      "after": "Order now for delivery by {day}",
+      "outOnline": "Out of stock online",
+      "backInDays": "Back in about {n, plural, one {# day} other {# days}}",
+      "expected": "Expected {date}"
+    },
+    "interval": {
+      "days": "{count, plural, one {Every day} other {Every # days}}",
+      "weeks": "{count, plural, one {Every week} other {Every # weeks}}",
+      "months": "{count, plural, one {Every month} other {Every # months}}"
+    },
+    "subscribe": {
+      "interval": "Delivery interval",
+      "price": "{amount} per delivery",
+      "oneTime": "{amount} one time",
+      "skipCancel": "Skip or cancel any time in your account"
+    },
+    "add": {
+      "select": "Select a {choice}",
+      "priceOnRequest": "Price on request",
+      "chooseStore": "Choose a store",
+      "unavailableCollect": "Unavailable for collection",
+      "outOfStock": "Out of stock",
+      "stockUnknown": "Stock could not be checked",
+      "reserve": "Reserve for collection",
+      "addToBag": "Add to bag",
+      "subscribe": "Subscribe",
+      "withTotal": "{label} - {total}"
+    },
+    "qty": {
+      "label": "Quantity",
+      "decrease": "Decrease quantity",
+      "increase": "Increase quantity",
+      "limit": "Only {n} available"
+    },
+    "toast": {
+      "reserved": "Reserved for collection"
+    },
+    "error": {
+      "collectGone": "That item just ran out at this store. Choose another store or have it delivered.",
+      "price": "This item has no price right now.",
+      "conflict": "Your bag changed while adding. Please try again.",
+      "market": "Collection is not available in your region.",
+      "generic": "We could not add that to your bag. Please try again.",
+      "stockUnknown": "Stock could not be checked right now.",
+      "title": "We could not load this product",
+      "retry": "Try again"
+    },
+    "trust": {
+      "returns": "{days}-day returns",
+      "quality": "Quality guarantee",
+      "sourced": "Responsibly sourced"
+    },
+    "acc": {
+      "details": "Details",
+      "brewing": "Brewing and care",
+      "shipping": "Shipping and collection"
+    },
+    "facts": {
+      "intensity": "Intensity",
+      "intensityAria": "Intensity {value} of 13",
+      "notes": "Flavor notes",
+      "roast": "Roast",
+      "origin": "Origin",
+      "roastLevels": {
+        "light": "Light",
+        "medium": "Medium",
+        "dark": "Dark"
+      }
+    },
+    "care": {
+      "pods": "Store capsules in a cool, dry place. Descale your machine every three months. Used capsules can be recycled where aluminum capsule recycling is available.",
+      "coffee": "Keep beans in an airtight container away from light and heat. Grind just before brewing and use water just off the boil.",
+      "machine": "Descale every three months, empty the water tank daily and rinse the drip tray. Use filtered water in hard-water areas.",
+      "accessory": "Hand wash with mild soap. Check the label on the product for dishwasher and heat guidance.",
+      "gift": "Store in a cool, dry place until gifting."
+    },
+    "shipping": {
+      "delivery": "Free delivery over {threshold}.",
+      "deliveryFlat": "Standard delivery in {min} to {max} business days.",
+      "collect": "Collect in store, ready in about {minutes} minutes.",
+      "returns": "Returns accepted within {days} days."
+    },
+    "spec": {
+      "system": "System",
+      "pressureBar": "Pressure",
+      "waterTankMl": "Water tank",
+      "powerWatts": "Power",
+      "features": "Features",
+      "warrantyMonths": "Warranty",
+      "decaf": "Decaf",
+      "organic": "Organic",
+      "fairtrade": "Fairtrade",
+      "process": "Process",
+      "brewMethods": "Brew methods",
+      "kind": "Type",
+      "material": "Material",
+      "capacityMl": "Capacity",
+      "contents": "Contents",
+      "occasion": "Occasion",
+      "yes": "Yes"
+    },
+    "specValue": {
+      "pressureBar": "{value} bar",
+      "waterTankMl": "{value} ml",
+      "powerWatts": "{value} W",
+      "warrantyMonths": "{value} months",
+      "capacityMl": "{value} ml"
+    },
+    "related": {
+      "title": "You may also like",
+      "goesWith": "Goes well with"
+    },
+    "reviews": {
+      "heading": "Customer reviews"
+    }
+  },
+  "reviews": {
+    "title": "Reviews",
+    "sortBy": "Sort by",
+    "sort": {
+      "newest": "Newest",
+      "highest": "Highest rated",
+      "lowest": "Lowest rated"
+    },
+    "empty": "No reviews yet.",
+    "beFirst": "Be the first to review",
+    "showMore": "Show more",
+    "loading": "Loading…",
+    "moreLoaded": "{count, plural, one {# more review loaded} other {# more reviews loaded}}",
+    "loadError": "We could not load the reviews. Please try again.",
+    "retry": "Try again",
+    "item": {
+      "stars": "{rating} out of 5",
+      "verified": "Verified purchase",
+      "by": "by {name}"
+    },
+    "cta": {
+      "signIn": "Sign in to write a review.",
+      "signInLink": "Sign in",
+      "write": "Write a review",
+      "reviewed": "You reviewed this product on {date}.",
+      "reviewedNoDate": "You reviewed this product.",
+      "edit": "Edit your review"
+    },
+    "form": {
+      "title": "Write a review",
+      "editTitle": "Edit your review",
+      "rating": "Your rating",
+      "ratingError": "Choose a rating",
+      "reviewTitle": "Title (optional)",
+      "text": "Your review (optional)",
+      "postedAs": "Posted as {name}",
+      "submit": "Submit review",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "star": "{n, plural, one {# star} other {# stars}}",
+      "count": "{n}/{max}",
+      "published": "Thanks, your review is live. The average updates shortly.",
+      "edited": "Your changes are live.",
+      "error": "We could not save your review. Please try again.",
+      "rateLimited": "You have posted a lot of reviews. Please try again later.",
+      "alreadyReviewed": "You have already reviewed this product. You can edit your review instead."
+    },
+    "errors": {
+      "rating_required": "Choose a rating.",
+      "rating_invalid": "Choose between 1 and 5 stars.",
+      "title_too_long": "The title can have at most 80 characters.",
+      "text_too_long": "The review can have at most 2000 characters."
+    },
+    "mine": {
+      "title": "Your reviews",
+      "empty": "You have not written any reviews yet.",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteTitle": "Delete this review?",
+      "deleteText": "This cannot be undone.",
+      "deleteConfirm": "Delete review",
+      "deleted": "Review deleted.",
+      "showMore": "Show more",
+      "showLess": "Show less",
+      "loadError": "We could not load your reviews. Please try again.",
+      "unavailable": "This product is no longer available."
+    }
+  },
+  "checkout": {
+    "title": "Checkout",
+    "stepsLabel": "Checkout steps",
+    "steps": {
+      "review": "Review",
+      "pay": "Pay"
+    },
+    "cluster": {
+      "collect": "Pickup at {store}",
+      "delivery": "Delivery",
+      "subscribe": "Subscription",
+      "lineCollect": "Collect at {store}",
+      "lineDelivery": "Delivery",
+      "collectCount": "{count, plural, one {# item ready for collection.} other {# items ready for collection.}}",
+      "deliveryCount": "{count, plural, one {# item shipping to you.} other {# items shipping to you.}} You enter the address next.",
+      "subscribeCount": "{count, plural, one {# subscription, shipped to your delivery address.} other {# subscriptions, shipped to your delivery address.}}"
+    },
+    "delivery": {
+      "freeOver": "Free delivery on orders over {threshold}",
+      "days": "Delivery in {days}"
+    },
+    "pickup": {
+      "change": "Change",
+      "ready": "Ready in about {minutes} minutes",
+      "open": "Open today {hours}",
+      "closed": "Closed today",
+      "who": "Who's picking up?",
+      "me": "It's me",
+      "meHelp": "Bring a photo ID and your order number",
+      "other": "Someone else",
+      "otherHelp": "Add an alternate pickup person",
+      "name": "Pickup name"
+    },
+    "continue": "Continue to secure checkout",
+    "continuing": "Preparing secure checkout…",
+    "backToReview": "Back to review",
+    "payment": {
+      "secure": "Encrypted and secure. Card details are entered in the secure payment form and never reach Malva Coffee.",
+      "loading": "Loading secure checkout…",
+      "region": "Secure checkout",
+      "declined": "Your payment was not accepted. Check your details or try another card.",
+      "generic": "Something went wrong with the payment. Your bag is unchanged, please try again.",
+      "unavailable": "Secure checkout is not available right now. Please try again shortly.",
+      "partOf": "Payment {n} of {total}: {cluster}",
+      "firstDone": "Your collection order is placed. Your delivery order still needs payment.",
+      "placing": "Confirming your order…",
+      "consentIntro": "By placing your order you agree to our",
+      "consentTerms": "terms",
+      "consentJoin": "and",
+      "consentPrivacy": "privacy policy"
+    },
+    "placement": {
+      "retry": "We could not confirm your order. Check your bag and try again.",
+      "retryButton": "Review and try again"
+    },
+    "summary": {
+      "title": "Order summary",
+      "items": "{count, plural, one {# item} other {# items}}",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "shipping": "Shipping",
+      "tax": "Tax",
+      "total": "Total",
+      "free": "Free",
+      "nextStep": "Calculated in secure checkout",
+      "quantity": "x{quantity}",
+      "codes": "Codes"
+    },
+    "promo": {
+      "reasons": {
+        "DoesNotMatchCart": "Your bag doesn't meet this offer yet.",
+        "NotActive": "This offer isn't active.",
+        "NotValid": "This offer isn't valid.",
+        "MaxApplicationReached": "This offer has been used up.",
+        "ApplicationStoppedByPreviousDiscount": "A better offer already applies."
+      }
+    },
+    "issues": {
+      "review": "Review your bag",
+      "unavailable": "{name} is no longer available.",
+      "collectOut": "{name} is not in stock at {store}.",
+      "collectNotAvailable": "{name} can only be collected in the US market. Remove it or switch market.",
+      "priceChanged": "The price of {name} changed.",
+      "toCart": "Back to bag",
+      "currencyMismatch": "{name} is priced in another currency."
+    },
+    "signIn": {
+      "required": "Sign in to check out with this bag.",
+      "cta": "Sign in"
+    },
+    "empty": {
+      "title": "Nothing to check out",
+      "cta": "Shop coffee"
+    },
+    "loadFailed": "We could not load your checkout.",
+    "retry": "Try again",
+    "totalsChanged": "Your total changed. Check the summary and continue again.",
+    "errors": {
+      "pickup_name_required": "Enter the name of the person collecting.",
+      "pickup_name_invalid": "Use letters, spaces, apostrophes, hyphens and full stops only (2 to 80 characters).",
+      "person_invalid": "Choose who is picking up.",
+      "code_malformed": "That code does not look right."
+    }
+  },
+  "order": {
+    "confirmed": "Order confirmed",
+    "track": {
+      "label": "Collection progress",
+      "ordered": "Ordered",
+      "preparing": "Preparing",
+      "ready": "Ready",
+      "collected": "Collected",
+      "done": "done",
+      "current": "current",
+      "upcoming": "upcoming"
+    },
+    "collect": {
+      "title": "Collect at {store}",
+      "bring": "Bring a photo ID and your order number.",
+      "keepNumber": "Keep this number; you will need it to collect your order.",
+      "checkLater": "Check this page or your account for status.",
+      "pickupName": "Pickup name: {name}",
+      "hours": "Open today {hours}",
+      "ready": "Ready in about {minutes} minutes"
+    },
+    "ship": {
+      "title": "Delivery",
+      "estimate": "Estimated {window}",
+      "noTracking": "Tracking will appear here",
+      "track": "Track parcel",
+      "method": "{method}",
+      "to": "Shipping to {address}"
+    },
+    "subscription": {
+      "title": "Subscription",
+      "every": "Delivers {interval}",
+      "manage": "Manage"
+    },
+    "items": "Your items",
+    "total": "Total",
+    "viewAccount": "View in My Account",
+    "keepShopping": "Keep shopping",
+    "guest": {
+      "title": "Create an account with this order",
+      "body": "Keep track of your orders and reorder in a click.",
+      "cta": "Create account"
+    },
+    "none": {
+      "title": "No recent order",
+      "body": "We could not find an order to show here.",
+      "cta": "Shop coffee"
+    },
+    "linked": {
+      "title": "Also part of this purchase",
+      "order": "Order {number}"
+    },
+    "loadFailed": "We could not load this order.",
+    "retry": "Try again",
+    "summary": {
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "shipping": "Shipping",
+      "tax": "Tax"
+    },
+    "line": {
+      "quantity": "x{quantity}"
+    },
+    "numberLabel": "Order"
+  },
+  "account": {
+    "eyebrow": "My account",
+    "pageTitle": "{tab}: my account",
+    "orderPageTitle": "Order {number}: my account",
+    "greeting": "Hi, {first}",
+    "status": {
+      "open": "{count, plural, one {# open order} other {# open orders}}",
+      "openNone": "No open orders",
+      "ready": "{count} ready for collection",
+      "unavailable": "Orders unavailable"
+    },
+    "tabs": {
+      "label": "Account",
+      "orders": "Orders",
+      "collection": "Collection",
+      "subscriptions": "Subscriptions",
+      "saved": "Saved",
+      "addresses": "Addresses",
+      "payments": "Payment methods",
+      "reviews": "Reviews",
+      "profile": "Profile",
+      "settings": "Settings",
+      "signOut": "Sign out"
+    },
+    "panel": {
+      "unavailable": "{panel} is unavailable right now.",
+      "retry": "Try again",
+      "loading": "Loading…"
+    },
+    "reviews": {
+      "stub": "No reviews yet."
+    },
+    "greetingNoName": "Hi there",
+    "orders": {
+      "title": "Order history",
+      "empty": "No orders yet.",
+      "emptyCta": "Shop coffee",
+      "filterLabel": "Filter orders",
+      "filter": {
+        "all": "All",
+        "inProgress": "In progress",
+        "ready": "Ready for collection",
+        "completed": "Completed"
+      },
+      "emptyFiltered": "No orders match this filter.",
+      "orderNumber": "Order {number}",
+      "placedOn": "Placed {date}",
+      "itemsCount": "{count, plural, one {# item} other {# items}}",
+      "pill": {
+        "ordered": "Ordered",
+        "preparing": "Preparing",
+        "ready": "Ready for collection",
+        "shipped": "Shipped",
+        "collected": "Collected",
+        "delivered": "Delivered",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "readyBlock": "Ready at {store} · {hours}. Bring your ID and this order number.",
+      "readyBlockNoHours": "Ready at {store}. Bring your ID and this order number.",
+      "details": "View details",
+      "buyAgain": "Buy again",
+      "directions": "Get directions",
+      "more": "+{count} more",
+      "prev": "Previous",
+      "next": "Next",
+      "page": "Page {page} of {pages}",
+      "pagination": "Orders pages",
+      "notFound": "We couldn't find that order.",
+      "notFoundHelp": "Check the number or go back to your orders.",
+      "backToOrders": "Back to orders",
+      "breadcrumb": "Orders",
+      "reorder": {
+        "added": "{count, plural, one {# item added to your bag.} other {# items added to your bag.}}",
+        "nothingAdded": "Nothing could be added to your bag.",
+        "skippedTitle": "These items could not be added",
+        "reason": {
+          "unavailable": "No longer available",
+          "out_of_stock": "Out of stock",
+          "not_found": "No longer in our range",
+          "price_missing": "No price in your country"
+        },
+        "viewBag": "View bag",
+        "close": "Close",
+        "failed": "We could not add these items. Try again."
+      },
+      "detail": {
+        "deliveries": "Shipments",
+        "parcel": "Parcel {n}",
+        "tracking": "Track parcel",
+        "trackingId": "Tracking number {id}",
+        "noTracking": "Tracking will appear here",
+        "items": "Items",
+        "quantity": "Quantity {count}",
+        "collection": "Collection",
+        "shippingAddress": "Delivery address",
+        "subtotal": "Subtotal",
+        "shipping": "Shipping",
+        "tax": "Tax",
+        "total": "Total",
+        "stateOrdered": "Ordered",
+        "tracker": "Order progress",
+        "fulfilment": {
+          "collect": "Collect in store",
+          "delivery": "Delivery",
+          "subscribe": "Subscription"
+        },
+        "refresh": "This page updates while your order is being prepared."
+      },
+      "return": {
+        "start": "Start a return",
+        "title": "Which items are you returning?",
+        "reason": "Reason",
+        "reasons": {
+          "none": "Choose a reason (optional)",
+          "damaged": "Damaged",
+          "wrong": "Wrong item",
+          "notAsDescribed": "Not as described",
+          "changedMind": "Changed my mind"
+        },
+        "submit": "Start return",
+        "closed": "The return window for this order has closed.",
+        "title2": "Returns",
+        "windowEnds": "You can start a return until {date}.",
+        "quantityLabel": "Quantity to return of {name}",
+        "pickOne": "Choose at least one item.",
+        "failed": "We could not start the return. Try again.",
+        "started": "Return started.",
+        "shipmentLabel": "Goods",
+        "paymentLabel": "Refund",
+        "shipment": {
+          "Advised": "Return announced",
+          "Returned": "Goods received",
+          "BackInStock": "Back in stock",
+          "Unusable": "Cannot be resold"
+        },
+        "payment": {
+          "Initial": "Refund pending",
+          "Refunded": "Refunded",
+          "NotRefunded": "Not refunded",
+          "NonRefundable": "Not refundable"
+        },
+        "trackingId": "Return tracking {id}"
+      }
+    },
+    "collection": {
+      "title": "Your collection store",
+      "help": "We use this store for live availability and collection orders.",
+      "change": "Change store",
+      "none": "No store chosen yet.",
+      "chooseStore": "Choose a store",
+      "phone": "Phone {phone}",
+      "unavailable": "Your store could not be loaded.",
+      "tile": {
+        "fast": "Fast collection",
+        "fastText": "Ready in about {minutes, number} minutes",
+        "shipping": "Free delivery",
+        "shippingText": "Free shipping over {threshold}",
+        "subscribe": "Subscribe and save",
+        "subscribeText": "Never run out of coffee"
+      }
+    },
+    "addresses": {
+      "title": "Addresses",
+      "empty": "No saved addresses.",
+      "emptyHelp": "Add an address and we will offer it at checkout.",
+      "add": "Add address",
+      "edit": "Edit",
+      "delete": "Delete",
+      "makeDefault": "Make default",
+      "default": "Default",
+      "label": "Name this address (Home, Work)",
+      "addTitle": "Add an address",
+      "editTitle": "Edit address",
+      "deleteConfirm": "Delete this address?",
+      "deleteDefaultPromote": "This is your default address. {label} will become your default.",
+      "deleteDefaultNone": "This is your default address. You will have no default until you choose one.",
+      "deleteAction": "Delete address",
+      "deleteKeep": "Keep it",
+      "deleted": "Address deleted.",
+      "saved": "Address saved.",
+      "failed": "We could not save the address. Try again.",
+      "list": "Saved addresses",
+      "form": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "street": "Street address",
+        "street2": "Apartment, suite, unit (optional)",
+        "city": "City",
+        "state": "State",
+        "statePlaceholder": "Choose a state",
+        "postalCode": "ZIP code",
+        "postalCodeCA": "Postal code",
+        "country": "Country",
+        "phone": "Phone (optional)",
+        "makeDefault": "Make this my default address",
+        "save": "Save address",
+        "cancel": "Cancel",
+        "countries": {
+          "US": "United States",
+          "CA": "Canada"
+        },
+        "error": {
+          "required": "This field is required.",
+          "too_long": "This is too long.",
+          "invalid": "Check this value.",
+          "unsupported": "We do not deliver there."
+        }
+      },
+      "verify": {
+        "title": "Check this address",
+        "unresolved": "We couldn't confirm: {fields}.",
+        "suggestion": "Did you mean: {address}",
+        "useSuggestion": "Use suggestion",
+        "keepMine": "Keep what I typed",
+        "edit": "Edit"
+      }
+    },
+    "payments": {
+      "title": "Payment methods",
+      "empty": "No saved cards.",
+      "emptyHelp": "Cards you choose to save while paying appear here.",
+      "hostedOnly": "Card details are only ever entered in our secure payment form at checkout.",
+      "default": "Default",
+      "remove": "Remove",
+      "makeDefault": "Make default",
+      "shop": "Browse the shop",
+      "removed": "Payment method removed.",
+      "failed": "We could not change this payment method. Try again.",
+      "list": "Saved payment methods",
+      "method": {
+        "card": "Card"
+      }
+    },
+    "profile": {
+      "title": "Profile",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "emailHelp": "To change your email, contact us.",
+      "phone": "Phone",
+      "phoneHelp": "Used for your default delivery address.",
+      "phoneNoAddress": "Add an address to save a phone number.",
+      "defaultAddress": "Default address",
+      "defaultAddressNone": "No saved addresses",
+      "save": "Save changes",
+      "saved": "Changes saved.",
+      "failed": "We could not save your changes. Try again.",
+      "error": {
+        "required": "This field is required.",
+        "too_long": "This is too long.",
+        "invalid": "Check this value.",
+        "no_address": "Add an address first."
+      }
+    },
+    "password": {
+      "title": "Change password",
+      "current": "Current password",
+      "new": "New password",
+      "submit": "Update password",
+      "changed": "Password updated.",
+      "wrongCurrent": "Your current password is incorrect.",
+      "policy": "Your new password does not meet the requirements.",
+      "rateLimited": "Too many attempts. Try again later.",
+      "failed": "We could not update your password. Try again.",
+      "required": "Enter your current password."
+    },
+    "settings": {
+      "title": "Settings",
+      "saveFailed": "Could not save. Try again.",
+      "noPrefs": "There are no email or text message settings: we do not send marketing messages."
+    },
+    "delete": {
+      "button": "Delete account",
+      "title": "Delete your account?",
+      "erased": "This erases your profile, addresses, saved items and saved cards.",
+      "retained": "Order records are kept for legal and tax reasons.",
+      "password": "Enter your password to confirm",
+      "confirm": "Delete my account",
+      "cancel": "Keep my account",
+      "wrong": "That password is not correct.",
+      "rateLimited": "Too many attempts. Try again later.",
+      "failed": "We could not delete your account. Try again.",
+      "done": "Your account was deleted.",
+      "section": "Delete your account"
+    },
+    "saved": {
+      "title": "Saved items",
+      "empty": "Nothing saved yet. Tap the heart on any product.",
+      "browse": "Browse",
+      "fromBag": "Save items from my bag",
+      "addAll": "Add all to bag",
+      "added": "{count, plural, one {# item added to your bag.} other {# items added to your bag.}}",
+      "nothingAdded": "Nothing could be added to your bag.",
+      "skippedTitle": "These items could not be added",
+      "remove": "Remove from saved",
+      "gone": "No longer available",
+      "failed": "We could not add your saved items. Try again.",
+      "fromBagFailed": "We could not save the items from your bag. Try again.",
+      "viewBag": "View bag",
+      "close": "Close"
+    }
+  },
+  "subscription": {
+    "priceLock": "Your price stays the same for every delivery.",
+    "cart": {
+      "shippingNote": "Shipping is calculated for each delivery."
+    },
+    "checkout": {
+      "needsAccount": "A subscription needs an account so you can manage it. Sign in or create one to continue.",
+      "signIn": "Sign in",
+      "register": "Create an account"
+    },
+    "confirmation": {
+      "active": "Your subscription starts now. Next delivery {date}, then {interval}. Manage it in your account.",
+      "settingUp": "We are setting up your subscription.",
+      "late": "We could not confirm your subscription yet. It will appear in your account; contact us if it does not."
+    },
+    "account": {
+      "customSchedule": "Custom schedule",
+      "title": "Subscriptions",
+      "empty": {
+        "title": "No subscriptions yet",
+        "text": "Subscribe & save on pods and coffee. Skip, pause or cancel any time.",
+        "cta": "Shop coffee"
+      },
+      "error": "We could not load your subscriptions.",
+      "retry": "Try again",
+      "contact": "Contact us",
+      "pending": {
+        "title": "Subscription pending",
+        "text": "We placed your order {orderNumber} and are still setting up the subscription. Check back shortly or contact us if it does not appear."
+      },
+      "failed": "We could not create your last order.",
+      "next": "Next delivery {date}",
+      "last": "Last order {date}",
+      "skipping": "Skipping {date}",
+      "skippedLabel": "Next delivery skipped",
+      "pausedText": "No further orders until you resume.",
+      "moreLines": "+{count} more",
+      "perDelivery": "{amount} per delivery",
+      "quantity": "Quantity {count}",
+      "list": "Your subscriptions"
+    },
+    "status": {
+      "active": "Active",
+      "paused": "Paused",
+      "canceled": "Canceled",
+      "expired": "Expired",
+      "failed": "Needs attention"
+    },
+    "action": {
+      "skip": "Skip next",
+      "changeInterval": "Change interval",
+      "pause": "Pause",
+      "resume": "Resume",
+      "cancel": "Cancel",
+      "subscribeAgain": "Subscribe again"
+    },
+    "dialog": {
+      "interval": {
+        "title": "Change interval",
+        "text": "The new interval applies from your next order. Your price per delivery stays the same.",
+        "current": "Current",
+        "blockedBySkip": "You can change the interval after the skipped delivery has passed."
+      },
+      "cancel": {
+        "title": "Cancel this subscription?",
+        "textLast": "No further orders will be created. Your last order was on {date}.",
+        "textNone": "No further orders will be created. No order has been created from it yet."
+      },
+      "keep": "Keep subscription",
+      "confirmCancel": "Cancel subscription",
+      "save": "Save",
+      "cancelLabel": "Cancel"
+    },
+    "toast": {
+      "skipped": "Next delivery skipped",
+      "paused": "Subscription paused",
+      "resumed": "Subscription resumed",
+      "intervalUpdated": "Interval updated",
+      "canceled": "Subscription canceled. Your last order was on {date}.",
+      "canceledNone": "Subscription canceled.",
+      "error": "That did not work. Please try again."
+    }
+  }
+}

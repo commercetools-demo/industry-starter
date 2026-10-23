@@ -1,0 +1,851 @@
+{
+ "note": "Lighthouse 13.5.0 CLI against the production build on http://localhost:3100 (mock commercetools), 2026-10-22. batch1 = every audited page on the build before the last hardening commits; final = the six pages measured again on the final build (account Orders and Subscriptions on mobile after the footer shift fix, commit b1d41659; Orders on mobile repeated three times: CLS 0, 0, 0 and performance 93, 91, 92). Mobile = Lighthouse default (simulated slow 4G, 4x CPU slowdown); desktop = desktop preset. failing = audits with a score under 1 in accessibility, best-practices and seo.",
+ "batch1": {
+  "about-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 698,
+   "fcpMs": 364,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 9,
+   "transferKB": 433,
+   "failing": []
+  },
+  "about-mobile": {
+   "scores": {
+    "performance": 93,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 3199,
+   "fcpMs": 903,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 11,
+   "transferKB": 380,
+   "failing": []
+  },
+  "account-orders-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 646,
+   "fcpMs": 364,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 11,
+   "transferKB": 440,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "account-orders-mobile": {
+   "scores": {
+    "performance": 91,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 3363,
+   "fcpMs": 903,
+   "tbtMs": 9,
+   "cls": 0.072,
+   "ttfbMs": 14,
+   "transferKB": 386,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "account-subscriptions-desktop": {
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 829,
+   "fcpMs": 286,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 10,
+   "transferKB": 439,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "account-subscriptions-mobile": {
+   "scores": {
+    "performance": 90,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 3682,
+   "fcpMs": 903,
+   "tbtMs": 10,
+   "cls": 0.008,
+   "ttfbMs": 13,
+   "transferKB": 385,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "article-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 661,
+   "fcpMs": 295,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 22,
+   "transferKB": 433,
+   "failing": []
+  },
+  "article-mobile": {
+   "scores": {
+    "performance": 93,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 3220,
+   "fcpMs": 905,
+   "tbtMs": 6,
+   "cls": 0,
+   "ttfbMs": 31,
+   "transferKB": 380,
+   "failing": []
+  },
+  "cart-desktop": {
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 911,
+   "fcpMs": 365,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 19,
+   "transferKB": 486,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "cart-mobile": {
+   "scores": {
+    "performance": 86,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 4153,
+   "fcpMs": 904,
+   "tbtMs": 14,
+   "cls": 0,
+   "ttfbMs": 26,
+   "transferKB": 432,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "checkout-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 54
+   },
+   "lcpMs": 605,
+   "fcpMs": 285,
+   "tbtMs": 0,
+   "cls": 0.008,
+   "ttfbMs": 10,
+   "transferKB": 441,
+   "failing": [
+    "best-practices:errors-in-console",
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "checkout-mobile": {
+   "scores": {
+    "performance": 91,
+    "accessibility": 100,
+    "best-practices": 96,
+    "seo": 54
+   },
+   "lcpMs": 3518,
+   "fcpMs": 903,
+   "tbtMs": 12,
+   "cls": 0.038,
+   "ttfbMs": 15,
+   "transferKB": 387,
+   "failing": [
+    "best-practices:errors-in-console",
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "confirmation-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 58
+   },
+   "lcpMs": 740,
+   "fcpMs": 284,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 13,
+   "transferKB": 460,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "confirmation-mobile": {
+   "scores": {
+    "performance": 93,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 58
+   },
+   "lcpMs": 3217,
+   "fcpMs": 903,
+   "tbtMs": 12,
+   "cls": 0,
+   "ttfbMs": 17,
+   "transferKB": 406,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "contact-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 698,
+   "fcpMs": 364,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 9,
+   "transferKB": 436,
+   "failing": []
+  },
+  "contact-mobile": {
+   "scores": {
+    "performance": 93,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 3213,
+   "fcpMs": 903,
+   "tbtMs": 4,
+   "cls": 0,
+   "ttfbMs": 11,
+   "transferKB": 382,
+   "failing": []
+  },
+  "faq-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 700,
+   "fcpMs": 364,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 11,
+   "transferKB": 439,
+   "failing": []
+  },
+  "faq-mobile": {
+   "scores": {
+    "performance": 93,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 3200,
+   "fcpMs": 902,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 15,
+   "transferKB": 386,
+   "failing": []
+  },
+  "home-ca-desktop": {
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 825,
+   "fcpMs": 365,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 15,
+   "transferKB": 605,
+   "failing": []
+  },
+  "home-ca-mobile": {
+   "scores": {
+    "performance": 94,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 3066,
+   "fcpMs": 903,
+   "tbtMs": 6,
+   "cls": 0,
+   "ttfbMs": 20,
+   "transferKB": 551,
+   "failing": []
+  },
+  "home-desktop": {
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 908,
+   "fcpMs": 284,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 19,
+   "transferKB": 611,
+   "failing": []
+  },
+  "home-mobile": {
+   "scores": {
+    "performance": 94,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 3063,
+   "fcpMs": 903,
+   "tbtMs": 5,
+   "cls": 0,
+   "ttfbMs": 25,
+   "transferKB": 513,
+   "failing": []
+  },
+  "journal-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 698,
+   "fcpMs": 364,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 9,
+   "transferKB": 433,
+   "failing": []
+  },
+  "journal-mobile": {
+   "scores": {
+    "performance": 93,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 3211,
+   "fcpMs": 902,
+   "tbtMs": 4,
+   "cls": 0,
+   "ttfbMs": 10,
+   "transferKB": 379,
+   "failing": []
+  },
+  "listing-desktop": {
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 92
+   },
+   "lcpMs": 1076,
+   "fcpMs": 286,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 23,
+   "transferKB": 590,
+   "failing": [
+    "seo:canonical"
+   ]
+  },
+  "listing-mobile": {
+   "scores": {
+    "performance": 91,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 92
+   },
+   "lcpMs": 3540,
+   "fcpMs": 904,
+   "tbtMs": 8,
+   "cls": 0,
+   "ttfbMs": 23,
+   "transferKB": 536,
+   "failing": [
+    "seo:canonical"
+   ]
+  },
+  "pdp-accessory-desktop": {
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 1057,
+   "fcpMs": 364,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 20,
+   "transferKB": 604,
+   "failing": []
+  },
+  "pdp-accessory-mobile": {
+   "scores": {
+    "performance": 84,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 4500,
+   "fcpMs": 903,
+   "tbtMs": 9,
+   "cls": 0,
+   "ttfbMs": 21,
+   "transferKB": 551,
+   "failing": []
+  },
+  "pdp-coffee-desktop": {
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 875,
+   "fcpMs": 365,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 17,
+   "transferKB": 656,
+   "failing": []
+  },
+  "pdp-coffee-mobile": {
+   "scores": {
+    "performance": 88,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 3968,
+   "fcpMs": 904,
+   "tbtMs": 10,
+   "cls": 0,
+   "ttfbMs": 22,
+   "transferKB": 603,
+   "failing": []
+  },
+  "pdp-machine-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 797,
+   "fcpMs": 284,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 20,
+   "transferKB": 728,
+   "failing": []
+  },
+  "pdp-machine-mobile": {
+   "scores": {
+    "performance": 84,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 4640,
+   "fcpMs": 902,
+   "tbtMs": 10,
+   "cls": 0,
+   "ttfbMs": 17,
+   "transferKB": 652,
+   "failing": []
+  },
+  "pdp-pod-desktop": {
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 874,
+   "fcpMs": 364,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 20,
+   "transferKB": 656,
+   "failing": []
+  },
+  "pdp-pod-mobile": {
+   "scores": {
+    "performance": 85,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 4350,
+   "fcpMs": 903,
+   "tbtMs": 8,
+   "cls": 0,
+   "ttfbMs": 30,
+   "transferKB": 603,
+   "failing": []
+  },
+  "policy-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 698,
+   "fcpMs": 364,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 10,
+   "transferKB": 433,
+   "failing": []
+  },
+  "policy-mobile": {
+   "scores": {
+    "performance": 93,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 3212,
+   "fcpMs": 903,
+   "tbtMs": 4,
+   "cls": 0,
+   "ttfbMs": 9,
+   "transferKB": 379,
+   "failing": []
+  },
+  "search-desktop": {
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 66
+   },
+   "lcpMs": 996,
+   "fcpMs": 285,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 16,
+   "transferKB": 467,
+   "failing": [
+    "seo:is-crawlable"
+   ]
+  },
+  "search-mobile": {
+   "scores": {
+    "performance": 90,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 66
+   },
+   "lcpMs": 3684,
+   "fcpMs": 903,
+   "tbtMs": 14,
+   "cls": 0,
+   "ttfbMs": 15,
+   "transferKB": 414,
+   "failing": [
+    "seo:is-crawlable"
+   ]
+  },
+  "sign-in-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 695,
+   "fcpMs": 363,
+   "tbtMs": 0,
+   "cls": 0.047,
+   "ttfbMs": 9,
+   "transferKB": 435,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "sign-in-mobile": {
+   "scores": {
+    "performance": 93,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 3212,
+   "fcpMs": 902,
+   "tbtMs": 4,
+   "cls": 0.028,
+   "ttfbMs": 10,
+   "transferKB": 382,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  }
+ },
+ "final": {
+  "home-mobile": {
+   "scores": {
+    "performance": 92,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 3368,
+   "fcpMs": 904,
+   "tbtMs": 6,
+   "cls": 0,
+   "ttfbMs": 19,
+   "transferKB": 515,
+   "failing": []
+  },
+  "home-desktop": {
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 924,
+   "fcpMs": 363,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 15,
+   "transferKB": 613,
+   "failing": []
+  },
+  "listing-mobile": {
+   "scores": {
+    "performance": 91,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 3534,
+   "fcpMs": 902,
+   "tbtMs": 6,
+   "cls": 0,
+   "ttfbMs": 17,
+   "transferKB": 538,
+   "failing": []
+  },
+  "listing-desktop": {
+   "scores": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 1147,
+   "fcpMs": 284,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 18,
+   "transferKB": 591,
+   "failing": []
+  },
+  "pdp-pod-mobile": {
+   "scores": {
+    "performance": 86,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 4182,
+   "fcpMs": 902,
+   "tbtMs": 5,
+   "cls": 0,
+   "ttfbMs": 17,
+   "transferKB": 604,
+   "failing": []
+  },
+  "pdp-pod-desktop": {
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+   },
+   "lcpMs": 980,
+   "fcpMs": 363,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 16,
+   "transferKB": 658,
+   "failing": []
+  },
+  "cart-mobile": {
+   "scores": {
+    "performance": 90,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 3686,
+   "fcpMs": 902,
+   "tbtMs": 10,
+   "cls": 0,
+   "ttfbMs": 14,
+   "transferKB": 410,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "cart-desktop": {
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 825,
+   "fcpMs": 283,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 13,
+   "transferKB": 464,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "account-orders-mobile": {
+   "scores": {
+    "performance": 93,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 3220,
+   "fcpMs": 906,
+   "tbtMs": 12,
+   "cls": 0,
+   "ttfbMs": 92,
+   "transferKB": 387,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "account-orders-desktop": {
+   "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 698,
+   "fcpMs": 283,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 9,
+   "transferKB": 441,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "account-subscriptions-mobile": {
+   "scores": {
+    "performance": 90,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 3693,
+   "fcpMs": 903,
+   "tbtMs": 10,
+   "cls": 0,
+   "ttfbMs": 14,
+   "transferKB": 387,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  },
+  "account-subscriptions-desktop": {
+   "scores": {
+    "performance": 99,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 54
+   },
+   "lcpMs": 824,
+   "fcpMs": 284,
+   "tbtMs": 0,
+   "cls": 0,
+   "ttfbMs": 13,
+   "transferKB": 440,
+   "failing": [
+    "seo:is-crawlable",
+    "seo:meta-description"
+   ]
+  }
+ }
+}

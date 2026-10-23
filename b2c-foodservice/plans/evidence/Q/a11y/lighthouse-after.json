@@ -1,0 +1,327 @@
+{
+ "home-desktop": {
+  "scores": {
+   "performance": 99,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp": 897,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 47,
+  "fcp": 262,
+  "bytes": 634,
+  "failing": []
+ },
+ "home-mobile": {
+  "scores": {
+   "performance": 92,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp": 3382,
+  "cls": 0,
+  "tbt": 8,
+  "ttfb": 33,
+  "fcp": 913,
+  "bytes": 526,
+  "failing": []
+ },
+ "listing-desktop": {
+  "scores": {
+   "performance": 98,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "lcp": 1086,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 31,
+  "fcp": 274,
+  "bytes": 639,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   }
+  ]
+ },
+ "listing-mobile": {
+  "scores": {
+   "performance": 84,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "lcp": 4613,
+  "cls": 0,
+  "tbt": 6,
+  "ttfb": 14,
+  "fcp": 914,
+  "bytes": 554,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   }
+  ]
+ },
+ "pdp-desktop": {
+  "scores": {
+   "performance": 98,
+   "accessibility": 100,
+   "best-practices": 96,
+   "seo": 92
+  },
+  "lcp": 1166,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 28,
+  "fcp": 289,
+  "bytes": 680,
+  "failing": [
+   {
+    "id": "errors-in-console",
+    "title": "Browser errors were logged to the console",
+    "items": [
+     "{\"source\":\"network\",\"description\":\"Failed to load resource: net::ERR_CONNECTION_CLOSED\",\"sourceLocation\":{\"type\":\"source"
+    ]
+   },
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   }
+  ]
+ },
+ "pdp-mobile": {
+  "scores": {
+   "performance": 90,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "lcp": 3584,
+  "cls": 0,
+  "tbt": 7,
+  "ttfb": 12,
+  "fcp": 904,
+  "bytes": 623,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   }
+  ]
+ },
+ "cart-desktop": {
+  "scores": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 54
+  },
+  "lcp": 700,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 14,
+  "fcp": 365,
+  "bytes": 453,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   },
+   {
+    "id": "is-crawlable",
+    "title": "Page is blocked from indexing",
+    "items": [
+     "{\"source\":{\"type\":\"node\",\"lhId\":\"1-165-META\",\"path\":\"1,HTML,0,HEAD,18,META\",\"selector\":\"head > meta\",\"boundingRect\":{\"to",
+     "{\"source\":{\"type\":\"source-location\",\"url\":\"http://localhost:3100/robots.txt\",\"urlProvider\":\"network\",\"line\":4,\"column\":0"
+    ]
+   }
+  ]
+ },
+ "cart-mobile": {
+  "scores": {
+   "performance": 92,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 54
+  },
+  "lcp": 3368,
+  "cls": 0,
+  "tbt": 6,
+  "ttfb": 8,
+  "fcp": 904,
+  "bytes": 394,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   },
+   {
+    "id": "is-crawlable",
+    "title": "Page is blocked from indexing",
+    "items": [
+     "{\"source\":{\"type\":\"node\",\"lhId\":\"1-165-META\",\"path\":\"1,HTML,0,HEAD,18,META\",\"selector\":\"head > meta\",\"boundingRect\":{\"to",
+     "{\"source\":{\"type\":\"source-location\",\"url\":\"http://localhost:3100/robots.txt\",\"urlProvider\":\"network\",\"line\":4,\"column\":0"
+    ]
+   }
+  ]
+ },
+ "sign-in-desktop": {
+  "scores": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 54
+  },
+  "lcp": 702,
+  "cls": 0.046,
+  "tbt": 0,
+  "ttfb": 9,
+  "fcp": 366,
+  "bytes": 452,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   },
+   {
+    "id": "is-crawlable",
+    "title": "Page is blocked from indexing",
+    "items": [
+     "{\"source\":{\"type\":\"node\",\"lhId\":\"1-171-META\",\"path\":\"1,HTML,0,HEAD,18,META\",\"selector\":\"head > meta\",\"boundingRect\":{\"to",
+     "{\"source\":{\"type\":\"source-location\",\"url\":\"http://localhost:3100/robots.txt\",\"urlProvider\":\"network\",\"line\":3,\"column\":0"
+    ]
+   }
+  ]
+ },
+ "sign-in-mobile": {
+  "scores": {
+   "performance": 96,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 54
+  },
+  "lcp": 2705,
+  "cls": 0.028,
+  "tbt": 6,
+  "ttfb": 8,
+  "fcp": 903,
+  "bytes": 391,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   },
+   {
+    "id": "is-crawlable",
+    "title": "Page is blocked from indexing",
+    "items": [
+     "{\"source\":{\"type\":\"node\",\"lhId\":\"1-171-META\",\"path\":\"1,HTML,0,HEAD,18,META\",\"selector\":\"head > meta\",\"boundingRect\":{\"to",
+     "{\"source\":{\"type\":\"source-location\",\"url\":\"http://localhost:3100/robots.txt\",\"urlProvider\":\"network\",\"line\":3,\"column\":0"
+    ]
+   }
+  ]
+ },
+ "register-desktop": {
+  "scores": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 54
+  },
+  "lcp": 649,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 10,
+  "fcp": 367,
+  "bytes": 457,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   },
+   {
+    "id": "is-crawlable",
+    "title": "Page is blocked from indexing",
+    "items": [
+     "{\"source\":{\"type\":\"node\",\"lhId\":\"1-175-META\",\"path\":\"1,HTML,0,HEAD,18,META\",\"selector\":\"head > meta\",\"boundingRect\":{\"to",
+     "{\"source\":{\"type\":\"source-location\",\"url\":\"http://localhost:3100/robots.txt\",\"urlProvider\":\"network\",\"line\":3,\"column\":0"
+    ]
+   }
+  ]
+ },
+ "register-mobile": {
+  "scores": {
+   "performance": 93,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 54
+  },
+  "lcp": 3221,
+  "cls": 0,
+  "tbt": 6,
+  "ttfb": 8,
+  "fcp": 906,
+  "bytes": 395,
+  "failing": [
+   {
+    "id": "meta-description",
+    "title": "Document does not have a meta description",
+    "items": []
+   },
+   {
+    "id": "is-crawlable",
+    "title": "Page is blocked from indexing",
+    "items": [
+     "{\"source\":{\"type\":\"node\",\"lhId\":\"1-175-META\",\"path\":\"1,HTML,0,HEAD,18,META\",\"selector\":\"head > meta\",\"boundingRect\":{\"to",
+     "{\"source\":{\"type\":\"source-location\",\"url\":\"http://localhost:3100/robots.txt\",\"urlProvider\":\"network\",\"line\":3,\"column\":0"
+    ]
+   }
+  ]
+ },
+ "about-desktop": {
+  "scores": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp": 704,
+  "cls": 0,
+  "tbt": 0,
+  "ttfb": 10,
+  "fcp": 288,
+  "bytes": 449,
+  "failing": []
+ },
+ "about-mobile": {
+  "scores": {
+   "performance": 93,
+   "accessibility": 100,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp": 3219,
+  "cls": 0,
+  "tbt": 7,
+  "ttfb": 9,
+  "fcp": 904,
+  "bytes": 389,
+  "failing": []
+ }
+}

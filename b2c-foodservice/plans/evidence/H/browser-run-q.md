@@ -1,0 +1,21 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED. -->
+
+# H browser recipe, run by workstream Q (closes M-H-03 except the real phone)
+
+2026-10-22, Chrome DevTools MCP, production build of `ws/q-quality` (`next start`, port 3100) against the mock commercetools (`scripts/mock-ct-server.mjs`). Viewports 1440x900 and 375x812 (device emulation). Steps are those of section 6 of `plans/workstreams/H-product-detail.md`.
+
+| Step | Result |
+| --- | --- |
+| 1 Open a pod from the listing | URL `/en-US/p/ember-ristretto/MCF-POD-EMBER-10`; breadcrumb Home, Pods, Original pods; 3 thumbnails; price `$5.90`, `$0.59 per capsule`, rating 3.9 (12), intensity, roast, flavour chips, pack selector 10 / 50 / 100, three fulfilment cards, `Add to bag - $5.90`. The page requested only `localhost:3100` and `placehold.co` (the placeholder images): no request to a commercetools host. `H-01-pdp-pods-1440.png` |
+| 2 Change pack | `50 box`: price `$25.95`, `$0.52 per capsule`, URL `?capsulesPerPack=50`, same document (a marker on `window` survived), no history entry, no request except the favicon |
+| 3 Store | Harlem: `Low stock at Malva Coffee Harlem`, `Ready today, in about 30 minutes`, `Reserve for collection - $25.95`. Williamsburg (0 in stock): `Unavailable at Malva Coffee Williamsburg`, button `Unavailable for collection` and disabled, all three packs disabled with the title `Not available for collection at this store`. Delivery card: `Add to bag - $25.95`, enabled. `H-02-collect-1440.png`, `H-03-unavailable-1440.png` |
+| 4 Coffee | `Select a grind`, disabled; size 1 kg (`?sizeGrams=1000`) and whole bean: button enabled with the line total `$57.65`. A card Quick add lands on `?choose=grind` with `Select a grind` announced and nothing added (see journey J8) |
+| 5 Machine | Pod One: colour Red changes the gallery image and the URL (`?colour=red&bundle=machine-only`); bundle options `Machine Only` and `Starter Capsules`; no Subscribe card; `Goes well with` leads with Original capsules. `H-04-machine-1440.png`. **Deviation**: a bean-to-cup machine (Barista Pro) has no bundle selector at all, because the seed gives it a single bundle value; the recipe expects `Starter Capsules` shown disabled. Kept (a selector with one option has no use); recorded as Q-Q-17 |
+| 6 Subscribe | Casa Espresso: third card, interval select (`Every 2 weeks`, `Every month`, `Every 2 months`, `Every 3 months`), `$5.13 per delivery` against `$5.70 one time`, `Your price stays the same for every delivery.`, `Subscribe - $10.26` for 2; toast `Added to bag`, header `Cart, 2 items`. The Pod One page shows no Subscribe card |
+| 7 Reserve | `Reserved for collection`, header badge 1; the cart read-back (mock) holds `supplyChannel` and `fulfilment = collect` (journey J1) |
+| 8 No price | Not possible in the data: every seeded variant has a USD and a CAD price (checked in the fixture). The `Price on request` state is covered by `components/pdp` tests |
+| 9 375 px | Gallery 335 px wide, the three thumbnails sit below the image (top 596 against image bottom 582), the add button is 1.95 screens down, the fulfilment cards stack. The compatibility guide opens as a modal (`H-06-guide-375.png`), the close button holds focus, Tab and Shift+Tab stay inside, Escape closes it. Two defects found here, both fixed (see `plans/evidence/Q/fixes.md`: QFX-14 focus not returned after a tap in Safari, QFX-15 the `aria-hidden` warning in the console) |
+| 10 Related, keyboard, `/en-CA` | `You may also like` shows four cards; opening one changes the page, scroll goes to the top and focus to the document. `/en-CA` shows `$8.10`, Delivery and Subscribe only, no store pill, also when the visitor arrives from a US session (a fresh US context deep-linked to `/en-CA/p/...` renders Canada). Page source: canonical link, the title and description from the product data. Thumbnails are native buttons (`Show image n of 3`, `aria-pressed`) |
+
+Console: one warning (the `aria-hidden` one, fixed). Network: every request 200; each product page also prefetches its breadcrumb, header and four related links (about 12 `_rsc` requests), see `plans/evidence/Q/perf.md`.
