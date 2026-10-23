@@ -24,7 +24,7 @@ export default function InstoreShell({ children }: { children: ReactNode }) {
       </a>
       <header className="instore-header sticky top-0 z-40 border-b border-line-2 bg-surface" data-testid="instore-header">
         <div className="flex h-[68px] items-center gap-3 px-4">
-          <Link href="/" aria-label={t('header.home')} className="flex min-w-0 flex-1 items-center gap-2.5 text-ink no-underline">
+          <Link href="/" className="flex min-h-12 min-w-0 flex-1 items-center gap-2.5 text-ink no-underline">
             <span className="wordmark truncate text-[19px]">{t('header.brand')}</span>
             <span
               data-testid="instore-badge"

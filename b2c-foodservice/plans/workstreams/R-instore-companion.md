@@ -60,7 +60,7 @@ Where the mode acts (all on the server):
 
 Pure `lib/instore/scan.ts`: `normaliseScan(raw)` trims, removes control characters and a leading symbology prefix (`]C1`, `]E0` and similar, three characters starting with `]`), and keeps the text only when it matches `SKU_PATTERN` (`/^[A-Za-z0-9._-]{1,64}$/`). Case is kept (SKUs are upper case in the catalogue, the lookup is exact). Result `{ ok: true, sku }` or `{ ok: false, reason: 'empty' | 'invalid' }`. Anything that is not a SKU (an EAN of a competitor, a URL) is `invalid` and never sent to the server.
 
-`lib/instore/scan-state.ts` (pure reducer): `idle`, `starting`, `scanning`, `denied`, `no-camera`, `camera-error`, `looking-up`, `found`, `unknown`, `invalid`, `lookup-failed`. `shouldAccept(last, sku, now)` ignores the same code seen again within 2500 ms (a camera sees a code 30 times a second) and while a result is shown. Scanning the same code again after the dialog was closed works.
+`lib/instore/scan-state.ts` (pure reducer) has two independent axes. Camera: `off`, `starting`, `on`, `denied`, `none`, `error`. Result: `none`, `looking-up`, `found`, `unknown`, `invalid`, `lookup-failed`. `shouldAccept` ignores the same code seen again within 2500 ms (a camera sees a code 30 times a second); a different code while a result is on screen waits for Scan another.
 
 Engine `lib/instore/scanner-engine.ts` (client only): `BarcodeDetector` when `window.BarcodeDetector` exists and supports `code_128`, `code_39`, `ean_13`, `ean_8`, `upc_a`, `upc_e`, `qr_code`, `itf`, `data_matrix`; otherwise `await import('@zxing/browser')` (lazy: not in the main bundle, checked by `npm run build` output and a test that no top-level import exists). Both read the same `MediaStream` from `getUserMedia({ video: { facingMode: 'environment' } })` shown in a `<video playsInline muted>`.
 
@@ -107,37 +107,37 @@ New namespace `instore.*` in both catalogues with identical keys; en-CA uses Can
 
 Common rules: test first; `npm run check` in `storefront` (and `seed` for R-02) before ticking; commit `instore: R-nn summary`; check in both modes (`APP_MODE=instore npm test` and the default).
 
-- [ ] **R-01 Plan and notes.** This file, `STATUS.md` row R, `DEPENDENCY-PLAN.md` row R, D-041 to D-049 in `DECISIONS.md`, `notes/todo-R.md`, `notes/questions-R.md`, `consolidate-notes.mjs`, `verify-plan.mjs --strict`.
-- [ ] **R-02 Seed type.** `seed/src/data/custom-types.ts` (`instore-order-type`, resourceTypeIds `order` and `cart`, enum field `orderType`), `K.typeInstoreOrder`, enum value sync in `planTypeUpdate`, seed tests.
-- [ ] **R-03 Mode switch.** `lib/app-mode.ts`, `.env.example` name, proxy redirects, `robots.ts`, `sitemap.ts`, route guards. Tests: `Mode defaults to website`, `instore is case insensitive`, `proxy redirects content paths in instore mode`, `proxy leaves website mode alone`.
-- [ ] **R-04 Camera headers.** `lib/security-headers.ts` and its test: `Permissions-Policy camera=(self) in instore mode only`, `CSP has media-src`; `next.config.ts` adds `X-Robots-Tag` in the mode.
-- [ ] **R-05 Cart custom fields.** `lib/ct/order-type.ts` and the callers of D6, `OrderView.orderType`, post-order hook. Tests: create, existing cart, rebuilt cart, clone, foreign type, missing type logs once and skips, website mode never sets it.
-- [ ] **R-06 Scan parsing and state.** `lib/instore/scan.ts`, `scan-state.ts`. Tests: normalisation table, `SKU_PATTERN`, duplicate window, every state transition.
-- [ ] **R-07 Scan lookup chain.** Type, mapper, `lib/ct/instore-scan.ts`, route, hook, key. Tests: mapper (variant attributes, price, availability), route (200, 400, 404, no store header), hook.
-- [ ] **R-08 Shell and home.** `InstoreShell`, `InstoreHeader`, badge, bag button, `InstoreHome`, layout and page branches, icons, messages. Tests: both modes render the right shell; badge present; targets at least 48 px (class check).
-- [ ] **R-09 Category and product.** `lib/instore/category.ts`, list rows, `InstoreProduct`, big stepper. Tests: row content, no editorial blocks, add flow, out-of-stock state.
-- [ ] **R-10 Scanner UI.** `ScannerProvider`, `ScanButton`, `ScanDialog`, engine with lazy zxing. Tests: every dialog state (denied, no camera, unknown, out of stock, repeat scan, manual entry, found and add), engine selection, no static zxing import.
-- [ ] **R-11 Bag and checkout.** `InstoreBag`, bag route, `CheckoutPage` `variant="instore"`, sticky bars, confirmation link. Tests: bag lines and totals, Checkout link, sticky bar, checkout in-store rendering.
-- [ ] **R-12 noindex, viewport, manifest.** Metadata and viewport in the root layout, manifest route, icon. Tests: robots meta, `viewport-fit=cover`, manifest 404 in website mode.
-- [ ] **R-13 Netlify branch deploy.** New section in `DEPLOY-NETLIFY.md`, `OWNER-HANDOFF.md` rows, `.env.example`.
-- [ ] **R-14 Browser verification and audit.** Mock server (`instore-order-type`, custom on carts), recipe 6, Lighthouse accessibility at mobile (home, category, product, bag), evidence in `plans/evidence/R/`, `STATUS.md` `Ready for review`.
+- [x] **R-01 Plan and notes.** This file, `STATUS.md` row R, `DEPENDENCY-PLAN.md` row R, D-041 to D-049 in `DECISIONS.md`, `notes/todo-R.md`, `notes/questions-R.md`, `consolidate-notes.mjs`, `verify-plan.mjs --strict`.
+- [x] **R-02 Seed type.** `seed/src/data/custom-types.ts` (`instore-order-type`, resourceTypeIds `order` and `cart`, enum field `orderType`), `K.typeInstoreOrder`, enum value sync in `planTypeUpdate`, seed tests.
+- [x] **R-03 Mode switch.** `lib/app-mode.ts`, `.env.example` name, proxy redirects, `robots.ts`, `sitemap.ts`, route guards. Tests: `Mode defaults to website`, `instore is case insensitive`, `proxy redirects content paths in instore mode`, `proxy leaves website mode alone`.
+- [x] **R-04 Camera headers.** `lib/security-headers.ts` and its test: `Permissions-Policy camera=(self) in instore mode only`, `CSP has media-src`; `next.config.ts` adds `X-Robots-Tag` in the mode.
+- [x] **R-05 Cart custom fields.** `lib/ct/order-type.ts` and the callers of D6, `OrderView.orderType`, post-order hook. Tests: create, existing cart, rebuilt cart, clone, foreign type, missing type logs once and skips, website mode never sets it.
+- [x] **R-06 Scan parsing and state.** `lib/instore/scan.ts`, `scan-state.ts`. Tests: normalisation table, `SKU_PATTERN`, duplicate window, every state transition.
+- [x] **R-07 Scan lookup chain.** Type, mapper, `lib/ct/instore-scan.ts`, route, hook, key. Tests: mapper (variant attributes, price, availability), route (200, 400, 404, no store header), hook.
+- [x] **R-08 Shell and home.** `InstoreShell`, `InstoreHeader`, badge, bag button, `InstoreHome`, layout and page branches, icons, messages. Tests: both modes render the right shell; badge present; targets at least 48 px (class check).
+- [x] **R-09 Category and product.** `lib/instore/category.ts`, list rows, `InstoreProduct`, big stepper. Tests: row content, no editorial blocks, add flow, out-of-stock state.
+- [x] **R-10 Scanner UI.** `ScannerProvider`, `ScanButton`, `ScanDialog`, engine with lazy zxing. Tests: every dialog state (denied, no camera, unknown, out of stock, repeat scan, manual entry, found and add), engine selection, no static zxing import.
+- [x] **R-11 Bag and checkout.** `InstoreBag`, bag route, `CheckoutPage` `variant="instore"`, sticky bars, confirmation link. Tests: bag lines and totals, Checkout link, sticky bar, checkout in-store rendering.
+- [x] **R-12 noindex, viewport, manifest.** Metadata and viewport in the root layout, manifest route, icon. Tests: robots meta, `viewport-fit=cover`, manifest 404 in website mode.
+- [x] **R-13 Netlify branch deploy.** New section in `DEPLOY-NETLIFY.md`, `OWNER-HANDOFF.md` rows, `.env.example`.
+- [x] **R-14 Browser verification and audit.** Mock server (`instore-order-type`, custom on carts), recipe 6, Lighthouse accessibility at mobile (home, category, product, bag), evidence in `plans/evidence/R/`, `STATUS.md` `Ready for review`.
 
 ## 5. Scenarios checklist
 
 No spec scenarios apply (no spec is owned). The behaviours below are the acceptance list; each names its test or evidence.
 
-- [ ] Default mode is the website: `app-mode.test.ts` `Mode defaults to website`.
-- [ ] In-store mode redirects content pages home: `proxy.test.ts` `proxy redirects content paths in instore mode`.
-- [ ] Scan normalises a barcode to a SKU: `scan.test.ts` `normaliseScan`.
-- [ ] Same code twice is ignored inside the window: `scan-state.test.ts` `shouldAccept`.
-- [ ] Camera permission denied offers manual entry: `ScanDialog.test.tsx` `Permission denied: manual entry is offered`.
-- [ ] No camera: `ScanDialog.test.tsx` `No camera: manual entry is offered`.
-- [ ] Unknown SKU: `ScanDialog.test.tsx` `Unknown SKU: says so and keeps scanning`.
-- [ ] Out of stock: `ScanDialog.test.tsx` `Out of stock: add is disabled with the reason`.
-- [ ] Cart carries the order type on create, existing cart, clone: `order-type.test.ts`.
-- [ ] Missing type does not break the shopper: `order-type.test.ts` `Type missing: logs once and skips the field`.
-- [ ] Camera header only in the mode: `security-headers.test.ts`.
-- [ ] Seed type is idempotent: `seed/src/instore-type.test.ts`.
+- [x] Default mode is the website: `app-mode.test.ts` `Mode defaults to website`.
+- [x] In-store mode redirects content pages home: `proxy.test.ts` `proxy redirects content paths in instore mode`.
+- [x] Scan normalises a barcode to a SKU: `scan.test.ts` `normaliseScan`.
+- [x] Same code twice is ignored inside the window: `scan-state.test.ts` `shouldAccept`.
+- [x] Camera permission denied offers manual entry: `ScanDialog.test.tsx` `Permission denied: manual entry is offered`.
+- [x] No camera: `ScanDialog.test.tsx` `No camera: manual entry is offered`.
+- [x] Unknown SKU: `ScanDialog.test.tsx` `Unknown SKU: says so and keeps scanning`.
+- [x] Out of stock: `ScanDialog.test.tsx` `Out of stock: add is disabled with the reason`.
+- [x] Cart carries the order type on create, existing cart, clone: `order-type.test.ts`.
+- [x] Missing type does not break the shopper: `order-type.test.ts` `Type missing: logs once and skips the field`.
+- [x] Camera header only in the mode: `security-headers.test.ts`.
+- [x] Seed type is idempotent: `seed/src/instore-type.test.ts`.
 
 ## 6. Browser recipe (Chrome DevTools MCP)
 

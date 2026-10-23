@@ -24,7 +24,7 @@ Updated 2026-10-21 (owner answers D-030 to D-039 applied to every plan). States:
 | O | Home page | 10 | Ready for review | O-00 to O-10 done against the mock catalogue; FIX-1 header overflow and FIX-2 URL market rule done; live read-back is OA-O-1; see plans/evidence/O/README.md |
 | P | Content and error pages | 10 | Ready for review (partial) | P-00 to P-11, P-13 to P-15 done; P-12 consent-link half blocked on K; scenario "Expired session is not a refusal" blocked on L; evidence plans/evidence/P/; owner rows SO-P1 to SO-P5, OA-P1, M-P-01, M-P-02, M-P-04, OA-P2, OA-P3 |
 | Q | Quality and release | 11 | Ready for review | Q-00 to Q-16 done against the mock (44 defects fixed, evidence in plans/evidence/Q/); open: live checks, hosted Checkout and Stripe (OA-K-a, M-Q-08, M-Q-09), VoiceOver (M-Q-02), Q-17 after the deploy; the owner's list is plans/OWNER-HANDOFF.md, the runbook plans/DEPLOY-NETLIFY.md |
-| R | In-store companion | 12 | In progress | Branch `instore` (not pushed, not deployed); `APP_MODE=instore`; owner rows OA-R-a to OA-R-d, M-R-01 to M-R-04, SO-R-a; questions Q-R-1 to Q-R-9; plan `plans/workstreams/R-instore-companion.md` |
+| R | In-store companion | 12 | Ready for review | Branch `instore` (not pushed, not deployed); `APP_MODE=instore`; owner rows OA-R-a to OA-R-d, M-R-01 to M-R-04, SO-R-a; questions Q-R-1 to Q-R-9; plan `plans/workstreams/R-instore-companion.md` |
 
 ## Environment
 

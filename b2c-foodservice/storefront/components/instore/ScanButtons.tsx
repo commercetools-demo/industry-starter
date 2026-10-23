@@ -62,7 +62,7 @@ export function ScanHeroButton({ className }: { className?: string }) {
       </span>
       <span className="flex min-w-0 flex-col">
         <span className="font-display text-[19px] font-bold leading-tight">{t('scan')}</span>
-        <span className="text-[14px] leading-snug text-surface/90">{t('scanHint')}</span>
+        <span className="text-[14px] leading-snug text-surface">{t('scanHint')}</span>
       </span>
     </button>
   );

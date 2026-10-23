@@ -112,7 +112,7 @@ export default function InstoreBag({ initialCart }: { initialCart?: Cart | null 
               <div className="flex gap-3">
                 <LineImage {...(line.imageUrl ? { url: line.imageUrl } : {})} alt="" width={80} height={96} />
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                  <Link href={`/p/${encodeURIComponent(line.slug)}/${encodeURIComponent(line.sku)}`} className="font-display text-[17px] font-bold leading-tight text-ink no-underline">
+                  <Link href={`/p/${encodeURIComponent(line.slug)}/${encodeURIComponent(line.sku)}`} className="-my-1 flex min-h-12 items-center font-display text-[17px] font-bold leading-tight text-ink no-underline">
                     {line.name}
                   </Link>
                   {line.variantSummary ? <p className="m-0 text-[14px] text-ink-2">{line.variantSummary}</p> : null}

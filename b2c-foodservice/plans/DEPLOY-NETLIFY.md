@@ -128,3 +128,17 @@ If a build fails on Netlify's secret scan (a value found in the output), check f
 | Contact form says "not sent" | `CONTACT_WEBHOOK_URL` empty or the receiver refuses (OA-P1) | check the receiver; the message is kept in the form |
 | Review form says "service unavailable" | the second client is not set (OA-M-a) | set `CTP_REVIEWS_CLIENT_ID` and `CTP_REVIEWS_CLIENT_SECRET` |
 | `/api/health` answers 200 | the dev routes were not removed | section 3; the gate would have failed |
+
+## 10. The In-store companion as a branch deploy (workstream R)
+
+The same code serves a second experience, a phone companion for a shopper standing in a store, when the server variable `APP_MODE` is `instore` (D-041). Netlify builds the branch `instore` as a *branch deploy* with its own URL, so the production site is untouched. Nothing here is deployed or pushed by the workstream; the steps are yours (rows OA-R-a to OA-R-d in `plans/notes/todo-R.md`, listed in `plans/TODO-MANUAL-TESTING.md`).
+
+1. **Branch.** The repository has the local branch `instore`. Push it yourself when you want it built.
+2. **Enable the branch deploy.** Site configuration, Build and deploy, Branches and deploy contexts, Branch deploys: choose "Let me add individual branches" and add `instore`.
+3. **Variables scoped to the branch.** Site configuration, Environment variables. Add `APP_MODE` = `instore`, scopes **Builds and Functions**, with "Different value for each deploy context" and the value only for the branch `instore` (production stays empty, which is the normal website). For the same branch set `NEXT_PUBLIC_SITE_URL` to `https://instore--<sitename>.netlify.app` (or your own domain for it). Every other variable of section 5 is inherited.
+4. **The URL.** A branch deploy answers at `https://instore--<sitename>.netlify.app` (`<sitename>` is the Netlify site name, two hyphens after the branch name). Print a QR code of it for the store (OA-R-d).
+5. **Build settings do not change.** `netlify.toml` keeps `base = "b2c-foodservice/storefront"` (relative to the repository root). The branch is built with the same command; `APP_MODE` is read at build time and at run time.
+6. **commercetools.** The order type (`instore-order-type`, field `orderType`) is created by `cd seed && npm run seed -- --only types` (OA-R-a). The storefront client needs the scope `view_types:<project>` (it reads the type once per five minutes); without the scope or the type the shop still works and logs `instore_order_type_missing` once.
+7. **HTTPS.** The camera works only on HTTPS (or localhost); Netlify serves HTTPS. The response header `Permissions-Policy` carries `camera=(self)` in this mode only and `camera=()` on the website.
+8. **Not indexed.** Every response has `X-Robots-Tag: noindex, nofollow`, the pages have a robots meta tag, `robots.txt` disallows all and the sitemap is empty.
+9. **Check.** `/en-US` shows the "In-store" badge and a camera button; `/en-US/cart` redirects to `/en-US/bag`; on the production URL `/en-US/bag` answers 404.
