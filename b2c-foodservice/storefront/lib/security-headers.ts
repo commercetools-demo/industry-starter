@@ -7,6 +7,8 @@
  *   the second line, not the first.
  * - The hosted Checkout (D-039) runs on the commercetools host; the exact origins are confirmed on the first live run (M-Q-08).
  *   Set `CSP_REPORT_ONLY=true` on the host to switch the policy to report-only without a code change.
+ * - `style-src` and `font-src` also allow the commercetools host: the hosted Checkout loads its own stylesheet and fonts from there, and
+ *   blocking them leaves the widget unstyled.
  * - Images come from the owner's image host, any https origin (`next.config.ts` remotePatterns).
  */
 export interface HeaderPair { key: string; value: string }
@@ -18,9 +20,9 @@ export function contentSecurityPolicy(dev: boolean): string {
   const directives: Record<string, string[]> = {
     'default-src': ["'self'"],
     'script-src': ["'self'", "'unsafe-inline'", ...(dev ? ["'unsafe-eval'"] : []), CT_ORIGINS],
-    'style-src': ["'self'", "'unsafe-inline'"],
+    'style-src': ["'self'", "'unsafe-inline'", CT_ORIGINS],
     'img-src': ["'self'", 'data:', 'blob:', 'https:'],
-    'font-src': ["'self'", 'data:'],
+    'font-src': ["'self'", 'data:', CT_ORIGINS],
     'connect-src': ["'self'", CT_ORIGINS, ...(dev ? ['ws:', 'wss:'] : [])],
     'frame-src': [CT_ORIGINS],
     'frame-ancestors': ["'none'"],

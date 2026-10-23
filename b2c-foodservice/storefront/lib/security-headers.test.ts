@@ -29,4 +29,10 @@ describe('security headers', () => {
     expect(prod?.value).toBe('max-age=31536000');
     expect(securityHeaders({ dev: true }).map((h) => h.key)).not.toContain('Strict-Transport-Security');
   });
+
+  it('lets the hosted Checkout load its stylesheet and fonts', () => {
+    const csp = contentSecurityPolicy(false);
+    expect(csp).toMatch(/style-src [^;]*https:\/\/\*\.commercetools\.com/);
+    expect(csp).toMatch(/font-src [^;]*https:\/\/\*\.commercetools\.com/);
+  });
 });
