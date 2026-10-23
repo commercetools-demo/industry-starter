@@ -111,7 +111,7 @@ MALVA B2B2C automotive: a reseller storefront for drivers and workshops, and a p
 
 ## b2c-foodservice
 
-MALVA Coffee storefront: a B2C coffee retailer selling pods, beans, machines and accessories in the US and Canada, with store collection, delivery and subscriptions in one bag. App: `b2c-foodservice/storefront`. Seed: `b2c-foodservice/seed`. Plans: `b2c-foodservice/plans/`. Specs: `b2c-foodservice/openspec/specs/`. Docs: `b2c-foodservice/docs/` (demo script and how it works). Live: <https://omni-industry-starter.netlify.app/en-US>.
+MALVA Coffee storefront: a B2C coffee retailer selling pods, beans, machines and accessories in the US and Canada, with store collection, delivery and subscriptions in one bag. App: `b2c-foodservice/storefront`. Seed: `b2c-foodservice/seed`. Plans: `b2c-foodservice/plans/`. Specs: `b2c-foodservice/openspec/specs/`. Docs: `docs/` (demo script and how it works). Live: <https://omni-industry-starter.netlify.app/en-US>.
 
 **State:** workstreams A to Q are "Ready for review" in `plans/STATUS.md` (2026-10-21); live Checkout, Stripe and recurring-order checks are listed as open owner actions in `plans/OWNER-HANDOFF.md`. The site is deployed on Netlify and reads a seeded commercetools project.
 

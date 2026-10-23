@@ -15,3 +15,6 @@ design-systems/**/*.fig
 
 # Local tooling lockfiles
 .commercetools/
+
+# Local Drive manifest for demo docs (ids stay off the repo)
+docs/.drive-docs
