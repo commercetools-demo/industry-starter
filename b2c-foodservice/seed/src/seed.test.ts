@@ -112,4 +112,19 @@ describe('Idempotent seed in dependency order', () => {
     expect(await runSeed(opts(api)).then((x) => x.changes)).toBe(0);
     expect(await verifySeed(api)).toEqual([]);
   });
+
+  it('adopts an existing zone that holds the same country under another key (or none) instead of failing', async () => {
+    for (const existingKey of [undefined, 'sample-zone-us']) {
+      const api = new FakeApi();
+      const sample = await api.create('zones', { ...(existingKey ? { key: existingKey } : {}), name: 'Sample US', locations: [{ country: 'US' }] });
+      const lines: string[] = [];
+      const r = await runSeed({ ...opts(api), run: new Runner(false, (l) => lines.push(l)) }, 'tax,shipping');
+      expect(r.skipped).toEqual([]);
+      expect(lines.join('\n')).toContain('the same entity already exists');
+      expect((await api.getByKey('zones', 'mcf-zone-us'))?.id).toBe(sample.id);
+      expect(api.all('zones')).toHaveLength(2);
+      // a second run changes nothing
+      expect(await runSeed(opts(api), 'tax,shipping').then((x) => x.changes)).toBe(0);
+    }
+  });
 });

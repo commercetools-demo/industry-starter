@@ -68,18 +68,61 @@ export class Ctx {
   keyOf: S.KeyOf = (typeId, id) => this.idKeys.get(typeId)?.get(id);
 }
 
-/** Creates a resource when it is missing, otherwise applies `plan(existing)` actions. Returns the resource (undefined in a dry run that creates). */
+const asArray = (x: unknown): Obj[] => (Array.isArray(x) ? (x as Obj[]) : []);
+
+/** True when the error is commercetools' "DuplicateField" (HTTP 400), also as the FakeApi throws it. */
+export function isDuplicateField(e: unknown): boolean {
+  const x = e as { message?: string; body?: { errors?: { code?: string }[] } };
+  return x?.body?.errors?.some((er) => er.code === 'DuplicateField') === true || /DuplicateField|duplicate value/i.test(x?.message ?? '');
+}
+
+/**
+ * The resource that blocks a create through a unique field other than the key (zone location, customer email, discount
+ * code, category or product slug). The seed adopts it instead of failing.
+ */
+async function findConflict(ctx: Ctx, kind: Kind, draft: Obj): Promise<Res | undefined> {
+  const all = await ctx.api.list(kind);
+  if (kind === 'zones') {
+    const wanted = new Set(asArray(draft.locations).map((l) => `${l.country}/${l.state ?? ''}`));
+    return all.find((z) => asArray(z.locations).some((l) => wanted.has(`${l.country}/${l.state ?? ''}`)));
+  }
+  if (kind === 'customers') return all.find((c) => String(c.email ?? '').toLowerCase() === String(draft.email ?? '').toLowerCase());
+  if (kind === 'discount-codes') return all.find((c) => c.code === draft.code);
+  if (kind === 'categories' || kind === 'products') {
+    const mine = Object.values((draft.slug ?? {}) as Record<string, string>);
+    return all.find((r) => {
+      const slug = (kind === 'products' ? (r.masterData as Obj | undefined)?.staged as Obj | undefined : r)?.slug as Record<string, string> | undefined;
+      return Object.values(slug ?? {}).some((v) => mine.includes(v));
+    });
+  }
+  return undefined;
+}
+
+/**
+ * Creates a resource when it is missing, otherwise applies `plan(existing)` actions. Returns the resource (undefined in a dry run that creates).
+ * When the create is refused as a duplicate of another unique field (a sample zone with the same country, a customer with the
+ * same email, a slug already in use), the existing resource is adopted: it gets the seed's key and the run continues with it.
+ */
 export async function upsert(ctx: Ctx, kind: Kind, label: string, draft: Obj, plan?: (existing: Res) => S.Action[]): Promise<Res | undefined> {
   const key = draft.key as string;
-  const existing = await ctx.api.getByKey(kind, key);
+  let existing = await ctx.api.getByKey(kind, key);
   if (!existing) {
-    const created = await ctx.run.act(`create ${label}`, () => ctx.api.create(kind, draft));
-    await ctx.pause();
-    return created;
+    try {
+      const created = await ctx.run.act(`create ${label}`, () => ctx.api.create(kind, draft));
+      await ctx.pause();
+      return created;
+    } catch (e) {
+      if (!isDuplicateField(e)) throw e;
+      const conflict = await findConflict(ctx, kind, draft);
+      if (!conflict) throw e;
+      ctx.run.note(`${label}: the same entity already exists${conflict.key ? ` with key ${conflict.key}` : ' without a key'}, continuing with it`);
+      existing = conflict.key === key ? conflict : ((await ctx.api.update(kind, conflict, [{ action: 'setKey', key }])) ?? conflict);
+      await ctx.pause();
+    }
   }
   const actions = plan ? plan(existing) : [];
   if (actions.length === 0) return existing;
-  const updated = await ctx.run.act(`update ${label} (${[...new Set(actions.map((a) => String(a.action)))].join(', ')})`, () => ctx.api.update(kind, existing, actions));
+  const updated = await ctx.run.act(`update ${label} (${[...new Set(actions.map((a) => String(a.action)))].join(', ')})`, () => ctx.api.update(kind, existing as Res, actions));
   await ctx.pause();
   return updated ?? existing;
 }

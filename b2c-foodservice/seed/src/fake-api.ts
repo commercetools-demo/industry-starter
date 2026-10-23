@@ -110,6 +110,10 @@ export class FakeApi implements Api {
     if (key && this.all(kind).some((r) => r.key === key)) throw new ApiError(400, `DuplicateField: key ${key} already exists in ${kind}`);
     const unique = body.uniquenessValue as string | undefined;
     if (kind === 'reviews' && unique && this.all(kind).some((r) => r.uniquenessValue === unique)) throw new ApiError(400, `DuplicateField: uniquenessValue ${unique} already exists in reviews`);
+    if (kind === 'zones') {
+      const mine = ((body.locations as Obj[] | undefined) ?? []).map((l) => `${l.country}/${l.state ?? ''}`);
+      for (const z of this.all('zones')) for (const l of ((z.locations as Obj[] | undefined) ?? [])) if (mine.includes(`${l.country}/${l.state ?? ''}`)) throw new ApiError(400, `DuplicateField: a duplicate value '{"country":"${String(l.country)}"}' exists for field 'location'`);
+    }
     const resolved = this.resolve(clone(body));
     const id = `${kind}-${(this.n += 1)}`;
     let stored: Res = { ...resolved, id, version: 1 } as Res;
@@ -194,6 +198,7 @@ export class FakeApi implements Api {
 
   private apply(kind: Kind, r: Res, a: Obj): void {
     const act = a.action as string;
+    if (act === 'setKey') { r.key = a.key as string; return; }
     const set = (field: string, value: unknown) => { r[field] = value; };
     const md = r.masterData as { published: boolean; hasStagedChanges: boolean; current: Obj; staged: Obj } | undefined;
     switch (`${kind}:${act}`) {
