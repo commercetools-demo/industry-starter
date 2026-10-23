@@ -8,7 +8,7 @@ import { priceDraftsOf } from './prices';
 import { PRODUCTS, type ImageTag, type ProductDef, type VariantDef } from './products';
 
 /** A recorded image (written by `npm run seed:images` into src/data/images.json). The URL is clean: no query, no fragment. */
-export interface RecordedImage { url: string; width: number; height: number; description: string }
+export interface RecordedImage { url: string; width: number; height: number; description: string; tag?: ImageTag }
 export interface ImageRef { url: string; dimensions: { w: number; h: number } }
 export type ImageMap = Record<string, ImageRef[]>;
 
@@ -40,7 +40,7 @@ export function assignImages(recorded: RecordedImage[], items: { key: string; ta
   if (recorded.length === 0) return out;
   const counters = new Map<ImageTag, number>();
   for (const item of items) {
-    const tagged = recorded.filter((r) => tagOfDescription(r.description) === item.tag);
+    const tagged = recorded.filter((r) => (r.tag ?? tagOfDescription(r.description)) === item.tag);
     const pool = tagged.length > 0 ? tagged : recorded;
     const n = counters.get(item.tag) ?? 0;
     counters.set(item.tag, n + 1);

@@ -3,12 +3,16 @@
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 import type { RecordedImage } from './data/catalog';
+import type { ImageTag } from './data/products';
 import { DATA_DIR, assertSafeProject, fail, isMainModule, loadDotenvFiles, parseArgs } from './lib';
 
 /**
  * Records free stock photos for products and categories. No browser, no cookie, no block bypass.
  *
- * Request: `GET ${IMAGE_SOURCE_URL}` (the owner provides the URL, OA-03). Response shape (`sample-data/image.json`,
+ * Request: `IMAGE_SOURCE_URL` is a search URL template, `https://my-app-domain.com/search/{query}.json?query={query}`
+ * (the owner provides it, OA-03). Every `{query}` is replaced by the URL-encoded search term of a tag (SEARCH_QUERIES:
+ * coffee, capsule, machine, cup), one GET per tag, in order. A URL without `{query}` is fetched once as it is.
+ * Photos recorded from a tag's search carry that tag; duplicates across searches are dropped. Response shape (`sample-data/image.json`,
  * `src/fixtures/image-source.json` is a complete invented fixture of it):
  *   { pageProps: { initialData: { data: [ { attributes: { width, height, description,
  *       image: { small, medium, large, download, download_link } } } ] } } }
@@ -34,6 +38,15 @@ export class ImageSourceBlockedError extends Error {
     this.name = 'ImageSourceBlockedError';
   }
 }
+
+/** The search term sent for each photo tag (SEED-PLAN section 15). */
+export const SEARCH_QUERIES: Record<ImageTag, string> = {
+  coffee: 'coffee beans', capsule: 'coffee capsules', machine: 'espresso machine', cup: 'coffee cup',
+};
+
+/** Replaces every `{query}` in the template with the URL-encoded term. */
+export const buildSearchUrl = (template: string, term: string): string => template.split('{query}').join(encodeURIComponent(term));
+export const isTemplate = (url: string): boolean => url.includes('{query}');
 
 export const FALLBACK_SIZE = { width: 1280, height: 853 };
 
@@ -101,12 +114,23 @@ export interface RunOptions { url?: string; dryRun: boolean; fetcher?: FetchLike
 export async function runImages(o: RunOptions): Promise<{ recorded: number; written: boolean }> {
   const log = o.log ?? console.log;
   if (!o.url) throw new Error('IMAGE_SOURCE_URL is not set. The owner provides it later, see OA-03 in plans/TODO-MANUAL-TESTING.md.');
+  const searches: { tag?: ImageTag; url: string }[] = isTemplate(o.url)
+    ? (Object.entries(SEARCH_QUERIES) as [ImageTag, string][]).map(([tag, term]) => ({ tag, url: buildSearchUrl(o.url as string, term) }))
+    : [{ url: o.url }];
   if (o.dryRun) {
-    log(`would GET ${o.url} -> src/data/images.json`);
+    for (const s of searches) log(`would GET ${s.url} -> src/data/images.json`);
     log('dry run: no network, nothing written');
     return { recorded: 0, written: false };
   }
-  const images = await fetchImages(o.url, o.fetcher);
+  const images: RecordedImage[] = [];
+  const seen = new Set<string>();
+  for (const s of searches) {
+    for (const image of await fetchImages(s.url, o.fetcher)) {
+      if (seen.has(image.url)) continue;
+      seen.add(image.url);
+      images.push(s.tag ? { ...image, tag: s.tag } : image);
+    }
+  }
   writeFileSync(path.join(o.dir ?? DATA_DIR, 'images.json'), `${JSON.stringify(images, null, 2)}\n`);
   for (const i of images) log(`recorded ${i.url} (${i.width}x${i.height})`);
   return { recorded: images.length, written: true };

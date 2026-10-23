@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { assignImages, loadRecordedImages, productImagesFor, tagOfDescription, type RecordedImage } from './data/catalog';
 import { PRODUCTS } from './data/products';
 import { FakeApi } from './fake-api';
-import { ImageSourceBlockedError, OA03_MESSAGE, cleanUrl, extractImages, fetchImages, runImages } from './images';
+import { ImageSourceBlockedError, OA03_MESSAGE, SEARCH_QUERIES, buildSearchUrl, cleanUrl, extractImages, fetchImages, runImages } from './images';
 import { Runner, isCleanUrl } from './lib';
 import { runSeed } from './seed';
 import { verifySeed } from './verify';
@@ -111,5 +111,22 @@ describe('Images', () => {
     expect(assignImages([], [{ key: 'p', tag: 'coffee' }])).toEqual({});
     const all = productImagesFor(extractImages(fixture));
     expect(Object.keys(all)).toHaveLength(PRODUCTS.length);
+  });
+
+  it('fills every {query} of the template, one GET per tag, and keeps the tag of the search', async () => {
+    const template = 'https://my-app-domain.com/search/{query}.json?query={query}';
+    expect(buildSearchUrl(template, 'coffee capsules')).toBe('https://my-app-domain.com/search/coffee%20capsules.json?query=coffee%20capsules');
+    const asked: string[] = [];
+    const dir = tmp();
+    const r = await runImages({ url: template, dryRun: false, dir, log: quiet, fetcher: async (u) => { asked.push(u); return { status: 200, ok: true, text: async () => JSON.stringify(fixture) }; } });
+    expect(asked).toEqual(Object.values(SEARCH_QUERIES).map((t) => buildSearchUrl(template, t)));
+    expect(r.recorded).toBe(12); // the same photos in every answer are recorded once, under the first tag
+    expect(loadRecordedImages(dir).every((i) => i.tag === 'coffee')).toBe(true);
+    // a recorded tag wins over the description
+    const map = assignImages([{ url: 'https://h/a.jpeg', width: 1, height: 1, description: 'nothing', tag: 'cup' }, { url: 'https://h/b.jpeg', width: 1, height: 1, description: 'mug' }], [{ key: 'p', tag: 'cup' }]);
+    expect(map.p?.[0]?.url).toBe('https://h/a.jpeg');
+    const lines: string[] = [];
+    await runImages({ url: template, dryRun: true, log: (l) => lines.push(l) });
+    expect(lines.filter((l) => l.startsWith('would GET'))).toHaveLength(4);
   });
 });
