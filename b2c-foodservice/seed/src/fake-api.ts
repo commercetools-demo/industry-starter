@@ -259,6 +259,11 @@ export class FakeApi implements Api {
         if (zr) zr.shippingRates = zr.shippingRates.filter((s) => s.price.currencyCode !== ((a.shippingRate as { price: { currencyCode: string } }).price.currencyCode));
         return;
       }
+      case 'types:addEnumValue': {
+        set('fieldDefinitions', ((r.fieldDefinitions as Obj[]) ?? []).map((f) => (f.name === a.fieldName
+          ? { ...f, type: { ...(f.type as Obj), values: [...(((f.type as Obj).values as unknown[]) ?? []), a.value] } } : f)));
+        return;
+      }
       case 'types:addFieldDefinition': set('fieldDefinitions', [...((r.fieldDefinitions as unknown[]) ?? []), a.fieldDefinition]); return;
       case 'product-types:addAttributeDefinition': set('attributes', [...((r.attributes as unknown[]) ?? []), a.attribute]); return;
       default: throw new Error(`FakeApi: unsupported action ${kind}:${act}`);
