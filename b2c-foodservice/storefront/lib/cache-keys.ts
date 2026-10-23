@@ -25,6 +25,8 @@ export const keyChannels = (country: string) => ['channels', country] as const;
 export const keyAvailability = (sku: string, country: string, storeKey: string | null) =>
   ['availability', sku, country, storeKey ?? 'online'] as const;
 export const KEY_RECURRENCE_POLICIES = 'recurrence-policies';
+/** Workstream R: the product a scanned SKU leads to. Market-scoped (price and stock), public data: no customer id. */
+export const keyScanLookup = (sku: string, country: string) => ['instore-scan', sku, country] as const;
 
 /** First element of every user-scoped SWR key (string keys and array keys). Sign-out evicts all of them (workstream J). */
 export const USER_SCOPED_KEYS: readonly string[] = [

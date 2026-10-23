@@ -11,7 +11,6 @@ export const SKU_PATTERN = /^[A-Za-z0-9._-]{1,64}$/;
 export type ScanParse = { ok: true; sku: string } | { ok: false; reason: 'empty' | 'invalid' };
 
 // Control characters (scanner guns and some decoders add CR, LF, TAB or GS) and the zero-width marks some QR generators add.
-// eslint-disable-next-line no-control-regex
 const NOISE = /[\u0000-\u001f\u007f​-‍﻿]/g;
 /** AIM symbology identifier: `]` + one letter + one modifier, for example `]C1` (Code 128) or `]E0` (EAN-13). */
 const AIM_PREFIX = /^\][A-Za-z][0-9A-Za-z]/;

@@ -442,3 +442,26 @@ export type SubscriptionAction =
   | { action: 'setInterval'; recurrencePolicyId: string };
 
 export interface SubscriptionsResponse { subscriptions: Subscription[]; pending: PendingSubscription[] }
+
+// Workstream R: In-store companion. What the scanner dialog shows for one scanned SKU (lib/mappers/scan-product.ts).
+export interface ScanProduct {
+  sku: string;
+  productId: string;
+  slug: string;
+  name: string;
+  /** Clean image URL of the variant (no sizing); null when the variant has none. */
+  imageUrl: string | null;
+  /** One line of variant attributes, for example "Intensity 8 · 10 capsules"; empty when the product has none. */
+  variant: string;
+  /** null: no price in this market (the add button is disabled). */
+  price: { amount: Money; old?: Money } | null;
+  /** Online (warehouse) stock, the figure the bag checks (D-044). `quantity` is a count, not shown above the low-stock threshold. */
+  availability: { state: AvailabilityState; quantity: number };
+  /** The stock read failed: never claim stock. */
+  inventoryFailed: boolean;
+  /** Smallest and largest quantity the stepper offers (inventory cart limits and stock). */
+  minQuantity: number;
+  maxQuantity: number;
+  /** Path of the product page without the locale: `/p/<slug>/<sku>`. */
+  href: string;
+}

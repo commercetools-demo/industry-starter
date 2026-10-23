@@ -44,6 +44,7 @@ const TABLE: Record<string, 'customer' | 'session' | 'public' | 'owner-or-guest'
   'faq-feedback': 'public',
   gate: 'public',
   health: 'dev',
+  'instore/scan': 'session',
   newsletter: 'public',
   orders: 'customer',
   'orders/[id]': 'owner-or-guest',
