@@ -11,7 +11,7 @@ The deploy itself is done with the command `/commercetools:nextjs-deploy-netlify
 
 | Item | Value | Where |
 | --- | --- | --- |
-| Netlify configuration | base directory `storefront`, build command `npm run build`, publish `.next`, `NODE_VERSION = "22"` | `netlify.toml` (repository root of the project) |
+| Netlify configuration | base directory `b2c-foodservice/storefront` (relative to the repository root), build command `npm run build`, publish `.next`, `NODE_VERSION = "22"` | `netlify.toml` (repository root of the project) |
 | Node version file | `22` | `storefront/.nvmrc` |
 | Other hosts | none: no `vercel.json` (a test fails if one appears) | `storefront/scripts/release-config.test.ts` |
 | Security headers, CSP, HSTS | set by the app for every route | `storefront/next.config.ts`, `storefront/lib/security-headers.ts` |

@@ -1,5 +1,6 @@
 [build]
-  base    = "storefront"
+  # Relative to the repository root, not to this file (the repository holds more than this project).
+  base    = "b2c-foodservice/storefront"
   command = "npm run build"
   publish = ".next"
 
