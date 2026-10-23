@@ -13,7 +13,7 @@ export interface HostedStart {
   locale: string;
   /** Number and currency formatting locale (the page locale). */
   currencyLocale: string;
-  styles: Record<string, string>;
+  styles?: Record<string, string>;
   onInfo: (code: string) => void;
   onError: (code: string) => void;
 }

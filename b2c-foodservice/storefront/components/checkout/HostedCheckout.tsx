@@ -50,7 +50,7 @@ export default function HostedCheckout({
       sessionId: session.sessionId,
       locale: sdkLocale(locale),
       currencyLocale: locale,
-      styles: readCheckoutTheme(),
+      // styles: readCheckoutTheme(),
       onInfo: (code) => {
         if (code === 'checkout_completed' && !done.current) {
           done.current = true;
