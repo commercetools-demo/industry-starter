@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Malva In-store">
+  <rect width="512" height="512" rx="112" fill="#191741"/>
+  <g fill="#FBF9F5">
+    <rect x="120" y="150" width="22" height="212" rx="4"/>
+    <rect x="158" y="150" width="12" height="212" rx="4"/>
+    <rect x="186" y="150" width="30" height="212" rx="4"/>
+    <rect x="232" y="150" width="12" height="212" rx="4"/>
+    <rect x="260" y="150" width="22" height="212" rx="4"/>
+    <rect x="298" y="150" width="12" height="212" rx="4"/>
+    <rect x="326" y="150" width="30" height="212" rx="4"/>
+    <rect x="372" y="150" width="20" height="212" rx="4"/>
+  </g>
+  <rect x="96" y="236" width="320" height="10" rx="5" fill="#6359FF"/>
+</svg>
