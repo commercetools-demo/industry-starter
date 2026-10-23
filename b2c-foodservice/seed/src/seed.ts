@@ -113,6 +113,13 @@ export async function upsert(ctx: Ctx, kind: Kind, label: string, draft: Obj, pl
       return created;
     } catch (e) {
       if (!isDuplicateField(e)) throw e;
+      if (draft.isDefault === true && /isDefault/.test((e as Error).message ?? '')) {
+        // The project already has a default shipping method: leave it alone and create ours as a non-default one.
+        ctx.run.note(`${label}: the project already has a default, creating it with isDefault false`);
+        const created = await ctx.run.act(`create ${label} (isDefault false)`, () => ctx.api.create(kind, { ...draft, isDefault: false }));
+        await ctx.pause();
+        return created;
+      }
       const conflict = await findConflict(ctx, kind, draft);
       if (!conflict) throw e;
       ctx.run.note(`${label}: the same entity already exists${conflict.key ? ` with key ${conflict.key}` : ' without a key'}, continuing with it`);

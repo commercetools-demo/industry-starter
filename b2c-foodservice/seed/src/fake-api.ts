@@ -110,6 +110,7 @@ export class FakeApi implements Api {
     if (key && this.all(kind).some((r) => r.key === key)) throw new ApiError(400, `DuplicateField: key ${key} already exists in ${kind}`);
     const unique = body.uniquenessValue as string | undefined;
     if (kind === 'reviews' && unique && this.all(kind).some((r) => r.uniquenessValue === unique)) throw new ApiError(400, `DuplicateField: uniquenessValue ${unique} already exists in reviews`);
+    if (kind === 'shipping-methods' && body.isDefault === true && this.all(kind).some((r) => r.isDefault === true)) throw new ApiError(400, "DuplicateField: A duplicate value 'true' exists for field 'isDefault'.");
     if (kind === 'zones') {
       const mine = ((body.locations as Obj[] | undefined) ?? []).map((l) => `${l.country}/${l.state ?? ''}`);
       for (const z of this.all('zones')) for (const l of ((z.locations as Obj[] | undefined) ?? [])) if (mine.includes(`${l.country}/${l.state ?? ''}`)) throw new ApiError(400, `DuplicateField: a duplicate value '{"country":"${String(l.country)}"}' exists for field 'location'`);

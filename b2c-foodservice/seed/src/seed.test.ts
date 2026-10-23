@@ -127,4 +127,14 @@ describe('Idempotent seed in dependency order', () => {
       expect(await runSeed(opts(api), 'tax,shipping').then((x) => x.changes)).toBe(0);
     }
   });
+
+  it('creates the standard shipping method as a non-default one when the project already has a default', async () => {
+    const api = new FakeApi();
+    await api.create('shipping-methods', { key: 'sample-default', name: 'Sample', isDefault: true });
+    const r = await runSeed(opts(api), 'tax,shipping');
+    expect(r.skipped).toEqual([]);
+    expect((await api.getByKey('shipping-methods', 'mcf-ship-standard'))?.isDefault).toBe(false);
+    expect((await api.getByKey('shipping-methods', 'sample-default'))?.isDefault).toBe(true);
+    expect(await runSeed(opts(api), 'tax,shipping').then((x) => x.changes)).toBe(0);
+  });
 });
