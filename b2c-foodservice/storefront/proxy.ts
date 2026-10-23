@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { instoreRedirect, isInstore } from '@/lib/app-mode';
 import { reconcileMarket } from '@/lib/session-reconcile';
 import { COUNTRY_CONFIG, DEFAULT_LOCALE, LOCALE_COOKIE } from '@/lib/utils';
 
@@ -38,6 +39,17 @@ export async function proxy(request: NextRequest) {
   const [, first = '', ...rest] = pathname.split('/');
 
   if (LOCALES.includes(first)) {
+    // In-store companion (workstream R, D-048): content, account, journal, search and shop paths go to the companion's home;
+    // `/category/x` and `/cart` go to their in-store pages. Decided before any session work.
+    if (isInstore()) {
+      const to = instoreRedirect(rest.length ? `/${rest.join('/')}` : '');
+      if (to !== null) {
+        const url = request.nextUrl.clone();
+        url.pathname = to === '/' ? `/${first}` : `/${first}${to}`;
+        if (to === '/') url.search = '';
+        return NextResponse.redirect(url, 307);
+      }
+    }
     // The URL locale is the source of truth for the market: a session or market cookie in another market is rewritten
     // here, on the request too so the page renders in the URL market (FIX-2, Q-F-15).
     const reconciled = await reconcileMarket(

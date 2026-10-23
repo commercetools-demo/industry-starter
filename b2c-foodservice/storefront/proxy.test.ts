@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { proxy } from './proxy';
 
 function req(path: string, cookie?: string): NextRequest {
@@ -10,6 +10,10 @@ function target(res: Response): string | null {
   const loc = res.headers.get('location');
   return loc ? loc.replace('http://localhost', '') : null;
 }
+
+// The default mode is the website; the in-store mode has its own file (proxy.instore.test.ts).
+beforeEach(() => vi.stubEnv('APP_MODE', 'website'));
+afterEach(() => vi.unstubAllEnvs());
 
 describe('Unknown locale', () => {
   it('Unknown locale redirects to the default locale, never nested', async () => {

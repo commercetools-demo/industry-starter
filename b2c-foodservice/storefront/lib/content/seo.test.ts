@@ -9,6 +9,7 @@ describe('SEO', () => {
   // The origin comes from the environment; a shell with a site URL set (a developer's, a host's build) must not change the result.
   beforeEach(() => {
     for (const name of ['NEXT_PUBLIC_SITE_URL', 'URL', 'DEPLOY_PRIME_URL']) vi.stubEnv(name, '');
+    vi.stubEnv('APP_MODE', 'website'); // these are the website's rules; the in-store mode is in app/robots.instore.test.ts
   });
   afterEach(() => vi.unstubAllEnvs());
 

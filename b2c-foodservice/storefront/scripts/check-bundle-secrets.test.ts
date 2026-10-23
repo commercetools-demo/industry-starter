@@ -68,7 +68,7 @@ describe('Secret list', () => {
     // Names that are settings, keys of public things or URLs of the project, not secrets.
     const notSecret = new Set([
       'CTP_PROJECT_KEY', 'EXPECTED_PROJECT_KEY', 'CTP_AUTH_URL', 'CTP_API_URL', 'CTP_SCOPES', 'CTP_REVIEWS_SCOPES', 'DEMO_LOGIN_ENABLED',
-      'NEXT_PUBLIC_SITE_URL', 'CTP_CHECKOUT_APP_KEY', 'CTP_SESSION_URL', 'CSP_REPORT_ONLY',
+      'NEXT_PUBLIC_SITE_URL', 'CTP_CHECKOUT_APP_KEY', 'CTP_SESSION_URL', 'CSP_REPORT_ONLY', 'APP_MODE',
     ]);
     const missing = names.filter((n) => !notSecret.has(n) && !SECRET_NAMES.includes(n));
     expect(missing).toEqual([]);

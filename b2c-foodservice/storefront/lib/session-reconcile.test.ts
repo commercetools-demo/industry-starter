@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { NextRequest } from 'next/server';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { proxy } from '@/proxy';
 import { reconcileMarket } from '@/lib/session-reconcile';
 import { createSessionToken, verifySessionToken } from '@/lib/session';
@@ -13,7 +13,9 @@ const CA = { country: 'CA', currency: 'CAD', locale: 'en-CA' };
 
 beforeEach(() => {
   process.env.SESSION_SECRET = 'a'.repeat(40);
+  vi.stubEnv('APP_MODE', 'website'); // the proxy's website behaviour; in-store redirects are in proxy.instore.test.ts
 });
+afterEach(() => vi.unstubAllEnvs());
 
 describe('URL market is the source of truth (FIX-2)', () => {
   it('a Canadian session on /en-US is moved to the US market and drops the cart and the store', async () => {
