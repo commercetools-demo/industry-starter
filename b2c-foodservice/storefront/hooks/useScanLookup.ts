@@ -12,13 +12,14 @@ export type ScanLookupStatus = 'idle' | 'loading' | 'found' | 'unknown' | 'faile
  * error: it is "the shop does not sell this code" (`unknown`); any other failure is `failed` (the dialog offers Try again).
  * Stock changes while a shopper walks around, so the answer is not kept past a few seconds and a repeated scan asks again.
  */
-export function useScanLookup(sku: string | null, country: string) {
-  const { data, error, isLoading, mutate } = useSWR<{ product: ScanProduct }>(
-    sku ? keyScanLookup(sku, country) : null,
+export function useScanLookup(sku: string | null, country: string, attempt = 0) {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<{ product: ScanProduct }>(
+    sku ? [...keyScanLookup(sku, country), attempt] : null,
     () => jsonFetcher<{ product: ScanProduct }>(`/api/instore/scan?sku=${encodeURIComponent(sku as string)}`),
     { revalidateOnFocus: false, dedupingInterval: 2000, shouldRetryOnError: false },
   );
   const unknown = error instanceof ApiError && (error.status === 404 || error.code === 'not_found' || error.code === 'validation_failed');
-  const status: ScanLookupStatus = !sku ? 'idle' : data ? 'found' : unknown ? 'unknown' : error ? 'failed' : isLoading ? 'loading' : 'loading';
+  // While a retry is running an old error is not the answer yet.
+  const status: ScanLookupStatus = !sku ? 'idle' : data ? 'found' : isLoading || isValidating ? 'loading' : unknown ? 'unknown' : error ? 'failed' : 'loading';
   return { product: data?.product ?? null, status, retry: () => mutate() };
 }
