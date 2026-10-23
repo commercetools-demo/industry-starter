@@ -9,6 +9,8 @@
  *   Set `CSP_REPORT_ONLY=true` on the host to switch the policy to report-only without a code change.
  * - `style-src` and `font-src` also allow the commercetools host: the hosted Checkout loads its own stylesheet and fonts from there, and
  *   blocking them leaves the widget unstyled.
+ * - `media-src` allows `blob:` for the barcode scanner's camera preview (workstream R). A `getUserMedia` stream needs no CSP entry, and
+ *   `@zxing/browser` uses no worker and no eval, so `worker-src` stays unset (it falls back to `script-src`). Verified in the browser (R-14).
  * - Images come from the owner's image host, any https origin (`next.config.ts` remotePatterns).
  */
 export interface HeaderPair { key: string; value: string }
@@ -22,6 +24,7 @@ export function contentSecurityPolicy(dev: boolean): string {
     'script-src': ["'self'", "'unsafe-inline'", ...(dev ? ["'unsafe-eval'"] : []), CT_ORIGINS],
     'style-src': ["'self'", "'unsafe-inline'", CT_ORIGINS],
     'img-src': ["'self'", 'data:', 'blob:', 'https:'],
+    'media-src': ["'self'", 'blob:'],
     'font-src': ["'self'", 'data:', CT_ORIGINS],
     'connect-src': ["'self'", CT_ORIGINS, ...(dev ? ['ws:', 'wss:'] : [])],
     'frame-src': [CT_ORIGINS],
@@ -33,7 +36,15 @@ export function contentSecurityPolicy(dev: boolean): string {
   return Object.entries(directives).map(([k, v]) => `${k} ${v.join(' ')}`).join('; ');
 }
 
-export function securityHeaders(opts: { dev: boolean; reportOnly?: boolean }): HeaderPair[] {
+/**
+ * Permissions-Policy. The camera is allowed for our own origin only in the In-store companion (D-046), which scans barcodes; the
+ * website keeps `camera=()`. The store picker's opt-in "use my position" keeps geolocation for the page itself.
+ */
+export function permissionsPolicy(instore: boolean): string {
+  return `camera=${instore ? '(self)' : '()'}, microphone=(), geolocation=(self)`;
+}
+
+export function securityHeaders(opts: { dev: boolean; reportOnly?: boolean; instore?: boolean }): HeaderPair[] {
   return [
     {
       key: opts.reportOnly ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy',
@@ -41,8 +52,9 @@ export function securityHeaders(opts: { dev: boolean; reportOnly?: boolean }): H
     },
     { key: 'X-Content-Type-Options', value: 'nosniff' },
     { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-    // The store picker has an opt-in "use my position" button, so geolocation stays allowed for the page itself.
-    { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(self)' },
+    { key: 'Permissions-Policy', value: permissionsPolicy(Boolean(opts.instore)) },
+    // The In-store companion is not for search engines (D-048); the same words are in the robots metadata and robots.txt.
+    ...(opts.instore ? [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] : []),
     { key: 'X-Frame-Options', value: 'DENY' },
     // https for a year. No includeSubDomains (the owner's other sites under the domain are not ours to decide) and no preload.
     // Browsers ignore it over plain http, so a local production build is not affected; development leaves it out.

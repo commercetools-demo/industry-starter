@@ -35,4 +35,25 @@ describe('security headers', () => {
     expect(csp).toMatch(/style-src [^;]*https:\/\/\*\.commercetools\.com/);
     expect(csp).toMatch(/font-src [^;]*https:\/\/\*\.commercetools\.com/);
   });
+
+  it('Permissions-Policy camera=(self) in instore mode only', () => {
+    const value = (instore?: boolean) => securityHeaders({ dev: false, ...(instore === undefined ? {} : { instore }) }).find((h) => h.key === 'Permissions-Policy')?.value;
+    expect(value(true)).toBe('camera=(self), microphone=(), geolocation=(self)');
+    expect(value(false)).toBe('camera=(), microphone=(), geolocation=(self)');
+    expect(value()).toBe('camera=(), microphone=(), geolocation=(self)');
+    expect(value(true)).not.toMatch(/camera=\(\*\)|camera=\*/);
+  });
+
+  it('CSP has media-src for the camera preview and no worker or eval for the scanner', () => {
+    const csp = contentSecurityPolicy(false);
+    expect(csp).toContain("media-src 'self' blob:");
+    expect(csp).not.toContain('worker-src');
+    expect(csp).not.toContain('unsafe-eval');
+  });
+
+  it('X-Robots-Tag noindex only in instore mode', () => {
+    const tag = (instore: boolean) => securityHeaders({ dev: false, instore }).find((h) => h.key === 'X-Robots-Tag')?.value;
+    expect(tag(true)).toBe('noindex, nofollow');
+    expect(tag(false)).toBeUndefined();
+  });
 });
