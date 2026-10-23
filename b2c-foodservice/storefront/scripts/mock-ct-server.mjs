@@ -11,6 +11,10 @@
 // Workstream I completed the cart: line
 // prices and totals, shipping with a free-above rule, flat tax per country, discount codes (WELCOME10, COFFEE15 over 60, FREESHIP,
 // EXPIRED10), every update action the storefront sends, ownership fields, and POST /__mock/price and /__mock/stock hooks.
+// Workstream R (In-store companion) added: the custom type `instore-order-type` (GET /types/key=..., `MOCK_NO_INSTORE_TYPE=1` makes it
+// 404 like a project that has not run the seed yet), `custom` on a cart draft and the setCustomType and setCustomField actions of a
+// cart and an order, and `MOCK_ORDER_COPIES_CART_CUSTOM=0` to place orders without the cart's custom fields (the platform's behaviour
+// is not documented; the storefront must work either way).
 //
 //   node scripts/mock-ct-server.mjs [port]      (needs openssl; writes a throwaway certificate to the OS temp dir)
 //   NODE_TLS_REJECT_UNAUTHORIZED=0 CTP_API_URL=https://localhost:9443 CTP_AUTH_URL=https://localhost:9443 \
@@ -35,6 +39,24 @@ import { createAccountMock } from './mock-fixtures/mock-account.mjs';
 
 const PORT = Number(process.argv[2] ?? 9443);
 const PROJECT = 'mock-project';
+/** The custom type of workstream R. Served unless MOCK_NO_INSTORE_TYPE=1 (then the project "has not been seeded yet"). */
+const INSTORE_TYPE = {
+  id: 'mock-type-instore', version: 1, key: 'instore-order-type', name: { 'en-US': 'In-store order type' }, resourceTypeIds: ['order', 'cart'],
+  fieldDefinitions: [{
+    name: 'orderType', required: false, label: { 'en-US': 'Order type' }, inputHint: 'SingleLine',
+    type: { name: 'Enum', values: [{ key: 'in-store-purchase', label: 'In-store purchase' }, { key: 'online', label: 'Online' }] },
+  }],
+};
+const instoreTypeAvailable = () => process.env.MOCK_NO_INSTORE_TYPE !== '1';
+/** A `custom` draft as the platform stores it: the type by id and the fields. Null when the type is unknown (the platform answers 400). */
+function customOf(draft) {
+  if (!draft?.type || draft.type.key !== INSTORE_TYPE.key || !instoreTypeAvailable()) return null;
+  const fields = draft.fields ?? {};
+  const known = INSTORE_TYPE.fieldDefinitions[0].type.values.map((v) => v.key);
+  if (Object.keys(fields).some((k) => k !== 'orderType') || (fields.orderType !== undefined && !known.includes(fields.orderType))) return null;
+  return { type: { typeId: 'type', id: INSTORE_TYPE.id }, fields };
+}
+const badCustom = () => ctError(400, [{ code: 'InvalidOperation', message: 'The custom type does not exist or the fields do not match it.' }]);
 
 const dir = mkdtempSync(join(tmpdir(), 'mock-ct-'));
 execFileSync('openssl', [
@@ -338,6 +360,24 @@ function updateCart(cart, body) {
       case 'setDeleteDaysAfterLastModification':
         next.deleteDaysAfterLastModification = action.deleteDaysAfterLastModification;
         break;
+      case 'setCustomType': {
+        // Workstream R: the cart's own custom type (one per resource). No type: removes it.
+        if (!action.type) {
+          delete next.custom;
+          break;
+        }
+        const custom = customOf({ type: action.type, fields: action.fields });
+        if (!custom) return badCustom();
+        next.custom = custom;
+        break;
+      }
+      case 'setCustomField': {
+        if (!next.custom || action.name !== 'orderType') return badCustom();
+        const custom = customOf({ type: { key: INSTORE_TYPE.key }, fields: { ...next.custom.fields, [action.name]: action.value } });
+        if (!custom) return badCustom();
+        next.custom = custom;
+        break;
+      }
       default:
         return ctError(400, [{ code: 'InvalidOperation', message: `unsupported action ${action.action}` }]);
     }
@@ -381,6 +421,9 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
   if (path === `/${PROJECT}/channels`) return json(res, 200, list(STORES));
   if (path === `/${PROJECT}/categories`) return json(res, 200, list(CATEGORIES));
   if (path === `/${PROJECT}/product-types`) return json(res, 200, list(productTypeResults()));
+  if (path === `/${PROJECT}/types/key=${INSTORE_TYPE.key}` && req.method === 'GET') {
+    return instoreTypeAvailable() ? json(res, 200, INSTORE_TYPE) : json(res, 404, { statusCode: 404, message: 'not found', errors: [{ code: 'ResourceNotFound' }] });
+  }
   if (path === `/${PROJECT}/shipping-methods/key=mcf-ship-standard`) {
     return json(res, 200, {
       id: 'ship-std', version: 1, key: 'mcf-ship-standard', name: 'Standard',
@@ -472,6 +515,11 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
     ];
     if (body.shippingAddress) cart.shippingAddress = body.shippingAddress;
     if (body.customerEmail) cart.customerEmail = body.customerEmail;
+    if (body.custom) {
+      const custom = customOf(body.custom);
+      if (!custom) return json(res, 400, badCustom().body);
+      cart.custom = custom;
+    }
     const filled = actions.length > 0 ? updateCart(cart, { version: cart.version, actions }) : { status: 200, body: cart };
     if (filled.status !== 200) return json(res, filled.status, filled.body);
     CARTS.set(cart.id, filled.body);

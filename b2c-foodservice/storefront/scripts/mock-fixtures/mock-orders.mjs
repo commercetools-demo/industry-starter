@@ -45,6 +45,8 @@ function orderFromCart(cart, body, deps) {
     lineItems, totalPrice: cart.totalPrice, ...(cart.taxedPrice ? { taxedPrice: cart.taxedPrice } : {}),
     ...(info ? { shippingInfo: info } : {}), shippingAddress: body.address ?? cart.shippingAddress ?? { country: cart.country },
     orderState: 'Open', paymentState: 'Paid', shipmentState: 'Pending',
+    // Workstream R: whether the platform copies the cart's custom fields to the order is not documented; MOCK_ORDER_COPIES_CART_CUSTOM=0 leaves them off.
+    ...(cart.custom && process.env.MOCK_ORDER_COPIES_CART_CUSTOM !== '0' ? { custom: cart.custom } : {}),
   };
   ORDERS.set(order.id, order);
   cart.cartState = 'Ordered';
@@ -89,6 +91,14 @@ export async function orderRoutes(req, res, url, path, deps) {
       const body = await readBody(req);
       if (body.version !== order.version) return json(res, 409, { statusCode: 409, message: 'version', errors: [{ code: 'ConcurrentModification' }] });
       for (const action of body.actions ?? []) {
+        if (action.action === 'setCustomType') {
+          order.custom = { type: { typeId: 'type', id: 'mock-type-instore' }, fields: action.fields ?? {} };
+          continue;
+        }
+        if (action.action === 'setCustomField') {
+          order.custom = { ...(order.custom ?? { type: { typeId: 'type', id: 'mock-type-instore' } }), fields: { ...(order.custom?.fields ?? {}), [action.name]: action.value } };
+          continue;
+        }
         if (action.action !== 'transitionState') return json(res, 400, { statusCode: 400, message: 'unsupported', errors: [{ code: 'InvalidOperation' }] });
         const from = order.state ? STATE_CHAIN.indexOf(order.state.obj.key) : -1;
         const to = STATE_CHAIN.indexOf(action.state.key);

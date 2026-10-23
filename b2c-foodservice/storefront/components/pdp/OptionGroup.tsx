@@ -20,11 +20,11 @@ function guideFor(attr: string): GuideKind | null {
 }
 
 /**
- * One selector of the buy box: label with the selected value, a guide link where one exists, and the options (pills, or
+ * One selector of the buy box (`large`: the In-store companion's bigger buttons, no guide link): label with the selected value, a guide link where one exists, and the options (pills, or
  * colour circles). `?choose=<attr>` (Quick add) highlights the group for 1.2 s, announces "Choose a ..." and moves focus to
  * the first option. Options are real buttons; the arrow keys move focus between enabled options.
  */
-export default function OptionGroup({ selector }: { selector: SelectorDef }) {
+export default function OptionGroup({ selector, large = false }: { selector: SelectorDef; large?: boolean }) {
   const t = useTranslations('pdp');
   const { data, selection, select, fulfilment, store, choose } = usePdp();
   const { product } = data;
@@ -64,7 +64,9 @@ export default function OptionGroup({ selector }: { selector: SelectorDef }) {
   const options = selector.options.map((o) => ({ ...o, label: optionLabel(o.value, o.label) }));
   const selectedValue = selection[selector.attr];
   const selectedLabel = options.find((o) => o.value === selectedValue)?.label;
-  const guide = guideFor(selector.attr);
+  // The In-store companion (workstream R) shows bigger buttons and no guide links: less to read in a store.
+  const guide = large ? null : guideFor(selector.attr);
+  const buttonSize = large ? 'h-14 min-w-[64px] px-5 text-[16px]' : undefined;
   const choice = t.has(`selector.choice.${selector.attr}`) ? t(`selector.choice.${selector.attr}`) : selector.attr;
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -114,6 +116,7 @@ export default function OptionGroup({ selector }: { selector: SelectorDef }) {
           selected={selectedValue}
           reasonText={reasonText}
           onSelect={(v) => select(selector.attr, v)}
+          large={large}
         />
       ) : (
         <div role="group" aria-labelledby={labelId} onKeyDown={onKeyDown} className="flex flex-wrap gap-2">
@@ -121,11 +124,11 @@ export default function OptionGroup({ selector }: { selector: SelectorDef }) {
             const state = states.find((s) => s.value === o.value);
             const common = { selected: selectedValue === o.value, onClick: () => select(selector.attr, o.value), 'data-value': o.value };
             return state?.disabled ? (
-              <OptionButton key={o.value} {...common} disabled disabledReason={reasonText(state.reason ?? 'noVariant')}>
+              <OptionButton key={o.value} {...common} disabled disabledReason={reasonText(state.reason ?? 'noVariant')} className={buttonSize}>
                 {o.label}
               </OptionButton>
             ) : (
-              <OptionButton key={o.value} {...common}>
+              <OptionButton key={o.value} {...common} className={buttonSize}>
                 {o.label}
               </OptionButton>
             );

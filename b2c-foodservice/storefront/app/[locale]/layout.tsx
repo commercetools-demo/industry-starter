@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { redirect } from 'next/navigation';
 import { unstable_serialize } from 'swr';
 import CartDrawer from '@/components/cart/CartDrawer';
+import InstoreShell from '@/components/instore/InstoreShell';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import PromiseBar from '@/components/layout/PromiseBar';
@@ -13,6 +14,7 @@ import ShellProviders from '@/components/layout/ShellProviders';
 import LocaleChooser from '@/components/locale/LocaleChooser';
 import StorePicker from '@/components/store/StorePicker';
 import { routing } from '@/i18n/routing';
+import { isInstore } from '@/lib/app-mode';
 import { keyChannels } from '@/lib/cache-keys';
 import { isDemoGateOpen } from '@/lib/gate';
 import { getShellData } from '@/lib/shell-data';
@@ -32,6 +34,9 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   if (!(await isDemoGateOpen())) redirect('/gate');
+
+  // The In-store companion (workstream R, D-041) has its own frame and reads no shell data (categories, stores, figures).
+  if (isInstore()) return <InstoreShell>{children}</InstoreShell>;
 
   const [t, shell] = await Promise.all([getTranslations('common'), getShellData(locale)]);
   const fallback = {

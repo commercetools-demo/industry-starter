@@ -10,6 +10,8 @@ import enUS from '@/messages/en-US.json';
 import enCA from '@/messages/en-CA.json';
 
 const SECRET = 'a'.repeat(40);
+// The website pages are tested as the website, whatever APP_MODE the run was started with (workstream R).
+vi.stubEnv('APP_MODE', 'website');
 const m = vi.hoisted(() => ({
   cookie: undefined as string | undefined,
   cookiesRead: vi.fn(),

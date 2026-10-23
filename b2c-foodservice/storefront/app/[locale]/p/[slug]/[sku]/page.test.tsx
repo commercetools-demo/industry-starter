@@ -30,6 +30,7 @@ const props = (over: { locale?: string; slug?: string; sku?: string; query?: Rec
 });
 
 beforeEach(() => {
+  vi.stubEnv('APP_MODE', 'website');
   h.load.mockReset();
   h.redirect.mockReset();
 });
