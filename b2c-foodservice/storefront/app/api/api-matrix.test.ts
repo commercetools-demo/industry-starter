@@ -42,6 +42,7 @@ const TABLE: Record<string, 'customer' | 'session' | 'public' | 'owner-or-guest'
   contact: 'public',
   'dev/session': 'dev',
   'faq-feedback': 'public',
+  gate: 'public',
   health: 'dev',
   newsletter: 'public',
   orders: 'customer',
@@ -58,6 +59,7 @@ const TABLE: Record<string, 'customer' | 'session' | 'public' | 'owner-or-guest'
   'session/store': 'session',
   'shopping-lists': 'customer',
   'shopping-lists/add-to-cart': 'customer',
+  'tracker/[...path]': 'public',
 };
 
 const API = __dirname;

@@ -15,6 +15,7 @@ See [features.md](features.md) for what each project contains.
 | [`b2c-healthcare`](b2c-healthcare/) | MALVA Healthcare (Next.js 16 on commercetools) | `b2c-healthcare/site` | [`site/README.md`](b2c-healthcare/site/README.md), [`plans/`](b2c-healthcare/plans/) |
 | [`b2b-manufacturing`](b2b-manufacturing/) | MALVA Plumbing and Waste management (Next.js 16 on commercetools) | `b2b-manufacturing/site` | [`site/README.md`](b2b-manufacturing/site/README.md), [`plan/`](b2b-manufacturing/plans/) |
 | [`b2b2c-automotive`](b2b2c-automotive/) | MALVA B2B2C automotive: reseller storefront and partner portal (Next.js 16 on commercetools) | `b2b2c-automotive/storefront`, `b2b2c-automotive/portal` | [`plans/`](b2b2c-automotive/plans/) |
+| [`b2c-foodservice`](b2c-foodservice/) | MALVA Coffee: pods, beans and machines with store collection and subscriptions (Next.js 16 on commercetools) | `b2c-foodservice/storefront` | [`storefront/README.md`](b2c-foodservice/storefront/README.md), [`plans/`](b2c-foodservice/plans/) |
 
 ## Layout
 

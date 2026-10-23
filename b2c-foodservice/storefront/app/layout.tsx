@@ -1,6 +1,7 @@
 import { Archivo, Roboto, Roboto_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
+import { TrackerScripts } from '@ct-demos/demotools/tracker';
 import './globals.css';
 
 const archivo = Archivo({
@@ -31,6 +32,9 @@ export default async function RootLayout({
   const messages = await getMessages();
   return (
     <html lang={locale} className={`${archivo.variable} ${roboto.variable} ${robotoMono.variable}`}>
+      <head>
+        <TrackerScripts gate={false} />
+      </head>
       <body className="bg-canvas text-ink font-body">
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}

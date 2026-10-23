@@ -26,8 +26,8 @@ describe('unknown /api paths', () => {
 
   it('existing api routes are not shadowed', () => {
     const routes = routeDirs(join(process.cwd(), 'app/api'));
-    // The catch-all is the only catch-all route; every more specific path (static or dynamic) is matched first.
-    expect(routes.filter((r) => r.includes('[...'))).toEqual(['/[...rest]']);
+    // The catch-all and the demo tracker proxy are the only catch-all routes; every more specific path (static or dynamic) is matched first.
+    expect(routes.filter((r) => r.includes('[...'))).toEqual(['/[...rest]', '/tracker/[...path]']);
     for (const known of ['/availability', '/channels', '/contact', '/faq-feedback', '/newsletter']) {
       expect(routes, known).toContain(known);
     }

@@ -1,6 +1,9 @@
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+// The demo gate lives outside the locale tree, so this redirect must not be locale-prefixed.
+// eslint-disable-next-line no-restricted-imports
+import { redirect } from 'next/navigation';
 import { unstable_serialize } from 'swr';
 import CartDrawer from '@/components/cart/CartDrawer';
 import Footer from '@/components/layout/Footer';
@@ -11,6 +14,7 @@ import LocaleChooser from '@/components/locale/LocaleChooser';
 import StorePicker from '@/components/store/StorePicker';
 import { routing } from '@/i18n/routing';
 import { keyChannels } from '@/lib/cache-keys';
+import { isDemoGateOpen } from '@/lib/gate';
 import { getShellData } from '@/lib/shell-data';
 
 export function generateStaticParams() {
@@ -27,6 +31,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+  if (!(await isDemoGateOpen())) redirect('/gate');
 
   const [t, shell] = await Promise.all([getTranslations('common'), getShellData(locale)]);
   const fallback = {

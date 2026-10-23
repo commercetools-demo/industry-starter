@@ -108,3 +108,25 @@ MALVA B2B2C automotive: a reseller storefront for drivers and workshops, and a p
 | Partner portal: growth | Marketing, bundles, product import, brand partnership | `portal/.../marketing`, `bundles`, `import`, `partnership` |
 | Portal onboarding | Register, approval, invite acceptance, password reset | `portal/app/[locale]/(auth)/*` |
 | Seed | Platform model, parts catalog, stores, business units, roles, customers, discounts | `b2b2c-automotive/seed/src` |
+
+## b2c-foodservice
+
+MALVA Coffee storefront: a B2C coffee retailer selling pods, beans, machines and accessories in the US and Canada, with store collection, delivery and subscriptions in one bag. App: `b2c-foodservice/storefront`. Seed: `b2c-foodservice/seed`. Plans: `b2c-foodservice/plans/`. Specs: `b2c-foodservice/openspec/specs/`. Docs: `b2c-foodservice/docs/` (demo script and how it works). Live: <https://omni-industry-starter.netlify.app/en-US>.
+
+**State:** workstreams A to Q are "Ready for review" in `plans/STATUS.md` (2026-10-21); live Checkout, Stripe and recurring-order checks are listed as open owner actions in `plans/OWNER-HANDOFF.md`. The site is deployed on Netlify and reads a seeded commercetools project.
+
+| Feature | What it does | Where |
+| --- | --- | --- |
+| Catalog browse and search | Category tree, facets with counts, search, per-capsule unit prices | `app/[locale]/(listing)`; `lib/ct/products.ts`, `search.ts`, `categories.ts` |
+| Product page | Variants, and a Collect, Ship or Subscribe choice per product | `app/[locale]/p/[slug]`; `lib/ct/product-detail.ts`, `subscription-plan.ts` |
+| Mixed bag | Collect, ship and subscribe lines in one cart, each in its own cluster | spec `fulfilment-and-availability-model`; `lib/ct/cart.ts`, `cart-enrich.ts` |
+| Store collection and per-store stock | Six New York stores, stock per store, collection tracker | `lib/ct/channels.ts`, `inventory.ts`; `account/(shell)/collection` |
+| Two markets | `en-US` (USD) and `en-CA` (CAD) with their own tax, shipping and thresholds | `lib/ct/market.ts`, `proxy.ts` |
+| Discount codes | `WELCOME10`, `FREESHIP`, `COFFEE15`, stackable | `lib/ct/cart.ts` |
+| Subscriptions and recurring orders | Four intervals; skip, pause, change interval, cancel | `account/(shell)/subscriptions`; `lib/ct/recurring-orders.ts` |
+| Reviews and ratings | Written by signed-in shoppers, counted at once | `lib/ct/reviews.ts`, `review-client.ts` |
+| Hosted checkout | commercetools Checkout with Stripe | `app/[locale]/checkout`; `lib/ct/checkout-session.ts` |
+| Account | Orders, addresses, saved items, payment methods, demo sign-in | `app/[locale]/account/*`; `lib/ct/auth.ts`, `orders.ts` |
+| Demo gate and tracker | Password gate and visitor analytics | `app/gate`, `app/api/gate`, `app/api/tracker`; `lib/gate.ts` |
+| Seed | Project settings, catalog, stores, customers, discounts, reviews | `b2c-foodservice/seed/src` |
+

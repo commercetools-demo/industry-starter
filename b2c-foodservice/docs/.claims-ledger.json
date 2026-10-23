@@ -1,0 +1,157 @@
+{
+  "082f3834dcfe": {
+    "disposition": "cited",
+    "text": "These are commercetools recurring orders, created by the platform when an order contains recurring lines \u2014 one per distinct interval"
+  },
+  "0c0420898ce9": {
+    "disposition": "not-a-claim",
+    "text": "No email is sent anywhere; no password reset; accounts are verified on creation"
+  },
+  "282be87aa778": {
+    "disposition": "not-a-claim",
+    "text": "Real Stripe account and the Checkout application's live settings"
+  },
+  "2e240283c592": {
+    "disposition": "not-a-claim",
+    "text": "A frontend client with no admin scopes (the deploy gate fails if one is present); a second client with `manage_products` used only for writing reviews"
+  },
+  "3897b3c84b79": {
+    "disposition": "not-a-claim",
+    "text": "**Status:** the decision was written from documentation; the live probes that would confirm it needed a Checkout application and Stripe connector, and the plan file records them as open."
+  },
+  "3cb7cfb5ff04": {
+    "disposition": "not-a-claim",
+    "text": "**Next delivery skipped**. While a skip is pending **Change interval** is disabled \u2014 the platform refuses a schedule change then, so the screen does not offer it"
+  },
+  "45807df56819": {
+    "disposition": "cited",
+    "text": "Requires Product Search indexing switched on in project settings ([reference](https://docs.commercetools.com/api/projects/products-search))"
+  },
+  "4e06897b7c9b": {
+    "disposition": "cited",
+    "text": "**Next delivery skipped**. While a skip is pending **Change interval** is disabled \u2014 the platform only accepts a schedule change on a recurring order with no active skip ([API reference](https://docs."
+  },
+  "4e4b27c1a143": {
+    "disposition": "not-a-claim",
+    "text": "Use a Stripe test card, never a real one, and place a test order before presenting so you know the pay step works that day."
+  },
+  "50b7ab388328": {
+    "disposition": "not-a-claim",
+    "text": "Every line sits in its own cluster (**Collect**, **Shipping to you**, **Subscriptions**) with its own promise and price."
+  },
+  "556dff66aabf": {
+    "disposition": "cited",
+    "text": "Requires indexing switched on in project settings"
+  },
+  "5839c602bc76": {
+    "disposition": "measured",
+    "measured_at": "bfc1d8fbbd6443800129aa52fd2f37c0fa545159",
+    "text": "41 products in a live commercetools project, with category tree, prices in USD and CAD, per-store stock and ratings \u2014 a seeded catalog, not a customer's"
+  },
+  "59263a55023d": {
+    "disposition": "cited",
+    "text": "Product Search API (`products().search()`), never `productProjections().search()` ([reference](https://docs.commercetools.com/api/projects/products-search))"
+  },
+  "5ff4069e56e4": {
+    "disposition": "not-a-claim",
+    "text": "- **Images are stock photography.** Product pictures come from Pexels; they illustrate the layout, not the products."
+  },
+  "61b5065d3513": {
+    "disposition": "cited",
+    "text": "Inventory entries with a supply channel per store, plus one with no channel for online"
+  },
+  "6c96426cc54b": {
+    "disposition": "not-a-claim",
+    "text": "Product pictures are stock photos from Pexels"
+  },
+  "6e590207c918": {
+    "disposition": "not-a-claim",
+    "text": "If you collect-demo on a day the picker says closed, say that hours are seeded data and move on rather than debating it."
+  },
+  "6eb788db26d0": {
+    "disposition": "not-a-claim",
+    "text": "No real money moves; test cards only"
+  },
+  "74a237c19db4": {
+    "disposition": "cited",
+    "text": "Product Search API only (D-023)"
+  },
+  "7ea76a24d177": {
+    "disposition": "not-a-claim",
+    "text": "Store hours are seeded data and currently read empty. Not a live opening-hours feed"
+  },
+  "8a7ea42f8dcb": {
+    "disposition": "measured",
+    "measured_at": "bfc1d8fbbd6443800129aa52fd2f37c0fa545159",
+    "text": "Results and facets from the commercetools Product Search, not from a local index. The catalog is 41 products"
+  },
+  "8d529c45c113": {
+    "disposition": "not-a-claim",
+    "text": "A backend-for-frontend: `lib/ct/*` modules plus Route Handlers under `app/api`. The browser never talks to commercetools"
+  },
+  "b3f4bfc8b23f": {
+    "disposition": "not-a-claim",
+    "text": "**Status:** the subscription flow was built and unit-tested; the live run needed owner actions that the plan lists as open (`OA-02`, `OA-04`), so confirm with a test order."
+  },
+  "b74260eaa682": {
+    "disposition": "not-a-claim",
+    "text": "Changing the interval is refused while a skip is pending, so the screen disables the button."
+  },
+  "b9b602e8099f": {
+    "disposition": "cited",
+    "text": "This is decision `complete-per-group` in `plans/PROJECT-FINDINGS.md`, taken because the Checkout documentation says the complete mode handles shipping configuration internally and recommends Payment O"
+  },
+  "bba658ff3d8a": {
+    "disposition": "cited",
+    "text": "When an order with recurring lines is created, the platform creates one recurring order per distinct schedule, and the account reads and changes them through the Recurring Orders API ([overview](https"
+  },
+  "bdfdb8fafea3": {
+    "disposition": "cited",
+    "text": "Changing the interval is only accepted on an Active recurring order with no active skip configuration ([API reference](https://docs.commercetools.com/api/projects/recurring-orders)), so the screen dis"
+  },
+  "be018c2e71e2": {
+    "disposition": "cited",
+    "text": "The clone-per-payment-group shape, or switch to Payment Only"
+  },
+  "c4d42fdd74ad": {
+    "disposition": "not-a-claim",
+    "text": "- **Do not place a real-looking order unprepared.** Payment runs through the hosted commercetools Checkout connected to Stripe in test mode."
+  },
+  "d16dd86cd9f5": {
+    "disposition": "not-a-claim",
+    "text": "Nothing has been subscribed yet for that shopper. Place a subscription order first (beat C)"
+  },
+  "d29f61083870": {
+    "disposition": "cited",
+    "text": "The documented alternative is Payment Only with a multiple-shipping cart."
+  },
+  "d85e7f34b8b1": {
+    "disposition": "cited",
+    "text": "[Inventory entries](https://docs.commercetools.com/api/projects/inventory) with a supply channel per store, plus one with no channel for online"
+  },
+  "df52d4819ebb": {
+    "disposition": "cited",
+    "text": "Product Search API (`products().search()`), never `productProjections().search()`"
+  },
+  "e1c59869099e": {
+    "disposition": "cited",
+    "text": "These are commercetools recurring orders, created by the platform when an order contains recurring lines \u2014 one per distinct interval ([overview](https://docs.commercetools.com/api/projects/recurring-o"
+  },
+  "e41344c15a15": {
+    "disposition": "measured",
+    "measured_at": "bfc1d8fbbd6443800129aa52fd2f37c0fa545159",
+    "text": "A live commercetools project with 41 products, prices in two currencies, per-store stock, ratings"
+  },
+  "e8109c53d424": {
+    "disposition": "not-a-claim",
+    "text": "Each beat below is a table: the left column is what you click, the right column is what that click shows."
+  },
+  "e8ff23a7ee5d": {
+    "disposition": "not-a-claim",
+    "text": "Canadian provincial tax is not modelled"
+  },
+  "fbaf144dcf4d": {
+    "disposition": "not-a-claim",
+    "text": "Signed in as **Liam Carter**, after a subscription order has been placed (the page is empty until then)"
+  }
+}

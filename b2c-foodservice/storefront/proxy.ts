@@ -77,5 +77,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next|favicon|checkout/return|.*\\..*).*)', '/'],
+  matcher: ['/((?!api|_next|favicon|gate|checkout/return|.*\\..*).*)', '/'],
 };
