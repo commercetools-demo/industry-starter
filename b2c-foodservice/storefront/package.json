@@ -12,9 +12,13 @@
     "check": "npm run lint && npm run typecheck && npm run test",
     "predeploy": "node scripts/predeploy-check.mjs",
     "test:live": "vitest run --config vitest.live.config.mts",
-    "verify:build": "next build && node scripts/check-bundle-secrets.mjs"
+    "verify:build": "next build && node scripts/check-bundle-secrets.mjs",
+    "catalog:validate": "node scripts/catalog.mjs validate",
+    "catalog:push": "node scripts/catalog.mjs push",
+    "catalog:publish": "node scripts/catalog.mjs publish"
   },
   "dependencies": {
+    "@commercetools-labs/page-builder": "1.0.0",
     "@commercetools/checkout-browser-sdk": "^1.7.5",
     "@commercetools/platform-sdk": "^8.27.0",
     "@commercetools/ts-client": "^4.10.0",
@@ -38,6 +42,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.1.2",
+    "ajv": "8.20.0",
     "eslint": "^9",
     "eslint-config-next": "^16.4.2",
     "jsdom": "^29.1.1",

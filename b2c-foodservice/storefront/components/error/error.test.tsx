@@ -146,9 +146,14 @@ describe('Error pages', () => {
     expect(screen.getByRole('search')).toHaveAttribute('action', '/en-US/search');
   });
 
-  it('the catch-all route calls notFound', async () => {
+  it('the catch-all route calls notFound when the page builder has no page for the path', async () => {
+    vi.doMock('@/components/page-builder/renderPage', () => ({ renderPage: async () => ({ kind: 'none' }) }));
+    vi.doMock('next-intl/server', async (orig) => ({ ...(await orig<object>()), setRequestLocale: () => {} }));
+    vi.resetModules();
     const { default: CatchAll } = await import('@/app/[locale]/[...rest]/page');
-    expect(() => CatchAll()).toThrow(/NEXT_HTTP_ERROR_FALLBACK;404|NEXT_NOT_FOUND/);
+    await expect(CatchAll({ params: Promise.resolve({ locale: 'en-US', rest: ['nothing-here'] }) })).rejects.toThrow(/NEXT_HTTP_ERROR_FALLBACK;404|NEXT_NOT_FOUND/);
+    vi.doUnmock('@/components/page-builder/renderPage');
+    vi.doUnmock('next-intl/server');
   });
 
   it('error page imports nothing from lib/ct', () => {

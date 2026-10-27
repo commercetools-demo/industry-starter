@@ -9,6 +9,9 @@ import { fileURLToPath } from 'node:url';
 export const SECRET_NAMES = [
   'CTP_CLIENT_SECRET', 'CTP_CLIENT_ID', 'SESSION_SECRET', 'CTP_REVIEWS_CLIENT_ID', 'CTP_REVIEWS_CLIENT_SECRET',
   'DEMO_LOGIN_PASSWORD', 'CONTACT_WEBHOOK_URL', 'CONTACT_WEBHOOK_TOKEN', 'FEEDBACK_WEBHOOK_URL',
+  // Page builder: the storefront holds only the render key; the preview token and admin secret belong to the service and CI,
+  // and are listed so a build that ever sees one fails.
+  'PB_RENDER_KEY', 'PB_PREVIEW_TOKEN', 'PB_ADMIN_SECRET',
 ];
 const MIN_LENGTH = 8;
 

@@ -43,6 +43,8 @@ vi.mock('@/components/home/HomeSections', () => ({
   NewArrivalsSection: () => <i data-slot="new" />,
   SubscribeSection: () => <i data-slot="subscribe" />,
 }));
+const pb = vi.hoisted(() => ({ outcome: { kind: 'none' } as { kind: 'none' } | { kind: 'failed' } | { kind: 'page'; node: unknown } }));
+vi.mock('@/components/page-builder/renderPage', () => ({ renderPage: async () => pb.outcome }));
 vi.mock('@/lib/ct/promise', () => ({ getPromiseFigures: async () => FIGURES }));
 vi.mock('@/lib/home-data', () => ({
   getHomeTree: async () => TREE,
@@ -66,6 +68,7 @@ const token = (claims: Record<string, string>, exp: string | number) =>
 
 beforeEach(() => {
   vi.clearAllMocks();
+  pb.outcome = { kind: 'none' };
   m.cookie = undefined;
   m.getHomeStore.mockImplementation(async (ctx: { collectionStoreKey?: string }) => (ctx.collectionStoreKey ? STORE : null));
   m.getFeaturedProduct.mockResolvedValue(product());
@@ -131,5 +134,26 @@ describe('home page', () => {
     expect(m.cookiesRead).toHaveBeenCalled();
     const source = readFileSync(join(process.cwd(), 'app/[locale]/page.tsx'), 'utf8');
     expect(source).not.toMatch(/force-static|revalidate|Cache-Control|unstable_cache|use cache/);
+  });
+});
+
+describe('home page and the page builder', () => {
+  it('a published home replaces the native home and does not load its data', async () => {
+    pb.outcome = { kind: 'page', node: <h1 data-slot="authored">Authored</h1> };
+    const html = await render();
+    expect(html).toContain('data-slot="authored"');
+    for (const slot of ['bestsellers', 'new', 'subscribe']) expect(html).not.toContain(`data-slot="${slot}"`);
+    expect(m.getHomeStore).not.toHaveBeenCalled();
+    expect(html).toContain('application/ld+json');
+  });
+
+  it('no page falls back to the native home', async () => {
+    pb.outcome = { kind: 'none' };
+    expect(await render()).toContain('data-slot="bestsellers"');
+  });
+
+  it('a page builder failure falls back to the native home', async () => {
+    pb.outcome = { kind: 'failed' };
+    expect(await render()).toContain('data-slot="bestsellers"');
   });
 });

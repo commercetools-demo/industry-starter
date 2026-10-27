@@ -1,0 +1,1161 @@
+{
+  "$schema": "./node_modules/@commercetools-labs/page-builder/catalog.schema.json",
+  "components": {
+    "groups": [
+      {
+        "key": "content",
+        "name": {
+          "en-US": "Content",
+          "en-CA": "Content"
+        }
+      },
+      {
+        "key": "home",
+        "name": {
+          "en-US": "Home",
+          "en-CA": "Home"
+        }
+      },
+      {
+        "key": "product",
+        "name": {
+          "en-US": "Product",
+          "en-CA": "Product"
+        }
+      },
+      {
+        "key": "listing",
+        "name": {
+          "en-US": "Category listing",
+          "en-CA": "Category listing"
+        }
+      }
+    ],
+    "components": [
+      {
+        "type": "content/hero",
+        "name": {
+          "en-US": "Hero",
+          "en-CA": "Hero"
+        },
+        "icon": "ViewCarousel",
+        "groupKey": "content",
+        "schema": [
+          {
+            "key": "eyebrow",
+            "label": {
+              "en-US": "Eyebrow",
+              "en-CA": "Eyebrow"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "title",
+            "label": {
+              "en-US": "Headline",
+              "en-CA": "Headline"
+            },
+            "kind": "richtext",
+            "localized": true,
+            "required": true
+          },
+          {
+            "key": "body",
+            "label": {
+              "en-US": "Text",
+              "en-CA": "Text"
+            },
+            "kind": "richtext",
+            "localized": true
+          },
+          {
+            "key": "image",
+            "label": {
+              "en-US": "Image",
+              "en-CA": "Image"
+            },
+            "kind": "image"
+          },
+          {
+            "key": "imageAlt",
+            "label": {
+              "en-US": "Image description",
+              "en-CA": "Image description"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "buttons",
+            "label": {
+              "en-US": "Buttons",
+              "en-CA": "Buttons"
+            },
+            "kind": "group",
+            "children": [
+              {
+                "key": "label",
+                "label": {
+                  "en-US": "Label",
+                  "en-CA": "Label"
+                },
+                "kind": "text",
+                "localized": true
+              },
+              {
+                "key": "link",
+                "label": {
+                  "en-US": "Link",
+                  "en-CA": "Link"
+                },
+                "kind": "link"
+              }
+            ]
+          }
+        ],
+        "pageTypes": [
+          "all"
+        ],
+        "inlineTextFields": [
+          "eyebrow",
+          "title",
+          "body"
+        ]
+      },
+      {
+        "type": "content/banner",
+        "name": {
+          "en-US": "Banner",
+          "en-CA": "Banner"
+        },
+        "icon": "Campaign",
+        "groupKey": "content",
+        "schema": [
+          {
+            "key": "title",
+            "label": {
+              "en-US": "Title",
+              "en-CA": "Title"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "text",
+            "label": {
+              "en-US": "Text",
+              "en-CA": "Text"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "image",
+            "label": {
+              "en-US": "Image",
+              "en-CA": "Image"
+            },
+            "kind": "image"
+          },
+          {
+            "key": "imageAlt",
+            "label": {
+              "en-US": "Image description",
+              "en-CA": "Image description"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "linkLabel",
+            "label": {
+              "en-US": "Link label",
+              "en-CA": "Link label"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "link",
+            "label": {
+              "en-US": "Link",
+              "en-CA": "Link"
+            },
+            "kind": "link"
+          }
+        ],
+        "pageTypes": [
+          "all"
+        ],
+        "inlineTextFields": [
+          "title",
+          "text"
+        ]
+      },
+      {
+        "type": "content/rich-text",
+        "name": {
+          "en-US": "Rich text",
+          "en-CA": "Rich text"
+        },
+        "icon": "Notes",
+        "groupKey": "content",
+        "schema": [
+          {
+            "key": "body",
+            "label": {
+              "en-US": "Text",
+              "en-CA": "Text"
+            },
+            "kind": "richtext",
+            "localized": true,
+            "required": true
+          }
+        ],
+        "pageTypes": [
+          "all"
+        ],
+        "inlineTextFields": [
+          "body"
+        ]
+      },
+      {
+        "type": "content/image",
+        "name": {
+          "en-US": "Image",
+          "en-CA": "Image"
+        },
+        "icon": "Image",
+        "groupKey": "content",
+        "schema": [
+          {
+            "key": "image",
+            "label": {
+              "en-US": "Image",
+              "en-CA": "Image"
+            },
+            "kind": "image",
+            "required": true
+          },
+          {
+            "key": "imageAlt",
+            "label": {
+              "en-US": "Image description",
+              "en-CA": "Image description"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "caption",
+            "label": {
+              "en-US": "Caption",
+              "en-CA": "Caption"
+            },
+            "kind": "text",
+            "localized": true
+          }
+        ],
+        "pageTypes": [
+          "all"
+        ],
+        "inlineTextFields": [
+          "caption"
+        ]
+      },
+      {
+        "type": "content/cta",
+        "name": {
+          "en-US": "Call to action",
+          "en-CA": "Call to action"
+        },
+        "icon": "TouchApp",
+        "groupKey": "content",
+        "schema": [
+          {
+            "key": "title",
+            "label": {
+              "en-US": "Title",
+              "en-CA": "Title"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "text",
+            "label": {
+              "en-US": "Text",
+              "en-CA": "Text"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "label",
+            "label": {
+              "en-US": "Button label",
+              "en-CA": "Button label"
+            },
+            "kind": "text",
+            "localized": true,
+            "required": true
+          },
+          {
+            "key": "link",
+            "label": {
+              "en-US": "Button link",
+              "en-CA": "Button link"
+            },
+            "kind": "link"
+          }
+        ],
+        "pageTypes": [
+          "all"
+        ],
+        "inlineTextFields": [
+          "title",
+          "text"
+        ]
+      },
+      {
+        "type": "home/category-tiles",
+        "name": {
+          "en-US": "Category tiles",
+          "en-CA": "Category tiles"
+        },
+        "icon": "Category",
+        "groupKey": "home",
+        "schema": [
+          {
+            "key": "title",
+            "label": {
+              "en-US": "Title",
+              "en-CA": "Title"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "categories",
+            "label": {
+              "en-US": "Categories",
+              "en-CA": "Categories"
+            },
+            "kind": "dataSource",
+            "dataSourceType": "commercetools/category-list"
+          }
+        ],
+        "pageTypes": [
+          "all"
+        ],
+        "inlineTextFields": [
+          "title"
+        ]
+      },
+      {
+        "type": "home/editorial-strip",
+        "name": {
+          "en-US": "Editorial strip",
+          "en-CA": "Editorial strip"
+        },
+        "icon": "Article",
+        "groupKey": "home",
+        "schema": [
+          {
+            "key": "eyebrow",
+            "label": {
+              "en-US": "Eyebrow",
+              "en-CA": "Eyebrow"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "headline",
+            "label": {
+              "en-US": "Headline",
+              "en-CA": "Headline"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "body",
+            "label": {
+              "en-US": "Text",
+              "en-CA": "Text"
+            },
+            "kind": "richtext",
+            "localized": true
+          },
+          {
+            "key": "image",
+            "label": {
+              "en-US": "Image",
+              "en-CA": "Image"
+            },
+            "kind": "image"
+          },
+          {
+            "key": "imageAlt",
+            "label": {
+              "en-US": "Image description",
+              "en-CA": "Image description"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "ctaLabel",
+            "label": {
+              "en-US": "Button label",
+              "en-CA": "Button label"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "link",
+            "label": {
+              "en-US": "Button link",
+              "en-CA": "Button link"
+            },
+            "kind": "link"
+          }
+        ],
+        "pageTypes": [
+          "all"
+        ],
+        "inlineTextFields": [
+          "eyebrow",
+          "headline",
+          "body"
+        ]
+      },
+      {
+        "type": "home/subscribe-strip",
+        "name": {
+          "en-US": "Subscribe strip",
+          "en-CA": "Subscribe strip"
+        },
+        "icon": "Subscriptions",
+        "groupKey": "home",
+        "schema": [
+          {
+            "key": "title",
+            "label": {
+              "en-US": "Title",
+              "en-CA": "Title"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "text",
+            "label": {
+              "en-US": "Text",
+              "en-CA": "Text"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "label",
+            "label": {
+              "en-US": "Button label",
+              "en-CA": "Button label"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "link",
+            "label": {
+              "en-US": "Button link",
+              "en-CA": "Button link"
+            },
+            "kind": "link"
+          }
+        ],
+        "pageTypes": [
+          "all"
+        ],
+        "inlineTextFields": [
+          "title",
+          "text"
+        ]
+      },
+      {
+        "type": "product/product-strip",
+        "name": {
+          "en-US": "Product strip",
+          "en-CA": "Product strip"
+        },
+        "icon": "Inventory2",
+        "groupKey": "product",
+        "schema": [
+          {
+            "key": "title",
+            "label": {
+              "en-US": "Title",
+              "en-CA": "Title"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "products",
+            "label": {
+              "en-US": "Products",
+              "en-CA": "Products"
+            },
+            "kind": "dataSource",
+            "dataSourceType": "commercetools/product-list"
+          },
+          {
+            "key": "showPrice",
+            "label": {
+              "en-US": "Show price",
+              "en-CA": "Show price"
+            },
+            "kind": "boolean"
+          }
+        ],
+        "pageTypes": [
+          "all"
+        ],
+        "inlineTextFields": [
+          "title"
+        ]
+      },
+      {
+        "type": "product/related-strip",
+        "name": {
+          "en-US": "Related products",
+          "en-CA": "Related products"
+        },
+        "icon": "Sell",
+        "groupKey": "product",
+        "schema": [
+          {
+            "key": "title",
+            "label": {
+              "en-US": "Title",
+              "en-CA": "Title"
+            },
+            "kind": "text",
+            "localized": true
+          },
+          {
+            "key": "products",
+            "label": {
+              "en-US": "Products",
+              "en-CA": "Products"
+            },
+            "kind": "dataSource",
+            "dataSourceType": "commercetools/related-products"
+          }
+        ],
+        "pageTypes": [
+          "pdp"
+        ],
+        "inlineTextFields": [
+          "title"
+        ]
+      },
+      {
+        "type": "listing/product-grid",
+        "name": {
+          "en-US": "Product grid",
+          "en-CA": "Product grid"
+        },
+        "icon": "ViewModule",
+        "groupKey": "listing",
+        "schema": [
+          {
+            "key": "itemsPerRow",
+            "label": {
+              "en-US": "Items per row (desktop)",
+              "en-CA": "Items per row (desktop)"
+            },
+            "kind": "select",
+            "options": [
+              {
+                "key": "2",
+                "label": {
+                  "en-US": "2",
+                  "en-CA": "2"
+                }
+              },
+              {
+                "key": "3",
+                "label": {
+                  "en-US": "3",
+                  "en-CA": "3"
+                }
+              },
+              {
+                "key": "4",
+                "label": {
+                  "en-US": "4",
+                  "en-CA": "4"
+                }
+              }
+            ]
+          },
+          {
+            "key": "showPrice",
+            "label": {
+              "en-US": "Show price on each tile",
+              "en-CA": "Show price on each tile"
+            },
+            "kind": "boolean"
+          },
+          {
+            "key": "showSwatches",
+            "label": {
+              "en-US": "Show variant swatches",
+              "en-CA": "Show variant swatches"
+            },
+            "kind": "boolean"
+          }
+        ],
+        "pageTypes": [
+          "category"
+        ],
+        "description": {
+          "en-US": "The products of the category being viewed, shown with the storefront's own product cards. Settings: tiles per row, price, swatches.",
+          "en-CA": "The products of the category being viewed, shown with the storefront's own product cards. Settings: tiles per row, price, swatches."
+        }
+      },
+      {
+        "type": "listing/result-header",
+        "name": {
+          "en-US": "Result header",
+          "en-CA": "Result header"
+        },
+        "icon": "Title",
+        "groupKey": "listing",
+        "schema": [],
+        "pageTypes": [
+          "category"
+        ],
+        "description": {
+          "en-US": "Breadcrumbs, category name and result count. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Breadcrumbs, category name and result count. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "listing/breadcrumbs",
+        "name": {
+          "en-US": "Breadcrumbs",
+          "en-CA": "Breadcrumbs"
+        },
+        "icon": "Navigation",
+        "groupKey": "listing",
+        "schema": [],
+        "pageTypes": [
+          "category"
+        ],
+        "description": {
+          "en-US": "Path to the category. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Path to the category. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "listing/facets",
+        "name": {
+          "en-US": "Filters",
+          "en-CA": "Filters"
+        },
+        "icon": "FilterList",
+        "groupKey": "listing",
+        "schema": [],
+        "pageTypes": [
+          "category"
+        ],
+        "description": {
+          "en-US": "Filters: a sidebar on wide screens, a Filters button on narrow ones. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Filters: a sidebar on wide screens, a Filters button on narrow ones. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "listing/sort",
+        "name": {
+          "en-US": "Sort",
+          "en-CA": "Sort"
+        },
+        "icon": "Sort",
+        "groupKey": "listing",
+        "schema": [],
+        "pageTypes": [
+          "category"
+        ],
+        "description": {
+          "en-US": "Sort order, and the store availability chip where the market offers collection. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Sort order, and the store availability chip where the market offers collection. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "listing/active-filters",
+        "name": {
+          "en-US": "Active filters",
+          "en-CA": "Active filters"
+        },
+        "icon": "Tune",
+        "groupKey": "listing",
+        "schema": [],
+        "pageTypes": [
+          "category"
+        ],
+        "description": {
+          "en-US": "The selected filters as removable chips. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "The selected filters as removable chips. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "listing/pagination",
+        "name": {
+          "en-US": "Pagination",
+          "en-CA": "Pagination"
+        },
+        "icon": "MoreHoriz",
+        "groupKey": "listing",
+        "schema": [],
+        "pageTypes": [
+          "category"
+        ],
+        "description": {
+          "en-US": "Page controls. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Page controls. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "product/breadcrumbs",
+        "name": {
+          "en-US": "Breadcrumbs",
+          "en-CA": "Breadcrumbs"
+        },
+        "icon": "Navigation",
+        "groupKey": "product",
+        "schema": [],
+        "pageTypes": [
+          "pdp"
+        ],
+        "description": {
+          "en-US": "Path to the product. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Path to the product. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "product/gallery",
+        "name": {
+          "en-US": "Gallery",
+          "en-CA": "Gallery"
+        },
+        "icon": "PhotoLibrary",
+        "groupKey": "product",
+        "schema": [],
+        "pageTypes": [
+          "pdp"
+        ],
+        "description": {
+          "en-US": "Product images. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Product images. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "product/header",
+        "name": {
+          "en-US": "Name, price and rating",
+          "en-CA": "Name, price and rating"
+        },
+        "icon": "Title",
+        "groupKey": "product",
+        "schema": [],
+        "pageTypes": [
+          "pdp"
+        ],
+        "description": {
+          "en-US": "Category, name, price, rating and tagline. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Category, name, price, rating and tagline. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "product/facts",
+        "name": {
+          "en-US": "Key facts",
+          "en-CA": "Key facts"
+        },
+        "icon": "Info",
+        "groupKey": "product",
+        "schema": [],
+        "pageTypes": [
+          "pdp"
+        ],
+        "description": {
+          "en-US": "The product's key facts, such as roast or intensity. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "The product's key facts, such as roast or intensity. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "product/options",
+        "name": {
+          "en-US": "Options",
+          "en-CA": "Options"
+        },
+        "icon": "Tune",
+        "groupKey": "product",
+        "schema": [],
+        "pageTypes": [
+          "pdp"
+        ],
+        "description": {
+          "en-US": "Choose pack size, grind, colour and the like. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Choose pack size, grind, colour and the like. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "product/fulfilment",
+        "name": {
+          "en-US": "Delivery, collection or subscription",
+          "en-CA": "Delivery, collection or subscription"
+        },
+        "icon": "LocalShipping",
+        "groupKey": "product",
+        "schema": [],
+        "pageTypes": [
+          "pdp"
+        ],
+        "description": {
+          "en-US": "How the shopper receives it, with stock and store availability. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "How the shopper receives it, with stock and store availability. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "product/add-to-bag",
+        "name": {
+          "en-US": "Add to bag",
+          "en-CA": "Add to bag"
+        },
+        "icon": "ShoppingBag",
+        "groupKey": "product",
+        "schema": [],
+        "pageTypes": [
+          "pdp"
+        ],
+        "description": {
+          "en-US": "Quantity and the add to bag button. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Quantity and the add to bag button. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "product/trust",
+        "name": {
+          "en-US": "Reassurance row",
+          "en-CA": "Reassurance row"
+        },
+        "icon": "VerifiedUser",
+        "groupKey": "product",
+        "schema": [],
+        "pageTypes": [
+          "pdp"
+        ],
+        "description": {
+          "en-US": "Returns window, quality and sourcing. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Returns window, quality and sourcing. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "product/details",
+        "name": {
+          "en-US": "Product details",
+          "en-CA": "Product details"
+        },
+        "icon": "Description",
+        "groupKey": "product",
+        "schema": [],
+        "pageTypes": [
+          "pdp"
+        ],
+        "description": {
+          "en-US": "Description, notes and other detail sections. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Description, notes and other detail sections. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "product/rating",
+        "name": {
+          "en-US": "Rating summary",
+          "en-CA": "Rating summary"
+        },
+        "icon": "Star",
+        "groupKey": "product",
+        "schema": [],
+        "pageTypes": [
+          "pdp"
+        ],
+        "description": {
+          "en-US": "Average rating and distribution. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Average rating and distribution. Placeable: shows what the page already renders; no settings."
+        }
+      },
+      {
+        "type": "product/reviews",
+        "name": {
+          "en-US": "Reviews",
+          "en-CA": "Reviews"
+        },
+        "icon": "RateReview",
+        "groupKey": "product",
+        "schema": [],
+        "pageTypes": [
+          "pdp"
+        ],
+        "description": {
+          "en-US": "Customer reviews and the review form. Placeable: shows what the page already renders; no settings.",
+          "en-CA": "Customer reviews and the review form. Placeable: shows what the page already renders; no settings."
+        }
+      }
+    ]
+  },
+  "data-sources": {
+    "groups": [
+      {
+        "key": "category",
+        "name": "Category"
+      },
+      {
+        "key": "product",
+        "name": "Product"
+      }
+    ],
+    "sources": [
+      {
+        "type": "commercetools/product-list",
+        "name": {
+          "en-US": "Product list",
+          "en-CA": "Product list"
+        },
+        "icon": "Inventory2",
+        "groupKey": "product",
+        "schema": [
+          {
+            "key": "query",
+            "label": {
+              "en-US": "Search text",
+              "en-CA": "Search text"
+            },
+            "kind": "text"
+          },
+          {
+            "key": "limit",
+            "label": {
+              "en-US": "Limit",
+              "en-CA": "Limit"
+            },
+            "kind": "number"
+          },
+          {
+            "key": "offset",
+            "label": {
+              "en-US": "Offset",
+              "en-CA": "Offset"
+            },
+            "kind": "number"
+          },
+          {
+            "key": "categoryId",
+            "label": {
+              "en-US": "Category",
+              "en-CA": "Category"
+            },
+            "kind": "category"
+          },
+          {
+            "key": "categorySubTree",
+            "label": {
+              "en-US": "Include subcategories",
+              "en-CA": "Include subcategories"
+            },
+            "kind": "boolean"
+          },
+          {
+            "key": "productPins",
+            "label": {
+              "en-US": "Pinned products",
+              "en-CA": "Pinned products"
+            },
+            "kind": "productPins"
+          },
+          {
+            "key": "sort",
+            "label": {
+              "en-US": "Sort",
+              "en-CA": "Sort"
+            },
+            "kind": "select",
+            "options": [
+              {
+                "key": "newest",
+                "label": {
+                  "en-US": "Newest",
+                  "en-CA": "Newest"
+                }
+              },
+              {
+                "key": "price-asc",
+                "label": {
+                  "en-US": "Price: low to high",
+                  "en-CA": "Price: low to high"
+                }
+              },
+              {
+                "key": "price-desc",
+                "label": {
+                  "en-US": "Price: high to low",
+                  "en-CA": "Price: high to low"
+                }
+              },
+              {
+                "key": "name",
+                "label": {
+                  "en-US": "Name",
+                  "en-CA": "Name"
+                }
+              }
+            ]
+          }
+        ],
+        "resolver": {
+          "kind": "product-list"
+        }
+      },
+      {
+        "type": "commercetools/category-list",
+        "name": {
+          "en-US": "Category list",
+          "en-CA": "Category list"
+        },
+        "icon": "List",
+        "groupKey": "category",
+        "schema": [
+          {
+            "key": "where",
+            "label": {
+              "en-US": "Where",
+              "en-CA": "Where"
+            },
+            "kind": "text"
+          },
+          {
+            "key": "categoryPins",
+            "label": {
+              "en-US": "Pinned categories",
+              "en-CA": "Pinned categories"
+            },
+            "kind": "categoryPins"
+          },
+          {
+            "key": "limit",
+            "label": {
+              "en-US": "Limit",
+              "en-CA": "Limit"
+            },
+            "kind": "number"
+          }
+        ],
+        "resolver": {
+          "kind": "category-list"
+        }
+      },
+      {
+        "type": "commercetools/related-products",
+        "name": {
+          "en-US": "Related products",
+          "en-CA": "Related products"
+        },
+        "icon": "Sell",
+        "groupKey": "product",
+        "description": {
+          "en-US": "Products that share a category with the product being viewed.",
+          "en-CA": "Products that share a category with the product being viewed."
+        },
+        "schema": [
+          {
+            "key": "limit",
+            "label": {
+              "en-US": "Limit",
+              "en-CA": "Limit"
+            },
+            "kind": "number"
+          }
+        ],
+        "resolver": {
+          "kind": "related-products"
+        }
+      }
+    ]
+  },
+  "sections": {
+    "sections": [
+      {
+        "id": "HEAD",
+        "name": {
+          "en-US": "Head",
+          "en-CA": "Head"
+        },
+        "description": {
+          "en-US": "Announcements above the page content.",
+          "en-CA": "Announcements above the page content."
+        },
+        "icon": "VerticalAlignTop",
+        "pageTypes": [
+          "all"
+        ]
+      },
+      {
+        "id": "MAIN",
+        "name": {
+          "en-US": "Main",
+          "en-CA": "Main"
+        },
+        "description": {
+          "en-US": "The page content.",
+          "en-CA": "The page content."
+        },
+        "icon": "ViewAgenda",
+        "pageTypes": [
+          "all"
+        ]
+      }
+    ]
+  },
+  "theme": {
+    "containerMaxWidth": "var(--maxw)",
+    "containerPaddingX": "1.25rem",
+    "gap": {
+      "row": "1.5rem",
+      "column": "1.5rem"
+    },
+    "sectionBackgrounds": {
+      "Canvas": {
+        "background": "var(--canvas)",
+        "color": "var(--ink)"
+      },
+      "Muted": {
+        "background": "var(--canvas-2)",
+        "color": "var(--ink)"
+      },
+      "Surface": {
+        "background": "var(--surface)",
+        "color": "var(--ink)"
+      },
+      "Ink": {
+        "background": "var(--ink)",
+        "color": "var(--surface)"
+      }
+    }
+  }
+}

@@ -62,6 +62,13 @@ describe('Secret list', () => {
     expect(problems[0]).not.toContain(VALUE);
   });
 
+  it.each(['PB_RENDER_KEY', 'PB_PREVIEW_TOKEN', 'PB_ADMIN_SECRET'])('page builder secret %s in the bundle is found', (name) => {
+    const problems = checkBundleSecrets(build(`var t="${VALUE}";`), { [name]: VALUE });
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain(name);
+    expect(problems[0]).not.toContain(VALUE);
+  });
+
   it('list covers every secret named in .env.example', () => {
     const example = readFileSync(join(process.cwd(), '.env.example'), 'utf8');
     const names = [...example.matchAll(/^([A-Z][A-Z0-9_]*)=/gm)].map((m) => m[1]);
@@ -69,6 +76,7 @@ describe('Secret list', () => {
     const notSecret = new Set([
       'CTP_PROJECT_KEY', 'EXPECTED_PROJECT_KEY', 'CTP_AUTH_URL', 'CTP_API_URL', 'CTP_SCOPES', 'CTP_REVIEWS_SCOPES', 'DEMO_LOGIN_ENABLED',
       'NEXT_PUBLIC_SITE_URL', 'CTP_CHECKOUT_APP_KEY', 'CTP_SESSION_URL', 'CSP_REPORT_ONLY',
+      'PB_SERVICE_URL', 'PB_ORIGIN', 'PB_TIMEOUT_MS', 'PB_ALLOW_MC_FRAMING', 'PB_MC_ORIGIN',
     ]);
     const missing = names.filter((n) => !notSecret.has(n) && !SECRET_NAMES.includes(n));
     expect(missing).toEqual([]);
