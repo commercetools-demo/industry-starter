@@ -12,6 +12,13 @@ export function webVisibleTree(tree: Category[]): Category[] {
     .map((c) => ({ ...c, children: webVisibleTree(c.children) }));
 }
 
+/** Categories the in-store shop shows: only `both` and `onlyInStore` (an unset category is not shown). A hidden category hides its subtree. */
+export function instoreVisibleTree(tree: Category[]): Category[] {
+  return tree
+    .filter((c) => c.instoreVisibility === 'both' || c.instoreVisibility === 'onlyInStore')
+    .map((c) => ({ ...c, children: instoreVisibleTree(c.children) }));
+}
+
 export function findCategory(tree: Category[], match: (c: Category) => boolean): Category | null {
   return flattenTree(tree).find(match) ?? null;
 }

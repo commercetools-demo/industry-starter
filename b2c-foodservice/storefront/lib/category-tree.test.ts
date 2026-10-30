@@ -1,9 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { webVisibleTree } from '@/lib/category-tree';
+import { instoreVisibleTree, webVisibleTree } from '@/lib/category-tree';
 import type { Category } from '@/lib/types';
 
 const cat = (id: string, instoreVisibility?: Category['instoreVisibility'], children: Category[] = []): Category => ({
   id, name: id, slug: id, children, ...(instoreVisibility ? { instoreVisibility } : {}),
+});
+
+describe('instoreVisibleTree', () => {
+  it('keeps only both and onlyInStore (unset is hidden) and drops hidden subtrees', () => {
+    const tree = [cat('unset'), cat('both', 'both', [cat('c1', 'onlyInStore'), cat('c2', 'onlyOnline')]), cat('online', 'onlyOnline', [cat('x', 'both')]), cat('store', 'onlyInStore'), cat('none', 'none')];
+    const out = instoreVisibleTree(tree);
+    expect(out.map((c) => c.id)).toEqual(['both', 'store']);
+    expect(out[0]?.children.map((c) => c.id)).toEqual(['c1']);
+  });
 });
 
 describe('webVisibleTree', () => {

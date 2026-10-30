@@ -1,8 +1,8 @@
 import 'server-only';
 import { notFound } from 'next/navigation';
 import { availabilityState } from '@/lib/availability';
-import { breadcrumbOf, idByKey, rootCategoryName } from '@/lib/category-tree';
-import { getCategoryBySlug, getCategoryTree } from '@/lib/ct/categories';
+import { breadcrumbOf, findCategory, idByKey, instoreVisibleTree, rootCategoryName } from '@/lib/category-tree';
+import { getCategoryTree } from '@/lib/ct/categories';
 import { getInventoryDetail } from '@/lib/ct/inventory';
 import { getListingProjections } from '@/lib/ct/products';
 import { searchProducts } from '@/lib/ct/search';
@@ -64,18 +64,20 @@ export function toRows(items: ProductSummary[], online: Record<string, number> |
 
 /** The root categories, for the home tiles (cached public data, one read). */
 export async function loadInstoreHome(locale: string): Promise<Category[]> {
-  return getCategoryTree(locale);
+  return instoreVisibleTree(await getCategoryTree(locale));
 }
 
 /** The name of a category, for the page title; null when unknown. */
 export async function instoreCategoryName(locale: string, slug: string): Promise<string | null> {
-  return (await getCategoryBySlug(locale, slug))?.name ?? null;
+  return findCategory(instoreVisibleTree(await getCategoryTree(locale)), (c) => c.slug === slug)?.name ?? null;
 }
 
 /** An unknown slug is a 404; a category with no products and no children is shown empty (a shopper can walk up). */
 export async function loadInstoreCategory(locale: string, slug: string, pageParam: string | undefined): Promise<InstoreCategoryView> {
   const market = marketForLocale(locale);
-  const [tree, category] = await Promise.all([getCategoryTree(locale), getCategoryBySlug(locale, slug)]);
+  // Only `both` and `onlyInStore` categories exist in the shop; a hidden one (or one under a hidden parent) is a 404.
+  const tree = instoreVisibleTree(await getCategoryTree(locale));
+  const category = findCategory(tree, (c) => c.slug === slug);
   if (!category) notFound();
 
   const params = parseListingParams(pageParam ? { page: pageParam } : {}, 'category');
