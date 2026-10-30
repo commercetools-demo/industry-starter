@@ -21,7 +21,19 @@ const BADGE_KEY: Record<CardBadge, 'bestseller' | 'new' | 'limitedEdition' | 'su
  * One click target: the name link is stretched over the card with ::after; the heart, Quick add and "Choose a store" are
  * siblings above it (z-20), so no interactive element sits inside an anchor. `data-price` is the amount to pay in minor units.
  */
-export default function ProductCard({ product, imagePriority = false }: { product: ProductSummary; imagePriority?: boolean }) {
+export default function ProductCard({
+  product,
+  imagePriority = false,
+  showPrice = true,
+  showSwatches = true,
+}: {
+  product: ProductSummary;
+  imagePriority?: boolean;
+  /** Page builder setting: false hides the price line. */
+  showPrice?: boolean;
+  /** Page builder setting: false hides the colour swatches. */
+  showSwatches?: boolean;
+}) {
   const t = useTranslations('card');
   const tPlp = useTranslations('plp');
   const href = `/p/${encodeURIComponent(product.slug)}/${encodeURIComponent(product.sku)}`;
@@ -58,9 +70,9 @@ export default function ProductCard({ product, imagePriority = false }: { produc
         {product.rating ? <Rating value={product.rating.average} count={product.rating.count} small /> : null}
         {product.matchedSku ? <p className="m-0 font-mono text-[11px] text-ink-3">{t('matchedVariant', { sku: product.matchedSku })}</p> : null}
         <div className="flex items-start justify-between gap-2">
-          <PriceLine price={product.price} unit={product.unit} />
+          {showPrice ? <PriceLine price={product.price} unit={product.unit} /> : <span />}
           <div className="flex shrink-0 flex-col items-end gap-1">
-            {product.swatches ? <Swatches swatches={product.swatches} /> : null}
+            {showSwatches && product.swatches ? <Swatches swatches={product.swatches} /> : null}
             {product.label ? (
               <span className="rounded-pill bg-canvas-2 px-2 py-0.5 font-mono text-[11px] text-ink-2">
                 {product.label.kind === 'intensity' ? t('intensity', { n: product.label.value }) : product.label.value}

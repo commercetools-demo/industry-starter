@@ -9,6 +9,9 @@ vi.mock('next/navigation', () => ({
   },
 }));
 vi.mock('next-intl/server', () => ({ setRequestLocale: () => {} }));
+const pb = vi.hoisted(() => ({ outcome: { kind: 'none' } as { kind: string; node?: unknown }, renderPage: vi.fn(), provide: vi.fn() }));
+vi.mock('@/components/page-builder/renderPage', () => ({ renderPage: async (...a: unknown[]) => { pb.renderPage(...a); return pb.outcome; } }));
+vi.mock('@/lib/pdp/request-product', () => ({ provideProduct: (d: unknown) => pb.provide(d) }));
 vi.mock('@/components/pdp/RelatedStrip', () => ({ default: () => null }));
 vi.mock('@/i18n/routing', async () => ({
   ...(await (await import('@/test/shell')).routingMock()),
@@ -32,6 +35,9 @@ const props = (over: { locale?: string; slug?: string; sku?: string; query?: Rec
 beforeEach(() => {
   h.load.mockReset();
   h.redirect.mockReset();
+  pb.outcome = { kind: 'none' };
+  pb.renderPage.mockClear();
+  pb.provide.mockClear();
 });
 
 describe('product route', () => {
@@ -94,5 +100,54 @@ describe('layout', () => {
     expect(follows(buyBox, rating)).toBe(true);
     expect(container.querySelectorAll('h1')).toHaveLength(1);
     expect(container.querySelector('main')).toBeNull();
+  });
+});
+
+describe('product route and the page builder', () => {
+  const authored = () => <p data-slot="authored">authored</p>;
+
+  it('asks the page builder for /p/<slug>/<sku> and forwards the query string untouched', async () => {
+    h.load.mockResolvedValue(podPage());
+    await ProductPage(props({ query: { capsulesPerPack: '50', pb_preview: 't' } }));
+    expect(pb.renderPage).toHaveBeenCalledWith({
+      locale: 'en-US',
+      segments: ['p', 'ember-ristretto', 'POD-10'],
+      searchParams: { capsulesPerPack: '50', pb_preview: 't' },
+    });
+  });
+
+  it('a published template is wrapped in the product state and gets the product for its server parts', async () => {
+    const page = podPage();
+    h.load.mockResolvedValue(page);
+    pb.outcome = { kind: 'page', node: authored() };
+    const el = await ProductPage(props({ query: { capsulesPerPack: '50', choose: 'capsulesPerPack' } }));
+    expect(el.props.data).toBe(page);
+    expect(el.props.initialSelection).toEqual({ capsulesPerPack: '50' });
+    expect(el.props.choose).toBe('capsulesPerPack');
+    expect(el.props.children.props['data-slot']).toBe('authored');
+    expect(pb.provide).toHaveBeenCalledWith(page);
+  });
+
+  it.each(['none', 'failed'])('page builder outcome %s renders the native product page', async (kind) => {
+    h.load.mockResolvedValue(podPage());
+    pb.outcome = { kind };
+    const el = await ProductPage(props());
+    expect(el.props.data).toBeDefined();
+    expect(el.props.related).toBeDefined();
+    expect(pb.provide).not.toHaveBeenCalled();
+  });
+
+  it('an unknown product is not-found even when a template is published', async () => {
+    h.load.mockResolvedValue(null);
+    pb.outcome = { kind: 'page', node: authored() };
+    await expect(ProductPage(props({ sku: 'NOPE' }))).rejects.toThrow('NEXT_NOT_FOUND');
+    expect(pb.provide).not.toHaveBeenCalled();
+  });
+
+  it('a wrong slug still redirects to the canonical URL before an authored page is drawn', async () => {
+    h.load.mockResolvedValue(podPage());
+    pb.outcome = { kind: 'page', node: authored() };
+    await expect(ProductPage(props({ slug: 'old-name' }))).rejects.toThrow('NEXT_REDIRECT');
+    expect(pb.provide).not.toHaveBeenCalled();
   });
 });

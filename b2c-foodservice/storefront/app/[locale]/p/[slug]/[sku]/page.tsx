@@ -3,10 +3,13 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
 import ProductDetail from '@/components/pdp/ProductDetail';
+import { renderPage } from '@/components/page-builder/renderPage';
+import { PdpProvider } from '@/components/pdp/pdp-state';
 import RelatedStrip from '@/components/pdp/RelatedStrip';
 import { permanentRedirect } from '@/i18n/routing';
 import { pageMetadata } from '@/lib/content/seo';
 import { loadProductPage } from '@/lib/pdp/load';
+import { provideProduct } from '@/lib/pdp/request-product';
 import { parseChoose, parseSelection } from '@/lib/product/selection';
 
 type Props = {
@@ -47,15 +50,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * `/[locale]/p/[slug]/[sku]`: the SKU identifies the product (lookup is always by SKU) and is the landing variant; the
  * slug is cosmetic, and a slug that is not the product's own is redirected permanently to the canonical URL, keeping the
  * query. The selection (`?capsulesPerPack=50&grind=filter`) and `?choose=<attr>` come from the query string.
+ *
+ * The page builder is asked for the layout in parallel with the native product load. The native load decides not-found and the
+ * redirect, and is the data every authored product component shows (server parts through `provideProduct`, client parts through
+ * `PdpProvider`, which wraps the whole authored page). A published product template replaces the native layout; with no
+ * template, or when the page builder fails, the native product page renders as before.
  */
 export default async function ProductPage({ params, searchParams }: Props) {
   const { locale, slug: rawSlug, sku: rawSku } = await params;
   setRequestLocale(locale);
   const sku = safeDecode(rawSku);
-  const data = await loadProductPage(sku, locale);
+  const query = await searchParams;
+  const [data, outcome] = await Promise.all([
+    loadProductPage(sku, locale),
+    renderPage({ locale, segments: ['p', rawSlug, rawSku], searchParams: query }),
+  ]);
   if (!data) notFound();
 
-  const query = await searchParams;
   if (safeDecode(rawSlug) !== data.product.slug) {
     const sp = new URLSearchParams();
     for (const [k, v] of Object.entries(query)) for (const one of Array.isArray(v) ? v : v === undefined ? [] : [v]) sp.append(k, one);
@@ -65,6 +76,16 @@ export default async function ProductPage({ params, searchParams }: Props) {
 
   const landing = data.product.variants.find((v) => v.sku === sku);
   const choose = parseChoose(query, data.product.selectors);
+  const initialSelection = parseSelection(query, data.product.selectors, landing);
+
+  if (outcome.kind === 'page') {
+    provideProduct(data);
+    return (
+      <PdpProvider data={data} initialSelection={initialSelection} {...(choose ? { choose } : {})}>
+        {outcome.node}
+      </PdpProvider>
+    );
+  }
   return (
     <ProductDetail
       data={data}
@@ -73,7 +94,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
           <RelatedStrip product={data.product} locale={locale} />
         </Suspense>
       }
-      initialSelection={parseSelection(query, data.product.selectors, landing)}
+      initialSelection={initialSelection}
       {...(choose ? { choose } : {})}
     />
   );
