@@ -41,6 +41,8 @@ export const K = {
   typeLine: 'mcf-line-fulfilment',
   typeStore: 'mcf-store',
   typeReview: 'mcf-review',
+  /** Owner-named key (R, D-043): no `mcf-` prefix, so it is a contract key. */
+  typeInstoreOrder: 'instore-order-type',
   orderOrdered: 'mcf-order-ordered',
   orderPreparing: 'mcf-order-preparing',
   orderReady: 'mcf-order-ready-for-collection',
@@ -63,7 +65,7 @@ export const K = {
  */
 export const CONTRACT_KEYS: readonly string[] = [
   K.orderOrdered, K.orderPreparing, K.orderReady, K.orderCollected,
-  K.typeLine, K.typeStore, K.typeReview,
+  K.typeLine, K.typeStore, K.typeReview, K.typeInstoreOrder,
 ];
 
 /** Deterministic 32-bit hash (FNV-1a). All "random looking" seed values derive from it so every run is identical. */

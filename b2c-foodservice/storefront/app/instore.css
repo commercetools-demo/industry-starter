@@ -1,0 +1,48 @@
+/* In-store companion layout helpers (workstream R). Loaded only by InstoreShell, so the website's CSS is unchanged. Values come from
+   tokens.css; the safe-area insets keep bars and the scan button clear of a phone's home indicator and notch. */
+
+/* A bar fixed to the bottom of the screen: the total and the main action of a page. Pages that have one set data-instore-bar on the
+   document element (InstoreBottomBar does); the floating scan button then steps aside (the header's camera button is always there)
+   so it never covers a choice or the bar. */
+.instore-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 45;
+  padding: 12px 16px calc(env(safe-area-inset-bottom, 0px) + 12px);
+  background: var(--surface);
+  border-top: 1px solid var(--line-2);
+}
+
+/* The round scan button, always reachable with a thumb. */
+.instore-fab {
+  position: fixed;
+  right: calc(env(safe-area-inset-right, 0px) + 16px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 50;
+}
+:root[data-instore-bar] .instore-fab {
+  display: none;
+}
+
+/* Room under the content for a fixed bar and the scan button. */
+.instore-main {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+}
+:root[data-instore-bar] .instore-main {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 112px);
+}
+
+.instore-header {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* The toast sits above the bottom bar. */
+:root[data-instore-bar] [role='status'].fixed.bottom-6 {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 104px);
+}
+
+/* The hosted Checkout and the checkout review use the full width of a phone. */
+.instore-checkout .wrap {
+  padding-inline: 16px;
+}

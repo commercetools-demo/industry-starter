@@ -1,8 +1,9 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useCartUi } from '@/components/cart/use-cart-ui';
+import InstoreBottomBar from '@/components/instore/InstoreBottomBar';
 import PolicyLink from '@/components/content/PolicyLink';
 import Button from '@/components/ui/Button';
 import ButtonLink from '@/components/ui/ButtonLink';
@@ -15,6 +16,7 @@ import { subscribeNeedsAccount } from '@/lib/checkout/guards';
 import { blockingIssues } from '@/lib/checkout/summary';
 import { validatePickupName } from '@/lib/checkout/validate';
 import { registerHref, signInHref } from '@/lib/routes';
+import { formatMoney } from '@/lib/utils';
 import type { CheckoutPayment, CheckoutState } from '@/lib/types';
 import CheckoutIssues from './CheckoutIssues';
 import DeliveryNote from './DeliveryNote';
@@ -31,8 +33,10 @@ type Banner = null | 'declined' | 'generic' | 'unavailable' | 'placement' | 'tot
  * complete hosted Checkout (D-039), which owns address, delivery method and payment. Totals are always the engine's, read back
  * from the last response. A mixed bag is paid per `state.payments` (complete-per-group: collect first, then delivery).
  * `resumePart` continues a mixed purchase after a redirect payment returned to the page.
+ * `instore` (workstream R): the In-store companion's layout, a single column with the Continue button in a bar fixed to the bottom
+ * of the screen with the total; no step indicator. The stages, the hosted Checkout and every rule are the same.
  */
-export default function CheckoutPage({ resumePart }: { resumePart?: number }) {
+export default function CheckoutPage({ resumePart, instore = false }: { resumePart?: number; instore?: boolean }) {
   const t = useTranslations('checkout');
   const router = useRouter();
   const { customer } = useAccount();
@@ -185,12 +189,20 @@ export default function CheckoutPage({ resumePart }: { resumePart?: number }) {
     { id: 2, label: t('steps.pay') },
   ];
 
-  const header = (
+  const header = instore ? (
+    <div className="mb-5 mt-5 flex items-center justify-between gap-3">
+      <h1 className="m-0 font-display text-[28px] font-extrabold tracking-[-0.02em]">{t('title')}</h1>
+      <span className="text-[14px] font-semibold text-ink-2" data-testid="instore-step">
+        {steps[stage - 1]?.label}
+      </span>
+    </div>
+  ) : (
     <div className="mb-8 mt-6 flex flex-wrap items-center justify-between gap-4">
       <h1 className="m-0 font-display text-[30px] font-extrabold tracking-[-0.02em]">{t('title')}</h1>
       <StepIndicator steps={steps} current={stage} onGoTo={(id) => id === 1 && goToReview()} />
     </div>
   );
+  const columns = instore ? 'grid items-start gap-6' : 'grid items-start gap-12 stack:grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)]';
 
   if (isLoading) {
     return (
@@ -231,7 +243,7 @@ export default function CheckoutPage({ resumePart }: { resumePart?: number }) {
   return (
     <div className="wrap pb-20">
       {header}
-      <div className="grid items-start gap-12 stack:grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)]">
+      <div className={columns}>
         <div className="min-w-0">
           {stage === 1 ? (
             <Review
@@ -242,6 +254,7 @@ export default function CheckoutPage({ resumePart }: { resumePart?: number }) {
               busy={busy}
               banner={banner}
               needsAccount={customer === null && subscribeNeedsAccount(state.cart, {})}
+              instore={instore}
               nameRef={nameRef}
               headingRef={reviewHeading}
               onPerson={choosePerson}
@@ -266,7 +279,7 @@ export default function CheckoutPage({ resumePart }: { resumePart?: number }) {
             />
           )}
         </div>
-        <OrderSummary state={state} />
+        <OrderSummary state={state} instore={instore} />
       </div>
     </div>
   );
@@ -315,7 +328,7 @@ function SubscriptionNeedsAccount() {
 }
 
 function Review({
-  state, person, name, nameError, busy, banner, needsAccount, nameRef, headingRef, onPerson, onName, onBlurName, onChangeStore, onContinue,
+  state, person, name, nameError, busy, banner, needsAccount, instore, nameRef, headingRef, onPerson, onName, onBlurName, onChangeStore, onContinue,
 }: {
   state: CheckoutState;
   person: PickupPersonChoice;
@@ -325,6 +338,8 @@ function Review({
   banner: Banner;
   /** A guest with a subscribe line (workstream N): payment waits for an account. */
   needsAccount: boolean;
+  /** The In-store companion's layout: Continue sits in the bottom bar with the total. */
+  instore: boolean;
   nameRef: React.RefObject<HTMLInputElement | null>;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   onPerson: (p: PickupPersonChoice) => void;
@@ -334,7 +349,13 @@ function Review({
   onContinue: () => void;
 }) {
   const t = useTranslations('checkout');
+  const locale = useLocale();
   const blocked = blockingIssues(state.issues).length > 0;
+  const continueButton = (
+    <Button size="lg" block loading={busy} disabled={blocked || busy || needsAccount} onClick={onContinue} className={instore ? 'min-h-14 flex-1 text-[16px] whitespace-normal!' : 'mt-5'}>
+      {busy ? t('continuing') : t('continue')}
+    </Button>
+  );
   return (
     <div>
       <h2 ref={headingRef} tabIndex={-1} className="sr-only">
@@ -361,9 +382,21 @@ function Review({
           {group.kind === 'delivery' && state.deliveryNote ? <DeliveryNote note={state.deliveryNote} currency={state.summary.currency} /> : null}
         </FulfilmentCluster>
       ))}
-      <Button size="lg" block loading={busy} disabled={blocked || busy || needsAccount} onClick={onContinue} className="mt-5">
-        {busy ? t('continuing') : t('continue')}
-      </Button>
+      {instore ? (
+        <InstoreBottomBar label={t('title')}>
+          <div className="flex items-center gap-4">
+            <div className="flex min-w-0 shrink-0 flex-col">
+              <span className="text-[13px] font-medium text-ink-3">{t('summary.total')}</span>
+              <span className="font-display text-[22px] font-extrabold leading-none text-ink" data-testid="checkout-bar-total">
+                {formatMoney(state.summary.totalCents, state.summary.currency, locale)}
+              </span>
+            </div>
+            {continueButton}
+          </div>
+        </InstoreBottomBar>
+      ) : (
+        continueButton
+      )}
     </div>
   );
 }

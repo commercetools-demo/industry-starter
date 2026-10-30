@@ -342,6 +342,8 @@ export interface OrderReturn { id: string; createdAt: string; trackingId: string
 /** The one order model: the confirmation page, the account list and the account detail all read this (workstreams K and L). */
 export interface OrderView {
   id: string; orderNumber: string; createdAt: string; email: string | null; locale: string; currency: string; customerId: string | null;
+  /** `orderType` custom field (workstream R, D-042); absent on orders that never had one. */
+  orderType?: 'in-store-purchase' | 'online' | null;
   state: OrderState | null; paymentState: string | null; shipmentState: string | null;
   status: OrderStatusKind;
   /** Derived from the lines: some line is collected / some line is shipped or subscribed. */
@@ -442,3 +444,26 @@ export type SubscriptionAction =
   | { action: 'setInterval'; recurrencePolicyId: string };
 
 export interface SubscriptionsResponse { subscriptions: Subscription[]; pending: PendingSubscription[] }
+
+// Workstream R: In-store companion. What the scanner dialog shows for one scanned SKU (lib/mappers/scan-product.ts).
+export interface ScanProduct {
+  sku: string;
+  productId: string;
+  slug: string;
+  name: string;
+  /** Clean image URL of the variant (no sizing); null when the variant has none. */
+  imageUrl: string | null;
+  /** One line of variant attributes, for example "Intensity 8 · 10 capsules"; empty when the product has none. */
+  variant: string;
+  /** null: no price in this market (the add button is disabled). */
+  price: { amount: Money; old?: Money } | null;
+  /** Online (warehouse) stock, the figure the bag checks (D-044). `quantity` is a count, not shown above the low-stock threshold. */
+  availability: { state: AvailabilityState; quantity: number };
+  /** The stock read failed: never claim stock. */
+  inventoryFailed: boolean;
+  /** Smallest and largest quantity the stepper offers (inventory cart limits and stock). */
+  minQuantity: number;
+  maxQuantity: number;
+  /** Path of the product page without the locale: `/p/<slug>/<sku>`. */
+  href: string;
+}

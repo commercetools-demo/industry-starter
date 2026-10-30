@@ -68,3 +68,5 @@
 - (Q) `GET /api/checkout` answers 404 `cart_not_found` for a shopper with no bag (checkout opened by URL), so the browser logs a console error (Lighthouse best practices 96 on checkout). Answer 200 with an empty state or have the page skip the call without a bag cookie.
 - (Q) Product images are larger than they are shown (trace insight `ImageDelivery`: 90 to 160 kB too many on the listing and the product page). Check the `sizes` of `CardImage` and the gallery once the real image endpoint exists (OA-03).
 - (Q) Dev-dependency advisories (`npm audit` without `--omit=dev`: storefront 5 high in the `eslint-config-next` chain, seed 6 including `vitest` 2.x); none ships. Move to current releases of the lint and test toolchains when they fit the pinned stack (`plans/evidence/Q/npm-audit.txt` section 3).
+- (R) Per-store availability in the In-store companion (the shopper stands in a known store; show that store stock, not the online stock). Needs the store chosen at the door, for example by QR code per store.
+- (R) A PNG apple-touch-icon and manifest icons (192, 512) for the In-store web app; the SVG icon is enough for Android Chrome but iOS prefers PNG.

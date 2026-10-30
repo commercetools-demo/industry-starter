@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
+import { isInstore } from './lib/app-mode';
 import { securityHeaders } from './lib/security-headers';
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
@@ -7,7 +8,7 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 export const baseConfig: NextConfig = {
   poweredByHeader: false,
   async headers() {
-    const headers = securityHeaders({ dev: process.env.NODE_ENV !== 'production', reportOnly: process.env.CSP_REPORT_ONLY === 'true' });
+    const headers = securityHeaders({ dev: process.env.NODE_ENV !== 'production', reportOnly: process.env.CSP_REPORT_ONLY === 'true', instore: isInstore() });
     return [{ source: '/:path*', headers }];
   },
   // forbidden() and unauthorized() need this flag in Next 16 (PROJECT-FINDINGS).

@@ -88,6 +88,8 @@ Follow `plans/DEPLOY-NETLIFY.md`. In short:
 3. **OA-P1**: where contact messages go (a helpdesk, Slack or Teams incoming webhook): `CONTACT_WEBHOOK_URL`, optionally `CONTACT_WEBHOOK_TOKEN`, `FEEDBACK_WEBHOOK_URL`.
 4. Tell Claude when the hand tests are finished: **delete the dev routes** (`app/api/health/route.ts`, `app/api/dev`, `app/[locale]/dev`; section 3 of the runbook), run `npm run predeploy` until it prints `predeploy: ok`, then `/commercetools:nextjs-deploy-netlify`. Deploy a preview first (Q-Q-14).
 
+Optional, the In-store companion (workstream R): rows **OA-R-a** (create the order type), **OA-R-b** (add the branch deploy), **OA-R-c** (`APP_MODE=instore` for that branch), **OA-R-d** (a QR code); then **M-R-01** to **M-R-04** (scan with the real camera on phones, printed barcodes, the order carries the field, install to the home screen) and **SO-R-a** (the texts). Steps: `plans/DEPLOY-NETLIFY.md` section 10.
+
 ## 9. After the deploy
 
 Give Claude the URL. Claude runs section E of `plans/RELEASE-CHECKLIST.md` and writes `plans/evidence/Q/deployed/` (task Q-17); you do **M-Q-07** (your own device: home, a product, the cart, sign-in; the demo account decision is applied), **M-Q-10** (headers, `/api/health` is 404, a host rate-limit rule) and **M-P-01** (a real enquiry reaches the receiver). **M-J-03**: confirm `DEMO_LOGIN_ENABLED` is what you decided.

@@ -21,6 +21,7 @@ vi.mock('@/lib/ct/channels', () => ({ getStoresForCountry: vi.fn(async () => [ST
 vi.mock('@/lib/ct/public-cache', () => ({ cachedPublic: (_k: string, _p: string[], fn: unknown) => fn }));
 vi.mock('@/lib/ct/client', () => ({
   apiRoot: {
+    types: () => ({ withKey: () => ({ get: () => ({ execute: async () => ({ body: { id: 'type-instore' } }) }) }) }),
     shippingMethods: () => ({ withKey: () => ({ get: () => ({ execute: async () => ({ body: { localizedDescription: { 'en-US': '2-4 business days' } } }) }) }) }),
     carts: () => ({
       post: ({ body }: { body: unknown }) => ({
@@ -46,6 +47,7 @@ vi.mock('@/lib/ct/client', () => ({
   },
 }));
 
+import { resetOrderTypeCache } from './order-type';
 import { ensureCheckoutCart, getCheckoutState, missingForPayment, preparePayments, removePaidLines, CheckoutNotReady } from './checkout';
 
 const market = { country: 'US', currency: 'USD', locale: 'en-US' };
@@ -142,6 +144,22 @@ describe('preparePayments', () => {
     expect(delivery?.lineItems[1]?.recurrenceInfo).toBeDefined();
     expect(delivery?.discountCodes).toBeUndefined();
     expect(delivery?.shippingMethod).toBeUndefined();
+  });
+  it('In-store: every clone of a mixed bag carries the order type; the website never sets it (D-042)', async () => {
+    h.view = viewCart([collectLine, shipLine]);
+    h.raw = rawMixed();
+    vi.stubEnv('APP_MODE', 'instore');
+    resetOrderTypeCache();
+    await preparePayments(session, market, { pickupName: 'Maya Lopez' });
+    expect(h.created).toHaveLength(2);
+    for (const c of h.created as { custom?: unknown }[]) {
+      expect(c.custom).toEqual({ type: { typeId: 'type', key: 'instore-order-type' }, fields: { orderType: 'in-store-purchase' } });
+    }
+    h.created = [];
+    vi.stubEnv('APP_MODE', 'website');
+    await preparePayments(session, market, { pickupName: 'Maya Lopez' });
+    for (const c of h.created as { custom?: unknown }[]) expect(c.custom).toBeUndefined();
+    vi.unstubAllEnvs();
   });
   it('Canada session never gets mcf-collect', async () => {
     h.view = viewCart([viewLine({ id: 'c1', fulfilment: 'collect', store: STORE_SOHO })], { country: 'CA', currency: 'CAD' });

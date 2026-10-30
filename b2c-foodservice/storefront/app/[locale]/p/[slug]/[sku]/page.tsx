@@ -2,9 +2,11 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
+import InstoreProduct from '@/components/instore/InstoreProduct';
 import ProductDetail from '@/components/pdp/ProductDetail';
 import RelatedStrip from '@/components/pdp/RelatedStrip';
 import { permanentRedirect } from '@/i18n/routing';
+import { isInstore } from '@/lib/app-mode';
 import { pageMetadata } from '@/lib/content/seo';
 import { loadProductPage } from '@/lib/pdp/load';
 import { parseChoose, parseSelection } from '@/lib/product/selection';
@@ -33,6 +35,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await loadProductPage(sku, locale); // the same cached load the page uses
   if (!data) return {};
   const { product } = data;
+  // The In-store companion is never indexed and has no social card (workstream R, D-048).
+  if (isInstore()) return { title: product.metaTitle ?? product.name, robots: { index: false, follow: false } };
   const image = product.variants.find((v) => v.sku === sku)?.images[0] ?? product.variants[0]?.images[0];
   return pageMetadata({
     locale,
@@ -64,6 +68,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
   }
 
   const landing = data.product.variants.find((v) => v.sku === sku);
+  if (isInstore()) return <InstoreProduct data={data} initialSelection={parseSelection(query, data.product.selectors, landing)} />;
   const choose = parseChoose(query, data.product.selectors);
   return (
     <ProductDetail

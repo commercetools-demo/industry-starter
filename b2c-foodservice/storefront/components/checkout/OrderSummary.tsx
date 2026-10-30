@@ -19,8 +19,9 @@ function Row({ label, value, tone }: { label: string; value: string; tone?: 'dis
 /**
  * The summary card, sticky beside the stage. It renders `state.summary` only (the engine's figures from the last response): no
  * promo input here (codes are entered on the bag page and read back), no tax rate, no free-shipping threshold of its own.
+ * `instore` (workstream R): the figures only. The Review stage above already lists the lines, so the list is not repeated.
  */
-export default function OrderSummary({ state }: { state: CheckoutState }) {
+export default function OrderSummary({ state, instore = false }: { state: CheckoutState; instore?: boolean }) {
   const t = useTranslations('checkout');
   const money = useMoney();
   const s = state.summary;
@@ -29,11 +30,11 @@ export default function OrderSummary({ state }: { state: CheckoutState }) {
   const applied = state.codes.filter((c) => c.state === 'applied');
 
   return (
-    <Card as="section" aria-labelledby="checkout-summary-title" className="stack:sticky stack:top-24">
+    <Card as="section" aria-labelledby="checkout-summary-title" className={instore ? '' : 'stack:sticky stack:top-24'}>
       <h2 id="checkout-summary-title" className="m-0 mb-3 font-display text-[18px] font-bold">
-        {t('summary.items', { count })}
+        {instore ? t('summary.title') : t('summary.items', { count })}
       </h2>
-      <ul className="m-0 mb-4 max-h-[200px] list-none overflow-y-auto p-0" data-testid="summary-lines">
+      <ul hidden={instore} className="m-0 mb-4 max-h-[200px] list-none overflow-y-auto p-0" data-testid="summary-lines">
         {state.cart.lines.map((l) => (
           <li key={l.id} className="flex items-start gap-3 py-2">
             <LineImage {...(l.imageUrl ? { url: l.imageUrl } : {})} alt={l.imageAlt} width={48} height={58} />

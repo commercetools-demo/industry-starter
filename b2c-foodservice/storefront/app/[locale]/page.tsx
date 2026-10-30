@@ -13,11 +13,17 @@ import { pageMetadata } from '@/lib/content/seo';
 import { loadHomePage } from '@/lib/home-page';
 import { homeStructuredData } from '@/lib/home-seo';
 import { routing } from '@/i18n/routing';
+import InstoreHome from '@/components/instore/InstoreHome';
+import { isInstore } from '@/lib/app-mode';
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  if (isInstore()) {
+    const t = await getTranslations({ locale, namespace: 'instore' });
+    return { title: t('meta.title'), robots: { index: false, follow: false } };
+  }
   const t = await getTranslations({ locale, namespace: 'home.meta' });
   const meta = pageMetadata({
     locale,
@@ -34,6 +40,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  if (isInstore()) {
+    const { loadInstoreHome } = await import('@/lib/instore/category');
+    return <InstoreHome tree={await loadInstoreHome(locale)} />;
+  }
   const [t, { ctx, collection, tree, store, figures, featured }] = await Promise.all([
     getTranslations({ locale, namespace: 'common' }),
     loadHomePage(locale),

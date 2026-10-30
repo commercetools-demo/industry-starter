@@ -193,10 +193,31 @@ export function planShippingUpdate(existing: Res, draft: { zoneRates?: ZoneRateL
   return out;
 }
 
-/** Field and attribute definitions added later are added to existing types; nothing is ever removed or retyped. */
-export function planTypeUpdate(existing: Res, draft: { fieldDefinitions?: { name: string }[] }): Action[] {
-  const have = new Set(((existing.fieldDefinitions as { name: string }[]) ?? []).map((f) => f.name));
-  return (draft.fieldDefinitions ?? []).filter((f) => !have.has(f.name)).map((fieldDefinition) => ({ action: 'addFieldDefinition', fieldDefinition }));
+/**
+ * Field and attribute definitions added later are added to existing types; nothing is ever removed or retyped. An Enum value
+ * missing from an existing enum field is added (`addEnumValue`); existing values are never changed.
+ */
+export function planTypeUpdate(
+  existing: Res,
+  draft: { fieldDefinitions?: { name: string; type?: { name?: string; values?: unknown } }[] },
+): Action[] {
+  const fields = (existing.fieldDefinitions as { name: string; type?: { values?: { key: string }[] } }[]) ?? [];
+  const have = new Map(fields.map((f) => [f.name, f]));
+  const actions: Action[] = [];
+  for (const f of draft.fieldDefinitions ?? []) {
+    const current = have.get(f.name);
+    if (!current) {
+      actions.push({ action: 'addFieldDefinition', fieldDefinition: f });
+      continue;
+    }
+    if (f.type?.name === 'Enum') {
+      const known = new Set((current.type?.values ?? []).map((v) => v.key));
+      for (const value of (f.type.values as { key: string; label: string }[] | undefined) ?? []) {
+        if (!known.has(value.key)) actions.push({ action: 'addEnumValue', fieldName: f.name, value });
+      }
+    }
+  }
+  return actions;
 }
 
 export function planProductTypeUpdate(existing: Res, draft: { attributes?: { name: string }[] }): Action[] {

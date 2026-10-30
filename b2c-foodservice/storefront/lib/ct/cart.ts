@@ -7,6 +7,7 @@ import { getCartEnrichment } from '@/lib/ct/cart-enrich';
 import { apiRoot } from '@/lib/ct/client';
 import { getStoresForCountry } from '@/lib/ct/channels';
 import { getInventoryDetail, getStoreStock } from '@/lib/ct/inventory';
+import { orderTypeCartActions, withOrderType } from '@/lib/ct/order-type';
 import { getProductBySku, getRecurrencePolicies, getRecurrencePolicyByKey } from '@/lib/ct/product-detail';
 import { updateWithRetry } from '@/lib/ct/retry';
 import type { DomainErrorCode } from '@/lib/api-domain';
@@ -61,21 +62,18 @@ async function createRawCart(
   shippingMode: 'Single' | 'Multiple' = CART_SHIPPING_MODE,
 ): Promise<{ cart: Cart; session: Session }> {
   const next = session.customerId ? session : ensureAnonymousId(session);
-  const { body } = await apiRoot
-    .carts()
-    .post({
-      body: {
-        currency: market.currency,
-        country: market.country,
-        locale: market.locale,
-        shippingMode,
-        ...(next.customerId ? { customerId: next.customerId } : { anonymousId: next.anonymousId }),
-        deleteDaysAfterLastModification: 30,
-        shippingAddress: { country: market.country },
-        taxMode: 'Platform',
-      },
-    })
-    .execute();
+  // In the In-store companion every cart is born with `orderType = in-store-purchase` (D-042); the draft is unchanged otherwise.
+  const draft = await withOrderType({
+    currency: market.currency,
+    country: market.country,
+    locale: market.locale,
+    shippingMode,
+    ...(next.customerId ? { customerId: next.customerId } : { anonymousId: next.anonymousId }),
+    deleteDaysAfterLastModification: 30,
+    shippingAddress: { country: market.country },
+    taxMode: 'Platform' as const,
+  });
+  const { body } = await apiRoot.carts().post({ body: draft }).execute();
   return { cart: body, session: { ...next, cartId: body.id } };
 }
 
@@ -200,8 +198,11 @@ export async function addLine(
   try {
     const updated = await updateWithRetry(
       async () => (await apiRoot.carts().withId({ ID: cartId }).get().execute()).body,
-      async (current) =>
-        (await apiRoot.carts().withId({ ID: cartId }).post({ body: { version: current.version, actions: [action] } }).execute()).body,
+      async (current) => {
+        // A cart that exists without the order type (made before the mode, or before the type) gets it in the same update (D-042).
+        const actions: CartUpdateAction[] = [action, ...(await orderTypeCartActions(current))];
+        return (await apiRoot.carts().withId({ ID: cartId }).post({ body: { version: current.version, actions } }).execute()).body;
+      },
     );
     return { cart: mapCartSummary(updated), session: next };
   } catch (e) {
@@ -337,6 +338,7 @@ export async function getCartView(session: Session, market: CartMarket): Promise
     current = rebuilt.session;
     ct = (await readOwnedCart(current)) ?? ct;
   }
+  ct = await tagOrderType(ct);
   const country = ct.country ?? market.country;
   const enrichment = await getCartEnrichment(ct, {
     locale: market.locale, country, currency: ct.totalPrice.currencyCode,
@@ -351,6 +353,20 @@ export async function getCartView(session: Session, market: CartMarket): Promise
     previousPrices: changes,
   });
   return { cart, session: current };
+}
+
+/**
+ * A cart that predates the In-store mode or the type gets `orderType` on its first read (D-042). Never breaks the page: a failure
+ * is logged and the cart is returned as it was (the next write or read tries again).
+ */
+async function tagOrderType(cart: Cart): Promise<Cart> {
+  try {
+    const actions = await orderTypeCartActions(cart);
+    return actions.length === 0 ? cart : await postUpdate(cart.id, cart.version, actions);
+  } catch {
+    console.warn(JSON.stringify({ event: 'instore_order_type_tag_failed' }));
+    return cart;
+  }
 }
 
 function withoutCart(session: Session): Session {

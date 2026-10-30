@@ -28,6 +28,7 @@ Spec ids: plain names are `openspec/specs/<name>/`. Apps: `storefront/` (shopper
 | O | Home page | design-home-page, home-landing-page | G | none | 10 |
 | P | Content and error pages: about, contact, FAQ, policies, blog, error pages | about-us, contact-us, faq, policy-pages, blog-resources, error-pages | E, F, J, L | SO-01 (copy and legal text) | 10 |
 | Q | Quality and release: responsive, accessibility, end-to-end journeys, security review, performance, deploy gate | none new; verifies all | all | OA-05 (Netlify) for deploy | 11 |
+| R | In-store companion: `APP_MODE=instore` experience for a shopper in a store (big-touch browse, barcode scan, bag, hosted Checkout, `instore-order-type` on the cart) deployed as a Netlify branch deploy | none new (reuses the code of G, H, I and K) | G, H, I, K | OA-R-a (type in the project), OA-R-b and OA-R-c (branch deploy and variables) | 12 |
 
 ## Waves
 
@@ -42,6 +43,7 @@ Spec ids: plain names are `openspec/specs/<name>/`. Apps: `storefront/` (shopper
 9. L and M in parallel.
 10. N, O, P in parallel.
 11. Q.
+12. R (after Q; a mode of the same app, not part of the release gate of Q).
 
 ## Graph
 

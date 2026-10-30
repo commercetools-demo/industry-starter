@@ -8,6 +8,7 @@ import type { MixedStrategy } from '@/lib/types';
 import { apiRoot } from '@/lib/ct/client';
 import { buildAddLineAction, getCartView, getOwnedCartForRebuild, ownsCart, rebuildCart, type AddLineInput, type CartMarket } from '@/lib/ct/cart';
 import { getStoresForCountry } from '@/lib/ct/channels';
+import { withOrderType } from '@/lib/ct/order-type';
 import { cachedPublic } from '@/lib/ct/public-cache';
 import { updateWithRetry } from '@/lib/ct/retry';
 import { AppError } from '@/lib/errors';
@@ -132,7 +133,8 @@ async function createPartCart(c: PartContext): Promise<CtCart> {
     shippingAddress: c.address ?? { country: raw.country ?? '' },
     ...(c.group.kind === 'collect' ? { shippingMethod: { typeId: 'shipping-method' as const, key: COLLECT_METHOD_KEY } } : {}),
   };
-  const { body: created } = await apiRoot.carts().post({ body }).execute();
+  // The clone of a bag paid per fulfilment group carries the original's order type, so every order of the purchase has it (D-042).
+  const { body: created } = await apiRoot.carts().post({ body: await withOrderType(body) }).execute();
   return created;
 }
 

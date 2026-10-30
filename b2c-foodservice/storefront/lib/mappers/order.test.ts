@@ -118,3 +118,15 @@ describe('mapOrder (account detail fields)', () => {
     expect(d.ship?.recipient ?? null).toBeNull();
   });
 });
+
+describe('mapOrder orderType (workstream R)', () => {
+  it('exposes the order type custom field when it holds a known value', () => {
+    const custom = (v: unknown) => ({ custom: { type: { typeId: 'type', id: 't' }, fields: { orderType: v } } });
+    expect(view(ctOrder(custom('in-store-purchase')), 'en-US', NOW).orderType).toBe('in-store-purchase');
+    expect(view(ctOrder(custom('online')), 'en-US', NOW).orderType).toBe('online');
+  });
+  it('leaves it out for an unknown value and for an order without custom fields', () => {
+    expect('orderType' in view(ctOrder({ custom: { type: { typeId: 'type', id: 't' }, fields: { orderType: 'x' } } }), 'en-US', NOW)).toBe(false);
+    expect('orderType' in view(ctOrder(), 'en-US', NOW)).toBe(false);
+  });
+});

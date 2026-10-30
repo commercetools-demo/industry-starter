@@ -66,8 +66,9 @@ describe('seed data (SEED-PLAN)', () => {
       ...taxCategoryDrafts, ...zoneDrafts, ...shippingMethodDrafts, ...typeDrafts, ...stateDrafts, ...productTypeDrafts, ...categoryDrafts(), ...channelDrafts(),
       ...recurrencePolicyDrafts, ...productDiscountDrafts(), ...cartDiscountDrafts, ...discountCodeDrafts, ...inventoryDrafts(), ...CUSTOMERS, shoppingListDraft(), ...PRODUCTS,
     ].map((d) => (d as { key?: string }).key);
-    for (const k of keys) expect(k, String(k)).toMatch(/^mcf-/);
-    for (const k of CONTRACT_KEYS) expect(k).toMatch(/^mcf-/);
+    const OWNER_KEYS = ['instore-order-type']; // keys the owner named (D-043)
+    for (const k of keys) expect(k, String(k)).toMatch(OWNER_KEYS.includes(String(k)) ? /^instore-order-type$/ : /^mcf-/);
+    for (const k of CONTRACT_KEYS) expect(k).toMatch(OWNER_KEYS.includes(k) ? /^instore-order-type$/ : /^mcf-/);
     expect(CONTRACT_KEYS).toEqual(expect.arrayContaining(stateDrafts.map((s) => s.key)));
     expect(CONTRACT_KEYS).toEqual(expect.arrayContaining(typeDrafts.map((t) => t.key)));
   });
