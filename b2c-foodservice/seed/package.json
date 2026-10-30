@@ -14,6 +14,8 @@
     "seed": "tsx src/seed.ts",
     "seed:settings": "tsx src/settings.ts",
     "seed:inventory": "tsx src/inventory.ts",
+    "seed:instore": "tsx src/instore.ts",
+    "seed:instore-visibility": "tsx src/instore.ts --visibility-only",
     "seed:cleanup": "tsx src/cleanup.ts",
     "seed:images": "tsx src/images.ts",
     "verify": "tsx src/verify.ts",

@@ -1,4 +1,5 @@
 import 'server-only';
+import { webVisibleTree } from '@/lib/category-tree';
 import { getCategoryTree } from '@/lib/ct/categories';
 import { getStoresForCountry } from '@/lib/ct/channels';
 import { getValidCountryConfig } from '@/lib/ct/market';
@@ -47,5 +48,5 @@ export async function getShellData(locale: string): Promise<ShellData> {
   const selectedKey = stores.some((s) => s.key === session.collectionStoreKey)
     ? (session.collectionStoreKey ?? null)
     : null;
-  return { country: market.country, currency: market.currency, categories, figures, stores, selectedKey, markets };
+  return { country: market.country, currency: market.currency, categories: webVisibleTree(categories), figures, stores, selectedKey, markets };
 }

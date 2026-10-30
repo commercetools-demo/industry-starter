@@ -5,6 +5,13 @@ export function flattenTree(tree: Category[]): Category[] {
   return tree.flatMap((c) => [c, ...flattenTree(c.children)]);
 }
 
+/** Categories the web storefront shows in its navigation: instoreVisibility not set, `both` or `onlyOnline`. A hidden category hides its subtree. */
+export function webVisibleTree(tree: Category[]): Category[] {
+  return tree
+    .filter((c) => !c.instoreVisibility || c.instoreVisibility === 'both' || c.instoreVisibility === 'onlyOnline')
+    .map((c) => ({ ...c, children: webVisibleTree(c.children) }));
+}
+
 export function findCategory(tree: Category[], match: (c: Category) => boolean): Category | null {
   return flattenTree(tree).find(match) ?? null;
 }

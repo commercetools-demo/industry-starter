@@ -14,6 +14,8 @@ export function mapCategory(c: SDKCategory, locale: string): Category {
   if (c.description) out.description = getLocalizedString(c.description, locale);
   if (c.parent) out.parentId = c.parent.id;
   if (c.orderHint) out.orderHint = c.orderHint;
+  const visibility = c.custom?.fields?.instoreVisibility;
+  if (visibility === 'onlyInStore' || visibility === 'onlyOnline' || visibility === 'both' || visibility === 'none') out.instoreVisibility = visibility;
   const src = c.assets?.[0]?.sources[0]?.uri;
   if (src) out.imageUrl = cleanImageUrl(src);
   return out;

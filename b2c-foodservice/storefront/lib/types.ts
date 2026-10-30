@@ -38,6 +38,8 @@ export interface Product {
 export interface Category {
   id: string; key?: string; name: string; slug: string; description?: string;
   imageUrl?: string; parentId?: string; orderHint?: string; children: Category[];
+  /** Custom field `instoreVisibility` of the category type `instore-category-type`; absent when not set. */
+  instoreVisibility?: 'onlyInStore' | 'onlyOnline' | 'both' | 'none';
 }
 
 export type ApiErrorBody = { error: { code: ErrorCode; message: string } };
