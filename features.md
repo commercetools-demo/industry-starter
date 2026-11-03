@@ -111,22 +111,26 @@ MALVA B2B2C automotive: a reseller storefront for drivers and workshops, and a p
 
 ## b2c-foodservice
 
-MALVA Coffee storefront: a B2C coffee retailer selling pods, beans, machines and accessories in the US and Canada, with store collection, delivery and subscriptions in one bag. App: `b2c-foodservice/storefront`. Seed: `b2c-foodservice/seed`. Plans: `b2c-foodservice/plans/`. Specs: `b2c-foodservice/openspec/specs/`. Docs: `docs/` (demo script and how it works). Live: <https://omni-industry-starter.netlify.app/en-US>.
+MALVA storefront with two brands, Malva Coffee and Malva Drinks, sharing one bag. Malva Coffee is a B2C coffee retailer selling pods, beans, machines and accessories in the US and Canada, with store collection, delivery and subscriptions. Malva Drinks sells sparkling water, delivered only. App: `b2c-foodservice/storefront`. Seed: `b2c-foodservice/seed`. Plans: `b2c-foodservice/plans/`. Specs: `b2c-foodservice/openspec/specs/`. Docs: `docs/` (demo script and how it works). Live: <https://omni-industry-starter.netlify.app/en-US>.
 
-**State:** workstreams A to Q are "Ready for review" in `plans/STATUS.md` (2026-10-21); live Checkout, Stripe and recurring-order checks are listed as open owner actions in `plans/OWNER-HANDOFF.md`. The site is deployed on Netlify and reads a seeded commercetools project.
+**State:** workstreams A to Q are "Ready for review" in `plans/STATUS.md` (2026-10-21); live Checkout, Stripe and recurring-order checks are listed as open owner actions in `plans/OWNER-HANDOFF.md`. The multibrand change (`add-multibrand-malva-drinks`, 38 of 38 tasks) was archived on 2026-11-03. The site is deployed on Netlify and reads a seeded commercetools project.
 
 | Feature | What it does | Where |
 | --- | --- | --- |
-| Catalog browse and search | Category tree, facets with counts, search, per-capsule unit prices | `app/[locale]/(listing)`; `lib/ct/products.ts`, `search.ts`, `categories.ts` |
-| Product page | Variants, and a Collect, Ship or Subscribe choice per product | `app/[locale]/p/[slug]`; `lib/ct/product-detail.ts`, `subscription-plan.ts` |
+| Multiple brands | Brand switcher above the header, URLs of the form `/{brand}/{locale}`, `/` and `/{locale}` redirect to `/malva-coffee/{locale}` | specs `multibrand-routing-and-switcher`, `brand-catalog-scoping`; `lib/brands.ts`, `i18n/navigation.tsx`, `components/layout/BrandSwitcher.tsx`, `proxy.ts` |
+| Per-brand catalog | Each brand has a product selection that scopes Product Search, the category tree and the header | `lib/ct/product-selections.ts`, `search.ts`, `categories.ts` |
+| Malva Drinks | Own home page, product page with size options, colour tokens and delivery-only fulfilment; drinks stock sits on its own inventory channel | spec `malva-drinks-storefront`; `components/home/DrinksHome.tsx`, `lib/ct/channels.ts`, `inventory.ts` |
+| One bag, two brands | Cart lines are grouped by brand in the UI from a `brand` field on the line custom type; one checkout and one shipment | specs `cart-management`, `cart-page`; `lib/cart/brand-sections.ts`, `components/cart/BrandHeading.tsx` |
+| Catalog browse and search | Category tree, facets with counts, search, per-capsule unit prices | `app/[brand]/[locale]/(listing)`; `lib/ct/products.ts`, `search.ts`, `categories.ts` |
+| Product page | Variants, and a Collect, Ship or Subscribe choice per product | `app/[brand]/[locale]/p/[slug]`; `lib/ct/product-detail.ts`, `subscription-plan.ts` |
 | Mixed bag | Collect, ship and subscribe lines in one cart, each in its own cluster | spec `fulfilment-and-availability-model`; `lib/ct/cart.ts`, `cart-enrich.ts` |
 | Store collection and per-store stock | Six New York stores, stock per store, collection tracker | `lib/ct/channels.ts`, `inventory.ts`; `account/(shell)/collection` |
 | Two markets | `en-US` (USD) and `en-CA` (CAD) with their own tax, shipping and thresholds | `lib/ct/market.ts`, `proxy.ts` |
 | Discount codes | `WELCOME10`, `FREESHIP`, `COFFEE15`, stackable | `lib/ct/cart.ts` |
 | Subscriptions and recurring orders | Four intervals; skip, pause, change interval, cancel | `account/(shell)/subscriptions`; `lib/ct/recurring-orders.ts` |
 | Reviews and ratings | Written by signed-in shoppers, counted at once | `lib/ct/reviews.ts`, `review-client.ts` |
-| Hosted checkout | commercetools Checkout with Stripe | `app/[locale]/checkout`; `lib/ct/checkout-session.ts` |
-| Account | Orders, addresses, saved items, payment methods, demo sign-in | `app/[locale]/account/*`; `lib/ct/auth.ts`, `orders.ts` |
+| Hosted checkout | commercetools Checkout with Stripe | `app/[brand]/[locale]/checkout`; `lib/ct/checkout-session.ts` |
+| Account | Orders, addresses, saved items, payment methods, demo sign-in | `app/[brand]/[locale]/account/*`; `lib/ct/auth.ts`, `orders.ts` |
 | Demo gate and tracker | Password gate and visitor analytics | `app/gate`, `app/api/gate`, `app/api/tracker`; `lib/gate.ts` |
-| Seed | Project settings, catalog, stores, customers, discounts, reviews | `b2c-foodservice/seed/src` |
+| Seed | Project settings, catalog, stores, customers, discounts, reviews, brand selections, the drinks catalogue and its reduction script | `b2c-foodservice/seed/src`, `scripts/reduce-drinks.ts`; spec `multibrand-seed` |
 
