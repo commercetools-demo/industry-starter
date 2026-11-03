@@ -1,8 +1,10 @@
 import 'server-only';
 import { cache } from 'react';
+import { BRANDS, DEFAULT_BRAND, brandOf } from '@/lib/brands';
 import { findCategory } from '@/lib/category-tree';
 import { getAttributeLabels } from '@/lib/ct/attribute-labels';
 import { getCategoryTree } from '@/lib/ct/categories';
+import { isInBrandSelection } from '@/lib/ct/product-selections';
 import { getInventoryDetail } from '@/lib/ct/inventory';
 import { getProductBySku, getRecurrencePolicies } from '@/lib/ct/product-detail';
 import { getFreeShippingThreshold } from '@/lib/ct/shipping';
@@ -17,11 +19,14 @@ const logFailure = (event: string) => (e: unknown) => {
   console.error(JSON.stringify({ event, status: (e as { statusCode?: number })?.statusCode }));
 };
 
-async function load(sku: string, locale: string): Promise<ProductPageData | null> {
+async function load(sku: string, locale: string, brand: string): Promise<ProductPageData | null> {
+  const brandSlug = brandOf(brand).slug;
   const market = marketForLocale(locale);
   const ctx = { locale, country: market.country, currency: market.currency };
   const projection = await getProductBySku(sku, ctx);
   if (!projection) return null;
+  // A product of another brand does not exist on this brand's URL.
+  if (!(await isInBrandSelection(projection.id, brandSlug))) return null;
 
   const skus = [projection.masterVariant, ...projection.variants].map((v) => v.sku).filter((s): s is string => Boolean(s));
   const [labels, tree, inventory, policies, threshold] = await Promise.all([
@@ -29,7 +34,7 @@ async function load(sku: string, locale: string): Promise<ProductPageData | null
       logFailure('pdp_labels_failed')(e);
       return {};
     }),
-    getCategoryTree(locale).catch((e: unknown) => {
+    getCategoryTree(locale, brandSlug).catch((e: unknown) => {
       logFailure('pdp_categories_failed')(e);
       return [] as Category[];
     }),
@@ -64,7 +69,8 @@ async function load(sku: string, locale: string): Promise<ProductPageData | null
     inventoryFailed: inventory === null,
     freeShippingThreshold: threshold,
     returnDays: RETURN_DAYS,
-    collection: market.collection,
+    collection: market.collection && BRANDS[brandSlug].pickup,
+    brand: brandSlug,
     country: market.country,
     currency: market.currency,
   };
@@ -75,4 +81,5 @@ async function load(sku: string, locale: string): Promise<ProductPageData | null
  * Wrapped in React `cache()` so `generateMetadata` and the page share one load with the same locale, currency and
  * country (skill rule: matching context). Exported for K, M, N and O.
  */
-export const loadProductPage: (sku: string, locale: string) => Promise<ProductPageData | null> = cache(load);
+export const loadProductPage: (sku: string, locale: string, brand?: string) => Promise<ProductPageData | null> = (sku, locale, brand = DEFAULT_BRAND) => cachedLoad(sku, locale, brand);
+const cachedLoad = cache(load);

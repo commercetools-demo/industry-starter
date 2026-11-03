@@ -4,9 +4,9 @@ import { fireEvent, screen } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import GlobalError from '@/app/global-error';
-import LocaleError from '@/app/[locale]/error';
-import Forbidden from '@/app/[locale]/forbidden';
-import LocaleNotFound from '@/app/[locale]/not-found';
+import LocaleError from '@/app/[brand]/[locale]/error';
+import Forbidden from '@/app/[brand]/[locale]/forbidden';
+import LocaleNotFound from '@/app/[brand]/[locale]/not-found';
 import RootNotFound from '@/app/not-found';
 import { renderWithIntl } from '@/test/render';
 import { nav } from '@/test/shell';
@@ -23,7 +23,7 @@ describe('Error pages', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent("We can't find that page.");
     expect(screen.getByText('The address may be mistyped, or the product may no longer be available.')).toBeInTheDocument();
     const search = screen.getByRole('search');
-    expect(search).toHaveAttribute('action', '/en-US/search');
+    expect(search).toHaveAttribute('action', '/malva-coffee/en-US/search');
     expect(search).toHaveAttribute('method', 'get');
     expect(screen.getByLabelText('Search the shop')).toHaveAttribute('name', 'q');
     const browse = screen.getByRole('navigation', { name: 'Browse the shop' });
@@ -31,7 +31,7 @@ describe('Error pages', () => {
     expect(browse.querySelector('a')).toHaveAttribute('href', '/category/pods');
     expect(screen.getByRole('link', { name: 'Back to home' })).toHaveAttribute('href', '/');
     expect(screen.queryByRole('alert')).toBeNull();
-    for (const file of ['components/error/ErrorPage.tsx', 'app/[locale]/not-found.tsx', 'app/not-found.tsx']) {
+    for (const file of ['components/error/ErrorPage.tsx', 'app/[brand]/[locale]/not-found.tsx', 'app/not-found.tsx']) {
       expect(readFileSync(join(ROOT, file), 'utf8')).not.toMatch(/lib\/session|cookies\(|headers\(/);
     }
   });
@@ -41,10 +41,10 @@ describe('Error pages', () => {
     expect(document.title).toBe("We can't find that page.");
     renderWithIntl(<LocaleError error={new Error('x')} reset={() => {}} />);
     expect(document.title).toBe('Something went wrong on our side.');
-    const ListingError = (await import('@/app/[locale]/(listing)/error')).default;
+    const ListingError = (await import('@/app/[brand]/[locale]/(listing)/error')).default;
     renderWithIntl(<ListingError error={new Error('x')} reset={() => {}} />);
     expect(document.title).toBe('We couldn’t load the products.');
-    const ProductError = (await import('@/app/[locale]/p/[slug]/[sku]/error')).default;
+    const ProductError = (await import('@/app/[brand]/[locale]/p/[slug]/[sku]/error')).default;
     renderWithIntl(<ProductError error={new Error('x')} reset={() => {}} />);
     expect(document.title).not.toBe('');
   });
@@ -127,6 +127,7 @@ describe('Error pages', () => {
       expect(Object.keys(entry).sort()).toEqual(['home', 'reference', 'retry', 'text', 'title']);
     }
     expect(localeFromPath('/en-CA/cart')).toBe('en-CA');
+    expect(localeFromPath('/malva-drinks/en-CA/cart')).toBe('en-CA');
     expect(localeFromPath('/xx/foo')).toBe('en-US');
     expect(localeFromPath('/')).toBe('en-US');
   });
@@ -143,22 +144,22 @@ describe('Error pages', () => {
   it('unknown locale path renders the default-locale 404', () => {
     renderWithIntl(<RootNotFound />);
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent("We can't find that page.");
-    expect(screen.getByRole('search')).toHaveAttribute('action', '/en-US/search');
+    expect(screen.getByRole('search')).toHaveAttribute('action', '/malva-coffee/en-US/search');
   });
 
   it('the catch-all route calls notFound', async () => {
-    const { default: CatchAll } = await import('@/app/[locale]/[...rest]/page');
+    const { default: CatchAll } = await import('@/app/[brand]/[locale]/[...rest]/page');
     expect(() => CatchAll()).toThrow(/NEXT_HTTP_ERROR_FALLBACK;404|NEXT_NOT_FOUND/);
   });
 
   it('error page imports nothing from lib/ct', () => {
     const files = [
       ...readdirSync(join(ROOT, 'components/error')).filter((f) => !f.includes('.test.')).map((f) => join('components/error', f)),
-      'app/[locale]/not-found.tsx',
-      'app/[locale]/error.tsx',
-      'app/[locale]/forbidden.tsx',
-      'app/[locale]/unauthorized.tsx',
-      'app/[locale]/[...rest]/page.tsx',
+      'app/[brand]/[locale]/not-found.tsx',
+      'app/[brand]/[locale]/error.tsx',
+      'app/[brand]/[locale]/forbidden.tsx',
+      'app/[brand]/[locale]/unauthorized.tsx',
+      'app/[brand]/[locale]/[...rest]/page.tsx',
       'app/not-found.tsx',
       'app/global-error.tsx',
     ];

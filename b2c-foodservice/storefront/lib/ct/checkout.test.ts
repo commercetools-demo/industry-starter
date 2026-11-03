@@ -145,6 +145,25 @@ describe('preparePayments', () => {
     expect(delivery?.discountCodes).toBeUndefined();
     expect(delivery?.shippingMethod).toBeUndefined();
   });
+  it('a bag of coffee and drinks is one delivery payment (one shipment) and the clone keeps each line brand and the drinks channel', async () => {
+    const drinksView = viewLine({ id: 'd1', brand: 'malva-drinks' });
+    h.view = viewCart([collectLine, shipLine, drinksView]);
+    h.raw = ctCart({
+      anonymousId: 'anon',
+      lines: [
+        ctLine({ id: 'c1', sku: 'A', fulfilment: 'collect', channelId: 'ch-soho' }),
+        ctLine({ id: 's1', sku: 'B' }),
+        ctLine({ id: 'd1', sku: 'D', channelId: 'ch-drinks', custom: { brand: 'malva-drinks' } }),
+      ],
+    });
+    const r = await preparePayments(session, market, { pickupName: 'Maya Lopez' });
+    expect(r.payments.map((p) => p.clusterKey)).toEqual(['collect:mcf-store-nyc-soho', 'delivery']);
+    const delivery = (h.created as { lineItems: { sku: string; supplyChannel?: unknown; custom?: { fields: Record<string, string> } }[] }[])[1];
+    expect(delivery?.lineItems.map((l) => l.sku)).toEqual(['B', 'D']);
+    const drinks = delivery?.lineItems[1];
+    expect(drinks?.supplyChannel).toEqual({ typeId: 'channel', id: 'ch-drinks' });
+    expect(drinks?.custom?.fields).toMatchObject({ fulfilment: 'delivery', brand: 'malva-drinks' });
+  });
   it('In-store: every clone of a mixed bag carries the order type; the website never sets it (D-042)', async () => {
     h.view = viewCart([collectLine, shipLine]);
     h.raw = rawMixed();

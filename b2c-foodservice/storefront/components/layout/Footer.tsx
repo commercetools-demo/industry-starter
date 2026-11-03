@@ -5,17 +5,21 @@ import { Link } from '@/i18n/routing';
 import { buildListingHref } from '@/lib/nav/listing-href';
 import { FOOTER_COLUMNS, FOOTER_LEGAL, footerHref, type FooterLink } from '@/lib/nav/footer-config';
 import { findCategoryByKey } from '@/lib/nav/mega-config';
+import { BRANDS, DEFAULT_BRAND, type BrandConfig } from '@/lib/brands';
 import type { Category } from '@/lib/types';
 import { marketForLocale } from '@/lib/utils';
 
 const LINK = 'text-[14px] text-footer-link hover:text-surface';
 
 /** Ink footer. Server component: a brand column with the newsletter form, four link columns (Collect only in the US), legal row. */
-export default function Footer({ categories }: { categories: Category[] }) {
+export default function Footer({ categories, brand = BRANDS[DEFAULT_BRAND] }: { categories: Category[]; brand?: BrandConfig }) {
   const t = useTranslations('shell.footer');
-  const tCommon = useTranslations('common');
+  const tBrands = useTranslations('shell.brandSwitcher.brands');
   const market = marketForLocale(useLocale());
-  const columns = FOOTER_COLUMNS.filter((c) => market.collection || !c.collectionOnly);
+  // A brand without the coffee catalogue or pickup drops the links to coffee categories and to the store picker.
+  const columns = FOOTER_COLUMNS.filter((c) => (market.collection && brand.pickup) || !c.collectionOnly)
+    .map((c) => ({ ...c, links: c.links.filter((l) => (brand.theme === 'coffee' || !l.categoryKey) && (brand.pickup || l.action !== 'choose-store')) }))
+    .filter((c) => c.links.length > 0);
 
   const hrefFor = (link: FooterLink): string => {
     if (link.categoryKey) {
@@ -29,8 +33,8 @@ export default function Footer({ categories }: { categories: Category[] }) {
     <footer className="mt-24 bg-ink text-surface">
       <div className="wrap grid grid-cols-[1.4fr_repeat(4,1fr)] gap-10 pb-12 pt-16 max-grid3:grid-cols-3 max-mobile:grid-cols-2">
         <div className="max-grid3:col-span-3 max-mobile:col-span-2">
-          <p className="wordmark m-0">{tCommon('brand')}</p>
-          <p className="mt-3 max-w-[340px] text-[14px] text-footer-link">{t('tagline')}</p>
+          <p className="wordmark m-0">{tBrands(brand.slug)}</p>
+          <p className="mt-3 max-w-[340px] text-[14px] text-footer-link">{t(brand.theme === 'coffee' ? 'tagline' : 'taglineDrinks')}</p>
           <NewsletterForm />
         </div>
         {columns.map((column) => (

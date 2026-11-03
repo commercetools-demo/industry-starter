@@ -10,6 +10,7 @@ const h = vi.hoisted(() => ({
   product: vi.fn(),
   stores: vi.fn(),
   updateError: undefined as unknown,
+  brand: 'malva-coffee',
   n: 0,
 }));
 vi.mock('@/lib/env', () => ({ getEnv: () => ({ SESSION_SECRET: 'a'.repeat(40) }) }));
@@ -44,7 +45,8 @@ vi.mock('@/lib/ct/client', () => ({
     }),
   },
 }));
-vi.mock('@/lib/ct/channels', () => ({ getStoresForCountry: h.stores }));
+vi.mock('@/lib/ct/channels', () => ({ getStoresForCountry: h.stores, getBrandChannelId: async (b: string) => (b === 'malva-drinks' ? 'ch-drinks' : undefined) }));
+vi.mock('@/lib/ct/product-selections', () => ({ getProductBrand: async () => h.brand }));
 vi.mock('@/lib/ct/product-detail', () => ({ getRecurrencePolicyByKey: h.policy, getProductBySku: h.product }));
 vi.mock('@/lib/ct/inventory', async (orig) => ({ ...(await orig<typeof import('@/lib/ct/inventory')>()), getStoreStock: h.stock }));
 
@@ -80,6 +82,9 @@ beforeEach(async () => {
   h.updates = [];
   h.carts.clear();
   h.n = 0;
+  h.brand = 'malva-coffee';
+  h.product.mockReset();
+  h.product.mockResolvedValue({ id: 'p1', masterVariant: { sku: 'SKU', recurrencePrices: [] }, variants: [] });
   h.updateError = undefined;
   h.stores.mockReset().mockResolvedValue([SOHO, BK]);
   h.stock.mockReset().mockResolvedValue(20);
@@ -95,7 +100,7 @@ describe('POST /api/cart/lines collect', () => {
     expect(action()).toEqual({
       action: 'addLineItem', sku: 'POD-10', quantity: 2,
       supplyChannel: { typeId: 'channel', id: 'ch-soho' },
-      custom: { type: { typeId: 'type', key: 'mcf-line-fulfilment' }, fields: { fulfilment: 'collect' } },
+      custom: { type: { typeId: 'type', key: 'mcf-line-fulfilment' }, fields: { fulfilment: 'collect', brand: 'malva-coffee' } },
     });
     expect(typeof (action().supplyChannel as { id: unknown }).id).toBe('string');
     expect(h.stock).toHaveBeenCalledWith('POD-10', 'ch-soho');
@@ -151,7 +156,7 @@ describe('POST /api/cart/lines subscribe', () => {
     expect(action()).toEqual({
       action: 'addLineItem', sku: 'POD-10', quantity: 1,
       recurrenceInfo: { recurrencePolicy: { typeId: 'recurrence-policy', id: 'rp-1m' }, priceSelectionMode: 'Fixed' },
-      custom: { type: { typeId: 'type', key: 'mcf-line-fulfilment' }, fields: { fulfilment: 'subscribe' } },
+      custom: { type: { typeId: 'type', key: 'mcf-line-fulfilment' }, fields: { fulfilment: 'subscribe', brand: 'malva-coffee' } },
     });
     expect(action().supplyChannel).toBeUndefined();
   });
@@ -201,5 +206,43 @@ describe('POST /api/cart/lines subscribe', () => {
     h.updateError = Object.assign(new Error('internal secret detail'), { statusCode: 500, body: { errors: [{ code: 'General', message: 'internal secret detail' }] } });
     const res = await post(collect);
     expect(JSON.stringify(await res.json())).not.toContain('secret');
+  });
+});
+
+describe('POST /api/cart/lines brand (multibrand)', () => {
+  const drinksLine = { sku: '100001', quantity: 2, fulfilment: 'delivery' };
+
+  it('stamps the brand the server found for the product, not one from the request', async () => {
+    h.brand = 'malva-drinks';
+    const res = await post({ ...drinksLine, brand: 'malva-coffee' });
+    expect(res.status).toBe(200);
+    expect((action().custom as { fields: Record<string, string> }).fields).toEqual({ fulfilment: 'delivery', brand: 'malva-drinks' });
+  });
+
+  it('a drinks line is a delivery line that reserves stock in the drinks channel', async () => {
+    h.brand = 'malva-drinks';
+    await post(drinksLine);
+    expect(action().supplyChannel).toEqual({ typeId: 'channel', id: 'ch-drinks' });
+  });
+
+  it('a coffee delivery line has no supply channel and carries the coffee brand', async () => {
+    await post({ sku: 'POD-10', quantity: 1, fulfilment: 'delivery' });
+    expect(action().supplyChannel).toBeUndefined();
+    expect((action().custom as { fields: Record<string, string> }).fields.brand).toBe('malva-coffee');
+  });
+
+  it('refuses collect and subscribe for a drinks product and leaves the cart alone', async () => {
+    h.brand = 'malva-drinks';
+    const collectRes = await post({ sku: '100001', quantity: 1, fulfilment: 'collect', storeKey: 'mcf-store-nyc-soho' });
+    expect(collectRes.status).toBe(400);
+    expect((await body(collectRes)).error?.code).toBe('collect_not_available_in_market');
+    const subRes = await post({ sku: '100001', quantity: 1, fulfilment: 'subscribe', recurrencePolicyKey: 'mcf-every-month' });
+    expect(subRes.status).toBe(422);
+    expect(h.updates).toHaveLength(0);
+  });
+
+  it('an unknown SKU is not found', async () => {
+    h.product.mockResolvedValue(null);
+    expect((await post(drinksLine)).status).toBe(404);
   });
 });

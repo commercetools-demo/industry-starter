@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
+import { DRINK_PRODUCT_KEYS } from './data/drinks';
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -72,7 +73,7 @@ describe('Safe cleanup of sample data', () => {
     await runSeed({ api, run: new Runner(false, quiet), demoPassword: 'dummy-long-demo-password' });
     const m = await freshManifest(api);
     expect(m.entries.some((e) => (e.key ?? '').startsWith('mcf-'))).toBe(false);
-    expect(m.skippedSeedOwned.products).toBe(41);
+    expect(m.skippedSeedOwned.products).toBe(41 + DRINK_PRODUCT_KEYS.length);
     expect(m.entries.some((e) => (e.type as string) === 'orders' || (e.type as string) === 'carts')).toBe(false);
   });
 

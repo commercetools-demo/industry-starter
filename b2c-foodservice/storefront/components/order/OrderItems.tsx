@@ -25,7 +25,10 @@ export default function OrderItems({ order }: { order: OrderView }) {
   const t = useTranslations('order');
   const locale = useLocale();
   const money = (cents: number) => formatMoney(cents, order.currency, locale);
+  const tBrands = useTranslations('shell.brandSwitcher.brands');
   const stores = new Map(order.collect.map((c) => [c.storeKey, c.storeName]));
+  // A purchase of two brands names the brand on each line; a one-brand order looks as before.
+  const mixed = new Set(order.lines.map((l) => l.brand ?? 'malva-coffee')).size > 1;
   const { totals } = order;
   return (
     <Card as="section" aria-labelledby="order-items-title" data-testid="order-items">
@@ -40,6 +43,7 @@ export default function OrderItems({ order }: { order: OrderView }) {
               <p className="m-0 text-[14px] font-semibold text-ink">{l.name}</p>
               <p className="m-0 mt-0.5 text-[12.5px] text-ink-3">{[l.variantSummary, t('line.quantity', { quantity: l.quantity })].filter(Boolean).join(' · ')}</p>
               <Marker line={l} stores={stores} />
+              {mixed ? <p data-brand={l.brand ?? 'malva-coffee'} className="m-0 mt-0.5 text-[12px] font-medium uppercase tracking-[0.06em] text-ink-3">{tBrands(l.brand ?? 'malva-coffee')}</p> : null}
             </div>
             <span className="shrink-0 text-[14px] font-semibold">{money(l.priceCents)}</span>
           </li>

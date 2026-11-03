@@ -8,6 +8,7 @@ const text = (name: string, en: string): FieldDefinition => ({ name, label: ls(e
 const num = (name: string, en: string): FieldDefinition => ({ name, label: ls(en), required: false, type: { name: 'Number' }, inputHint: 'SingleLine' });
 
 export const FULFILMENT_VALUES = ['collect', 'delivery', 'subscribe'] as const;
+export const BRAND_VALUES = ['malva-coffee', 'malva-drinks'] as const;
 
 /** Values of the `orderType` enum on carts and orders (workstream R, D-042). `in-store-purchase` is set by the In-store companion. */
 export const ORDER_TYPE_VALUES = [
@@ -26,6 +27,11 @@ export const typeDrafts: TypeDraft[] = [
       {
         name: 'fulfilment', label: ls('Fulfilment'), required: false, inputHint: 'SingleLine',
         type: { name: 'Enum', values: FULFILMENT_VALUES.map((key) => ({ key, label: key })) },
+      },
+      // The brand of the line (multibrand): the cart is shared, the UI groups lines by this field. A line without it is Malva Coffee.
+      {
+        name: 'brand', label: ls('Brand'), required: false, inputHint: 'SingleLine',
+        type: { name: 'Enum', values: BRAND_VALUES.map((key) => ({ key, label: key })) },
       },
     ],
   },

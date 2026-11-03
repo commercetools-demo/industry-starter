@@ -1,5 +1,6 @@
 // Product Search request builder (workstream G, 3.4). Pure: returns the JSON body for `products().search().post`.
 // Never builds a productProjections search and never sets productProjectionParameters (D-023).
+import type { BrandSlug } from '@/lib/brands';
 import {
   BADGE_FIELD, FACETS, SUBSCRIBABLE_FIELD, facetApplies,
   type CategoryRoot, type FacetDef,
@@ -22,7 +23,13 @@ export interface SearchRequestBody {
 /** One facet of a Product Search response: buckets for distinct and ranges, `value` for count. */
 export interface RawFacet { name: string; buckets?: { key: string | number | boolean; count: number }[]; value?: number }
 
-export interface SearchContext { locale: string; currency: string; country: string; storeChannelId?: string }
+export interface SearchContext {
+  locale: string; currency: string; country: string; storeChannelId?: string;
+  /** The brand whose product selection restricts the search (multibrand). Absent: all products. */
+  brand?: BrandSlug;
+  /** The id of that brand's product selection; resolved by `searchProducts`, never set by a caller. */
+  selectionId?: string;
+}
 
 export interface SearchScope {
   /** Category id for `categoriesSubTree`; absent on /shop and /search. */
@@ -50,6 +57,9 @@ export const marketClause = (ctx: SearchContext): SearchClause => ({
     { exact: { field: 'variants.prices.country', value: ctx.country } },
   ],
 });
+
+/** Products assigned to a product selection (by the selection id; Product Search field `productSelections`). */
+export const selectionClause = (selectionId: string): SearchClause => ({ exact: { field: 'productSelections', value: selectionId } });
 
 function anyOf(clauses: SearchClause[]): SearchClause | undefined {
   if (clauses.length === 0) return undefined;
@@ -122,6 +132,7 @@ function buildQuery(ctx: SearchContext, scope: SearchScope, p: ListingParams): S
   const filter: SearchClause[] = [];
   if (scope.categoryId) filter.push({ exact: { field: 'categoriesSubTree', value: scope.categoryId } });
   filter.push(marketClause(ctx));
+  if (ctx.selectionId) filter.push(selectionClause(ctx.selectionId));
   if (p.avail && ctx.storeChannelId) {
     filter.push({ exact: { field: 'variants.availability.isOnStockForChannel', value: ctx.storeChannelId } });
   }

@@ -7,10 +7,10 @@ import SearchToggle from '@/components/layout/SearchToggle';
 import StorePill from '@/components/layout/StorePill';
 
 /** Right side of the header, right to left: store pill, locale pill, search, account, cart. */
-export default function HeaderActions() {
+export default function HeaderActions({ showStore = true }: { showStore?: boolean }) {
   return (
     <div className="ml-auto flex min-w-0 items-center gap-1.5 max-mobile:gap-0.5">
-      <StorePill />
+      {showStore ? <StorePill /> : null}
       <LocalePill />
       <SearchToggle />
       <AccountMenu />

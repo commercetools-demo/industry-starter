@@ -1,5 +1,6 @@
 'use client';
 
+import { DEFAULT_BRAND } from '@/lib/brands';
 import { useSyncExternalStore } from 'react';
 import { GLOBAL_ERROR_DICTIONARY, localeFromPath, type GlobalErrorLocale } from '@/components/error/global-error-dictionary';
 import './globals.css';
@@ -51,7 +52,7 @@ export default function GlobalError({
                   {t.retry}
                 </button>
               ) : null}
-              <a href={`/${locale}`} className="rounded-pill border border-line-2 px-[26px] py-[14px] text-[14px] font-semibold text-ink">
+              <a href={`/${DEFAULT_BRAND}/${locale}`} className="rounded-pill border border-line-2 px-[26px] py-[14px] text-[14px] font-semibold text-ink">
                 {t.home}
               </a>
             </div>

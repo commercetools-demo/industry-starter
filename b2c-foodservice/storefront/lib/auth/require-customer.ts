@@ -3,6 +3,7 @@ import { getLocale } from 'next-intl/server';
 import { redirect } from '@/i18n/routing';
 import { requireCustomer } from '@/lib/api';
 import { safeRedirect } from '@/lib/auth/redirect';
+import { getBrand } from '@/lib/brand-server';
 import { getSession } from '@/lib/session';
 
 /**
@@ -13,7 +14,7 @@ export async function requireCustomerPage(currentPath: string): Promise<{ custom
   const { customerId } = await getSession();
   if (customerId) return { customerId };
   const back = safeRedirect(currentPath, '/account');
-  redirect({ href: `/account/sign-in?redirect=${encodeURIComponent(back)}`, locale: await getLocale() });
+  redirect({ href: `/account/sign-in?redirect=${encodeURIComponent(back)}`, locale: await getLocale(), brand: (await getBrand()).slug });
   throw new Error('unreachable: redirect() throws');
 }
 

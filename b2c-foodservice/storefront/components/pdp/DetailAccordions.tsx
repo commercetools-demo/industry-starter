@@ -45,7 +45,7 @@ export default function DetailAccordions() {
   return (
     <div className="border-t border-line" data-testid="pdp-accordions">
       <Accordion title={t('acc.details')} defaultOpen>
-        {product.description ? <p className="m-0 mb-3">{product.description}</p> : null}
+        {product.description ? <p className="m-0 mb-3 whitespace-pre-line">{product.description}</p> : null}
         {rows.length > 0 ? (
           <dl className="m-0 grid grid-cols-[minmax(0,140px)_minmax(0,1fr)] gap-x-4 gap-y-2">
             {rows.map((r) => (

@@ -97,3 +97,10 @@ The system SHALL use the platform tax mode with tax categories for coffee and fo
 - **GIVEN** a Canadian shipping address in any province
 - **WHEN** the cart is priced
 - **THEN** a machine carries 5% GST, food carries 0%, and no provincial tax is added
+
+### Requirement: Drinks are delivery only
+Malva Drinks products SHALL be available for delivery only, with stock read from the drinks inventory channel; collection store stock SHALL NOT apply to them.
+
+#### Scenario: Collect offered
+- **WHEN** the drinks PDP renders in the US market
+- **THEN** no collect option is shown even though stores exist

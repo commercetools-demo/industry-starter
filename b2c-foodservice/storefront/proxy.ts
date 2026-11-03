@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { instoreRedirect, isInstore } from '@/lib/app-mode';
+import { BRAND_HEADER, DEFAULT_BRAND, isBrandSlug } from '@/lib/brands';
 import { reconcileMarket } from '@/lib/session-reconcile';
 import { COUNTRY_CONFIG, DEFAULT_LOCALE, LOCALE_COOKIE } from '@/lib/utils';
 
@@ -36,16 +37,44 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const [, first = '', ...rest] = pathname.split('/');
+  const [, maybeBrand = '', ...afterBrand] = pathname.split('/');
+
+  // Multibrand (design D2): the URL is `/{brand}/{locale}/...`. A path without a brand is a legacy or default URL and goes to the
+  // default brand: `/` and `/{locale}/...` become `/malva-coffee/{locale}/...` (308, path and query kept).
+  if (!isBrandSlug(maybeBrand)) {
+    const url = request.nextUrl.clone();
+    const [firstLegacy = '', ...restLegacy] = [maybeBrand, ...afterBrand];
+    if (LOCALES.includes(firstLegacy)) {
+      const tail = restLegacy.join('/');
+      url.pathname = tail ? `/${DEFAULT_BRAND}/${firstLegacy}/${tail}` : `/${DEFAULT_BRAND}/${firstLegacy}`;
+      return NextResponse.redirect(url, 308);
+    }
+    const cookie = request.cookies.get(LOCALE_COOKIE)?.value;
+    const locale = cookie && LOCALES.includes(cookie) ? cookie : DEFAULT_LOCALE.locale;
+    // An unsupported locale-shaped first segment is replaced, never nested.
+    const segments = LOCALE_SHAPE.test(firstLegacy) ? restLegacy : [firstLegacy, ...restLegacy].filter(Boolean);
+    const tail = segments.join('/');
+    url.pathname = tail ? `/${DEFAULT_BRAND}/${locale}/${tail}` : `/${DEFAULT_BRAND}/${locale}`;
+    return NextResponse.redirect(url, 307);
+  }
+
+  const brand = maybeBrand;
+  const [first = '', ...rest] = afterBrand;
 
   if (LOCALES.includes(first)) {
     // In-store companion (workstream R, D-048): content, account, journal, search and shop paths go to the companion's home;
-    // `/category/x` and `/cart` go to their in-store pages. Decided before any session work.
+    // `/category/x` and `/cart` go to their in-store pages. Decided before any session work. The companion is Malva Coffee only.
     if (isInstore()) {
+      if (brand !== DEFAULT_BRAND) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/${DEFAULT_BRAND}/${first}`;
+        url.search = '';
+        return NextResponse.redirect(url, 307);
+      }
       const to = instoreRedirect(rest.length ? `/${rest.join('/')}` : '');
       if (to !== null) {
         const url = request.nextUrl.clone();
-        url.pathname = to === '/' ? `/${first}` : `/${first}${to}`;
+        url.pathname = to === '/' ? `/${brand}/${first}` : `/${brand}/${first}${to}`;
         if (to === '/') url.search = '';
         return NextResponse.redirect(url, 307);
       }
@@ -58,9 +87,10 @@ export async function proxy(request: NextRequest) {
       request.cookies.get(LOCALE_COOKIE)?.value,
     );
     for (const c of reconciled?.cookies ?? []) request.cookies.set(c.name, c.value);
-    // Forward on the request too, so server components read the locale (next-intl).
+    // Forward on the request too, so server components read the locale (next-intl) and the brand.
     const headers = new Headers(request.headers);
     headers.set(LOCALE_HEADER, first);
+    headers.set(BRAND_HEADER, brand);
     const response = NextResponse.next({ request: { headers } });
     response.headers.set(LOCALE_HEADER, first);
     // The render of a background fetch still sees the URL market through the request cookies above; only a page load writes them.
@@ -76,15 +106,14 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
+  // A brand without a valid locale: use the market cookie (or the default) and keep the rest of the path.
   const cookie = request.cookies.get(LOCALE_COOKIE)?.value;
   const locale = cookie && LOCALES.includes(cookie) ? cookie : DEFAULT_LOCALE.locale;
-
-  // An unsupported locale-shaped first segment is replaced, never nested.
-  const segments = LOCALE_SHAPE.test(first) ? rest : [first, ...rest];
+  // An unsupported locale-shaped segment after the brand is replaced, never nested.
+  const segments = LOCALE_SHAPE.test(first) ? rest : [first, ...rest].filter(Boolean);
   const tail = segments.join('/');
-
   const url = request.nextUrl.clone();
-  url.pathname = tail ? `/${locale}/${tail}` : `/${locale}`;
+  url.pathname = tail ? `/${brand}/${locale}/${tail}` : `/${brand}/${locale}`;
   return NextResponse.redirect(url, 307);
 }
 

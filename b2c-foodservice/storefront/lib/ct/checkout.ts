@@ -12,6 +12,7 @@ import { withOrderType } from '@/lib/ct/order-type';
 import { cachedPublic } from '@/lib/ct/public-cache';
 import { updateWithRetry } from '@/lib/ct/retry';
 import { AppError } from '@/lib/errors';
+import { brandOfLineFields } from '@/lib/brands';
 import { fulfilmentOf } from '@/lib/mappers/cart';
 import { mapCheckoutState } from '@/lib/mappers/checkout';
 import type { Session } from '@/lib/session';
@@ -97,7 +98,10 @@ function lineDraft(l: LineItem) {
         ? { sku, quantity: l.quantity, fulfilment, recurrencePolicyKey: '' }
         : { sku, quantity: l.quantity, fulfilment };
   const { action: _action, ...draft } = buildAddLineAction(input, {
+    // The clone keeps the line's brand and, for a delivery line, its brand inventory channel (Malva Drinks).
+    brand: brandOfLineFields(l.custom?.fields),
     ...(l.supplyChannel ? { channelId: l.supplyChannel.id } : {}),
+    ...(l.supplyChannel && fulfilment === 'delivery' ? { brandChannelId: l.supplyChannel.id } : {}),
     ...(l.recurrenceInfo ? { policyId: l.recurrenceInfo.recurrencePolicy.id } : {}),
   });
   void _action;

@@ -1,4 +1,5 @@
 import 'server-only';
+import { DEFAULT_BRAND, type BrandSlug } from '@/lib/brands';
 import { getPromiseFigures } from '@/lib/ct/promise';
 import { getFeaturedProduct, getHomeStore, getHomeTree, type HomeCtx } from '@/lib/home-data';
 import { getSession } from '@/lib/session';
@@ -19,13 +20,14 @@ export interface HomePageData {
  * boundaries). The session is read once; an invalid or expired token is an empty session, so the page renders as for an
  * anonymous visitor. Never throws: every part degrades alone (lib/home-data.ts, getPromiseFigures).
  */
-export async function loadHomePage(locale: string): Promise<HomePageData> {
+export async function loadHomePage(locale: string, brand: BrandSlug = DEFAULT_BRAND): Promise<HomePageData> {
   const market = marketForLocale(locale);
   const session = await getSession();
   const ctx: HomeCtx = {
     locale,
     country: market.country,
     currency: market.currency,
+    brand,
     ...(session.collectionStoreKey ? { collectionStoreKey: session.collectionStoreKey } : {}),
   };
   const [tree, store, figures] = await Promise.all([

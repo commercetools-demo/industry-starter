@@ -1,3 +1,4 @@
+import { DEFAULT_BRAND, type BrandSlug } from '@/lib/brands';
 import type { Metadata } from 'next';
 
 /** Site origin for canonical links, the sitemap and robots.txt. Not a secret; falls back to the Netlify URL, then localhost. */
@@ -12,20 +13,22 @@ interface PageMetaInput {
   path: string;
   title: string;
   description: string;
+  /** The brand whose URL is canonical (default Malva Coffee). */
+  brand?: BrandSlug;
   /** Locales that have their own text; a fallback locale is not advertised as an alternate. */
   ownLocales?: string[];
   openGraph?: NonNullable<Metadata['openGraph']>;
 }
 
-export function pageMetadata({ locale, path, title, description, ownLocales = [locale], openGraph }: PageMetaInput): Metadata {
+export function pageMetadata({ locale, brand = DEFAULT_BRAND, path, title, description, ownLocales = [locale], openGraph }: PageMetaInput): Metadata {
   return {
     metadataBase: new URL(siteOrigin()),
     title,
     description,
     alternates: {
-      canonical: `/${locale}${path}`,
-      languages: Object.fromEntries(ownLocales.map((l) => [l, `/${l}${path}`])),
+      canonical: `/${brand}/${locale}${path}`,
+      languages: Object.fromEntries(ownLocales.map((l) => [l, `/${brand}/${l}${path}`])),
     },
-    openGraph: { title, description, url: `/${locale}${path}`, ...openGraph },
+    openGraph: { title, description, url: `/${brand}/${locale}${path}`, ...openGraph },
   };
 }

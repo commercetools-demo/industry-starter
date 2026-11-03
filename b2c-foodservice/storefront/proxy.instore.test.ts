@@ -11,20 +11,24 @@ describe('Proxy in instore mode (workstream R)', () => {
 
   it('proxy redirects content paths in instore mode', async () => {
     for (const p of ['/en-US/about', '/en-US/journal/x', '/en-CA/account/orders', '/en-US/faq', '/en-US/shop', '/en-US/search?q=a']) {
-      const res = await proxy(req(p));
+      const res = await proxy(req(`/malva-coffee${p}`));
       expect(res.status, p).toBe(307);
-      expect(target(res), p).toBe(p.startsWith('/en-CA') ? '/en-CA' : '/en-US');
+      expect(target(res), p).toBe(p.startsWith('/en-CA') ? '/malva-coffee/en-CA' : '/malva-coffee/en-US');
     }
   });
 
   it('maps category and cart to their in-store pages and keeps the query', async () => {
-    expect(target(await proxy(req('/en-US/category/pods?page=2')))).toBe('/en-US/c/pods?page=2');
-    expect(target(await proxy(req('/en-US/cart')))).toBe('/en-US/bag');
+    expect(target(await proxy(req('/malva-coffee/en-US/category/pods?page=2')))).toBe('/malva-coffee/en-US/c/pods?page=2');
+    expect(target(await proxy(req('/malva-coffee/en-US/cart')))).toBe('/malva-coffee/en-US/bag');
+  });
+
+  it('the companion is Malva Coffee only: another brand goes to the coffee home', async () => {
+    expect(target(await proxy(req('/malva-drinks/en-US/c/chic')))).toBe('/malva-coffee/en-US');
   });
 
   it('serves the in-store routes and sets the locale header', async () => {
     for (const p of ['/en-US', '/en-US/c/pods', '/en-US/p/a/MCF-1', '/en-US/bag', '/en-US/checkout']) {
-      const res = await proxy(req(p));
+      const res = await proxy(req(`/malva-coffee${p}`));
       expect(res.headers.get('location'), p).toBeNull();
       expect(res.headers.get('x-next-intl-locale'), p).toBe('en-US');
     }
@@ -37,7 +41,7 @@ describe('Proxy in website mode', () => {
 
   it('proxy leaves website mode alone', async () => {
     for (const p of ['/en-US/about', '/en-US/category/pods', '/en-US/cart', '/en-US/journal']) {
-      const res = await proxy(req(p));
+      const res = await proxy(req(`/malva-coffee${p}`));
       expect(res.headers.get('location'), p).toBeNull();
     }
   });

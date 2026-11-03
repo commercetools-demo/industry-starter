@@ -27,7 +27,7 @@ describe('GET /api/search', () => {
     const res = await call('countOnly=1&scope=shop&locale=en-CA&f_roast=dark&page=3');
     expect(await res.json()).toEqual({ total: 12 });
     expect(res.headers.get('Cache-Control')).toBe('no-store');
-    expect(load.count).toHaveBeenCalledWith({ locale: 'en-CA', scopeParam: 'shop', searchParams: expect.objectContaining({ f_roast: 'dark', page: '3' }) });
+    expect(load.count).toHaveBeenCalledWith({ locale: 'en-CA', brand: 'malva-coffee', scopeParam: 'shop', searchParams: expect.objectContaining({ f_roast: 'dark', page: '3' }) });
   });
   it('invalid params 400', async () => {
     expect((await call('countOnly=1&scope=%22drop')).status).toBe(400);
@@ -53,5 +53,14 @@ describe('GET /api/search', () => {
   it('a search failure becomes 503', async () => {
     load.count.mockRejectedValue(Object.assign(new Error('x'), { statusCode: 503 }));
     expect((await call('countOnly=1&scope=shop&locale=en-US')).status).toBe(503);
+  });
+
+  it('takes the brand from the query, defaults to Malva Coffee and refuses an unknown one', async () => {
+    load.count.mockResolvedValue({ total: 1 });
+    const drinks = await call('scope=shop&countOnly=1&locale=en-US&brand=malva-drinks');
+    expect(drinks.status).toBe(200);
+    expect(load.count).toHaveBeenLastCalledWith(expect.objectContaining({ brand: 'malva-drinks' }));
+    const bad = await call('scope=shop&countOnly=1&brand=nope');
+    expect(bad.status).toBe(400);
   });
 });

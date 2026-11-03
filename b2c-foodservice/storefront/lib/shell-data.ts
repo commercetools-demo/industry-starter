@@ -1,4 +1,5 @@
 import 'server-only';
+import { BRANDS, DEFAULT_BRAND, type BrandSlug } from '@/lib/brands';
 import { webVisibleTree } from '@/lib/category-tree';
 import { getCategoryTree } from '@/lib/ct/categories';
 import { getStoresForCountry } from '@/lib/ct/channels';
@@ -24,16 +25,16 @@ export interface ShellData {
  * list or a missing figure and a server log line, and the shell still renders (it never throws).
  * The URL's market drives what is shown; the session supplies only the chosen store.
  */
-export async function getShellData(locale: string): Promise<ShellData> {
+export async function getShellData(locale: string, brand: BrandSlug = DEFAULT_BRAND): Promise<ShellData> {
   const market = marketForLocale(locale);
   const session = await getSession();
   const [categories, figures, stores, markets] = await Promise.all([
-    getCategoryTree(locale).catch((e: unknown) => {
+    getCategoryTree(locale, brand).catch((e: unknown) => {
       console.error(JSON.stringify({ event: 'shell_categories_failed', status: (e as { statusCode?: number })?.statusCode }));
       return [] as Category[];
     }),
     getPromiseFigures(market, session.collectionStoreKey),
-    market.collection
+    market.collection && BRANDS[brand].pickup
       ? getStoresForCountry(market.country, locale).catch((e: unknown) => {
           console.error(JSON.stringify({ event: 'shell_stores_failed', status: (e as { statusCode?: number })?.statusCode }));
           return [] as Store[];
@@ -41,12 +42,14 @@ export async function getShellData(locale: string): Promise<ShellData> {
       : Promise.resolve([] as Store[]),
     getValidCountryConfig(),
   ]);
-  if (process.env.NODE_ENV !== 'production' && categories.length > 0) {
+  if (process.env.NODE_ENV !== 'production' && categories.length > 0 && brand === DEFAULT_BRAND) {
     const missing = missingCategoryKeys(categories);
     if (missing.length > 0) console.warn(JSON.stringify({ event: 'nav_categories_missing', keys: missing }));
   }
   const selectedKey = stores.some((s) => s.key === session.collectionStoreKey)
     ? (session.collectionStoreKey ?? null)
     : null;
-  return { country: market.country, currency: market.currency, categories: webVisibleTree(categories), figures, stores, selectedKey, markets };
+  // A brand without pickup makes no collection promise.
+  const brandFigures = BRANDS[brand].pickup ? figures : { ...figures, collectionMinutes: null };
+  return { country: market.country, currency: market.currency, categories: webVisibleTree(categories), figures: brandFigures, stores, selectedKey, markets };
 }

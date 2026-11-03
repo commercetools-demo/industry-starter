@@ -13,7 +13,7 @@ import type { Api, Kind, ProjectView, Res } from './api';
 const REF_KIND: Record<string, Kind> = {
   category: 'categories', 'product-type': 'product-types', 'tax-category': 'tax-categories', zone: 'zones', channel: 'channels',
   type: 'types', customer: 'customers', product: 'products', review: 'reviews', state: 'states', 'cart-discount': 'cart-discounts',
-  'product-discount': 'product-discounts', 'recurrence-policy': 'recurrence-policies', 'shipping-method': 'shipping-methods',
+  'product-discount': 'product-discounts', 'recurrence-policy': 'recurrence-policies', 'shipping-method': 'shipping-methods', 'product-selection': 'product-selections',
 };
 
 export class ApiError extends Error {
@@ -233,6 +233,13 @@ export class FakeApi implements Api {
         set('custom', custom);
         return;
       }
+      case 'product-selections:addProduct': {
+        const have = (r.products as string[] | undefined) ?? [];
+        const id = (a.product as { id: string }).id;
+        if (have.includes(id)) throw new ApiError(400, 'FakeApi: product already in the selection');
+        set('products', [...have, id]);
+        return;
+      }
       case 'inventory:changeQuantity': set('quantityOnStock', a.quantity); return;
       case 'product-discounts:changeSortOrder': case 'cart-discounts:changeSortOrder': set('sortOrder', a.sortOrder); return;
       case 'product-discounts:changeIsActive': case 'cart-discounts:changeIsActive': set('isActive', a.isActive); return;
@@ -284,6 +291,11 @@ export class FakeApi implements Api {
     this.bucket(kind).delete(res.id);
     this.writes += 1;
     if (kind === 'reviews') this.recomputeStatistics((stored.target as { id: string } | undefined)?.id);
+  }
+
+  async selectionProductIds(selectionId: string): Promise<string[]> {
+    this.reads += 1;
+    return [...(((this.bucket('product-selections').get(selectionId)?.products as string[] | undefined)) ?? [])];
   }
 
   async verifyCustomerEmail(res: { id: string; version: number }): Promise<void> {

@@ -82,6 +82,63 @@
   --ct-stone-700: #7C7975;
 }
 
+/* Malva Drinks: the same design with another colour set (multibrand D7). Values are the colours of the owner's `styles.css`
+   (bg, surface, text, accent, accent-2 and the neutral, accent and accent-2 ramps); fonts, radii and shapes are NOT taken from it.
+   `html[data-brand]` is set by the root layout from the URL brand, and has higher specificity than `:root`, so every semantic
+   token below replaces the coffee value on the same element (derived tokens such as --ring and --overlay follow).
+   Contrast: the base accent #5980a6 is only 3.9:1 on the canvas, so the semantic accent uses the 700 step (#416180, 5.3:1 under
+   light text) and the press state the 800 step; the 600 step stays in the ramp for graphics. */
+html[data-brand='malva-drinks'] {
+  --canvas: #f2f2f3;
+  --canvas-2: #e7e7ea;
+  --surface: #e9e9ea;
+  --ink: #1d1f20;
+  --ink-2: #424244;
+  --ink-3: #5d5d60;
+  --line: #d4d4d7;
+  --line-2: #b7b7ba;
+  --accent: #416180;
+  --accent-press: #2c455d;
+  --teal: #7e9cb8;
+  --teal-strong: #627d98;
+  --teal-text: #314457;
+  --stone: #b7b7ba;
+  --footer-heading: #b7b7ba;
+  --footer-link: #d4d4d7;
+  --footer-meta: #98989b;
+  --swatch-fallback: var(--canvas-2);
+
+  --brand-neutral-100: #f5f5f8;
+  --brand-neutral-200: #e7e7ea;
+  --brand-neutral-300: #d4d4d7;
+  --brand-neutral-400: #b7b7ba;
+  --brand-neutral-500: #98989b;
+  --brand-neutral-600: #7a7a7d;
+  --brand-neutral-700: #5d5d60;
+  --brand-neutral-800: #424244;
+  --brand-neutral-900: #2b2b2d;
+
+  --brand-accent-100: #eef6ff;
+  --brand-accent-200: #d6ebff;
+  --brand-accent-300: #b5d9fd;
+  --brand-accent-400: #94bce3;
+  --brand-accent-500: #749dc4;
+  --brand-accent-600: #597ea3;
+  --brand-accent-700: #416180;
+  --brand-accent-800: #2c455d;
+  --brand-accent-900: #1d2d3d;
+
+  --brand-accent-2-100: #eef6ff;
+  --brand-accent-2-200: #d6ebff;
+  --brand-accent-2-300: #bdd8f2;
+  --brand-accent-2-400: #9ebbd8;
+  --brand-accent-2-500: #7e9cb8;
+  --brand-accent-2-600: #627d98;
+  --brand-accent-2-700: #486077;
+  --brand-accent-2-800: #314457;
+  --brand-accent-2-900: #1f2d3a;
+}
+
 @theme inline {
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);

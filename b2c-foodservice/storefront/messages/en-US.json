@@ -74,7 +74,33 @@
       "cta": "Shop subscriptions",
       "stepsAria": "How subscriptions work"
     },
-    "loading": "Loading products"
+    "loading": "Loading products",
+    "drinks": {
+      "hero": {
+        "eyebrow": "Sparkling water",
+        "headline": "Fizz,\nwith a French kiss.",
+        "subline": "Sparkling water with real fruit juices, bottled in the South of France. Delivered to your door.",
+        "cta": "Shop all drinks",
+        "aria": "Malva Drinks"
+      },
+      "tiles": {
+        "aria": "Shop by line"
+      },
+      "range": {
+        "eyebrow": "The range",
+        "title": "Taste the range"
+      },
+      "story": {
+        "eyebrow": "Our promise",
+        "title": "Crisp bubbles.\nReal fruit.",
+        "body": "Four lines, one idea: sparkling water that tastes like something. From clean unflavored water to cocktail-inspired Chic, every can and bottle is made to be shared.",
+        "cta": "Browse the range"
+      },
+      "meta": {
+        "title": "Malva Drinks: sparkling water, delivered",
+        "description": "Sparkling water in four lines: French Kiss, Unflavored, Flavored Forever and Chic. Order online and have it delivered."
+      }
+    }
   },
   "ui": {
     "stepper": {
@@ -146,7 +172,11 @@
       "coffee": "Coffee",
       "machines": "Machines",
       "accessories": "Accessories",
-      "gifts": "Gifts"
+      "gifts": "Gifts",
+      "french-kiss": "French Kiss",
+      "unflavored": "Unflavored",
+      "flavored-forever": "Flavored Forever",
+      "chic": "Chic"
     },
     "menu": {
       "open": "Open menu",
@@ -274,7 +304,8 @@
       "copyright": "© {year} Malva Coffee",
       "privacy": "Privacy",
       "terms": "Terms",
-      "accessibility": "Accessibility"
+      "accessibility": "Accessibility",
+      "taglineDrinks": "Sparkling water, delivered to your door."
     },
     "newsletter": {
       "heading": "Join the list",
@@ -287,6 +318,13 @@
     },
     "toast": {
       "added": "Added to bag"
+    },
+    "brandSwitcher": {
+      "label": "Brands",
+      "brands": {
+        "malva-coffee": "Malva Coffee",
+        "malva-drinks": "Malva Drinks"
+      }
     }
   },
   "cart": {
@@ -428,6 +466,9 @@
       "generic": "Something went wrong. Please try again.",
       "storeRequired": "Choose a store to collect from",
       "collectUnavailable": "That item isn't available for collection there"
+    },
+    "brand": {
+      "subtotal": "Subtotal {amount}"
     }
   },
   "store": {
@@ -858,14 +899,16 @@
         "sizeGrams": "Size",
         "grind": "Grind",
         "colour": "Color",
-        "bundle": "Bundle"
+        "bundle": "Bundle",
+        "drinkSize": "Size"
       },
       "choice": {
         "capsulesPerPack": "pack size",
         "sizeGrams": "size",
         "grind": "grind",
         "colour": "color",
-        "bundle": "bundle"
+        "bundle": "bundle",
+        "drinkSize": "size"
       }
     },
     "pack": {
@@ -1030,7 +1073,8 @@
       "coffee": "Keep beans in an airtight container away from light and heat. Grind just before brewing and use water just off the boil.",
       "machine": "Descale every three months, empty the water tank daily and rinse the drip tray. Use filtered water in hard-water areas.",
       "accessory": "Hand wash with mild soap. Check the label on the product for dishwasher and heat guidance.",
-      "gift": "Store in a cool, dry place until gifting."
+      "gift": "Store in a cool, dry place until gifting.",
+      "drink": "Serve chilled. Store in a cool, dry place away from direct sunlight. Best enjoyed before the date printed on the pack."
     },
     "shipping": {
       "delivery": "Free delivery over {threshold}.",

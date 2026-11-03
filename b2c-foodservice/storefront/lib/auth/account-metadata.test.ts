@@ -27,7 +27,7 @@ describe('account document titles (WCAG 2.4.2)', () => {
   });
 
   it('every page of the account frame exports generateMetadata (the index only redirects)', () => {
-    const root = join(process.cwd(), 'app/[locale]/account/(shell)');
+    const root = join(process.cwd(), 'app/[brand]/[locale]/account/(shell)');
     const pages: string[] = [];
     const walk = (dir: string) => {
       for (const name of readdirSync(dir)) {

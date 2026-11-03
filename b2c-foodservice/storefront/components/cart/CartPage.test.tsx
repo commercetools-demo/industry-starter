@@ -389,3 +389,22 @@ describe('discount codes (I-10)', () => {
     await expectNoAxeViolations(container);
   });
 });
+
+describe('brand sections (multibrand)', () => {
+  const drink = (id: string) => viewLine({ id, brand: 'malva-drinks', unitPrice: usd(250) });
+
+  it('a bag with two brands shows one section per brand with its subtotal, the current brand first', () => {
+    setup(viewCart([viewLine({ id: 'a', unitPrice: usd(1000) }), drink('b'), drink('c')]));
+    const headings = screen.getAllByRole('heading', { level: 2 }).filter((h) => h.closest('[data-brand-section]'));
+    expect(headings.map((h) => h.textContent)).toEqual(['Malva Coffee', 'Malva Drinks']);
+    const drinks = screen.getByRole('region', { name: 'Malva Drinks' });
+    expect(within(drinks).getByText('Subtotal $5.00')).toBeInTheDocument();
+    expect(within(screen.getByRole('region', { name: 'Malva Coffee' })).getByText('Subtotal $10.00')).toBeInTheDocument();
+  });
+
+  it('a bag with one brand has one section and no brand heading', () => {
+    setup(viewCart([drink('b')]));
+    expect(document.querySelector('[data-brand-section]')).toBeNull();
+    expect(screen.getAllByRole('region').length).toBeGreaterThanOrEqual(1);
+  });
+});

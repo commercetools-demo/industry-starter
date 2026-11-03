@@ -78,19 +78,19 @@ describe('Policy pages', () => {
 
   it('Opened from checkout: policy page needs no session and sets no redirect', () => {
     const view = readFileSync(join(process.cwd(), 'components/content/PolicyView.tsx'), 'utf8');
-    const page = readFileSync(join(process.cwd(), 'app/[locale]/policies/[slug]/page.tsx'), 'utf8');
+    const page = readFileSync(join(process.cwd(), 'app/[brand]/[locale]/policies/[slug]/page.tsx'), 'utf8');
     for (const src of [view, page]) {
       expect(src).not.toMatch(/lib\/session|cookies\(|redirect\(/);
     }
   });
 
   it('policy page has no commerce import beyond tokens', () => {
-    const page = readFileSync(join(process.cwd(), 'app/[locale]/policies/[slug]/page.tsx'), 'utf8');
+    const page = readFileSync(join(process.cwd(), 'app/[brand]/[locale]/policies/[slug]/page.tsx'), 'utf8');
     expect(page).not.toContain('@/lib/ct/');
   });
 
   it('unknown policy slug is not found', async () => {
-    const mod = await import('@/app/[locale]/policies/[slug]/page');
+    const mod = await import('@/app/[brand]/[locale]/policies/[slug]/page');
     await expect(mod.default({ params: Promise.resolve({ locale: 'en-US', slug: 'nope' }) })).rejects.toThrow();
   });
 });

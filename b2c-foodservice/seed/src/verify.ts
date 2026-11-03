@@ -2,7 +2,9 @@
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 import type { Api, Kind, Res } from './api';
 import { CONTRACT_KEYS, COUNTRIES, CURRENCIES, K, LANGUAGES } from './data/base';
+import { CHANNEL_DRINKS, SELECTION_COFFEE, SELECTION_DRINKS, selectionDrafts } from './data/brands';
 import { CATEGORIES } from './data/categories';
+import { DRINK_CATEGORIES, DRINK_PRODUCT_KEYS, DRINK_SKUS, drinkInventoryDrafts, drinkProductType } from './data/drinks';
 import { CUSTOMERS, shoppingListDraft } from './data/customers';
 import { typeDrafts } from './data/custom-types';
 import { cartDiscountDrafts, discountCodeDrafts, productDiscountDrafts } from './data/discounts';
@@ -149,6 +151,28 @@ export async function verifySeed(api: Api): Promise<string[]> {
   if (missingInv.length) problems.push(`inventory: ${missingInv.length} of ${wantInv.length} entries missing (first: ${missingInv[0]?.key})`);
   const wrongInv = wantInv.filter((i) => haveInv.has(i.key as string) && haveInv.get(i.key as string)?.quantityOnStock !== i.quantityOnStock);
   if (wrongInv.length) problems.push(`inventory: ${wrongInv.length} entries differ from the rule (first: ${wrongInv[0]?.key})`);
+
+  // multibrand: line brand field, selections and their members, the drinks channel, catalogue and stock
+  const lineType = await need('types', K.typeLine);
+  const brandField = ((lineType?.fieldDefinitions as { name: string }[]) ?? []).find((f) => f.name === 'brand');
+  if (lineType && !brandField) problems.push(`type ${K.typeLine}: field brand missing`);
+  const drinksChannel = await need('channels', CHANNEL_DRINKS);
+  if (drinksChannel && !((drinksChannel.roles as string[]) ?? []).includes('InventorySupply')) problems.push(`channel ${CHANNEL_DRINKS}: role InventorySupply missing`);
+  await need('product-types', drinkProductType.key as string);
+  for (const c of DRINK_CATEGORIES) await need('categories', c.key);
+  for (const d of selectionDrafts) await need('product-selections', d.key as string);
+  const wantMembers: [string, string[]][] = [[SELECTION_COFFEE, PRODUCTS.map((x) => x.key)], [SELECTION_DRINKS, DRINK_PRODUCT_KEYS]];
+  for (const [selectionKey, keys] of wantMembers) {
+    const selection = await api.getByKey('product-selections', selectionKey);
+    if (!selection) continue;
+    const assigned = new Set(await api.selectionProductIds(selection.id));
+    const missing = keys.filter((k) => { const p = products.get(k); return !p || !assigned.has(p.id); });
+    if (missing.length) problems.push(`product selection ${selectionKey}: ${missing.length} product(s) not assigned (first: ${missing[0]})`);
+  }
+  for (const k of DRINK_PRODUCT_KEYS) if (!products.has(k)) problems.push(`product ${k}: missing`);
+  const haveDrinkInv = new Set((await api.list('inventory')).map((i) => i.key as string));
+  const missingDrinkInv = drinkInventoryDrafts().filter((i) => !haveDrinkInv.has(i.key as string));
+  if (missingDrinkInv.length) problems.push(`inventory: ${missingDrinkInv.length} of ${DRINK_SKUS.length} drinks entries missing (first: ${missingDrinkInv[0]?.key})`);
 
   // discounts and codes
   for (const d of productDiscountDrafts()) await need('product-discounts', d.key as string);

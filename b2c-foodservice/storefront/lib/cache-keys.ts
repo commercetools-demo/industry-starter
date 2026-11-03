@@ -50,6 +50,7 @@ export const TAG = {
   shippingMethods: 'shipping-methods',
   recurrencePolicies: 'recurrence-policies',
   attributeLabels: 'attribute-labels',
+  productSelections: 'product-selections',
 } as const;
 
 /** Server cache lifetimes in seconds, public data only. */
@@ -60,4 +61,5 @@ export const TTL = {
   shippingMethods: 60,
   recurrencePolicies: 300,
   attributeLabels: 3600,
+  productSelections: 300,
 } as const;

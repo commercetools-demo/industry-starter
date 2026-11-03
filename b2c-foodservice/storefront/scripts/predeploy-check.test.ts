@@ -19,10 +19,10 @@ describe('deploy gate', () => {
     expect(checkPredeploy(root)).toEqual(['Remove app/api/dev before deploying']);
   });
 
-  it('Deploy gate fails while app/[locale]/dev exists', () => {
+  it('Deploy gate fails while app/[brand]/[locale]/dev exists', () => {
     const root = mkdtempSync(join(tmpdir(), 'predeploy-'));
     mkdirSync(join(root, 'app', '[locale]', 'dev', 'design'), { recursive: true });
-    expect(checkPredeploy(root)).toEqual(['Remove app/[locale]/dev (the design kitchen sink) before deploying']);
+    expect(checkPredeploy(root)).toEqual(['Remove app/[brand]/[locale]/dev (the design kitchen sink) before deploying']);
   });
 
   it('Deploy gate passes when the route is removed', () => {

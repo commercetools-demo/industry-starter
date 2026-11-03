@@ -92,6 +92,18 @@ A commercetools storefront for Malva Coffee, an online coffee retailer selling c
 | Click **Collection** | Saved store, address, hours and phone. **Change store** updates availability across the site |
 | Click **Addresses** and **Saved** | An address book with a default, and saved items |
 
+## I — Two brands, one bag
+
+| Click this | What it shows |
+|---|---|
+| ▶ Open the [Home page](https://omni-industry-starter.netlify.app/en-US) | The address becomes `/malva-coffee/en-US`: every page lives at `/{brand}/{locale}`, and the old address redirects here |
+| Look above the header | A brand switcher: the current brand is the first tab. Click **Malva Drinks** |
+| Look at the [Malva Drinks home page](https://omni-industry-starter.netlify.app/malva-drinks/en-US) | The same design in a different colour set, with four product lines (French Kiss, Unflavored, Flavored Forever, Chic) in the header. There is no store pill and no collection promise: drinks are delivered only |
+| Open any drinks product | A product page with the size options of that product, and delivery only. The coffee categories are not in this header, and a coffee product address under this brand is not found |
+| Add a drink, switch to **Malva Coffee** and add a pod, then open the bag | One bag, two sections (one per brand, each with its own subtotal), one total and one checkout. Each line carries its brand on the commercetools line item |
+
+Behind it: each brand has its own **product selection**, so Product Search and the category tree only return that brand's products, and the drinks have their own inventory channel. Both brands use the same API routes, cart, checkout and account.
+
 ## What's real
 
 | Feature | What runs, and where it stops |

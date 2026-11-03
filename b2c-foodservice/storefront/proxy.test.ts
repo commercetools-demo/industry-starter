@@ -15,37 +15,75 @@ function target(res: Response): string | null {
 beforeEach(() => vi.stubEnv('APP_MODE', 'website'));
 afterEach(() => vi.unstubAllEnvs());
 
+describe('Brand and locale redirects', () => {
+  it('sends the root to the default brand in the default locale', async () => {
+    const res = await proxy(req('/'));
+    expect(res.status).toBe(307);
+    expect(target(res)).toBe('/malva-coffee/en-US');
+  });
+
+  it('sends the root to the default brand in the cookie locale', async () => {
+    expect(target(await proxy(req('/', 'malva-locale=en-CA')))).toBe('/malva-coffee/en-CA');
+  });
+
+  it('sends a legacy locale URL to the default brand with a 308, keeping path and query', async () => {
+    const res = await proxy(req('/en-CA/p/some-product?x=1'));
+    expect(res.status).toBe(308);
+    expect(target(res)).toBe('/malva-coffee/en-CA/p/some-product?x=1');
+    expect(target(await proxy(req('/en-US')))).toBe('/malva-coffee/en-US');
+  });
+
+  it('puts the brand and locale in front of a bare path', async () => {
+    expect(target(await proxy(req('/coffee', 'malva-locale=en-CA')))).toBe('/malva-coffee/en-CA/coffee');
+    expect(target(await proxy(req('/coffee?roast=dark&page=2')))).toBe('/malva-coffee/en-US/coffee?roast=dark&page=2');
+  });
+
+  it('keeps a brand when the locale is missing', async () => {
+    expect(target(await proxy(req('/malva-drinks')))).toBe('/malva-drinks/en-US');
+    expect(target(await proxy(req('/malva-drinks/c/chic', 'malva-locale=en-CA')))).toBe('/malva-drinks/en-CA/c/chic');
+  });
+});
+
 describe('Unknown locale', () => {
   it('Unknown locale redirects to the default locale, never nested', async () => {
     const res = await proxy(req('/fr-FR/coffee'));
     expect(res.status).toBe(307);
-    expect(target(res)).toBe('/en-US/coffee');
+    expect(target(res)).toBe('/malva-coffee/en-US/coffee');
+    expect(target(await proxy(req('/malva-drinks/fr-FR/coffee')))).toBe('/malva-drinks/en-US/coffee');
   });
 
   it('Unknown locale redirects to the cookie locale', async () => {
     const res = await proxy(req('/fr-FR/coffee', 'malva-locale=en-CA'));
-    expect(target(res)).toBe('/en-CA/coffee');
-  });
-
-  it('Bare path gets the cookie locale', async () => {
-    expect(target(await proxy(req('/coffee', 'malva-locale=en-CA')))).toBe('/en-CA/coffee');
-    expect(target(await proxy(req('/')))).toBe('/en-US');
+    expect(target(res)).toBe('/malva-coffee/en-CA/coffee');
   });
 
   it('Invalid cookie falls back to en-US', async () => {
-    expect(target(await proxy(req('/coffee', 'malva-locale=xx-XX')))).toBe('/en-US/coffee');
+    expect(target(await proxy(req('/coffee', 'malva-locale=xx-XX')))).toBe('/malva-coffee/en-US/coffee');
   });
 
   it('Removed locales are treated as unknown', async () => {
-    expect(target(await proxy(req('/de-DE')))).toBe('/en-US');
-    expect(target(await proxy(req('/en-GB/tea')))).toBe('/en-US/tea');
+    expect(target(await proxy(req('/de-DE')))).toBe('/malva-coffee/en-US');
+    expect(target(await proxy(req('/en-GB/tea')))).toBe('/malva-coffee/en-US/tea');
   });
 
-  it('Supported locale passes through and sets x-next-intl-locale', async () => {
-    for (const path of ['/en-CA', '/en-CA/anything']) {
+  it('Query string is preserved', async () => {
+    expect(target(await proxy(req('/fr-FR/coffee?q=a')))).toBe('/malva-coffee/en-US/coffee?q=a');
+  });
+});
+
+describe('Supported brand and locale', () => {
+  it('passes through and sets the locale and brand headers', async () => {
+    for (const [path, brand, locale] of [
+      ['/malva-coffee/en-CA', 'malva-coffee', 'en-CA'],
+      ['/malva-drinks/en-CA/anything', 'malva-drinks', 'en-CA'],
+      ['/malva-drinks/en-US/cart', 'malva-drinks', 'en-US'],
+    ] as const) {
       const res = await proxy(req(path, 'malva-locale=en-US'));
-      expect(res.headers.get('location')).toBeNull();
-      expect(res.headers.get('x-next-intl-locale')).toBe('en-CA');
+      expect(res.headers.get('location'), path).toBeNull();
+      expect(res.headers.get('x-next-intl-locale'), path).toBe(locale);
+      // The brand travels as a request header (the response only echoes the locale); the request header override is on the response.
+      expect(res.headers.get('x-middleware-override-headers') ?? '', path).toContain('x-brand');
+      expect(res.headers.get('x-middleware-request-x-brand'), path).toBe(brand);
     }
   });
 
@@ -55,10 +93,5 @@ describe('Unknown locale', () => {
       expect(res.headers.get('location'), path).toBeNull();
       expect(res.headers.get('x-next-intl-locale'), path).toBeNull();
     }
-  });
-
-  it('Query string is preserved', async () => {
-    expect(target(await proxy(req('/coffee?roast=dark&page=2')))).toBe('/en-US/coffee?roast=dark&page=2');
-    expect(target(await proxy(req('/fr-FR/coffee?q=a')))).toBe('/en-US/coffee?q=a');
   });
 });

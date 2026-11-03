@@ -28,6 +28,17 @@ The system SHALL display the cart's subtotal, discounts, tax and total as return
 - **WHEN** the buyer views the cart
 - **THEN** the shortfall is stated as an amount and the route to checkout is not offered
 
+### Requirement: Lines grouped by brand
+The cart drawer and cart page SHALL render one section per brand, current brand first, with one shared order total and checkout action. When the bag holds lines of more than one brand, each section SHALL show the brand name and a brand subtotal; a bag of one brand keeps the unchanged single-brand layout.
+
+#### Scenario: Two sections
+- **WHEN** the cart has coffee and drinks lines
+- **THEN** two sections show with their subtotals and a single checkout button
+
+#### Scenario: One brand only
+- **WHEN** the cart has only drinks lines
+- **THEN** one drinks section shows and no empty coffee section
+
 ## Components
 
 Data source tags: `[STATIC]` served from CDN with no middleware call; `[CACHED]` one shared middleware call at build or cache expiry; `[MIDDLEWARE]` called per request because the response is session-specific.

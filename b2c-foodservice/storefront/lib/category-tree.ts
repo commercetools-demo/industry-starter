@@ -19,6 +19,14 @@ export function instoreVisibleTree(tree: Category[]): Category[] {
     .map((c) => ({ ...c, children: instoreVisibleTree(c.children) }));
 }
 
+/**
+ * The tree reduced to the categories whose id is in `ids` (a category with products in a brand's selection plus its ancestors, which
+ * is what the `categoriesSubTree` facet returns). A category outside `ids` is dropped with its subtree.
+ */
+export function pruneToIds(tree: Category[], ids: ReadonlySet<string>): Category[] {
+  return tree.filter((c) => ids.has(c.id)).map((c) => ({ ...c, children: pruneToIds(c.children, ids) }));
+}
+
 export function findCategory(tree: Category[], match: (c: Category) => boolean): Category | null {
   return flattenTree(tree).find(match) ?? null;
 }

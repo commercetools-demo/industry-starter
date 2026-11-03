@@ -12,8 +12,9 @@ vi.mock('next-intl/server', () => ({ getTranslations: async () => (key: string) 
 vi.mock('@/lib/ct/cart-enrich', () => ({ getCartEnrichment: async () => ({}) }));
 vi.mock('@/lib/ct/channels', async () => {
   const { STORE_BK, STORE_SOHO } = await import('@/test/cart');
-  return { getStoresForCountry: async (country: string) => (country === 'US' ? [STORE_SOHO, STORE_BK] : []) };
+  return { getStoresForCountry: async (country: string) => (country === 'US' ? [STORE_SOHO, STORE_BK] : []), getBrandChannelId: async () => undefined };
 });
+vi.mock('@/lib/ct/product-selections', () => ({ getProductBrand: async () => 'malva-coffee' }));
 vi.mock('@/lib/ct/project', () => ({
   getMarkets: async () => [
     { locale: 'en-US', currency: 'USD', country: 'US', label: 'United States', collection: true, timeZone: 'x' },
@@ -30,6 +31,7 @@ vi.mock('@/lib/ct/product-detail', () => {
     getRecurrencePolicies: async () => [policy],
     getRecurrencePolicyByKey: async (key: string) => (key === policy.key ? policy : null),
     getProductBySku: async (sku: string) => ({
+      id: `p-${sku}`,
       masterVariant: variant(sku, sku === 'SUB-CA'), variants: [], attributes: [{ name: 'subscribable', value: true }],
     }),
   };

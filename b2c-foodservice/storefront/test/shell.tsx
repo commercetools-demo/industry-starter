@@ -26,6 +26,7 @@ export async function routingMock() {
     routing: { locales: ['en-US', 'en-CA'], defaultLocale: 'en-US' },
     Link: ({ href, children, ...rest }: { href: string; children?: ReactNode } & Record<string, unknown>) =>
       React.createElement('a', { href, ...rest }, children),
+    useBrand: () => 'malva-coffee' as const,
     usePathname: () => nav.pathname,
     useRouter: () => ({ push: nav.push, replace: nav.replace, refresh: nav.refresh }),
     redirect: vi.fn(),

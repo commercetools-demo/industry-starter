@@ -94,11 +94,23 @@ New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import
 
 ## Shell and pickers (workstream F)
 
-- Layout: `app/[locale]/layout.tsx` renders skip link, promise bar, header, `<main id="main-content">`, footer, store picker and locale chooser. **Pages must not render their own `<main>`** (use `div` or `section`). Page layers must stay below `z-60` (the header); dialogs use `z-80` and up.
+- Layout: `app/[brand]/[locale]/layout.tsx` renders skip link, promise bar, header, `<main id="main-content">`, footer, store picker and locale chooser. **Pages must not render their own `<main>`** (use `div` or `section`). Page layers must stay below `z-60` (the header); dialogs use `z-80` and up.
 - Shell data is read once per request by `lib/shell-data.ts` (never throws; each part degrades alone). The URL locale drives the shell; the session supplies the chosen store.
 - Hooks for G, H and I: `useCollectionStore()` (`store`, `stores`, `select`, `open({ sku })`, `preferShip`), `useAvailability(sku, country)`, `useCartCount()`, `useMarket()` (`switchCountry`, `switchLanguage`), `useShellUi()` (`openCart`, `registerCartDrawer`), `useToast()`. Routes: `GET /api/channels`, `GET /api/availability`, `PUT /api/session/store`, `PUT /api/session/market`, `GET /api/cart/count`, `POST /api/newsletter`.
 - Single source for the free-shipping figure: `getFreeShippingThreshold(country, currency)` in `lib/ct/shipping.ts` (cart and PDP call it too). Listing links: `buildListingHref(slug, { facet: value })` in `lib/nav/listing-href.ts` (`f_<facet>` params).
 - Tests for shell components: `test/shell.tsx` (`renderShell`, `stubFetch`, `routingMock`) and `test/axe.ts`. Local browser checks without credentials: `node scripts/mock-ct-server.mjs` (see its header).
+
+## Multibrand: Malva Coffee and Malva Drinks
+
+- One codebase, one commercetools project, one BFF (`/api/*`, unprefixed), one cart, checkout and account. Public pages live at `/{brand}/{locale}/...` (`app/[brand]/[locale]`); `/` and `/{locale}/...` redirect to `/malva-coffee/{locale}/...` (`proxy.ts`). The proxy forwards the brand as the request header `x-brand`; `lib/brand-server.ts` `getBrand()` reads it, `useBrand()` (`@/i18n/routing`) reads the route param on the client.
+- `lib/brands.ts` is the one registry (selection key, inventory channel key, `pickup`, theme, home and PDP variant, tile categories). No other file hard-codes a brand rule. Adding a brand is a registry entry, seed data and its home and PDP variants.
+- Navigation: `Link`, `useRouter`, `usePathname`, `redirect`, `permanentRedirect`, `getPathname` from `@/i18n/routing` still take locale-free, brand-free hrefs; `i18n/navigation.tsx` (client) and `i18n/paths.ts` add `/{brand}/{locale}`. A server `redirect` needs `brand` (from the page params, or `getBrand()`). `pageMetadata({ brand, ... })` gives the canonical under the brand.
+- Catalogue: each brand has a product selection (`mcf-selection-malva-coffee`, `mcf-selection-malva-drinks`). `searchProducts` adds `productSelections = <id>` when `ctx.brand` is set (`lib/ct/product-selections.ts` `getSelectionId`, cached); the category tree for a brand is the categories of its selection plus ancestors (`getCategoryTree(locale, brand)`, a `categoriesSubTree` facet); a product of another brand is a 404 (`isInBrandSelection`). A brand without a selection in the project: the default brand sees everything, any other sees nothing.
+- Cart: the line custom type `mcf-line-fulfilment` has the enum `brand`. `addLine` finds the brand on the server (`getProductBrand`), never from the request, writes `brand`, and for Malva Drinks sets `supplyChannel` to the drinks inventory channel with `fulfilment = delivery`. A brand channel is not a store: `fulfilmentOf`, `planLines`, the order mapper and the checkout clone all go by the brand. The cart view groups lines per brand (`lib/cart/brand-sections.ts`); a bag of two brands still ships as one shipment and pays as one order.
+- Stock: a brand channel's entry is the SKU's online stock (`getInventoryDetail`, `getAvailabilityForSkus`, `getBrandChannelIds`).
+- Theme: colours only, `html[data-brand='malva-drinks']` in `app/tokens.css` (values from the owner's `styles.css`; fonts, radii and shapes unchanged). The root layout sets `data-brand` from the header.
+- Malva Drinks has no store pickup: no store pill, picker, collect chip, collection promise or `FulfilmentCards`; `POST /api/cart/lines` refuses collect and subscribe for a drinks product (`collect_not_available_in_market`).
+- Seed (`seed/`): steps `drinks-catalog`, `product-selections`, `selection-membership`; drinks data is `seed/src/data/drinks.json`, written by `seed/scripts/reduce-drinks.ts` from the scraped Maison Perrier file. Drinks images are the scraped URLs as they are.
 
 ## Auth and session (workstream J)
 
@@ -137,7 +149,7 @@ New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import
 
 - No moderation (D-037): a review has no state and counts at once. One review per customer and product (`uniquenessValue` `<customerId>:<productId>` plus a pre-check). Routes: `GET/POST /api/reviews`, `PATCH/DELETE /api/reviews/[id]`; rules and pure validation in `lib/reviews/validate.ts`.
 - Reads use the main client (`lib/ct/reviews.ts`); writes use the isolated second client `lib/ct/review-client.ts` (D-027, env names `CTP_REVIEWS_CLIENT_ID`, `CTP_REVIEWS_CLIENT_SECRET`, optional `CTP_REVIEWS_SCOPES`). Nothing else imports it.
-- UI: `components/reviews/ReviewsSection` (mounted by `components/pdp/ReviewsSlot`; `REVIEWS_ENABLED` is true) and the account tab `app/[locale]/account/(shell)/reviews` with `MyReviews`. Hooks: `useReviews` (SWR infinite; call `revalidateReviewLists(productId)` after a write, because SWR's global `mutate(filter)` skips infinite keys), `useMyReviews`, `useReviewActions`.
+- UI: `components/reviews/ReviewsSection` (mounted by `components/pdp/ReviewsSlot`; `REVIEWS_ENABLED` is true) and the account tab `app/[brand]/[locale]/account/(shell)/reviews` with `MyReviews`. Hooks: `useReviews` (SWR infinite; call `revalidateReviewLists(productId)` after a write, because SWR's global `mutate(filter)` skips infinite keys), `useMyReviews`, `useReviewActions`.
 - Review text is rendered as plain React text only; never `dangerouslySetInnerHTML`. Responses never carry an email or customer id (a test checks the key list).
 - Mock server: `scripts/mock-fixtures/mock-reviews.mjs` (reviews from the fixtures, create, update, delete, statistics kept in step; customer `cust-1` has an order with the first product).
 
@@ -169,7 +181,7 @@ New resource checklist (six files): `lib/ct/<namespace>.ts` (starts with `import
 
 ## Account area (workstream L)
 
-- Shell: `app/[locale]/account/(shell)/layout.tsx` gives a signed-in customer `AccountShell` (tabs, header); every page calls `requireCustomerPage('/account/<tab>')`. The Collection tab is US only (404 in Canada). The order detail page is `/account/orders/[orderNumber]` (read by number on the server, then the client follows it by id).
+- Shell: `app/[brand]/[locale]/account/(shell)/layout.tsx` gives a signed-in customer `AccountShell` (tabs, header); every page calls `requireCustomerPage('/account/<tab>')`. The Collection tab is US only (404 in Canada). The order detail page is `/account/orders/[orderNumber]` (read by number on the server, then the client follows it by id).
 - Server: `lib/ct/reorder.ts`, `addresses.ts`, `customer.ts`, `payment-methods.ts`, `shopping-lists.ts`; pure rules in `lib/account/*` (order status, returns window, address policy and validation). Orders: see above.
 - Payment methods are read only (token never leaves the server); scopes are `view_payment_methods` and `manage_payment_methods`. Remove sets Inactive (a default method is first set to non-default).
 - `useSavedItems` keeps its API: sessionStorage for guests, the server shopping list for signed-in customers (merged once at sign-in).

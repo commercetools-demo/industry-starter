@@ -1,3 +1,4 @@
+import { isBrandSlug } from '@/lib/brands';
 /**
  * global-error replaces the root layout, so it cannot use the message catalogues or NextIntlClientProvider.
  * This small inline dictionary is the one allowed exception to "strings come from the catalogues"; a test checks both locales.
@@ -22,8 +23,9 @@ export const GLOBAL_ERROR_DICTIONARY = {
 
 export type GlobalErrorLocale = keyof typeof GLOBAL_ERROR_DICTIONARY;
 
-/** The locale from the first path segment; the default locale when it is not one of ours. */
+/** The locale from the path (`/{brand}/{locale}/...`, or a legacy `/{locale}/...`); the default locale when it is not one of ours. */
 export function localeFromPath(pathname: string): GlobalErrorLocale {
-  const first = pathname.split('/')[1] ?? '';
-  return first in GLOBAL_ERROR_DICTIONARY ? (first as GlobalErrorLocale) : 'en-US';
+  const [, first = '', second = ''] = pathname.split('/');
+  const candidate = isBrandSlug(first) ? second : first;
+  return candidate in GLOBAL_ERROR_DICTIONARY ? (candidate as GlobalErrorLocale) : 'en-US';
 }

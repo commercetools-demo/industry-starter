@@ -2,7 +2,7 @@
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 // Deploy gate (workstream Q, D9). Prints names, lengths and keys of the project; never a secret value.
 //   npm run predeploy                    structure and files, plus the environment of the shell and of .env.production
-// The dev routes (app/api/health, app/api/dev, app/[locale]/dev) are kept while the owner tests by hand; this gate lists them
+// The dev routes (app/api/health, app/api/dev, app/[brand]/[locale]/dev) are kept while the owner tests by hand; this gate lists them
 // and fails until they are deleted.
 import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -29,7 +29,7 @@ export function checkPredeploy(root) {
     problems.push('Remove app/api/dev before deploying');
   }
   if (existsSync(join(root, 'app', '[locale]', 'dev'))) {
-    problems.push('Remove app/[locale]/dev (the design kitchen sink) before deploying');
+    problems.push('Remove app/[brand]/[locale]/dev (the design kitchen sink) before deploying');
   }
   return problems;
 }

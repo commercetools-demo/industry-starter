@@ -3,6 +3,7 @@ import { toCodeState, stateReasonKey } from '@/lib/cart/discount-reasons';
 import { groupKeyOf, groupLines } from '@/lib/cart/plan';
 import { blockers, freeShipping, minimumOrder, variantSummary, type VariantTranslator } from '@/lib/cart/summary';
 import { availabilityState } from '@/lib/availability';
+import { BRANDS, brandOfLineFields } from '@/lib/brands';
 import { mapMoney } from '@/lib/mappers/money';
 import { CART_MAX_LINE_QUANTITY, LOW_STOCK_THRESHOLD } from '@/lib/shop-config';
 import type {
@@ -70,7 +71,8 @@ export function fulfilmentOf(l: Pick<LineItem, 'custom' | 'recurrenceInfo' | 'su
   const raw: unknown = l.custom?.fields?.fulfilment;
   if (typeof raw === 'string' && (FULFILMENTS as readonly string[]).includes(raw)) return raw as Fulfilment;
   if (l.recurrenceInfo) return 'subscribe';
-  if (l.supplyChannel) return 'collect';
+  // A supply channel means collect only for a brand with pickup: Malva Drinks lines carry the brand's inventory channel, which is not a store.
+  if (l.supplyChannel && BRANDS[brandOfLineFields(l.custom?.fields)].pickup) return 'collect';
   return 'delivery';
 }
 
@@ -125,6 +127,7 @@ function noticesOf(
 function mapLine(l: LineItem, e: CartEnrichment, ctx: MapContext): CartLine {
   const sku = l.variant?.sku ?? '';
   const fulfilment = fulfilmentOf(l);
+  const brand = brandOfLineFields(l.custom?.fields);
   const product = e.products[l.productId];
   const variant = product?.variants[sku];
   const store = fulfilment === 'collect' ? storeOf(l.supplyChannel?.id, e.stores) : undefined;
@@ -135,7 +138,8 @@ function mapLine(l: LineItem, e: CartEnrichment, ctx: MapContext): CartLine {
   const { notices, maxQuantity } = noticesOf(l, fulfilment, e.inventory, l.supplyChannel?.id, ctx.previousPrices?.[l.id]);
 
   let collectAtSessionStore: CartLine['collectAtSessionStore'];
-  if (fulfilment === 'delivery' && ctx.collection) {
+  // No Collect chip on a line of a brand without pickup (Malva Drinks).
+  if (fulfilment === 'delivery' && ctx.collection && BRANDS[brand].pickup) {
     const s = e.stores.find((x) => x.key === e.sessionStoreKey);
     collectAtSessionStore =
       s && e.inventory ? { storeKey: s.key, storeName: s.name, state: availabilityState(e.inventory[sku]?.stores[s.id] ?? 0, LOW_STOCK_THRESHOLD) } : null;
@@ -155,6 +159,7 @@ function mapLine(l: LineItem, e: CartEnrichment, ctx: MapContext): CartLine {
     ...(l.price.discounted ? { oldUnitPrice: list } : {}),
     total: mapMoney(l.totalPrice),
     fulfilment,
+    brand,
     groupKey: groupKeyOf({ fulfilment, store }),
     ...(store ? { store } : {}),
     ...(policyId && schedule ? { recurrence: { policyId, schedule } } : {}),

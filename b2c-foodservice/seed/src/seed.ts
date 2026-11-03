@@ -2,6 +2,9 @@
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 import type { Api, Kind, Res } from './api';
 import { ls } from './data/base';
+import { drinksChannelDraft, selectionDrafts, SELECTION_COFFEE, SELECTION_DRINKS } from './data/brands';
+import { DRINK_PRODUCT_KEYS, drinkCategoryDrafts, drinkInventoryDrafts, drinkProductDrafts, drinkProductType } from './data/drinks';
+import { readyDrinkDrafts } from './data/instore';
 import { categoryDrafts } from './data/categories';
 import { categoryImagesFor, loadRecordedImages, productDrafts, productImagesFor, type ImageMap, type RecordedImage } from './data/catalog';
 import { CUSTOMERS, customerDraft, shoppingListDraft } from './data/customers';
@@ -17,6 +20,7 @@ import { shippingMethodDrafts, taxCategoryDrafts, zoneDrafts } from './data/tax-
 import { FakeApi } from './fake-api';
 import { fail, getAdmin, isMainModule, parseArgs, Runner, sleep } from './lib';
 import { ensureProjectSettings } from './settings';
+import { ensureSelectionMembership } from './selections';
 import * as S from './sync';
 
 /**
@@ -235,6 +239,40 @@ export const STEPS: Step[] = [
     requires: [{ step: 'products', kind: 'products', key: productKey() }, { step: 'channels', kind: 'channels', key: 'mcf-store-nyc-soho' }],
     run: async (c) => {
       for (const d of inventoryDrafts()) await upsert(c, 'inventory', `inventory ${d.key}`, d as unknown as Obj, (e) => S.planInventoryUpdate(e, d));
+    },
+  },
+  {
+    // Malva Drinks: product type, categories, the drinks inventory channel, products (prices embedded) and stock on that channel.
+    name: 'drinks-catalog', requires: [{ step: 'tax', kind: 'tax-categories', key: 'mcf-tax-food' }],
+    run: async (c) => {
+      await upsert(c, 'product-types', `product type ${drinkProductType.key}`, drinkProductType as unknown as Obj, (e) => S.planProductTypeUpdate(e, drinkProductType));
+      for (const d of drinkCategoryDrafts()) await upsert(c, 'categories', `category ${String(d.key)}`, d, (e) => S.planCategoryUpdate(e, { name: d.name as never, assets: (d.assets as unknown[] | undefined) ?? [] }));
+      const ch = drinksChannelDraft();
+      await upsert(c, 'channels', `inventory channel ${ch.key}`, ch as unknown as Obj);
+      for (const d of drinkProductDrafts()) {
+        await upsert(c, 'products', `product ${String(d.key)}`, d, (e) => [
+          ...S.planProductUpdate(e, d as never, c.keyOf, 'core'), ...S.planProductUpdate(e, d as never, c.keyOf, 'prices'),
+        ]);
+      }
+      for (const d of drinkInventoryDrafts()) await upsert(c, 'inventory', `inventory ${d.key}`, d as unknown as Obj, (e) => S.planInventoryUpdate(e, d));
+    },
+  },
+  {
+    name: 'product-selections', requires: [],
+    run: async (c) => {
+      for (const d of selectionDrafts) await upsert(c, 'product-selections', `product selection ${d.key}`, d as unknown as Obj);
+    },
+  },
+  {
+    // Coffee has no selection today: every coffee product (and the in-store ready drinks, when present) joins the coffee selection.
+    name: 'selection-membership',
+    requires: [
+      { step: 'products', kind: 'products', key: productKey() },
+      { step: 'product-selections', kind: 'product-selections', key: SELECTION_COFFEE },
+    ],
+    run: async (c) => {
+      await ensureSelectionMembership(c.api, c.run, SELECTION_COFFEE, [...PRODUCTS.map((p) => p.key), ...readyDrinkDrafts().map((d) => String(d.key))], c.pause);
+      await ensureSelectionMembership(c.api, c.run, SELECTION_DRINKS, DRINK_PRODUCT_KEYS, c.pause);
     },
   },
   {

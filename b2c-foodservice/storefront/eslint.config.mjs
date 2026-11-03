@@ -60,7 +60,7 @@ const eslintConfig = defineConfig([
     },
   },
   {
-    files: ['app/[[]locale[]]/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}', 'context/**/*.{ts,tsx}', 'hooks/**/*.{ts,tsx}'],
+    files: ['app/[[]brand[]]/[[]locale[]]/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}', 'context/**/*.{ts,tsx}', 'hooks/**/*.{ts,tsx}'],
     rules: { 'no-restricted-imports': ['error', NAV_RESTRICTIONS] },
   },
   {

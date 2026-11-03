@@ -4,7 +4,10 @@ import { useTranslations } from 'next-intl';
 import Breadcrumbs from '@/components/listing/Breadcrumbs';
 import Button from '@/components/ui/Button';
 import { useCart } from '@/hooks/useCart';
+import { useBrand } from '@/i18n/routing';
+import { brandSections } from '@/lib/cart/brand-sections';
 import type { Cart } from '@/lib/types';
+import BrandHeading from './BrandHeading';
 import CompanionNudge from './CompanionNudge';
 import DroppedLinesNotice from './DroppedLinesNotice';
 import EmptyCart from './EmptyCart';
@@ -31,6 +34,7 @@ export default function CartPage({ initialCart }: { initialCart?: Cart | null })
   const t = useTranslations('cart');
   const { cart, isLoading, error, mutate } = useCart(initialCart === undefined ? {} : { initialCart });
   const ui = useCartUi();
+  const brand = useBrand();
 
   const crumbs = [{ label: t('page.home'), href: '/' }, { label: t('page.breadcrumb') }];
 
@@ -67,6 +71,7 @@ export default function CartPage({ initialCart }: { initialCart?: Cart | null })
     );
   }
 
+  const sections = brandSections(cart, brand);
   return (
     <div className="wrap pb-20 pt-6" data-cart-root>
       <Breadcrumbs items={crumbs} />
@@ -79,8 +84,13 @@ export default function CartPage({ initialCart }: { initialCart?: Cart | null })
       ) : null}
       <div className="grid items-start gap-12 stack:grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)]">
         <div>
-          {cart.groups.map((group) => (
-            <FulfilmentGroup key={group.key} cart={cart} group={group} ui={ui} />
+          {sections.map((section) => (
+            <section key={section.brand} aria-label={section.name}>
+              {sections.length > 1 ? <BrandHeading section={section} /> : null}
+              {section.groups.map((group) => (
+                <FulfilmentGroup key={`${section.brand}:${group.key}`} cart={cart} group={group} ui={ui} />
+              ))}
+            </section>
           ))}
         </div>
         <div className="stack:sticky stack:top-24">

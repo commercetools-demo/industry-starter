@@ -2,6 +2,7 @@ import 'server-only';
 import type { InventoryEntry } from '@commercetools/platform-sdk';
 import { availabilityState } from '@/lib/availability';
 import { apiRoot } from '@/lib/ct/client';
+import { getBrandChannelIds } from '@/lib/ct/channels';
 import { AppError } from '@/lib/errors';
 import { LOW_STOCK_THRESHOLD } from '@/lib/shop-config';
 import type { InventoryDetail, SkuAvailability, Store } from '@/lib/types';
@@ -19,7 +20,9 @@ function mapEntries(
   entries: InventoryEntry[],
   stores: Pick<Store, 'id' | 'key'>[],
 ): SkuAvailability {
-  const online = entries.find((e) => !e.supplyChannel);
+  // The online entry has no channel; a SKU stocked only in a non-store channel (a brand warehouse) ships from that entry.
+  const storeIds = new Set(stores.map((s) => s.id));
+  const online = entries.find((e) => !e.supplyChannel) ?? entries.find((e) => e.supplyChannel && !storeIds.has(e.supplyChannel.id));
   const quantityByChannel = new Map<string, number>();
   for (const e of entries) {
     if (e.supplyChannel) quantityByChannel.set(e.supplyChannel.id, e.availableQuantity);
@@ -78,10 +81,12 @@ export async function getInventoryDetail(skus: string[]): Promise<Record<string,
     .inventory()
     .get({ queryArgs: { where: `sku in (${unique.map((s) => `"${s}"`).join(', ')})`, limit: 500 } })
     .execute();
+  // A brand's inventory channel (Malva Drinks) holds that brand's stock: it counts as the SKU's online stock, not as a store.
+  const brandChannels = await getBrandChannelIds().catch((): Record<string, string> => ({}));
   const out: Record<string, InventoryDetail> = {};
   for (const e of body.results) {
     const entry = (out[e.sku] ??= { online: 0, stores: {} });
-    if (e.supplyChannel) {
+    if (e.supplyChannel && !brandChannels[e.supplyChannel.id]) {
       entry.stores[e.supplyChannel.id] = e.availableQuantity;
     } else {
       entry.online = e.availableQuantity;

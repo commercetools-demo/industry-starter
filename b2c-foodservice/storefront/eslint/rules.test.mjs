@@ -45,7 +45,7 @@ describe('BFF boundary rules', () => {
 describe('Locale navigation rules', () => {
   it('Bare next/link in locale UI fails', async () => {
     expect(ids(await lint('next-link.bad.tsx', 'components/nav.tsx'))).toContain('no-restricted-imports');
-    expect(ids(await lint('next-link.bad.tsx', 'app/[locale]/nav.tsx'))).toContain('no-restricted-imports');
+    expect(ids(await lint('next-link.bad.tsx', 'app/[brand]/[locale]/nav.tsx'))).toContain('no-restricted-imports');
   });
 
   it('useRouter from next/navigation in locale UI fails', async () => {
@@ -53,7 +53,7 @@ describe('Locale navigation rules', () => {
   });
 
   it('notFound from next/navigation passes', async () => {
-    expect(await lint('next-navigation.good.tsx', 'app/[locale]/page.tsx')).toEqual([]);
+    expect(await lint('next-navigation.good.tsx', 'app/[brand]/[locale]/page.tsx')).toEqual([]);
   });
 
   it('Link from @/i18n/routing passes', async () => {
@@ -71,7 +71,7 @@ describe('Quality gates', () => {
   });
 
   it('Tailwind arbitrary hex fails', async () => {
-    expect(ids(await lint('tailwind-hex.bad.tsx', 'app/[locale]/badge.tsx'))).toContain('no-restricted-syntax');
+    expect(ids(await lint('tailwind-hex.bad.tsx', 'app/[brand]/[locale]/badge.tsx'))).toContain('no-restricted-syntax');
   });
 
   it('Raw hex in a test file is not flagged', async () => {
