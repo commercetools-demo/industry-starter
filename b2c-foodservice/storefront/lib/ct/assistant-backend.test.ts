@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { Unavailable } from '@/lib/agent/shopping/backend';
+import { SignInRequired, Unavailable } from '@/lib/agent/shopping/backend';
 import type { ShoppingSessionContext } from '@/lib/agent/shopping/types';
 import { LineRejected } from '@/lib/ct/cart';
 import { AppError } from '@/lib/errors';
@@ -8,6 +8,7 @@ import type { ProductSummary } from '@/lib/types';
 import { usd, viewCart, viewLine } from '@/test/cart';
 import { podPage } from '@/test/pdp';
 import { StorefrontApiBackend, toToolError } from './assistant-backend';
+import { ctOrder } from '@/test/orders';
 
 const m = vi.hoisted(() => ({
   search: vi.fn(),
@@ -21,6 +22,9 @@ const m = vi.hoisted(() => ({
   changeQuantity: vi.fn(),
   removeLine: vi.fn(),
   cartFor: vi.fn(),
+  listOrders: vi.fn(),
+  byNumber: vi.fn(),
+  byId: vi.fn(),
 }));
 
 // The domain error class is what the mapper tests against; the real module pulls in the commercetools client.
@@ -45,6 +49,7 @@ vi.mock('@/lib/ct/products', () => ({ getListingProjections: m.projections }));
 vi.mock('@/lib/pdp/load', () => ({ loadProductPage: m.page }));
 vi.mock('@/lib/ct/inventory', () => ({ getInventoryDetail: m.inventory }));
 vi.mock('@/lib/ct/categories', () => ({ getCategoryTree: m.tree, getCategoryBySlug: m.bySlug }));
+vi.mock('@/lib/ct/orders', () => ({ listOrders: m.listOrders, getCustomerOrderByNumber: m.byNumber, getCustomerOrderById: m.byId }));
 
 const market = { country: 'US', currency: 'USD', locale: 'en-US' };
 const ctx = (over: Partial<ShoppingSessionContext> = {}): ShoppingSessionContext => ({
@@ -92,8 +97,8 @@ describe('StorefrontApiBackend skeleton', () => {
     expect('displayName' in prefs).toBe(false);
   });
 
-  it('Methods not built yet say so as Unavailable', async () => {
-    await expect(backendFor({}).getOrders()).rejects.toBeInstanceOf(Unavailable);
+  it('Drained notes start empty', () => {
+    expect(backendFor({}).drainNotes()).toEqual([]);
   });
 
   it('Drained notes are returned once', () => {
@@ -222,5 +227,44 @@ describe('StorefrontApiBackend cart (the bag is the cart)', () => {
     const error = await backendFor(bagSession).addToCart(ctx(), 'fam:POD-10', 1).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(Unavailable);
     expect(m.addLine).not.toHaveBeenCalled();
+  });
+});
+
+describe('StorefrontApiBackend orders (the shopper\'s own orders only)', () => {
+  const signedIn: Session = { customerId: 'cust-1', customerFirstName: 'Maya' };
+  const order = (number: string) => ({ ...ctOrder({ orderNumber: number }), customerId: 'cust-1' });
+
+  it('A guest is asked to sign in', async () => {
+    const error = await backendFor({ anonymousId: 'anon-1' }).getOrders().catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(SignInRequired);
+    const detail = await backendFor({ anonymousId: 'anon-1' }).getOrder(ctx(), 'MC-1001').catch((e: unknown) => e);
+    expect(detail).toBeInstanceOf(SignInRequired);
+    expect(m.byNumber).not.toHaveBeenCalled();
+  });
+
+  it('Another customer order is null', async () => {
+    m.byNumber.mockResolvedValue(null);
+    m.byId.mockResolvedValue(null);
+    expect(await backendFor(signedIn).getOrder(ctx(), 'MC-FOREIGN')).toBeNull();
+  });
+
+  it('An unknown number is null, and a malformed id makes no call', async () => {
+    m.byNumber.mockClear();
+    expect(await backendFor(signedIn).getOrder(ctx(), 'bad id with spaces')).toBeNull();
+    expect(m.byNumber).not.toHaveBeenCalled();
+  });
+
+  it('Newest first, at most five', async () => {
+    m.listOrders.mockResolvedValue({ results: [order('MC-3'), order('MC-2')], total: 2 });
+    const orders = await backendFor(signedIn).getOrders(ctx(), 9);
+    expect(m.listOrders).toHaveBeenCalledWith('cust-1', { filter: 'all', limit: 5, offset: 0 });
+    expect(orders.map((o) => o.orderId)).toEqual(['MC-3', 'MC-2']);
+  });
+
+  it('Order link uses the route locale and brand', async () => {
+    m.byNumber.mockResolvedValue(order('MC-1001'));
+    const found = await backendFor(signedIn).getOrder(ctx(), 'MC-1001');
+    expect(found?.viewUrl).toBe('/malva-coffee/en-US/account/orders/MC-1001');
+    expect(found?.orderId).toBe('MC-1001');
   });
 });

@@ -2,15 +2,17 @@ import 'server-only';
 import { KeyedMutex } from '@/lib/agent/common/mutex';
 import { NotOffered, SignInRequired, type StorefrontBackend, Unavailable } from '@/lib/agent/shopping/backend';
 import { decodeId } from '@/lib/agent/shopping/ids';
-import type { Cart, CartTotals, Product, ProductDetails, SearchFilters, ShoppingSessionContext, UserPreferences } from '@/lib/agent/shopping/types';
+import type { Cart, CartTotals, Order, Product, ProductDetails, SearchFilters, ShoppingSessionContext, UserPreferences } from '@/lib/agent/shopping/types';
 import { getCategoryBySlug, getCategoryTree } from '@/lib/ct/categories';
 import { addLine, changeQuantity, type CartMarket, getCartForSession, getCartView, LineRejected, removeLine } from '@/lib/ct/cart';
+import { getCustomerOrderById, getCustomerOrderByNumber, listOrders } from '@/lib/ct/orders';
 import { getInventoryDetail } from '@/lib/ct/inventory';
 import { getListingProjections } from '@/lib/ct/products';
 import { searchProducts as searchCatalogue } from '@/lib/ct/search';
 import { rootCategoryName } from '@/lib/category-tree';
 import { AppError } from '@/lib/errors';
-import { cartFromView, detailsFromPage, productFromSummary, totalsFromView } from '@/lib/mappers/assistant';
+import { mapOrder } from '@/lib/mappers/order';
+import { cartFromView, detailsFromPage, orderFromView, productFromSummary, totalsFromView } from '@/lib/mappers/assistant';
 import { loadProductPage } from '@/lib/pdp/load';
 import type { SearchContext, SearchScope } from '@/lib/search/build';
 import type { ListingParams, SortKey } from '@/lib/search/params';
@@ -29,6 +31,9 @@ import type { Cart as CartView } from '@/lib/types';
 
 const GENERIC_FAILURE = 'The storefront is temporarily unavailable.';
 const RESET = 'The bag was reset. Reload the page and try again.';
+/** An order number or an internal id, validated before any read. */
+const ORDER_ID = /^[A-Za-z0-9_-]{1,64}$/;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** The wording the executor relays when a filter or check could not run (the same sentences the Shopper MCP backend used). */
 const NOTE = {
@@ -276,11 +281,35 @@ export class StorefrontApiBackend implements StorefrontBackend {
     return this.mutex.run(this.session.anonymousId ?? this.session.customerId ?? 'bag', fn);
   }
 
-  async getOrders(): Promise<never> {
-    throw new Unavailable('not built');
+  // -- Orders: the shopper's OWN orders only. Ownership is decided by the customer-scoped reads; unknown and foreign are the same null.
+
+  /** The signed-in shopper's newest orders, at most five. A guest is asked to sign in. Read-only: no state is written. */
+  async getOrders(_ctx?: ShoppingSessionContext, limit = 5): Promise<Order[]> {
+    return this.guard(async () => {
+      const customerId = this.requireCustomer();
+      const { results } = await listOrders(customerId, { filter: 'all', limit: Math.min(Math.max(1, limit), 5), offset: 0 });
+      return results.map((order) => orderFromView(mapOrder(order, this.orderContext()), this.baseHref));
+    });
   }
 
-  async getOrder(): Promise<never> {
-    throw new Unavailable('not built');
+  /** One of the shopper's orders by number or internal id; null when unknown or not theirs. */
+  async getOrder(_ctx: ShoppingSessionContext, orderId: string): Promise<Order | null> {
+    return this.guard(async () => {
+      const customerId = this.requireCustomer();
+      if (!ORDER_ID.test(orderId)) return null;
+      const byNumber = await getCustomerOrderByNumber(customerId, orderId);
+      const order = byNumber ?? (UUID.test(orderId) ? await getCustomerOrderById(customerId, orderId) : null);
+      if (!order) return null;
+      return orderFromView(mapOrder(order, this.orderContext()), this.baseHref);
+    });
+  }
+
+  private requireCustomer(): string {
+    if (!this.session.customerId) throw new SignInRequired();
+    return this.session.customerId;
+  }
+
+  private orderContext() {
+    return { locale: this.market.locale, now: new Date() };
   }
 }
