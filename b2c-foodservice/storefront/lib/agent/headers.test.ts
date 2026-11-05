@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 const ROOT = __dirname;
 const PORTED_DIRS = ['common', 'shopping', 'runtime'];
 // Written for this deployment, not ported from upstream: they carry no Anthropic header (workstream T2, U-01).
-const OWN_FILES = new Set(['shopping/ids.ts', 'shopping/money.ts']);
+const OWN_FILES = new Set(['shopping/ids.ts', 'shopping/money.ts', 'shopping/backend-contract.ts']);
 
 function sources(dir: string): string[] {
   let entries: string[];

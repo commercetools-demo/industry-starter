@@ -1,10 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
+import { type ContractHarness, runBackendContract } from '@/lib/agent/shopping/backend-contract';
 import { SignInRequired, Unavailable } from '@/lib/agent/shopping/backend';
 import type { ShoppingSessionContext } from '@/lib/agent/shopping/types';
 import { LineRejected } from '@/lib/ct/cart';
 import { AppError } from '@/lib/errors';
 import type { Session } from '@/lib/session';
-import type { ProductSummary } from '@/lib/types';
+import type { ProductPageData, ProductSummary } from '@/lib/types';
 import { usd, viewCart, viewLine } from '@/test/cart';
 import { podPage } from '@/test/pdp';
 import { StorefrontApiBackend, toToolError } from './assistant-backend';
@@ -266,5 +267,61 @@ describe('StorefrontApiBackend orders (the shopper\'s own orders only)', () => {
     const found = await backendFor(signedIn).getOrder(ctx(), 'MC-1001');
     expect(found?.viewUrl).toBe('/malva-coffee/en-US/account/orders/MC-1001');
     expect(found?.orderId).toBe('MC-1001');
+  });
+});
+
+// The same rules as the agent's test double (lib/agent/shopping/backend-contract.ts), run against this backend with the storefront modules mocked.
+describe('StorefrontApiBackend against the shared contract', () => {
+  const contractMarket = { country: 'US', currency: 'USD', locale: 'en-US' };
+  const singlePage = (sku: string): ProductPageData => {
+    const base = podPage();
+    const variant = base.product.variants[0]!;
+    return { ...base, product: { ...base.product, name: `Product ${sku}`, defaultSku: sku, variants: [{ ...variant, sku }], selectors: [], rating: null } };
+  };
+
+  runBackendContract('StorefrontApiBackend', () => {
+    const shopper: Session = { customerId: 'cust-1', customerFirstName: 'Maya', cartId: 'bag' };
+    let lines: { id: string; quantity: number }[] = [];
+    const stock: Record<string, { online: number; stores: Record<string, number> }> = { 'SKU-a': stockEntry(5), 'SKU-b': stockEntry(5) };
+    const pages: Record<string, ProductPageData> = { 'SKU-a': singlePage('SKU-a'), 'SKU-b': singlePage('SKU-b') };
+    const bag = () => viewCart(lines.map((l) => viewLine({ id: l.id, quantity: l.quantity, unitPrice: usd(1000) })));
+    const byNumber = (customerId: string, number: string) => (customerId === 'cust-1' && number === 'MC-OWN' ? { ...ctOrder({ orderNumber: 'MC-OWN' }), customerId: 'cust-1' } : null);
+
+    m.page.mockImplementation(async (sku: string) => pages[sku] ?? null);
+    m.inventory.mockImplementation(async (skus: string[]) => Object.fromEntries(skus.filter((s) => stock[s]).map((s) => [s, stock[s]])));
+    m.search.mockImplementation(async () => searchOk([]));
+    m.cartFor.mockResolvedValue({ id: 'bag' });
+    m.cartView.mockImplementation(async () => ({ cart: bag(), session: shopper }));
+    m.addLine.mockImplementation(async (_s: Session, _m: unknown, input: { sku: string; quantity: number }) => {
+      const id = input.sku.slice('SKU-'.length);
+      const line = lines.find((l) => l.id === id);
+      if (line) line.quantity += input.quantity;
+      else lines.push({ id, quantity: input.quantity });
+      return { session: shopper, cart: {} };
+    });
+    m.changeQuantity.mockImplementation(async (_s: Session, _m: unknown, lineId: string, quantity: number) => {
+      const line = lines.find((l) => l.id === lineId);
+      if (line) line.quantity = quantity;
+      return bag();
+    });
+    m.removeLine.mockImplementation(async (_s: Session, _m: unknown, lineId: string) => {
+      lines = lines.filter((l) => l.id !== lineId);
+      return bag();
+    });
+    m.byNumber.mockImplementation(async (customerId: string, number: string) => byNumber(customerId, number));
+    m.byId.mockResolvedValue(null);
+
+    return {
+      backend: new StorefrontApiBackend({ session: shopper, market: contractMarket, baseHref: '/malva-coffee/en-US' }),
+      guest: new StorefrontApiBackend({ session: { anonymousId: 'anon-2' }, market: contractMarket, baseHref: '/malva-coffee/en-US' }),
+      ctx: ctx(),
+      knownId: 'SKU-a',
+      otherId: 'SKU-b',
+      familyId: 'fam:POD-10',
+      unknownId: 'NOPE-1',
+      ownOrder: 'MC-OWN',
+      foreignOrder: 'MC-FOREIGN',
+      breakSearch: () => m.search.mockResolvedValue({ status: 'unsupported_language' }),
+    } satisfies ContractHarness;
   });
 });
