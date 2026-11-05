@@ -2,19 +2,20 @@ import 'server-only';
 import { KeyedMutex } from '@/lib/agent/common/mutex';
 import { NotOffered, SignInRequired, type StorefrontBackend, Unavailable } from '@/lib/agent/shopping/backend';
 import { decodeId } from '@/lib/agent/shopping/ids';
-import type { Product, ProductDetails, SearchFilters, ShoppingSessionContext, UserPreferences } from '@/lib/agent/shopping/types';
+import type { Cart, CartTotals, Product, ProductDetails, SearchFilters, ShoppingSessionContext, UserPreferences } from '@/lib/agent/shopping/types';
 import { getCategoryBySlug, getCategoryTree } from '@/lib/ct/categories';
-import { type CartMarket, LineRejected } from '@/lib/ct/cart';
+import { addLine, changeQuantity, type CartMarket, getCartForSession, getCartView, LineRejected, removeLine } from '@/lib/ct/cart';
 import { getInventoryDetail } from '@/lib/ct/inventory';
 import { getListingProjections } from '@/lib/ct/products';
 import { searchProducts as searchCatalogue } from '@/lib/ct/search';
 import { rootCategoryName } from '@/lib/category-tree';
 import { AppError } from '@/lib/errors';
-import { detailsFromPage, productFromSummary } from '@/lib/mappers/assistant';
+import { cartFromView, detailsFromPage, productFromSummary, totalsFromView } from '@/lib/mappers/assistant';
 import { loadProductPage } from '@/lib/pdp/load';
 import type { SearchContext, SearchScope } from '@/lib/search/build';
 import type { ListingParams, SortKey } from '@/lib/search/params';
 import type { Session } from '@/lib/session';
+import type { Cart as CartView } from '@/lib/types';
 
 /**
  * The assistant's `StorefrontBackend` over the storefront's own commercetools modules (workstream T2). The assistant's cart IS the
@@ -27,6 +28,7 @@ import type { Session } from '@/lib/session';
  */
 
 const GENERIC_FAILURE = 'The storefront is temporarily unavailable.';
+const RESET = 'The bag was reset. Reload the page and try again.';
 
 /** The wording the executor relays when a filter or check could not run (the same sentences the Shopper MCP backend used). */
 const NOTE = {
@@ -104,8 +106,6 @@ export class StorefrontApiBackend implements StorefrontBackend {
     const name = this.session.customerFirstName;
     return { userId: ctx.userId, ...(name ? { displayName: name } : {}), preferences: {} };
   }
-
-  // -- Methods built in U-05 and U-06
 
   // -- Catalogue
 
@@ -186,20 +186,94 @@ export class StorefrontApiBackend implements StorefrontBackend {
     return Object.fromEntries(Object.entries(detail).map(([sku, d]) => [sku, d.online]));
   }
 
-  async getCart(): Promise<never> {
-    throw new Unavailable('not built');
+  // -- Cart: the assistant's cart IS the shopper's bag (every write goes through lib/ct/cart with this session)
+
+  /** The bag as the agent sees it. A lost or empty bag is an empty cart. */
+  async getCart(): Promise<Cart> {
+    return this.guard(async () => this.view((await this.bag()).cart));
   }
 
-  async addToCart(): Promise<never> {
-    throw new Unavailable('not built');
+  /** Adds `quantity` of one SKU. Refuses a family, an out-of-stock SKU and a lost bag; never creates a bag here (decision 5). */
+  async addToCart(_ctx: ShoppingSessionContext, productId: string, quantity: number): Promise<Cart> {
+    return this.guard(() =>
+      this.lock(async () => {
+        const decoded = decodeId(productId);
+        if (decoded.kind === 'family') throw new Unavailable('This product has options; choose one of its variants.');
+        await this.assertBuyable(decoded.sku);
+        if (!(await getCartForSession(this.session))) throw new Unavailable(RESET);
+        const written = await addLine(this.session, this.market, { sku: decoded.sku, quantity, fulfilment: 'delivery' });
+        this.adopt(written.session);
+        return this.view((await this.bag()).cart);
+      }),
+    );
   }
 
-  async updateCartItem(): Promise<never> {
-    throw new Unavailable('not built');
+  /** A set. A product the bag does not hold leaves the bag as it is; that is not an error. */
+  async updateCartItem(_ctx: ShoppingSessionContext, productId: string, quantity: number): Promise<Cart> {
+    return this.guard(() =>
+      this.lock(async () => {
+        const { line, cart } = await this.lineFor(productId);
+        if (!line) return this.view(cart);
+        return cartFromView(await changeQuantity(this.session, this.market, line.id, quantity));
+      }),
+    );
   }
 
-  async removeFromCart(): Promise<never> {
-    throw new Unavailable('not built');
+  /** Same tolerance as `updateCartItem`. Removing the last line leaves the shopper's bag in place, empty. */
+  async removeFromCart(_ctx: ShoppingSessionContext, productId: string): Promise<Cart> {
+    return this.guard(() =>
+      this.lock(async () => {
+        const { line, cart } = await this.lineFor(productId);
+        if (!line) return this.view(cart);
+        return cartFromView(await removeLine(this.session, this.market, line.id));
+      }),
+    );
+  }
+
+  /** Cent-exact totals for the checkout card. Null for an empty bag. */
+  async getCartTotals(): Promise<CartTotals | null> {
+    return this.guard(async () => {
+      const { cart } = await this.bag();
+      return cart ? totalsFromView(cart) : null;
+    });
+  }
+
+  /** Reads the bag through the storefront module (prices and shipping refreshed) and keeps the session it returns. */
+  private async bag(): Promise<{ cart: CartView | null }> {
+    const result = await getCartView(this.session, this.market);
+    this.adopt(result.session);
+    return { cart: result.cart };
+  }
+
+  private view(cart: CartView | null): Cart {
+    return cart ? cartFromView(cart) : { items: [], currency: this.market.currency };
+  }
+
+  /** The bag line for a SKU, or null. A family is never in the bag. */
+  private async lineFor(productId: string): Promise<{ line: CartView['lines'][number] | null; cart: CartView | null }> {
+    const decoded = decodeId(productId);
+    const { cart } = await this.bag();
+    if (decoded.kind === 'family' || !cart) return { line: null, cart };
+    return { line: cart.lines.find((l) => l.sku === decoded.sku) ?? null, cart };
+  }
+
+  /**
+   * Refuses a SKU that is unknown or out of stock. The message names ids only: the SKU and, for a variant, the in-stock sibling SKUs.
+   */
+  private async assertBuyable(sku: string): Promise<void> {
+    const stock = await this.readStock([sku]);
+    if ((stock[sku] ?? 0) > 0) return;
+    const page = await loadProductPage(sku, this.market.locale);
+    if (!page) throw new Unavailable(`${sku} cannot be bought right now.`);
+    const siblings = page.product.variants.length > 1 ? page.product.variants.map((v) => v.sku).filter((s) => s !== sku) : [];
+    const siblingStock = siblings.length > 0 ? await this.readStock(siblings) : {};
+    const inStock = siblings.filter((s) => (siblingStock[s] ?? 0) > 0);
+    throw new Unavailable(inStock.length > 0 ? `${sku} is out of stock. In stock: ${inStock.join(', ')}.` : `${sku} is out of stock.`);
+  }
+
+  /** Per-session serialisation of cart writes (a click on the page at the same time is handled by the module's own retry). */
+  private lock<T>(fn: () => Promise<T>): Promise<T> {
+    return this.mutex.run(this.session.anonymousId ?? this.session.customerId ?? 'bag', fn);
   }
 
   async getOrders(): Promise<never> {

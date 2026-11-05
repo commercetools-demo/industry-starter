@@ -5,7 +5,7 @@ import { LineRejected } from '@/lib/ct/cart';
 import { AppError } from '@/lib/errors';
 import type { Session } from '@/lib/session';
 import type { ProductSummary } from '@/lib/types';
-import { usd } from '@/test/cart';
+import { usd, viewCart, viewLine } from '@/test/cart';
 import { podPage } from '@/test/pdp';
 import { StorefrontApiBackend, toToolError } from './assistant-backend';
 
@@ -16,6 +16,11 @@ const m = vi.hoisted(() => ({
   inventory: vi.fn(),
   tree: vi.fn(),
   bySlug: vi.fn(),
+  cartView: vi.fn(),
+  addLine: vi.fn(),
+  changeQuantity: vi.fn(),
+  removeLine: vi.fn(),
+  cartFor: vi.fn(),
 }));
 
 // The domain error class is what the mapper tests against; the real module pulls in the commercetools client.
@@ -29,6 +34,11 @@ vi.mock('@/lib/ct/cart', () => ({
       this.name = 'LineRejected';
     }
   },
+  getCartView: m.cartView,
+  addLine: m.addLine,
+  changeQuantity: m.changeQuantity,
+  removeLine: m.removeLine,
+  getCartForSession: m.cartFor,
 }));
 vi.mock('@/lib/ct/search', () => ({ searchProducts: m.search }));
 vi.mock('@/lib/ct/products', () => ({ getListingProjections: m.projections }));
@@ -83,7 +93,7 @@ describe('StorefrontApiBackend skeleton', () => {
   });
 
   it('Methods not built yet say so as Unavailable', async () => {
-    await expect(backendFor({}).getCart()).rejects.toBeInstanceOf(Unavailable);
+    await expect(backendFor({}).getOrders()).rejects.toBeInstanceOf(Unavailable);
   });
 
   it('Drained notes are returned once', () => {
@@ -147,5 +157,70 @@ describe('StorefrontApiBackend catalogue reads', () => {
   it('Unknown sku is null', async () => {
     m.page.mockResolvedValue(null);
     expect(await backendFor({}).getProductDetails(ctx(), 'NOPE-1')).toBeNull();
+  });
+});
+
+describe('StorefrontApiBackend cart (the bag is the cart)', () => {
+  const inBag = (ids: string[]) => viewCart(ids.map((id) => viewLine({ id, quantity: 1, unitPrice: usd(1000) })));
+  const bagSession: Session = { cartId: 'c1', anonymousId: 'anon-1' };
+
+  it('Add keeps other lines', async () => {
+    m.cartFor.mockResolvedValue({ id: 'c1' });
+    m.inventory.mockResolvedValue({ 'SKU-new': stockEntry(5) });
+    m.addLine.mockResolvedValue({ session: bagSession, cart: {} });
+    m.cartView.mockResolvedValue({ cart: inBag(['a', 'new']), session: bagSession });
+    const cart = await backendFor(bagSession).addToCart(ctx(), 'SKU-new', 1);
+    expect(cart.items.map((i) => i.productId)).toEqual(['SKU-a', 'SKU-new']);
+  });
+
+  it('Delivery is the only fulfilment sent, and the shopper session is used', async () => {
+    m.cartFor.mockResolvedValue({ id: 'c1' });
+    m.inventory.mockResolvedValue({ 'SKU-new': stockEntry(5) });
+    m.addLine.mockResolvedValue({ session: bagSession, cart: {} });
+    m.cartView.mockResolvedValue({ cart: inBag(['new']), session: bagSession });
+    await backendFor(bagSession).addToCart(ctx(), 'SKU-new', 2);
+    expect(m.addLine).toHaveBeenLastCalledWith(bagSession, market, { sku: 'SKU-new', quantity: 2, fulfilment: 'delivery' });
+  });
+
+  it('Add of an out-of-stock sku names ids only', async () => {
+    m.cartFor.mockResolvedValue({ id: 'c1' });
+    m.inventory.mockResolvedValue({ 'POD-50': stockEntry(0), 'POD-10': stockEntry(4) });
+    m.page.mockResolvedValue(podPage());
+    m.addLine.mockClear();
+    const error = await backendFor(bagSession).addToCart(ctx(), 'POD-50', 1).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(Unavailable);
+    expect((error as Error).message).toBe('POD-50 is out of stock. In stock: POD-10.');
+    expect(m.addLine).not.toHaveBeenCalled();
+  });
+
+  it('Update of a product not in the cart returns the cart unchanged', async () => {
+    m.cartView.mockResolvedValue({ cart: inBag(['a']), session: bagSession });
+    m.changeQuantity.mockClear();
+    const cart = await backendFor(bagSession).updateCartItem(ctx(), 'SKU-zzz', 3);
+    expect(cart.items.map((i) => i.productId)).toEqual(['SKU-a']);
+    expect(m.changeQuantity).not.toHaveBeenCalled();
+  });
+
+  it('Remove the last line leaves an empty cart', async () => {
+    m.cartView.mockResolvedValue({ cart: inBag(['a']), session: bagSession });
+    m.removeLine.mockResolvedValue(inBag([]));
+    const cart = await backendFor(bagSession).removeFromCart(ctx(), 'SKU-a');
+    expect(cart).toEqual({ items: [], currency: 'USD' });
+    expect(m.removeLine).toHaveBeenCalledWith(bagSession, market, 'a');
+  });
+
+  it('A lost bag is a reload message, not a new cart', async () => {
+    m.cartFor.mockResolvedValue(null);
+    m.inventory.mockResolvedValue({ 'SKU-new': stockEntry(5) });
+    m.addLine.mockClear();
+    const error = await backendFor({ cartId: 'gone' }).addToCart(ctx(), 'SKU-new', 1).catch((e: unknown) => e);
+    expect((error as Error).message).toBe('The bag was reset. Reload the page and try again.');
+    expect(m.addLine).not.toHaveBeenCalled();
+  });
+
+  it('A family id is refused by add', async () => {
+    const error = await backendFor(bagSession).addToCart(ctx(), 'fam:POD-10', 1).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(Unavailable);
+    expect(m.addLine).not.toHaveBeenCalled();
   });
 });
