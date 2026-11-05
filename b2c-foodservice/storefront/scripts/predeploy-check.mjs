@@ -51,6 +51,16 @@ export function checkDebugRoutes(root) {
   return found;
 }
 
+/** Shopping assistant variables (names only): with the switch on, the model key is required. The assistant calls only the storefront modules (T2). @param {Record<string, string | undefined>} env @returns {string[]} */
+export function checkAssistantEnv(env) {
+  const problems = [];
+  if (env.ASSISTANT_ENABLED === 'true') {
+    if (!env.ANTHROPIC_API_KEY) problems.push('ASSISTANT_ENABLED is true but ANTHROPIC_API_KEY is not set');
+  }
+  if (env.ASSISTANT_TRANSPORT && !['sse', 'buffered'].includes(env.ASSISTANT_TRANSPORT)) problems.push('ASSISTANT_TRANSPORT must be sse or buffered');
+  return problems;
+}
+
 /** The environment of the target. @param {Record<string, string | undefined>} env @returns {string[]} problems, names only */
 export function checkPredeployEnv(env) {
   const problems = [];
@@ -74,6 +84,8 @@ export function checkPredeployEnv(env) {
       if (scopes.includes(admin)) problems.push(`CTP_SCOPES contains the admin scope ${admin}; the storefront client must not hold it`);
     }
   }
+  if (env.ASSISTANT_SHOWCASE === 'true') problems.push('ASSISTANT_SHOWCASE is true; the card showcase must not ship');
+  problems.push(...checkAssistantEnv(env));
   if (env.CTP_SESSION_URL) problems.push('CTP_SESSION_URL is set; it is for the local mock only (leave it empty)');
   for (const name of ['CONTACT_WEBHOOK_URL', 'FEEDBACK_WEBHOOK_URL']) {
     if (env[name] && !env[name].startsWith('https://')) problems.push(`${name} must start with https://`);
