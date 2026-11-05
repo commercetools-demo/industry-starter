@@ -32,6 +32,18 @@ Credentials live only in `.env.local`. `.env.example` lists names only.
 | `npm run predeploy` | The deploy gate: fails while the dev routes exist or the environment is not fit for production (names only, never values) |
 | `npm run verify:build` | Build, then scan the client bundle for secret values |
 
+## Shopping assistant
+
+A conversational assistant (port of Anthropic's Apache-2.0 [commerce-agents](https://github.com/anthropics/commerce-agents) reference, see `NOTICE`) that can search the catalogue, keep its own cart and look up the signed-in shopper's old orders. It never places an order. It calls **only** the storefront's own commercetools modules (`lib/ct/*`), with the shopper's cookie session; its cart **is** the shopper's bag (the Shopper MCP was removed in workstream T2, D-055). Layout and rules: `lib/agent/README.md`; plans: `../plans/workstreams/T-shopping-assistant.md` and `../plans/workstreams/T2-assistant-storefront-backend.md`; specs: `../openspec/changes/add-shopping-assistant/`.
+
+- **Environment** (names only, see `.env.example`): `ASSISTANT_ENABLED` (off unless `true`), `ANTHROPIC_API_KEY`, `ASSISTANT_MODEL`, `ASSISTANT_TRANSPORT` (`sse` or `buffered`), `ASSISTANT_SHOWCASE` (never in production; the deploy gate fails on it).
+- **Routes**: `POST /api/assistant/session`, `POST /api/assistant/turn` (body `{ message }` only), `POST /api/assistant/card/add`, `GET /api/assistant/card/product`. (`/api/assistant/adopt-cart` was retired in T2.)
+- **Run without a model**: the unit tests use fakes (`lib/agent/testing.ts`: `FakeBackend`, `FakeModelClient`); `npx vitest run lib/agent components/assistant context`. In `next dev` the session store is in memory; production uses Netlify Blobs.
+- **Card showcase**: set `ASSISTANT_SHOWCASE=true` and open `/malva-coffee/en-US/assistant-showcase`.
+- **Refresh the verbatim checks** against an upstream clone: `UPSTREAM_DIR=<clone> npx vitest run lib/agent/shopping/tools`.
+- **Boundaries (lint)**: `lib/agent/**` imports no `lib/ct`, `lib/session` or `@commercetools/*`; the Anthropic and Blobs SDKs are importable only under `lib/agent/**`; UI code never imports `lib/agent/**`.
+- **Before a release**: `plans/RELEASE-CHECKLIST.md` section G (spend cap, token expiry, showcase off, per-instance rate limit).
+
 ## Deploying
 
 Hosting is Netlify (`../netlify.toml`: base directory `storefront`, `npm run build`, publish `.next`, Node 22). The runbook with every environment variable name, the dev routes to remove, the preview and production steps and the rollback is [`../plans/DEPLOY-NETLIFY.md`](../plans/DEPLOY-NETLIFY.md). In short: `npm run check`, `npm run verify:build`, delete the dev routes, `npm run predeploy`, then `/commercetools:nextjs-deploy-netlify`, which hands over to Netlify's `netlify-deploy` skill. To roll back, publish the previous deploy in Netlify.
