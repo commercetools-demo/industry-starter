@@ -3,6 +3,7 @@ import { KeyedMutex } from '@/lib/agent/common/mutex';
 import { NotOffered, SignInRequired, type StorefrontBackend, Unavailable } from '@/lib/agent/shopping/backend';
 import { decodeId } from '@/lib/agent/shopping/ids';
 import type { Cart, CartTotals, Order, Product, ProductDetails, SearchFilters, ShoppingSessionContext, UserPreferences } from '@/lib/agent/shopping/types';
+import { DEFAULT_BRAND } from '@/lib/brands';
 import { getCategoryBySlug, getCategoryTree } from '@/lib/ct/categories';
 import { addLine, changeQuantity, type CartMarket, getCartForSession, getCartView, LineRejected, removeLine } from '@/lib/ct/cart';
 import { getCustomerOrderById, getCustomerOrderByNumber, listOrders } from '@/lib/ct/orders';
@@ -65,6 +66,17 @@ export interface StorefrontApiBackendOptions {
   /** The path prefix of this storefront's pages for the route locale and brand, for example `/malva-coffee/en-US`. */
   baseHref: string;
   mutex?: KeyedMutex;
+}
+
+/** One lock for every assistant request in this process: cart writes of one session never interleave. */
+const sharedMutex = new KeyedMutex();
+
+/**
+ * The backend for one request: the shopper's cookie session and market (`getSession`, `getMarket`). The order links point at the default
+ * brand's account pages (the assistant spans both brands, Q-T2-2).
+ */
+export function createStorefrontBackend(session: Session, market: CartMarket): StorefrontApiBackend {
+  return new StorefrontApiBackend({ session, market, baseHref: `/${DEFAULT_BRAND}/${market.locale}`, mutex: sharedMutex });
 }
 
 export class StorefrontApiBackend implements StorefrontBackend {
