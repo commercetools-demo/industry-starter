@@ -136,7 +136,7 @@ function buildQuery(ctx: SearchContext, scope: SearchScope, p: ListingParams): S
   if (p.avail && ctx.storeChannelId) {
     filter.push({ exact: { field: 'variants.availability.isOnStockForChannel', value: ctx.storeChannelId } });
   }
-  return p.q ? { and: [{ filter }, textClause(p.q, ctx)] } : { filter };
+  return p.q ? { and: [...filter, textClause(p.q, ctx)] } : { filter };
 }
 
 function buildFacets(ctx: SearchContext, scope: SearchScope, p: ListingParams): SearchClause[] {
