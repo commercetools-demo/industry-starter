@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 // eslint-disable-next-line no-restricted-imports
 import { redirect } from 'next/navigation';
 import { unstable_serialize } from 'swr';
+import AssistantRoot from '@/components/assistant/AssistantRoot';
 import CartDrawer from '@/components/cart/CartDrawer';
 import InstoreShell from '@/components/instore/InstoreShell';
 import Footer from '@/components/layout/Footer';
@@ -48,23 +49,25 @@ export default async function LocaleLayout({
 
   return (
     <ShellProviders fallback={fallback}>
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-130 focus:rounded-pill focus:bg-ink focus:px-5 focus:py-3 focus:text-surface"
-      >
-        {t('skipToContent')}
-      </a>
-      <BrandSwitcher />
-      <PromiseBar figures={shell.figures} locale={locale} />
-      <Header categories={shell.categories} brand={brand} />
-      <main id="main-content" tabIndex={-1} className="outline-none">
-        {children}
-      </main>
-      <Footer categories={shell.categories} brand={brand} />
-      {/* Dialogs sit outside the header's stacking context so no page layer can cover them. */}
-      {brand.pickup ? <StorePicker /> : null}
-      <CartDrawer />
-      <LocaleChooser markets={shell.markets} />
+      <AssistantRoot enabled={process.env.ASSISTANT_ENABLED?.trim().toLowerCase() === 'true'}>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-130 focus:rounded-pill focus:bg-ink focus:px-5 focus:py-3 focus:text-surface"
+        >
+          {t('skipToContent')}
+        </a>
+        <BrandSwitcher />
+        <PromiseBar figures={shell.figures} locale={locale} />
+        <Header categories={shell.categories} brand={brand} />
+        <main id="main-content" tabIndex={-1} className="outline-none">
+          {children}
+        </main>
+        <Footer categories={shell.categories} brand={brand} />
+        {/* Dialogs sit outside the header's stacking context so no page layer can cover them. */}
+        {brand.pickup ? <StorePicker /> : null}
+        <CartDrawer />
+        <LocaleChooser markets={shell.markets} />
+      </AssistantRoot>
     </ShellProviders>
   );
 }

@@ -45,7 +45,10 @@ export type DomainErrorCode =
   | 'invalid_state'
   | 'subscription_unavailable'
   | 'version_conflict'
-  | 'unsupported_media_type';
+  | 'unsupported_media_type'
+  // Workstream T: adopting the assistant's cart as the bag.
+  | 'assistant_cart_unusable'
+  | 'assistant_session_expired';
 
 const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   invalid_credentials: 'Email or password is incorrect',
@@ -86,6 +89,8 @@ const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   subscription_unavailable: 'That delivery interval is not available',
   version_conflict: 'This subscription changed while you were working. Please try again',
   unsupported_media_type: 'The request must be JSON',
+  assistant_cart_unusable: 'The assistant cart cannot be moved to your bag',
+  assistant_session_expired: 'The assistant conversation has ended',
 };
 
 /** Same envelope as D: `{ error: { code, message, ...extra } }`. Extras are plain data (rule ids, retryAfterSeconds). */

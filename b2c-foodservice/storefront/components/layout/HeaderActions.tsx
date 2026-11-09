@@ -1,5 +1,6 @@
 'use client';
 
+import AssistantLauncher from '@/components/assistant/AssistantLauncher';
 import AccountMenu from '@/components/layout/AccountMenu';
 import CartButton from '@/components/layout/CartButton';
 import LocalePill from '@/components/layout/LocalePill';
@@ -11,6 +12,7 @@ export default function HeaderActions({ showStore = true }: { showStore?: boolea
   return (
     <div className="ml-auto flex min-w-0 items-center gap-1.5 max-mobile:gap-0.5">
       {showStore ? <StorePill /> : null}
+      <AssistantLauncher />
       <LocalePill />
       <SearchToggle />
       <AccountMenu />

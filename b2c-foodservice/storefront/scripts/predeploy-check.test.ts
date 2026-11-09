@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { checkDebugRoutes, checkPredeploy, checkPredeployEnv, checkPredeployFiles } from './predeploy-check.mjs';
+import { checkAssistantEnv, checkDebugRoutes, checkPredeploy, checkPredeployEnv, checkPredeployFiles } from './predeploy-check.mjs';
 
 describe('deploy gate', () => {
   it('Deploy gate fails while app/api/health/route.ts exists', () => {
@@ -114,5 +114,24 @@ describe('deploy gate: environment and files', () => {
     expect(checkPredeployEnv({ ...GOOD_ENV, CTP_REVIEWS_SCOPES: 'manage_products:shop-key manage_orders:shop-key' })).toEqual([
       'CTP_REVIEWS_SCOPES holds manage_orders; the reviews client may hold manage_products only',
     ]);
+  });
+});
+
+describe('shopping assistant environment', () => {
+  it('the showcase flag fails the gate', () => {
+    expect(checkPredeployEnv({ ...GOOD_ENV, ASSISTANT_SHOWCASE: 'true' })).toContain('ASSISTANT_SHOWCASE is true; the card showcase must not ship');
+  });
+
+  it('a disabled assistant needs nothing', () => {
+    expect(checkAssistantEnv({})).toEqual([]);
+  });
+
+  it('enabled needs the model key and nothing else', () => {
+    expect(checkAssistantEnv({ ASSISTANT_ENABLED: 'true' })).toEqual(['ASSISTANT_ENABLED is true but ANTHROPIC_API_KEY is not set']);
+    expect(checkAssistantEnv({ ASSISTANT_ENABLED: 'true', ANTHROPIC_API_KEY: 'k' })).toEqual([]);
+  });
+
+  it('a bad transport is named', () => {
+    expect(checkAssistantEnv({ ASSISTANT_TRANSPORT: 'ws' })).toEqual(['ASSISTANT_TRANSPORT must be sse or buffered']);
   });
 });
