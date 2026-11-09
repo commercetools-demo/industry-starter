@@ -56,3 +56,8 @@ export function signInHref(redirect?: string): string {
 export function registerHref(redirect?: string): string {
   return redirect ? `/account/register?redirect=${encodeURIComponent(redirect)}` : '/account/register';
 }
+
+/** The bag page (locale-free; `Link` from `@/i18n/routing` adds brand and locale). */
+export function bagHref(): string {
+  return '/cart';
+}
