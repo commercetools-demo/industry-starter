@@ -99,12 +99,35 @@ export const BASE_DEFAULTS: Omit<BaseAgentConfig, 'model'> = {
 export const THINKING_MODEL_FAMILIES: readonly string[] = ['claude-sonnet-5', 'claude-opus-5', 'claude-fable-5'];
 
 export function supportsAdaptiveThinking(model: string): boolean {
-  return THINKING_MODEL_FAMILIES.some((family) => model === family || model.startsWith(`${family}-`));
+  return isModelInFamilies(model, THINKING_MODEL_FAMILIES);
+}
+
+function isModelInFamilies(model: string, families: readonly string[]): boolean {
+  return families.some((family) => model === family || model.startsWith(`${family}-`));
+}
+
+/**
+ * Models that answer a forced `tool_choice` (`{type: "tool"}` or `{type: "any"}`) with a 400 ("not supported for this model"), with or
+ * without thinking. Only `auto` and `none` are accepted. A denylist on purpose: an unknown model id keeps the reference's forced round.
+ * Verify an addition against the Claude API model documentation. Note `claude-sonnet-5` and `claude-opus-5` (no minor version) still
+ * accept forced tool choice, so match the full id prefix, not the family above.
+ */
+export const NO_FORCED_TOOL_CHOICE_MODELS: readonly string[] = ['claude-sonnet-5-5', 'claude-opus-5-5', 'claude-fable-5-1', 'claude-mythos-5-1'];
+
+/** Models on which `thinking: {type: "disabled"}` is a 400 at every effort (thinking is always on). */
+const NO_DISABLED_THINKING_FAMILIES: readonly string[] = ['claude-sonnet-5-5', 'claude-opus-5-5', 'claude-fable-5', 'claude-mythos-5'];
+
+/** True when the model accepts `tool_choice: {type: "tool", name}`; false for the models listed in `NO_FORCED_TOOL_CHOICE_MODELS`. */
+export function supportsForcedToolChoice(model: string): boolean {
+  return !isModelInFamilies(model, NO_FORCED_TOOL_CHOICE_MODELS);
 }
 
 /** The request fields that carry `thinkingEffort`, for every model call the agent makes on `model`. Empty for an unrecognised model. */
 export function thinkingRequestFields(config: Pick<BaseAgentConfig, 'model' | 'thinkingEffort'>): Record<string, unknown> {
   if (!supportsAdaptiveThinking(config.model)) return {};
-  if (config.thinkingEffort === null) return { thinking: { type: 'disabled' } };
+  if (config.thinkingEffort === null) {
+    // These models reject `thinking: {type: "disabled"}` with a 400 (thinking is always on); omitting the field runs their default.
+    return isModelInFamilies(config.model, NO_DISABLED_THINKING_FAMILIES) ? {} : { thinking: { type: 'disabled' } };
+  }
   return { thinking: { type: 'adaptive' }, output_config: { effort: config.thinkingEffort } };
 }

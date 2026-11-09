@@ -11,7 +11,9 @@ describe('shopping config', () => {
       thinking: { type: 'adaptive' },
       output_config: { effort: 'low' },
     });
-    expect(thinkingRequestFields({ model: 'claude-sonnet-5-5', thinkingEffort: null })).toEqual({ thinking: { type: 'disabled' } });
+    // Sonnet 5.5 rejects `disabled` with a 400 (thinking always on): the field is omitted. Sonnet 5 still accepts it.
+    expect(thinkingRequestFields({ model: 'claude-sonnet-5-5', thinkingEffort: null })).toEqual({});
+    expect(thinkingRequestFields({ model: 'claude-sonnet-5', thinkingEffort: null })).toEqual({ thinking: { type: 'disabled' } });
     expect(thinkingRequestFields({ model: 'claude-sonnet-50', thinkingEffort: 'low' })).toEqual({});
   });
 
@@ -49,5 +51,13 @@ describe('remember', () => {
     expect([...m.keys()]).toEqual(['2', 'a', '1']);
     remember(m, '2', 2, 3);
     expect([...m.keys()]).toEqual(['a', '1', '2']);
+  });
+});
+
+describe('forced tool choice support', () => {
+  it('Sonnet 5.5, Opus 5.5 and Fable 5.1 reject a forced tool_choice; earlier and unknown models keep it', async () => {
+    const { supportsForcedToolChoice } = await import('../common/config');
+    for (const m of ['claude-sonnet-5-5', 'claude-opus-5-5', 'claude-fable-5-1', 'claude-mythos-5-1']) expect(supportsForcedToolChoice(m), m).toBe(false);
+    for (const m of ['claude-sonnet-5', 'claude-opus-5', 'claude-fable-5', 'claude-haiku-5-5', 'some-other-model']) expect(supportsForcedToolChoice(m), m).toBe(true);
   });
 });

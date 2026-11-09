@@ -120,12 +120,39 @@ describe('forced rounds and caching', () => {
   it('An order question forces the order read on the first round only, and the rolling cache marker is skipped on it', async () => {
     const backend = new FakeBackend();
     backend.orders = [];
-    const { agent, client } = make([{ blocks: [{ type: 'tool_use', name: 'get_orders', input: {} }] }, { blocks: [{ type: 'text', text: 'You have none.' }] }], backend);
+    // A model that accepts a forced tool_choice (Sonnet 5.5 does not; see the next test).
+    const forcing = defineShoppingConfig('claude-sonnet-5', { ...SHOPPING_CONFIG, model: 'claude-sonnet-5' });
+    const { agent, client } = make([{ blocks: [{ type: 'tool_use', name: 'get_orders', input: {} }] }, { blocks: [{ type: 'text', text: 'You have none.' }] }], backend, forcing);
     await run(agent, user('where is my order?'));
     expect(client.requests[0].tool_choice).toEqual({ type: 'tool', name: 'get_orders' });
     expect(client.requests[1].tool_choice).toEqual({ type: 'auto' });
     expect(JSON.stringify(client.requests[0].messages)).not.toContain('cache_control');
     expect(JSON.stringify(client.requests[1].messages)).toContain('cache_control');
+  });
+
+  it('On the deployment model (no forced tool_choice) an order question never sends tool/any and the context names the tool', async () => {
+    // Regression: claude-sonnet-5-5 answers tool_choice {type: "tool"} with a 400, so every grounded turn failed before it started.
+    expect(SHOPPING_CONFIG.model).toBe('claude-sonnet-5-5');
+    const backend = new FakeBackend();
+    backend.orders = [];
+    const { agent, client } = make([{ blocks: [{ type: 'tool_use', name: 'get_orders', input: {} }] }, { blocks: [{ type: 'text', text: 'You have none.' }] }], backend);
+    await run(agent, user('Where is my last order?'));
+    for (const req of client.requests) expect(['auto', 'none']).toContain((req.tool_choice as { type: string }).type);
+    const context = (client.requests[0] as { system: { text: string }[] }).system[1].text;
+    expect(context).toContain('call the `get_orders` tool');
+    // Runtime-authored: after the fenced data, never inside it; same bytes on every round of the turn.
+    expect(context.indexOf('# Required first step')).toBeGreaterThan(context.lastIndexOf('# Session context'));
+    expect((client.requests[1] as { system: { text: string }[] }).system[1].text).toBe(context);
+    expect((client.requests[0] as { system: { text: string }[] }).system[0].text).not.toContain('Required first step');
+  });
+
+  it('A grounded turn that skips its read is logged with the tool name only', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const { agent } = make([{ blocks: [{ type: 'text', text: 'Your order is fine.' }] }], new FakeBackend());
+    await run(agent, user('Where is my last order?'));
+    const logged = warn.mock.calls.map((c) => String(c[0])).filter((l) => l.includes('assistant_grounding_skipped'));
+    expect(logged).toEqual([JSON.stringify({ event: 'assistant_grounding_skipped', tool: 'get_orders' })]);
+    warn.mockRestore();
   });
 
   it('Cache markers are on the last tool and the static system block; the context block is behind them and carries the cart', async () => {

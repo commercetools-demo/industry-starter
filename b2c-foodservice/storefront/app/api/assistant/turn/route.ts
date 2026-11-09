@@ -65,8 +65,16 @@ export const POST = handle('/api/assistant/turn', async (req) => {
         }
       }, HEARTBEAT_MS);
       try {
-        for await (const event of events) controller.enqueue(encoder.encode(toSse(event)));
-      } catch {
+        for await (const event of events) {
+          if (event.type === 'tool_call' || event.type === 'tool_result' || event.type === 'error' || event.type === 'turn_complete') {
+            assistantDebug('[assistant] turn event', event.type, JSON.stringify(event.data).slice(0, 400));
+          }
+          controller.enqueue(encoder.encode(toSse(event)));
+        }
+      } catch (error) {
+        // Logged, never sent to the browser: a silent catch here hid the model API's 400 for days.
+        const e = error as { name?: string; message?: string; status?: number };
+        console.error(JSON.stringify({ event: 'assistant_turn_failed', name: e?.name, status: e?.status, message: String(e?.message ?? error).slice(0, 500) }));
         controller.enqueue(
           encoder.encode(
             toSse({
@@ -99,3 +107,9 @@ export const POST = handle('/api/assistant/turn', async (req) => {
     },
   });
 });
+
+/** TEMPORARY debug (order lookup investigation): one string per line, because the dev log file cannot serialise objects. */
+function assistantDebug(label: string, ...data: unknown[]): void {
+  const line = `${label} ${data.map((d) => (typeof d === 'string' ? d : JSON.stringify(d))).join(' ')}`;
+  console.debug(line);
+}

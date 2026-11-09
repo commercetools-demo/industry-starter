@@ -299,8 +299,26 @@ export class StorefrontApiBackend implements StorefrontBackend {
   async getOrders(_ctx?: ShoppingSessionContext, limit = 5): Promise<Order[]> {
     return this.guard(async () => {
       const customerId = this.requireCustomer();
-      const { results } = await listOrders(customerId, { filter: 'all', limit: Math.min(Math.max(1, limit), 5), offset: 0 });
-      return results.map((order) => orderFromView(mapOrder(order, this.orderContext()), this.baseHref));
+      assistantDebug('[assistant] getOrders: listOrders start', { limit });
+      let results;
+      try {
+        ({ results } = await listOrders(customerId, { filter: 'all', limit: Math.min(Math.max(1, limit), 5), offset: 0 }));
+      } catch (error) {
+        assistantDebug('[assistant] getOrders: listOrders FAILED', debugError(error));
+        throw error;
+      }
+      assistantDebug('[assistant] getOrders: listOrders done', {
+        count: results.length,
+        orders: results.map((o) => ({ orderNumber: o.orderNumber, state: o.orderState, shipment: o.shipmentState, lines: o.lineItems.length })),
+      });
+      try {
+        const mapped = results.map((order) => orderFromView(mapOrder(order, this.orderContext()), this.baseHref));
+        assistantDebug('[assistant] getOrders: mapped', mapped.map((o) => ({ orderId: o.orderId, status: o.status, items: o.items.length, total: o.total })));
+        return mapped;
+      } catch (error) {
+        assistantDebug('[assistant] getOrders: mapping FAILED', debugError(error));
+        throw error;
+      }
     });
   }
 
@@ -308,11 +326,26 @@ export class StorefrontApiBackend implements StorefrontBackend {
   async getOrder(_ctx: ShoppingSessionContext, orderId: string): Promise<Order | null> {
     return this.guard(async () => {
       const customerId = this.requireCustomer();
+      assistantDebug('[assistant] getOrder: start', { orderId, valid: ORDER_ID.test(orderId) });
       if (!ORDER_ID.test(orderId)) return null;
-      const byNumber = await getCustomerOrderByNumber(customerId, orderId);
-      const order = byNumber ?? (UUID.test(orderId) ? await getCustomerOrderById(customerId, orderId) : null);
+      let order;
+      try {
+        const byNumber = await getCustomerOrderByNumber(customerId, orderId);
+        order = byNumber ?? (UUID.test(orderId) ? await getCustomerOrderById(customerId, orderId) : null);
+      } catch (error) {
+        assistantDebug('[assistant] getOrder: read FAILED', debugError(error));
+        throw error;
+      }
+      assistantDebug('[assistant] getOrder: read done', order ? { orderNumber: order.orderNumber, state: order.orderState, lines: order.lineItems.length } : null);
       if (!order) return null;
-      return orderFromView(mapOrder(order, this.orderContext()), this.baseHref);
+      try {
+        const mapped = orderFromView(mapOrder(order, this.orderContext()), this.baseHref);
+        assistantDebug('[assistant] getOrder: mapped', { orderId: mapped.orderId, status: mapped.status, items: mapped.items.length, total: mapped.total });
+        return mapped;
+      } catch (error) {
+        assistantDebug('[assistant] getOrder: mapping FAILED', debugError(error));
+        throw error;
+      }
     });
   }
 
@@ -324,4 +357,16 @@ export class StorefrontApiBackend implements StorefrontBackend {
   private orderContext() {
     return { locale: this.market.locale, now: new Date() };
   }
+}
+
+/** TEMPORARY debug helper (order lookup investigation): name, message, status and the top of the stack, never request headers. */
+function debugError(error: unknown): Record<string, unknown> {
+  const e = error as { name?: string; message?: string; statusCode?: number; code?: string; body?: { errors?: unknown }; stack?: string };
+  return { name: e?.name, message: e?.message, statusCode: e?.statusCode, code: e?.code, errors: e?.body?.errors, stack: e?.stack?.split('\n').slice(0, 6).join('\n') };
+}
+
+/** TEMPORARY debug (order lookup investigation): one string per line, because the dev log file cannot serialise objects. */
+function assistantDebug(label: string, ...data: unknown[]): void {
+  const line = `${label} ${data.map((d) => (typeof d === 'string' ? d : JSON.stringify(d))).join(' ')}`;
+  console.debug(line);
 }

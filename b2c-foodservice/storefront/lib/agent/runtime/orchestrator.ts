@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // Adapted from shopping-agent/runtime-messages-api/shopping_agent_runtime/orchestrator.py; changes: TypeScript async generator over the raw event stream; turn wall-clock deadline checked between rounds; AbortSignal replaces task cancellation; the session is persisted by the host through `beforeComplete` (immediately before turn_complete); no memory extraction (a serverless function is frozen when its body ends, and memory is off here).
 
-import { firstForcedTool } from '../common/grounding';
+import { firstForcedTool, groundingInstruction } from '../common/grounding';
 import { buildSystemBlocks, buildRequestMessages, type Message, withEagerInput, withToolCacheControl } from '../common/prompt-assembly';
 import { partialUiToolNames } from '../common/presentation';
 import type { SkillRegistry } from '../common/skills';
 import { type AgentEvent, AgentEvents, type ToolOutcome } from '../common/streaming';
-import { thinkingRequestFields } from '../common/config';
+import { supportsForcedToolChoice, thinkingRequestFields } from '../common/config';
 import {
   EagerDispatcher,
   type RawEvent,
@@ -118,16 +118,21 @@ export class ShoppingAgent {
         account: account ?? null,
         accountMaxChars: config.maxContextChars,
       });
-      const system = buildSystemBlocks(this.staticSystem, context);
-      const executor = new ShoppingToolExecutor({ backend, config, skills, session, state });
       const forcedTool = firstForcedTool(GROUNDING_RULES, config, latestUserText(messages), state);
+      // Some models reject a forced tool_choice with a 400: there the grounding rule rides in the per-turn context as an instruction and
+      // the round runs with `auto` (the static prompt and the transcript are untouched, so no cached byte changes).
+      const forceByChoice = forcedTool !== null && supportsForcedToolChoice(config.model);
+      const groundedContext = forcedTool !== null && !forceByChoice ? `${context}\n\n${groundingInstruction(forcedTool)}` : context;
+      const system = buildSystemBlocks(this.staticSystem, groundedContext);
+      const executor = new ShoppingToolExecutor({ backend, config, skills, session, state });
+      let groundingToolCalled = false;
 
       for (let roundIndex = 0; roundIndex <= config.maxToolIterations; roundIndex += 1) {
         // Iteration caps are a runaway guard, not a budget; the DEADLINE is what keeps a slow turn inside the host's ceiling: past it one
         // final round runs with tools disabled so the turn ends in prose rather than being severed (a severed turn loses its turn_complete).
         const pastDeadline = config.turnDeadlineS > 0 && performance.now() - turnStarted > config.turnDeadlineS * 1000;
         const forceText = roundIndex === config.maxToolIterations || pastDeadline;
-        const toolChoice: Record<string, string> = forceText ? { type: 'none' } : roundIndex === 0 && forcedTool ? { type: 'tool', name: forcedTool } : { type: 'auto' };
+        const toolChoice: Record<string, string> = forceText ? { type: 'none' } : roundIndex === 0 && forcedTool && forceByChoice ? { type: 'tool', name: forcedTool } : { type: 'auto' };
 
         // The rolling marker is skipped on non-auto rounds: tool_choice keys the cached messages span, so an entry written under a forced
         // round is unreadable by the auto rounds that follow.
@@ -156,6 +161,7 @@ export class ShoppingAgent {
         lastPrompt = promptTokens(round.usage);
         logModelCall(config.model, round.stopReason, round.usage, callStarted, session.sessionId, roundIndex);
         if (reply) messages.push(reply);
+        if (forcedTool && toolUses.some((block) => block.name === forcedTool)) groundingToolCalled = true;
         if (toolUses.length === 0 || forceText) break;
 
         // The calls eager dispatch did not announce: started late, or never run.
@@ -173,6 +179,8 @@ export class ShoppingAgent {
           break;
         }
       }
+      // Instruction-only grounding is not enforced by the API: say when a grounded turn ended without its read (tool name only).
+      if (forcedTool && !forceByChoice && !groundingToolCalled) console.warn(JSON.stringify({ event: 'assistant_grounding_skipped', tool: forcedTool }));
     } finally {
       // Pairs any open tool call with its result, or an error naming the interruption; then cancels whatever is still running.
       closeOpenToolUses(messages, settled);

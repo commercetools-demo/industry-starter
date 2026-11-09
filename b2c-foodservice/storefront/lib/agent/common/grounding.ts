@@ -70,3 +70,12 @@ export function firstForcedTool<Config, State>(rules: readonly GroundingRule<Con
   }
   return null;
 }
+
+/**
+ * The grounding rule as an instruction, for models that reject a forced `tool_choice` (see `supportsForcedToolChoice`): the round runs
+ * with `auto` and this line goes into the per-turn context block, after the cache breakpoint and outside the data fence (it is
+ * runtime-authored, not catalogue data). Deterministic, so every round of a turn sends the same bytes.
+ */
+export function groundingInstruction(tool: string): string {
+  return `# Required first step\n\nThis message must be answered from fresh data: call the \`${tool}\` tool before you reply, and base the reply on its result.`;
+}
