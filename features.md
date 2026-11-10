@@ -1,6 +1,13 @@
 # Features
 
+Code-derived inventory of what this repo implements. Bullets and key file paths —
+the mechanism lives in `docs/how-it-works.md`, the walkthrough in `docs/demo-script.md`.
+
+_Last generated: 2026-11-10 by feature-doc._
+
 What each project in this repository contains, and how far along it is. Derived from each project's `openspec/specs/`, `plan(s)/STATUS.md` and the routes and `lib/ct/` modules under its app directory. Build state is as recorded in the project's `STATUS.md` at the time of writing; the plan, not this file, is the source of truth.
+
+This repo is a monorepo of six industry starter storefronts plus shared design systems, built from scratch (not a fork of a commercetools starter), so rows carry no provenance tags. `docs/demo-script.md` and `docs/how-it-works.md` at the root cover the Malva Coffee demo only.
 
 All projects are **commercetools-labs** reference code: MIT, freely available, AS IS and UNSUPPORTED (see [SUPPORT.md](SUPPORT.md)). Every project is a self-contained Next.js 16 (App Router) storefront on commercetools with locale routing, a server-side BFF (`lib/ct/*` plus Route Handlers) and a seed package or seed workstream for the commercetools project.
 
@@ -133,4 +140,37 @@ MALVA storefront with two brands, Malva Coffee and Malva Drinks, sharing one bag
 | Account | Orders, addresses, saved items, payment methods, demo sign-in | `app/[brand]/[locale]/account/*`; `lib/ct/auth.ts`, `orders.ts` |
 | Demo gate and tracker | Password gate and visitor analytics | `app/gate`, `app/api/gate`, `app/api/tracker`; `lib/gate.ts` |
 | Seed | Project settings, catalog, stores, customers, discounts, reviews, brand selections, the drinks catalogue and its reduction script | `b2c-foodservice/seed/src`, `scripts/reduce-drinks.ts`; spec `multibrand-seed` |
+
+### b2c-foodservice: conversational shopping assistant
+
+A docked assistant panel (launcher in the header, never a modal) on the website experience for both brands and both markets. Ported from Anthropic's reference commerce agent (`github.com/anthropics/commerce-agents`, Apache-2.0). Workstreams T and T2 (`plans/STATUS.md`): T2 is Ready for review; the real-model proof (U-13) is blocked on the owner confirming the Anthropic spend cap (OA-T-a). Specs: `openspec/changes/add-shopping-assistant/`.
+
+- Storefront-backed agent: the assistant's `StorefrontBackend` calls the storefront's own `lib/ct/*` modules with the shopper's cookie session, so the assistant's cart is the shopper's bag with no second cart and no adopt step (`lib/ct/assistant-backend.ts`, `assistant-cart.ts`, `lib/mappers/assistant.ts`).
+- Tools: product search and detail, cart read/add/update/remove, order list and order status of the signed-in shopper, and load-skill (`lib/agent/shopping/tools/registry.ts`). No tool places an order or moves money; the shopper pays in the hosted Checkout.
+- Trust and safety gates between model and shopper: fenced storefront text, cart provenance (a cart write accepts only product ids that catalogue or order tools returned this session), an options gate for products with variants, a line-quantity cap, and server-side grounding (`lib/agent/shopping/gates.ts`, `fencing.ts`, `grounding.ts`, `enrichment.ts`).
+- Streaming turn loop over server-sent events with a heartbeat and an optional buffered transport (`ASSISTANT_TRANSPORT=buffered`); request body carries the message only, the transcript is server-owned (`app/api/assistant/turn/route.ts`, `lib/agent/host/sessions.ts`).
+- Server-side session store on Netlify Blobs with compare-and-set, with an in-memory store for development (`lib/agent/store/`); rate limiting and an assistant on/off switch (`lib/agent/http/guard.ts`).
+- Six generative cards: products carousel, comparison grid, plan checklist, guide, order status, checkout summary; card clicks add to the bag through a server-composed card route (`components/assistant/cards/`, `app/api/assistant/card/add`, `card/product`).
+- Four markdown skills the model loads on demand: customer care, planning goals, purchase research, search discovery (`lib/agent/skills/`).
+- Plain-language activity line per tool call, quoted-as-data rendering and suggestion chips (`components/assistant/activity.ts`, `QuotedAsData.tsx`, `Suggestions.tsx`).
+- Card showcase page rendering every card from fixtures (`app/[brand]/[locale]/assistant-showcase`, `components/assistant/fixtures.ts`).
+- Not built by decision: policies search, fulfilment options, web search, long-term memory and any order-placing tool.
+
+### b2c-foodservice: In-store companion
+
+The same build switched into a phone-sized in-store companion by one server variable, `APP_MODE=instore` (workstream R, "Ready for review"; recorded as not yet pushed or deployed in `plans/STATUS.md`).
+
+- App-mode switch: anything other than `instore` is the website, so a typo never turns the shop into the companion (`lib/app-mode.ts`).
+- Restricted route set (home, category `/c`, product `/p`, bag, checkout); every other path redirects to home (`lib/app-mode.ts` `instoreRedirect`, `proxy.ts`).
+- Barcode scan resolves a SKU to a product with image, variant attributes, price, availability and quantity limits; 404s on the website (`app/api/instore/scan/route.ts`, `lib/ct/instore-scan.ts`, `lib/instore/scanner-engine.ts`, `components/instore/scan/`).
+- Companion screens: home, category, product, bag, bottom bar and stock line; shows only categories flagged for in-store (`components/instore/*`, `lib/instore/category.ts`).
+- Web manifest, noindex metadata and viewport-fit cover for an installable companion (`app/instore.webmanifest`, `lib/instore/manifest.ts`).
+
+## design-systems
+
+Shared design-system packages, one per industry: `design-systems/admin`, `automotive`, `healthcare`, `telecom`.
+
+- Tokens as CSS and JSON (`tokens.css`, `tokens.json`) with foundations documentation per system.
+- Reference component pages as standalone HTML (admin: button, table, sidebar, top bar, charts, date picker, form fields, overlays and more under `admin/components/`) and a dashboard layout (`admin/layouts/dashboard.html`).
+- Healthcare has a design lint and token-parity check (specs `design-*`).
 
