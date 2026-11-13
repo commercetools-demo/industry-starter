@@ -17,6 +17,7 @@ export const PRODUCT_TYPE_SHAPE: Record<string, ProductShape> = {
   'mcf-machine': 'machine',
   'mcf-accessory': 'accessory',
   'mcf-gift-set': 'gift',
+  'mcf-drink': 'drink',
 };
 
 /** Shape of a product from its product type key; unknown types read as accessories (no selectors beyond colour). */
@@ -36,6 +37,8 @@ export const SHAPE_SELECTORS: Record<ProductShape, SelectorConfig[]> = {
   ],
   accessory: [{ attr: 'colour', renderer: 'colour', required: true }],
   gift: [],
+  // Malva Drinks: one variant per size line; the scraped size text is the label.
+  drink: [{ attr: 'drinkSize', renderer: 'pill', required: true }],
 };
 
 /**
@@ -51,6 +54,7 @@ export const PDP_INFO_ATTRIBUTES: Record<ProductShape, string[]> = {
   machine: ['system', 'pressureBar', 'waterTankMl', 'powerWatts', 'features', 'warrantyMonths'],
   accessory: ['kind', 'material', 'capacityMl'],
   gift: ['contents', 'occasion'],
+  drink: [],
 };
 
 /** Attributes that never become selectors or facts (flags used by cards and the cart). */

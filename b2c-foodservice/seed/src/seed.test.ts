@@ -22,7 +22,7 @@ describe('Idempotent seed in dependency order', () => {
   });
 
   it('runs the steps in the documented order', () => {
-    expect(STEP_NAMES).toEqual(['settings', 'tax', 'shipping', 'states', 'types', 'product-types', 'categories', 'channels', 'recurrence', 'products', 'prices', 'inventory', 'discounts', 'customers', 'shopping-lists', 'reviews']);
+    expect(STEP_NAMES).toEqual(['settings', 'tax', 'shipping', 'states', 'types', 'product-types', 'categories', 'channels', 'recurrence', 'products', 'prices', 'inventory', 'drinks-catalog', 'product-selections', 'selection-membership', 'discounts', 'customers', 'shopping-lists', 'reviews']);
   });
 
   it('Re-run', async () => {

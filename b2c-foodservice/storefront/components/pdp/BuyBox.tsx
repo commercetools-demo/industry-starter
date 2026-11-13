@@ -22,6 +22,8 @@ export default function BuyBox() {
   const t = useTranslations('pdp');
   const { data, fulfilment, collectionEnabled } = usePdp();
   const { product } = data;
+  // Malva Drinks: delivery only, so there is no "How would you like it?" choice, only the delivery block.
+  const drinks = data.brand === 'malva-drinks';
   return (
     <div className="flex min-w-0 flex-col gap-6" data-testid="buy-box">
       <BuyBoxHeader />
@@ -29,8 +31,8 @@ export default function BuyBox() {
       {product.selectors.map((s) => (
         <OptionGroup key={s.attr} selector={s} />
       ))}
-      <FulfilmentCards />
-      {fulfilment === 'collect' && collectionEnabled ? <CollectBlock /> : fulfilment === 'subscribe' ? <SubscribeBlock /> : <ShipBlock />}
+      {drinks ? null : <FulfilmentCards />}
+      {!drinks && fulfilment === 'collect' && collectionEnabled ? <CollectBlock /> : !drinks && fulfilment === 'subscribe' ? <SubscribeBlock /> : <ShipBlock />}
       {data.inventoryFailed && fulfilment === 'subscribe' ? (
         <p role="status" className="m-0 text-[12.5px] text-ink-3">{t('error.stockUnknown')}</p>
       ) : null}

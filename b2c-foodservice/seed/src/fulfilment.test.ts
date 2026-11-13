@@ -27,7 +27,8 @@ describe('Stores are supply channels', () => {
   it('Store list', async () => {
     const api = await seeded();
     api.put('channels', { key: 'warehouse-hand-made', roles: ['ProductDistribution'], name: { 'en-US': 'Hand made' } });
-    const picker = api.all('channels').filter((c) => ((c.roles as string[]) ?? []).includes('InventorySupply'));
+    // A store is an InventorySupply channel with the store key prefix; the Malva Drinks inventory channel is not a store.
+    const picker = api.all('channels').filter((c) => ((c.roles as string[]) ?? []).includes('InventorySupply') && String(c.key).startsWith('mcf-store-'));
     expect(picker.map((c) => c.key).sort()).toEqual(STORES.map((s) => s.key).sort());
     expect(picker).toHaveLength(6);
     // nearest first: from Times Square the Midtown East store leads, from Brooklyn Heights the Williamsburg store
@@ -62,7 +63,7 @@ describe('Availability per store', () => {
     const again = await seeded();
     expect(api.all('inventory').map((i) => `${String(i.key)}=${String(i.quantityOnStock)}`)).toEqual(again.all('inventory').map((i) => `${String(i.key)}=${String(i.quantityOnStock)}`));
     const variants = allVariants();
-    expect(api.all('inventory')).toHaveLength(variants.length * 7);
+    expect(api.all('inventory').filter((i) => !String(i.key).endsWith('-drinks'))).toHaveLength(variants.length * 7);
     const storeEntries = api.all('inventory').filter((i) => i.supplyChannel);
     expect(storeEntries.filter((i) => i.quantityOnStock === 0).length).toBeGreaterThanOrEqual(5);
     expect(storeEntries.filter((i) => (i.quantityOnStock as number) > 0 && (i.quantityOnStock as number) <= LOW_STOCK_THRESHOLD).length).toBeGreaterThanOrEqual(5);

@@ -28,6 +28,19 @@ const SDK_PATTERN = {
   group: ['@commercetools/*'],
   message: 'No @commercetools/* import outside lib/ct and lib/mappers (BFF boundary).',
 };
+// Workstream T: the assistant's SDKs live under lib/agent/** only; the assistant reaches commercetools only through the backend the route layer injects (T2).
+const ASSISTANT_SDK_PATTERN = {
+  group: ['@anthropic-ai/sdk', '@anthropic-ai/sdk/*', '@netlify/blobs'],
+  message: 'The Anthropic and Netlify Blobs SDKs are importable only under lib/agent/** (workstream T).',
+};
+const AGENT_BOUNDARY_PATTERN = {
+  group: ['@/lib/ct/*', '@/lib/mappers/*', '@/lib/session', '@/lib/api'],
+  message: 'lib/agent/** talks to commerce only through an injected backend: no lib/ct, session or route helpers (workstream T2). Inject what it needs.',
+};
+const CLIENT_AGENT_PATTERN = {
+  group: ['@/lib/agent/*', '@/lib/agent/**', '!@/lib/agent/protocol'],
+  message: 'UI code must not import lib/agent/** (server only); use components/assistant/protocol.ts.',
+};
 const NAV_RESTRICTIONS = {
   paths: [
     {
@@ -40,7 +53,7 @@ const NAV_RESTRICTIONS = {
       message: "Use the locale-aware helpers from '@/i18n/routing'.",
     },
   ],
-  patterns: [SDK_PATTERN],
+  patterns: [SDK_PATTERN, ASSISTANT_SDK_PATTERN, CLIENT_AGENT_PATTERN],
 };
 
 const eslintConfig = defineConfig([
@@ -55,12 +68,12 @@ const eslintConfig = defineConfig([
   {
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
-      'no-restricted-imports': ['error', { patterns: [SDK_PATTERN] }],
+      'no-restricted-imports': ['error', { patterns: [SDK_PATTERN, ASSISTANT_SDK_PATTERN] }],
       'no-restricted-syntax': ['error', CLIENT_BUILDER],
     },
   },
   {
-    files: ['app/[[]locale[]]/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}', 'context/**/*.{ts,tsx}', 'hooks/**/*.{ts,tsx}'],
+    files: ['app/[[]brand[]]/[[]locale[]]/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}', 'context/**/*.{ts,tsx}', 'hooks/**/*.{ts,tsx}'],
     rules: { 'no-restricted-imports': ['error', NAV_RESTRICTIONS] },
   },
   {
@@ -70,8 +83,13 @@ const eslintConfig = defineConfig([
   },
   {
     // lib/checkout/hosted-sdk.ts is the one module that imports the Checkout Browser SDK (workstream K, D-039); it is not the platform SDK.
-    files: ['lib/ct/**', 'lib/mappers/**', 'lib/checkout/hosted-sdk.ts', ...TESTS],
+    files: ['lib/ct/**', 'lib/mappers/**', 'lib/checkout/hosted-sdk.ts', 'scripts/**', ...TESTS],
     rules: { 'no-restricted-imports': 'off' },
+  },
+  {
+    files: ['lib/agent/**/*.ts'],
+    ignores: TESTS,
+    rules: { 'no-restricted-imports': ['error', { patterns: [SDK_PATTERN, AGENT_BOUNDARY_PATTERN] }] },
   },
   {
     files: ['lib/ct/client.ts', 'lib/ct/review-client.ts'],

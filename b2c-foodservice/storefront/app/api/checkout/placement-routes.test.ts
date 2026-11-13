@@ -172,24 +172,24 @@ describe('GET /checkout/return', () => {
     h.poll.mockResolvedValue(orderView({ locale: 'en-CA' }));
     const res = await get('?orderId=ord-1');
     expect(res.status).toBe(303);
-    expect(new URL(res.headers.get('location') ?? '').pathname).toBe('/en-CA/checkout/confirmation/ord-1');
+    expect(new URL(res.headers.get('location') ?? '').pathname).toBe('/malva-coffee/en-CA/checkout/confirmation/ord-1');
   });
   it('Return route ignores a locale in the query', async () => {
     h.poll.mockResolvedValue(orderView({ locale: 'en-US' }));
     const res = await get('?orderId=ord-1&locale=en-CA&redirect=https://evil.example');
-    expect(new URL(res.headers.get('location') ?? '').pathname).toBe('/en-US/checkout/confirmation/ord-1');
+    expect(new URL(res.headers.get('location') ?? '').pathname).toBe('/malva-coffee/en-US/checkout/confirmation/ord-1');
     expect(new URL(res.headers.get('location') ?? '').host).toBe('localhost:3000');
   });
   it('an order locale that is not ours falls back to the default locale', async () => {
     h.poll.mockResolvedValue(orderView({ locale: 'de-DE' }));
-    expect(new URL((await get('?orderId=ord-1')).headers.get('location') ?? '').pathname).toBe('/en-US/checkout/confirmation/ord-1');
+    expect(new URL((await get('?orderId=ord-1')).headers.get('location') ?? '').pathname).toBe('/malva-coffee/en-US/checkout/confirmation/ord-1');
   });
   it('Return route with unknown order lands on No recent order', async () => {
     h.poll.mockResolvedValue(null);
     for (const qs of ['?orderId=nope', '', '?orderId=a/../b&orderNumber=%22x']) {
       const res = await get(qs);
       expect(res.status).toBe(303);
-      expect(new URL(res.headers.get('location') ?? '').pathname).toBe('/en-US/checkout/confirmation');
+      expect(new URL(res.headers.get('location') ?? '').pathname).toBe('/malva-coffee/en-US/checkout/confirmation');
     }
   });
   it('finalises by order number too, and a redirect payment of this bag empties it', async () => {
@@ -202,6 +202,6 @@ describe('GET /checkout/return', () => {
     h.jar.set(PAY_CARTS_COOKIE, JSON.stringify([{ id: 'clone-a', clusterKey: 'collect:mcf-store-nyc-soho', label: 'SoHo', totalCents: 1000 }, { id: 'clone-b', clusterKey: 'delivery', label: null, totalCents: 1815 }]));
     h.poll.mockResolvedValue(orderView({ orderNumber: `${NUMBER}-A` }));
     const loc = new URL((await get('?orderId=ord-1')).headers.get('location') ?? '');
-    expect(loc.pathname + loc.search).toBe('/en-US/checkout?resume=1&part=1');
+    expect(loc.pathname + loc.search).toBe('/malva-coffee/en-US/checkout?resume=1&part=1');
   });
 });

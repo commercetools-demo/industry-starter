@@ -47,4 +47,6 @@ export const ICONS = {
     'M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19',
     'M1 1l22 22',
   ],
+  arrowUp: ['M12 19V5', 'M6 11l6-6 6 6'],
+  sparkle: ['M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z', 'M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16z'],
 } as const satisfies Record<string, readonly string[]>;

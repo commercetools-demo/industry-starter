@@ -1,6 +1,7 @@
 import 'server-only';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { DEFAULT_BRAND, type BrandSlug } from '@/lib/brands';
 import { breadcrumbOf, idByKey, rootCategoryName } from '@/lib/category-tree';
 import type { FilterChip } from '@/components/listing/ActiveFilters';
 import type { Crumb } from '@/components/listing/Breadcrumbs';
@@ -32,6 +33,8 @@ export interface ListingInput {
   scope: ListingScope;
   /** Category slug of `/category/[slug]`. */
   slug?: string;
+  /** The brand whose product selection scopes the listing (default Malva Coffee). */
+  brand?: BrandSlug;
   searchParams: Record<string, string | string[] | undefined>;
 }
 
@@ -74,13 +77,13 @@ interface Resolved {
   tree: Category[];
 }
 
-async function resolve(locale: string): Promise<Resolved & { stores: Store[] }> {
+async function resolve(locale: string, brand: BrandSlug): Promise<Resolved & { stores: Store[] }> {
   const market = marketForLocale(locale);
-  const [session, tree] = await Promise.all([getSession(), getCategoryTree(locale)]);
+  const [session, tree] = await Promise.all([getSession(), getCategoryTree(locale, brand)]);
   const stores = market.collection ? await getStoresForCountry(market.country, locale).catch(() => [] as Store[]) : [];
   const store = stores.find((s) => s.key === session.collectionStoreKey) ?? null;
   return {
-    ctx: { locale, currency: market.currency, country: market.country, ...(store ? { storeChannelId: store.id } : {}) },
+    ctx: { locale, currency: market.currency, country: market.country, brand, ...(store ? { storeChannelId: store.id } : {}) },
     store, tree, stores,
   };
 }
@@ -95,12 +98,13 @@ const camel = (v: string) => v.replace(/-(\w)/g, (_, c: string) => c.toUpperCase
 const humanize = (key: string) => key.split('-').map((w) => (w ? w[0]!.toUpperCase() + w.slice(1) : w)).join(' ');
 
 /** Counts only: used by the mobile filter sheet through GET /api/search?countOnly=1. */
-export async function loadCount(input: { locale: string; scopeParam: string; searchParams: ListingInput['searchParams'] }): Promise<{ total: number } | { status: 'unsupported_language' } | { status: 'unknown_scope' }> {
+export async function loadCount(input: { locale: string; brand?: BrandSlug; scopeParam: string; searchParams: ListingInput['searchParams'] }): Promise<{ total: number } | { status: 'unsupported_language' } | { status: 'unknown_scope' }> {
   const params = parseListingParams(input.searchParams, input.scopeParam === 'shop' ? 'shop' : 'category');
-  const { ctx, tree } = await resolve(input.locale);
+  const brand = input.brand ?? DEFAULT_BRAND;
+  const { ctx, tree } = await resolve(input.locale, brand);
   let category: Category | null = null;
   if (input.scopeParam !== 'shop') {
-    category = await getCategoryByKey(input.locale, input.scopeParam);
+    category = await getCategoryByKey(input.locale, input.scopeParam, brand);
     if (!category) return { status: 'unknown_scope' };
   }
   const scope: SearchScope = { ...(category ? { categoryId: category.id } : {}), root: rootKeyOf(tree, category), categoryIdByKey: idByKey(tree) };
@@ -110,12 +114,13 @@ export async function loadCount(input: { locale: string; scopeParam: string; sea
 
 export async function loadListing(input: ListingInput): Promise<ListingResult> {
   const { locale, scope } = input;
+  const brand = input.brand ?? DEFAULT_BRAND;
   const params = parseListingParams(input.searchParams, scope);
   const t = await getTranslations({ locale, namespace: 'plp' });
   const market = marketForLocale(locale);
-  const [{ ctx, store, tree }, attributeLabels] = await Promise.all([resolve(locale), getAttributeLabels(locale).catch(() => ({}))]);
+  const [{ ctx, store, tree }, attributeLabels] = await Promise.all([resolve(locale, brand), getAttributeLabels(locale).catch(() => ({}))]);
 
-  const category = scope === 'category' && input.slug ? await getCategoryBySlug(locale, input.slug) : null;
+  const category = scope === 'category' && input.slug ? await getCategoryBySlug(locale, input.slug, brand) : null;
   if (scope === 'category' && !category) notFound();
   const basePath = scope === 'category' ? `/category/${encodeURIComponent(category!.slug)}` : scope === 'shop' ? '/shop' : '/search';
 

@@ -9,11 +9,11 @@ import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 export type Kind =
   | 'product-types' | 'categories' | 'products' | 'tax-categories' | 'zones' | 'shipping-methods' | 'channels'
   | 'types' | 'customers' | 'inventory' | 'product-discounts' | 'cart-discounts' | 'discount-codes'
-  | 'recurrence-policies' | 'states' | 'shopping-lists' | 'reviews';
+  | 'recurrence-policies' | 'states' | 'shopping-lists' | 'reviews' | 'product-selections';
 
 export const ALL_KINDS: Kind[] = [
   'product-types', 'categories', 'products', 'tax-categories', 'zones', 'shipping-methods', 'channels', 'types', 'customers',
-  'inventory', 'product-discounts', 'cart-discounts', 'discount-codes', 'recurrence-policies', 'states', 'shopping-lists', 'reviews',
+  'inventory', 'product-discounts', 'cart-discounts', 'discount-codes', 'recurrence-policies', 'states', 'shopping-lists', 'reviews', 'product-selections',
 ];
 
 export interface Res {
@@ -30,6 +30,8 @@ export interface Api {
   create(kind: Kind, body: Record<string, unknown>): Promise<Res>;
   update(kind: Kind, res: { id: string; version: number }, actions: Record<string, unknown>[]): Promise<Res>;
   remove(kind: Kind, res: { id: string; version: number }): Promise<void>;
+  /** Ids of the products assigned to a product selection. */
+  selectionProductIds(selectionId: string): Promise<string[]>;
   /** Marks a customer's email as verified (email token, then confirm); there is no update action for it. */
   verifyCustomerEmail(res: { id: string; version: number }): Promise<void>;
   getProject(): Promise<ProjectView>;
@@ -91,6 +93,7 @@ function endpoint(root: ByProjectKeyRequestBuilder, kind: Kind): Endpoint {
     case 'states': return e(root.states());
     case 'shopping-lists': return e(root.shoppingLists());
     case 'reviews': return e(root.reviews());
+    case 'product-selections': return e(root.productSelections());
   }
 }
 
@@ -119,6 +122,14 @@ export function sdkApi(root: ByProjectKeyRequestBuilder): Api {
     },
     async remove(kind, res) {
       await endpoint(root, kind).withId({ ID: res.id }).delete({ queryArgs: { version: res.version } }).execute();
+    },
+    async selectionProductIds(selectionId) {
+      const ids: string[] = [];
+      for (let offset = 0; ; offset += PAGE) {
+        const { results } = (await root.productSelections().withId({ ID: selectionId }).products().get({ queryArgs: { limit: PAGE, offset } }).execute()).body;
+        ids.push(...results.map((r) => r.product.id));
+        if (results.length < PAGE) return ids;
+      }
     },
     async verifyCustomerEmail(res) {
       const { value } = (await root.customers().emailToken().post({ body: { id: res.id, version: res.version, ttlMinutes: 10 } }).execute()).body;

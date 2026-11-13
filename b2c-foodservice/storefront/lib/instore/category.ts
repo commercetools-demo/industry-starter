@@ -1,3 +1,4 @@
+import { DEFAULT_BRAND } from '@/lib/brands';
 import 'server-only';
 import { notFound } from 'next/navigation';
 import { availabilityState } from '@/lib/availability';
@@ -82,7 +83,7 @@ export async function loadInstoreCategory(locale: string, slug: string, pagePara
 
   const params = parseListingParams(pageParam ? { page: pageParam } : {}, 'category');
   const outcome = await searchProducts(
-    { locale, currency: market.currency, country: market.country },
+    { locale, currency: market.currency, country: market.country, brand: DEFAULT_BRAND },
     { categoryId: category.id, root: rootKeyOf(tree, category), categoryIdByKey: idByKey(tree) },
     params,
     { withFacets: false },

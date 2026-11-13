@@ -2,7 +2,7 @@
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 // Deploy gate (workstream Q, D9). Prints names, lengths and keys of the project; never a secret value.
 //   npm run predeploy                    structure and files, plus the environment of the shell and of .env.production
-// The dev routes (app/api/health, app/api/dev, app/[locale]/dev) are kept while the owner tests by hand; this gate lists them
+// The dev routes (app/api/health, app/api/dev, app/[brand]/[locale]/dev) are kept while the owner tests by hand; this gate lists them
 // and fails until they are deleted.
 import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -29,7 +29,7 @@ export function checkPredeploy(root) {
     problems.push('Remove app/api/dev before deploying');
   }
   if (existsSync(join(root, 'app', '[locale]', 'dev'))) {
-    problems.push('Remove app/[locale]/dev (the design kitchen sink) before deploying');
+    problems.push('Remove app/[brand]/[locale]/dev (the design kitchen sink) before deploying');
   }
   return problems;
 }
@@ -49,6 +49,16 @@ export function checkDebugRoutes(root) {
   };
   walk(join(root, 'app'), 'app');
   return found;
+}
+
+/** Shopping assistant variables (names only): with the switch on, the model key is required. The assistant calls only the storefront modules (T2). @param {Record<string, string | undefined>} env @returns {string[]} */
+export function checkAssistantEnv(env) {
+  const problems = [];
+  if (env.ASSISTANT_ENABLED === 'true') {
+    if (!env.ANTHROPIC_API_KEY) problems.push('ASSISTANT_ENABLED is true but ANTHROPIC_API_KEY is not set');
+  }
+  if (env.ASSISTANT_TRANSPORT && !['sse', 'buffered'].includes(env.ASSISTANT_TRANSPORT)) problems.push('ASSISTANT_TRANSPORT must be sse or buffered');
+  return problems;
 }
 
 /** The environment of the target. @param {Record<string, string | undefined>} env @returns {string[]} problems, names only */
@@ -74,6 +84,8 @@ export function checkPredeployEnv(env) {
       if (scopes.includes(admin)) problems.push(`CTP_SCOPES contains the admin scope ${admin}; the storefront client must not hold it`);
     }
   }
+  if (env.ASSISTANT_SHOWCASE === 'true') problems.push('ASSISTANT_SHOWCASE is true; the card showcase must not ship');
+  problems.push(...checkAssistantEnv(env));
   if (env.CTP_SESSION_URL) problems.push('CTP_SESSION_URL is set; it is for the local mock only (leave it empty)');
   for (const name of ['CONTACT_WEBHOOK_URL', 'FEEDBACK_WEBHOOK_URL']) {
     if (env[name] && !env[name].startsWith('https://')) problems.push(`${name} must start with https://`);

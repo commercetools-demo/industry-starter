@@ -1,3 +1,4 @@
+import { brandOfLineFields } from '@/lib/brands';
 import type { Address, Delivery, LineItem, Order, ReturnInfo } from '@commercetools/platform-sdk';
 import { canReturn, deriveOrderStatus, returnWindowEnds } from '@/lib/account/order-status';
 import { trackingUrl } from '@/lib/account/tracking';
@@ -72,7 +73,9 @@ function mapLine(l: LineItem, locale: string): OrderLineView {
     quantity: l.quantity,
     imageUrl: image?.url ?? null,
     fulfilment: f,
-    storeKey: l.supplyChannel?.obj?.key ?? null,
+    // Only a collect line's channel is a store (a brand's inventory channel is not).
+    storeKey: f === 'collect' ? (l.supplyChannel?.obj?.key ?? null) : null,
+    brand: brandOfLineFields(l.custom?.fields),
     storeName: channel ? getLocalizedString(channel.name, locale) : null,
     recurrence: schedule,
     unitCents: l.price.discounted?.value.centAmount ?? l.price.value.centAmount,

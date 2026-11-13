@@ -11,9 +11,14 @@ vi.mock('@/lib/ct/inventory', async () => (await import('@/test/fake-carts')).in
 vi.mock('next-intl/server', () => ({
   getTranslations: async () => (key: string, v: Record<string, unknown> = {}) => `${key}${v.n ?? v.count ?? ''}`,
 }));
+vi.mock('@/lib/ct/product-detail', async (orig) => ({
+  ...(await orig<typeof import('@/lib/ct/product-detail')>()),
+  getProductBySku: async (sku: string) => ({ id: `p-${sku}`, masterVariant: { sku }, variants: [] }),
+}));
+vi.mock('@/lib/ct/product-selections', () => ({ getProductBrand: async () => 'malva-coffee' }));
 vi.mock('@/lib/ct/channels', async () => {
   const { STORE_BK, STORE_SOHO } = await import('@/test/cart');
-  return { getStoresForCountry: async (country: string) => (country === 'US' ? [STORE_SOHO, STORE_BK] : []) };
+  return { getStoresForCountry: async (country: string) => (country === 'US' ? [STORE_SOHO, STORE_BK] : []), getBrandChannelId: async () => undefined };
 });
 vi.mock('@/lib/ct/cart-enrich', async () => {
   const { fake } = await import('@/test/fake-carts');
@@ -300,6 +305,19 @@ describe('fulfilment switch and store change (I-05)', () => {
     ]);
     const view = await cartOf(ok);
     expect(view.lines[0]).toMatchObject({ fulfilment: 'collect', groupKey: `collect:${STORE_SOHO.key}` });
+  });
+
+  it('a drinks line cannot be switched to collect, and a brand-channel line keeps its channel in the other cart operations', async () => {
+    await bag([{ id: 'a', sku: 'S1', channelId: 'ch-drinks', custom: { brand: 'malva-drinks' } }]);
+    const res = await patchL('a', { fulfilment: 'collect', storeKey: STORE_SOHO.key });
+    expect(res.status).toBe(400);
+    expect(await errOf(res)).toMatchObject({ code: 'collect_not_available_in_market' });
+    expect(fake.updates).toHaveLength(0);
+    // switching a delivery line to delivery is a no-op: the line, its drinks channel and the brand stay
+    const same = await patchL('a', { fulfilment: 'delivery' });
+    expect(same.status).toBe(200);
+    expect(fake.updates.flatMap((u) => u.actions).some((a) => a.action === 'setLineItemSupplyChannel')).toBe(false);
+    expect((await cartOf(same)).lines[0]).toMatchObject({ brand: 'malva-drinks', fulfilment: 'delivery', groupKey: 'delivery' });
   });
 
   it('store_required when no session store', async () => {

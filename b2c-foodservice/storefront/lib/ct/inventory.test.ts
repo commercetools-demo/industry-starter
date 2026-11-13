@@ -6,8 +6,9 @@ const { execute, get } = vi.hoisted(() => {
   return { execute, get: vi.fn(() => ({ execute })) };
 });
 vi.mock('@/lib/ct/client', () => ({ apiRoot: { inventory: () => ({ get }) } }));
+vi.mock('@/lib/ct/channels', () => ({ getBrandChannelIds: async () => ({ 'c-drinks': 'malva-drinks' }) }));
 
-import { getAvailabilityForSkus, getStoreAvailability } from '@/lib/ct/inventory';
+import { getAvailabilityForSkus, getInventoryDetail, getStoreAvailability } from '@/lib/ct/inventory';
 
 const STORES = [
   { id: 'c-soho', key: 'mcf-store-nyc-soho' },
@@ -67,5 +68,25 @@ describe('getAvailabilityForSkus', () => {
     expect(out.map((o) => [o.sku, o.ship])).toEqual([['A', 'in'], ['B', 'out']]);
     expect(out[1].stores[1].state).toBe('in');
     expect(get).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('brand inventory channel (Malva Drinks)', () => {
+  it('stock in the drinks channel is the SKU online stock, not a store', async () => {
+    execute.mockResolvedValue({ body: { results: [entry('100001', 3, 'c-drinks')] } });
+    const detail = await getInventoryDetail(['100001']);
+    expect(detail['100001']).toEqual({ online: 3, stores: {} });
+  });
+
+  it('a store channel next to it stays a store', async () => {
+    execute.mockResolvedValue({ body: { results: [entry('S1', 40), entry('S1', 6, 'c-soho')] } });
+    expect((await getInventoryDetail(['S1']))['S1']).toEqual({ online: 40, stores: { 'c-soho': 6 } });
+  });
+
+  it('ship availability of a SKU stocked only in a non-store channel comes from that entry', async () => {
+    execute.mockResolvedValue({ body: { results: [entry('100001', 3, 'c-drinks')] } });
+    const [a] = await getAvailabilityForSkus(['100001'], STORES);
+    expect(a?.ship).toBe('low');
+    expect(a?.stores.every((s) => s.state === 'out')).toBe(true);
   });
 });

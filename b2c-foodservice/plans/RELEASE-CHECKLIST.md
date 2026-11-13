@@ -78,3 +78,14 @@ Run order: 1) section A (offline, from a clean clone), 2) section B (live projec
 - [ ] (listed in `plans/evidence/Q/FINAL-REPORT.md` section 7; waits for the owner's written yes) Known gaps accepted by the owner (M-Q-06): no monitoring or alerting; rate limits are per instance unless the host provides them; renewal payment for subscriptions depends on Checkout recurring payments (public beta); no cookie banner (no third-party scripts); content is in the repository (a text correction needs a deploy); newsletter and any other route listed as "not built" in `plans/evidence/Q/fixes.md`; in-store selling is out of scope (D-001).
 - [ ] (not run: only when the repository is published) If the repository will be published: run the `ct-builders-readiness` skill and keep its report out of the published tree (`plans/evidence/Q/PUBLISH-READINESS.md`); MIT and SPDX headers on every source file, no customer or internal names, `design/export/` decision by the owner.
 - [ ] (open: SO-Q2; the route answers 404 unless `DEMO_LOGIN_ENABLED=true`) Demo sign-in (D-040): owner confirms `DEMO_LOGIN_ENABLED` is `true` only on demo deployments and `DEMO_LOGIN_PASSWORD` is set in Netlify as a secret.
+
+## G. Shopping assistant (workstream T)
+
+- [ ] `ASSISTANT_ENABLED` is `true` only where the assistant is meant to be live; `ANTHROPIC_API_KEY` is set as a secret in Netlify (the Shopper MCP was removed by T2, D-055: no MCP variables) (names only in the repository).
+- [ ] Anthropic spend cap set on the key's workspace (OA-T-a); the per-session turn limit is per instance, add a host rate-limit rule (Q-Q-7).
+- [ ] A signed-in and a guest shopper both checked in the assistant (T2 U-13 proof table).
+- [ ] `ASSISTANT_SHOWCASE` is not `true` (`npm run predeploy` checks it).
+- [ ] `ASSISTANT_TRANSPORT` decided from `plans/evidence/T/transport.md` (T-02, OA-T-d); a turn streams on the deployed site and survives a closed tab.
+- [ ] Proof table run with the real model (T2 U-13) and the money check in USD and CAD (T-39).
+- [ ] An order lookup answers only for the signed-in shopper's own orders (two demo customers tried).
+

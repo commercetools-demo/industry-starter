@@ -13,7 +13,7 @@ vi.mock('next-intl/server', () => ({ setRequestLocale: vi.fn(), getTranslations:
 const bySlug = (slug: string) => ARTICLES.find((a) => a.slug === slug)!;
 
 async function loadPage() {
-  return import('@/app/[locale]/journal/[slug]/page');
+  return import('@/app/[brand]/[locale]/journal/[slug]/page');
 }
 
 describe('Journal article', () => {
@@ -71,7 +71,7 @@ describe('Journal article', () => {
     const meta = await generateMetadata({ params: Promise.resolve({ locale: 'en-US', slug: 'descale-your-machine' }) });
     expect(meta.title).toBe('How to descale your capsule machine');
     expect(String(meta.description).length).toBeGreaterThan(100);
-    expect(meta.alternates?.canonical).toBe('/en-US/journal/descale-your-machine');
+    expect(meta.alternates?.canonical).toBe('/malva-coffee/en-US/journal/descale-your-machine');
     expect(meta.openGraph).toMatchObject({ type: 'article', publishedTime: '2026-09-12' });
   });
 
@@ -79,13 +79,13 @@ describe('Journal article', () => {
     const { generateMetadata } = await loadPage();
     const meta = await generateMetadata({ params: Promise.resolve({ locale: 'en-CA', slug: 'descale-your-machine' }) });
     expect(Object.keys(meta.alternates?.languages ?? {})).toEqual(['en-US']);
-    expect(meta.alternates?.canonical).toBe('/en-CA/journal/descale-your-machine');
+    expect(meta.alternates?.canonical).toBe('/malva-coffee/en-CA/journal/descale-your-machine');
   });
 
   it('static params list published articles for both locales and no withdrawn ones', async () => {
     const { generateStaticParams } = await loadPage();
     const params = generateStaticParams();
-    expect(params).toHaveLength(6);
+    expect(params).toHaveLength(12);
     expect(params.some((p) => p.slug === 'capsule-take-back-plan')).toBe(false);
   });
 });

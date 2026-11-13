@@ -61,7 +61,7 @@ describe('ButtonLink', () => {
     renderWithIntl(<ButtonLink href="/cart">Bag</ButtonLink>, { locale: 'en-CA' });
     const a = screen.getByRole('link', { name: 'Bag' });
     expect(a.tagName).toBe('A');
-    expect(a).toHaveAttribute('href', '/en-CA/cart');
+    expect(a).toHaveAttribute('href', '/malva-coffee/en-CA/cart');
     expect(a.className).toContain('rounded-pill');
   });
 });

@@ -125,7 +125,7 @@ export interface CartLineSummary { id: string; sku: string; quantity: number }
 export interface CartSummary { id: string; version: number; count: number; lines: CartLineSummary[] }
 
 // Workstream H: product detail view model (see lib/mappers/product-detail.ts).
-export type ProductShape = 'pods' | 'coffee' | 'machine' | 'accessory' | 'gift';
+export type ProductShape = 'pods' | 'coffee' | 'machine' | 'accessory' | 'gift' | 'drink';
 export type VariantAttrValue = string | number | boolean;
 export interface PriceTier { minimumQuantity: number; value: Money }
 export interface VariantPrice { value: Money; discounted?: Money; discountName?: string; tiers: PriceTier[] }
@@ -196,8 +196,10 @@ export interface ProductPageData {
   inventoryFailed: boolean;
   freeShippingThreshold: Money | null;
   returnDays: number;
-  /** Collection in store is offered in this market (US only, D-035). */
+  /** Collection in store is offered in this market (US only, D-035) and by the product's brand (not Malva Drinks). */
   collection: boolean;
+  /** The brand whose URL the page is served under; absent means Malva Coffee. */
+  brand?: 'malva-coffee' | 'malva-drinks';
   country: string;
   currency: string;
 }
@@ -242,6 +244,8 @@ export interface CartLine {
   /** The engine's line total, verbatim. */
   total: Money;
   fulfilment: Fulfilment;
+  /** The brand of the line (custom field `brand`; a line without it is Malva Coffee). The cart UI groups lines by it. */
+  brand: 'malva-coffee' | 'malva-drinks';
   groupKey: GroupKey;
   store?: CartLineStore;
   recurrence?: { policyId: string; schedule: { unit: 'Weeks' | 'Months' | 'Days'; value: number } };
@@ -323,6 +327,8 @@ export type OrderFilter = 'all' | 'in-progress' | 'ready' | 'completed';
 export interface OrderLineView {
   id: string; sku: string; name: string; variantSummary: string; quantity: number; imageUrl: string | null;
   fulfilment: Fulfilment; storeKey: string | null; storeName: string | null; recurrence: RecurrencePolicyView['schedule'] | null;
+  /** The brand of the line (custom field `brand`); absent means Malva Coffee. The mapper always sets it. */
+  brand?: 'malva-coffee' | 'malva-drinks';
   /** Price of one unit (discounted when it is). */
   unitCents: number;
   /** Total of the line (all units, after discounts). */

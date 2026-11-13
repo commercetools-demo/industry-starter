@@ -15,9 +15,9 @@ describe('SEO', () => {
 
   it('sitemap lists content pages in both locales', () => {
     const urls = sitemap().map((e) => e.url);
-    for (const locale of ['en-US', 'en-CA']) {
+    for (const [brand, locale] of [['malva-coffee', 'en-US'], ['malva-coffee', 'en-CA'], ['malva-drinks', 'en-US'], ['malva-drinks', 'en-CA']]) {
       for (const path of ['', '/about', '/contact', '/faq', '/journal', '/policies/shipping-returns', '/policies/terms', '/policies/privacy', '/policies/accessibility', '/journal/brew-a-better-cup']) {
-        expect(urls, `${locale}${path}`).toContain(`http://localhost:3000/${locale}${path}`);
+        expect(urls, `${brand}/${locale}${path}`).toContain(`http://localhost:3000/${brand}/${locale}${path}`);
       }
     }
   });
@@ -30,11 +30,11 @@ describe('SEO', () => {
 
   it('alternates only list locales with their own text and lastModified comes from the content', () => {
     const entries = buildSitemap('https://shop.example', ['en-US', 'en-CA']);
-    const faq = entries.find((e) => e.url === 'https://shop.example/en-CA/faq')!;
+    const faq = entries.find((e) => e.url === 'https://shop.example/malva-coffee/en-CA/faq')!;
     expect(Object.keys(faq.alternates?.languages ?? {})).toEqual(['en-US']);
-    const article = entries.find((e) => e.url.endsWith('/en-US/journal/brew-a-better-cup'))!;
+    const article = entries.find((e) => e.url.endsWith('/malva-coffee/en-US/journal/brew-a-better-cup'))!;
     expect(article.lastModified).toBe('2026-10-09');
-    const terms = entries.find((e) => e.url.endsWith('/en-US/policies/terms'))!;
+    const terms = entries.find((e) => e.url.endsWith('/malva-coffee/en-US/policies/terms'))!;
     expect(terms.lastModified).toBe('2026-10-01');
   });
 
@@ -42,7 +42,7 @@ describe('SEO', () => {
     const r = robots();
     const rules = Array.isArray(r.rules) ? r.rules[0] : r.rules;
     expect(rules.allow).toBe('/');
-    expect(rules.disallow).toEqual(['/api/', '/*/account', '/*/cart', '/*/checkout']);
+    expect(rules.disallow).toEqual(['/api/', '/*/*/account', '/*/*/cart', '/*/*/checkout']);
     expect(r.sitemap).toBe('http://localhost:3000/sitemap.xml');
   });
 

@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const h = vi.hoisted(() => ({
-  product: vi.fn(), inventory: vi.fn(), policies: vi.fn(), cacheCalls: 0,
+  product: vi.fn(), inventory: vi.fn(), policies: vi.fn(), cacheCalls: 0, inBrand: vi.fn(),
 }));
 // A memoising stand-in for React's request-scoped cache(): one result per argument list.
 vi.mock('react', () => ({
@@ -17,6 +17,7 @@ vi.mock('react', () => ({
 }));
 vi.mock('@/lib/ct/product-detail', () => ({ getProductBySku: h.product, getRecurrencePolicies: h.policies }));
 vi.mock('@/lib/ct/inventory', () => ({ getInventoryDetail: h.inventory }));
+vi.mock('@/lib/ct/product-selections', () => ({ isInBrandSelection: h.inBrand }));
 vi.mock('@/lib/ct/attribute-labels', () => ({ getAttributeLabels: async () => ({}) }));
 vi.mock('@/lib/ct/categories', () => ({ getCategoryTree: async () => [] }));
 vi.mock('@/lib/ct/shipping', () => ({ getFreeShippingThreshold: async () => ({ centAmount: 7500, currencyCode: 'USD' }) }));
@@ -31,13 +32,27 @@ const projection = (subscribable = true, type = 'mcf-pods') => ({
 });
 
 beforeEach(() => {
-  for (const f of [h.product, h.inventory, h.policies]) f.mockReset();
+  for (const f of [h.product, h.inventory, h.policies, h.inBrand]) f.mockReset();
+  h.inBrand.mockResolvedValue(true);
   h.inventory.mockResolvedValue({ A: { online: 3, stores: {} } });
   h.policies.mockResolvedValue([{ id: 'r1', key: 'k', name: 'Every month', schedule: { unit: 'Months', value: 1 } }]);
   vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 describe('loadProductPage', () => {
+  it('a product that is not in the brand selection does not exist on that brand', async () => {
+    h.product.mockResolvedValue(projection());
+    h.inBrand.mockResolvedValue(false);
+    expect(await loadProductPage('X1', 'en-US', 'malva-drinks')).toBeNull();
+    expect(h.inBrand).toHaveBeenCalledWith('p1', 'malva-drinks');
+  });
+
+  it('the brand defaults to Malva Coffee', async () => {
+    h.product.mockResolvedValue(projection());
+    expect(await loadProductPage('X2', 'en-US')).not.toBeNull();
+    expect(h.inBrand).toHaveBeenCalledWith('p1', 'malva-coffee');
+  });
+
   it('metadata and page share one cached load', async () => {
     h.product.mockResolvedValue(projection());
     const [a, b] = await Promise.all([loadProductPage('A', 'en-US'), loadProductPage('A', 'en-US')]);

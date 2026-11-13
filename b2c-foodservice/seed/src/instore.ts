@@ -5,6 +5,8 @@ import {
   INSTORE_VISIBILITY_VALUES, instoreCategoryDraft, instoreCategoryTypeDraft, instoreVisibilityField, readyDrinkDrafts, readyDrinkProductType,
 } from './data/instore';
 import { fail, getAdmin, isMainModule, parseArgs, Runner } from './lib';
+import { SELECTION_COFFEE } from './data/brands';
+import { ensureSelectionMembership } from './selections';
 import { planProductTypeUpdate, planTypeUpdate } from './sync';
 
 /**
@@ -55,6 +57,8 @@ export async function seedInstore(c: Ctx): Promise<void> {
   await ensure(c, 'categories', `category ${instoreCategoryDraft.key}`, instoreCategoryDraft as unknown as Obj, (e) =>
     e.custom ? [] : [{ action: 'setCustomType', type: instoreCategoryDraft.custom.type, fields: instoreCategoryDraft.custom.fields }]);
   for (const d of readyDrinkDrafts()) await ensure(c, 'products', `product ${String(d.key)}`, d);
+  // The in-store shop is Malva Coffee: its products belong to the coffee product selection (skipped until that selection exists).
+  if (!c.run.dryRun) await ensureSelectionMembership(c.api, c.run, SELECTION_COFFEE, readyDrinkDrafts().map((d) => String(d.key)));
 }
 
 async function main() {

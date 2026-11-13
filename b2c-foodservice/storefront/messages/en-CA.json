@@ -74,7 +74,33 @@
       "cta": "Shop subscriptions",
       "stepsAria": "How subscriptions work"
     },
-    "loading": "Loading products"
+    "loading": "Loading products",
+    "drinks": {
+      "hero": {
+        "eyebrow": "Sparkling water",
+        "headline": "Fizz,\nwith a French kiss.",
+        "subline": "Sparkling water with real fruit juices, bottled in the South of France. Delivered to your door.",
+        "cta": "Shop all drinks",
+        "aria": "Malva Drinks"
+      },
+      "tiles": {
+        "aria": "Shop by line"
+      },
+      "range": {
+        "eyebrow": "The range",
+        "title": "Taste the range"
+      },
+      "story": {
+        "eyebrow": "Our promise",
+        "title": "Crisp bubbles.\nReal fruit.",
+        "body": "Four lines, one idea: sparkling water that tastes like something. From clean unflavored water to cocktail-inspired Chic, every can and bottle is made to be shared.",
+        "cta": "Browse the range"
+      },
+      "meta": {
+        "title": "Malva Drinks: sparkling water, delivered",
+        "description": "Sparkling water in four lines: French Kiss, Unflavored, Flavored Forever and Chic. Order online and have it delivered."
+      }
+    }
   },
   "ui": {
     "stepper": {
@@ -146,7 +172,11 @@
       "coffee": "Coffee",
       "machines": "Machines",
       "accessories": "Accessories",
-      "gifts": "Gifts"
+      "gifts": "Gifts",
+      "french-kiss": "French Kiss",
+      "unflavored": "Unflavored",
+      "flavored-forever": "Flavored Forever",
+      "chic": "Chic"
     },
     "menu": {
       "open": "Open menu",
@@ -274,7 +304,8 @@
       "copyright": "© {year} Malva Coffee",
       "privacy": "Privacy",
       "terms": "Terms",
-      "accessibility": "Accessibility"
+      "accessibility": "Accessibility",
+      "taglineDrinks": "Sparkling water, delivered to your door."
     },
     "newsletter": {
       "heading": "Join the list",
@@ -287,6 +318,13 @@
     },
     "toast": {
       "added": "Added to bag"
+    },
+    "brandSwitcher": {
+      "label": "Brands",
+      "brands": {
+        "malva-coffee": "Malva Coffee",
+        "malva-drinks": "Malva Drinks"
+      }
     }
   },
   "cart": {
@@ -428,6 +466,9 @@
       "generic": "Something went wrong. Please try again.",
       "storeRequired": "Choose a store to collect from",
       "collectUnavailable": "That item isn't available for collection there"
+    },
+    "brand": {
+      "subtotal": "Subtotal {amount}"
     }
   },
   "store": {
@@ -858,14 +899,16 @@
         "sizeGrams": "Size",
         "grind": "Grind",
         "colour": "Colour",
-        "bundle": "Bundle"
+        "bundle": "Bundle",
+        "drinkSize": "Size"
       },
       "choice": {
         "capsulesPerPack": "pack size",
         "sizeGrams": "size",
         "grind": "grind",
         "colour": "colour",
-        "bundle": "bundle"
+        "bundle": "bundle",
+        "drinkSize": "size"
       }
     },
     "pack": {
@@ -1030,7 +1073,8 @@
       "coffee": "Keep beans in an airtight container away from light and heat. Grind just before brewing and use water just off the boil.",
       "machine": "Descale every three months, empty the water tank daily and rinse the drip tray. Use filtered water in hard-water areas.",
       "accessory": "Hand wash with mild soap. Check the label on the product for dishwasher and heat guidance.",
-      "gift": "Store in a cool, dry place until gifting."
+      "gift": "Store in a cool, dry place until gifting.",
+      "drink": "Serve chilled. Store in a cool, dry place away from direct sunlight. Best enjoyed before the date printed on the pack."
     },
     "shipping": {
       "delivery": "Free delivery over {threshold}.",
@@ -1810,6 +1854,112 @@
         "error": "We couldn't add that to your bag. Please try again.",
         "moreChoices": "See sizes and options"
       }
+    }
+  },
+  "assistant": {
+    "launcher": {
+      "label": "Ask Malva"
+    },
+    "panel": {
+      "title": "Malva assistant",
+      "close": "Close the assistant",
+      "cartCount": "{count, plural, one {# item in the assistant cart} other {# items in the assistant cart}}",
+      "disclaimer": "The assistant can make mistakes. It never places an order for you."
+    },
+    "welcome": "Hi, I can help you find coffee, pods, machines and drinks, build a bag, or look up an order.",
+    "starters": {
+      "starter1": "Help me choose a coffee",
+      "starter2": "Which pods fit my machine?",
+      "starter3": "What is in my bag?",
+      "starter4": "Where is my last order?"
+    },
+    "composer": {
+      "label": "Message the assistant",
+      "placeholder": "Ask about coffee, pods, or an order",
+      "working": "Working…",
+      "send": "Send"
+    },
+    "working": "Working",
+    "latest": "↓ Latest",
+    "errors": {
+      "unreachable": "The assistant could not be reached. Please try again.",
+      "unavailable": "The assistant is not available right now."
+    },
+    "activity": {
+      "generic": "Working on it…",
+      "compose": "Putting the answer together…",
+      "search_products": "Searching the catalogue…",
+      "get_product_details": "Reading the details…",
+      "get_orders": "Looking up your orders…",
+      "get_order_status": "Looking up your order…",
+      "get_cart": "Checking the assistant cart…",
+      "add_to_cart": "Updating the assistant cart…",
+      "update_cart_item": "Updating the assistant cart…",
+      "remove_from_cart": "Updating the assistant cart…",
+      "checkout": "Preparing your summary…",
+      "get_preferences": "Reading your profile…",
+      "load_skill": "Getting ready…"
+    },
+    "cards": {
+      "unknown": "The assistant sent something this chat cannot show.",
+      "rating": "Rated {rating} out of 5",
+      "outOfStock": "Out of stock",
+      "from": "From {price}",
+      "pickOption": "Ask the assistant to pick an option.",
+      "addLabel": "Add {title} to cart",
+      "adding": "Adding to cart",
+      "added": "Added to cart",
+      "addFailed": "Could not add to cart",
+      "details": "Details for {title}",
+      "collapseDetails": "Collapse details",
+      "loadingDetails": "Loading details...",
+      "detailsUnavailable": "More details are not available right now.",
+      "options": "Options",
+      "scrollPrev": "Scroll to previous products",
+      "scrollNext": "Scroll to more products",
+      "recommended": "Recommended",
+      "bestFor": "Best for: {text}",
+      "pro": "Pro",
+      "con": "Con",
+      "priceDifference": "Price difference:",
+      "priceVs": "{low} vs {high}",
+      "comparedOn": "Compared on: {dimensions}",
+      "plannedPicks": "Planned picks {total}, the cheapest option in each step",
+      "stepsWithoutItems": "{count, plural, one {# step with no items to show} other {# steps with no items to show}}",
+      "noItemsForStep": "No items to show for this step.",
+      "sources": "Sources: {sources}",
+      "orderTitle": "Order {id}",
+      "status": {
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "out_for_delivery": "Out for delivery",
+        "delivered": "Delivered",
+        "delayed": "Delayed",
+        "cancelled": "Cancelled",
+        "return_initiated": "Return started",
+        "refunded": "Refunded"
+      },
+      "railOrdered": "Ordered",
+      "railPacked": "Packed",
+      "railShipped": "Shipped",
+      "railDelivered": "Delivered",
+      "railDone": "done",
+      "delayedChip": "delayed",
+      "lineQuantity": "{title} × {quantity}",
+      "total": "Total",
+      "estimatedDelivery": "Estimated delivery: {date}",
+      "viewOrder": "View order",
+      "trackPackage": "Track package",
+      "checkoutTitle": "Ready for your bag",
+      "notCharged": "Not charged",
+      "notChargedNote": "Nothing is charged here. You pay when you check out from your bag.",
+      "inBagNote": "These items are already in your bag. Nothing is charged here.",
+      "fulfilmentDelivery": "Delivery",
+      "fulfilmentPickup": "Pickup",
+      "fulfilmentShipping": "Shipping",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "continueInBag": "Continue in my bag"
     }
   }
 }

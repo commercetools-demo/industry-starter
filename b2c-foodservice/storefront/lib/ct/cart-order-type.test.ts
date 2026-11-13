@@ -55,6 +55,9 @@ vi.mock('@/lib/ct/client', () => ({
     }),
   },
 }));
+vi.mock('@/lib/ct/product-detail', () => ({ getProductBySku: async () => ({ id: 'p1', masterVariant: { sku: 'S' }, variants: [] }), getRecurrencePolicies: async () => [], getRecurrencePolicyByKey: async () => null }));
+vi.mock('@/lib/ct/product-selections', () => ({ getProductBrand: async () => 'malva-coffee' }));
+vi.mock('@/lib/ct/channels', () => ({ getBrandChannelId: async () => undefined, getStoresForCountry: async () => [] }));
 vi.mock('@/lib/ct/cart-enrich', async () => ({ getCartEnrichment: async () => (await import('@/lib/mappers/cart')).EMPTY_ENRICHMENT }));
 vi.mock('next-intl/server', () => ({ getTranslations: async () => (key: string) => key }));
 vi.mock('@/lib/env', () => ({ getEnv: () => ({ SESSION_SECRET: 'a'.repeat(40) }) }));

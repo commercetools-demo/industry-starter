@@ -1,0 +1,16 @@
+This directory tree contains material adapted from the commerce-agents reference
+implementation, Copyright 2026 Anthropic PBC, licensed under the Apache License 2.0
+(see third_party/commerce-agents/LICENSE).
+
+Upstream: https://github.com/anthropics/commerce-agents
+Upstream commit read for the port: fd4d59224ab96b43c6dc6888207c67b3bd5a24cf
+
+Adapted files (each carries an "Adapted from <upstream path>; changes: ..." line, as
+Apache-2.0 section 4(b) requires). Keep this list in step with lib/agent/:
+
+  lib/agent/common/*        from commerce-common/commerce_common/*
+  lib/agent/shopping/*      from shopping-agent/core/shopping_agent/*
+  lib/agent/runtime/*       from shopping-agent/runtime-messages-api/shopping_agent_runtime/*
+  lib/agent/skills/*/SKILL.md   from shopping-agent/skills/*/SKILL.md (unchanged)
+  components/assistant/*    from examples/web-shared/* and examples/retail/storefront-web/*
+  hooks/assistantApi.ts     from examples/web-shared/api.ts

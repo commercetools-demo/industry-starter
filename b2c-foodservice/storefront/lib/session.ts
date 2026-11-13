@@ -17,6 +17,8 @@ export interface Session {
   currency?: string;
   locale?: string;
   collectionStoreKey?: string;
+  /** The shopping assistant's server-side session id (T-25). Opaque; the conversation itself lives in the agent store. */
+  agentSessionId?: string;
 }
 
 export const SESSION_COOKIE = 'malva-session';
@@ -35,6 +37,7 @@ const SESSION_KEYS = [
   'currency',
   'locale',
   'collectionStoreKey',
+  'agentSessionId',
 ] as const satisfies ReadonlyArray<keyof Session>;
 
 /** Keeps only the known keys with string values; drops anything else (tokens, card data). */

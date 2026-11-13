@@ -1,13 +1,15 @@
 import 'server-only';
-import type { Cart, CartAddLineItemAction, CartUpdateAction } from '@commercetools/platform-sdk';
+import type { Cart, CartAddLineItemAction, CartUpdateAction, ProductProjection } from '@commercetools/platform-sdk';
 import { getTranslations } from 'next-intl/server';
+import { BRANDS, DEFAULT_BRAND, brandOfLineFields, type BrandSlug } from '@/lib/brands';
 import { isCodeRejectionReason, type CodeRejectionReason } from '@/lib/cart/discount-reasons';
 import { planFulfilmentSwitch, planStoreChange, shippingMethodKeyFor, type PlanLine, type PlanOp } from '@/lib/cart/plan';
 import { getCartEnrichment } from '@/lib/ct/cart-enrich';
 import { apiRoot } from '@/lib/ct/client';
-import { getStoresForCountry } from '@/lib/ct/channels';
+import { getBrandChannelId, getStoresForCountry } from '@/lib/ct/channels';
 import { getInventoryDetail, getStoreStock } from '@/lib/ct/inventory';
 import { orderTypeCartActions, withOrderType } from '@/lib/ct/order-type';
+import { getProductBrand } from '@/lib/ct/product-selections';
 import { getProductBySku, getRecurrencePolicies, getRecurrencePolicyByKey } from '@/lib/ct/product-detail';
 import { updateWithRetry } from '@/lib/ct/retry';
 import type { DomainErrorCode } from '@/lib/api-domain';
@@ -109,7 +111,7 @@ export class LineRejected extends Error {
 }
 
 /** What the validated input resolved to: the store channel for collect, the policy id for subscribe. */
-export interface LineTargets { channelId?: string; policyId?: string }
+export interface LineTargets { channelId?: string; policyId?: string; brand?: BrandSlug; brandChannelId?: string }
 
 const LINE_TYPE = { typeId: 'type', key: 'mcf-line-fulfilment' } as const;
 
@@ -126,8 +128,13 @@ export function buildAddLineAction(input: AddLineInput, targets: LineTargets = {
     action: 'addLineItem' as const,
     sku: input.sku,
     quantity: input.quantity,
-    custom: { type: LINE_TYPE, fields: { fulfilment: input.fulfilment } },
+    // `brand` (the line's brand) is written whenever the server resolved it; the cart UI groups lines by it.
+    custom: { type: LINE_TYPE, fields: { fulfilment: input.fulfilment, ...(targets.brand ? { brand: targets.brand } : {}) } },
   };
+  // A brand with its own inventory channel (Malva Drinks) reserves stock there; the line stays a delivery line.
+  if (input.fulfilment === 'delivery' && targets.brandChannelId) {
+    return { ...base, supplyChannel: { typeId: 'channel', id: targets.brandChannelId } };
+  }
   if (input.fulfilment === 'collect') {
     if (!targets.channelId) throw new LineRejected('unknown_store', 400);
     return { ...base, supplyChannel: { typeId: 'channel', id: targets.channelId } };
@@ -143,8 +150,13 @@ export function buildAddLineAction(input: AddLineInput, targets: LineTargets = {
 }
 
 /** Checks a collect or subscribe line against the project before the cart is touched. Delivery needs nothing. */
-async function resolveTargets(market: CartMarket, input: AddLineInput): Promise<LineTargets> {
-  if (input.fulfilment === 'delivery') return {};
+async function resolveTargets(market: CartMarket, input: AddLineInput, brand: BrandSlug, projection: ProductProjection): Promise<LineTargets> {
+  const brandChannelId = await getBrandChannelId(brand);
+  const brandTargets = { brand, ...(brandChannelId ? { brandChannelId } : {}) };
+  if (input.fulfilment === 'delivery') return brandTargets;
+  // A brand without pickup (Malva Drinks) has no collect line and no subscription.
+  if (input.fulfilment === 'collect' && !BRANDS[brand].pickup) throw new LineRejected('collect_not_available_in_market', 400);
+  if (input.fulfilment === 'subscribe' && brand !== DEFAULT_BRAND) throw new LineRejected('price_unavailable', 422);
   if (input.fulfilment === 'collect') {
     if (!marketForCountry(market.country)?.collection) throw new LineRejected('collect_not_available_in_market', 400);
     const stores = await getStoresForCountry(market.country, market.locale);
@@ -152,12 +164,10 @@ async function resolveTargets(market: CartMarket, input: AddLineInput): Promise<
     if (!store) throw new LineRejected('unknown_store', 400);
     const available = await getStoreStock(input.sku, store.id);
     if (available < input.quantity) throw new LineRejected('not_available_for_collection', 409, { available });
-    return { channelId: store.id };
+    return { ...brandTargets, channelId: store.id };
   }
   const policy = await getRecurrencePolicyByKey(input.recurrencePolicyKey, market.locale);
   if (!policy) throw new LineRejected('unknown_policy', 400);
-  const projection = await getProductBySku(input.sku, market);
-  if (!projection) throw new AppError('not_found', 404);
   const variant = [projection.masterVariant, ...projection.variants].find((v) => v.sku === input.sku);
   const subscribable = isSubscribable(variant, projection.attributes);
   const hasPrice = (variant?.recurrencePrices ?? []).some(
@@ -168,7 +178,7 @@ async function resolveTargets(market: CartMarket, input: AddLineInput): Promise<
       p.value.centAmount > 0,
   );
   if (!subscribable || !hasPrice) throw new LineRejected('price_unavailable', 422);
-  return { policyId: policy.id };
+  return { ...brandTargets, policyId: policy.id };
 }
 
 /** `subscribable` is a variant attribute (the seed writes it into every variant, product-level `attributes` is empty); a product-level one is accepted too. */
@@ -185,7 +195,11 @@ export async function addLine(
   market: CartMarket,
   input: AddLineInput,
 ): Promise<{ cart: CartSummary; session: Session }> {
-  const targets = await resolveTargets(market, input);
+  // The server decides the line's brand from the product (selection membership), never from the request.
+  const projection = await getProductBySku(input.sku, market);
+  if (!projection) throw new AppError('not_found', 404);
+  const brand = await getProductBrand(projection.id);
+  const targets = await resolveTargets(market, input, brand, projection);
   const action = buildAddLineAction(input, targets);
   let next = session;
   let cart = session.cartId ? await getActiveCart(session.cartId) : null;
@@ -427,7 +441,8 @@ function planLines(cart: Cart): PlanLine[] {
     sku: l.variant?.sku ?? '',
     quantity: l.quantity,
     fulfilment: fulfilmentOf(l),
-    ...(l.supplyChannel ? { channelId: l.supplyChannel.id } : {}),
+    // Only a collect line's channel is a store; a brand's inventory channel (Malva Drinks) is not part of the fulfilment plans.
+    ...(l.supplyChannel && fulfilmentOf(l) === 'collect' ? { channelId: l.supplyChannel.id } : {}),
     subscribe: Boolean(l.recurrenceInfo) || fulfilmentOf(l) === 'subscribe',
   }));
 }
@@ -468,7 +483,9 @@ async function resolveStore(cart: Cart, market: CartMarket, session: Session, st
  */
 export async function switchFulfilment(session: Session, market: CartMarket, lineId: string, input: SwitchInput): Promise<CartView> {
   const ct = await mutateCart(session, async (current) => {
-    lineOrThrow(current, lineId);
+    const target = lineOrThrow(current, lineId);
+    // A line of a brand without pickup (Malva Drinks) is never collected.
+    if (input.fulfilment === 'collect' && !BRANDS[brandOfLineFields(target.custom?.fields)].pickup) throw new LineRejected('collect_not_available_in_market', 400);
     const store = input.fulfilment === 'collect' ? await resolveStore(current, market, session, input.storeKey) : undefined;
     const plan = planFulfilmentSwitch(planLines(current), lineId, store ? { fulfilment: 'collect', channelId: store.id } : { fulfilment: 'delivery' });
     if (plan.kind === 'reject') throw new LineRejected(plan.reason, plan.reason === 'line_not_found' ? 404 : 422);

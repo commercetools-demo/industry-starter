@@ -5,6 +5,7 @@ const h = vi.hoisted(() => ({ session: {} as { customerId?: string }, redirect: 
 vi.mock('@/lib/env', () => ({ getEnv: () => ({ SESSION_SECRET: 'a'.repeat(40) }) }));
 vi.mock('@/lib/session', () => ({ getSession: async () => h.session }));
 vi.mock('next-intl/server', () => ({ getLocale: async () => 'en-CA' }));
+vi.mock('@/lib/brand-server', () => ({ getBrand: async () => ({ slug: 'malva-drinks' }) }));
 vi.mock('@/i18n/routing', () => ({
   redirect: (arg: unknown) => {
     h.redirect(arg);
@@ -26,6 +27,7 @@ describe('guards', () => {
     expect(h.redirect).toHaveBeenCalledWith({
       href: '/account/sign-in?redirect=%2Faccount%2Forders',
       locale: 'en-CA',
+      brand: 'malva-drinks',
     });
   });
 

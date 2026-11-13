@@ -93,7 +93,7 @@ export function viewLine(o: Partial<CartLine> & { id: string; fulfilment?: CartL
   return {
     sku: `SKU-${o.id}`, productId: `p-${o.id}`, slug: `slug-${o.id}`, name: `Product ${o.id}`, imageAlt: `Product ${o.id}`,
     variantSummary: 'Intensity 8 · 10 capsules', quantity, unitPrice, total: { ...unitPrice, centAmount: unitPrice.centAmount * quantity },
-    groupKey: groupKeyOf({ fulfilment, store }), notices: [], maxQuantity: 99, ...rest, fulfilment, ...(store ? { store } : {}),
+    brand: 'malva-coffee', groupKey: groupKeyOf({ fulfilment, store }), notices: [], maxQuantity: 99, ...rest, fulfilment, ...(store ? { store } : {}),
   };
 }
 

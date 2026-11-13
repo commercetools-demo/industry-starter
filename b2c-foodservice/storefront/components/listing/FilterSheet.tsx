@@ -7,7 +7,7 @@ import Button from '@/components/ui/Button';
 import Drawer from '@/components/ui/Drawer';
 import Icon from '@/components/ui/Icon';
 import { fetchJson } from '@/hooks/fetcher';
-import { useRouter } from '@/i18n/routing';
+import { useBrand, useRouter } from '@/i18n/routing';
 import { FACET_BY_NAME, facetMode } from '@/lib/search/facet-config';
 import { listingHref, serializeListingParams, toggleFacetValue, type ListingParams, type ListingScope } from '@/lib/search/params';
 import type { FacetGroup as FacetGroupModel } from '@/lib/types';
@@ -31,6 +31,7 @@ export default function FilterSheet({
   const t = useTranslations('plp.filters');
   const locale = useLocale();
   const router = useRouter();
+  const brand = useBrand();
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<ListingParams>(params);
   const [count, setCount] = useState(total);
@@ -53,6 +54,7 @@ export default function FilterSheet({
     qs.set('scope', apiScope);
     qs.set('countOnly', '1');
     qs.set('locale', locale);
+    qs.set('brand', brand);
     let cancelled = false;
     const timer = setTimeout(() => {
       fetchJson<{ total: number }>(`/api/search?${qs.toString()}`)
@@ -67,7 +69,7 @@ export default function FilterSheet({
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [draftKey, open, apiScope, locale]);
+  }, [draftKey, open, apiScope, locale, brand]);
 
   const shown = useMemo(
     () =>

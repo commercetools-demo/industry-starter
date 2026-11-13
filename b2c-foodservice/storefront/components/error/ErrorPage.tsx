@@ -3,9 +3,9 @@
 import { useLocale, useTranslations } from 'next-intl';
 import Button, { buttonClasses } from '@/components/ui/Button';
 import ButtonLink from '@/components/ui/ButtonLink';
-import { Link, usePathname } from '@/i18n/routing';
+import { Link, useBrand, usePathname } from '@/i18n/routing';
 import { buildListingHref } from '@/lib/nav/listing-href';
-import { STATIC_TOP_CATEGORIES, accountHref, contactHref, searchHref, signInHref } from '@/lib/routes';
+import { accountHref, contactHref, searchHref, signInHref, staticTopCategories } from '@/lib/routes';
 
 export type ErrorKind = 'not-found' | 'server-error' | 'forbidden' | 'unauthorized';
 
@@ -33,6 +33,7 @@ export default function ErrorPage({ kind, reference, onRetry }: ErrorPageProps) 
   const t = useTranslations('error');
   const tNav = useTranslations('shell.nav');
   const locale = useLocale();
+  const brand = useBrand();
   const pathname = usePathname();
   const key = KEYS[kind];
   const text = kind === 'unauthorized' ? t('unauthorized.text') : t(`${key}.text`);
@@ -52,7 +53,7 @@ export default function ErrorPage({ kind, reference, onRetry }: ErrorPageProps) 
 
         {kind === 'not-found' ? (
           <>
-            <form role="search" method="get" action={`/${locale}${searchHref()}`} className="mt-8 flex gap-2">
+            <form role="search" method="get" action={`/${brand}/${locale}${searchHref()}`} className="mt-8 flex gap-2">
               <label htmlFor="error-search" className="sr-only">
                 {t('searchLabel')}
               </label>
@@ -70,13 +71,13 @@ export default function ErrorPage({ kind, reference, onRetry }: ErrorPageProps) 
             <nav aria-label={t('browse')} className="mt-8">
               <p className="eyebrow m-0 mb-3">{t('browse')}</p>
               <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-                {STATIC_TOP_CATEGORIES.map((slug) => (
+                {staticTopCategories(brand).map((slug) => (
                   <li key={slug}>
                     <Link
                       href={buildListingHref(slug)}
                       className="transition-state inline-flex min-h-9 items-center rounded-pill border border-line-2 bg-surface px-4 py-[7px] text-[13px] font-medium text-ink hover:border-ink"
                     >
-                      {tNav(slug)}
+                      {tNav(slug as 'pods')}
                     </Link>
                   </li>
                 ))}

@@ -1,5 +1,6 @@
 import 'server-only';
 import { HOME_CONTENT } from '@/content/home';
+import type { BrandSlug } from '@/lib/brands';
 import { idByKey, rootCategoryName } from '@/lib/category-tree';
 import { getCategoryTree } from '@/lib/ct/categories';
 import { getChannelByKey } from '@/lib/ct/channels';
@@ -22,6 +23,8 @@ export interface HomeCtx {
   currency: string;
   /** Chosen store from the session (may be stale or unknown). */
   collectionStoreKey?: string;
+  /** The brand of the page; scopes the category tree and the product searches to its product selection. */
+  brand?: BrandSlug;
 }
 
 export const HOME_PRODUCT_LIMIT = 4;
@@ -37,7 +40,7 @@ export async function section<T>(name: string, run: () => Promise<T>, empty: T):
 }
 
 export const getHomeTree = (ctx: HomeCtx): Promise<Category[]> =>
-  section('tree', () => getCategoryTree(ctx.locale), [] as Category[]);
+  section('tree', () => getCategoryTree(ctx.locale, ctx.brand), [] as Category[]);
 
 /** The session's store when it exists in this market's channel list; null in a market without collection. */
 export function getHomeStore(ctx: HomeCtx): Promise<Store | null> {
@@ -74,9 +77,23 @@ export function searchHomeProducts(
   return section(collection, async () => {
     const params = parseListingParams({ f_collection: collection }, 'shop');
     const outcome = await searchProducts(
-      { locale: ctx.locale, currency: ctx.currency, country: ctx.country, ...(store ? { storeChannelId: store.id } : {}) },
+      { locale: ctx.locale, currency: ctx.currency, country: ctx.country, ...(ctx.brand ? { brand: ctx.brand } : {}), ...(store ? { storeChannelId: store.id } : {}) },
       { categoryIdByKey: idByKey(tree) },
       params,
+      { limit: HOME_PRODUCT_LIMIT, withFacets: false },
+    );
+    if (outcome.status !== 'ok' || outcome.ids.length === 0) return [];
+    return getListingProjections(outcome.ids, cardContext(ctx, tree, store));
+  }, [] as ProductSummary[]);
+}
+
+/** Up to four products of the brand in the listing's default order (a brand without badges, Malva Drinks). */
+export function searchBrandRange(ctx: HomeCtx, tree: Category[], store: Store | null): Promise<ProductSummary[]> {
+  return section('range', async () => {
+    const outcome = await searchProducts(
+      { locale: ctx.locale, currency: ctx.currency, country: ctx.country, ...(ctx.brand ? { brand: ctx.brand } : {}), ...(store ? { storeChannelId: store.id } : {}) },
+      { categoryIdByKey: idByKey(tree) },
+      parseListingParams({}, 'shop'),
       { limit: HOME_PRODUCT_LIMIT, withFacets: false },
     );
     if (outcome.status !== 'ok' || outcome.ids.length === 0) return [];
@@ -89,7 +106,7 @@ export function countSubscribable(ctx: HomeCtx): Promise<number> {
   return section('subscribable', async () => {
     const params = parseListingParams({ f_collection: 'subscribable' }, 'shop');
     const outcome = await searchProducts(
-      { locale: ctx.locale, currency: ctx.currency, country: ctx.country },
+      { locale: ctx.locale, currency: ctx.currency, country: ctx.country, ...(ctx.brand ? { brand: ctx.brand } : {}) },
       {},
       params,
       { limit: 1, withFacets: false },

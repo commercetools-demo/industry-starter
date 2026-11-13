@@ -5,7 +5,9 @@ import { deleteTargets, isSeedOwned, type Target } from './cleanup';
 import { CONTRACT_KEYS } from './data/base';
 import { CATEGORIES } from './data/categories';
 import { shoppingListDraft, CUSTOMERS } from './data/customers';
+import { CHANNEL_DRINKS, selectionDrafts } from './data/brands';
 import { typeDrafts } from './data/custom-types';
+import { DRINK_CATEGORIES, DRINK_PRODUCT_KEYS, drinkInventoryDrafts, drinkProductType } from './data/drinks';
 import { cartDiscountDrafts, discountCodeDrafts, productDiscountDrafts } from './data/discounts';
 import { inventoryDrafts, recurrencePolicyDrafts } from './data/extras';
 import { productTypeDrafts } from './data/product-types';
@@ -35,15 +37,16 @@ export function resetTargets(): { kind: Kind; keys: string[] }[] {
     { kind: 'discount-codes', keys: keys(discountCodeDrafts) },
     { kind: 'cart-discounts', keys: keys(cartDiscountDrafts) },
     { kind: 'product-discounts', keys: keys(productDiscountDrafts()) },
-    { kind: 'inventory', keys: keys(inventoryDrafts()) },
-    { kind: 'products', keys: PRODUCTS.map((p) => p.key) },
+    { kind: 'inventory', keys: [...keys(inventoryDrafts()), ...keys(drinkInventoryDrafts())] },
+    { kind: 'product-selections', keys: keys(selectionDrafts) },
+    { kind: 'products', keys: [...PRODUCTS.map((p) => p.key), ...DRINK_PRODUCT_KEYS] },
     { kind: 'shipping-methods', keys: keys(shippingMethodDrafts) },
     { kind: 'tax-categories', keys: keys(taxCategoryDrafts) },
     { kind: 'zones', keys: keys(zoneDrafts) },
-    { kind: 'categories', keys: CATEGORIES.map((c) => c.key).reverse() },
-    { kind: 'product-types', keys: keys(productTypeDrafts) },
+    { kind: 'categories', keys: [...DRINK_CATEGORIES.map((c) => c.key), ...CATEGORIES.map((c) => c.key).reverse()] },
+    { kind: 'product-types', keys: [...keys(productTypeDrafts), drinkProductType.key as string] },
     { kind: 'recurrence-policies', keys: keys(recurrencePolicyDrafts) },
-    { kind: 'channels', keys: keys(channelDrafts()) },
+    { kind: 'channels', keys: [...keys(channelDrafts()), CHANNEL_DRINKS] },
     { kind: 'types', keys: keys(typeDrafts) },
     // Definition order: `ordered` references `preparing`, so the referencing state goes first.
     { kind: 'states', keys: keys(stateDrafts) },

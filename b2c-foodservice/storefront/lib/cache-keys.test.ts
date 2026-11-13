@@ -57,7 +57,7 @@ describe('cachedPublic', () => {
 
   it('Only public kinds can be cached (kind is one of the TTL keys)', () => {
     expect(Object.keys(TTL).sort()).toEqual(
-      ['attributeLabels', 'categories', 'channels', 'project', 'recurrencePolicies', 'shippingMethods'],
+      ['attributeLabels', 'categories', 'channels', 'productSelections', 'project', 'recurrencePolicies', 'shippingMethods'],
     );
     expect(Object.keys(TAG).sort()).toEqual(Object.keys(TTL).sort());
   });

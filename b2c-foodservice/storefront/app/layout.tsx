@@ -1,3 +1,4 @@
+import { getBrand } from '@/lib/brand-server';
 import type { Metadata, Viewport } from 'next';
 import { Archivo, Roboto, Roboto_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
@@ -53,8 +54,10 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  // The proxy sets the brand of the URL; it selects the colour token set (`html[data-brand]`, see tokens.css).
+  const brand = await getBrand();
   return (
-    <html lang={locale} className={`${archivo.variable} ${roboto.variable} ${robotoMono.variable}`}>
+    <html lang={locale} data-brand={brand.theme} className={`${archivo.variable} ${roboto.variable} ${robotoMono.variable}`}>
       <head>
         <TrackerScripts gate={false} />
       </head>

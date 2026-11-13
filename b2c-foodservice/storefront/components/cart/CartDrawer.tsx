@@ -7,7 +7,10 @@ import Button from '@/components/ui/Button';
 import Drawer from '@/components/ui/Drawer';
 import { useShellUi } from '@/context/shell-ui-context';
 import { useCart } from '@/hooks/useCart';
+import { useBrand } from '@/i18n/routing';
+import { brandSections } from '@/lib/cart/brand-sections';
 import type { Cart } from '@/lib/types';
+import BrandHeading from './BrandHeading';
 import DrawerLine from './DrawerLine';
 import DroppedLinesNotice from './DroppedLinesNotice';
 import EmptyCart from './EmptyCart';
@@ -95,6 +98,7 @@ export default function CartDrawer() {
   const { cartOpen, closeCart, registerCartDrawer } = useShellUi();
   const { cart, isLoading, error, mutate } = useCart({ enabled: cartOpen });
   const ui = useCartUi();
+  const brand = useBrand();
 
   useEffect(() => {
     registerCartDrawer(true);
@@ -115,20 +119,26 @@ export default function CartDrawer() {
       );
     }
     if (!cart || empty) return <EmptyCart variant="drawer" onNavigate={closeCart} />;
+    const sections = brandSections(cart, brand);
     return (
       <>
         <div className="mt-2">
           <FreeShippingProgress freeShipping={cart.freeShipping} />
         </div>
-        {cart.groups.map((group) => (
-          <section key={group.key}>
-            <GroupHeading group={group} freeShipping={cart.freeShipping} compact />
-            <ul className="m-0 list-none p-0">
-              {linesOf(cart, group.lineIds).map((line) => (
-                <DrawerLine key={line.id} line={line} ui={ui} onNavigate={closeCart} />
-              ))}
-            </ul>
-          </section>
+        {sections.map((brandSection) => (
+          <div key={brandSection.brand}>
+            {sections.length > 1 ? <BrandHeading section={brandSection} level={3} /> : null}
+            {brandSection.groups.map((group) => (
+              <section key={`${brandSection.brand}:${group.key}`}>
+                <GroupHeading group={group} freeShipping={cart.freeShipping} compact />
+                <ul className="m-0 list-none p-0">
+                  {linesOf(cart, group.lineIds).map((line) => (
+                    <DrawerLine key={line.id} line={line} ui={ui} onNavigate={closeCart} />
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
         ))}
       </>
     );

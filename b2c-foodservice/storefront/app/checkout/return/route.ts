@@ -1,3 +1,4 @@
+import { DEFAULT_BRAND } from '@/lib/brands';
 import { NextResponse } from 'next/server';
 import { handle } from '@/lib/api';
 import { finalizeWithPolling } from '@/lib/checkout/finalize';
@@ -12,7 +13,7 @@ export const dynamic = 'force-dynamic';
 const ORDER_NUMBER = /^MC-[0-9A-Z]{10}(-[A-H])?$/;
 
 /**
- * GET /checkout/return?orderId=<id> or ?orderNumber=<n> (outside `[locale]`; the payment return URL of the Application, used by
+ * GET /checkout/return?orderId=<id> or ?orderNumber=<n> (outside `[brand]/[locale]`; the payment return URL of the Application, used by
  * redirect payment methods such as 3-D Secure). Finalises the order and answers `303` to
  * `/<order locale>/checkout/confirmation/<orderId>`; the locale is the order's own when it is one of ours, never taken from the
  * query. A payment of a mixed bag that is not the last returns to `/<locale>/checkout?resume=1&part=<next>` for the next payment.
@@ -25,7 +26,7 @@ export const GET = handle('/checkout/return', async (req) => {
   const ref =
     orderId && ORDER_ID_PATTERN.test(orderId) ? { orderId } : orderNumber && ORDER_NUMBER.test(orderNumber) ? { orderNumber } : null;
   const to = (path: string) => NextResponse.redirect(new URL(path, url.origin), 303);
-  const none = `/${DEFAULT_LOCALE.locale}/checkout/confirmation`;
+  const none = `/${DEFAULT_BRAND}/${DEFAULT_LOCALE.locale}/checkout/confirmation`;
   if (!ref) return to(none);
 
   const order = await finalizeWithPolling(ref);
@@ -34,6 +35,6 @@ export const GET = handle('/checkout/return', async (req) => {
 
   const session = await getSession();
   const placement = await afterPlacement(session, await readPayParts(), order);
-  const res = to(placement.next !== null ? `/${locale}/checkout?resume=1&part=${placement.next}` : `/${locale}/checkout/confirmation/${encodeURIComponent(order.id)}`);
+  const res = to(placement.next !== null ? `/${DEFAULT_BRAND}/${locale}/checkout?resume=1&part=${placement.next}` : `/${DEFAULT_BRAND}/${locale}/checkout/confirmation/${encodeURIComponent(order.id)}`);
   return applyPlacement(res, placement);
 });

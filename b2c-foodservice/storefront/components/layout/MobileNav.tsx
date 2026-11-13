@@ -11,16 +11,17 @@ import { Link } from '@/i18n/routing';
 import { cn } from '@/lib/cn';
 import { buildListingHref } from '@/lib/nav/listing-href';
 import { MEGA_CONFIG, PRIMARY_NAV, findCategoryByKey, resolveNavHref, type MenuId } from '@/lib/nav/mega-config';
+import { BRANDS, DEFAULT_BRAND, type BrandConfig } from '@/lib/brands';
 import type { Category } from '@/lib/types';
 import { marketForLocale } from '@/lib/utils';
 
 const ROW = 'block w-full border-b border-line py-4 text-left font-display text-[24px] font-semibold text-ink';
 
 /** Menu toggle (under 820px) and the full-screen slide-in panel with an accordion for sub-categories. */
-export default function MobileNav({ categories }: { categories: Category[] }) {
+export default function MobileNav({ categories, brand = BRANDS[DEFAULT_BRAND] }: { categories: Category[]; brand?: BrandConfig }) {
   const t = useTranslations('shell');
-  const tCommon = useTranslations('common');
   const tLocale = useTranslations('locale');
+  const tBrands = useTranslations('shell.brandSwitcher.brands');
   const market = marketForLocale(useLocale());
   const { mobileNavOpen, setMobileNavOpen, setLocaleOpen } = useShellUi();
   const { stores, open: openStorePicker } = useCollectionStore();
@@ -29,7 +30,8 @@ export default function MobileNav({ categories }: { categories: Category[] }) {
   useDialog({ open: mobileNavOpen, onClose: () => setMobileNavOpen(false), ref: panel });
 
   const close = () => setMobileNavOpen(false);
-  const showStore = market.collection && stores.length > 0;
+  const showStore = brand.pickup && market.collection && stores.length > 0;
+  const plainNav = brand.theme !== 'coffee';
 
   return (
     <>
@@ -58,13 +60,22 @@ export default function MobileNav({ categories }: { categories: Category[] }) {
           {/* The close button comes first in the DOM so it receives focus on open; the wordmark is shown first. */}
           <IconButton label={t('menu.close')} icon="x" onClick={close} className="order-2" />
           <Link prefetch={false} href="/" onClick={close} className="wordmark order-1 text-ink no-underline">
-            {tCommon('brand')}
+            {tBrands(brand.slug)}
           </Link>
         </div>
 
         <nav aria-label={t('nav.label')} className="wrap flex-1 pb-10">
           <ul className="m-0 list-none p-0">
-            {PRIMARY_NAV.map((item) => {
+            {plainNav
+              ? categories.map((category) => (
+                  <li key={category.id}>
+                    <Link prefetch={false} href={buildListingHref(category.slug)} onClick={close} className={ROW}>
+                      {category.name}
+                    </Link>
+                  </li>
+                ))
+              : null}
+            {(plainNav ? [] : PRIMARY_NAV).map((item) => {
               const category = findCategoryByKey(categories, item.categoryKey);
               const href = category ? buildListingHref(category.slug) : '/';
               const label = t(`nav.${item.labelKey}`);

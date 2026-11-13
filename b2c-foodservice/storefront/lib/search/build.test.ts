@@ -113,3 +113,24 @@ describe('buildSearchRequest', () => {
     expect([req.limit, req.offset]).toEqual([24, 48]);
   });
 });
+
+describe('keyword search with a market filter (regression)', () => {
+  // Product Search rejects a compound expression that mixes a multi-level filter (product selection + price) with a text
+  // expression ("Expressions nesting level are incompatible"). The market and selection criteria must sit in the same flat `and`
+  // as the text, never inside a nested `filter` next to it.
+  const selCtx = { ...ctx, selectionId: 'sel-coffee' };
+  const req = buildSearchRequest(selCtx, {}, params({ q: 'Bean' }), opts);
+
+  it('the query is a flat and with the text as one of its direct criteria', () => {
+    const query = req.query as { and?: SearchClause[] };
+    expect(query.and).toBeDefined();
+    expect(query.and?.some((c) => 'filter' in c)).toBe(false);
+    expect(json(req.query)).toContain('"fullText"');
+  });
+
+  it('keeps the market and the selection in the same and as the text', () => {
+    const text = json(req.query);
+    expect(text).toContain('"variants.prices.country"');
+    expect(text).toContain('"productSelections"');
+  });
+});

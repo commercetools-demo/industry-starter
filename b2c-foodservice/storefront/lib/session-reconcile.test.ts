@@ -52,7 +52,7 @@ describe('URL market is the source of truth (FIX-2)', () => {
 
   it('the proxy rewrites the request cookie so the page renders in the URL market, and sets both cookies', async () => {
     const token = await createSessionToken({ ...CA, cartId: 'cart-1' });
-    const request = new NextRequest('http://localhost/en-US', { headers: { cookie: `malva-session=${token}; malva-locale=en-CA` } });
+    const request = new NextRequest('http://localhost/malva-coffee/en-US', { headers: { cookie: `malva-session=${token}; malva-locale=en-CA` } });
     const res = await proxy(request);
     const set = res.headers.get('set-cookie') ?? '';
     expect(set).toContain('malva-session=');
@@ -68,7 +68,7 @@ describe('URL market is the source of truth (FIX-2)', () => {
     const cookie = `malva-session=${token}; malva-locale=en-CA`;
     // Next removes its own prefetch headers before the proxy runs: what remains is what the browser sends (a fetch is dest `empty`).
     for (const headers of [{ 'sec-fetch-dest': 'empty' }, { 'sec-purpose': 'prefetch' }, { purpose: 'prefetch' }] as Record<string, string>[]) {
-      const request = new NextRequest('http://localhost/en-US/p/casa-espresso/MCF-POD-CASA-10?_rsc=x', { headers: { cookie, ...headers } });
+      const request = new NextRequest('http://localhost/malva-coffee/en-US/p/casa-espresso/MCF-POD-CASA-10?_rsc=x', { headers: { cookie, ...headers } });
       const res = await proxy(request);
       expect(res.headers.get('set-cookie')).toBeNull();
       // the page still renders in the URL market, from the request cookies
@@ -76,7 +76,7 @@ describe('URL market is the source of truth (FIX-2)', () => {
     }
     // a page load of the same URL still moves the session (document, or a client that sends no Sec-Fetch-Dest)
     for (const extra of [{ 'sec-fetch-dest': 'document' }, {}] as Record<string, string>[]) {
-      const visit = await proxy(new NextRequest('http://localhost/en-US/cart', { headers: { cookie, ...extra } }));
+      const visit = await proxy(new NextRequest('http://localhost/malva-coffee/en-US/cart', { headers: { cookie, ...extra } }));
       expect(visit.headers.get('set-cookie')).toContain('malva-session=');
     }
   });

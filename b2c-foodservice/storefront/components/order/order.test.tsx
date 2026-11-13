@@ -23,8 +23,8 @@ import OrderConfirmation from '@/components/order/OrderConfirmation';
 import OrderStatusTrack, { nodeStates } from '@/components/order/OrderStatusTrack';
 import NoRecentOrder from '@/components/order/NoRecentOrder';
 import { pollInterval, ORDER_POLL_MS } from '@/hooks/useOrderStatus';
-import ConfirmationRoute from '@/app/[locale]/checkout/confirmation/[orderId]/page';
-import ConfirmationIndex from '@/app/[locale]/checkout/confirmation/page';
+import ConfirmationRoute from '@/app/[brand]/[locale]/checkout/confirmation/[orderId]/page';
+import ConfirmationIndex from '@/app/[brand]/[locale]/checkout/confirmation/page';
 
 const store = { storeKey: 'mcf-store-nyc-soho', storeName: 'Malva SoHo', address: '1 Prince St, New York', hours: '08:00–18:00', phone: '+1 212 555 0101', readyMinutes: 15, pickupName: 'Maya Lopez', lat: null, lng: null };
 const collectLine = { id: 'c1', sku: 'S-C1', storeName: 'Malva SoHo', unitCents: 1000, name: 'Pod box', variantSummary: '', quantity: 1, imageUrl: null, fulfilment: 'collect' as const, storeKey: store.storeKey, recurrence: null, priceCents: 1000 };
@@ -94,6 +94,15 @@ describe('confirmation (K-13)', () => {
     expect(screen.getByTestId('collection-card')).toBeInTheDocument();
     expect(screen.getByTestId('shipping-card')).toBeInTheDocument();
     expect(within(screen.getByTestId('subscription-card')).getByText(/Dark Roast · Delivers every 2 weeks/)).toBeInTheDocument();
+  });
+  it('an order of two brands names the brand on each line, a one-brand order does not', () => {
+    render(orderView({ lines: [{ ...shipLine, id: 'c1', brand: 'malva-coffee' }, { ...shipLine, id: 'd1', brand: 'malva-drinks' }] }));
+    const items = screen.getByTestId('order-items');
+    expect([...items.querySelectorAll('[data-brand]')].map((n) => n.textContent)).toEqual(['Malva Coffee', 'Malva Drinks']);
+  });
+  it('a one-brand order shows no brand label', () => {
+    render(orderView({ lines: [{ ...shipLine, brand: 'malva-drinks' }] }));
+    expect(screen.getByTestId('order-items').querySelector('[data-brand]')).toBeNull();
   });
   it('linked orders of one purchase are listed', () => {
     render(orderView({ linked: [{ id: 'ord-2', orderNumber: 'MC-ABCDEFGHJK-B' }] }));
@@ -192,7 +201,7 @@ describe('confirmation pages', () => {
       throw new Error('NEXT_REDIRECT');
     });
     await expect(route('ord-1')).rejects.toThrow('NEXT_REDIRECT');
-    expect(h.redirect).toHaveBeenCalledWith({ href: '/account/sign-in?redirect=%2Fcheckout%2Fconfirmation%2Ford-1', locale: 'en-US' });
+    expect(h.redirect).toHaveBeenCalledWith({ href: '/account/sign-in?redirect=%2Fcheckout%2Fconfirmation%2Ford-1', locale: 'en-US', brand: 'malva-coffee' });
     h.redirect.mockReset();
     h.getSession.mockResolvedValue({ customerId: 'cust-1' });
     const el = await route('ord-1');

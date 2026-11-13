@@ -22,6 +22,7 @@ const ct = vi.hoisted(() => ({
   projections: [] as Record<string, unknown>[],
   session: {} as Record<string, string>,
   projectionCalls: 0,
+  selectionId: '',
 }));
 const cat = (id: string, key: string, slug: string, name: string, parent?: string, orderHint = '0.1') => ({
   id, key, name: { 'en-US': name, 'en-CA': name }, slug: { 'en-US': slug, 'en-CA': slug }, orderHint,
@@ -58,6 +59,8 @@ vi.mock('@/lib/ct/client', () => ({
   },
 }));
 vi.mock('@/lib/session', () => ({ getSession: async () => ct.session }));
+// The brand's product selection id ('' = the project has no selection, so the default brand searches everything).
+vi.mock('@/lib/ct/product-selections', () => ({ getSelectionId: async () => ct.selectionId }));
 
 import { loadCount, loadListing, type ListingView } from '@/lib/listing/load';
 
@@ -83,6 +86,7 @@ beforeEach(() => {
   ct.projections = [];
   ct.session = {};
   ct.projectionCalls = 0;
+  ct.selectionId = '';
 });
 
 describe('loadListing', () => {
@@ -245,5 +249,43 @@ describe('loadCount', () => {
     expect(await loadCount({ locale: 'en-US', scopeParam: 'mcf-cat-nope', searchParams: {} })).toEqual({ status: 'unknown_scope' });
     ct.languages = ['en-US'];
     expect(await loadCount({ locale: 'en-CA', scopeParam: 'shop', searchParams: {} })).toEqual({ status: 'unsupported_language' });
+  });
+});
+
+describe('brand scoping', () => {
+  const facetReply = (...ids: string[]) => ({ total: 0, results: [], facets: [{ name: 'categories', buckets: ids.map((key) => ({ key, count: 1 })) }] });
+
+  it('restricts the search to the brand product selection', async () => {
+    ct.selectionId = 'sel-drinks';
+    // 1st search: the category facet of the brand tree (no hits); 2nd: the listing itself.
+    ct.searchReplies = [facetReply('c-coffee'), reply(1, [1])];
+    ct.projections = [projection(1, 'Ember')];
+    ok(await loadListing({ locale: 'en-US', brand: 'malva-drinks', scope: 'shop', searchParams: {} }));
+    const listing = ct.searchBodies.find((b) => (b as { limit?: number }).limit !== 0)!;
+    expect(JSON.stringify(listing.query)).toContain('"field":"productSelections","value":"sel-drinks"');
+  });
+
+  it('shows only the categories of the selection, with their ancestors', async () => {
+    ct.selectionId = 'sel-coffee';
+    ct.searchReplies = [facetReply('c-pods', 'c-orig'), reply(0, []), facetReply('c-pods', 'c-orig')];
+    ct.projections = [];
+    const v = ok(await loadListing({ locale: 'en-US', brand: 'malva-coffee', scope: 'search', searchParams: { q: 'zzz' } }));
+    expect(v.noResults?.categories.map((c) => c.name)).toEqual(['Pods']);
+  });
+
+  it('a category of another brand is a 404', async () => {
+    ct.selectionId = 'sel-drinks';
+    ct.searchReplies = [facetReply('c-coffee')];
+    await expect(loadListing({ locale: 'en-US', brand: 'malva-drinks', scope: 'category', slug: 'pods', searchParams: {} })).rejects.toThrow('NEXT_NOT_FOUND');
+  });
+
+  it('a brand whose selection is missing has no products, the default brand keeps the whole catalogue', async () => {
+    ct.selectionId = '';
+    const drinks = await loadListing({ locale: 'en-US', brand: 'malva-drinks', scope: 'shop', searchParams: {} });
+    expect(ok(drinks).total).toBe(0);
+    expect(ct.searchBodies).toHaveLength(0);
+    ct.searchReplies = [reply(1, [1])];
+    ct.projections = [projection(1, 'Ember')];
+    expect(ok(await loadListing({ locale: 'en-US', brand: 'malva-coffee', scope: 'shop', searchParams: {} })).total).toBe(1);
   });
 });

@@ -18,3 +18,4 @@ design-systems/**/*.fig
 
 # Local Drive manifest for demo docs (ids stay off the repo)
 docs/.drive-docs
+graphify-out/cache/*

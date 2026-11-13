@@ -1,3 +1,4 @@
+import type { BrandSlug } from '@/lib/brands';
 import 'server-only';
 import { findCategory, idByKey, rootCategoryName } from '@/lib/category-tree';
 import { getCategoryTree } from '@/lib/ct/categories';
@@ -14,7 +15,7 @@ import { marketForLocale } from '@/lib/utils';
 export const RELATED_COUNT = 4;
 export const GOES_WITH_COUNT = 4;
 
-export interface RelatedContext { locale: string; country: string; currency: string; storeChannelId?: string }
+export interface RelatedContext { locale: string; country: string; currency: string; storeChannelId?: string; brand?: BrandSlug }
 
 /** Ids from a search, in order, without duplicates and without the product itself. */
 async function idsFor(
@@ -35,7 +36,7 @@ async function idsFor(
  * listing's market filter and card mapper. Failures are the caller's to catch (the strip is omitted). Exported for O.
  */
 export async function getRelatedProducts(product: Pick<ProductDetail, 'id' | 'breadcrumb'>, ctx: RelatedContext): Promise<ProductSummary[]> {
-  const tree = await getCategoryTree(ctx.locale);
+  const tree = await getCategoryTree(ctx.locale, ctx.brand);
   const chosen: string[] = [];
   const take = (ids: string[]) => {
     for (const id of ids) if (id !== product.id && !chosen.includes(id) && chosen.length < RELATED_COUNT) chosen.push(id);
@@ -54,7 +55,7 @@ export async function getRelatedProducts(product: Pick<ProductDetail, 'id' | 'br
  */
 export async function getCompatibleCapsules(product: Pick<ProductDetail, 'shape' | 'systemKey'>, ctx: RelatedContext): Promise<ProductSummary[]> {
   if (product.shape !== 'machine' || !product.systemKey || !machineTakesCapsules(product.systemKey)) return [];
-  const tree = await getCategoryTree(ctx.locale);
+  const tree = await getCategoryTree(ctx.locale, ctx.brand);
   const pods = findCategory(tree, (c) => c.key === PODS_CATEGORY_KEY);
   if (!pods) return [];
   const ids = await idsFor(ctx, { categoryId: pods.id }, { system: product.systemKey }, GOES_WITH_COUNT, tree);
@@ -62,7 +63,7 @@ export async function getCompatibleCapsules(product: Pick<ProductDetail, 'shape'
 }
 
 /** Market, currency and the chosen store's channel id for the cards' availability line, from the URL locale and the session. */
-export async function getRelatedContext(locale: string): Promise<RelatedContext> {
+export async function getRelatedContext(locale: string, brand?: BrandSlug): Promise<RelatedContext> {
   const market = marketForLocale(locale);
   const session = await getSession();
   let storeChannelId: string | undefined;
@@ -70,5 +71,5 @@ export async function getRelatedContext(locale: string): Promise<RelatedContext>
     const stores = await getStoresForCountry(market.country, locale).catch(() => []);
     storeChannelId = stores.find((s) => s.key === session.collectionStoreKey)?.id;
   }
-  return { locale, country: market.country, currency: market.currency, ...(storeChannelId ? { storeChannelId } : {}) };
+  return { locale, country: market.country, currency: market.currency, ...(brand ? { brand } : {}), ...(storeChannelId ? { storeChannelId } : {}) };
 }

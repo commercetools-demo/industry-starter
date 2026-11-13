@@ -6,19 +6,23 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "agent:skills": "node scripts/skills-generate.mjs",
+    "agent:skills:check": "node scripts/skills-generate.mjs --check",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "check": "npm run lint && npm run typecheck && npm run test",
+    "check": "npm run agent:skills:check && npm run lint && npm run typecheck && npm run test",
     "predeploy": "node scripts/predeploy-check.mjs",
     "test:live": "vitest run --config vitest.live.config.mts",
     "verify:build": "next build && node scripts/check-bundle-secrets.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "1.4.0",
     "@commercetools/checkout-browser-sdk": "^1.7.5",
     "@commercetools/platform-sdk": "^8.27.0",
     "@commercetools/ts-client": "^4.10.0",
-    "@ct-demos/demotools": "^6.1.0",
+    "@ct-demos/demotools": "^6.4.0",
+    "@netlify/blobs": "11.1.7",
     "@zxing/browser": "0.2.1",
     "@zxing/library": "0.23.0",
     "jose": "^6.2.13",
@@ -28,7 +32,8 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "server-only": "^0.0.1",
-    "swr": "^2.5.1"
+    "swr": "^2.5.1",
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",

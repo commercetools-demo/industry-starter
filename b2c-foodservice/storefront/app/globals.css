@@ -3,6 +3,7 @@
 @import './typography.css';
 @import './motion.css';
 @import './home.css';
+@import '../components/assistant/assistant-tokens.css';
 
 /* WCAG 2.4.11: the 72px sticky header never covers a focused element or an anchor target (Q-Q-5). */
 html {

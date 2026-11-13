@@ -1,6 +1,8 @@
 import 'server-only';
 import type { ProductSearchRequest } from '@commercetools/platform-sdk';
+import { DEFAULT_BRAND } from '@/lib/brands';
 import { apiRoot } from '@/lib/ct/client';
+import { getSelectionId } from '@/lib/ct/product-selections';
 import { getProjectLanguages } from '@/lib/ct/project';
 import {
   PAGE_SIZE, buildSearchRequest,
@@ -32,6 +34,17 @@ async function run(body: ReturnType<typeof buildSearchRequest>): Promise<RawResp
   return res.body as unknown as RawResponse;
 }
 
+/**
+ * Adds the brand's product selection id to the context. A brand whose selection is missing from the project has no products,
+ * except the default brand, which then searches everything (a project seeded before multibrand keeps working).
+ */
+export async function withSelection(ctx: SearchContext): Promise<SearchContext | 'empty'> {
+  if (!ctx.brand || ctx.selectionId) return ctx;
+  const selectionId = await getSelectionId(ctx.brand);
+  if (selectionId) return { ...ctx, selectionId };
+  return ctx.brand === DEFAULT_BRAND ? ctx : 'empty';
+}
+
 /** True when the project has this display language (case-insensitive). */
 export async function isLanguageSupported(locale: string): Promise<boolean> {
   const languages = await getProjectLanguages();
@@ -60,6 +73,9 @@ export async function searchProducts(
   opts: { limit?: number; withFacets?: boolean } = {},
 ): Promise<SearchOutcome> {
   if (!(await isLanguageSupported(ctx.locale))) return { status: 'unsupported_language' };
+  const scoped = await withSelection(ctx);
+  if (scoped === 'empty') return { status: 'ok', total: 0, ids: [], matchedSkus: {}, facets: [], page: 1, pageCount: 1 };
+  ctx = scoped;
   const limit = opts.limit ?? PAGE_SIZE;
   const withFacets = opts.withFacets ?? true;
   const offset = limit > 0 ? (params.page - 1) * limit : 0;

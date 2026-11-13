@@ -32,6 +32,9 @@ describe('mapCart', () => {
     expect(fulfilmentOf(ctLine({ id: 'a', sku: 'S', fulfilment: null, channelId: 'ch-soho' }))).toBe('collect');
     expect(fulfilmentOf(ctLine({ id: 'a', sku: 'S', fulfilment: null, policyId: 'rp' }))).toBe('subscribe');
     expect(fulfilmentOf(ctLine({ id: 'a', sku: 'S', fulfilment: null }))).toBe('delivery');
+    // A brand inventory channel (Malva Drinks) is not a collection store, even when the fulfilment field is missing.
+    expect(fulfilmentOf(ctLine({ id: 'a', sku: 'S', fulfilment: null, channelId: 'ch-drinks', custom: { brand: 'malva-drinks' } }))).toBe('delivery');
+    expect(fulfilmentOf(ctLine({ id: 'a', sku: 'S', fulfilment: null, channelId: 'ch-soho', custom: { brand: 'malva-coffee' } }))).toBe('collect');
   });
 
   it('collect line gets the store and readiness', () => {
@@ -163,5 +166,36 @@ describe('mapCart', () => {
   it('an empty cart maps to an empty view', () => {
     const view = mapCart(ctCart({ lines: [] }), enrichment(), ctx);
     expect(view).toMatchObject({ lines: [], groups: [], count: 0, canCheckout: false, blockers: ['empty'] });
+  });
+});
+
+describe('line brand', () => {
+  it('reads the brand custom field and treats a line without it as Malva Coffee', () => {
+    const cart = ctCart({ lines: [
+      ctLine({ id: 'a', sku: 'S1', custom: { brand: 'malva-drinks' } }),
+      ctLine({ id: 'b', sku: 'S2' }),
+      ctLine({ id: 'c', sku: 'S3', custom: { brand: 'nonsense' } }),
+    ] });
+    const view = mapCart(cart, enrichment(), ctx);
+    expect(view.lines.map((l) => l.brand)).toEqual(['malva-drinks', 'malva-coffee', 'malva-coffee']);
+  });
+
+  it('a drinks line with the drinks channel is a delivery line in the delivery group', () => {
+    const cart = ctCart({ lines: [ctLine({ id: 'a', sku: 'S1', channelId: 'ch-drinks', custom: { brand: 'malva-drinks' } })] });
+    const view = mapCart(cart, enrichment(), ctx);
+    expect(view.lines[0]?.fulfilment).toBe('delivery');
+    expect(view.groups.map((g) => g.key)).toEqual(['delivery']);
+  });
+});
+
+describe('pickup per brand', () => {
+  it('a delivery line of Malva Drinks never offers Collect at the session store, a coffee line does', () => {
+    const cart = ctCart({ lines: [
+      ctLine({ id: 'a', sku: 'S1', custom: { brand: 'malva-drinks' } }),
+      ctLine({ id: 'b', sku: 'S2' }),
+    ] });
+    const view = mapCart(cart, enrichment({ inventory: { S1: { online: 5, stores: { 'ch-soho': 5 } }, S2: { online: 5, stores: { 'ch-soho': 5 } } }, sessionStoreKey: STORE_SOHO.key }), ctx);
+    expect(view.lines.find((l) => l.id === 'a')?.collectAtSessionStore).toBeUndefined();
+    expect(view.lines.find((l) => l.id === 'b')?.collectAtSessionStore).toMatchObject({ storeKey: STORE_SOHO.key });
   });
 });

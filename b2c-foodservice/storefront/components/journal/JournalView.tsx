@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 import ContentPage from '@/components/content/ContentPage';
 import FallbackNotice from '@/components/content/FallbackNotice';
 import ArticleCard from '@/components/journal/ArticleCard';
+import { DEFAULT_BRAND, type BrandSlug } from '@/lib/brands';
 import { Link } from '@/i18n/routing';
 import { ARTICLES } from '@/content/journal';
 import { resolveLocalized } from '@/lib/content/localized';
@@ -16,10 +17,12 @@ const CHIP_OFF = `${CHIP} border-line-2 bg-surface text-ink hover:border-ink`;
 /** Journal listing. Filters live in the URL: `?tag=brewing&tag=capsules&q=descale&page=2`. */
 export default function JournalView({
   locale,
+  brand = DEFAULT_BRAND,
   query,
   articles = ARTICLES,
 }: {
   locale: string;
+  brand?: BrandSlug;
   query: JournalQuery;
   articles?: Article[];
 }) {
@@ -47,7 +50,7 @@ export default function JournalView({
         </ul>
       </nav>
 
-      <form role="search" method="get" action={`/${locale}/journal`} className="my-6 flex max-w-[520px] gap-2">
+      <form role="search" method="get" action={`/${brand}/${locale}/journal`} className="my-6 flex max-w-[520px] gap-2">
         {query.tags.map((tag) => (
           <input key={tag} type="hidden" name="tag" value={tag} />
         ))}
