@@ -97,6 +97,8 @@ export function detectPriceChanges(ct: Pick<CtCart, 'lineItems'>, enrichment: Pi
   const out: Record<string, Money> = {};
   for (const l of ct.lineItems) {
     if (fulfilmentOf(l) === 'subscribe') continue;
+    // An external price is set by the shop (a preset bundle's parent, workstream V); the catalogue price does not apply to it.
+    if (l.priceMode === 'ExternalPrice') continue;
     const current = enrichment.products[l.productId]?.variants[l.variant?.sku ?? '']?.currentPrice;
     if (!current) continue;
     const stored = effectivePrice(l);

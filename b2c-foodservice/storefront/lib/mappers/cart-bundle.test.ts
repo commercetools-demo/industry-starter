@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 commercetools GmbH. Freely available, AS IS and UNSUPPORTED.
 import { describe, expect, it } from 'vitest';
-import { mapCart, mapCartSummary } from '@/lib/mappers/cart';
+import { detectPriceChanges, mapCart, mapCartSummary } from '@/lib/mappers/cart';
 import { ctCart, ctLine, enrichment, usd, vt } from '@/test/cart';
 
 const ctx = { locale: 'en-US', t: vt, collection: true } as const;
@@ -95,4 +95,16 @@ describe('preset bundle in the bag (V-12)', () => {
     const row = mapCart(ctCart({ lines: [parent, ...parts] }), enrichment({ inventory }), ctx).lines[0];
     expect(row.notices).toEqual([]);
   });
+
+  it('an externally priced line is never reported as a price change (the catalogue price does not apply)', () => {
+    const external = { ...ctLine({ id: 'E', sku: 'SKU-E', productId: 'pe', quantity: 1, cents: 34916 }), priceMode: 'ExternalPrice' };
+    const normal = ctLine({ id: 'N', sku: 'SKU-N', productId: 'pn', quantity: 1, cents: 1000 });
+    const products = {
+      pe: { variants: { 'SKU-E': { currentPrice: usd(40000) } } },
+      pn: { variants: { 'SKU-N': { currentPrice: usd(1500) } } },
+    } as unknown as Parameters<typeof detectPriceChanges>[1]['products'];
+    const changes = detectPriceChanges(ctCart({ lines: [external, normal] }), { products });
+    expect(Object.keys(changes)).toEqual(['N']);
+  });
 });
+

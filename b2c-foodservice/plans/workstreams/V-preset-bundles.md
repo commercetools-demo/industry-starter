@@ -339,7 +339,7 @@ Common rules: test first, then code. Run `cd storefront && npm run check` (and `
   - a child cannot be changed, removed or switched (`bundle_line_locked`);
 - switching the parent to collect moves every child to the same store, and switching it back moves every child to delivery;
   - switching a shopper's own machine line to collect and back never touches the bundle's machine child.
-- [ ] **V-11 Prices stay right.** Files: `lib/mappers/cart.ts` (`detectPriceChanges` skips external prices), `lib/ct/cart.ts` (`repricePresetBundles` in `getCartView`, D7). Tests: an externally priced line is never "price-updated" by the old check; a component price change re-prices the parent and shows `price-updated` with the old price; a removed preset blocks checkout; at most one update per load.
+- [x] **V-11 Prices stay right.** Files: `lib/mappers/cart.ts` (`detectPriceChanges` skips external prices), `lib/ct/cart.ts` (`repricePresetBundles` in `getCartView`, D7). Tests: an externally priced line is never "price-updated" by the old check; a component price change re-prices the parent and shows `price-updated` with the old price; a removed preset blocks checkout; at most one update per load.
 - [x] **V-12 Bag view.** File: `lib/mappers/cart.ts` (`mapCart`, `mapCartSummary`; D8). Tests:
   - one bundle plus one pod line gives `lines.length === 2` and count = bundle quantity + pod quantity;
   - children are not in any group;
