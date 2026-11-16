@@ -125,7 +125,7 @@ export interface CartLineSummary { id: string; sku: string; quantity: number }
 export interface CartSummary { id: string; version: number; count: number; lines: CartLineSummary[] }
 
 // Workstream H: product detail view model (see lib/mappers/product-detail.ts).
-export type ProductShape = 'pods' | 'coffee' | 'machine' | 'accessory' | 'gift' | 'drink';
+export type ProductShape = 'pods' | 'coffee' | 'machine' | 'accessory' | 'gift' | 'drink' | 'presetBundle';
 export type VariantAttrValue = string | number | boolean;
 export interface PriceTier { minimumQuantity: number; value: Money }
 export interface VariantPrice { value: Money; discounted?: Money; discountName?: string; tiers: PriceTier[] }
@@ -256,6 +256,13 @@ export interface CartLine {
   /** Product shape ('pods', 'machine', ...) and capsule system, for the companion nudge. */
   shape?: ProductShape;
   systemKey?: string;
+  /** Set on a preset bundle's parent line; child lines are not in `lines` (workstream V, D8). */
+  bundle?: {
+    presetName: string;
+    discountPercent: number;
+    wasUnitPrice?: Money;
+    items: { sku: string; name: string; imageUrl?: string; role: 'machine' | 'item' }[];
+  };
 }
 export interface CartGroup { key: GroupKey; kind: Fulfilment; store?: CartLineStore; lineIds: string[] }
 export type CodeState =
@@ -473,3 +480,25 @@ export interface ScanProduct {
   /** Path of the product page without the locale: `/p/<slug>/<sku>`. */
   href: string;
 }
+
+// Workstream V: preset bundles (plan `plans/workstreams/V-preset-bundles.md`, D5 and D8).
+export type BundleRole = 'machine' | 'item';
+export interface BundleComponentView {
+  productId: string; sku: string; name: string; slug: string;
+  imageUrl?: string; imageAlt: string; role: BundleRole;
+  unitPrice: Money | null; inStock: boolean;
+}
+/** One machine variant the shopper may pick (D-059), with the preset's totals for that choice. */
+export interface BundleMachineOption {
+  sku: string; label: string; imageUrl?: string; imageAlt: string; inStock: boolean;
+  was: Money | null; price: Money | null; save: Money | null;
+}
+export interface BundlePresetView {
+  index: number; name: string; discountPercent: number;
+  /** The machine (the first option's variant) and the pods, as the default choice. */
+  components: BundleComponentView[];
+  machines: BundleMachineOption[];
+  was: Money | null; price: Money | null; save: Money | null;
+  available: boolean; unavailableReason?: 'no-price' | 'out-of-stock';
+}
+export interface BundleView { productId: string; sku: string; presets: BundlePresetView[] }
