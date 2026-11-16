@@ -5,6 +5,10 @@ import { BRANDS, DEFAULT_BRAND, brandOfLineFields, type BrandSlug } from '@/lib/
 import { isCodeRejectionReason, type CodeRejectionReason } from '@/lib/cart/discount-reasons';
 import { planFulfilmentSwitch, planStoreChange, shippingMethodKeyFor, type PlanLine, type PlanOp } from '@/lib/cart/plan';
 import { getCartEnrichment } from '@/lib/ct/cart-enrich';
+import { getBundleView } from '@/lib/ct/preset-bundles';
+import { buildPresetBundleActions, buildRaiseBundleActions } from '@/lib/ct/preset-bundle-cart';
+import { childrenOf, bundlePresetOf, isBundleParent } from '@/lib/mappers/bundle-lines';
+import { shapeOf } from '@/lib/product/variant-config';
 import { apiRoot } from '@/lib/ct/client';
 import { getBrandChannelId, getStoresForCountry } from '@/lib/ct/channels';
 import { getInventoryDetail, getStoreStock } from '@/lib/ct/inventory';
@@ -198,6 +202,8 @@ export async function addLine(
   // The server decides the line's brand from the product (selection membership), never from the request.
   const projection = await getProductBySku(input.sku, market);
   if (!projection) throw new AppError('not_found', 404);
+  // A preset bundle is added through POST /api/cart/bundles only: a bare add would take the anchor price without its parts (D6).
+  if (shapeOf(projection.productType?.obj?.key) === 'presetBundle') throw new LineRejected('bundle_requires_preset', 422);
   const brand = await getProductBrand(projection.id);
   const targets = await resolveTargets(market, input, brand, projection);
   const action = buildAddLineAction(input, targets);
@@ -224,6 +230,118 @@ export async function addLine(
     if (input.fulfilment === 'subscribe' && code === 'MissingPriceForProduct') throw new LineRejected('price_unavailable', 422);
     throw toLineError(e);
   }
+}
+
+// ---------------------------------------------------------------- workstream V: preset bundles (D5, D6, V-09)
+
+export interface PresetBundleInput {
+  sku: string;
+  preset: number;
+  quantity: number;
+  machineSku?: string;
+  fulfilment: 'delivery' | 'collect';
+  storeKey?: string;
+}
+
+/** Stock of every part at the quantity: the store's for collect, else online. Refuses the first short part with its stock. */
+async function checkBundleStock(parts: string[], quantity: number, storeId: string | null): Promise<void> {
+  if (storeId) {
+    for (const sku of parts) {
+      const available = await getStoreStock(sku, storeId);
+      if (available < quantity) throw new LineRejected('not_available_for_collection', 409, { available });
+    }
+    return;
+  }
+  const detail = await getInventoryDetail(parts);
+  for (const sku of parts) {
+    const available = detail[sku]?.online ?? 0;
+    if (available < quantity) throw new LineRejected('quantity_exceeds_stock', 409, { available });
+  }
+}
+
+/** The bag's bundle with the same product, preset, machine, fulfilment and store (Q-V-19), or undefined. */
+function findBundle(cart: Cart, want: { sku: string; preset: number; machineSku: string; fulfilment: string; storeId: string | null }) {
+  return cart.lineItems.find((l) =>
+    isBundleParent(l)
+    && l.variant?.sku === want.sku
+    && bundlePresetOf(l) === want.preset
+    && (l.custom?.fields?.bundleMachineSku as string | undefined) === want.machineSku
+    && (l.custom?.fields?.fulfilment as string | undefined) === want.fulfilment
+    && (want.storeId === null ? !l.supplyChannel : l.supplyChannel?.id === want.storeId),
+  );
+}
+
+/**
+ * Adds one preset bundle to the bag (workstream V, D5 and D6). The server re-reads the view for the session market, refuses
+ * an unavailable preset or machine variant, checks the stock of every part at the bag's quantity, then sends the parent and
+ * its parts in one update. The same bundle again raises the quantity of the existing one (Q-V-19). The browser sends no price.
+ */
+export async function addPresetBundle(
+  session: Session,
+  market: CartMarket,
+  input: PresetBundleInput,
+): Promise<{ cart: CartSummary; session: Session }> {
+  const projection = await getProductBySku(input.sku, market);
+  if (!projection || shapeOf(projection.productType?.obj?.key) !== 'presetBundle') throw new AppError('not_found', 404);
+  if ((await getProductBrand(projection.id)) !== DEFAULT_BRAND) throw new AppError('not_found', 404);
+  const view = await getBundleView(input.sku, projection, market);
+  const preset = view?.presets.find((p) => p.index === input.preset);
+  if (!preset) throw new LineRejected('bundle_preset_unavailable', 422, { reason: 'not-shown' });
+  const machineSku = input.machineSku ?? preset.components.find((c) => c.role === 'machine')?.sku ?? '';
+  const option = preset.machines.find((m) => m.sku === machineSku);
+  if (!option) throw new LineRejected('bundle_preset_unavailable', 422, { reason: 'unknown-machine' });
+  if (!option.price || !option.was) throw new LineRejected('bundle_preset_unavailable', 422, { reason: 'no-price' });
+  // Online stock decides a delivery bundle here; a collect bundle is checked against the store's stock below.
+  if (input.fulfilment === 'delivery' && !option.inStock) throw new LineRejected('bundle_preset_unavailable', 422, { reason: 'out-of-stock' });
+
+  let storeId: string | null = null;
+  if (input.fulfilment === 'collect') {
+    if (!marketForCountry(market.country)?.collection) throw new LineRejected('collect_not_available_in_market', 400);
+    const store = (await getStoresForCountry(market.country, market.locale)).find((s) => s.key === input.storeKey);
+    if (!store) throw new LineRejected('unknown_store', 400);
+    storeId = store.id;
+  }
+  const parts = [machineSku, ...preset.components.filter((c) => c.role === 'item').map((c) => c.sku)];
+  const podSkus = parts.slice(1);
+
+  let cart = session.cartId ? await getActiveCart(session.cartId) : null;
+  const wanted = { sku: input.sku, preset: input.preset, machineSku, fulfilment: input.fulfilment, storeId };
+  const existing = cart ? findBundle(cart, wanted) : undefined;
+  await checkBundleStock(parts, input.quantity + (existing?.quantity ?? 0), storeId);
+
+  let next = session;
+  if (!cart) {
+    const created = await createRawCart(session, market);
+    cart = created.cart;
+    next = created.session;
+  }
+  const cartId = cart.id;
+  const key = `bundle-${crypto.randomUUID()}`;
+  const updated = await updateWithRetry(
+    async () => (await apiRoot.carts().withId({ ID: cartId }).get().execute()).body,
+    async (current) => {
+      const hit = findBundle(current, wanted);
+      const actions = hit
+        ? buildRaiseBundleActions(hit, childrenOf(current.lineItems, hit), input.quantity)
+        : buildPresetBundleActions({
+          parentSku: input.sku,
+          key,
+          quantity: input.quantity,
+          presetIndex: input.preset,
+          discount: preset.discountPercent / 100,
+          wasCents: option.was?.centAmount ?? 0,
+          priceCents: option.price?.centAmount ?? 0,
+          currency: market.currency,
+          fulfilment: input.fulfilment,
+          ...(storeId ? { storeChannelId: storeId } : {}),
+          machineSku,
+          podSkus,
+        });
+      const all: CartUpdateAction[] = [...actions, ...(await orderTypeCartActions(current))];
+      return (await apiRoot.carts().withId({ ID: cartId }).post({ body: { version: current.version, actions: all } }).execute()).body;
+    },
+  );
+  return { cart: mapCartSummary(updated), session: next };
 }
 
 // ---------------------------------------------------------------- workstream I: the full cart

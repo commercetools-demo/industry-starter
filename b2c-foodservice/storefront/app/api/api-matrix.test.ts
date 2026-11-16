@@ -37,6 +37,7 @@ const TABLE: Record<string, 'customer' | 'session' | 'public' | 'owner-or-guest'
   cart: 'session',
   'cart/count': 'session',
   'cart/lines': 'session',
+  'cart/bundles': 'session',
   'cart/lines/[lineId]': 'session',
   channels: 'public',
   checkout: 'session',
