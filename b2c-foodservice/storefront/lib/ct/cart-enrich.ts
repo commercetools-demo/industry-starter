@@ -4,12 +4,14 @@ import { nudgeTarget } from '@/lib/cart/summary';
 import { getAttributeLabels } from '@/lib/ct/attribute-labels';
 import { getStoresForCountry } from '@/lib/ct/channels';
 import { apiRoot } from '@/lib/ct/client';
+import { getBundleView } from '@/lib/ct/preset-bundles';
 import { getInventoryDetail } from '@/lib/ct/inventory';
-import { getRecurrencePolicies } from '@/lib/ct/product-detail';
+import { getProductBySku, getRecurrencePolicies } from '@/lib/ct/product-detail';
 import { getFreeShippingThreshold } from '@/lib/ct/shipping';
 import { mapAttributes } from '@/lib/mappers/attribute';
 import type { AttributeLabels } from '@/lib/mappers/attribute-labels';
 import { EMPTY_ENRICHMENT, fulfilmentOf, type CartEnrichment, type EnrichedProduct, type EnrichedVariant } from '@/lib/mappers/cart';
+import { isBundleParent } from '@/lib/mappers/bundle-lines';
 import { mapMoney } from '@/lib/mappers/money';
 import { ATTRIBUTE_BLOCKLIST, shapeOf } from '@/lib/product/variant-config';
 import { getCompatibleCapsules } from '@/lib/related';
@@ -86,18 +88,38 @@ async function readProducts(ids: string[], ctx: EnrichContext, labels: Attribute
  * threshold and the recurrence policies, all in parallel. An empty cart makes no call. Each part fails alone: a failed
  * inventory read means no stock flags (never a failed cart), a failed projection read means no variant summaries.
  */
+/**
+ * The presets of each bundle product in the bag, by product id: the bag shows the preset's name and discount (workstream V).
+ * One projection read and one view read per bundle product; a failure gives no names (the bag then shows "Bundle").
+ */
+async function readBundles(cart: CtCart, ctx: EnrichContext): Promise<NonNullable<CartEnrichment['bundles']>> {
+  const parents = new Map<string, string>();
+  for (const l of cart.lineItems) if (isBundleParent(l) && l.variant?.sku) parents.set(l.productId, l.variant.sku);
+  const out: NonNullable<CartEnrichment['bundles']> = {};
+  for (const [productId, sku] of parents) {
+    const projection = await getProductBySku(sku, ctx);
+    if (!projection || shapeOf(projection.productType?.obj?.key) !== 'presetBundle') continue;
+    const view = await getBundleView(sku, projection, ctx);
+    if (!view) continue;
+    out[productId] = Object.fromEntries(view.presets.map((p) => [p.index, { name: p.name, discountPercent: p.discountPercent }]));
+  }
+  return out;
+}
+
 export async function getCartEnrichment(cart: CtCart, ctx: EnrichContext): Promise<CartEnrichment> {
   if (cart.lineItems.length === 0) return EMPTY_ENRICHMENT;
   const productIds = [...new Set(cart.lineItems.map((l) => l.productId))];
   const skus = [...new Set(cart.lineItems.map((l) => l.variant?.sku).filter((s): s is string => Boolean(s)))];
   const hasSubscribe = cart.lineItems.some((l) => fulfilmentOf(l) === 'subscribe');
 
-  const [labels, inventory, stores, threshold, policies] = await Promise.all([
+  const hasBundle = cart.lineItems.some((l) => isBundleParent(l));
+  const [labels, inventory, stores, threshold, policies, bundles] = await Promise.all([
     getAttributeLabels(ctx.locale).catch((): AttributeLabels => ({})),
     getInventoryDetail(skus).catch(() => null),
     getStoresForCountry(ctx.country, ctx.locale).catch(() => []),
     getFreeShippingThreshold(ctx.country, ctx.currency).catch(() => null),
     hasSubscribe ? getRecurrencePolicies(ctx.locale).catch(() => []) : Promise.resolve([]),
+    hasBundle ? readBundles(cart, ctx).catch((): NonNullable<CartEnrichment['bundles']> => ({})) : Promise.resolve({}),
   ]);
   const products = await readProducts(productIds, ctx, labels).catch((): Record<string, EnrichedProduct> => ({}));
 
@@ -123,5 +145,6 @@ export async function getCartEnrichment(cart: CtCart, ctx: EnrichContext): Promi
     products, inventory, stores, ...(ctx.sessionStoreKey ? { sessionStoreKey: ctx.sessionStoreKey } : {}), threshold,
     policies: Object.fromEntries(policies.map((p) => [p.id, p.schedule])),
     nudge,
+    ...(hasBundle ? { bundles } : {}),
   };
 }

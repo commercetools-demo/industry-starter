@@ -4,6 +4,7 @@ import { groupKeyOf, groupLines } from '@/lib/cart/plan';
 import { blockers, freeShipping, minimumOrder, variantSummary, type VariantTranslator } from '@/lib/cart/summary';
 import { availabilityState } from '@/lib/availability';
 import { BRANDS, brandOfLineFields } from '@/lib/brands';
+import { bundlePresetOf, childrenOf, isBundleChild, isBundleParent } from '@/lib/mappers/bundle-lines';
 import { mapMoney } from '@/lib/mappers/money';
 import { CART_MAX_LINE_QUANTITY, LOW_STOCK_THRESHOLD } from '@/lib/shop-config';
 import type {
@@ -13,12 +14,17 @@ import type {
 import { getLocalizedString } from '@/lib/utils';
 
 /** Minimal cart for the quick add path (the full view is `mapCart`; these fields stay a subset of it). */
+/** Units in the bag. A bundle's parts are not counted: the bundle counts once, at its own quantity (workstream V, D8). */
+export function unitsOf(lines: readonly Pick<LineItem, 'id' | 'quantity' | 'key' | 'custom'>[]): number {
+  return lines.filter((l) => !isBundleChild(l)).reduce((n, l) => n + l.quantity, 0);
+}
+
 export function mapCartSummary(c: Pick<CtCart, 'id' | 'version' | 'lineItems' | 'totalLineItemQuantity'>) {
   return {
     id: c.id,
     version: c.version,
-    count: c.totalLineItemQuantity ?? c.lineItems.reduce((n, l) => n + l.quantity, 0),
-    lines: c.lineItems.map((l) => ({ id: l.id, sku: l.variant?.sku ?? '', quantity: l.quantity })),
+    count: unitsOf(c.lineItems),
+    lines: c.lineItems.filter((l) => !isBundleChild(l)).map((l) => ({ id: l.id, sku: l.variant?.sku ?? '', quantity: l.quantity })),
   };
 }
 
@@ -47,6 +53,8 @@ export interface CartEnrichment {
   /** Recurrence schedule per policy id. */
   policies: Record<string, RecurrencePolicyView['schedule']>;
   nudge: CartNudge | null;
+  /** Workstream V: the presets of each bundle product (by product id), for the bag's bundle name and discount. */
+  bundles?: Record<string, Record<number, { name: string; discountPercent: number }>>;
 }
 
 export interface MapContext {
@@ -171,6 +179,46 @@ function mapLine(l: LineItem, e: CartEnrichment, ctx: MapContext): CartLine {
   };
 }
 
+/** Stock notices that a part can raise; they are copied onto its bundle row (D8). Price notices stay on the parts. */
+const STOCK_NOTICES = new Set(['out-of-stock', 'quantity-exceeds-stock', 'collect-unavailable']);
+
+/** A row of the bag: a normal line, or a bundle with its parts folded into one `bundle` block (workstream V, D8). */
+function mapVisibleLine(l: LineItem, all: LineItem[], e: CartEnrichment, ctx: MapContext): CartLine {
+  const line = mapLine(l, e, ctx);
+  if (!isBundleParent(l)) return line;
+  const parts = childrenOf(all, l);
+  const partLines = parts.map((c) => mapLine(c, e, ctx));
+  const machineSku = String(l.custom?.fields?.bundleMachineSku ?? '');
+  const ordered = [...partLines].sort((a, b) => Number(b.sku === machineSku) - Number(a.sku === machineSku));
+  const machine = ordered.find((p) => p.sku === machineSku);
+  const preset = e.bundles?.[l.productId]?.[bundlePresetOf(l) ?? -1];
+  const discount = typeof l.custom?.fields?.bundleDiscount === 'number' ? l.custom.fields.bundleDiscount : undefined;
+  const wasCents = l.custom?.fields?.bundleWasCents;
+  const wasUnitPrice: Money | undefined = typeof wasCents === 'number' && wasCents > 0
+    ? { centAmount: wasCents, currencyCode: line.unitPrice.currencyCode } : undefined;
+  // The bundle SKU has no stock of its own (it is never sold alone): its stock and limits come from the parts only.
+  const stock = [
+    ...line.notices.filter((n) => !STOCK_NOTICES.has(n.kind)),
+    ...partLines.flatMap((p) => p.notices.filter((n) => STOCK_NOTICES.has(n.kind))),
+  ];
+  return {
+    ...line,
+    ...(machine?.imageUrl ? { imageUrl: machine.imageUrl, imageAlt: machine.imageAlt } : {}),
+    ...(wasUnitPrice && wasUnitPrice.centAmount > line.unitPrice.centAmount ? { oldUnitPrice: wasUnitPrice } : {}),
+    maxQuantity: Math.min(CART_MAX_LINE_QUANTITY, ...partLines.map((p) => p.maxQuantity)),
+    notices: stock,
+    bundle: {
+      presetName: preset?.name ?? 'Bundle',
+      discountPercent: preset?.discountPercent ?? (discount !== undefined ? Math.round(discount * 100) : 0),
+      ...(wasUnitPrice ? { wasUnitPrice } : {}),
+      items: ordered.map((p) => ({
+        sku: p.sku, name: p.name, ...(p.imageUrl ? { imageUrl: p.imageUrl } : {}),
+        role: p.sku === machineSku ? 'machine' : 'item',
+      })),
+    },
+  };
+}
+
 function mapCodes(ct: CtCart, locale: string): AppliedCode[] {
   return (ct.discountCodes ?? []).map((d) => {
     const state = toCodeState(d.state);
@@ -203,7 +251,8 @@ function shippingOf(ct: CtCart): Cart['shipping'] {
  */
 export function mapCart(ct: CtCart, enrichment: CartEnrichment, ctx: MapContext): Cart {
   const currency = ct.totalPrice.currencyCode;
-  const lines = ct.lineItems.map((l) => mapLine(l, enrichment, ctx));
+  // The bag's rows: a bundle's parts are hidden, the parent carries them in its `bundle` block (workstream V, D8).
+  const lines = ct.lineItems.filter((l) => !isBundleChild(l)).map((l) => mapVisibleLine(l, ct.lineItems, enrichment, ctx));
   const sum = (f: (l: LineItem) => number) => ct.lineItems.reduce((n, l) => n + f(l), 0);
   const subtotal: Money = { centAmount: sum((l) => l.totalPrice.centAmount), currencyCode: currency };
   const saved = sum((l) => Math.max(0, effectivePrice(l).centAmount * l.quantity - l.totalPrice.centAmount));
@@ -223,7 +272,7 @@ export function mapCart(ct: CtCart, enrichment: CartEnrichment, ctx: MapContext)
   return {
     id: ct.id, version: ct.version, currency, country: ct.country ?? '',
     shippingMode: ct.shippingMode === 'Multiple' ? 'Multiple' : 'Single',
-    count: ct.totalLineItemQuantity ?? sum((l) => l.quantity),
+    count: unitsOf(ct.lineItems),
     lines, groups: groupLines(lines),
     subtotal,
     discount: saved > 0 ? { centAmount: saved, currencyCode: currency } : null,
