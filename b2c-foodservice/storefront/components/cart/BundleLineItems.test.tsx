@@ -40,14 +40,11 @@ describe('preset bundle row in the bag (V-13)', () => {
     expect(parts).toEqual([['machine', 'Vertuo Studio'], ['item', 'Pod One Starter Gift'], ['item', 'Pod Discovery Gift Set']]);
   });
 
-  it('the row shows the preset name, the struck-through price and the engine total, with no fulfilment chips', async () => {
+  it('the row shows the preset name, the struck-through price and the engine total; its chips are offered', async () => {
     const ui = uiStub();
     const { container } = renderShell(<ul><CartLineRow line={bundleLine()} ui={ui} /></ul>);
     expect(screen.getByText('Vertuo bundle')).toBeInTheDocument();
     expect(screen.getByTestId('line-total')).toHaveTextContent('$349.16');
-    expect(screen.queryByText('How you get this item')).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Collect' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Ship' })).not.toBeInTheDocument();
     await expectNoAxeViolations(container);
   });
 

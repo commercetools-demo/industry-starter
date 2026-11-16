@@ -12,12 +12,14 @@ import type { BundleView, ProductPageData } from '@/lib/types';
 
 const h = vi.hoisted(() => ({
   add: vi.fn(), openCart: vi.fn(), show: vi.fn(), error: null as string | null,
+  store: null as null | { key: string; name: string }, open: vi.fn(),
 }));
 
 vi.mock('@/i18n/routing', async () => (await import('@/test/shell')).routingMock());
 vi.mock('@/hooks/useAddPresetBundle', () => ({
   useAddPresetBundle: () => ({ add: h.add, isAdding: false, error: h.error }),
 }));
+vi.mock('@/hooks/useCollectionStore', () => ({ useCollectionStore: () => ({ store: h.store, open: h.open }) }));
 vi.mock('@/context/shell-ui-context', async (orig) => ({ ...(await orig<object>()), useShellUi: () => ({ openCart: h.openCart }) }));
 vi.mock('@/context/toast', async (orig) => ({ ...(await orig<object>()), useToast: () => ({ show: h.show }) }));
 
@@ -36,6 +38,8 @@ beforeEach(() => {
   h.show.mockReset();
   h.error = null;
   nav.replace.mockReset();
+  h.store = null;
+  h.open.mockReset();
 });
 
 describe('preset bundle product page (V-14)', () => {
@@ -104,5 +108,25 @@ describe('preset bundle product page (V-14)', () => {
   it('passes an axe check', async () => {
     const { container } = renderShell(<PresetBundleDetail product={product} bundle={viewOf()} requestedPreset={null} />);
     await expectNoAxeViolations(container);
+  });
+
+  it('collection offered: a shopper can collect at the chosen store, and the add sends that store', async () => {
+    h.store = { key: 'mcf-store-nyc-soho', name: 'Malva SoHo' };
+    renderShell(<PresetBundleDetail product={product} bundle={viewOf()} requestedPreset={null} collection />);
+    await userEvent.click(screen.getByRole('button', { name: 'Collect at Malva SoHo' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Add bundle to bag · $349.16' }));
+    await waitFor(() => expect(h.add).toHaveBeenCalledTimes(1));
+    expect(h.add).toHaveBeenCalledWith(expect.objectContaining({ fulfilment: 'collect', storeKey: 'mcf-store-nyc-soho' }));
+  });
+
+  it('collection offered without a store: the shopper is asked to choose one (the picker opens)', async () => {
+    renderShell(<PresetBundleDetail product={product} bundle={viewOf()} requestedPreset={null} collection />);
+    await userEvent.click(screen.getByRole('button', { name: 'Choose a store to collect' }));
+    expect(h.open).toHaveBeenCalledWith({ sku: BUNDLE_SKU });
+  });
+
+  it('?choose=preset moves focus to the picker', () => {
+    renderShell(<PresetBundleDetail product={product} bundle={viewOf()} requestedPreset={null} choose="preset" />);
+    expect(document.activeElement).toBe(screen.getByText('Choose your bundle'));
   });
 });

@@ -203,10 +203,20 @@ function mapVisibleLine(l: LineItem, all: LineItem[], e: CartEnrichment, ctx: Ma
     ...line.notices.filter((n) => !STOCK_NOTICES.has(n.kind)),
     ...partLines.flatMap((p) => p.notices.filter((n) => STOCK_NOTICES.has(n.kind))),
   ];
+  // The collect chip of the row shows the worst state of its parts at the session store (the bundle has no stock of its own).
+  const chips = partLines.map((p) => p.collectAtSessionStore);
+  const rank = { out: 0, low: 1, in: 2 } as const;
+  const worst = chips.every((c): c is NonNullable<typeof c> => !!c)
+    ? chips.reduce((a, b) => (rank[b.state] < rank[a.state] ? b : a))
+    : undefined;
+  const collect = line.collectAtSessionStore !== undefined && worst !== undefined
+    ? { collectAtSessionStore: worst }
+    : {};
   return {
     ...line,
     ...(machine?.imageUrl ? { imageUrl: machine.imageUrl, imageAlt: machine.imageAlt } : {}),
     ...(wasUnitPrice && wasUnitPrice.centAmount > line.unitPrice.centAmount ? { oldUnitPrice: wasUnitPrice } : {}),
+    ...collect,
     maxQuantity: Math.min(CART_MAX_LINE_QUANTITY, ...partLines.map((p) => p.maxQuantity)),
     notices: stock,
     bundle: {

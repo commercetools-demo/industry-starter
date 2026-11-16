@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TrustRow from '@/components/pdp/TrustRow';
 import { usePathname, useRouter } from '@/i18n/routing';
 import { initialPresetOf, machineOf } from '@/lib/preset-bundle/selection';
@@ -11,15 +11,20 @@ import BundleAddToBag from './BundleAddToBag';
 import BundleContents from './BundleContents';
 import BundleHero from './BundleHero';
 import MachinePicker from './MachinePicker';
-import PresetPicker from './PresetPicker';
+import PresetPicker, { PICKER_LEGEND_ID } from './PresetPicker';
 
 /**
  * The product page of a preset bundle (workstream V, D9). The chosen preset lives in `?preset=<index>` (replaced, not pushed).
  * Renders no `<main>`: the locale layout owns it. Shown instead of the buy box for the bundle shape.
  */
 export default function PresetBundleDetail({
-  product, bundle, requestedPreset,
-}: { product: ProductPageData['product']; bundle: BundleView | null; requestedPreset: number | null }) {
+  product, bundle, requestedPreset, collection = false, choose,
+}: {
+  product: ProductPageData['product']; bundle: BundleView | null; requestedPreset: number | null;
+  collection?: boolean;
+  /** `?choose=preset` from a listing card: the picker takes focus (workstream V, D9). */
+  choose?: string;
+}) {
   const t = useTranslations('presetBundle');
   const locale = useLocale();
   const router = useRouter();
@@ -27,6 +32,9 @@ export default function PresetBundleDetail({
   const start = bundle ? initialPresetOf(bundle, requestedPreset) : undefined;
   const [index, setIndex] = useState<number | null>(start?.index ?? null);
   const [machineSku, setMachineSku] = useState<string | undefined>(machineOf(start)?.sku);
+  useEffect(() => {
+    if (choose === 'preset') document.getElementById(PICKER_LEGEND_ID)?.focus();
+  }, [choose]);
 
   if (!bundle || !start) {
     return (
@@ -39,7 +47,7 @@ export default function PresetBundleDetail({
 
   const preset = bundle.presets.find((p) => p.index === index) ?? start;
   const machine = machineOf(preset, machineSku);
-  const choose = (next: BundlePresetView) => {
+  const select = (next: BundlePresetView) => {
     setIndex(next.index);
     setMachineSku(machineOf(next)?.sku);
     router.replace(`${pathname}?preset=${next.index}`);
@@ -55,7 +63,7 @@ export default function PresetBundleDetail({
         <p className="eyebrow m-0">{t('eyebrow')}</p>
         <h1 className="page-title mt-2 m-0">{product.name}</h1>
         <p className="mt-3 text-[15px] text-ink-2">{t('lede')}</p>
-        <PresetPicker presets={bundle.presets} selected={preset.index} onSelect={choose} />
+        <PresetPicker presets={bundle.presets} selected={preset.index} onSelect={select} />
         {preset.machines.length > 1 ? (
           <MachinePicker
             machines={preset.machines}
@@ -71,6 +79,7 @@ export default function PresetBundleDetail({
             machineSku={machine.sku}
             unitCents={machine.price.centAmount}
             currency={machine.price.currencyCode}
+            collection={collection}
           />
         ) : (
           <p className="mt-6 text-[14px] font-semibold text-danger-text">{t('unavailable')}</p>

@@ -106,5 +106,19 @@ describe('preset bundle in the bag (V-12)', () => {
     const changes = detectPriceChanges(ctCart({ lines: [external, normal] }), { products });
     expect(Object.keys(changes)).toEqual(['N']);
   });
+
+  it('the bundle row shows the worst state of its parts at the session store (for the Collect chip)', () => {
+    const { parent, parts } = bundle(1);
+    const view = mapCart(ctCart({ lines: [parent, ...parts] }), enrichment({
+      sessionStoreKey: 'mcf-store-nyc-soho',
+      inventory: {
+        [MACHINE]: { online: 0, stores: { 'ch-soho': 9 } },
+        [PODS[0]]: { online: 0, stores: { 'ch-soho': 0 } },
+        [PODS[1]]: { online: 0, stores: { 'ch-soho': 20 } },
+      },
+    }), ctx);
+    const row = view.lines[0];
+    expect(row.collectAtSessionStore).toMatchObject({ storeKey: 'mcf-store-nyc-soho', state: 'out' });
+  });
 });
 

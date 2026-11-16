@@ -672,7 +672,14 @@ async function switchBundleActions(
 export async function changeCollectionStore(session: Session, market: CartMarket, storeKey: string): Promise<CartView> {
   const ct = await mutateCart(session, async (current) => {
     const store = await resolveStore(current, market, session, storeKey);
-    return opsToActions(planStoreChange(planLines(current), store.id));
+    // Collected bundles move with their parts (workstream V, D6). A part the new store cannot cover keeps its line and shows
+    // the collect-unavailable notice, as any other line does.
+    const bundleMoves: CartUpdateAction[] = current.lineItems
+      .filter((l) => isBundleParent(l) && fulfilmentOf(l) === 'collect')
+      .flatMap((parent) => [parent, ...childrenOf(current.lineItems, parent)])
+      .filter((p) => p.supplyChannel?.id !== store.id)
+      .map((p) => ({ action: 'setLineItemSupplyChannel', lineItemId: p.id, supplyChannel: { typeId: 'channel' as const, id: store.id } }));
+    return [...opsToActions(planStoreChange(planLines(current), store.id)), ...bundleMoves];
   });
   return finish(session, market, ct);
 }

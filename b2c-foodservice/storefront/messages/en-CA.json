@@ -1970,14 +1970,14 @@
   },
   "presetBundle": {
     "eyebrow": "Bundle",
-    "lede": "Pick a set. Everything ships together.",
+    "lede": "Pick a set. Everything ships or is collected together.",
     "legend": "Choose your bundle",
     "machine": "Choose your machine",
     "save": "Save {percent}%",
     "youSave": "You save {amount}",
     "was": "Was {amount}",
     "inTheBox": "What's in the box",
-    "together": "Delivered together. Not available for collection.",
+    "together": "Delivered or collected together",
     "unavailable": "This bundle is not available right now",
     "notInMarket": "Not available in Canada",
     "outOfStock": "Out of stock",
@@ -1990,6 +1990,10 @@
       "choose": "Choose a bundle to add",
       "stock": "That quantity is not available",
       "collect": "Not available for collection at that store"
-    }
+    },
+    "fulfilment": "How you get it",
+    "ship": "Ship to me",
+    "collectAt": "Collect at {store}",
+    "chooseStore": "Choose a store to collect"
   }
 }

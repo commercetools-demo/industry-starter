@@ -40,7 +40,13 @@ export default function ProductDetail({
     <div className="wrap pb-16 pt-3.5" data-testid="product-detail">
       <Breadcrumbs items={crumbs} />
       {product.shape === 'presetBundle' ? (
-        <PresetBundleDetail product={product} bundle={data.bundle ?? null} requestedPreset={requestedPreset} />
+        <PresetBundleDetail
+          product={product}
+          bundle={data.bundle ?? null}
+          requestedPreset={requestedPreset}
+          collection={data.collection}
+          {...(choose ? { choose } : {})}
+        />
       ) : (
         <PdpProvider data={data} initialSelection={initialSelection} {...(choose ? { choose } : {})}>
           <div className="mt-3.5 grid gap-x-12 gap-y-8 stack:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">

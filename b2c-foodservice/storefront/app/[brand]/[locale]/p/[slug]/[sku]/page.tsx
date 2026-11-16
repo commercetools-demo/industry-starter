@@ -71,7 +71,10 @@ export default async function ProductPage({ params, searchParams }: Props) {
 
   const landing = data.product.variants.find((v) => v.sku === sku);
   if (isInstore()) return <InstoreProduct data={data} initialSelection={parseSelection(query, data.product.selectors, landing)} />;
-  const choose = parseChoose(query, data.product.selectors);
+  // A preset bundle has no selectors: its only choice is the preset, asked for by a listing card (workstream V, D9).
+  const choose = data.product.shape === 'presetBundle'
+    ? (query.choose === 'preset' ? 'preset' : undefined)
+    : parseChoose(query, data.product.selectors);
   return (
     <ProductDetail
       data={data}

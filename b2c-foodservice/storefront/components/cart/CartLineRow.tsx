@@ -72,8 +72,8 @@ export default function CartLineRow({ line, ui }: { line: CartLine; ui: CartUi }
           <LineNotice key={n.kind} notice={n} line={line} pending={pending} onShip={() => void ui.ship(line)} />
         ))}
         <div className="mt-3.5 flex flex-wrap items-center justify-between gap-3">
-          {/* A bundle switches as one: its chips are not offered on the row (workstream V, D6). */}
-          {line.bundle ? null : <FulfilmentChips line={line} pending={pending} onCollect={() => void ui.collect(line)} onShip={() => void ui.ship(line)} />}
+          {/* On a bundle row the chips switch the whole bundle: the server moves every part (workstream V, D6). */}
+          <FulfilmentChips line={line} pending={pending} onCollect={() => void ui.collect(line)} onShip={() => void ui.ship(line)} />
           <div className="flex items-center gap-4">
             <QuantityStepper
               value={line.quantity}

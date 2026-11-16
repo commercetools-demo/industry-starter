@@ -75,13 +75,13 @@ vi.mock('@/lib/ct/inventory', () => ({
   getInventoryDetail: async (skus: string[]) => Object.fromEntries(skus.map((sku) => [sku, { online: ct.stock[sku] ?? 100, stores: {} }])),
   getStoreStock: async (sku: string) => ct.stock[sku] ?? 100,
 }));
-vi.mock('@/lib/ct/channels', () => ({ getBrandChannelId: async () => undefined, getStoresForCountry: async () => [(await import('@/test/cart')).STORE_SOHO] }));
+vi.mock('@/lib/ct/channels', () => ({ getBrandChannelId: async () => undefined, getStoresForCountry: async () => [(await import('@/test/cart')).STORE_SOHO, (await import('@/test/cart')).STORE_BK] }));
 vi.mock('@/lib/ct/cart-enrich', async () => ({ getCartEnrichment: async () => (await import('@/lib/mappers/cart')).EMPTY_ENRICHMENT }));
 vi.mock('@/lib/ct/order-type', () => ({ orderTypeCartActions: async () => [], withOrderType: async (d: unknown) => d }));
 vi.mock('next-intl/server', () => ({ getTranslations: async () => (key: string) => key }));
 vi.mock('@/lib/env', () => ({ getEnv: () => ({ SESSION_SECRET: 'a'.repeat(40) }) }));
 
-import { LineRejected, addLine, addPresetBundle, changeQuantity, rebuildCart, removeLine, switchFulfilment } from '@/lib/ct/cart';
+import { LineRejected, addLine, addPresetBundle, changeCollectionStore, changeQuantity, rebuildCart, removeLine, switchFulfilment } from '@/lib/ct/cart';
 import { BUNDLE_SKU, componentProducts, inventoryFor } from '@/test/preset-bundle';
 import { BUNDLE_CONFIG_VALUE } from '@/test/preset-bundle';
 import { mapBundleView, parseBundleConfig } from '@/lib/mappers/preset-bundle';
@@ -254,3 +254,16 @@ describe('region switch of a preset bundle (V-16)', () => {
     expect(newCart.lineItems).toEqual([]);
   });
 });
+
+describe('a collected bundle and a store change (V-10, D6)', () => {
+  it('a collected bundle moves with every part when the shopper changes store', async () => {
+    const { bag, parent, parts } = await bagWithBundle();
+    await switchFulfilment(bag, MARKET, parent.id, { fulfilment: 'collect', storeKey: 'mcf-store-nyc-soho' });
+    ct.updates.length = 0;
+    await changeCollectionStore(bag, MARKET, 'mcf-store-brooklyn');
+    const moved = ct.updates[0].actions.filter((a) => a.action === 'setLineItemSupplyChannel');
+    expect(moved.map((a) => a.lineItemId).sort()).toEqual([parent.id, ...parts.map((p) => p.id)].sort());
+    expect(moved.every((a) => (a.supplyChannel as { id: string }).id === 'ch-bk')).toBe(true);
+  });
+});
+
