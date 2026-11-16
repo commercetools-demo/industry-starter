@@ -22,13 +22,13 @@ export interface MegaMenuEntry {
   feature: NavLink[];
   shop: NavLink[];
   /** Other primary entries shown under "More from Malva". */
-  more: Array<MenuId | 'gifts' | 'bundles'>;
+  more: Array<MenuId | 'gifts'>;
 }
 
 export interface PrimaryNavItem {
-  id: MenuId | 'gifts' | 'bundles';
+  id: MenuId | 'gifts';
   /** Key under `shell.nav.` */
-  labelKey: MenuId | 'gifts' | 'bundles';
+  labelKey: MenuId | 'gifts';
   categoryKey: string;
   hasMenu: boolean;
   /** Shown for this brand only (workstream V: Bundles is Malva Coffee's). Absent: every brand. */
@@ -41,10 +41,9 @@ export const PRIMARY_NAV: PrimaryNavItem[] = [
   { id: 'machines', labelKey: 'machines', categoryKey: 'mcf-cat-machines', hasMenu: true },
   { id: 'accessories', labelKey: 'accessories', categoryKey: 'mcf-cat-accessories', hasMenu: true },
   { id: 'gifts', labelKey: 'gifts', categoryKey: 'mcf-cat-gifts', hasMenu: false },
-  { id: 'bundles', labelKey: 'bundles', categoryKey: 'mcf-cat-bundles', hasMenu: false, brand: 'malva-coffee' },
 ];
 
-/** The primary entries of one brand (Bundles is Malva Coffee only). */
+/** The primary entries of one brand (an entry with `brand` is shown for that brand only). */
 export function primaryNavFor(brand: string): PrimaryNavItem[] {
   return PRIMARY_NAV.filter((n) => !n.brand || n.brand === brand);
 }
@@ -67,7 +66,7 @@ export const MEGA_CONFIG: Record<MenuId, MegaMenuEntry> = {
       { labelKey: 'link.limited', params: { collection: 'limited-edition' } },
       { labelKey: 'link.decaf', params: { decaf: true } },
     ],
-    more: ['coffee', 'machines', 'accessories', 'gifts', 'bundles'],
+    more: ['coffee', 'machines', 'accessories', 'gifts'],
   },
   coffee: {
     id: 'coffee',
@@ -80,7 +79,7 @@ export const MEGA_CONFIG: Record<MenuId, MegaMenuEntry> = {
       { labelKey: 'link.blends', categoryKey: 'mcf-cat-coffee-blends' },
       { labelKey: 'link.subscriptions', params: { collection: 'subscribable' } },
     ],
-    more: ['pods', 'machines', 'accessories', 'gifts', 'bundles'],
+    more: ['pods', 'machines', 'accessories', 'gifts'],
   },
   machines: {
     id: 'machines',
@@ -93,7 +92,7 @@ export const MEGA_CONFIG: Record<MenuId, MegaMenuEntry> = {
       { labelKey: 'link.filter', categoryKey: 'mcf-cat-machines-filter' },
       { labelKey: 'link.grinders', categoryKey: 'mcf-cat-machines-grinders' },
     ],
-    more: ['pods', 'coffee', 'accessories', 'gifts', 'bundles'],
+    more: ['pods', 'coffee', 'accessories', 'gifts'],
   },
   accessories: {
     id: 'accessories',
@@ -105,7 +104,7 @@ export const MEGA_CONFIG: Record<MenuId, MegaMenuEntry> = {
       { labelKey: 'link.care', categoryKey: 'mcf-cat-accessories-care' },
       { labelKey: 'link.storage', categoryKey: 'mcf-cat-accessories-storage' },
     ],
-    more: ['pods', 'coffee', 'machines', 'gifts', 'bundles'],
+    more: ['pods', 'coffee', 'machines', 'gifts'],
   },
 };
 

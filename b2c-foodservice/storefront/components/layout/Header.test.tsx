@@ -146,7 +146,7 @@ describe('Header', () => {
     renderShell(<Header categories={[]} />, { fallback: fallbackFor(null) });
     const nav5 = screen.getByRole('navigation', { name: 'Main' });
     const links = within(nav5).getAllByRole('link');
-    expect(links.map((l) => l.textContent)).toEqual(['Pods', 'Coffee', 'Machines', 'Accessories', 'Gifts', 'Bundles']);
+    expect(links.map((l) => l.textContent)).toEqual(['Pods', 'Coffee', 'Machines', 'Accessories', 'Gifts']);
     expect(links.every((l) => l.getAttribute('href') === '/')).toBe(true);
   });
 
