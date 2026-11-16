@@ -141,12 +141,12 @@ describe('Header', () => {
     expect(screen.getByRole('link', { name: 'Pods' })).not.toHaveAttribute('aria-current');
   });
 
-  it('an empty category tree still renders the five links to the home page', () => {
+  it('an empty category tree still renders the six links to the home page', () => {
     guestFetch();
     renderShell(<Header categories={[]} />, { fallback: fallbackFor(null) });
     const nav5 = screen.getByRole('navigation', { name: 'Main' });
     const links = within(nav5).getAllByRole('link');
-    expect(links.map((l) => l.textContent)).toEqual(['Pods', 'Coffee', 'Machines', 'Accessories', 'Gifts']);
+    expect(links.map((l) => l.textContent)).toEqual(['Pods', 'Coffee', 'Machines', 'Accessories', 'Gifts', 'Bundles']);
     expect(links.every((l) => l.getAttribute('href') === '/')).toBe(true);
   });
 

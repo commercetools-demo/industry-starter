@@ -3,9 +3,9 @@
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import MegaPanel from '@/components/layout/MegaMenu';
-import { Link, usePathname } from '@/i18n/routing';
+import { Link, useBrand, usePathname } from '@/i18n/routing';
 import { cn } from '@/lib/cn';
-import { PRIMARY_NAV, findCategoryByKey, type MenuId } from '@/lib/nav/mega-config';
+import { PRIMARY_NAV, findCategoryByKey, primaryNavFor, type MenuId } from '@/lib/nav/mega-config';
 import type { Category } from '@/lib/types';
 
 /** Pointer-leave grace period, so moving from a link into its panel does not close it. */
@@ -79,9 +79,11 @@ export default function PrimaryNav({ categories }: { categories: Category[] }) {
     link?.focus();
   };
 
+  const navBrand = useBrand();
+
   return (
     <nav ref={root} aria-label={t('label')} onKeyDown={onKeyDown} className="flex items-center gap-1 max-[1100px]:gap-0 max-mobile:hidden">
-      {PRIMARY_NAV.map((item) => {
+      {primaryNavFor(navBrand).map((item) => {
         const category = findCategoryByKey(categories, item.categoryKey);
         const href = category ? `/category/${category.slug}` : '/';
         const active = category !== null && (pathname === href || pathname.startsWith(`${href}/`));

@@ -10,7 +10,7 @@ import { useCollectionStore } from '@/hooks/useCollectionStore';
 import { Link } from '@/i18n/routing';
 import { cn } from '@/lib/cn';
 import { buildListingHref } from '@/lib/nav/listing-href';
-import { MEGA_CONFIG, PRIMARY_NAV, findCategoryByKey, resolveNavHref, type MenuId } from '@/lib/nav/mega-config';
+import { MEGA_CONFIG, findCategoryByKey, primaryNavFor, resolveNavHref, type MenuId } from '@/lib/nav/mega-config';
 import { BRANDS, DEFAULT_BRAND, type BrandConfig } from '@/lib/brands';
 import type { Category } from '@/lib/types';
 import { marketForLocale } from '@/lib/utils';
@@ -75,7 +75,7 @@ export default function MobileNav({ categories, brand = BRANDS[DEFAULT_BRAND] }:
                   </li>
                 ))
               : null}
-            {(plainNav ? [] : PRIMARY_NAV).map((item) => {
+            {(plainNav ? [] : primaryNavFor(brand.slug)).map((item) => {
               const category = findCategoryByKey(categories, item.categoryKey);
               const href = category ? buildListingHref(category.slug) : '/';
               const label = t(`nav.${item.labelKey}`);

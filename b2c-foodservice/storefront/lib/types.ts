@@ -101,7 +101,8 @@ export interface ProductSummary {
   unit?: { money: Money; perKey: 'capsule' | '100g' };
   label?: { kind: 'intensity' | 'roast'; value: string };
   swatches?: { key: string; name: string }[];
-  requiredChoice: 'grind' | 'colour' | null;
+  /** 'preset' for a preset bundle: the card opens the product page to pick one (workstream V). */
+  requiredChoice: 'grind' | 'colour' | 'preset' | null;
   rating: { average: number; count: number } | null;
   /** null when no store is chosen (or the market has no stores). */
   availability: { state: AvailabilityState } | null;

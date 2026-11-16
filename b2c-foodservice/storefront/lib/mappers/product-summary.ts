@@ -45,6 +45,8 @@ export function mapProductSummary(p: ProductProjection, ctx: SummaryContext): Pr
   const variants = raw.map((v) => mapVariant(v, ctx));
   const productAttrs = mapAttributes(p.attributes, ctx.locale);
   const name = getLocalizedString(p.name, ctx.locale);
+  // A preset bundle is recognised by its `bundle-ref` attribute (no product type expand on listings): "From" and a preset choice.
+  const presetBundle = (p.masterVariant?.attributes ?? []).some((a) => a.name === 'bundle-ref');
 
   let defaultIdx = 0;
   let best: number | undefined;
@@ -98,12 +100,12 @@ export function mapProductSummary(p: ProductProjection, ctx: SummaryContext): Pr
     price: defPay && best !== undefined
       ? {
           from: defPay.pay,
-          fromIsRange: high !== undefined && high !== best,
+          fromIsRange: presetBundle || (high !== undefined && high !== best),
           ...(defPay.old ? { old: defPay.old } : {}),
           ...(defPay.discountName ? { discountName: defPay.discountName } : {}),
         }
       : null,
-    requiredChoice: colours.size > 1 ? 'colour' : grinds.size > 1 ? 'grind' : null,
+    requiredChoice: presetBundle ? 'preset' : colours.size > 1 ? 'colour' : grinds.size > 1 ? 'grind' : null,
     rating: rating ? { average: roundRating(rating.average), count: rating.count } : null,
     availability: ctx.storeChannelId
       ? { state: availabilityState(channel?.availableQuantity ?? 0, LOW_STOCK_THRESHOLD) }
