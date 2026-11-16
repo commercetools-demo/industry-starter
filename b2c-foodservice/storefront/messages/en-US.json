@@ -1967,5 +1967,29 @@
       "discount": "Discount",
       "continueInBag": "Continue in my bag"
     }
+  },
+  "presetBundle": {
+    "eyebrow": "Bundle",
+    "lede": "Pick a set. Everything ships together.",
+    "legend": "Choose your bundle",
+    "machine": "Choose your machine",
+    "save": "Save {percent}%",
+    "youSave": "You save {amount}",
+    "was": "Was {amount}",
+    "inTheBox": "What's in the box",
+    "together": "Delivered together. Not available for collection.",
+    "unavailable": "This bundle is not available right now",
+    "notInMarket": "Not available in your market",
+    "outOfStock": "Out of stock",
+    "addToBag": "Add bundle to bag · {total}",
+    "added": "Bundle added to your bag",
+    "quantity": "Quantity",
+    "error": {
+      "generic": "The bundle could not be added. Try again",
+      "unavailable": "That bundle is not available right now",
+      "choose": "Choose a bundle to add",
+      "stock": "That quantity is not available",
+      "collect": "Not available for collection at that store"
+    }
   }
 }

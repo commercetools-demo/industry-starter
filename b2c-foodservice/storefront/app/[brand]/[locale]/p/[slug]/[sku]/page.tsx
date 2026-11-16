@@ -11,6 +11,7 @@ import { isInstore } from '@/lib/app-mode';
 import { pageMetadata } from '@/lib/content/seo';
 import { loadProductPage } from '@/lib/pdp/load';
 import { parseChoose, parseSelection } from '@/lib/product/selection';
+import { parsePresetParam } from '@/lib/preset-bundle/selection';
 
 type Props = {
   params: Promise<{ brand?: string; locale: string; slug: string; sku: string }>;
@@ -81,6 +82,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
       }
       initialSelection={parseSelection(query, data.product.selectors, landing)}
       {...(choose ? { choose } : {})}
+      requestedPreset={parsePresetParam(query.preset)}
     />
   );
 }
