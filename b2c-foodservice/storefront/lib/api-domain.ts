@@ -48,7 +48,12 @@ export type DomainErrorCode =
   | 'unsupported_media_type'
   // Workstream T: adopting the assistant's cart as the bag.
   | 'assistant_cart_unusable'
-  | 'assistant_session_expired';
+  | 'assistant_session_expired'
+  // Workstream V: preset bundles (D6).
+  | 'bundle_requires_preset'
+  | 'bundle_preset_unavailable'
+  | 'bundle_line_locked'
+  | 'bundle_not_subscribable';
 
 const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   invalid_credentials: 'Email or password is incorrect',
@@ -91,6 +96,10 @@ const DOMAIN_MESSAGES: Record<DomainErrorCode, string> = {
   unsupported_media_type: 'The request must be JSON',
   assistant_cart_unusable: 'The assistant cart cannot be moved to your bag',
   assistant_session_expired: 'The assistant conversation has ended',
+  bundle_requires_preset: 'Choose a preset to add this bundle',
+  bundle_preset_unavailable: 'That bundle is not available right now',
+  bundle_line_locked: 'Change the whole bundle, not one of its items',
+  bundle_not_subscribable: 'A bundle cannot be subscribed to',
 };
 
 /** Same envelope as D: `{ error: { code, message, ...extra } }`. Extras are plain data (rule ids, retryAfterSeconds). */

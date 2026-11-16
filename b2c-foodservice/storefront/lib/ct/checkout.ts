@@ -1,5 +1,5 @@
 import 'server-only';
-import type { Cart as CtCart, CartDraft, CartUpdateAction, LineItem } from '@commercetools/platform-sdk';
+import type { Cart as CtCart, CartDraft, CartUpdateAction, LineItem, LineItemDraft } from '@commercetools/platform-sdk';
 import { COLLECT_METHOD_KEY, SHIP_METHOD_KEY } from '@/lib/cart/plan';
 import { buildSingleGroupActions, collectAddress, planGroups, splitPlan, type FulfilmentGroup } from '@/lib/checkout/fulfilment-plan';
 import { checkoutBlockers, type CheckoutBlocker } from '@/lib/checkout/guards';
@@ -13,6 +13,7 @@ import { cachedPublic } from '@/lib/ct/public-cache';
 import { updateWithRetry } from '@/lib/ct/retry';
 import { AppError } from '@/lib/errors';
 import { brandOfLineFields } from '@/lib/brands';
+import { childrenOf, isBundleLine, isBundleParent } from '@/lib/mappers/bundle-lines';
 import { fulfilmentOf } from '@/lib/mappers/cart';
 import { mapCheckoutState } from '@/lib/mappers/checkout';
 import type { Session } from '@/lib/session';
@@ -88,7 +89,7 @@ export function totalCentsOf(c: Pick<CtCart, 'taxedPrice' | 'totalPrice' | 'ship
 }
 
 /** The line as a draft for a new cart: the same `addLineItem` shape the cart core builds, without the action name. */
-function lineDraft(l: LineItem) {
+export function lineDraft(l: LineItem) {
   const fulfilment = fulfilmentOf(l);
   const sku = l.variant?.sku ?? '';
   const input: AddLineInput =
@@ -108,9 +109,36 @@ function lineDraft(l: LineItem) {
   return draft;
 }
 
-/** Same sku, fulfilment, store and policy: how a clone line finds its bag line. */
-function sameLine(a: LineItem, b: LineItem): boolean {
+/**
+ * A preset bundle line (workstream V, D6): the clone keeps its key (the parts' `parentId` points at it), its external price and
+ * every custom field, so the paid lines are the bag's lines. Pure.
+ */
+export function bundleLineDraft(l: LineItem): LineItemDraft {
+  return {
+    sku: l.variant?.sku ?? '',
+    quantity: l.quantity,
+    ...(l.key ? { key: l.key } : {}),
+    externalPrice: { currencyCode: l.price.value.currencyCode, centAmount: l.price.value.centAmount },
+    ...(l.supplyChannel ? { supplyChannel: { typeId: 'channel' as const, id: l.supplyChannel.id } } : {}),
+    custom: { type: { typeId: 'type' as const, key: 'mcf-line-fulfilment' }, fields: { ...(l.custom?.fields ?? {}) } },
+  };
+}
+
+/**
+ * The bag lines of one fulfilment group, with the parts of every bundle in it (the group lists only the parent: parts are not
+ * rows). Pure. Exported for K's clone and its tests.
+ */
+export function selectGroupLines(raw: Pick<CtCart, 'lineItems'>, lineIds: readonly string[]): LineItem[] {
+  const wanted = new Set(lineIds);
+  const parents = raw.lineItems.filter((l) => isBundleParent(l) && wanted.has(l.id));
+  return raw.lineItems.filter((l) => wanted.has(l.id) || parents.some((p) => childrenOf(raw.lineItems, p).includes(l)));
+}
+
+/** Same sku, fulfilment, store, policy, key and parent: how a clone line finds its bag line (a part never matches the shopper's own line). */
+export function sameLine(a: LineItem, b: LineItem): boolean {
   return (
+    (a.key ?? null) === (b.key ?? null) &&
+    (a.custom?.fields?.parentId ?? null) === (b.custom?.fields?.parentId ?? null) &&
     a.variant?.sku === b.variant?.sku &&
     fulfilmentOf(a) === fulfilmentOf(b) &&
     (a.supplyChannel?.id ?? null) === (b.supplyChannel?.id ?? null) &&
@@ -132,7 +160,7 @@ async function createPartCart(c: PartContext): Promise<CtCart> {
     deleteDaysAfterLastModification: 1,
     ...(raw.customerId ? { customerId: raw.customerId } : { anonymousId: raw.anonymousId }),
     ...(raw.customerEmail ? { customerEmail: raw.customerEmail } : {}),
-    lineItems: raw.lineItems.filter((l) => c.group.lineIds.includes(l.id)).map(lineDraft),
+    lineItems: selectGroupLines(raw, c.group.lineIds).map((l) => (isBundleLine(l) ? bundleLineDraft(l) : lineDraft(l))),
     ...(codes.length ? { discountCodes: codes } : {}),
     shippingAddress: c.address ?? { country: raw.country ?? '' },
     ...(c.group.kind === 'collect' ? { shippingMethod: { typeId: 'shipping-method' as const, key: COLLECT_METHOD_KEY } } : {}),

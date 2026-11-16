@@ -11,6 +11,7 @@ import { isInstore } from '@/lib/app-mode';
 import { pageMetadata } from '@/lib/content/seo';
 import { loadProductPage } from '@/lib/pdp/load';
 import { parseChoose, parseSelection } from '@/lib/product/selection';
+import { parsePresetParam } from '@/lib/preset-bundle/selection';
 
 type Props = {
   params: Promise<{ brand?: string; locale: string; slug: string; sku: string }>;
@@ -70,7 +71,10 @@ export default async function ProductPage({ params, searchParams }: Props) {
 
   const landing = data.product.variants.find((v) => v.sku === sku);
   if (isInstore()) return <InstoreProduct data={data} initialSelection={parseSelection(query, data.product.selectors, landing)} />;
-  const choose = parseChoose(query, data.product.selectors);
+  // A preset bundle has no selectors: its only choice is the preset, asked for by a listing card (workstream V, D9).
+  const choose = data.product.shape === 'presetBundle'
+    ? (query.choose === 'preset' ? 'preset' : undefined)
+    : parseChoose(query, data.product.selectors);
   return (
     <ProductDetail
       data={data}
@@ -81,6 +85,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
       }
       initialSelection={parseSelection(query, data.product.selectors, landing)}
       {...(choose ? { choose } : {})}
+      requestedPreset={parsePresetParam(query.preset)}
     />
   );
 }

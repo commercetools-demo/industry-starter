@@ -18,6 +18,7 @@ export const PRODUCT_TYPE_SHAPE: Record<string, ProductShape> = {
   'mcf-accessory': 'accessory',
   'mcf-gift-set': 'gift',
   'mcf-drink': 'drink',
+  'malva-coffee-machine-bundle': 'presetBundle',
 };
 
 /** Shape of a product from its product type key; unknown types read as accessories (no selectors beyond colour). */
@@ -26,6 +27,7 @@ export function shapeOf(typeKey: string | undefined): ProductShape {
 }
 
 export const SHAPE_SELECTORS: Record<ProductShape, SelectorConfig[]> = {
+  presetBundle: [],
   pods: [{ attr: 'capsulesPerPack', renderer: 'pill', required: true }],
   coffee: [
     { attr: 'sizeGrams', renderer: 'pill', required: true },
@@ -49,6 +51,7 @@ export const NO_DEFAULT_SELECTORS: readonly string[] = ['grind'];
 
 /** Read-only facts per shape (rendered in Details), in display order. Every one is also kept out of the selectors. */
 export const PDP_INFO_ATTRIBUTES: Record<ProductShape, string[]> = {
+  presetBundle: [],
   pods: ['system', 'intensity', 'flavourNotes', 'origin', 'decaf', 'organic', 'fairtrade'],
   coffee: ['roast', 'origin', 'process', 'flavourNotes', 'intensity', 'brewMethods', 'decaf', 'organic', 'fairtrade'],
   machine: ['system', 'pressureBar', 'waterTankMl', 'powerWatts', 'features', 'warrantyMonths'],

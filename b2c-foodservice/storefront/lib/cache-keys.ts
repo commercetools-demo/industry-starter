@@ -40,6 +40,8 @@ export const keyPaymentMethods = (customerId: string) => ['payment-methods', cus
 export const keyOrdersPage = (customerId: string, filter: string, page: number) =>
   ['orders', customerId, filter, page] as const;
 export const keyProfile = (customerId: string) => ['profile', customerId] as const;
+/** Preset bundle view of one SKU in one market (workstream V, D5). Prices depend on the market, so it is per locale. */
+export const keyPresetBundle = (sku: string, locale: string) => ['preset-bundle', sku, locale] as const;
 /** Saved items: `ids` for the hearts (no product read), `full` for the Saved tab (cards). Both extend `keySavedItems`. */
 export const keySavedItemsView = (customerId: string, view: 'ids' | 'full') => ['saved-items', customerId, view] as const;
 
@@ -51,6 +53,7 @@ export const TAG = {
   recurrencePolicies: 'recurrence-policies',
   attributeLabels: 'attribute-labels',
   productSelections: 'product-selections',
+  presetBundleConfig: 'preset-bundle-config',
 } as const;
 
 /** Server cache lifetimes in seconds, public data only. */
@@ -62,4 +65,5 @@ export const TTL = {
   recurrencePolicies: 300,
   attributeLabels: 3600,
   productSelections: 300,
+  presetBundleConfig: 60,
 } as const;

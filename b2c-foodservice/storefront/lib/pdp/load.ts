@@ -6,9 +6,11 @@ import { getAttributeLabels } from '@/lib/ct/attribute-labels';
 import { getCategoryTree } from '@/lib/ct/categories';
 import { isInBrandSelection } from '@/lib/ct/product-selections';
 import { getInventoryDetail } from '@/lib/ct/inventory';
+import { getBundleView } from '@/lib/ct/preset-bundles';
 import { getProductBySku, getRecurrencePolicies } from '@/lib/ct/product-detail';
 import { getFreeShippingThreshold } from '@/lib/ct/shipping';
 import { mapProductDetail } from '@/lib/mappers/product-detail';
+import { shapeOf } from '@/lib/product/variant-config';
 import { RETURN_DAYS } from '@/lib/shop-config';
 import type { Category, InventoryDetail, ProductPageData } from '@/lib/types';
 import { marketForLocale } from '@/lib/utils';
@@ -28,8 +30,10 @@ async function load(sku: string, locale: string, brand: string): Promise<Product
   // A product of another brand does not exist on this brand's URL.
   if (!(await isInBrandSelection(projection.id, brandSlug))) return null;
 
+  // Workstream V: a preset bundle reads its bundle view and no recurrence policies (it is not subscribable).
+  const isBundle = shapeOf(projection.productType?.obj?.key) === 'presetBundle';
   const skus = [projection.masterVariant, ...projection.variants].map((v) => v.sku).filter((s): s is string => Boolean(s));
-  const [labels, tree, inventory, policies, threshold] = await Promise.all([
+  const [labels, tree, inventory, policies, threshold, bundle] = await Promise.all([
     getAttributeLabels(locale).catch((e: unknown) => {
       logFailure('pdp_labels_failed')(e);
       return {};
@@ -42,7 +46,7 @@ async function load(sku: string, locale: string, brand: string): Promise<Product
       logFailure('pdp_inventory_failed')(e);
       return null;
     }),
-    getRecurrencePolicies(locale).catch((e: unknown): null => {
+    isBundle ? Promise.resolve(null) : getRecurrencePolicies(locale).catch((e: unknown): null => {
       logFailure('pdp_policies_failed')(e);
       return null;
     }),
@@ -50,6 +54,12 @@ async function load(sku: string, locale: string, brand: string): Promise<Product
       logFailure('pdp_threshold_failed')(e);
       return null;
     }),
+    isBundle
+      ? getBundleView(sku, projection, ctx).catch((e: unknown): null => {
+        logFailure('pdp_bundle_failed')(e);
+        return null;
+      })
+      : Promise.resolve(null),
   ]);
 
   const product = mapProductDetail(projection, {
@@ -73,6 +83,7 @@ async function load(sku: string, locale: string, brand: string): Promise<Product
     brand: brandSlug,
     country: market.country,
     currency: market.currency,
+    ...(isBundle ? { bundle } : {}),
   };
 }
 

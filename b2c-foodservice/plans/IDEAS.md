@@ -70,3 +70,4 @@
 - (Q) Dev-dependency advisories (`npm audit` without `--omit=dev`: storefront 5 high in the `eslint-config-next` chain, seed 6 including `vitest` 2.x); none ships. Move to current releases of the lint and test toolchains when they fit the pinned stack (`plans/evidence/Q/npm-audit.txt` section 3).
 - (R) Per-store availability in the In-store companion (the shopper stands in a known store; show that store stock, not the online stock). Needs the store chosen at the door, for example by QR code per store.
 - (R) A PNG apple-touch-icon and manifest icons (192, 512) for the In-store web app; the SVG icon is enough for Android Chrome but iOS prefers PNG.
+- (V) Re-price a preset bundle in the bag on each load (D7: `repricePresetBundles`, `setLineItemPrice` and `bundleWasCents`, "Price updated" notice). Parked by the owner's answer Q-V-9 (2026-11-16): the price is locked when the bundle is added. The external-price skip in `detectPriceChanges` stays.

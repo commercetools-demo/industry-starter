@@ -12,6 +12,7 @@ import type {
   OrderDelivery, OrderLineView, OrderReturn, OrderState, OrderView, RecurrencePolicyView, ReturnPaymentState, ReturnShipmentState, Store,
 } from '@/lib/types';
 import { getLocalizedString } from '@/lib/utils';
+import { childrenOf, isBundleChild, isBundleParent } from '@/lib/mappers/bundle-lines';
 
 /** Seeded order state keys (seed base.ts) to the app's four collection states. Anything else is null. */
 const STATE_OF: Record<string, OrderState> = {
@@ -130,6 +131,29 @@ function returnsOf(info: ReturnInfo[] | undefined, names: Map<string, string>): 
 }
 
 /** Units of each line still returnable: ordered minus everything in `returnInfo` (all return states count). */
+/** The bundle row of a parent line: its parts folded into `bundle`, machine first (workstream V, D8). */
+function withBundle(line: OrderLineView, parent: LineItem, parts: LineItem[], locale: string): OrderLineView {
+  const machineSku = String(parent.custom?.fields?.bundleMachineSku ?? '');
+  const items = parts.map((p) => ({
+    sku: p.variant?.sku ?? '',
+    name: getLocalizedString(p.name, locale),
+    ...(p.variant?.images?.[0]?.url ? { imageUrl: p.variant.images[0].url } : {}),
+    role: (p.variant?.sku ?? '') === machineSku ? ('machine' as const) : ('item' as const),
+  })).sort((a, b) => Number(b.role === 'machine') - Number(a.role === 'machine'));
+  const machine = items.find((i) => i.role === 'machine');
+  const discount = parent.custom?.fields?.bundleDiscount;
+  return {
+    ...line,
+    ...(machine?.imageUrl ? { imageUrl: machine.imageUrl } : {}),
+    // The preset's name is in the bundle configuration, not on the order: the order shows the generic name.
+    bundle: { presetName: 'Bundle', discountPercent: typeof discount === 'number' ? Math.round(discount * 100) : 0, items },
+  };
+}
+
+/**
+ * Returnable units per line. A bundle's parts are not listed: the bundle row (its parent) is returned as one, and the
+ * return writes every part at the same quantity (workstream V, Q-V-7).
+ */
 export function returnableUnits(order: Pick<Order, 'lineItems' | 'returnInfo'>): Record<string, number> {
   const returned = new Map<string, number>();
   for (const r of order.returnInfo ?? []) {
@@ -137,7 +161,7 @@ export function returnableUnits(order: Pick<Order, 'lineItems' | 'returnInfo'>):
       if (i.type === 'LineItemReturnItem') returned.set(i.lineItemId, (returned.get(i.lineItemId) ?? 0) + i.quantity);
     }
   }
-  return Object.fromEntries(order.lineItems.map((l) => [l.id, Math.max(0, l.quantity - (returned.get(l.id) ?? 0))]));
+  return Object.fromEntries(order.lineItems.filter((l) => !isBundleChild(l)).map((l) => [l.id, Math.max(0, l.quantity - (returned.get(l.id) ?? 0))]));
 }
 
 /** A stored order to the view. Pure: works from the order alone (an order revisited later needs no cart). */
@@ -148,7 +172,11 @@ export function orderTypeOf(custom: Pick<NonNullable<Order['custom']>, 'fields'>
 }
 
 export function mapOrder(o: Order, ctx: OrderMapContext): OrderView {
-  const lines = o.lineItems.map((l) => mapLine(l, ctx.locale));
+  // The rows: a bundle's parts are folded into the bundle row (workstream V, D8).
+  const lines = o.lineItems.filter((l) => !isBundleChild(l)).map((l) => {
+    const line = mapLine(l, ctx.locale);
+    return isBundleParent(l) ? withBundle(line, l, childrenOf(o.lineItems, l), ctx.locale) : line;
+  });
   const methodKey = o.shippingInfo?.shippingMethod?.obj?.key;
   const collectOrder = methodKey === COLLECT_METHOD_KEY;
 
@@ -185,7 +213,7 @@ export function mapOrder(o: Order, ctx: OrderMapContext): OrderView {
     });
   }
 
-  const names = new Map(lines.map((l) => [l.id, l.name]));
+  const names = new Map(o.lineItems.map((l) => [l.id, getLocalizedString(l.name, ctx.locale)]));
   const deliveries = deliveriesOf(o, names);
   const shipsSomething = o.lineItems.some((l) => fulfilmentOf(l) !== 'collect');
   const info = o.shippingInfo;

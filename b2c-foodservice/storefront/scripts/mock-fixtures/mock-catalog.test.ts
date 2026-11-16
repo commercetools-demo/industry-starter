@@ -4,18 +4,33 @@ import { describe, expect, it } from 'vitest';
 import { buildSearchRequest } from '../../lib/search/build';
 import { parseListingParams } from '../../lib/search/params';
 // @ts-expect-error plain JavaScript module of the mock server
-import { DOCS, projectionOf, runSearch } from './mock-catalog.mjs';
+import { CUSTOM_OBJECTS, DOCS, DOC_BY_ID, VARIANT_BY_SKU, projectionOf, runSearch } from './mock-catalog.mjs';
 
 const ctx = { locale: 'en-US', currency: 'USD', country: 'US' };
 const search = (sp: Record<string, string>, scope: 'shop' | 'search' = 'shop', extra: Record<string, unknown> = {}) =>
   runSearch(buildSearchRequest(ctx, { root: null, ...extra }, parseListingParams(sp, scope), { limit: 100, offset: 0, withFacets: true }));
 
 describe('mock catalogue', () => {
-  it('has the seed catalogue: 41 products, all sellable in both markets', () => {
-    expect(DOCS).toHaveLength(41);
+  it('has the seed catalogue: 41 products, all sellable in both markets, and the owner\'s bundle (no price, no stock row)', () => {
+    expect(DOCS).toHaveLength(42);
+    const bundle = DOCS.filter((d: { productType: string }) => d.productType === 'malva-coffee-machine-bundle');
+    expect(bundle).toHaveLength(1);
+    expect(bundle[0].variants[0].prices).toHaveLength(0);
+    // A listing needs a price (Q-V-12): the bundle has none, so no listing shows it, and the seed products are the listing.
     expect(search({}).total).toBe(41);
     const cad = runSearch(buildSearchRequest({ ...ctx, currency: 'CAD', country: 'CA' }, {}, parseListingParams({}, 'shop'), { limit: 1, offset: 0, withFacets: false }));
     expect(cad.total).toBe(41);
+  });
+
+  it('serves the owner\'s bundle: its SKU, its bundle-ref and the custom object and components it points to', () => {
+    const found = VARIANT_BY_SKU.get('998674532');
+    expect(found.doc.productType).toBe('malva-coffee-machine-bundle');
+    const ref = found.variant.attrs.find((a: { name: string }) => a.name === 'bundle-ref');
+    expect(ref.raw.id).toBe(CUSTOM_OBJECTS[0].id);
+    expect(CUSTOM_OBJECTS[0].container).toBe('configurable-bundles_items');
+    // the component products answer to the ids the custom object refers to
+    expect(DOC_BY_ID.get('37f4f5a9-7a60-40f1-ad59-31aa8316541e').key).toBe('mcf-p-vertuo-studio');
+    expect(DOC_BY_ID.get('c988c8f7-3035-4922-894d-6a8585dad9a1').key).toBe('mcf-p-pod-carousel-holder');
   });
 
   it('filters by an enum with the postFilter and keeps the group counts comparable', () => {

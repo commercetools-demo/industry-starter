@@ -138,9 +138,9 @@ describe('seed data (SEED-PLAN)', () => {
   });
 
   it('categories form the planned tree with slugs in three languages, unique per language, and valid order hints', () => {
-    expect(CATEGORIES.filter((c) => !c.parent).map((c) => c.key)).toEqual(['mcf-cat-pods', 'mcf-cat-coffee', 'mcf-cat-machines', 'mcf-cat-accessories', 'mcf-cat-gifts']);
-    expect(CATEGORIES).toHaveLength(20);
-    for (const l of LANGUAGES) expect(new Set(categoryDrafts().map((c) => (c.slug as Record<string, string>)[l])).size).toBe(20);
+    expect(CATEGORIES.filter((c) => !c.parent).map((c) => c.key)).toEqual(['mcf-cat-pods', 'mcf-cat-coffee', 'mcf-cat-machines', 'mcf-cat-accessories', 'mcf-cat-gifts', 'mcf-cat-bundles']);
+    expect(CATEGORIES).toHaveLength(21);
+    for (const l of LANGUAGES) expect(new Set(categoryDrafts().map((c) => (c.slug as Record<string, string>)[l])).size).toBe(21);
     for (const c of categoryDrafts()) expect(c.orderHint).toMatch(/^0\.\d*[1-9]$/);
     const idx = new Map(CATEGORIES.map((c, i) => [c.key, i]));
     for (const c of CATEGORIES) if (c.parent) expect(idx.get(c.parent)).toBeLessThan(idx.get(c.key) as number);

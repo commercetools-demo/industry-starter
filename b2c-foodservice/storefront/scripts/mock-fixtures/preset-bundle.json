@@ -1,0 +1,159 @@
+{
+  "_about": "Owner data of the preset bundle (workstream V). The two custom objects are copied from bundles.har (id, container, key, value only; no request data). `product` is the bundle product's projection fields: the owner creates it in Merchant Center (D-057), so the mock invents its name and gives it no price and no stock row. `componentProductIds` are the project ids the bundle's custom object references for its five component products; the mock gives those products the same ids. Mock fixture, not seed data.",
+  "bundleItem": {
+    "id": "9790d294-a6c3-4a54-9391-841b1a7ab85a",
+    "container": "configurable-bundles_items",
+    "key": "bundle--1794844737333",
+    "value": {
+      "createProduct": false,
+      "selectProduct": true,
+      "mainProductReference": {
+        "id": "0e44e6d5-2936-419b-9ad9-802b1d79d9d5"
+      },
+      "configurationType": "custom-object",
+      "bundleType": {
+        "label": "Promo bundle machine+pods",
+        "value": "schema--1794837340439"
+      },
+      "bundleConfiguration": {
+        "presets": [
+          {
+            "name": {
+              "en-GB": "",
+              "de-DE": "",
+              "en-US": "Vertuo bundle",
+              "en-CA": ""
+            },
+            "coffeeMachine": {
+              "typeId": "product",
+              "id": "37f4f5a9-7a60-40f1-ad59-31aa8316541e"
+            },
+            "pods": [
+              {
+                "typeId": "product",
+                "id": "c008dc8c-f88d-477c-8aae-dc80899c1fd9"
+              },
+              {
+                "typeId": "product",
+                "id": "87201dfe-de93-401f-815c-1d0a9c0fa521"
+              }
+            ],
+            "presetDiscount": 0.1
+          },
+          {
+            "name": {
+              "en-GB": "",
+              "de-DE": "",
+              "en-US": "Pod plus",
+              "en-CA": ""
+            },
+            "coffeeMachine": {
+              "typeId": "product",
+              "id": "465a3b79-2d77-49df-a7b4-1209ad47de87"
+            },
+            "pods": [
+              {
+                "typeId": "product",
+                "id": "87201dfe-de93-401f-815c-1d0a9c0fa521"
+              },
+              {
+                "typeId": "product",
+                "id": "c008dc8c-f88d-477c-8aae-dc80899c1fd9"
+              },
+              {
+                "typeId": "product",
+                "id": "c988c8f7-3035-4922-894d-6a8585dad9a1"
+              }
+            ],
+            "presetDiscount": 0.12
+          }
+        ]
+      }
+    }
+  },
+  "bundleSchema": {
+    "id": "0638698c-53bb-4740-884c-934797a3faed",
+    "container": "configurable-bundles_schemas",
+    "key": "schema--1794837340439",
+    "value": {
+      "name": "Promo bundle machine+pods",
+      "targetProductTypes": [
+        {
+          "productType": {
+            "typeId": "product-type",
+            "id": "f892b74e-3bf4-4b59-992f-89c8171850f5"
+          },
+          "attribute": "bundle-ref"
+        }
+      ],
+      "attributes": [
+        {
+          "name": "presets",
+          "type": "Object",
+          "set": true,
+          "required": false,
+          "attributes": [
+            {
+              "name": "name",
+              "type": "LocalizedString",
+              "set": false,
+              "required": false
+            },
+            {
+              "name": "coffeeMachine",
+              "type": "Reference",
+              "set": false,
+              "required": false,
+              "reference": {
+                "by": "id",
+                "type": "product"
+              }
+            },
+            {
+              "name": "pods",
+              "type": "Reference",
+              "set": true,
+              "required": false,
+              "reference": {
+                "by": "id",
+                "type": "product"
+              }
+            },
+            {
+              "name": "presetDiscount",
+              "type": "Number",
+              "set": false,
+              "required": false
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "product": {
+    "id": "0e44e6d5-2936-419b-9ad9-802b1d79d9d5",
+    "key": "mcf-p-machine-pods-bundle",
+    "name": {
+      "en-US": "Machine and pods bundle",
+      "en-CA": "Machine and pods bundle"
+    },
+    "slug": {
+      "en-US": "machine-and-pods-bundle",
+      "en-CA": "machine-and-pods-bundle"
+    },
+    "description": {
+      "en-US": "A coffee machine and its pods, together for less. Pick one set.",
+      "en-CA": "A coffee machine and its pods, together for less. Pick one set."
+    },
+    "productType": "malva-coffee-machine-bundle",
+    "sku": "998674532",
+    "bundleRef": "9790d294-a6c3-4a54-9391-841b1a7ab85a"
+  },
+  "componentProductIds": {
+    "mcf-p-vertuo-studio": "37f4f5a9-7a60-40f1-ad59-31aa8316541e",
+    "mcf-p-pod-plus-milk": "465a3b79-2d77-49df-a7b4-1209ad47de87",
+    "mcf-p-pod-one-starter-gift": "c008dc8c-f88d-477c-8aae-dc80899c1fd9",
+    "mcf-p-pod-discovery-gift-set": "87201dfe-de93-401f-815c-1d0a9c0fa521",
+    "mcf-p-pod-carousel-holder": "c988c8f7-3035-4922-894d-6a8585dad9a1"
+  }
+}

@@ -150,6 +150,15 @@ describe('Header', () => {
     expect(links.every((l) => l.getAttribute('href') === '/')).toBe(true);
   });
 
+  it('a root category added in Merchant Center shows after the fixed entries (D-060)', () => {
+    guestFetch();
+    const bundles: Category = { id: 'cat-bundles', key: 'bundles', name: 'Bundles', slug: 'bundles', children: [] };
+    renderShell(<Header categories={[...TREE, bundles]} />, { fallback: fallbackFor(null) });
+    const links = within(screen.getByRole('navigation', { name: 'Main' })).getAllByRole('link');
+    expect(links.map((l) => l.textContent)).toEqual(['Pods', 'Coffee', 'Machines', 'Accessories', 'Gifts', 'Bundles']);
+    expect(links.at(-1)).toHaveAttribute('href', '/category/bundles');
+  });
+
   it('search submits to /search?q=', async () => {
     guestFetch();
     renderShell(<Header categories={TREE} />, { fallback: fallbackFor(null) });

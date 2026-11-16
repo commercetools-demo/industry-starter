@@ -396,7 +396,12 @@
       },
       "remove": "Remove",
       "removeNamed": "Remove {name}",
-      "firstDelivery": "First delivery by {day}, then {interval}"
+      "firstDelivery": "First delivery by {day}, then {interval}",
+      "bundle": {
+        "badge": "Bundle · save {percent}%",
+        "includes": "Includes",
+        "together": "Delivered or collected together"
+      }
     },
     "notice": {
       "priceUpdated": "Price updated",
@@ -1961,5 +1966,33 @@
       "discount": "Discount",
       "continueInBag": "Continue in my bag"
     }
+  },
+  "presetBundle": {
+    "eyebrow": "Bundle",
+    "lede": "Pick a set. Everything ships or is collected together.",
+    "legend": "Choose your bundle",
+    "machine": "Choose your machine",
+    "save": "Save {percent}%",
+    "youSave": "You save {amount}",
+    "was": "Was {amount}",
+    "inTheBox": "What's in the box",
+    "together": "Delivered or collected together",
+    "unavailable": "This bundle is not available right now",
+    "notInMarket": "Not available in your market",
+    "outOfStock": "Out of stock",
+    "addToBag": "Add bundle to bag · {total}",
+    "added": "Bundle added to your bag",
+    "quantity": "Quantity",
+    "error": {
+      "generic": "The bundle could not be added. Try again",
+      "unavailable": "That bundle is not available right now",
+      "choose": "Choose a bundle to add",
+      "stock": "That quantity is not available",
+      "collect": "Not available for collection at that store"
+    },
+    "fulfilment": "How you get it",
+    "ship": "Ship to me",
+    "collectAt": "Collect at {store}",
+    "chooseStore": "Choose a store to collect"
   }
 }

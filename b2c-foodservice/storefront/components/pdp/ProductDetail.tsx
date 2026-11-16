@@ -6,6 +6,7 @@ import Gallery from '@/components/pdp/Gallery';
 import RatingSummary from '@/components/pdp/RatingSummary';
 import ReviewsSlot from '@/components/pdp/ReviewsSlot';
 import { PdpProvider } from '@/components/pdp/pdp-state';
+import PresetBundleDetail from '@/components/preset-bundle/PresetBundleDetail';
 import type { Selection } from '@/lib/product/resolve-variant';
 import type { ProductPageData } from '@/lib/types';
 
@@ -19,11 +20,14 @@ export default function ProductDetail({
   initialSelection,
   choose,
   related,
+  requestedPreset = null,
 }: {
   data: ProductPageData;
   initialSelection: Selection;
   choose?: string;
   related?: ReactNode;
+  /** `?preset=<index>` of a preset bundle (workstream V). */
+  requestedPreset?: number | null;
 }) {
   const t = useTranslations('pdp');
   const { product } = data;
@@ -35,12 +39,22 @@ export default function ProductDetail({
   return (
     <div className="wrap pb-16 pt-3.5" data-testid="product-detail">
       <Breadcrumbs items={crumbs} />
-      <PdpProvider data={data} initialSelection={initialSelection} {...(choose ? { choose } : {})}>
-        <div className="mt-3.5 grid gap-x-12 gap-y-8 stack:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-          <Gallery />
-          <BuyBox />
-        </div>
-      </PdpProvider>
+      {product.shape === 'presetBundle' ? (
+        <PresetBundleDetail
+          product={product}
+          bundle={data.bundle ?? null}
+          requestedPreset={requestedPreset}
+          collection={data.collection}
+          {...(choose ? { choose } : {})}
+        />
+      ) : (
+        <PdpProvider data={data} initialSelection={initialSelection} {...(choose ? { choose } : {})}>
+          <div className="mt-3.5 grid gap-x-12 gap-y-8 stack:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+            <Gallery />
+            <BuyBox />
+          </div>
+        </PdpProvider>
+      )}
       <RatingSummary rating={product.rating} />
       <ReviewsSlot productId={product.id} productSlug={product.slug} sku={product.defaultSku} productName={product.name} stats={product.rating} />
       {related}

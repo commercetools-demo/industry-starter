@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const h = vi.hoisted(() => ({
-  product: vi.fn(), inventory: vi.fn(), policies: vi.fn(), cacheCalls: 0, inBrand: vi.fn(),
+  product: vi.fn(), inventory: vi.fn(), policies: vi.fn(), cacheCalls: 0, inBrand: vi.fn(), bundle: vi.fn(),
 }));
 // A memoising stand-in for React's request-scoped cache(): one result per argument list.
 vi.mock('react', () => ({
@@ -17,6 +17,7 @@ vi.mock('react', () => ({
 }));
 vi.mock('@/lib/ct/product-detail', () => ({ getProductBySku: h.product, getRecurrencePolicies: h.policies }));
 vi.mock('@/lib/ct/inventory', () => ({ getInventoryDetail: h.inventory }));
+vi.mock('@/lib/ct/preset-bundles', () => ({ getBundleView: h.bundle }));
 vi.mock('@/lib/ct/product-selections', () => ({ isInBrandSelection: h.inBrand }));
 vi.mock('@/lib/ct/attribute-labels', () => ({ getAttributeLabels: async () => ({}) }));
 vi.mock('@/lib/ct/categories', () => ({ getCategoryTree: async () => [] }));
@@ -91,5 +92,37 @@ describe('loadProductPage', () => {
     expect((await loadProductPage('M', 'en-US'))?.policies).toEqual([]);
     h.product.mockResolvedValue(projection(true));
     expect((await loadProductPage('B', 'en-US'))?.policies).toHaveLength(1);
+  });
+});
+
+describe('loadProductPage for a preset bundle (V-08)', () => {
+  const bundleProjection = () => projection(false, 'malva-coffee-machine-bundle');
+  const view = { productId: 'p1', sku: 'BUNDLE-1', presets: [] };
+
+  it('loads the bundle view and no recurrence policies for the bundle shape', async () => {
+    h.product.mockResolvedValue(bundleProjection());
+    h.bundle.mockResolvedValue(view);
+    const page = await loadProductPage('BUNDLE-1', 'en-US');
+    expect(page?.product.shape).toBe('presetBundle');
+    expect(page?.bundle).toEqual(view);
+    expect(h.bundle).toHaveBeenCalledWith('BUNDLE-1', expect.anything(), expect.objectContaining({ country: 'US', currency: 'USD' }));
+    expect(h.policies).not.toHaveBeenCalled();
+    expect(page?.policies).toEqual([]);
+  });
+
+  it('a failed bundle read gives bundle null and logs pdp_bundle_failed', async () => {
+    h.product.mockResolvedValue(bundleProjection());
+    h.bundle.mockRejectedValue(Object.assign(new Error('boom'), { statusCode: 403 }));
+    const page = await loadProductPage('BUNDLE-2', 'en-US');
+    expect(page?.bundle).toBeNull();
+    expect(console.error).toHaveBeenCalledWith(JSON.stringify({ event: 'pdp_bundle_failed', status: 403 }));
+  });
+
+  it('other shapes do not read the bundle and carry no bundle field', async () => {
+    h.product.mockResolvedValue(projection());
+    const page = await loadProductPage('POD-1', 'en-US');
+    expect(h.bundle).not.toHaveBeenCalled();
+    expect(page).not.toHaveProperty('bundle');
+    expect(h.policies).toHaveBeenCalled();
   });
 });
