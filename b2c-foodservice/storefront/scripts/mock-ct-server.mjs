@@ -17,7 +17,7 @@
 // is not documented; the storefront must work either way).
 // Workstream V added the preset bundle: the bundle product (no price, no stock row), its two custom objects (GET custom-objects?where=id="…"),
 // the component products under their project ids, external prices on lines (`externalPrice` on addLineItem, setLineItemPrice; keyed
-// lines never merge; recalculate keeps external prices).
+// lines never merge; recalculate keeps external prices), and the brand product selections (every product is malva-coffee's).
 //
 //   node scripts/mock-ct-server.mjs [port]      (needs openssl; writes a throwaway certificate to the OS temp dir)
 //   NODE_TLS_REJECT_UNAUTHORIZED=0 CTP_API_URL=https://localhost:9443 CTP_AUTH_URL=https://localhost:9443 \
@@ -484,6 +484,20 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
   if (policyMatch) {
     const found = RECURRENCE_POLICIES.find((p) => p.key === decodeURIComponent(policyMatch[1]));
     return found ? json(res, 200, found) : json(res, 404, { statusCode: 404, message: 'not found', errors: [{ code: 'ResourceNotFound' }] });
+  }
+  // Brand product selections (multibrand, workstream V): malva-coffee holds every product of the mock catalogue, malva-drinks none.
+  // The selection by key, and a product's assignments (lib/ct/product-selections.ts and getProductBrand read them).
+  const BRAND_SELECTION_KEYS = { 'mcf-selection-malva-coffee': 'sel-malva-coffee', 'mcf-selection-malva-drinks': 'sel-malva-drinks' };
+  const selectionByKey = new RegExp(`^/${PROJECT}/product-selections/key=([^/]+)$`).exec(path);
+  if (selectionByKey && req.method === 'GET' && Object.hasOwn(BRAND_SELECTION_KEYS, decodeURIComponent(selectionByKey[1]))) {
+    const key = decodeURIComponent(selectionByKey[1]);
+    return json(res, 200, { id: BRAND_SELECTION_KEYS[key], version: 1, key, name: { 'en-US': key }, createdAt: '2026-01-01T00:00:00.000Z', lastModifiedAt: '2026-01-01T00:00:00.000Z' });
+  }
+  const assignments = new RegExp(`^/${PROJECT}/products/([0-9a-f-]{36})/product-selections$`).exec(path);
+  if (assignments && req.method === 'GET') {
+    if (!DOC_BY_ID.has(assignments[1])) return json(res, 404, { statusCode: 404, message: 'not found', errors: [{ code: 'ResourceNotFound' }] });
+    const coffee = BRAND_SELECTION_KEYS['mcf-selection-malva-coffee'];
+    return json(res, 200, list([{ productSelection: { typeId: 'product-selection', id: coffee }, variants: [] }]));
   }
   // One projection by key (home page) or by id (the product page read).
   const byKey = new RegExp(`^/${PROJECT}/product-projections/key=([^/]+)$`).exec(path);

@@ -369,6 +369,7 @@ Common rules: test first, then code. Run `cd storefront && npm run check` (and `
   - QuickAdd on the bundle card navigates and does not call the add hook.
 - [x] **V-19 Assistant and in-store guard.** No new feature. Check that the assistant's cart tool and the in-store scan turn `bundle_requires_preset` into their normal "cannot add" answer (read how they map `LineRejected`). Tests: one per surface, asserting the refusal, not a crash. Anything larger goes into IDEAS.
 - [ ] **V-20 Browser verification against the mock.** Run section 6 at 375 px and 1440 px. Save screenshots and a short README in `plans/evidence/V/`.
+  - Partial (not ticked): over HTTP against the mock, the PDP renders both presets (Vertuo bundle $349.16, was $387.95, save 10%; Pod plus $416.15, was $472.90, save 12%), and `POST /api/cart/bundles` gives one bag row with the machine and pods at $0. The screenshots and the console check at 375 and 1440 px are missing: the in-app browser tools were disabled for the session.
 - [ ] **V-21 Live verification and handover.** Only after OA-V-a. Set the new client in `storefront/.env.local` (names only in `.env.example`; `CTP_SCOPES` gains `view_key_value_documents`). Run section 6 again against the real project, place one order in the hosted Checkout test mode (M-V-01 lists what only the owner can check), run `npm run build`, update `FEATURES.md`, and set `STATUS.md` to `Ready for review`.
 
 ## 5. Scenarios checklist
