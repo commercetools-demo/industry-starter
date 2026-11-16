@@ -13,7 +13,7 @@ import { cachedPublic } from '@/lib/ct/public-cache';
 import { updateWithRetry } from '@/lib/ct/retry';
 import { AppError } from '@/lib/errors';
 import { brandOfLineFields } from '@/lib/brands';
-import { childrenOf, isBundleChild, isBundleLine, isBundleParent } from '@/lib/mappers/bundle-lines';
+import { childrenOf, isBundleLine, isBundleParent } from '@/lib/mappers/bundle-lines';
 import { fulfilmentOf } from '@/lib/mappers/cart';
 import { mapCheckoutState } from '@/lib/mappers/checkout';
 import type { Session } from '@/lib/session';

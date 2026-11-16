@@ -15,6 +15,9 @@
 // 404 like a project that has not run the seed yet), `custom` on a cart draft and the setCustomType and setCustomField actions of a
 // cart and an order, and `MOCK_ORDER_COPIES_CART_CUSTOM=0` to place orders without the cart's custom fields (the platform's behaviour
 // is not documented; the storefront must work either way).
+// Workstream V added the preset bundle: the bundle product (no price, no stock row), its two custom objects (GET custom-objects?where=id="…"),
+// the component products under their project ids, external prices on lines (`externalPrice` on addLineItem, setLineItemPrice; keyed
+// lines never merge; recalculate keeps external prices).
 //
 //   node scripts/mock-ct-server.mjs [port]      (needs openssl; writes a throwaway certificate to the OS temp dir)
 //   NODE_TLS_REJECT_UNAUTHORIZED=0 CTP_API_URL=https://localhost:9443 CTP_AUTH_URL=https://localhost:9443 \
@@ -30,7 +33,7 @@ import { createServer } from 'node:https';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  DOCS, DOC_BY_ID, FIXTURES, PRICE_OVERRIDES, RECURRENCE_POLICIES, VARIANT_BY_SKU, categoryId, channelId, priceFor, productTypeResults, projectionOf, runSearch,
+  CUSTOM_OBJECTS, DOCS, DOC_BY_ID, FIXTURES, PRICE_OVERRIDES, RECURRENCE_POLICIES, VARIANT_BY_SKU, categoryId, channelId, priceFor, productTypeResults, projectionOf, runSearch,
 } from './mock-fixtures/mock-catalog.mjs';
 import { orderRoutes, placedOrders } from './mock-fixtures/mock-orders.mjs';
 import { recurringRoutes } from './mock-fixtures/mock-recurring.mjs';
@@ -103,7 +106,7 @@ const rate = (currency, freeAbove) => ({
 
 const inventoryEntries = (sku) => {
   const found = VARIANT_BY_SKU.get(sku);
-  if (!found) return [];
+  if (!found || found.variant.noInventoryRow) return []; // a bundle product has no stock row (workstream V)
   const { stock } = found.variant;
   const over = STOCK_OVERRIDES.get(sku);
   const online = over?.online ?? stock.online;
@@ -220,6 +223,8 @@ function newLine(cart, found, action, price, id) {
     price: { value: centMoney(price.currency, unit) }, totalPrice: centMoney(price.currency, 0),
     ...(action.supplyChannel ? { supplyChannel: action.supplyChannel } : {}),
     ...(action.recurrenceInfo ? { recurrenceInfo: action.recurrenceInfo } : {}),
+    ...(action.externalPrice ? { priceMode: 'ExternalPrice' } : {}),
+    ...(action.key ? { key: action.key } : {}),
   };
 }
 
@@ -290,13 +295,19 @@ function updateCart(cart, body) {
       case 'addLineItem': {
         const found = VARIANT_BY_SKU.get(action.sku);
         if (!found) return ctError(400, [{ code: 'InvalidOperation', message: `A product with SKU '${action.sku}' not found.` }]);
-        const price = priceFor(found.variant, next.country, currency);
+        // An external price (a preset bundle, workstream V) is the price the line carries; the variant's own price is not read.
+        const price = action.externalPrice
+          ? { currency: action.externalPrice.currencyCode, cents: action.externalPrice.centAmount }
+          : priceFor(found.variant, next.country, currency);
         if (!price) return ctError(400, [{ code: 'MissingPriceForProduct', message: 'no price' }]);
-        // Lines merge on SKU, fulfilment, supply channel and recurrence policy, like the platform (workstream H).
+        // Lines merge on SKU, fulfilment, supply channel, recurrence policy and parent, like the platform (workstream H). A keyed
+        // line (a bundle parent) never merges, and a bundle part never merges into a line of its own (F-V-02).
         const existing = next.lineItems.find(
           (l) => l.variant.sku === action.sku && l.custom?.fields?.fulfilment === action.custom?.fields?.fulfilment
             && l.supplyChannel?.id === action.supplyChannel?.id
-            && l.recurrenceInfo?.recurrencePolicy?.id === action.recurrenceInfo?.recurrencePolicy?.id,
+            && l.recurrenceInfo?.recurrencePolicy?.id === action.recurrenceInfo?.recurrencePolicy?.id
+            && (l.custom?.fields?.parentId ?? null) === (action.custom?.fields?.parentId ?? null)
+            && !action.key && !l.key,
         );
         if (existing) existing.quantity += action.quantity ?? 1;
         else next.lineItems.push(newLine(next, found, action, price, `li-${(lineSeq += 1)}-${cartSeq}`));
@@ -320,6 +331,20 @@ function updateCart(cart, body) {
         else delete l.supplyChannel;
         break;
       }
+      case 'setLineItemPrice': {
+        const l = lineOf(action.lineItemId);
+        if (!l) return ctError(400, [{ code: 'InvalidOperation', message: 'line item not found' }]);
+        if (action.externalPrice) {
+          l.priceMode = 'ExternalPrice';
+          l.price = { value: centMoney(action.externalPrice.currencyCode, action.externalPrice.centAmount) };
+        } else {
+          delete l.priceMode;
+          const found = VARIANT_BY_SKU.get(l.variant.sku);
+          const price = found && priceFor(found.variant, next.country, currency);
+          if (price) l.price = { value: centMoney(price.currency, price.cents) };
+        }
+        break;
+      }
       case 'setLineItemCustomField': {
         const l = lineOf(action.lineItemId);
         if (!l) return ctError(400, [{ code: 'InvalidOperation', message: 'line item not found' }]);
@@ -339,7 +364,8 @@ function updateCart(cart, body) {
         for (const l of next.lineItems) {
           const found = VARIANT_BY_SKU.get(l.variant.sku);
           const price = found && priceFor(found.variant, next.country, currency);
-          if (price && !l.recurrenceInfo) l.price = { value: centMoney(price.currency, price.cents) };
+          // A line with an external price keeps it (the platform's recalculate does too, F-V-03).
+          if (price && !l.recurrenceInfo && l.priceMode !== 'ExternalPrice') l.price = { value: centMoney(price.currency, price.cents) };
         }
         break;
       case 'addDiscountCode': {
@@ -446,6 +472,11 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
     const skus = one ? [one[1]] : many ? [...many[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]) : atChannel ? [atChannel[1]] : [];
     const entries = skus.flatMap(inventoryEntries);
     return json(res, 200, list(atChannel ? entries.filter((e) => e.supplyChannel?.id === atChannel[2]) : entries));
+  }
+  // The owner's custom objects of the preset bundle (workstream V): GET custom-objects?where=id="…" (needs OA-V-a in the project).
+  if (path === `/${PROJECT}/custom-objects` && req.method === 'GET') {
+    const id = /^id="([^"]+)"$/.exec(url.searchParams.get('where') ?? '')?.[1];
+    return json(res, 200, list(CUSTOM_OBJECTS.filter((o) => o.id === id)));
   }
   // Recurrence policies: the list and one by key (workstream H).
   if (path === `/${PROJECT}/recurrence-policies`) return json(res, 200, list(RECURRENCE_POLICIES));
