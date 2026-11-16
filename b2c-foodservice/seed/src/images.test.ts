@@ -59,7 +59,7 @@ describe('Images', () => {
     // nothing else changes: every update line is a product with images or a category with assets
     expect(run.lines.every((l) => /^update (product mcf-p-[^ ]+ \(addExternalImage, publish\)|category mcf-cat-[^ ]+ \(addAsset\))$/.test(l)), run.lines.find((l) => !/addExternalImage|addAsset/.test(l))).toBe(true);
     expect(run.lines.filter((l) => l.startsWith('update product')).length).toBe(PRODUCTS.length);
-    expect(run.lines.filter((l) => l.startsWith('update category')).length).toBe(20);
+    expect(run.lines.filter((l) => l.startsWith('update category')).length).toBe(21);
     expect(JSON.stringify(api.all('products'))).toContain('https://images.example.com/photos/');
     expect(JSON.stringify(api.all('products'))).not.toContain('?auto=compress');
     expect(await verifySeed(api)).toEqual([]);

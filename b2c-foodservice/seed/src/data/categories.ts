@@ -36,6 +36,9 @@ export const CATEGORIES: CategoryDef[] = [
   C('mcf-cat-accessories-care', 'mcf-cat-accessories', 'Care and descaling', 'care-and-descaling', 'Keep your machine in shape.'),
   C('mcf-cat-accessories-storage', 'mcf-cat-accessories', 'Storage', 'storage', 'Capsule and bean storage.'),
   C('mcf-cat-gifts', undefined, 'Gifts', 'gifts', 'Curated gift sets.'),
+  // Preset bundles (workstream V). Online only by default: no `instoreVisibility` is set, and the storefront's in-store tree
+  // shows only categories marked both or onlyInStore (lib/category-tree.ts).
+  C('mcf-cat-bundles', undefined, 'Bundles', 'bundles', 'A machine and its pods, together for less.'),
 ];
 
 export const categoryName = (c: CategoryDef): LString => ls(c.en);
