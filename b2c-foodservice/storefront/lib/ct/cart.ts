@@ -7,7 +7,7 @@ import { planFulfilmentSwitch, planStoreChange, shippingMethodKeyFor, type PlanL
 import { getCartEnrichment } from '@/lib/ct/cart-enrich';
 import { getBundleView } from '@/lib/ct/preset-bundles';
 import { buildPresetBundleActions, buildRaiseBundleActions } from '@/lib/ct/preset-bundle-cart';
-import { childrenOf, bundlePresetOf, isBundleParent } from '@/lib/mappers/bundle-lines';
+import { bundlePresetOf, childrenOf, isBundleChild, isBundleLine, isBundleParent } from '@/lib/mappers/bundle-lines';
 import { shapeOf } from '@/lib/product/variant-config';
 import { apiRoot } from '@/lib/ct/client';
 import { getBrandChannelId, getStoresForCountry } from '@/lib/ct/channels';
@@ -527,6 +527,21 @@ async function availableFor(line: Cart['lineItems'][number]): Promise<number> {
 }
 
 /**
+ * A bundle's quantity moves as one (workstream V, D6): the parent and every part go to the same quantity in one update. Raising
+ * it is refused when any part has less stock than the new quantity (the part's own stock: its store for a collect bundle).
+ */
+async function changeBundleQuantity(current: Cart, parent: Cart['lineItems'][number], quantity: number): Promise<CartUpdateAction[]> {
+  const parts = childrenOf(current.lineItems, parent);
+  if (quantity > parent.quantity) {
+    for (const part of parts) {
+      const available = await availableFor(part);
+      if (quantity > available) throw new LineRejected('quantity_exceeds_stock', 409, { available });
+    }
+  }
+  return [parent, ...parts].map((l) => ({ action: 'changeLineItemQuantity', lineItemId: l.id, quantity }));
+}
+
+/**
  * Sets a line's quantity (1 to 99; removal is `removeLine`, never a quantity of 0). Raising it above the stock is refused
  * with `quantity_exceeds_stock` and the available count; lowering is always allowed.
  */
@@ -534,6 +549,8 @@ export async function changeQuantity(session: Session, market: CartMarket, lineI
   if (!Number.isInteger(quantity) || quantity < 1 || quantity > CART_MAX_LINE_QUANTITY) throw new LineRejected('invalid_request', 400);
   const ct = await mutateCart(session, async (current) => {
     const line = lineOrThrow(current, lineId);
+    if (isBundleChild(line)) throw new LineRejected('bundle_line_locked', 409);
+    if (isBundleParent(line)) return changeBundleQuantity(current, line, quantity);
     if (quantity === line.quantity) return [];
     if (quantity > line.quantity) {
       const available = await availableFor(line);
@@ -547,14 +564,18 @@ export async function changeQuantity(session: Session, market: CartMarket, lineI
 /** Removes a line. An empty cart is still the shopper's cart: the session keeps its `cartId`. */
 export async function removeLine(session: Session, market: CartMarket, lineId: string): Promise<CartView> {
   const ct = await mutateCart(session, (current) => {
-    lineOrThrow(current, lineId);
-    return [{ action: 'removeLineItem', lineItemId: lineId }];
+    const line = lineOrThrow(current, lineId);
+    if (isBundleChild(line)) throw new LineRejected('bundle_line_locked', 409);
+    // A bundle goes as one: the parent and every part (workstream V, D6).
+    const removed = isBundleParent(line) ? [line, ...childrenOf(current.lineItems, line)] : [line];
+    return removed.map((l) => ({ action: 'removeLineItem', lineItemId: l.id }));
   });
   return finish(session, market, ct);
 }
 
 function planLines(cart: Cart): PlanLine[] {
-  return cart.lineItems.map((l) => ({
+  // Bundle lines are left out: a plan must never merge a part into the shopper's own line of the same SKU (workstream V, D6).
+  return cart.lineItems.filter((l) => !isBundleLine(l)).map((l) => ({
     id: l.id,
     sku: l.variant?.sku ?? '',
     quantity: l.quantity,
@@ -602,8 +623,10 @@ async function resolveStore(cart: Cart, market: CartMarket, session: Session, st
 export async function switchFulfilment(session: Session, market: CartMarket, lineId: string, input: SwitchInput): Promise<CartView> {
   const ct = await mutateCart(session, async (current) => {
     const target = lineOrThrow(current, lineId);
+    if (isBundleChild(target)) throw new LineRejected('bundle_line_locked', 409);
     // A line of a brand without pickup (Malva Drinks) is never collected.
     if (input.fulfilment === 'collect' && !BRANDS[brandOfLineFields(target.custom?.fields)].pickup) throw new LineRejected('collect_not_available_in_market', 400);
+    if (isBundleParent(target)) return switchBundleActions(current, target, session, market, input);
     const store = input.fulfilment === 'collect' ? await resolveStore(current, market, session, input.storeKey) : undefined;
     const plan = planFulfilmentSwitch(planLines(current), lineId, store ? { fulfilment: 'collect', channelId: store.id } : { fulfilment: 'delivery' });
     if (plan.kind === 'reject') throw new LineRejected(plan.reason, plan.reason === 'line_not_found' ? 404 : 422);
@@ -616,6 +639,30 @@ export async function switchFulfilment(session: Session, market: CartMarket, lin
     return opsToActions(plan.ops);
   });
   return finish(session, market, ct);
+}
+
+/**
+ * A bundle moves as one (workstream V, D6): the parent and every part change to delivery, or to the store (each part's stock
+ * at the bundle's quantity is checked). The lines keep their key, so the parent stays the same line.
+ */
+async function switchBundleActions(
+  current: Cart, parent: Cart['lineItems'][number], session: Session, market: CartMarket, input: SwitchInput,
+): Promise<CartUpdateAction[]> {
+  const store = input.fulfilment === 'collect' ? await resolveStore(current, market, session, input.storeKey) : undefined;
+  const parts = [parent, ...childrenOf(current.lineItems, parent)];
+  if (store) {
+    for (const part of parts) {
+      const available = await getStoreStock(part.variant?.sku ?? '', store.id);
+      if (available < parent.quantity) throw new LineRejected('not_available_for_collection', 409, { available });
+    }
+  }
+  const fulfilment = store ? 'collect' : 'delivery';
+  const done = parts.every((p) => fulfilmentOf(p) === fulfilment && (store ? p.supplyChannel?.id === store.id : !p.supplyChannel));
+  if (done) return [];
+  return parts.flatMap((p): CartUpdateAction[] => [
+    { action: 'setLineItemSupplyChannel', lineItemId: p.id, ...(store ? { supplyChannel: { typeId: 'channel' as const, id: store.id } } : {}) },
+    { action: 'setLineItemCustomField', lineItemId: p.id, name: 'fulfilment', value: fulfilment },
+  ]);
 }
 
 /**

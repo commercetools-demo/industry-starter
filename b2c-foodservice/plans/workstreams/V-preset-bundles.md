@@ -332,7 +332,7 @@ Common rules: test first, then code. Run `cd storefront && npm run check` (and `
   - an unavailable preset is refused with no update;
   - `POST /api/cart/lines` with the bundle SKU answers `bundle_requires_preset`;
   - the route rejects a body with a `price` field or a bad preset.
-- [ ] **V-10 Keep the lines together.** File: `lib/ct/cart.ts` (`changeQuantity`, `removeLine`, `switchFulfilment`, `planLines`, per D6). Tests:
+- [x] **V-10 Keep the lines together.** File: `lib/ct/cart.ts` (`changeQuantity`, `removeLine`, `switchFulfilment`, `planLines`, per D6). Tests:
   - the parent quantity change cascades;
   - raising it above a child's stock is refused with `available`;
   - removing the parent removes the children;

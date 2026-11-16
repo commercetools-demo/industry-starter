@@ -8,6 +8,7 @@ const ct = vi.hoisted(() => ({
   updates: [] as { id: string; actions: Record<string, unknown>[] }[],
   n: 0,
   view: null as BundleView | null,
+  stock: {} as Record<string, number>,
 }));
 
 // A small in-memory cart engine: addLineItem and changeLineItemQuantity only.
@@ -40,6 +41,15 @@ vi.mock('@/lib/ct/client', () => ({
                 });
               }
               if (a.action === 'changeLineItemQuantity') lines = lines.map((l) => (l.id === a.lineItemId ? { ...l, quantity: a.quantity } : l));
+              if (a.action === 'removeLineItem') lines = lines.filter((l) => l.id !== a.lineItemId);
+              if (a.action === 'setLineItemSupplyChannel') lines = lines.map((l) => (l.id === a.lineItemId ? { ...l, supplyChannel: a.supplyChannel } : l));
+              if (a.action === 'setLineItemCustomField') {
+                lines = lines.map((l) => {
+                  if (l.id !== a.lineItemId) return l;
+                  const fields = { ...((l.custom as { fields?: Record<string, unknown> } | undefined)?.fields ?? {}), [a.name as string]: a.value };
+                  return { ...l, custom: { fields } };
+                });
+              }
             }
             const next = { ...c, version: c.version + 1, lineItems: lines, totalLineItemQuantity: lines.reduce((n, l) => n + (l.quantity as number), 0) };
             ct.carts.set(ID, next);
@@ -62,16 +72,16 @@ vi.mock('@/lib/ct/product-selections', () => ({ getProductBrand: async () => 'ma
 vi.mock('@/lib/ct/preset-bundles', () => ({ getBundleView: async () => ct.view }));
 vi.mock('@/lib/ct/inventory', () => ({
   SKU_PATTERN: /^[A-Za-z0-9._-]{1,64}$/,
-  getInventoryDetail: async (skus: string[]) => Object.fromEntries(skus.map((sku) => [sku, { online: 100, stores: {} }])),
-  getStoreStock: async () => 100,
+  getInventoryDetail: async (skus: string[]) => Object.fromEntries(skus.map((sku) => [sku, { online: ct.stock[sku] ?? 100, stores: {} }])),
+  getStoreStock: async (sku: string) => ct.stock[sku] ?? 100,
 }));
-vi.mock('@/lib/ct/channels', () => ({ getBrandChannelId: async () => undefined, getStoresForCountry: async () => [] }));
+vi.mock('@/lib/ct/channels', () => ({ getBrandChannelId: async () => undefined, getStoresForCountry: async () => [(await import('@/test/cart')).STORE_SOHO] }));
 vi.mock('@/lib/ct/cart-enrich', async () => ({ getCartEnrichment: async () => (await import('@/lib/mappers/cart')).EMPTY_ENRICHMENT }));
 vi.mock('@/lib/ct/order-type', () => ({ orderTypeCartActions: async () => [], withOrderType: async (d: unknown) => d }));
 vi.mock('next-intl/server', () => ({ getTranslations: async () => (key: string) => key }));
 vi.mock('@/lib/env', () => ({ getEnv: () => ({ SESSION_SECRET: 'a'.repeat(40) }) }));
 
-import { LineRejected, addLine, addPresetBundle } from '@/lib/ct/cart';
+import { LineRejected, addLine, addPresetBundle, changeQuantity, removeLine, switchFulfilment } from '@/lib/ct/cart';
 import { BUNDLE_SKU, componentProducts, inventoryFor } from '@/test/preset-bundle';
 import { BUNDLE_CONFIG_VALUE } from '@/test/preset-bundle';
 import { mapBundleView, parseBundleConfig } from '@/lib/mappers/preset-bundle';
@@ -83,6 +93,7 @@ const session = () => ({ anonymousId: 'anon-1' }) as unknown as Session;
 beforeEach(() => {
   ct.carts.clear();
   ct.updates.length = 0;
+  ct.stock = {};
   ct.view = mapBundleView(parseBundleConfig(BUNDLE_CONFIG_VALUE)!, componentProducts(), inventoryFor(), { locale: 'en-US', currency: 'USD' }, BUNDLE_SKU);
 });
 
@@ -126,3 +137,83 @@ describe('addPresetBundle (V-09)', () => {
     expect(ct.updates).toHaveLength(0);
   });
 });
+
+// ---------------------------------------------------------------- V-10: the lines of a bundle stay together
+
+const MACHINE_SKU = 'MCF-MAC-VERTUO-BLA-M';
+const POD_SKU = 'MCF-GFT-STARTER';
+
+/** A bag with one bundle (preset 0, quantity 1). Returns the session and the ids of the parent and its parts. */
+async function bagWithBundle() {
+  const first = await addPresetBundle(session(), MARKET, { sku: BUNDLE_SKU, preset: 0, quantity: 1, fulfilment: 'delivery' });
+  const bag = { anonymousId: 'anon-1', cartId: first.session.cartId } as unknown as Session;
+  const lines = (ct.carts.get(first.session.cartId as string)?.lineItems ?? []) as { id: string; key?: string; variant?: { sku: string } }[];
+  const parent = lines.find((l) => l.key?.startsWith('bundle-'))!;
+  const parts = lines.filter((l) => l !== parent);
+  return { bag, parent, parts };
+}
+
+describe('preset bundle lines stay together (V-10)', () => {
+  it('the parent quantity change cascades to the machine and every pod in one update', async () => {
+    const { bag, parent } = await bagWithBundle();
+    ct.updates.length = 0;
+    await changeQuantity(bag, MARKET, parent.id, 2);
+    const actions = ct.updates[0].actions;
+    expect(actions).toHaveLength(4);
+    expect(actions.every((a) => a.action === 'changeLineItemQuantity' && a.quantity === 2)).toBe(true);
+  });
+
+  it('raising the bundle above a part\'s stock is refused with that part\'s available count', async () => {
+    const { bag, parent, parts } = await bagWithBundle();
+    ct.updates.length = 0;
+    ct.stock[POD_SKU] = 1;
+    const pod = parts.find((p) => p.variant?.sku === POD_SKU)!;
+    expect(pod).toBeDefined();
+    await expect(changeQuantity(bag, MARKET, parent.id, 2)).rejects.toMatchObject({ code: 'quantity_exceeds_stock', extra: { available: 1 } });
+    expect(ct.updates).toHaveLength(0);
+  });
+
+  it('removing the bundle removes the parent and every part', async () => {
+    const { bag, parent } = await bagWithBundle();
+    ct.updates.length = 0;
+    await removeLine(bag, MARKET, parent.id);
+    expect(ct.updates[0].actions).toHaveLength(4);
+    expect(ct.updates[0].actions.every((a) => a.action === 'removeLineItem')).toBe(true);
+    expect(ct.carts.get(bag.cartId as string)?.lineItems).toEqual([]);
+  });
+
+  it('a part cannot be changed, removed or switched on its own: bundle_line_locked', async () => {
+    const { bag, parts } = await bagWithBundle();
+    const part = parts[0];
+    await expect(changeQuantity(bag, MARKET, part.id, 2)).rejects.toMatchObject({ code: 'bundle_line_locked', status: 409 });
+    await expect(removeLine(bag, MARKET, part.id)).rejects.toMatchObject({ code: 'bundle_line_locked' });
+    await expect(switchFulfilment(bag, MARKET, part.id, { fulfilment: 'delivery' })).rejects.toMatchObject({ code: 'bundle_line_locked' });
+    expect(ct.updates).toHaveLength(1); // only the add
+  });
+
+  it('switching the shopper\'s own machine line to collect and back never touches the bundle machine part', async () => {
+    const { bag, parent, parts } = await bagWithBundle();
+    const own = await addLine(bag, MARKET, { sku: MACHINE_SKU, quantity: 1, fulfilment: 'delivery' });
+    const ownId = (ct.carts.get(own.session.cartId as string)?.lineItems as { id: string; key?: string; variant?: { sku: string } }[])
+      .find((l) => l.variant?.sku === MACHINE_SKU && !(l as { custom?: { fields?: Record<string, unknown> } }).custom?.fields?.parentId)!.id;
+    const bundleIds = [parent.id, ...parts.map((p) => p.id)];
+    ct.updates.length = 0;
+    await switchFulfilment(bag, MARKET, ownId, { fulfilment: 'collect', storeKey: 'mcf-store-nyc-soho' });
+    await switchFulfilment(bag, MARKET, ownId, { fulfilment: 'delivery' });
+    for (const update of ct.updates) {
+      for (const a of update.actions) expect(bundleIds).not.toContain(a.lineItemId);
+    }
+    expect(ct.updates.length).toBeGreaterThan(0);
+  });
+
+  it('switching the bundle to collect moves the parent and every part to the store', async () => {
+    const { bag, parent, parts } = await bagWithBundle();
+    ct.updates.length = 0;
+    await switchFulfilment(bag, MARKET, parent.id, { fulfilment: 'collect', storeKey: 'mcf-store-nyc-soho' });
+    const actions = ct.updates[0].actions;
+    const touched = actions.filter((a) => a.action === 'setLineItemSupplyChannel').map((a) => a.lineItemId);
+    expect(touched.sort()).toEqual([parent.id, ...parts.map((p) => p.id)].sort());
+    expect(actions.filter((a) => a.action === 'setLineItemCustomField').every((a) => a.value === 'collect')).toBe(true);
+  });
+});
+
