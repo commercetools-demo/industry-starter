@@ -202,6 +202,8 @@ export interface ProductPageData {
   brand?: 'malva-coffee' | 'malva-drinks';
   country: string;
   currency: string;
+  /** Workstream V: the preset bundle view for a bundle SKU (null when it cannot be read); absent for other shapes. */
+  bundle?: BundleView | null;
 }
 
 // Workstream M: reviews and ratings (no moderation, D-037: every review is published on creation).
