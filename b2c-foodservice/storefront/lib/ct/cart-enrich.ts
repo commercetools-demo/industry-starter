@@ -11,7 +11,7 @@ import { getFreeShippingThreshold } from '@/lib/ct/shipping';
 import { mapAttributes } from '@/lib/mappers/attribute';
 import type { AttributeLabels } from '@/lib/mappers/attribute-labels';
 import { EMPTY_ENRICHMENT, fulfilmentOf, type CartEnrichment, type EnrichedProduct, type EnrichedVariant } from '@/lib/mappers/cart';
-import { isBundleParent } from '@/lib/mappers/bundle-lines';
+import { isBundleLine, isBundleParent } from '@/lib/mappers/bundle-lines';
 import { mapMoney } from '@/lib/mappers/money';
 import { ATTRIBUTE_BLOCKLIST, shapeOf } from '@/lib/product/variant-config';
 import { getCompatibleCapsules } from '@/lib/related';
@@ -123,8 +123,9 @@ export async function getCartEnrichment(cart: CtCart, ctx: EnrichContext): Promi
   ]);
   const products = await readProducts(productIds, ctx, labels).catch((): Record<string, EnrichedProduct> => ({}));
 
+  // A bundle's machine is not a machine the shopper chose alone: no companion nudge for the parts (workstream V).
   const target = nudgeTarget(
-    cart.lineItems.map((l) => ({
+    cart.lineItems.filter((l) => !isBundleLine(l)).map((l) => ({
       shape: products[l.productId]?.shape,
       systemKey: products[l.productId]?.systemKey,
       name: getLocalizedString(l.name, ctx.locale),

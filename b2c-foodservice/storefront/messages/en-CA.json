@@ -397,7 +397,12 @@
       },
       "remove": "Remove",
       "removeNamed": "Remove {name}",
-      "firstDelivery": "First delivery by {day}, then {interval}"
+      "firstDelivery": "First delivery by {day}, then {interval}",
+      "bundle": {
+        "badge": "Bundle · save {percent}%",
+        "includes": "Includes",
+        "together": "Delivered or collected together"
+      }
     },
     "notice": {
       "priceUpdated": "Price updated",

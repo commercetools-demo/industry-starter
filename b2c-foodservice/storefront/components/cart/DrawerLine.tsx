@@ -8,6 +8,7 @@ import LineImage from './LineImage';
 import LineNotice from './LineNotice';
 import QuantityStepper from './QuantityStepper';
 import { focusAfterRemove, useMoney, type CartUi } from './use-cart-ui';
+import BundleLineItems from './BundleLineItems';
 
 /**
  * One line in the drawer: image, name and engine line total, variant summary, the fulfilment mark, notices, stepper and a
@@ -37,7 +38,8 @@ export default function DrawerLine({ line, ui, onNavigate }: { line: CartLine; u
             {money(line.total)}
           </span>
         </div>
-        {line.variantSummary ? <p className="m-0 mt-0.5 text-[12.5px] text-ink-3">{line.variantSummary}</p> : null}
+        {line.bundle ? <p className="m-0 mt-0.5 text-[12.5px] text-ink-3">{line.bundle.presetName}</p> : line.variantSummary ? <p className="m-0 mt-0.5 text-[12.5px] text-ink-3">{line.variantSummary}</p> : null}
+        {line.bundle ? <BundleLineItems bundle={line.bundle} /> : null}
         <div className="mt-1.5">
           <FulfilmentBadge line={line} variant="drawer" />
         </div>

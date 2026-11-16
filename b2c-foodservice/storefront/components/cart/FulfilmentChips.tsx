@@ -24,7 +24,7 @@ export default function FulfilmentChips({
 }) {
   const t = useTranslations('cart.line.chip');
   const offered = useCollectionOffered();
-  if (line.fulfilment === 'subscribe' || !offered) return null;
+  if (line.bundle || line.fulfilment === 'subscribe' || !offered) return null;
 
   const collectActive = line.fulfilment === 'collect';
   const out = line.collectAtSessionStore?.state === 'out';

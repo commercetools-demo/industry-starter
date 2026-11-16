@@ -7,6 +7,7 @@ import { deliveryEstimate } from '@/lib/product/delivery';
 import { DELIVERY_CUTOFF_HOUR, SHIP_DAYS_MAX, SHIP_DAYS_MIN } from '@/lib/shop-config';
 import type { CartLine } from '@/lib/types';
 import { marketForLocale } from '@/lib/utils';
+import BundleLineItems from './BundleLineItems';
 import FulfilmentBadge from './FulfilmentBadge';
 import FulfilmentChips from './FulfilmentChips';
 import LineImage from './LineImage';
@@ -57,7 +58,7 @@ export default function CartLineRow({ line, ui }: { line: CartLine; ui: CartUi }
             {money(line.total)}
           </span>
         </div>
-        {line.variantSummary ? <p className="m-0 mt-0.5 text-[13px] text-ink-3">{line.variantSummary}</p> : null}
+        {line.bundle ? <p className="m-0 mt-0.5 text-[13px] text-ink-3">{line.bundle.presetName}</p> : line.variantSummary ? <p className="m-0 mt-0.5 text-[13px] text-ink-3">{line.variantSummary}</p> : null}
         <p className="m-0 mt-0.5 text-[12.5px] text-ink-3">
           {line.oldUnitPrice ? <s className="mr-1.5">{money(line.oldUnitPrice)}</s> : null}
           {money(line.unitPrice)}
@@ -65,12 +66,14 @@ export default function CartLineRow({ line, ui }: { line: CartLine; ui: CartUi }
         <div className="mt-2">
           <FulfilmentBadge line={line} variant="page" />
         </div>
+        {line.bundle ? <BundleLineItems bundle={line.bundle} /> : null}
         {line.fulfilment === 'subscribe' ? <FirstDelivery line={line} /> : null}
         {line.notices.map((n) => (
           <LineNotice key={n.kind} notice={n} line={line} pending={pending} onShip={() => void ui.ship(line)} />
         ))}
         <div className="mt-3.5 flex flex-wrap items-center justify-between gap-3">
-          <FulfilmentChips line={line} pending={pending} onCollect={() => void ui.collect(line)} onShip={() => void ui.ship(line)} />
+          {/* A bundle switches as one: its chips are not offered on the row (workstream V, D6). */}
+          {line.bundle ? null : <FulfilmentChips line={line} pending={pending} onCollect={() => void ui.collect(line)} onShip={() => void ui.ship(line)} />}
           <div className="flex items-center gap-4">
             <QuantityStepper
               value={line.quantity}
