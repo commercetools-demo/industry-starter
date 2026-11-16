@@ -55,6 +55,7 @@ const TABLE: Record<string, 'customer' | 'session' | 'public' | 'owner-or-guest'
   'orders/[id]/reorder': 'customer',
   'orders/[id]/returns': 'customer',
   'recurrence-policies': 'public',
+  'preset-bundles/[sku]': 'session',
   'recurring-orders': 'customer',
   'recurring-orders/[id]': 'customer',
   reviews: 'public',
