@@ -31,6 +31,7 @@ Spec ids: plain names are `openspec/specs/<name>/`. Apps: `storefront/` (shopper
 | R | In-store companion: `APP_MODE=instore` experience for a shopper in a store (big-touch browse, barcode scan, bag, hosted Checkout, `instore-order-type` on the cart) deployed as a Netlify branch deploy | none new (reuses the code of G, H, I and K) | G, H, I, K | OA-R-a (type in the project), OA-R-b and OA-R-c (branch deploy and variables) | 12 |
 | T | Shopping assistant: docked chat panel over the storefront's own commercetools modules (the Shopper MCP was replaced by T2, D-055; catalogue, assistant cart, own past orders; never orders for the shopper), port of Anthropic's commerce agent | none new (its specs are delta specs of the open OpenSpec change under openspec/changes, so they join the main specs on archive) | D, E, G, H, I, J, K, L | OA-T-a (Anthropic key), OA-T-b (Shopper MCP servers US and CA), OA-T-c (Store templates), OA-T-d (Netlify variables and branch deploy) | 13 |
 | T2 | Assistant on storefront APIs (Shopper MCP removed, D-055) | none new (its specs are delta specs of the open OpenSpec change `add-shopping-assistant`, `specs/shopping-assistant-storefront-backend`) | T, I, G, H, L, D | OA-T-a (Anthropic key and spend cap); OA-T-d for the transport proof | 14 |
+| V | Preset bundles: a "Bundles" category, a product page with one radio card per preset (machine plus pods), the preset discount on the bundle line, parts as $0 child lines (plan `workstreams/V-preset-bundles.md`) | none new | C, F, G, H, I, K, L | OA-V-a (API client with `view_key_value_documents`), OA-V-b (Netlify variables) | 15 |
 
 ## Waves
 
@@ -47,6 +48,8 @@ Spec ids: plain names are `openspec/specs/<name>/`. Apps: `storefront/` (shopper
 11. Q.
 12. R (after Q; a mode of the same app, not part of the release gate of Q).
 13. T (after R; an optional feature behind `ASSISTANT_ENABLED`, not part of the release gate of Q).
+14. T2 (after T; replaces the Shopper MCP backend).
+15. V (preset bundles; a catalogue feature after T2, not part of the release gate of Q).
 
 ## Graph
 
