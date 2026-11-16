@@ -1,8 +1,9 @@
 import 'server-only';
 import type { Order } from '@commercetools/platform-sdk';
-import { LineRejected, addLine, getCartForSession, type CartMarket } from '@/lib/ct/cart';
+import { LineRejected, addLine, addPresetBundle, getCartForSession, type CartMarket } from '@/lib/ct/cart';
 import { getInventoryDetail } from '@/lib/ct/inventory';
 import { AppError } from '@/lib/errors';
+import { bundlePresetOf, isBundleChild, isBundleParent } from '@/lib/mappers/bundle-lines';
 import { fulfilmentOf } from '@/lib/mappers/cart';
 import { CART_MAX_LINE_QUANTITY } from '@/lib/shop-config';
 import type { Session } from '@/lib/session';
@@ -16,6 +17,8 @@ export interface PlannedLine {
   /** What Buy again will add: `collect` only with a chosen store in a collection market; subscribe lines become one-off. */
   fulfilment: 'delivery' | 'collect';
   storeKey?: string;
+  /** A preset bundle (workstream V): re-added as one bundle; its parts are not planned. */
+  bundle?: { preset: number; machineSku: string };
 }
 
 /**
@@ -28,7 +31,7 @@ export function planReorder(
   order: Pick<Order, 'lineItems'>,
   ctx: { locale: string; collection: boolean; storeKey?: string },
 ): PlannedLine[] {
-  return order.lineItems.flatMap((l): PlannedLine[] => {
+  return order.lineItems.filter((l) => !isBundleChild(l)).flatMap((l): PlannedLine[] => {
     const sku = l.variant.sku;
     if (!sku) return [];
     const ordered = fulfilmentOf(l);
@@ -36,6 +39,11 @@ export function planReorder(
       sku, name: getLocalizedString(l.name, ctx.locale) || sku,
       quantity: Math.min(Math.max(1, l.quantity), CART_MAX_LINE_QUANTITY), ordered,
     };
+    if (isBundleParent(l)) {
+      const collect = ordered === 'collect' && ctx.collection && ctx.storeKey;
+      const bundle = { preset: bundlePresetOf(l) ?? -1, machineSku: String(l.custom?.fields?.bundleMachineSku ?? '') };
+      return [{ ...base, fulfilment: collect ? ('collect' as const) : ('delivery' as const), ...(collect ? { storeKey: ctx.storeKey } : {}), bundle }];
+    }
     if (ordered === 'collect' && ctx.collection && ctx.storeKey) return [{ ...base, fulfilment: 'collect' as const, storeKey: ctx.storeKey }];
     return [{ ...base, fulfilment: 'delivery' as const }];
   });
@@ -70,7 +78,8 @@ export async function addPlannedLines(session: Session, market: CartMarket, plan
 
   let stock: Record<string, { online: number }> | null = null;
   try {
-    const skus = plan.filter((p) => p.fulfilment === 'delivery').map((p) => p.sku);
+    // A bundle's SKU has no stock of its own; addPresetBundle checks the stock of its parts.
+    const skus = plan.filter((p) => p.fulfilment === 'delivery' && !p.bundle).map((p) => p.sku);
     stock = skus.length > 0 ? await getInventoryDetail(skus) : {};
   } catch {
     stock = null; // the stock read failed: addLine still checks collect lines, delivery lines are tried as they are
@@ -80,7 +89,7 @@ export async function addPlannedLines(session: Session, market: CartMarket, plan
   let cart: CartSummary | null = null;
   for (const line of plan) {
     let quantity = line.quantity;
-    if (line.fulfilment === 'delivery' && stock) {
+    if (line.fulfilment === 'delivery' && stock && !line.bundle) {
       const online = stock[line.sku]?.online ?? 0;
       if (online <= 0) {
         skipped.push({ sku: line.sku, name: line.name, reason: 'out_of_stock' });
@@ -88,14 +97,22 @@ export async function addPlannedLines(session: Session, market: CartMarket, plan
       }
       quantity = Math.min(quantity, online);
     }
-    const attempt = async (q: number) =>
-      addLine(
+    const attempt = async (q: number) => {
+      if (line.bundle) {
+        const storeKey = line.fulfilment === 'collect' ? line.storeKey : undefined;
+        return addPresetBundle(current, market, {
+          sku: line.sku, quantity: q, preset: line.bundle.preset, machineSku: line.bundle.machineSku,
+          fulfilment: line.fulfilment, ...(storeKey ? { storeKey } : {}),
+        });
+      }
+      return addLine(
         current,
         market,
         line.fulfilment === 'collect' && line.storeKey
           ? { sku: line.sku, quantity: q, fulfilment: 'collect', storeKey: line.storeKey }
           : { sku: line.sku, quantity: q, fulfilment: 'delivery' },
       );
+    };
     try {
       let out;
       let used = quantity;

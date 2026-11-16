@@ -342,6 +342,8 @@ export interface OrderLineView {
   unitCents: number;
   /** Total of the line (all units, after discounts). */
   priceCents: number;
+  /** Workstream V: a preset bundle row with its parts (the parts are not rows of their own). */
+  bundle?: { presetName: string; discountPercent: number; items: { sku: string; name: string; imageUrl?: string; role: 'machine' | 'item' }[] };
 }
 export interface OrderDelivery {
   id: string; createdAt: string; carrier: string | null; trackingId: string | null; trackingUrl: string | null;
