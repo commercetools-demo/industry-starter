@@ -81,7 +81,7 @@ vi.mock('@/lib/ct/order-type', () => ({ orderTypeCartActions: async () => [], wi
 vi.mock('next-intl/server', () => ({ getTranslations: async () => (key: string) => key }));
 vi.mock('@/lib/env', () => ({ getEnv: () => ({ SESSION_SECRET: 'a'.repeat(40) }) }));
 
-import { LineRejected, addLine, addPresetBundle, changeQuantity, removeLine, switchFulfilment } from '@/lib/ct/cart';
+import { LineRejected, addLine, addPresetBundle, changeQuantity, rebuildCart, removeLine, switchFulfilment } from '@/lib/ct/cart';
 import { BUNDLE_SKU, componentProducts, inventoryFor } from '@/test/preset-bundle';
 import { BUNDLE_CONFIG_VALUE } from '@/test/preset-bundle';
 import { mapBundleView, parseBundleConfig } from '@/lib/mappers/preset-bundle';
@@ -217,3 +217,40 @@ describe('preset bundle lines stay together (V-10)', () => {
   });
 });
 
+// ---------------------------------------------------------------- V-16: the region switch re-adds a bundle
+
+describe('region switch of a preset bundle (V-16)', () => {
+  const CA = { country: 'CA', currency: 'CAD', locale: 'en-CA' };
+  /** The view a Canadian shopper gets: the same presets, priced in CAD (or with no price when `noPrice`). */
+  const canadianView = (noPrice: boolean): BundleView => ({
+    ...ct.view!,
+    presets: noPrice ? [] : ct.view!.presets.map((p) => ({
+      ...p,
+      machines: p.machines.map((m) => ({ ...m, price: { centAmount: 45000, currencyCode: 'CAD' }, was: { centAmount: 50000, currencyCode: 'CAD' }, save: { centAmount: 5000, currencyCode: 'CAD' } })),
+    })),
+  });
+
+  it('US to CA re-adds the bundle at the CAD price, once, with its parts', async () => {
+    const { bag } = await bagWithBundle();
+    ct.view = canadianView(false);
+    const oldCart = ct.carts.get(bag.cartId as string) as unknown as Parameters<typeof rebuildCart>[1];
+    const result = await rebuildCart(bag, oldCart, CA);
+    expect(result.dropped).toEqual([]);
+    const newCart = ct.carts.get(result.session.cartId as string) as { lineItems: { key?: string; externalPrice?: { currencyCode: string; centAmount: number }; custom?: { fields: Record<string, unknown> } }[] };
+    const parents = newCart.lineItems.filter((l) => l.key?.startsWith('bundle-'));
+    expect(parents).toHaveLength(1);
+    expect(parents[0].externalPrice).toEqual({ currencyCode: 'CAD', centAmount: 45000 });
+    expect(newCart.lineItems).toHaveLength(4); // the parent and its three parts; the parts are not re-added on their own
+  });
+
+  it('a preset with no price in CA comes back as a dropped line, and no part is left behind', async () => {
+    const { bag } = await bagWithBundle();
+    ct.view = canadianView(true);
+    const oldCart = ct.carts.get(bag.cartId as string) as unknown as Parameters<typeof rebuildCart>[1];
+    const result = await rebuildCart(bag, oldCart, CA);
+    expect(result.dropped).toHaveLength(1);
+    expect(result.dropped[0]).toMatchObject({ sku: BUNDLE_SKU, reason: 'no-price' });
+    const newCart = ct.carts.get(result.session.cartId as string) as { lineItems: unknown[] };
+    expect(newCart.lineItems).toEqual([]);
+  });
+});

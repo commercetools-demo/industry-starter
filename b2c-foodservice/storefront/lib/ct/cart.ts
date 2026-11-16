@@ -22,7 +22,7 @@ import { detectPriceChanges, fulfilmentOf, mapCart, mapCartSummary } from '@/lib
 import { ensureAnonymousId, type Session } from '@/lib/session';
 import { CART_MAX_LINE_QUANTITY, CART_SHIPPING_MODE, MIN_ORDER_VALUE } from '@/lib/shop-config';
 import type { VariantTranslator } from '@/lib/cart/summary';
-import type { Cart as CartView, CartSummary, DroppedLine, Money } from '@/lib/types';
+import type { Cart as CartView, CartSummary, DroppedLine, Money, Store } from '@/lib/types';
 import { getLocalizedString, marketForCountry } from '@/lib/utils';
 
 /**
@@ -743,8 +743,14 @@ export async function rebuildCart(session: Session, oldCart: Cart, target: Rebui
   const collectionOffered = Boolean(marketForCountry(target.country)?.collection);
 
   for (const line of oldCart.lineItems) {
+    // A bundle's parts are never re-added on their own: the parent re-adds the bundle (workstream V, D6).
+    if (isBundleChild(line)) continue;
     const sku = line.variant?.sku ?? '';
     const name = getLocalizedString(line.name, target.locale);
+    if (isBundleParent(line)) {
+      next = await rebuildBundle(next, market, line, { name, stores: { old: oldStores, new: newStores }, collectionOffered }, dropped);
+      continue;
+    }
     const fulfilment = fulfilmentOf(line);
     const attempts: AddLineInput[] = [];
     if (fulfilment === 'subscribe') {
@@ -779,6 +785,45 @@ export async function rebuildCart(session: Session, oldCart: Cart, target: Rebui
   const droppedCodes = await reapplyCodes(next, oldCart);
   await markForDeletion(oldCart);
   return { session: next, dropped, droppedCodes };
+}
+
+/**
+ * Re-adds one bundle in the new market (workstream V, D6). Collect first when the new market offers collection and the store
+ * exists there, then delivery (the rule of any collect line). A bundle that cannot be re-added is a dropped line.
+ */
+async function rebuildBundle(
+  session: Session,
+  market: CartMarket,
+  parent: Cart['lineItems'][number],
+  ctx: { name: string; stores: { old: Store[]; new: Store[] }; collectionOffered: boolean },
+  dropped: DroppedLine[],
+): Promise<Session> {
+  const sku = parent.variant?.sku ?? '';
+  const wanted = {
+    sku,
+    preset: bundlePresetOf(parent) ?? -1,
+    quantity: parent.quantity,
+    machineSku: String(parent.custom?.fields?.bundleMachineSku ?? ''),
+  };
+  const attempts: PresetBundleInput[] = [];
+  if (parent.custom?.fields?.fulfilment === 'collect' && ctx.collectionOffered) {
+    const oldStore = ctx.stores.old.find((s) => s.id === parent.supplyChannel?.id);
+    const store = oldStore && ctx.stores.new.find((s) => s.key === oldStore.key);
+    if (store) attempts.push({ ...wanted, fulfilment: 'collect', storeKey: store.key });
+  }
+  attempts.push({ ...wanted, fulfilment: 'delivery' });
+  for (const input of attempts) {
+    try {
+      return (await addPresetBundle(session, market, input)).session;
+    } catch (e) {
+      if (e instanceof LineRejected && input.fulfilment === 'collect') continue;
+      const reason = e instanceof LineRejected && e.code === 'bundle_preset_unavailable' ? 'no-price' : rebuildReason(e);
+      if (!reason) throw e;
+      dropped.push({ sku, name: ctx.name, reason });
+      return session;
+    }
+  }
+  return session;
 }
 
 function rebuildReason(e: unknown): DroppedLine['reason'] | null {
