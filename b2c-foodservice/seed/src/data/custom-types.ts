@@ -33,6 +33,13 @@ export const typeDrafts: TypeDraft[] = [
         name: 'brand', label: ls('Brand'), required: false, inputHint: 'SingleLine',
         type: { name: 'Enum', values: BRAND_VALUES.map((key) => ({ key, label: key })) },
       },
+      // Preset bundles (workstream V, D3). Optional: a line that is not part of a bundle has none of them. `parentId` is the
+      // parent line's key (`bundle-<uuid>`) on a child; the others are on the parent. The owner already has `parentId` in Merchant Center.
+      str('parentId', 'Parent line key (bundle part)'),
+      str('bundlePreset', 'Bundle preset position'),
+      str('bundleMachineSku', 'Bundle machine SKU'),
+      num('bundleDiscount', 'Bundle preset discount'),
+      num('bundleWasCents', 'Bundle was price (cents per unit)'),
     ],
   },
   {

@@ -1,0 +1,8 @@
+cart created: lines=0
+(1) addLineItem bundle SKU with key and externalPrice: FAILED status=400 codes=InvalidOperation message="LineItem error: The product '0e44e6d5-2936-419b-9ad9-802b1d79d9d5' is missing a tax category."
+(2) two adds of MCF-GFT-DISCOVERY with different custom fields: lines=2 (expect 2)
+(3) recalculate updateProductData: prices before=0,0 after=0,0 priceModes=ExternalPrice,ExternalPrice
+(4) setLineItemPrice external: price now=150 priceMode=ExternalPrice
+(5) custom object read: OK results=1
+(6) store channel found: yes
+(6) addLineItem bundle SKU with store supplyChannel: FAILED status=400 codes=InvalidOperation message="LineItem error: The product '0e44e6d5-2936-419b-9ad9-802b1d79d9d5' is missing a tax category."

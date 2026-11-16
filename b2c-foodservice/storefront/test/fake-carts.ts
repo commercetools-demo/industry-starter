@@ -52,14 +52,17 @@ const err = (statusCode: number, errors: Obj[]) => Object.assign(new Error('ct')
 interface Line extends Obj {
   id: string; quantity: number; variant: { sku: string }; price: { value: ReturnType<typeof money> }; totalPrice: ReturnType<typeof money>;
   custom?: { fields: Obj }; supplyChannel?: { typeId: string; id: string }; recurrenceInfo?: { recurrencePolicy: { id: string } };
+  key?: string; priceMode?: string;
 }
 
+/** Lines merge like the platform: same SKU, fulfilment, store, recurrence and parent; a keyed line (a bundle) never merges (workstream V). */
 function sameLine(l: Line, a: Obj): boolean {
   const fields = (a.custom as { fields?: Obj } | undefined)?.fields;
   return (
     l.variant.sku === a.sku && l.custom?.fields?.fulfilment === fields?.fulfilment &&
     l.supplyChannel?.id === (a.supplyChannel as { id?: string } | undefined)?.id &&
-    l.recurrenceInfo?.recurrencePolicy.id === (a.recurrenceInfo as { recurrencePolicy?: { id: string } } | undefined)?.recurrencePolicy?.id
+    l.recurrenceInfo?.recurrencePolicy.id === (a.recurrenceInfo as { recurrencePolicy?: { id: string } } | undefined)?.recurrencePolicy?.id &&
+    (l.custom?.fields?.parentId ?? null) === (fields?.parentId ?? null) && !a.key && !l.key
   );
 }
 
@@ -92,9 +95,11 @@ function apply(cart: Obj, action: Obj): void {
   };
   switch (action.action) {
     case 'addLineItem': {
-      const price = priceFor(action.sku as string, currency);
+      // An external price (a bundle parent or part, workstream V) is the price the line carries; the SKU's own price is not read.
+      const external = action.externalPrice as { centAmount: number } | undefined;
+      const price = external ? external.centAmount : priceFor(action.sku as string, currency);
       if (price === undefined) throw err(400, [{ code: 'InvalidOperation', message: `A product with SKU '${String(action.sku)}' not found.` }]);
-      if (!price) throw err(400, [{ code: 'MissingPriceForProduct', message: 'no price' }]);
+      if (price === null) throw err(400, [{ code: 'MissingPriceForProduct', message: 'no price' }]);
       const existing = lines.find((l) => sameLine(l, action));
       if (existing) existing.quantity += action.quantity as number;
       else {
@@ -104,6 +109,8 @@ function apply(cart: Obj, action: Obj): void {
           name: { 'en-US': `Product ${String(action.sku)}` }, productSlug: { 'en-US': `slug-${String(action.sku)}` },
           price: { value: money(price, currency) }, totalPrice: money(0, currency),
           taxRate: { includedInPrice: false },
+          ...(external ? { priceMode: 'ExternalPrice' } : {}),
+          ...(action.key ? { key: action.key as string } : {}),
           custom: action.custom as { fields: Obj },
           ...(action.supplyChannel ? { supplyChannel: action.supplyChannel as { typeId: string; id: string } } : {}),
           ...(action.recurrenceInfo ? { recurrenceInfo: action.recurrenceInfo as { recurrencePolicy: { id: string } } } : {}),
@@ -123,6 +130,19 @@ function apply(cart: Obj, action: Obj): void {
       else delete l.supplyChannel;
       break;
     }
+    case 'setLineItemPrice': {
+      const l = line();
+      const external = action.externalPrice as { centAmount: number } | undefined;
+      if (external) {
+        l.priceMode = 'ExternalPrice';
+        l.price = { value: money(external.centAmount, currency) };
+      } else {
+        delete l.priceMode;
+        const p = priceFor(l.variant.sku, currency);
+        if (p) l.price = { value: money(p, currency) };
+      }
+      break;
+    }
     case 'setLineItemCustomField': {
       const l = line();
       l.custom = { fields: { ...(l.custom?.fields ?? {}), [action.name as string]: action.value } };
@@ -137,7 +157,8 @@ function apply(cart: Obj, action: Obj): void {
     case 'recalculate':
       for (const l of lines) {
         const p = priceFor(l.variant.sku, currency);
-        if (p && !l.recurrenceInfo) l.price = { value: money(p, currency) };
+        // A line with an external price keeps it (F-V-03).
+        if (p && !l.recurrenceInfo && l.priceMode !== 'ExternalPrice') l.price = { value: money(p, currency) };
       }
       break;
     case 'addDiscountCode': {

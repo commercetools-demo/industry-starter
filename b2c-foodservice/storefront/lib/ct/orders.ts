@@ -5,6 +5,7 @@ import { apiRoot } from '@/lib/ct/client';
 import { cachedPublic } from '@/lib/ct/public-cache';
 import { updateWithRetry } from '@/lib/ct/retry';
 import { AppError } from '@/lib/errors';
+import { childrenOf, isBundleParent } from '@/lib/mappers/bundle-lines';
 import { mapOrder, returnableUnits } from '@/lib/mappers/order';
 import type { OrderFilter, OrderState, OrderView } from '@/lib/types';
 
@@ -194,6 +195,18 @@ export async function getCustomerOrderById(customerId: string, id: string): Prom
 export interface ReturnLineInput { lineId: string; quantity: number; reason?: string }
 
 /** `addReturnInfo` for the given lines, on the latest version (one retry on a conflict). The caller checked ownership and limits. */
+/**
+ * A return of a bundle row returns every part at the same quantity (workstream V, Q-V-7). The units check is made on the
+ * rows the shopper sees (`returnableUnits` lists the bundle row only); the written items add the parts.
+ */
+export function withBundleParts(order: Pick<Order, 'lineItems'>, items: ReturnLineInput[]): ReturnLineInput[] {
+  return items.flatMap((i) => {
+    const line = order.lineItems.find((l) => l.id === i.lineId);
+    if (!line || !isBundleParent(line)) return [i];
+    return [i, ...childrenOf(order.lineItems, line).map((part) => ({ ...i, lineId: part.id }))];
+  });
+}
+
 export async function addReturn(orderId: string, items: ReturnLineInput[], now = new Date()): Promise<Order> {
   return updateWithRetry(
     async () => (await apiRoot.orders().withId({ ID: orderId }).get({ queryArgs: { expand: ORDER_EXPAND } }).execute()).body,
@@ -213,7 +226,7 @@ export async function addReturn(orderId: string, items: ReturnLineInput[], now =
                 {
                   action: 'addReturnInfo',
                   returnDate: now.toISOString(),
-                  items: items.map((i) => ({
+                  items: withBundleParts(current, items).map((i) => ({
                     quantity: i.quantity,
                     lineItemId: i.lineId,
                     ...(i.reason ? { comment: i.reason } : {}),

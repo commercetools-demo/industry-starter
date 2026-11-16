@@ -50,7 +50,7 @@ export function assignImages(recorded: RecordedImage[], items: { key: string; ta
   return out;
 }
 
-const topCategoryTag: Record<string, ImageTag> = { 'mcf-cat-pods': 'capsule', 'mcf-cat-coffee': 'coffee', 'mcf-cat-machines': 'machine', 'mcf-cat-accessories': 'cup', 'mcf-cat-gifts': 'coffee' };
+const topCategoryTag: Record<string, ImageTag> = { 'mcf-cat-pods': 'capsule', 'mcf-cat-coffee': 'coffee', 'mcf-cat-machines': 'machine', 'mcf-cat-accessories': 'cup', 'mcf-cat-gifts': 'coffee', 'mcf-cat-bundles': 'machine' };
 
 export const productImageItems = (): { key: string; tag: ImageTag }[] => PRODUCTS.map((p) => ({ key: p.key, tag: p.tag }));
 export const categoryImageItems = (): { key: string; tag: ImageTag }[] =>

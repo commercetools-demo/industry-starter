@@ -107,3 +107,20 @@ describe('mapProductSummary', () => {
     expect(mapProductSummary(withStock(40), ctx).availability).toBeNull();
   });
 });
+
+describe('preset bundle summary (V-18)', () => {
+  const bundleAttr = { name: 'bundle-ref', value: { typeId: 'key-value-document', id: 'ref-1' } };
+  it('a preset bundle reads "From" and asks for a preset choice', () => {
+    const s = mapProductSummary(product({
+      masterVariant: variant(1, 'BUNDLE', 34916, [bundleAttr]),
+      variants: [],
+    }), ctx);
+    expect(s.requiredChoice).toBe('preset');
+    expect(s.price).toMatchObject({ fromIsRange: true });
+  });
+
+  it('a normal product keeps its own choice (no preset)', () => {
+    const s = mapProductSummary(product({ masterVariant: variant(1, 'POD', 1000, []), variants: [] }), ctx);
+    expect(s.requiredChoice).toBeNull();
+  });
+});

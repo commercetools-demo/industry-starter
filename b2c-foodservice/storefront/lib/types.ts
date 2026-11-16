@@ -101,7 +101,8 @@ export interface ProductSummary {
   unit?: { money: Money; perKey: 'capsule' | '100g' };
   label?: { kind: 'intensity' | 'roast'; value: string };
   swatches?: { key: string; name: string }[];
-  requiredChoice: 'grind' | 'colour' | null;
+  /** 'preset' for a preset bundle: the card opens the product page to pick one (workstream V). */
+  requiredChoice: 'grind' | 'colour' | 'preset' | null;
   rating: { average: number; count: number } | null;
   /** null when no store is chosen (or the market has no stores). */
   availability: { state: AvailabilityState } | null;
@@ -125,7 +126,7 @@ export interface CartLineSummary { id: string; sku: string; quantity: number }
 export interface CartSummary { id: string; version: number; count: number; lines: CartLineSummary[] }
 
 // Workstream H: product detail view model (see lib/mappers/product-detail.ts).
-export type ProductShape = 'pods' | 'coffee' | 'machine' | 'accessory' | 'gift' | 'drink';
+export type ProductShape = 'pods' | 'coffee' | 'machine' | 'accessory' | 'gift' | 'drink' | 'presetBundle';
 export type VariantAttrValue = string | number | boolean;
 export interface PriceTier { minimumQuantity: number; value: Money }
 export interface VariantPrice { value: Money; discounted?: Money; discountName?: string; tiers: PriceTier[] }
@@ -202,6 +203,8 @@ export interface ProductPageData {
   brand?: 'malva-coffee' | 'malva-drinks';
   country: string;
   currency: string;
+  /** Workstream V: the preset bundle view for a bundle SKU (null when it cannot be read); absent for other shapes. */
+  bundle?: BundleView | null;
 }
 
 // Workstream M: reviews and ratings (no moderation, D-037: every review is published on creation).
@@ -256,6 +259,13 @@ export interface CartLine {
   /** Product shape ('pods', 'machine', ...) and capsule system, for the companion nudge. */
   shape?: ProductShape;
   systemKey?: string;
+  /** Set on a preset bundle's parent line; child lines are not in `lines` (workstream V, D8). */
+  bundle?: {
+    presetName: string;
+    discountPercent: number;
+    wasUnitPrice?: Money;
+    items: { sku: string; name: string; imageUrl?: string; role: 'machine' | 'item' }[];
+  };
 }
 export interface CartGroup { key: GroupKey; kind: Fulfilment; store?: CartLineStore; lineIds: string[] }
 export type CodeState =
@@ -333,6 +343,8 @@ export interface OrderLineView {
   unitCents: number;
   /** Total of the line (all units, after discounts). */
   priceCents: number;
+  /** Workstream V: a preset bundle row with its parts (the parts are not rows of their own). */
+  bundle?: { presetName: string; discountPercent: number; items: { sku: string; name: string; imageUrl?: string; role: 'machine' | 'item' }[] };
 }
 export interface OrderDelivery {
   id: string; createdAt: string; carrier: string | null; trackingId: string | null; trackingUrl: string | null;
@@ -473,3 +485,25 @@ export interface ScanProduct {
   /** Path of the product page without the locale: `/p/<slug>/<sku>`. */
   href: string;
 }
+
+// Workstream V: preset bundles (plan `plans/workstreams/V-preset-bundles.md`, D5 and D8).
+export type BundleRole = 'machine' | 'item';
+export interface BundleComponentView {
+  productId: string; sku: string; name: string; slug: string;
+  imageUrl?: string; imageAlt: string; role: BundleRole;
+  unitPrice: Money | null; inStock: boolean;
+}
+/** One machine variant the shopper may pick (D-059), with the preset's totals for that choice. */
+export interface BundleMachineOption {
+  sku: string; label: string; imageUrl?: string; imageAlt: string; inStock: boolean;
+  was: Money | null; price: Money | null; save: Money | null;
+}
+export interface BundlePresetView {
+  index: number; name: string; discountPercent: number;
+  /** The machine (the first option's variant) and the pods, as the default choice. */
+  components: BundleComponentView[];
+  machines: BundleMachineOption[];
+  was: Money | null; price: Money | null; save: Money | null;
+  available: boolean; unavailableReason?: 'no-price' | 'out-of-stock';
+}
+export interface BundleView { productId: string; sku: string; presets: BundlePresetView[] }

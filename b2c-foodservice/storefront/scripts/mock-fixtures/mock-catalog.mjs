@@ -47,6 +47,29 @@ const distributionOf = (ratings) => {
   return out;
 };
 
+// ---------------------------------------------------------------- the preset bundle (workstream V)
+// The owner's bundle product and its two custom objects (preset-bundle.json). The bundle's custom object references its five
+// component products by project id, so those products take those ids here. The bundle product has no price and no stock row,
+// as in the project (the owner creates it, D-057).
+const BUNDLE = JSON.parse(readFileSync(join(here, 'preset-bundle.json'), 'utf8'));
+const COMPONENT_IDS = new Map(Object.entries(BUNDLE.componentProductIds));
+export const CUSTOM_OBJECTS = [BUNDLE.bundleItem, BUNDLE.bundleSchema].map((o) => ({
+  ...o, version: 1, createdAt: '2026-01-01T00:00:00.000Z', lastModifiedAt: '2026-01-01T00:00:00.000Z',
+}));
+const bundleDoc = (index) => {
+  const p = BUNDLE.product;
+  const ref = { typeId: 'key-value-document', id: p.bundleRef };
+  return {
+    id: p.id, index, key: p.key, name: p.name, slug: p.slug, description: p.description,
+    directCategoryIds: [categoryId('mcf-cat-bundles')], subTreeIds: [categoryId('mcf-cat-bundles')],
+    productType: p.productType, common: {}, createdAt: '2026-01-01T00:00:00.000Z',
+    variants: [{
+      id: 1, sku: p.sku, attrs: [{ name: 'bundle-ref', value: ref, raw: ref, type: { name: 'reference' } }],
+      prices: [], stock: { online: 0, stores: [] }, noInventoryRow: true,
+    }],
+  };
+};
+
 // ---------------------------------------------------------------- documents
 export const DOCS = FIXTURES.products.map((p, i) => {
   const direct = p.categories.map((k) => categoryId(k));
@@ -61,7 +84,7 @@ export const DOCS = FIXTURES.products.map((p, i) => {
   });
   const ratings = p.ratings;
   return {
-    id: uuid(i + 1), index: i, key: p.key, name: p.name, slug: p.slug, description: p.description,
+    id: COMPONENT_IDS.get(p.key) ?? uuid(i + 1), index: i, key: p.key, name: p.name, slug: p.slug, description: p.description,
     directCategoryIds: direct, subTreeIds: sub, productType: p.productType, common: p.common,
     createdAt: new Date(Date.UTC(2026, 0, 1) + (FIXTURES.products.length - i) * 86400000).toISOString(),
     stats: ratings.length
@@ -70,6 +93,7 @@ export const DOCS = FIXTURES.products.map((p, i) => {
     variants,
   };
 });
+DOCS.push(bundleDoc(FIXTURES.products.length));
 export const DOC_BY_ID = new Map(DOCS.map((d) => [d.id, d]));
 export const VARIANT_BY_SKU = new Map(DOCS.flatMap((d) => d.variants.map((v) => [v.sku, { doc: d, variant: v }])));
 
