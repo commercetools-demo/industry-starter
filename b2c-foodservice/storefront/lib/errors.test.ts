@@ -50,6 +50,19 @@ describe('errors', () => {
     expect(JSON.stringify(r.json)).not.toMatch(/ct-secret-detail|STACKTRACE|Project foo/);
   });
 
+  it('logs the commercetools error codes and fields of a refused request, never their message or value, and returns neither', async () => {
+    const e = Object.assign(new Error('x'), {
+      statusCode: 400,
+      body: { statusCode: 400, errors: [{ code: 'InvalidField', field: 'bundlePreset', message: 'shopper@example.test', invalidValue: 'v' }] },
+    });
+    const r = await body(errorResponse(e, '/api/cart/bundles'));
+    expect(r.json.error.code).toBe('validation_failed');
+    expect(JSON.stringify(r.json)).not.toMatch(/InvalidField|bundlePreset/);
+    const logged = String(logSpy.mock.calls[0][0]);
+    expect(JSON.parse(logged).upstreamErrors).toEqual([{ code: 'InvalidField', field: 'bundlePreset' }]);
+    expect(logged).not.toMatch(/shopper@example\.test|invalidValue/);
+  });
+
   it('Correlation id is logged and not returned', async () => {
     const e = { statusCode: 503, headers: { 'x-correlation-id': 'corr-123' }, message: 'x' };
     const r = await body(errorResponse(e, '/api/cart'));

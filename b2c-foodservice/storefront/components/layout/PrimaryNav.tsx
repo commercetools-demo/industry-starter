@@ -5,15 +5,33 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import MegaPanel from '@/components/layout/MegaMenu';
 import { Link, useBrand, usePathname } from '@/i18n/routing';
 import { cn } from '@/lib/cn';
-import { PRIMARY_NAV, findCategoryByKey, primaryNavFor, type MenuId } from '@/lib/nav/mega-config';
+import { PRIMARY_NAV, extraRootCategories, findCategoryByKey, primaryNavFor, type MenuId } from '@/lib/nav/mega-config';
 import type { Category } from '@/lib/types';
 
 /** Pointer-leave grace period, so moving from a link into its panel does not close it. */
 export const CLOSE_DELAY_MS = 130;
 
+const linkClass = (active: boolean) =>
+  cn(
+    'group relative px-3.5 py-2.5 font-display text-[15px] font-semibold max-[1100px]:px-2',
+    active ? 'text-accent' : 'text-ink hover:text-accent focus-visible:text-accent',
+  );
+
+function Underline({ active }: { active: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        'absolute bottom-1 left-3.5 right-3.5 max-[1100px]:left-2 max-[1100px]:right-2 h-0.5 origin-left bg-current transition-transform duration-200 motion-reduce:transition-none',
+        active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100',
+      )}
+    />
+  );
+}
+
 /**
- * The five primary links and their hover panels. A missing category (or an empty tree) falls back to `/` so the bar is
- * never empty. A panel opens on pointer enter or ArrowDown, closes 130 ms after the pointer leaves the link or the
+ * The five primary links and their hover panels, then any other root category of the brand as a plain link (D-060).
+ * A missing category (or an empty tree) falls back to `/` so the bar is never empty. A panel opens on pointer enter or ArrowDown, closes 130 ms after the pointer leaves the link or the
  * panel, and on Escape, outside pointer down, a link choice and a route change.
  */
 export default function PrimaryNav({ categories }: { categories: Category[] }) {
@@ -112,19 +130,29 @@ export default function PrimaryNav({ categories }: { categories: Category[] }) {
                   }
                 : undefined
             }
-            className={cn(
-              'group relative px-3.5 py-2.5 font-display text-[15px] font-semibold max-[1100px]:px-2',
-              active ? 'text-accent' : 'text-ink hover:text-accent focus-visible:text-accent',
-            )}
+            className={linkClass(active)}
           >
             {t(item.labelKey)}
-            <span
-              aria-hidden="true"
-              className={cn(
-                'absolute bottom-1 left-3.5 right-3.5 max-[1100px]:left-2 max-[1100px]:right-2 h-0.5 origin-left bg-current transition-transform duration-200 motion-reduce:transition-none',
-                active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100',
-              )}
-            />
+            <Underline active={active} />
+          </Link>
+        );
+      })}
+      {/* Root categories the owner adds in Merchant Center (D-060): plain links after the fixed entries. */}
+      {extraRootCategories(categories).map((category) => {
+        const href = `/category/${category.slug}`;
+        const active = pathname === href || pathname.startsWith(`${href}/`);
+        return (
+          <Link
+            key={category.id}
+            prefetch={false}
+            href={href}
+            aria-current={active ? 'page' : undefined}
+            onMouseEnter={() => scheduleClose()}
+            onClick={close}
+            className={linkClass(active)}
+          >
+            {category.name}
+            <Underline active={active} />
           </Link>
         );
       })}

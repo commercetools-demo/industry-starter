@@ -10,7 +10,7 @@ import { useCollectionStore } from '@/hooks/useCollectionStore';
 import { Link } from '@/i18n/routing';
 import { cn } from '@/lib/cn';
 import { buildListingHref } from '@/lib/nav/listing-href';
-import { MEGA_CONFIG, findCategoryByKey, primaryNavFor, resolveNavHref, type MenuId } from '@/lib/nav/mega-config';
+import { MEGA_CONFIG, extraRootCategories, findCategoryByKey, primaryNavFor, resolveNavHref, type MenuId } from '@/lib/nav/mega-config';
 import { BRANDS, DEFAULT_BRAND, type BrandConfig } from '@/lib/brands';
 import type { Category } from '@/lib/types';
 import { marketForLocale } from '@/lib/utils';
@@ -124,6 +124,14 @@ export default function MobileNav({ categories, brand = BRANDS[DEFAULT_BRAND] }:
                 </li>
               );
             })}
+            {/* Root categories the owner adds in Merchant Center (D-060), after the fixed entries. */}
+            {(plainNav ? [] : extraRootCategories(categories)).map((category) => (
+              <li key={category.id}>
+                <Link prefetch={false} href={buildListingHref(category.slug)} onClick={close} className={ROW}>
+                  {category.name}
+                </Link>
+              </li>
+            ))}
             {showStore ? (
               <li>
                 <button

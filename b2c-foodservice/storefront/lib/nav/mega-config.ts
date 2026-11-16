@@ -48,6 +48,16 @@ export function primaryNavFor(brand: string): PrimaryNavItem[] {
   return PRIMARY_NAV.filter((n) => !n.brand || n.brand === brand);
 }
 
+/**
+ * Root categories of the brand's tree that no fixed primary entry points at, for example a category the owner adds in
+ * Merchant Center (D-060). The header shows them after the fixed entries as plain links, in the tree's order (`orderHint`).
+ * The tree is already scoped to the brand's selection and to web visibility, so nothing else needs filtering here.
+ */
+export function extraRootCategories(tree: Category[]): Category[] {
+  const fixed = new Set(PRIMARY_NAV.map((n) => n.categoryKey));
+  return tree.filter((c) => !c.key || !fixed.has(c.key));
+}
+
 const FEATURE: NavLink[] = [
   { labelKey: 'feature.newIn', params: { collection: 'new' } },
   { labelKey: 'feature.bestsellers', params: { collection: 'bestseller' } },

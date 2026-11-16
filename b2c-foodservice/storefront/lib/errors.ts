@@ -37,6 +37,20 @@ interface UpstreamLike {
   message?: unknown;
   headers?: Record<string, unknown>;
   originalRequest?: { headers?: Record<string, unknown> };
+  body?: unknown;
+}
+
+/**
+ * The commercetools error codes and field names of a refused request (for example `InvalidField` on `bundlePreset`), for the
+ * server log only. Never the message or the value: those can carry shopper data. At most five.
+ */
+function upstreamErrorsOf(e: unknown): { code: string; field?: string }[] {
+  const body = asUpstream(e).body as { errors?: unknown } | null | undefined;
+  const list = Array.isArray(body?.errors) ? (body.errors as { code?: unknown; field?: unknown }[]) : [];
+  return list
+    .filter((x) => typeof x?.code === 'string')
+    .slice(0, 5)
+    .map((x) => ({ code: x.code as string, ...(typeof x.field === 'string' ? { field: x.field } : {}) }));
 }
 
 /**
@@ -84,12 +98,14 @@ export function toAppError(e: unknown): AppError {
 export function errorResponse(e: unknown, route: string): Response {
   const err = toAppError(e);
   const upstreamStatus = asUpstream(e).statusCode;
+  const upstreamErrors = upstreamErrorsOf(e);
   const line = {
     route,
     code: err.code,
     status: err.status,
     correlationId: err.correlationId ?? crypto.randomUUID(),
     ...(typeof upstreamStatus === 'number' ? { upstreamStatus } : {}),
+    ...(upstreamErrors.length > 0 ? { upstreamErrors } : {}),
   };
   console.error(JSON.stringify(line));
   return Response.json(

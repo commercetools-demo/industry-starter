@@ -62,6 +62,14 @@ describe('MobileNav', () => {
     expect(dialog()).toHaveAttribute('aria-modal', 'true');
   });
 
+  it('lists a root category added in Merchant Center after the fixed entries (D-060)', async () => {
+    stubFetch({});
+    renderShell(<MobileNav categories={[...TREE, cat('bundles', 'bundles')]} />, { fallback: fallback([STORE]) });
+    await userEvent.click(screen.getByRole('button', { name: 'Open menu' }));
+    const link = within(dialog()).getByRole('link', { name: 'bundles' });
+    expect(link).toHaveAttribute('href', '/category/bundles');
+  });
+
   it('Navigating from the panel closes it and changes the page', async () => {
     setup();
     await userEvent.click(screen.getByRole('button', { name: 'Open menu' }));

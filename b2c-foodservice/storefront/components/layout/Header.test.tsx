@@ -141,13 +141,22 @@ describe('Header', () => {
     expect(screen.getByRole('link', { name: 'Pods' })).not.toHaveAttribute('aria-current');
   });
 
-  it('an empty category tree still renders the six links to the home page', () => {
+  it('an empty category tree still renders the five links to the home page', () => {
     guestFetch();
     renderShell(<Header categories={[]} />, { fallback: fallbackFor(null) });
     const nav5 = screen.getByRole('navigation', { name: 'Main' });
     const links = within(nav5).getAllByRole('link');
     expect(links.map((l) => l.textContent)).toEqual(['Pods', 'Coffee', 'Machines', 'Accessories', 'Gifts']);
     expect(links.every((l) => l.getAttribute('href') === '/')).toBe(true);
+  });
+
+  it('a root category added in Merchant Center shows after the fixed entries (D-060)', () => {
+    guestFetch();
+    const bundles: Category = { id: 'cat-bundles', key: 'bundles', name: 'Bundles', slug: 'bundles', children: [] };
+    renderShell(<Header categories={[...TREE, bundles]} />, { fallback: fallbackFor(null) });
+    const links = within(screen.getByRole('navigation', { name: 'Main' })).getAllByRole('link');
+    expect(links.map((l) => l.textContent)).toEqual(['Pods', 'Coffee', 'Machines', 'Accessories', 'Gifts', 'Bundles']);
+    expect(links.at(-1)).toHaveAttribute('href', '/category/bundles');
   });
 
   it('search submits to /search?q=', async () => {
