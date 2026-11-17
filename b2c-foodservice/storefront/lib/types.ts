@@ -126,7 +126,9 @@ export interface CartLineSummary { id: string; sku: string; quantity: number }
 export interface CartSummary { id: string; version: number; count: number; lines: CartLineSummary[] }
 
 // Workstream H: product detail view model (see lib/mappers/product-detail.ts).
-export type ProductShape = 'pods' | 'coffee' | 'machine' | 'accessory' | 'gift' | 'drink' | 'presetBundle';
+export type ProductShape = 'pods' | 'coffee' | 'machine' | 'accessory' | 'gift' | 'drink' | 'presetBundle' | 'readyDrink';
+/** A modifier a ready-made coffee can take (a `coffee-modifiers` product listed by the drink's modifiers configuration). */
+export interface ModifierOption { id: string; name: string }
 export type VariantAttrValue = string | number | boolean;
 export interface PriceTier { minimumQuantity: number; value: Money }
 export interface VariantPrice { value: Money; discounted?: Money; discountName?: string; tiers: PriceTier[] }
@@ -205,6 +207,8 @@ export interface ProductPageData {
   currency: string;
   /** Workstream V: the preset bundle view for a bundle SKU (null when it cannot be read); absent for other shapes. */
   bundle?: BundleView | null;
+  /** Ready-made coffee: the modifiers the shopper can pick (any number); null when the configuration cannot be read. Absent for other shapes. */
+  modifiers?: ModifierOption[] | null;
 }
 
 // Workstream M: reviews and ratings (no moderation, D-037: every review is published on creation).
@@ -259,6 +263,8 @@ export interface CartLine {
   /** Product shape ('pods', 'machine', ...) and capsule system, for the companion nudge. */
   shape?: ProductShape;
   systemKey?: string;
+  /** Ready-made coffee: the names of the modifiers on the line (also appended to `variantSummary`). */
+  modifiers?: string[];
   /** Set on a preset bundle's parent line; child lines are not in `lines` (workstream V, D8). */
   bundle?: {
     presetName: string;

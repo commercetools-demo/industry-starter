@@ -37,6 +37,9 @@ export interface PdpState {
   collectionEnabled: boolean;
   /** A store change is being re-read from the server. */
   refreshing: boolean;
+  /** Ready-made coffee: the chosen modifier product ids (any number, in the offered order). */
+  modifiers: string[];
+  toggleModifier: (id: string) => void;
 }
 
 const PdpContext = createContext<PdpState | null>(null);
@@ -107,6 +110,17 @@ export function PdpProvider({ data, initialSelection, choose, children }: Props)
 
   const select = useCallback((attr: string, value: string) => setSelection((s) => ({ ...s, [attr]: value })), []);
 
+  const [modifierChoice, setModifierChoice] = useState<string[]>([]);
+  const toggleModifier = useCallback(
+    (id: string) => setModifierChoice((m) => (m.includes(id) ? m.filter((x) => x !== id) : [...m, id])),
+    [],
+  );
+  // Only ids the page still offers, in the offered order.
+  const modifiers = useMemo(
+    () => (data.modifiers ?? []).map((o) => o.id).filter((id) => modifierChoice.includes(id)),
+    [data.modifiers, modifierChoice],
+  );
+
   // Mirror the selection in the address bar without a server round trip or a history entry (Q-H-10).
   const first = useRef(true);
   useEffect(() => {
@@ -136,6 +150,7 @@ export function PdpProvider({ data, initialSelection, choose, children }: Props)
   const value: PdpState = {
     data, selection, select, variant, preview, missing, choose, fulfilment, setFulfilment, quantity, minQty, maxQty, setQuantity,
     policies, subscribeAvailable, policyId, setPolicyId: setPolicyChoice, store, collectionEnabled, refreshing,
+    modifiers, toggleModifier,
   };
   return <PdpContext.Provider value={value}>{children}</PdpContext.Provider>;
 }

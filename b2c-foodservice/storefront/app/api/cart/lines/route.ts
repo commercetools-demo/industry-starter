@@ -4,6 +4,7 @@ import { domainError } from '@/lib/api-domain';
 import { LineRejected, addLine, type AddLineInput } from '@/lib/ct/cart';
 import { limitClient } from '@/lib/http/limit';
 import { SKU_PATTERN } from '@/lib/ct/inventory';
+import { isUuid } from '@/lib/mappers/drink-modifiers';
 import { createSessionToken, getMarket, getSession, setSessionCookie } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
@@ -13,6 +14,7 @@ type Fulfilment = (typeof FULFILMENTS)[number];
 
 /** Store and policy keys are seeded keys (`mcf-...`); anything else is refused before a call is made. */
 const KEY_PATTERN = /^[A-Za-z0-9_-]{1,256}$/;
+const MAX_MODIFIERS = 20;
 
 function parse(raw: unknown): AddLineInput | null {
   if (typeof raw !== 'object' || raw === null) return null;
@@ -21,7 +23,13 @@ function parse(raw: unknown): AddLineInput | null {
   if (typeof b.quantity !== 'number' || !Number.isInteger(b.quantity) || b.quantity < 1 || b.quantity > 99) return null;
   if (typeof b.fulfilment !== 'string' || !(FULFILMENTS as readonly string[]).includes(b.fulfilment)) return null;
   const fulfilment = b.fulfilment as Fulfilment;
-  const base = { sku: b.sku, quantity: b.quantity };
+  // Ready-made coffee: modifier product ids (checked against the drink's configuration by addLine).
+  let modifiers: string[] | undefined;
+  if (b.modifiers !== undefined) {
+    if (!Array.isArray(b.modifiers) || b.modifiers.length > MAX_MODIFIERS || !b.modifiers.every(isUuid)) return null;
+    modifiers = b.modifiers;
+  }
+  const base = { sku: b.sku, quantity: b.quantity, ...(modifiers ? { modifiers } : {}) };
   if (fulfilment === 'collect') {
     if (typeof b.storeKey !== 'string' || !KEY_PATTERN.test(b.storeKey)) return null;
     return { ...base, fulfilment, storeKey: b.storeKey };
@@ -34,7 +42,8 @@ function parse(raw: unknown): AddLineInput | null {
 }
 
 /**
- * POST /api/cart/lines { sku, quantity (1..99), fulfilment: 'delivery' | 'collect' | 'subscribe', storeKey?, recurrencePolicyKey? }
+ * POST /api/cart/lines { sku, quantity (1..99), fulfilment: 'delivery' | 'collect' | 'subscribe', storeKey?, recurrencePolicyKey?,
+ *   modifiers? (ready-made coffee: product ids from the drink's configuration; 400 validation_failed otherwise) }
  * -> 200 { cart: CartSummary }. Used by H (product page), G (Quick add, delivery) and I (bag).
  * Errors: 400 validation_failed (bad input), 404 not_found (unknown SKU), 422 validation_failed (no price in the cart's
  * market), 409 conflict (changed twice while adding). Collect and subscribe (workstream H) add domain codes in the same

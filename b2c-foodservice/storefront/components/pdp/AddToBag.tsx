@@ -36,7 +36,7 @@ export default function AddToBag() {
   const locale = useLocale();
   const toast = useToast();
   const { open } = useCollectionStore();
-  const { data, variant, preview, fulfilment, quantity, setQuantity, minQty, maxQty, missing, policies, policyId, store } = usePdp();
+  const { data, variant, preview, fulfilment, quantity, setQuantity, minQty, maxQty, missing, policies, policyId, store, modifiers } = usePdp();
   const { add, isAdding, error } = useAddToCart();
   const router = useRouter();
   // The store ran out between the page load and the add: re-read the stock so the block and the options tell the truth.
@@ -75,6 +75,7 @@ export default function AddToBag() {
       fulfilment,
       ...(fulfilment === 'collect' && store ? { storeKey: store.key } : {}),
       ...(fulfilment === 'subscribe' && chosenPolicy ? { recurrencePolicyKey: chosenPolicy.policy.key } : {}),
+      ...(modifiers.length > 0 ? { modifiers } : {}),
     });
     if (cart) toast.show(fulfilment === 'collect' ? t('toast.reserved') : tShell('added'));
   };

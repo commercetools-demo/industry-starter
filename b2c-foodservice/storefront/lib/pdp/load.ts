@@ -6,6 +6,7 @@ import { getAttributeLabels } from '@/lib/ct/attribute-labels';
 import { getCategoryTree } from '@/lib/ct/categories';
 import { isInBrandSelection } from '@/lib/ct/product-selections';
 import { getInventoryDetail } from '@/lib/ct/inventory';
+import { getModifierOptions } from '@/lib/ct/drink-modifiers';
 import { getBundleView } from '@/lib/ct/preset-bundles';
 import { getProductBySku, getRecurrencePolicies } from '@/lib/ct/product-detail';
 import { getFreeShippingThreshold } from '@/lib/ct/shipping';
@@ -32,8 +33,10 @@ async function load(sku: string, locale: string, brand: string): Promise<Product
 
   // Workstream V: a preset bundle reads its bundle view and no recurrence policies (it is not subscribable).
   const isBundle = shapeOf(projection.productType?.obj?.key) === 'presetBundle';
+  // Ready-made coffee: the modifiers its configuration offers (milks, coffees).
+  const isReadyDrink = shapeOf(projection.productType?.obj?.key) === 'readyDrink';
   const skus = [projection.masterVariant, ...projection.variants].map((v) => v.sku).filter((s): s is string => Boolean(s));
-  const [labels, tree, inventory, policies, threshold, bundle] = await Promise.all([
+  const [labels, tree, inventory, policies, threshold, bundle, modifiers] = await Promise.all([
     getAttributeLabels(locale).catch((e: unknown) => {
       logFailure('pdp_labels_failed')(e);
       return {};
@@ -57,6 +60,12 @@ async function load(sku: string, locale: string, brand: string): Promise<Product
     isBundle
       ? getBundleView(sku, projection, ctx).catch((e: unknown): null => {
         logFailure('pdp_bundle_failed')(e);
+        return null;
+      })
+      : Promise.resolve(null),
+    isReadyDrink
+      ? getModifierOptions(projection, locale).catch((e: unknown): null => {
+        logFailure('pdp_modifiers_failed')(e);
         return null;
       })
       : Promise.resolve(null),
@@ -84,6 +93,7 @@ async function load(sku: string, locale: string, brand: string): Promise<Product
     country: market.country,
     currency: market.currency,
     ...(isBundle ? { bundle } : {}),
+    ...(isReadyDrink ? { modifiers } : {}),
   };
 }
 

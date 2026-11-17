@@ -26,6 +26,8 @@ export interface PlanLine {
   fulfilment: Fulfilment;
   channelId?: string;
   subscribe: boolean;
+  /** Ready-made coffee: the line's modifier ids (sorted, comma-joined). A twin must have the same ones. */
+  modifiers?: string;
 }
 
 export type SwitchTarget = { fulfilment: 'delivery' } | { fulfilment: 'collect'; channelId: string };
@@ -80,7 +82,8 @@ export function groupLines(lines: ReadonlyArray<Pick<CartLine, 'id' | 'fulfilmen
 function findTwin(lines: readonly PlanLine[], self: PlanLine, fulfilment: 'delivery' | 'collect', channelId: string | null): PlanLine | undefined {
   return lines.find(
     (l) =>
-      l.id !== self.id && !l.subscribe && l.sku === self.sku && l.fulfilment === fulfilment && (l.channelId ?? null) === channelId,
+      l.id !== self.id && !l.subscribe && l.sku === self.sku && l.fulfilment === fulfilment && (l.channelId ?? null) === channelId &&
+      (l.modifiers ?? '') === (self.modifiers ?? ''),
   );
 }
 

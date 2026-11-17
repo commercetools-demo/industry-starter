@@ -4,6 +4,7 @@ import { groupKeyOf, groupLines } from '@/lib/cart/plan';
 import { blockers, freeShipping, minimumOrder, variantSummary, type VariantTranslator } from '@/lib/cart/summary';
 import { availabilityState } from '@/lib/availability';
 import { BRANDS, brandOfLineFields } from '@/lib/brands';
+import { lineModifierIds } from '@/lib/mappers/drink-modifiers';
 import { bundlePresetOf, childrenOf, isBundleChild, isBundleParent } from '@/lib/mappers/bundle-lines';
 import { mapMoney } from '@/lib/mappers/money';
 import { CART_MAX_LINE_QUANTITY, LOW_STOCK_THRESHOLD } from '@/lib/shop-config';
@@ -55,6 +56,8 @@ export interface CartEnrichment {
   nudge: CartNudge | null;
   /** Workstream V: the presets of each bundle product (by product id), for the bag's bundle name and discount. */
   bundles?: Record<string, Record<number, { name: string; discountPercent: number }>>;
+  /** Ready-made coffee: modifier product names by id, for the lines' modifiers. */
+  modifierNames?: Record<string, string>;
 }
 
 export interface MapContext {
@@ -76,7 +79,8 @@ const FULFILMENTS: readonly Fulfilment[] = ['collect', 'delivery', 'subscribe'];
 
 /** The custom field first, derived from the line when missing (a line added by another channel). */
 export function fulfilmentOf(l: Pick<LineItem, 'custom' | 'recurrenceInfo' | 'supplyChannel'>): Fulfilment {
-  const raw: unknown = l.custom?.fields?.fulfilment;
+  // The in-store line type of a ready-made coffee line spells the field the US way.
+  const raw: unknown = l.custom?.fields?.fulfilment ?? l.custom?.fields?.fulfillment;
   if (typeof raw === 'string' && (FULFILMENTS as readonly string[]).includes(raw)) return raw as Fulfilment;
   if (l.recurrenceInfo) return 'subscribe';
   // A supply channel means collect only for a brand with pickup: Malva Drinks lines carry the brand's inventory channel, which is not a store.
@@ -156,6 +160,9 @@ function mapLine(l: LineItem, e: CartEnrichment, ctx: MapContext): CartLine {
   }
   const policyId = l.recurrenceInfo?.recurrencePolicy?.id;
   const schedule = policyId ? e.policies[policyId] : undefined;
+  // A modifier whose name could not be read is left out of the summary (the line itself is unchanged).
+  const modifiers = (lineModifierIds(l) ?? []).flatMap((id) => (e.modifierNames?.[id] ? [e.modifierNames[id]] : []));
+  const summary = product && variant ? variantSummary(product.shape, variant.attrs, variant.labels, ctx.t) : '';
 
   return {
     id: l.id, sku, productId: l.productId,
@@ -163,7 +170,8 @@ function mapLine(l: LineItem, e: CartEnrichment, ctx: MapContext): CartLine {
     name,
     ...(image?.url ? { imageUrl: image.url } : {}),
     imageAlt: image?.label ?? name,
-    variantSummary: product && variant ? variantSummary(product.shape, variant.attrs, variant.labels, ctx.t) : '',
+    variantSummary: [summary, ...modifiers].filter(Boolean).join(' · '),
+    ...(modifiers.length > 0 ? { modifiers } : {}),
     quantity: l.quantity,
     unitPrice: unit,
     ...(l.price.discounted ? { oldUnitPrice: list } : {}),

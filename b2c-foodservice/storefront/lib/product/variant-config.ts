@@ -19,6 +19,7 @@ export const PRODUCT_TYPE_SHAPE: Record<string, ProductShape> = {
   'mcf-gift-set': 'gift',
   'mcf-drink': 'drink',
   'malva-coffee-machine-bundle': 'presetBundle',
+  'mcf-ready-drink': 'readyDrink',
 };
 
 /** Shape of a product from its product type key; unknown types read as accessories (no selectors beyond colour). */
@@ -28,6 +29,8 @@ export function shapeOf(typeKey: string | undefined): ProductShape {
 
 export const SHAPE_SELECTORS: Record<ProductShape, SelectorConfig[]> = {
   presetBundle: [],
+  // Ready-made coffee: the size is the variant; modifiers are not variants (they travel on the line, see lib/ct/drink-modifiers.ts).
+  readyDrink: [{ attr: 'size', renderer: 'pill', required: true }],
   pods: [{ attr: 'capsulesPerPack', renderer: 'pill', required: true }],
   coffee: [
     { attr: 'sizeGrams', renderer: 'pill', required: true },
@@ -52,6 +55,7 @@ export const NO_DEFAULT_SELECTORS: readonly string[] = ['grind'];
 /** Read-only facts per shape (rendered in Details), in display order. Every one is also kept out of the selectors. */
 export const PDP_INFO_ATTRIBUTES: Record<ProductShape, string[]> = {
   presetBundle: [],
+  readyDrink: [],
   pods: ['system', 'intensity', 'flavourNotes', 'origin', 'decaf', 'organic', 'fairtrade'],
   coffee: ['roast', 'origin', 'process', 'flavourNotes', 'intensity', 'brewMethods', 'decaf', 'organic', 'fairtrade'],
   machine: ['system', 'pressureBar', 'waterTankMl', 'powerWatts', 'features', 'warrantyMonths'],
@@ -61,7 +65,7 @@ export const PDP_INFO_ATTRIBUTES: Record<ProductShape, string[]> = {
 };
 
 /** Attributes that never become selectors or facts (flags used by cards and the cart). */
-export const ATTRIBUTE_BLOCKLIST: readonly string[] = ['badge', 'subscribable'];
+export const ATTRIBUTE_BLOCKLIST: readonly string[] = ['badge', 'subscribable', 'modifiers', 'pos-id', 'receipt-text'];
 
 /** Pack size labels for pods ("10 sleeve", "50 box", "100 box"); other counts read "<n> pack" (messages `pdp.pack.*`). */
 export const PACK_LABEL_KEYS: Record<number, 'sleeve' | 'box'> = { 10: 'sleeve', 50: 'box', 100: 'box' };

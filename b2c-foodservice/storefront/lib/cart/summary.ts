@@ -42,6 +42,8 @@ export function variantSummary(
     parts.push(label('colour'), label('bundle'));
   } else if (shape === 'accessory') {
     parts.push(label('colour'));
+  } else if (shape === 'readyDrink') {
+    parts.push(label('size'));
   }
   return parts.filter((p): p is string => Boolean(p)).join(' · ');
 }

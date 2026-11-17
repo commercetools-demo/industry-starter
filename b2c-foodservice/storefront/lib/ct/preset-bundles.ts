@@ -23,6 +23,11 @@ async function fetchBundleConfigValue(customObjectId: string): Promise<unknown> 
 }
 const cachedBundleConfigValue = cachedPublic('presetBundleConfig', ['preset-bundle-config'], fetchBundleConfigValue);
 
+/** The value of one key-value document by id (cached, public), or null. Also read for ready-made coffee modifiers (lib/ct/drink-modifiers.ts). */
+export async function getKeyValueDocumentValue(customObjectId: string): Promise<unknown> {
+  return UUID.test(customObjectId) ? cachedBundleConfigValue(customObjectId) : null;
+}
+
 /** The config of one custom object id. The id is checked as a UUID before it is used in a predicate. Public data: cached. */
 export async function getBundleConfig(customObjectId: string): Promise<BundleConfig | null> {
   if (!UUID.test(customObjectId)) return null;
