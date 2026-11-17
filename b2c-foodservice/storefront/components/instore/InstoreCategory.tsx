@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { CategoryTile } from '@/components/instore/InstoreHome';
+import { CategoryTileGrid } from '@/components/instore/InstoreHome';
 import ProductRow from '@/components/instore/ProductRow';
 import Icon from '@/components/ui/Icon';
 import { buttonClasses } from '@/components/ui/Button';
@@ -31,13 +31,7 @@ export default function InstoreCategory({ view, rootKey }: { view: InstoreCatego
 
       {children.length > 0 ? (
         <section aria-label={t('browse')}>
-          <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0">
-            {children.map((c) => (
-              <li key={c.id} className="min-w-0">
-                <CategoryTile name={c.name} slug={c.slug} rootKey={rootKey} />
-              </li>
-            ))}
-          </ul>
+          <CategoryTileGrid categories={children} rootKey={rootKey} />
         </section>
       ) : null}
 
