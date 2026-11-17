@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-17",
+  "via": "MCP ct-spec-test-b2c-food (update_types, two addFieldDefinition actions)",
+  "type": "instore-customer-type",
+  "versionBefore": 1,
+  "versionAfter": 3,
+  "fields": [
+    { "name": "paymentAccountIds", "type": "Set<String>", "required": false, "note": "unchanged" },
+    { "name": "notes", "type": "Set<String>", "required": false, "inputHint": "MultiLine" },
+    { "name": "loyaltyPoints", "type": "Number", "required": false }
+  ]
+}
