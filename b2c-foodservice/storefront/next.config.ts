@@ -11,8 +11,12 @@ export const baseConfig: NextConfig = {
     const headers = securityHeaders({ dev: process.env.NODE_ENV !== 'production', reportOnly: process.env.CSP_REPORT_ONLY === 'true', instore: isInstore() });
     return [{ source: '/:path*', headers }];
   },
-  // forbidden() and unauthorized() need this flag in Next 16 (PROJECT-FINDINGS).
-  experimental: { authInterrupts: true },
+  experimental: {
+    // forbidden() and unauthorized() need this flag in Next 16 (PROJECT-FINDINGS).
+    authInterrupts: true,
+    // Coding agents are nudged about security upgrades only (not every stable release or Future Default).
+    agentUpgrade: 'security',
+  },
   // Every request gets blocking metadata: title, description and robots sit in <head> in the first bytes, not streamed
   // into <body> for browsers. Crawlers, link previews and audit tools read them without running scripts. The pages
   // already wait for their data, so the cost is nil (plans/evidence/Q/perf.md).
