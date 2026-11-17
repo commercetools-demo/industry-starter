@@ -3,7 +3,7 @@
 
 # Workstream W: Customer connector (Connect service)
 
-Read `plans/JUNIOR-GUIDE.md` first. Everything runs in the new folder `b2c-foodservice/connect/`, except W-01, which changes the custom type in the project through the commercetools MCP. Plan written on branch `worktree-foodservice-customer-connector-plan` (worktree `.claude/worktrees/foodservice-customer-connector-plan`, not pushed); implement on the same branch. Nothing is deployed by this workstream.
+Read `plans/JUNIOR-GUIDE.md` first. Everything runs in the folders `b2c-foodservice/connect.yaml` and `b2c-foodservice/customer-api/`, except W-01, which changes the custom type in the project through the commercetools MCP. Plan written on branch `worktree-foodservice-customer-connector-plan` (worktree `.claude/worktrees/foodservice-customer-connector-plan`, not pushed); implement on the same branch. Nothing is deployed by this workstream.
 
 ## 1. Header
 
@@ -24,7 +24,7 @@ Read `plans/JUNIOR-GUIDE.md` first. Everything runs in the new folder `b2c-foods
 **In scope**
 
 1. Two new optional fields on `instore-customer-type`, added through the MCP (W-01): `notes` (Set of String) and `loyaltyPoints` (Number). Nothing else on the type changes.
-2. A Connect connector root at `b2c-foodservice/connect/`: `connect.yaml` plus one TypeScript `service` app, scaffolded with the Connect CLI (W-02).
+2. A Connect connector root at `b2c-foodservice/`: `connect.yaml` plus one TypeScript `service` app, scaffolded with the Connect CLI (W-02).
 3. Eight GET routes, one POST, one PUT and one DELETE (section 3, D3), CORS `*` (D4), no authentication (D-062).
 4. Tests at the router level, a README, and a live run on a local machine against the project (W-13).
 
@@ -42,7 +42,7 @@ Read `plans/JUNIOR-GUIDE.md` first. Everything runs in the new folder `b2c-foods
 Connect clones a Git repository and reads `connect.yaml` **at the repository root** only (Connect docs: `ConnectorStagedDraft.repository` is a URL and a tag, no sub-path). The Git root here is `industry-starter`, which holds five other industries, so `connect.yaml` must not go there. Instead:
 
 ```
-b2c-foodservice/connect/          # connector root (becomes the root of its own repository, OA-W-b)
+b2c-foodservice/                  # connector root alongside the rest of the industry (OA-W-b)
 ├── connect.yaml
 ├── README.md
 └── customer-api/                 # the service app; folder name == deployAs[].name
@@ -51,7 +51,7 @@ b2c-foodservice/connect/          # connector root (becomes the root of its own 
     └── tests/
 ```
 
-For deployment the owner mirrors `b2c-foodservice/connect/` into its own repository (`git subtree split --prefix b2c-foodservice/connect`), tags it and registers it (OA-W-b). No npm workspaces; the app folder is self-contained.
+For deployment the owner mirrors `b2c-foodservice/` into its own repository (`git subtree split --prefix b2c-foodservice`), tags it and registers it (OA-W-b). No npm workspaces; the app folder is self-contained.
 
 ### D2. connect.yaml
 
@@ -140,7 +140,7 @@ Every write sends the customer `version`. On 409 `ConcurrentModification` the se
 
 ## 4. Tasks
 
-Common rules: test first; `npm run check` (or the template's `build` plus `test`) in `connect/customer-api` before ticking; commit `connect: W-nn summary`.
+Common rules: test first; `npm run check` (or the template's `build` plus `test`) in `customer-api` before ticking; commit `connect: W-nn summary`.
 
 - [x] **W-00 Plan and notes.** This file, `STATUS.md` row W, `DEPENDENCY-PLAN.md` row W, D-062 to D-064 in `DECISIONS.md`, `notes/questions-W.md`, `notes/todo-W.md`, rows copied by hand into the generated blocks of `QUESTIONS.md` and `TODO-MANUAL-TESTING.md` (do **not** run `consolidate-notes.mjs` on main: it drops the T rows).
 - [x] **W-01 Custom type fields (MCP).** With the MCP `ct-spec-test-b2c-food`: `read_types` key `instore-customer-type` (version 1 and one field `paymentAccountIds` on 2026-11-17), then `update_types` with that version and two `addFieldDefinition` actions: `notes` (`Set` of `String`, `required: false`, `inputHint: MultiLine`, label "Notes" in en-AU, en-GB, en-IE, en-US) and `loyaltyPoints` (`Number`, `required: false`, label "Loyalty points" in the same four locales). Read the type back and save it to `plans/evidence/W/type-after.json`. Probe on one seeded demo customer: set three notes, read them back twice and record the order (D5), add a duplicate (expect an error) and record it, then remove the notes. Nothing else on the type changes.
@@ -155,7 +155,7 @@ Common rules: test first; `npm run check` (or the template's `build` plus `test`
 - [x] **W-10 Notes add.** POST (D5, D6). Tests: `customer with the type gets setCustomField only`, `customer without a type gets setCustomType with notes`, `customer with another type answers 409 and is not written`, `paymentAccountIds is never in the actions`, `duplicate text answers 409`, `text over 1000 characters answers 400`, `101st note answers 409`.
 - [x] **W-11 Notes edit and delete.** PUT and DELETE (D5, D6). Tests: `expected mismatch answers 409 and writes nothing`, `edit to an existing text answers 409`, `deleting the last note removes the field`, `ConcurrentModification is retried and then succeeds`, `three conflicts answer 409 conflict`.
 - [x] **W-12 Loyalty points.** GET only. Tests: `absent field answers 0`, `value is returned as a number`, `POST, PUT and DELETE answer 405`.
-- [ ] **W-13 README and live run.** `connect/README.md`: the "no auth, demo only" warning first, the route table, the scopes and why, the configuration table, notes semantics (D5), fail behaviour (the service only proxies commercetools; when commercetools is down it answers 502 and the frontend shows an error), and the deploy steps of OA-W-b and OA-W-c. Then, with the OA-W-a client in `connect/customer-api/.env` (gitignored), `npm run start:dev` and the recipe of section 6 against the project. Evidence in `plans/evidence/W/`. **Live run not done: blocked on OA-W-a** (README is written).
+- [ ] **W-13 README and live run.** `customer-api/README.md`: the "no auth, demo only" warning first, the route table, the scopes and why, the configuration table, notes semantics (D5), fail behaviour (the service only proxies commercetools; when commercetools is down it answers 502 and the frontend shows an error), and the deploy steps of OA-W-b and OA-W-c. Then, with the OA-W-a client in `customer-api/.env` (gitignored), `npm run start:dev` and the recipe of section 6 against the project. Evidence in `plans/evidence/W/`. **Live run not done: blocked on OA-W-a** (README is written).
 
 ## 5. Scenarios checklist
 
@@ -198,7 +198,7 @@ See `plans/notes/questions-W.md` (Q-W-1 to Q-W-6). Each has the default that is 
 
 ## 10. Definition of done
 
-- W-00 to W-13 ticked, each with a passing check commit in `connect/customer-api`.
+- W-00 to W-13 ticked, each with a passing check commit in `customer-api`.
 - `commercetools connect validate` passes; `commercetools connect application test` passes.
 - Acceptance list in section 5 has a named passing test or recorded evidence.
 - The type read-back shows `notes` and `loyaltyPoints` and an unchanged `paymentAccountIds`.

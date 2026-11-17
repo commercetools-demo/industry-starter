@@ -92,10 +92,10 @@ Tests mock the commercetools layer with an in-memory fake, so they need no crede
 
 ## Deploy
 
-This folder must be the **root of its own Git repository**: Connect reads `connect.yaml` only at a repository root. From the monorepo root:
+`connect.yaml` is in the parent folder, `b2c-foodservice/`. Connect reads `connect.yaml` only at a repository root, so `b2c-foodservice/` must be the **root of its own Git repository**. From the monorepo root:
 
 ```bash
-git subtree split --prefix b2c-foodservice/connect -b connect-export
+git subtree split --prefix b2c-foodservice -b connect-export
 ```
 
 Push `connect-export` to a new repository as `main`, tag it (for example `v0.1.0`), register it as a Connector (Merchant Center, or `commercetools connect connectorstaged create`) and deploy it to a **sandbox** deployment in the same region as the project. See `plans/TODO-MANUAL-TESTING.md` rows OA-W-b and OA-W-c.
