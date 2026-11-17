@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ct-spec-test-b2c-food": {
+      "type": "http",
+      "url": "https://mcp.us-central1.gcp.commercetools.com/projects/spec-test-b2c-food/coding-agent"
+    }
+  }
+}
