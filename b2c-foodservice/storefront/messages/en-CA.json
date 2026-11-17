@@ -905,7 +905,8 @@
         "grind": "Grind",
         "colour": "Colour",
         "bundle": "Bundle",
-        "drinkSize": "Size"
+        "drinkSize": "Size",
+        "size": "Size"
       },
       "choice": {
         "capsulesPerPack": "pack size",
@@ -913,7 +914,8 @@
         "grind": "grind",
         "colour": "colour",
         "bundle": "bundle",
-        "drinkSize": "size"
+        "drinkSize": "size",
+        "size": "size"
       }
     },
     "pack": {
@@ -1119,6 +1121,11 @@
     },
     "reviews": {
       "heading": "Customer reviews"
+    },
+    "modifiers": {
+      "title": "Customize",
+      "titleWithValue": "Customize - {value}",
+      "hint": "Choose any"
     }
   },
   "reviews": {

@@ -6,6 +6,7 @@ import { SWRConfig, unstable_serialize } from 'swr';
 import BigStepper from '@/components/instore/BigStepper';
 import InstoreBottomBar from '@/components/instore/InstoreBottomBar';
 import StockLine from '@/components/instore/StockLine';
+import ModifierPicker from '@/components/pdp/ModifierPicker';
 import OptionGroup from '@/components/pdp/OptionGroup';
 import { PdpProvider, usePdp } from '@/components/pdp/pdp-state';
 import Button from '@/components/ui/Button';
@@ -48,7 +49,7 @@ function Body() {
   const tShell = useTranslations('shell.toast');
   const locale = useLocale();
   const toast = useToast();
-  const { data, variant, preview, quantity, setQuantity, minQty, maxQty, missing } = usePdp();
+  const { data, variant, preview, quantity, setQuantity, minQty, maxQty, missing, modifiers } = usePdp();
   const { add, isAdding, error } = useAddToCart();
   const { product } = data;
   const fmt = (m: Money) => formatMoney(m.centAmount, m.currencyCode, locale);
@@ -88,7 +89,7 @@ function Body() {
 
   const onAdd = async () => {
     if (!variant || state.disabled || isAdding) return;
-    const cart = await add({ sku: variant.sku, quantity, fulfilment: 'delivery' });
+    const cart = await add({ sku: variant.sku, quantity, fulfilment: 'delivery', ...(modifiers.length > 0 ? { modifiers } : {}) });
     if (cart) toast.show(tShell('added'));
   };
 
@@ -118,6 +119,8 @@ function Body() {
       {product.selectors.map((s) => (
         <OptionGroup key={s.attr} selector={s} large />
       ))}
+
+      <ModifierPicker large />
 
       {error ? (
         <p role="alert" className="m-0 text-[14.5px] font-medium text-danger-text">

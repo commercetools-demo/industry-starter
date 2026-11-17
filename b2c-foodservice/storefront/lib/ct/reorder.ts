@@ -5,6 +5,7 @@ import { getInventoryDetail } from '@/lib/ct/inventory';
 import { AppError } from '@/lib/errors';
 import { bundlePresetOf, isBundleChild, isBundleParent } from '@/lib/mappers/bundle-lines';
 import { fulfilmentOf } from '@/lib/mappers/cart';
+import { lineModifierIds } from '@/lib/mappers/drink-modifiers';
 import { CART_MAX_LINE_QUANTITY } from '@/lib/shop-config';
 import type { Session } from '@/lib/session';
 import type { CartSummary, Fulfilment, ReorderResult, ReorderSkipReason } from '@/lib/types';
@@ -19,6 +20,8 @@ export interface PlannedLine {
   storeKey?: string;
   /** A preset bundle (workstream V): re-added as one bundle; its parts are not planned. */
   bundle?: { preset: number; machineSku: string };
+  /** Ready-made coffee: the ordered modifiers (`addLine` checks them against the drink's configuration again). */
+  modifiers?: string[];
 }
 
 /**
@@ -35,9 +38,11 @@ export function planReorder(
     const sku = l.variant.sku;
     if (!sku) return [];
     const ordered = fulfilmentOf(l);
+    const modifiers = lineModifierIds(l);
     const base = {
       sku, name: getLocalizedString(l.name, ctx.locale) || sku,
       quantity: Math.min(Math.max(1, l.quantity), CART_MAX_LINE_QUANTITY), ordered,
+      ...(modifiers && modifiers.length > 0 ? { modifiers } : {}),
     };
     if (isBundleParent(l)) {
       const collect = ordered === 'collect' && ctx.collection && ctx.storeKey;
@@ -109,8 +114,8 @@ export async function addPlannedLines(session: Session, market: CartMarket, plan
         current,
         market,
         line.fulfilment === 'collect' && line.storeKey
-          ? { sku: line.sku, quantity: q, fulfilment: 'collect', storeKey: line.storeKey }
-          : { sku: line.sku, quantity: q, fulfilment: 'delivery' },
+          ? { sku: line.sku, quantity: q, fulfilment: 'collect', storeKey: line.storeKey, ...(line.modifiers ? { modifiers: line.modifiers } : {}) }
+          : { sku: line.sku, quantity: q, fulfilment: 'delivery', ...(line.modifiers ? { modifiers: line.modifiers } : {}) },
       );
     };
     try {

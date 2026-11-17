@@ -113,6 +113,22 @@ describe('In-store product page', () => {
     const body = JSON.parse(String(t.calls.find((c) => c.url === '/api/cart/lines')?.init?.body)) as Record<string, unknown>;
     expect(body).toMatchObject({ sku: 'POD-10', fulfilment: 'delivery' });
   });
+
+  it('a ready-made coffee offers its modifiers and sends the chosen ones with the line', async () => {
+    const OAT = '572a1c72-24e1-4a96-a693-d022be0cd867';
+    const ALMOND = 'f8716393-8508-46cb-865a-7dac4731e22a';
+    const t = stubFetch({ ...base, ...lines });
+    const data = { ...podPage(), modifiers: [{ id: OAT, name: 'Oat milk' }, { id: ALMOND, name: 'Almond milk' }] };
+    const sel = parseSelection({}, data.product.selectors, data.product.variants[0]);
+    renderShell(<InstoreProduct data={data} initialSelection={sel} />);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: 'Oat milk' }));
+    expect(screen.getByRole('button', { name: 'Oat milk' })).toHaveAttribute('aria-pressed', 'true');
+    await user.click(screen.getByTestId('add-to-bag'));
+    await waitFor(() => expect(t.calls.some((c) => c.url === '/api/cart/lines')).toBe(true));
+    const body = JSON.parse(String(t.calls.find((c) => c.url === '/api/cart/lines')?.init?.body)) as Record<string, unknown>;
+    expect(body).toMatchObject({ sku: 'POD-10', fulfilment: 'delivery', modifiers: [OAT] });
+  });
 });
 
 describe('In-store bag', () => {

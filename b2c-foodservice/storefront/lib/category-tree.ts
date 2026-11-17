@@ -5,17 +5,20 @@ export function flattenTree(tree: Category[]): Category[] {
   return tree.flatMap((c) => [c, ...flattenTree(c.children)]);
 }
 
-/** Categories the web storefront shows in its navigation: instoreVisibility not set, `both` or `onlyOnline`. A hidden category hides its subtree. */
+/** Categories the web storefront shows: instoreVisibility not set, `both`, `onlyOnline` or `allThree`. A hidden category hides its subtree. */
 export function webVisibleTree(tree: Category[]): Category[] {
   return tree
-    .filter((c) => !c.instoreVisibility || c.instoreVisibility === 'both' || c.instoreVisibility === 'onlyOnline')
+    .filter((c) => !c.instoreVisibility || c.instoreVisibility === 'both' || c.instoreVisibility === 'onlyOnline' || c.instoreVisibility === 'allThree')
     .map((c) => ({ ...c, children: webVisibleTree(c.children) }));
 }
 
-/** Categories the in-store shop shows: only `both` and `onlyInStore` (an unset category is not shown). A hidden category hides its subtree. */
+/**
+ * Categories the in-store shop (APP_MODE=instore) shows: only `onlyBarista` and `allThree` (an unset category is not shown, and
+ * neither are `both` and `onlyInStore`). A hidden category hides its subtree.
+ */
 export function instoreVisibleTree(tree: Category[]): Category[] {
   return tree
-    .filter((c) => c.instoreVisibility === 'both' || c.instoreVisibility === 'onlyInStore')
+    .filter((c) => c.instoreVisibility === 'onlyBarista' || c.instoreVisibility === 'allThree')
     .map((c) => ({ ...c, children: instoreVisibleTree(c.children) }));
 }
 

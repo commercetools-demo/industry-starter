@@ -76,7 +76,7 @@ export async function instoreCategoryName(locale: string, slug: string): Promise
 /** An unknown slug is a 404; a category with no products and no children is shown empty (a shopper can walk up). */
 export async function loadInstoreCategory(locale: string, slug: string, pageParam: string | undefined): Promise<InstoreCategoryView> {
   const market = marketForLocale(locale);
-  // Only `both` and `onlyInStore` categories exist in the shop; a hidden one (or one under a hidden parent) is a 404.
+  // Only `onlyBarista` and `allThree` categories exist in the shop; a hidden one (or one under a hidden parent) is a 404.
   const tree = instoreVisibleTree(await getCategoryTree(locale));
   const category = findCategory(tree, (c) => c.slug === slug);
   if (!category) notFound();

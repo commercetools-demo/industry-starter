@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const h = vi.hoisted(() => ({
-  product: vi.fn(), inventory: vi.fn(), policies: vi.fn(), cacheCalls: 0, inBrand: vi.fn(), bundle: vi.fn(),
+  product: vi.fn(), inventory: vi.fn(), policies: vi.fn(), cacheCalls: 0, inBrand: vi.fn(), bundle: vi.fn(), modifiers: vi.fn(),
 }));
 // A memoising stand-in for React's request-scoped cache(): one result per argument list.
 vi.mock('react', () => ({
@@ -18,6 +18,7 @@ vi.mock('react', () => ({
 vi.mock('@/lib/ct/product-detail', () => ({ getProductBySku: h.product, getRecurrencePolicies: h.policies }));
 vi.mock('@/lib/ct/inventory', () => ({ getInventoryDetail: h.inventory }));
 vi.mock('@/lib/ct/preset-bundles', () => ({ getBundleView: h.bundle }));
+vi.mock('@/lib/ct/drink-modifiers', () => ({ getModifierOptions: h.modifiers }));
 vi.mock('@/lib/ct/product-selections', () => ({ isInBrandSelection: h.inBrand }));
 vi.mock('@/lib/ct/attribute-labels', () => ({ getAttributeLabels: async () => ({}) }));
 vi.mock('@/lib/ct/categories', () => ({ getCategoryTree: async () => [] }));
@@ -123,6 +124,22 @@ describe('loadProductPage for a preset bundle (V-08)', () => {
     const page = await loadProductPage('POD-1', 'en-US');
     expect(h.bundle).not.toHaveBeenCalled();
     expect(page).not.toHaveProperty('bundle');
+    expect(page).not.toHaveProperty('modifiers');
+    expect(h.modifiers).not.toHaveBeenCalled();
     expect(h.policies).toHaveBeenCalled();
+  });
+
+  it('a ready-made coffee carries the modifiers its configuration offers; a failed read gives null and logs', async () => {
+    const options = [{ id: '572a1c72-24e1-4a96-a693-d022be0cd867', name: 'Oat milk' }];
+    h.modifiers.mockResolvedValueOnce(options);
+    h.product.mockResolvedValue(projection(false, 'mcf-ready-drink'));
+    const page = await loadProductPage('RD-1', 'en-US');
+    expect(page?.product.shape).toBe('readyDrink');
+    expect(page?.modifiers).toEqual(options);
+    expect(h.modifiers).toHaveBeenCalledWith(expect.objectContaining({ id: 'p1' }), 'en-US');
+    h.modifiers.mockRejectedValueOnce(Object.assign(new Error('boom'), { statusCode: 403 }));
+    const failed = await loadProductPage('RD-2', 'en-US');
+    expect(failed?.modifiers).toBeNull();
+    expect(console.error).toHaveBeenCalledWith(JSON.stringify({ event: 'pdp_modifiers_failed', status: 403 }));
   });
 });

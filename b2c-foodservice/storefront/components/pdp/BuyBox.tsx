@@ -7,6 +7,7 @@ import CollectBlock from '@/components/pdp/CollectBlock';
 import DetailAccordions from '@/components/pdp/DetailAccordions';
 import FactsRow from '@/components/pdp/FactsRow';
 import FulfilmentCards from '@/components/pdp/FulfilmentCards';
+import ModifierPicker from '@/components/pdp/ModifierPicker';
 import OptionGroup from '@/components/pdp/OptionGroup';
 import ShipBlock from '@/components/pdp/ShipBlock';
 import SubscribeBlock from '@/components/pdp/SubscribeBlock';
@@ -31,6 +32,7 @@ export default function BuyBox() {
       {product.selectors.map((s) => (
         <OptionGroup key={s.attr} selector={s} />
       ))}
+      {data.modifiers && data.modifiers.length > 0 ? <ModifierPicker /> : null}
       {drinks ? null : <FulfilmentCards />}
       {!drinks && fulfilment === 'collect' && collectionEnabled ? <CollectBlock /> : !drinks && fulfilment === 'subscribe' ? <SubscribeBlock /> : <ShipBlock />}
       {data.inventoryFailed && fulfilment === 'subscribe' ? (

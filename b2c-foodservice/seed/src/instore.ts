@@ -12,7 +12,7 @@ import { planProductTypeUpdate, planTypeUpdate } from './sync';
 /**
  * In-store seeding, idempotent:
  *  - `npm run seed:instore-visibility`: ensures the custom type `instore-category-type` (resource type category) has the enum
- *    field `instoreVisibility` (onlyInStore, onlyOnline, both, none). An existing type gets the field added; the type is
+ *    field `instoreVisibility` (onlyInStore, onlyOnline, both, none, onlyBarista, allThree). An existing type gets the field added; the type is
  *    created when missing. Nothing is removed or retyped.
  *  - `npm run seed:instore`: runs the above, then creates the product type `mcf-ready-drink`, the category
  *    `mcf-cat-instore-drinks` (instoreVisibility onlyInStore, so it stays off the web navigation) and the ready-made drinks

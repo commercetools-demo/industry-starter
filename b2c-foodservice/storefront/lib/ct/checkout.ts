@@ -15,6 +15,7 @@ import { AppError } from '@/lib/errors';
 import { brandOfLineFields } from '@/lib/brands';
 import { childrenOf, isBundleLine, isBundleParent } from '@/lib/mappers/bundle-lines';
 import { fulfilmentOf } from '@/lib/mappers/cart';
+import { lineModifierIds, modifiersKeyOf } from '@/lib/mappers/drink-modifiers';
 import { mapCheckoutState } from '@/lib/mappers/checkout';
 import type { Session } from '@/lib/session';
 import type { Cart, CheckoutPayment, CheckoutState, Store } from '@/lib/types';
@@ -104,6 +105,8 @@ export function lineDraft(l: LineItem) {
     ...(l.supplyChannel ? { channelId: l.supplyChannel.id } : {}),
     ...(l.supplyChannel && fulfilment === 'delivery' ? { brandChannelId: l.supplyChannel.id } : {}),
     ...(l.recurrenceInfo ? { policyId: l.recurrenceInfo.recurrencePolicy.id } : {}),
+    // A ready-made coffee line keeps its in-store line type and its modifiers.
+    ...(lineModifierIds(l) ? { modifiers: lineModifierIds(l) } : {}),
   });
   void _action;
   return draft;
@@ -134,7 +137,7 @@ export function selectGroupLines(raw: Pick<CtCart, 'lineItems'>, lineIds: readon
   return raw.lineItems.filter((l) => wanted.has(l.id) || parents.some((p) => childrenOf(raw.lineItems, p).includes(l)));
 }
 
-/** Same sku, fulfilment, store, policy, key and parent: how a clone line finds its bag line (a part never matches the shopper's own line). */
+/** Same sku, fulfilment, store, policy, key, parent and modifiers: how a clone line finds its bag line (a part never matches the shopper's own line). */
 export function sameLine(a: LineItem, b: LineItem): boolean {
   return (
     (a.key ?? null) === (b.key ?? null) &&
@@ -142,7 +145,8 @@ export function sameLine(a: LineItem, b: LineItem): boolean {
     a.variant?.sku === b.variant?.sku &&
     fulfilmentOf(a) === fulfilmentOf(b) &&
     (a.supplyChannel?.id ?? null) === (b.supplyChannel?.id ?? null) &&
-    (a.recurrenceInfo?.recurrencePolicy.id ?? null) === (b.recurrenceInfo?.recurrencePolicy.id ?? null)
+    (a.recurrenceInfo?.recurrencePolicy.id ?? null) === (b.recurrenceInfo?.recurrencePolicy.id ?? null) &&
+    modifiersKeyOf(a) === modifiersKeyOf(b)
   );
 }
 

@@ -11,8 +11,12 @@ import { oneTimeCents } from './prices';
  */
 export const INSTORE_CATEGORY_TYPE_KEY = 'instore-category-type';
 export const INSTORE_VISIBILITY_FIELD = 'instoreVisibility';
-/** onlyInStore: self-checkout only. onlyOnline: web storefront only. both: everywhere. none: nowhere. */
-export const INSTORE_VISIBILITY_VALUES = ['onlyInStore', 'onlyOnline', 'both', 'none'] as const;
+/**
+ * onlyOnline: web storefront only. allThree: web storefront and the in-store shop. onlyBarista: the in-store shop only.
+ * onlyInStore and both: no longer shown by the in-store shop (it shows only onlyBarista and allThree); both still shows on the web.
+ * none: nowhere.
+ */
+export const INSTORE_VISIBILITY_VALUES = ['onlyInStore', 'onlyOnline', 'both', 'none', 'onlyBarista', 'allThree'] as const;
 export type InstoreVisibility = (typeof INSTORE_VISIBILITY_VALUES)[number];
 
 export const instoreVisibilityField: FieldDefinition = {

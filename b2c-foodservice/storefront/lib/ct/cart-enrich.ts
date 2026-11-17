@@ -4,6 +4,7 @@ import { nudgeTarget } from '@/lib/cart/summary';
 import { getAttributeLabels } from '@/lib/ct/attribute-labels';
 import { getStoresForCountry } from '@/lib/ct/channels';
 import { apiRoot } from '@/lib/ct/client';
+import { getModifierNames } from '@/lib/ct/drink-modifiers';
 import { getBundleView } from '@/lib/ct/preset-bundles';
 import { getInventoryDetail } from '@/lib/ct/inventory';
 import { getProductBySku, getRecurrencePolicies } from '@/lib/ct/product-detail';
@@ -12,6 +13,7 @@ import { mapAttributes } from '@/lib/mappers/attribute';
 import type { AttributeLabels } from '@/lib/mappers/attribute-labels';
 import { EMPTY_ENRICHMENT, fulfilmentOf, type CartEnrichment, type EnrichedProduct, type EnrichedVariant } from '@/lib/mappers/cart';
 import { isBundleLine, isBundleParent } from '@/lib/mappers/bundle-lines';
+import { lineModifierIds } from '@/lib/mappers/drink-modifiers';
 import { mapMoney } from '@/lib/mappers/money';
 import { ATTRIBUTE_BLOCKLIST, shapeOf } from '@/lib/product/variant-config';
 import { getCompatibleCapsules } from '@/lib/related';
@@ -113,13 +115,16 @@ export async function getCartEnrichment(cart: CtCart, ctx: EnrichContext): Promi
   const hasSubscribe = cart.lineItems.some((l) => fulfilmentOf(l) === 'subscribe');
 
   const hasBundle = cart.lineItems.some((l) => isBundleParent(l));
-  const [labels, inventory, stores, threshold, policies, bundles] = await Promise.all([
+  const modifierIds = [...new Set(cart.lineItems.flatMap((l) => lineModifierIds(l) ?? []))];
+  const [labels, inventory, stores, threshold, policies, bundles, modifierNames] = await Promise.all([
     getAttributeLabels(ctx.locale).catch((): AttributeLabels => ({})),
     getInventoryDetail(skus).catch(() => null),
     getStoresForCountry(ctx.country, ctx.locale).catch(() => []),
     getFreeShippingThreshold(ctx.country, ctx.currency).catch(() => null),
     hasSubscribe ? getRecurrencePolicies(ctx.locale).catch(() => []) : Promise.resolve([]),
     hasBundle ? readBundles(cart, ctx).catch((): NonNullable<CartEnrichment['bundles']> => ({})) : Promise.resolve({}),
+    // Ready-made coffee: the names of the lines' modifiers (a failed read shows the lines without them).
+    getModifierNames(modifierIds, ctx.locale).catch((): Record<string, string> => ({})),
   ]);
   const products = await readProducts(productIds, ctx, labels).catch((): Record<string, EnrichedProduct> => ({}));
 
@@ -147,5 +152,6 @@ export async function getCartEnrichment(cart: CtCart, ctx: EnrichContext): Promi
     policies: Object.fromEntries(policies.map((p) => [p.id, p.schedule])),
     nudge,
     ...(hasBundle ? { bundles } : {}),
+    ...(modifierIds.length > 0 ? { modifierNames } : {}),
   };
 }

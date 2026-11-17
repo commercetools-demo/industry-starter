@@ -19,6 +19,8 @@ import { updateWithRetry } from '@/lib/ct/retry';
 import type { DomainErrorCode } from '@/lib/api-domain';
 import { AppError } from '@/lib/errors';
 import { detectPriceChanges, fulfilmentOf, mapCart, mapCartSummary } from '@/lib/mappers/cart';
+import { fulfilmentFieldOf, instoreLineCustom, lineModifierIds, modifiersKeyOf, normaliseModifierChoice } from '@/lib/mappers/drink-modifiers';
+import { getAllowedModifierIds } from '@/lib/ct/drink-modifiers';
 import { ensureAnonymousId, type Session } from '@/lib/session';
 import { CART_MAX_LINE_QUANTITY, CART_SHIPPING_MODE, MIN_ORDER_VALUE } from '@/lib/shop-config';
 import type { VariantTranslator } from '@/lib/cart/summary';
@@ -35,10 +37,14 @@ import { getLocalizedString, marketForCountry } from '@/lib/utils';
  */
 export interface CartMarket { country: string; currency: string; locale: string }
 
-export type AddLineInput =
+export type AddLineInput = (
   | { sku: string; quantity: number; fulfilment: 'delivery' }
   | { sku: string; quantity: number; fulfilment: 'collect'; storeKey: string }
-  | { sku: string; quantity: number; fulfilment: 'subscribe'; recurrencePolicyKey: string };
+  | { sku: string; quantity: number; fulfilment: 'subscribe'; recurrencePolicyKey: string }
+) & {
+  /** Ready-made coffee only: the chosen modifier product ids (checked against the drink's configuration by `addLine`). */
+  modifiers?: string[];
+};
 
 /** Units in the cart (sum of line quantities, not lines), or null when the cart is gone or no longer Active. */
 export async function getCartUnitCount(cartId: string): Promise<number | null> {
@@ -115,7 +121,11 @@ export class LineRejected extends Error {
 }
 
 /** What the validated input resolved to: the store channel for collect, the policy id for subscribe. */
-export interface LineTargets { channelId?: string; policyId?: string; brand?: BrandSlug; brandChannelId?: string }
+export interface LineTargets {
+  channelId?: string; policyId?: string; brand?: BrandSlug; brandChannelId?: string;
+  /** Set for a ready-made coffee line (checked and sorted modifier ids, possibly empty): the line takes the in-store line type. */
+  modifiers?: string[];
+}
 
 const LINE_TYPE = { typeId: 'type', key: 'mcf-line-fulfilment' } as const;
 
@@ -133,7 +143,10 @@ export function buildAddLineAction(input: AddLineInput, targets: LineTargets = {
     sku: input.sku,
     quantity: input.quantity,
     // `brand` (the line's brand) is written whenever the server resolved it; the cart UI groups lines by it.
-    custom: { type: LINE_TYPE, fields: { fulfilment: input.fulfilment, ...(targets.brand ? { brand: targets.brand } : {}) } },
+    // A ready-made coffee line has the in-store line type instead (it has no `brand` field: such a line is Malva Coffee's).
+    custom: targets.modifiers
+      ? instoreLineCustom(input.fulfilment, targets.modifiers)
+      : { type: LINE_TYPE, fields: { fulfilment: input.fulfilment, ...(targets.brand ? { brand: targets.brand } : {}) } },
   };
   // A brand with its own inventory channel (Malva Drinks) reserves stock there; the line stays a delivery line.
   if (input.fulfilment === 'delivery' && targets.brandChannelId) {
@@ -194,6 +207,21 @@ export function isSubscribable(
   return (flag(variant?.attributes) ?? flag(productAttributes)) === true;
 }
 
+/**
+ * The modifiers of a ready-made coffee line: the shopper's choice checked against the drink's configuration, sorted (an empty
+ * list is a drink without modifiers). Undefined for every other product; modifiers sent for one are refused.
+ */
+async function resolveModifiers(projection: ProductProjection, chosen: string[] | undefined): Promise<string[] | undefined> {
+  if (shapeOf(projection.productType?.obj?.key) !== 'readyDrink') {
+    if (chosen && chosen.length > 0) throw new AppError('validation_failed', 400);
+    return undefined;
+  }
+  if (!chosen || chosen.length === 0) return [];
+  const checked = normaliseModifierChoice(chosen, await getAllowedModifierIds(projection));
+  if (!checked) throw new AppError('validation_failed', 400);
+  return checked;
+}
+
 export async function addLine(
   session: Session,
   market: CartMarket,
@@ -205,7 +233,8 @@ export async function addLine(
   // A preset bundle is added through POST /api/cart/bundles only: a bare add would take the anchor price without its parts (D6).
   if (shapeOf(projection.productType?.obj?.key) === 'presetBundle') throw new LineRejected('bundle_requires_preset', 422);
   const brand = await getProductBrand(projection.id);
-  const targets = await resolveTargets(market, input, brand, projection);
+  const modifiers = await resolveModifiers(projection, input.modifiers);
+  const targets = { ...(await resolveTargets(market, input, brand, projection)), ...(modifiers ? { modifiers } : {}) };
   const action = buildAddLineAction(input, targets);
   let next = session;
   let cart = session.cartId ? await getActiveCart(session.cartId) : null;
@@ -583,17 +612,24 @@ function planLines(cart: Cart): PlanLine[] {
     // Only a collect line's channel is a store; a brand's inventory channel (Malva Drinks) is not part of the fulfilment plans.
     ...(l.supplyChannel && fulfilmentOf(l) === 'collect' ? { channelId: l.supplyChannel.id } : {}),
     subscribe: Boolean(l.recurrenceInfo) || fulfilmentOf(l) === 'subscribe',
+    // Two drinks with different modifiers are different lines: a switch never folds one into the other.
+    ...(modifiersKeyOf(l) ? { modifiers: modifiersKeyOf(l) } : {}),
   }));
 }
 
 /** Plan steps to commercetools update actions. `set` does not merge on its own, hence the explicit `merge` steps. */
-export function opsToActions(ops: PlanOp[]): CartUpdateAction[] {
+export function opsToActions(ops: PlanOp[], lines: readonly Pick<Cart['lineItems'][number], 'id' | 'custom'>[] = []): CartUpdateAction[] {
+  // A ready-made coffee line spells its fulfilment field the US way (in-store line type).
+  const field = (lineId: string) => {
+    const line = lines.find((l) => l.id === lineId);
+    return line ? fulfilmentFieldOf(line) : 'fulfilment';
+  };
   return ops.flatMap((op): CartUpdateAction[] =>
     op.kind === 'set'
       ? [
           // No `supplyChannel` field removes the channel (verified in I-00).
           { action: 'setLineItemSupplyChannel', lineItemId: op.lineId, ...(op.channelId ? { supplyChannel: { typeId: 'channel' as const, id: op.channelId } } : {}) },
-          { action: 'setLineItemCustomField', lineItemId: op.lineId, name: 'fulfilment', value: op.fulfilment },
+          { action: 'setLineItemCustomField', lineItemId: op.lineId, name: field(op.lineId), value: op.fulfilment },
         ]
       : [
           { action: 'changeLineItemQuantity', lineItemId: op.keepId, quantity: op.quantity },
@@ -636,7 +672,7 @@ export async function switchFulfilment(session: Session, market: CartMarket, lin
       const available = await getStoreStock(sku, store.id);
       if (available < plan.resultingQuantity) throw new LineRejected('not_available_for_collection', 409, { available });
     }
-    return opsToActions(plan.ops);
+    return opsToActions(plan.ops, current.lineItems);
   });
   return finish(session, market, ct);
 }
@@ -679,7 +715,7 @@ export async function changeCollectionStore(session: Session, market: CartMarket
       .flatMap((parent) => [parent, ...childrenOf(current.lineItems, parent)])
       .filter((p) => p.supplyChannel?.id !== store.id)
       .map((p) => ({ action: 'setLineItemSupplyChannel', lineItemId: p.id, supplyChannel: { typeId: 'channel' as const, id: store.id } }));
-    return [...opsToActions(planStoreChange(planLines(current), store.id)), ...bundleMoves];
+    return [...opsToActions(planStoreChange(planLines(current), store.id), current.lineItems), ...bundleMoves];
   });
   return finish(session, market, ct);
 }
@@ -760,6 +796,7 @@ export async function rebuildCart(session: Session, oldCart: Cart, target: Rebui
     }
     const fulfilment = fulfilmentOf(line);
     const attempts: AddLineInput[] = [];
+    const modifiers = lineModifierIds(line);
     if (fulfilment === 'subscribe') {
       const policy = policies.find((p) => p.id === line.recurrenceInfo?.recurrencePolicy?.id);
       if (!policy) {
@@ -771,9 +808,9 @@ export async function rebuildCart(session: Session, oldCart: Cart, target: Rebui
       if (fulfilment === 'collect' && collectionOffered) {
         const oldStore = oldStores.find((s) => s.id === line.supplyChannel?.id);
         const store = oldStore && newStores.find((s) => s.key === oldStore.key);
-        if (store) attempts.push({ sku, quantity: line.quantity, fulfilment: 'collect', storeKey: store.key });
+        if (store) attempts.push({ sku, quantity: line.quantity, fulfilment: 'collect', storeKey: store.key, ...(modifiers ? { modifiers } : {}) });
       }
-      attempts.push({ sku, quantity: line.quantity, fulfilment: 'delivery' });
+      attempts.push({ sku, quantity: line.quantity, fulfilment: 'delivery', ...(modifiers ? { modifiers } : {}) });
     }
     for (const input of attempts) {
       try {

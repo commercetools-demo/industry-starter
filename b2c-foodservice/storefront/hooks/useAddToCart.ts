@@ -13,6 +13,8 @@ export interface AddToCartInput {
   fulfilment: 'delivery' | 'collect' | 'subscribe';
   storeKey?: string;
   recurrencePolicyKey?: string;
+  /** Ready-made coffee: the chosen modifier product ids. */
+  modifiers?: string[];
 }
 
 /**
