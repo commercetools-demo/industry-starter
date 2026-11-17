@@ -14,7 +14,7 @@ Read `plans/JUNIOR-GUIDE.md` first. Everything runs in the new folder `b2c-foods
 | Depends on | none (it reads platform data only; it shares no code with `storefront/` or `seed/`) |
 | Wave | 16 (independent of the storefront; not part of the release gate of Q) |
 | Specs implemented | none: no OpenSpec spec covers this. The endpoint list in section 3 is the contract (owner request, 2026-11-17). |
-| Owner prerequisites | OA-W-a (an API client for local live runs), OA-W-b (a separate Git repository for the connector), OA-W-c (deploy as a sandbox). W-01 needs the MCP `ct-spec-test-b2c-food` connected (it is defined in `industry-starter/.mcp.json`). |
+| Owner prerequisites | OA-W-a (an API client for local live runs), OA-W-b (a separate Git repository for the connector), OA-W-c (deploy as a sandbox), OA-W-d (run `connect validate` with Docker). W-01 needs the MCP `ct-spec-test-b2c-food` connected (it is defined in `industry-starter/.mcp.json`). |
 | Skills | `commercetools-connect` (service app, connect.yaml, scopes, tests), `commercetools-platform` (SDK client, query predicates, custom fields) |
 
 ## 2. Goal and scope
@@ -72,11 +72,12 @@ inheritAs:
       - view_orders            # orders and carts (read)
       - view_shopping_lists    # wishlists (read)
       - manage_customers       # read the customer, write the notes field
+      - view_types             # resolve the custom type key (expand custom.type)
 ```
 
 - The platform generates the API client from `inheritAs.apiClient.scopes` and injects `CTP_CLIENT_ID`, `CTP_CLIENT_SECRET`, `CTP_SCOPE`, `CTP_PROJECT_KEY`, `CTP_API_URL` and `CTP_AUTH_URL`. They are **not** declared under `configuration`.
 - Scope names come from the Scopes reference (`view_orders` covers Carts and Orders; `view_shopping_lists` covers Shopping Lists). Never `manage_project`.
-- `setCustomType` with a type `key` may or may not need `view_types`; W-01 probes it and the scope list changes only if the API refuses (Q-W-6).
+- `view_types` is included so the service can read the key of the customer's custom type (`expand=custom.type`). Q-W-6 is settled by including it; W-13 can try without it with the OA-W-a client.
 - No `scripts` block: the service registers no Extension or Subscription, and the type change is done once through the MCP (W-01), not by `postDeploy`.
 - Route mount = endpoint: `app.use('/customers', router)`. The deployed paths are therefore exactly the owner's: `{connect-url}/customers/{customerId}/orders` and so on.
 
@@ -142,19 +143,19 @@ Every write sends the customer `version`. On 409 `ConcurrentModification` the se
 Common rules: test first; `npm run check` (or the template's `build` plus `test`) in `connect/customer-api` before ticking; commit `connect: W-nn summary`.
 
 - [x] **W-00 Plan and notes.** This file, `STATUS.md` row W, `DEPENDENCY-PLAN.md` row W, D-062 to D-064 in `DECISIONS.md`, `notes/questions-W.md`, `notes/todo-W.md`, rows copied by hand into the generated blocks of `QUESTIONS.md` and `TODO-MANUAL-TESTING.md` (do **not** run `consolidate-notes.mjs` on main: it drops the T rows).
-- [x] **W-01 Custom type fields (MCP).** With the MCP `ct-spec-test-b2c-food`: `read_types` key `instore-customer-type` (version 1 and one field `paymentAccountIds` on 2026-11-17), then `update_types` with that version and two `addFieldDefinition` actions: `notes` (`Set` of `String`, `required: false`, `inputHint: MultiLine`, label "Notes" in en-AU, en-GB, en-IE, en-US) and `loyaltyPoints` (`Number`, `required: false`, label "Loyalty points" in the same four locales). Read the type back and save it to `plans/evidence/W/type-after.json`. Probe on one seeded demo customer: set three notes, read them back twice and record the order (D5), add a duplicate (expect an error) and record it, then remove the notes. Record whether `setCustomType` by key needed `view_types` (Q-W-6). Nothing else on the type changes.
-- [ ] **W-02 Scaffold.** `commercetools connect init connect` from `b2c-foodservice/` (start from scratch, TypeScript, Service, application name `customer-api`). The CLI is interactive; answer the prompts by hand or with `expect`. Pin the SDK versions (D7). `commercetools connect validate` passes on the untouched scaffold.
-- [ ] **W-03 connect.yaml and configuration.** D2 as written; `readConfiguration()` and its tests (missing variable throws; `CORS_ALLOWED_ORIGIN` defaults to `*`).
-- [ ] **W-04 App shell.** Mount at `/customers`, `health` route, CORS (D4), JSON error middleware, 405 handler, correlation id and request log (D7). Tests: `health answers 200`, `preflight OPTIONS for PUT and DELETE answers 204 with Access-Control-Allow-Origin *`, `unknown method answers 405 with Allow`, `errors hide the stack outside development`.
-- [ ] **W-05 Customer guard.** UUID check and customer existence lookup shared by every route. Tests: `non-UUID customerId answers 400`, `unknown customer answers 404`.
-- [ ] **W-06 Orders.** List and by id (D3). Tests: `list uses an input variable, not string building`, `limit is capped at 100`, `order of another customer answers 404`.
-- [ ] **W-07 Carts.** As W-06 plus the `cartState` filter. Tests: `cartState filter`, `invalid cartState answers 400`, `cart of another customer answers 404`.
-- [ ] **W-08 Wishlists.** As W-06 with `customer(id = :cid)`. Tests: `wishlist of another customer answers 404`, `list paging`.
-- [ ] **W-09 Notes read and sort.** Pure functions `presentNotes(raw)` and `noteAt(list, index)` (D5), and the GET route. Tests: `same contents in any order give the same indexes`, `absent field gives []`, `index not a whole number answers 400`, `index out of range answers 404`.
-- [ ] **W-10 Notes add.** POST (D5, D6). Tests: `customer with the type gets setCustomField only`, `customer without a type gets setCustomType with notes`, `customer with another type answers 409 and is not written`, `paymentAccountIds is never in the actions`, `duplicate text answers 409`, `text over 1000 characters answers 400`, `101st note answers 409`.
-- [ ] **W-11 Notes edit and delete.** PUT and DELETE (D5, D6). Tests: `expected mismatch answers 409 and writes nothing`, `edit to an existing text answers 409`, `deleting the last note removes the field`, `ConcurrentModification is retried and then succeeds`, `three conflicts answer 409 conflict`.
-- [ ] **W-12 Loyalty points.** GET only. Tests: `absent field answers 0`, `value is returned as a number`, `POST, PUT and DELETE answer 405`.
-- [ ] **W-13 README and live run.** `connect/README.md`: the "no auth, demo only" warning first, the route table, the scopes and why, the configuration table, notes semantics (D5), fail behaviour (the service only proxies commercetools; when commercetools is down it answers 502 and the frontend shows an error), and the deploy steps of OA-W-b and OA-W-c. Then, with the OA-W-a client in `connect/customer-api/.env` (gitignored), `npm run start:dev` and the recipe of section 6 against the project. Evidence in `plans/evidence/W/`.
+- [x] **W-01 Custom type fields (MCP).** With the MCP `ct-spec-test-b2c-food`: `read_types` key `instore-customer-type` (version 1 and one field `paymentAccountIds` on 2026-11-17), then `update_types` with that version and two `addFieldDefinition` actions: `notes` (`Set` of `String`, `required: false`, `inputHint: MultiLine`, label "Notes" in en-AU, en-GB, en-IE, en-US) and `loyaltyPoints` (`Number`, `required: false`, label "Loyalty points" in the same four locales). Read the type back and save it to `plans/evidence/W/type-after.json`. Probe on one seeded demo customer: set three notes, read them back twice and record the order (D5), add a duplicate (expect an error) and record it, then remove the notes. Nothing else on the type changes.
+- [x] **W-02 Scaffold.** `commercetools connect init connect` was tried (start from scratch, TypeScript, Service, name `customer-api`, endpoint `/customers`, variable `CORS_ALLOWED_ORIGIN`). On 2026-11-17 it answered every prompt, then exited 0 at "Initializing your Connect project" and wrote nothing (CLI 0.0.25, Node 22.21.1). The folder was therefore built by hand on the structure of the sibling labs connector `tiktok/service` (npm, ts-jest, supertest) and `connect.yaml` follows the docs example. SDK versions pinned (D7). `commercetools connect validate` needs a running Docker daemon and could not run here: it is an owner row (OA-W-d).
+- [x] **W-03 connect.yaml and configuration.** D2 as written; `readConfiguration()` and its tests (missing variable throws; `CORS_ALLOWED_ORIGIN` defaults to `*`).
+- [x] **W-04 App shell.** Mount at `/customers`, `health` route, CORS (D4), JSON error middleware, 405 handler, correlation id and request log (D7). Tests: `health answers 200`, `preflight OPTIONS for PUT and DELETE answers 204 with Access-Control-Allow-Origin *`, `unknown method answers 405 with Allow`, `errors hide the stack outside development`.
+- [x] **W-05 Customer guard.** UUID check and customer existence lookup shared by every route. Tests: `non-UUID customerId answers 400`, `unknown customer answers 404`.
+- [x] **W-06 Orders.** List and by id (D3). Tests: `list uses an input variable, not string building`, `limit is capped at 100`, `order of another customer answers 404`.
+- [x] **W-07 Carts.** As W-06 plus the `cartState` filter. Tests: `cartState filter`, `invalid cartState answers 400`, `cart of another customer answers 404`.
+- [x] **W-08 Wishlists.** As W-06 with `customer(id = :cid)`. Tests: `wishlist of another customer answers 404`, `list paging`.
+- [x] **W-09 Notes read and sort.** Pure functions `presentNotes(raw)` and `noteAt(list, index)` (D5), and the GET route. Tests: `same contents in any order give the same indexes`, `absent field gives []`, `index not a whole number answers 400`, `index out of range answers 404`.
+- [x] **W-10 Notes add.** POST (D5, D6). Tests: `customer with the type gets setCustomField only`, `customer without a type gets setCustomType with notes`, `customer with another type answers 409 and is not written`, `paymentAccountIds is never in the actions`, `duplicate text answers 409`, `text over 1000 characters answers 400`, `101st note answers 409`.
+- [x] **W-11 Notes edit and delete.** PUT and DELETE (D5, D6). Tests: `expected mismatch answers 409 and writes nothing`, `edit to an existing text answers 409`, `deleting the last note removes the field`, `ConcurrentModification is retried and then succeeds`, `three conflicts answer 409 conflict`.
+- [x] **W-12 Loyalty points.** GET only. Tests: `absent field answers 0`, `value is returned as a number`, `POST, PUT and DELETE answer 405`.
+- [ ] **W-13 README and live run.** `connect/README.md`: the "no auth, demo only" warning first, the route table, the scopes and why, the configuration table, notes semantics (D5), fail behaviour (the service only proxies commercetools; when commercetools is down it answers 502 and the frontend shows an error), and the deploy steps of OA-W-b and OA-W-c. Then, with the OA-W-a client in `connect/customer-api/.env` (gitignored), `npm run start:dev` and the recipe of section 6 against the project. Evidence in `plans/evidence/W/`. **Live run not done: blocked on OA-W-a** (README is written).
 
 ## 5. Scenarios checklist
 
@@ -183,7 +184,7 @@ The service has no pages; the browser part proves CORS from a real page. With th
 
 ## 7. Self-verification with data (no asking the owner)
 
-- Unit and router tests mock commercetools with `msw` (`onUnhandledRequest: 'error'`), so they run with no credentials.
+- Unit and router tests replace the commercetools layer (`CtApi`) with an in-memory fake (`tests/fake-api.ts`, built instead of `msw`), so they run with no credentials.
 - W-01 and the recipe use the MCP `ct-spec-test-b2c-food` to read and write the project. Live writes touch only one seeded demo customer's `notes`, and each run removes what it added.
 - Without OA-W-a the live part of W-13 is blocked; everything else is done and the STATUS row says `Blocked: OA-W-a` for the live run only.
 

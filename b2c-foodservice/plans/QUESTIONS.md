@@ -253,5 +253,5 @@ Generated from `plans/notes/questions-*.md` by `node plans/consolidate-notes.mjs
 | Q-W-3 | `loyaltyPoints` is absent on a customer who never had points. What does GET return? | `0`. | No | Open | |
 | Q-W-4 | Limits on notes. | Trimmed text, 1 to 1000 characters; at most 100 notes per customer. | No | Open | |
 | Q-W-5 | Which carts does `GET /carts` return? | Every cart of the customer (any state), newest first, with an optional `cartState` filter. | No | Open | |
-| Q-W-6 | Does `setCustomType` with the type `key` need the `view_types` scope? | Probe in W-01. The scope list stays `view_orders`, `view_shopping_lists`, `manage_customers` unless the API refuses; then `view_types` is added. | W-10 | Open | |
+| Q-W-6 | Does `setCustomType` with the type `key` need the `view_types` scope? | Built with `view_types` included (read-only), so the custom type key can be resolved with `expand=custom.type`. W-13 can try without it. | No | Answered | Default built. |
 <!-- END WORKSTREAM-QUESTIONS -->

@@ -1,0 +1,18 @@
+# Customer connector: one `service` application. No authentication, demo only (see README).
+deployAs:
+  - name: customer-api
+    applicationType: service
+    endpoint: /customers
+    configuration:
+      standardConfiguration:
+        - key: CORS_ALLOWED_ORIGIN
+          description: Value of Access-Control-Allow-Origin. Default "*" (any origin).
+          required: false
+          default: '*'
+inheritAs:
+  apiClient:
+    scopes:
+      - view_orders # orders and carts (read)
+      - view_shopping_lists # wishlists (read)
+      - manage_customers # read the customer, write the notes field
+      - view_types # resolve the key of the customer's custom type (expand custom.type)
