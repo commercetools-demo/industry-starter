@@ -1,5 +1,5 @@
 import type { Category as SDKCategory } from '@commercetools/platform-sdk';
-import type { Category } from '@/lib/types';
+import { INSTORE_VISIBILITY_VALUES, type Category, type InstoreVisibility } from '@/lib/types';
 import { cleanImageUrl } from '@/lib/ct/image-config';
 import { getLocalizedString } from '@/lib/utils';
 
@@ -15,7 +15,7 @@ export function mapCategory(c: SDKCategory, locale: string): Category {
   if (c.parent) out.parentId = c.parent.id;
   if (c.orderHint) out.orderHint = c.orderHint;
   const visibility = c.custom?.fields?.instoreVisibility;
-  if (visibility === 'onlyInStore' || visibility === 'onlyOnline' || visibility === 'both' || visibility === 'none') out.instoreVisibility = visibility;
+  if ((INSTORE_VISIBILITY_VALUES as readonly unknown[]).includes(visibility)) out.instoreVisibility = visibility as InstoreVisibility;
   const src = c.assets?.[0]?.sources[0]?.uri;
   if (src) out.imageUrl = cleanImageUrl(src);
   return out;

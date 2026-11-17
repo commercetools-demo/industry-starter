@@ -35,11 +35,15 @@ export interface Product {
   rating?: RatingStats;
 }
 
+/** The values of the category field `instoreVisibility` (enum on `instore-category-type`). */
+export const INSTORE_VISIBILITY_VALUES = ['onlyInStore', 'onlyOnline', 'both', 'none', 'onlyBarista', 'allThree'] as const;
+export type InstoreVisibility = (typeof INSTORE_VISIBILITY_VALUES)[number];
+
 export interface Category {
   id: string; key?: string; name: string; slug: string; description?: string;
   imageUrl?: string; parentId?: string; orderHint?: string; children: Category[];
   /** Custom field `instoreVisibility` of the category type `instore-category-type`; absent when not set. */
-  instoreVisibility?: 'onlyInStore' | 'onlyOnline' | 'both' | 'none';
+  instoreVisibility?: InstoreVisibility;
 }
 
 export type ApiErrorBody = { error: { code: ErrorCode; message: string } };

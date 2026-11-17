@@ -21,7 +21,7 @@ describe('In-store seed', () => {
     const t = await api.getByKey('types', INSTORE_CATEGORY_TYPE_KEY);
     const defs = t?.fieldDefinitions as { name: string; type: { values: { key: string }[] } }[];
     expect(defs.map((f) => f.name)).toEqual(['other', 'instoreVisibility']);
-    expect(defs[1]?.type.values.map((v) => v.key)).toEqual(['onlyInStore', 'onlyOnline', 'both', 'none']);
+    expect(defs[1]?.type.values.map((v) => v.key)).toEqual(['onlyInStore', 'onlyOnline', 'both', 'none', 'onlyBarista', 'allThree']);
   });
 
   it('creates the drinks in an onlyInStore category and is idempotent', async () => {
