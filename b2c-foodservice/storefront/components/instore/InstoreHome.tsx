@@ -5,13 +5,29 @@ import { Link } from '@/i18n/routing';
 import { categoryIcon } from '@/lib/instore/category-icons';
 import type { Category } from '@/lib/types';
 
-/** The size of a tile: a thumb-sized target with a large icon and the name, two to a row. */
+/**
+ * The tile grid: two columns, every row as tall as the tallest tile, so all tiles have the same height. `rootKey` picks the icon
+ * for every tile (sub-categories use their root's); without it each tile uses its own key.
+ */
+export function CategoryTileGrid({ categories, rootKey }: { categories: Pick<Category, 'id' | 'name' | 'slug' | 'key'>[]; rootKey?: string }) {
+  return (
+    <ul className="m-0 grid list-none auto-rows-fr grid-cols-2 gap-3 p-0">
+      {categories.map((c) => (
+        <li key={c.id} className="min-w-0">
+          <CategoryTile name={c.name} slug={c.slug} rootKey={rootKey ?? c.key} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** The size of a tile: a thumb-sized target with a large icon and the name, filling its grid cell. */
 export function CategoryTile({ name, slug, rootKey }: { name: string; slug: string; rootKey: string | undefined }) {
   return (
     <Link
       href={`/c/${encodeURIComponent(slug)}`}
       data-testid="instore-tile"
-      className="transition-press flex min-h-[132px] flex-col items-center justify-center gap-3 rounded-card border border-line-2 bg-surface px-3 py-4 text-center text-ink no-underline hover:border-ink active:scale-[0.98]"
+      className="transition-press flex h-full min-h-[132px] flex-col items-center justify-center gap-3 rounded-card border border-line-2 bg-surface px-3 py-4 text-center text-ink no-underline hover:border-ink active:scale-[0.98]"
     >
       <span className="flex h-16 w-16 items-center justify-center rounded-pill bg-canvas-2 text-ink">
         <Icon name={categoryIcon(rootKey)} size={36} />
@@ -35,13 +51,7 @@ export default function InstoreHome({ tree }: { tree: Category[] }) {
         <h2 id="instore-categories" className="m-0 text-[15px] font-semibold text-ink-2">
           {t('categories')}
         </h2>
-        <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0">
-          {tree.map((c) => (
-            <li key={c.id} className="min-w-0">
-              <CategoryTile name={c.name} slug={c.slug} rootKey={c.key} />
-            </li>
-          ))}
-        </ul>
+        <CategoryTileGrid categories={tree} />
       </section>
     </div>
   );
