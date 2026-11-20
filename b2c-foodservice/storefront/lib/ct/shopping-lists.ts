@@ -1,7 +1,7 @@
 import 'server-only';
 import type { ShoppingList, ShoppingListUpdateAction } from '@commercetools/platform-sdk';
 import { apiRoot } from '@/lib/ct/client';
-import { ownsCart } from '@/lib/ct/cart';
+import { isLiveCart, ownsCart } from '@/lib/ct/cart';
 import { updateWithRetry } from '@/lib/ct/retry';
 import { AppError } from '@/lib/errors';
 import { isProductId } from '@/lib/reviews/validate';
@@ -103,7 +103,7 @@ export async function cartProductIds(session: Session): Promise<string[]> {
   if (!session.cartId) return [];
   try {
     const { body } = await apiRoot.carts().withId({ ID: session.cartId }).get().execute();
-    if (body.cartState !== 'Active' || !ownsCart(body, session)) return [];
+    if (!isLiveCart(body) || !ownsCart(body, session)) return [];
     return [...new Set(body.lineItems.map((l) => l.productId))];
   } catch (e) {
     if ((e as { statusCode?: number })?.statusCode === 404) return [];

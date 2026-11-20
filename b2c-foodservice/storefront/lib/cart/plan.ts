@@ -10,11 +10,11 @@ import type { CartGroup, CartLine, CartLineStore, Fulfilment, GroupKey } from '@
  *    (one group per store), `delivery`, `subscribe`. K assigns shipping methods per `GroupKey`.
  *  - `Cart.groups` is in display order: collect stores (first appearance), then delivery, then subscribe. A group with no
  *    lines does not exist.
- *  - `CART_SHIPPING_MODE` (lib/shop-config.ts) is a constant: `Single` prices the whole bag with one shipping method
- *    (`syncShippingMethod`: standard when any line is delivery or subscribe, else collect); `Multiple` is decided by K
- *    (spike K-01): `mapCart` then sums `shipping[].shippingInfo.price` and `syncShippingMethod` does nothing.
- *  - The shipping mode is fixed when a cart is created. Changing it means a new cart: `rebuildCart` (lib/ct/cart.ts)
- *    carries lines and codes over; `getCartView` calls it when an active cart's mode differs from the constant.
+ *  - `CART_SHIPPING_MODE` (lib/shop-config.ts) is `Multiple` (D-062): `syncShipping` (lib/ct/cart.ts, plan in
+ *    lib/cart/shipping-allocation.ts) gives each group one shipping entry and allocates every line to it; `mapCart` sums
+ *    `shipping[].shippingInfo.price`. `Single` is only used by the clone carts of the `complete-per-group` fallback.
+ *  - The shipping mode is fixed when a cart is created and old carts are not migrated: a cart whose mode differs from the
+ *    constant is not the shopper's cart (`isLiveCart`). `rebuildCart` still carries lines and codes over on a market switch.
  *  - Canada has no collection (D-035): a session in that market cannot create or switch to a collect line.
  */
 

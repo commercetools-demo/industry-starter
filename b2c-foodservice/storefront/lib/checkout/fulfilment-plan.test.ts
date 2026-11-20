@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  buildFulfilmentActions, buildSingleGroupActions, collectAddress, planGroups, shippingKeyOf, splitPickupName, splitPlan,
-  type FulfilmentGroup,
-} from './fulfilment-plan';
+import { collectAddress, planGroups, shippingKeyOf, splitPickupName, splitPlan } from './fulfilment-plan';
 import { MIXED_STRATEGY } from './strategy';
 
 const store = (key: string) => ({ key, id: `id-${key}`, name: `Store ${key}`, addressLine: '148 Prince Street', city: 'New York', collectionMinutes: 20 });
@@ -55,43 +52,8 @@ describe('collect address', () => {
   });
 });
 
-describe('actions', () => {
-  const group: FulfilmentGroup = { key: 'collect:soho', kind: 'collect', storeKey: 'soho', lineIds: ['b', 'd'] };
-  const address = collectAddress({ name: 'SoHo', addressLine: '148 Prince Street', city: 'New York', postalCode: '10012', country: 'US' }, 'Maya Lopez');
-  const input = {
-    existing: { shippingKeys: ['old-ship'], addressKeys: ['old-addr'], linesWithDetails: ['b'] },
-    collect: [{ group, address, lines: [{ lineId: 'b', quantity: 2 }, { lineId: 'd', quantity: 1 }] }],
-  };
-  it('Multiple actions run in a safe order', () => {
-    const order = buildFulfilmentActions(input).map((a) => a.action);
-    expect(order).toEqual([
-      'setLineItemShippingDetails', 'removeShippingMethod', 'removeItemShippingAddress',
-      'addItemShippingAddress', 'addShippingMethod', 'setLineItemShippingDetails', 'setLineItemShippingDetails',
-    ]);
-  });
-  it('Existing shipping entries are removed before new ones are added', () => {
-    const actions = buildFulfilmentActions(input);
-    const firstAdd = actions.findIndex((a) => a.action === 'addItemShippingAddress');
-    expect(actions.findIndex((a) => a.action === 'removeShippingMethod')).toBeLessThan(firstAdd);
-    expect(actions.findIndex((a) => a.action === 'removeItemShippingAddress')).toBeLessThan(firstAdd);
-  });
-  it('Every collect line quantity is allocated to a target', () => {
-    const targets = buildFulfilmentActions(input).flatMap((a) => (a.action === 'setLineItemShippingDetails' && a.shippingDetails ? [a] : []));
-    expect(targets.map((t) => [t.lineItemId, t.shippingDetails?.targets[0]?.quantity, t.shippingDetails?.targets[0]?.addressKey])).toEqual([
-      ['b', 2, 'collect-soho'], ['d', 1, 'collect-soho'],
-    ]);
-  });
-  it('Single group uses setShippingMethod', () => {
-    expect(buildSingleGroupActions(group, address).map((a) => a.action)).toEqual(['setShippingAddress', 'setShippingMethod']);
-  });
-  it('Collect only uses mcf-collect', () => {
-    const m = buildSingleGroupActions(group, address).find((a) => a.action === 'setShippingMethod');
-    expect(m).toMatchObject({ shippingMethod: { key: 'mcf-collect' } });
-  });
-  it('a delivery group is left to the hosted flow', () => {
-    expect(buildSingleGroupActions({ key: 'delivery', kind: 'delivery', storeKey: null, lineIds: ['a'] }, null)).toEqual([]);
-  });
-  it('the provisional strategy is complete-per-group', () => {
-    expect(MIXED_STRATEGY).toBe('complete-per-group');
+describe('strategy', () => {
+  it('the mixed bag is paid as one Multiple cart (D-062); complete-per-group is the fallback constant', () => {
+    expect(MIXED_STRATEGY).toBe('complete-multiple');
   });
 });

@@ -57,6 +57,20 @@ K deviation (2026-10-21, D-039): the prototype's three steps (Details, Fulfilmen
 | 2026-10-21 | N-02 (documentation pass; live run blocked on OA-02 and OA-04): `setSchedule` works only on an Active recurring order with **no active skip configuration** and with prices for every cart item under the new schedule (SDK `RecurringOrderSetScheduleAction`). The workstream plan did not say so: the card disables Change interval while a skip is pending. `setOrderSkipConfiguration` uses a `Counter { totalToSkip, skipped }`; whether `totalToSkip` is cumulative and whether `nextOrderAt` moves at skip time is not documented (built: cumulative, no browser-side date) | SDK 8 `recurring-order.d.ts`, docs recurring-orders-overview | `lib/ct/subscription-plan.ts`; confirm in M-N-04 |
 | 2026-10-21 | N-02: recurring orders created by the schedule emit `OrderCreatedFromRecurringOrder`, not `OrderCreated`; `originOrder` is queryable (`where=originOrder(id="...")`, documented guide); the platform creates one recurring order per distinct schedule when an order is created from a cart with recurring lines. The skill text ("create one per subscribe line after checkout") and its draft are not the documented shape; N builds on the documented behaviour (D-026) | docs recurring-orders-overview, guide create-a-recurring-order | N-08 not built |
 
+## F-K-02 `Multiple` carts: live probe (2026-11-20)
+
+Probe on a throwaway cart in project `spec-test-b2c-food`, run before D-062 switched the shop to `Multiple`. It answers S1, S2 and S4 of F-K-01 and adds three facts the design depends on.
+
+| Fact | Result |
+| --- | --- |
+| A `Multiple` cart at creation | Refuses a cart-level `shippingAddress`, `shippingMethod` or rate: "Cannot set shipping address, method or rate with shipping mode Multiple." The address and method go in per group (`addItemShippingAddress`, `addShippingMethod`). |
+| S1 | Works: `addItemShippingAddress { address with key }`, `addShippingMethod { shippingKey, shippingMethod, shippingAddress }`, `setLineItemShippingDetails { targets: [{ addressKey, quantity, shippingMethodKey }] }`. We use the same string for the address key and the shipping key. |
+| S2 | A fully allocated cart gets a price on every shipping entry, a `taxedPrice` on every line and on the cart, and `totalPrice` includes shipping. An unallocated cart has no shipping price and no tax. A country-only delivery address is taxed with the "US sales tax fallback 8%". |
+| S4 | `freeAbove` (7500 USD) compares the whole cart's line total, collect lines included, not the delivery group. |
+| Quantity change | A line whose quantity changes keeps its old targets and still says `valid: true`. Allocation must be checked by comparing the summed target quantity with the line quantity (`isFullyAllocated`), never by `valid`. |
+
+Still unknown, and the owner's live test: S13 (does the complete hosted Checkout accept a `Multiple` cart; predicted FAIL), S14 (does it keep the pre-set collect addresses), what it writes into the delivery entry. See `plans/TODO-MANUAL-TESTING.md` M-K-10 to M-K-14.
+
 ## F-V-01 to F-V-05 Platform facts for preset bundles (workstream V, probe 2026-11-16)
 
 Probe: `storefront/lib/ct/preset-bundle-probe.live.ts` (`npm run test:live -- preset-bundle-probe`), one throw-away cart, names and counts only. Output: `plans/evidence/V/V-01-probe.txt`.

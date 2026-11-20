@@ -90,7 +90,7 @@ describe('region switch with a bag (I-12)', () => {
     expect(session.cartId).toBeDefined();
     expect(session.cartId).not.toBe(oldId);
     const fresh = fake.carts.get(session.cartId!)!;
-    expect(fresh).toMatchObject({ currency: 'CAD', country: 'CA', locale: 'en-CA', shippingMode: 'Single' });
+    expect(fresh).toMatchObject({ currency: 'CAD', country: 'CA', locale: 'en-CA', shippingMode: 'Multiple' });
     expect(lineOf(session.cartId!, 'S1')).toMatchObject({ quantity: 2 });
     expect((lineOf(session.cartId!, 'S1') as unknown as { price: { value: { centAmount: number } } }).price.value.centAmount).toBe(1300);
   });

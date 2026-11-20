@@ -81,6 +81,58 @@ describe('mapOrder (account detail fields)', () => {
     expect(d.deliveries).toHaveLength(1);
   });
 
+  describe('a Multiple order (D-062)', () => {
+    const price = (centAmount: number) => ({ type: 'centPrecision', centAmount, currencyCode: 'USD', fractionDigits: 2 });
+    const entry = (shippingKey: string, method: string, address: object, cents: number, extra: object = {}) => ({
+      shippingKey, shippingAddress: address,
+      shippingInfo: { shippingMethodName: method, price: price(cents), shippingMethod: { typeId: 'shipping-method', obj: { key: method, localizedDescription: { 'en-US': '2-4 business days' } } }, ...extra },
+    });
+    const pickup = { firstName: 'Maya', lastName: 'Lopez', additionalAddressInfo: 'Collection at SoHo', country: 'US' };
+    const home = { firstName: 'Maya', lastName: 'Lopez', streetName: '5 Main St', city: 'Brooklyn', postalCode: '11201', state: 'NY', country: 'US' };
+    const mixed = () => ctOrder({
+      shippingMode: 'Multiple', shippingInfo: undefined, shippingAddress: undefined,
+      lineItems: [collectLine('l1'), ctLine('l2')],
+      shipping: [entry('collect-mcf-store-nyc-soho', 'mcf-collect', pickup, 0), entry('delivery', 'mcf-ship-standard', home, 695)],
+    });
+
+    it('reads collect and delivery from the entries: the pickup name, the delivery address and method, no cart-level fields', () => {
+      const o = view(mixed(), 'en-US', NOW);
+      expect(o.hasCollect).toBe(true);
+      expect(o.hasShip).toBe(true);
+      expect(o.collect[0]?.pickupName).toBe('Maya Lopez');
+      expect(o.ship).toMatchObject({ methodName: 'mcf-ship-standard', estimate: '2-4 business days' });
+      expect(o.ship?.address).toContain('5 Main St');
+    });
+
+    it('sums the shipping of every entry (collect is free, delivery pays)', () => {
+      const o = view(mixed(), 'en-US', NOW);
+      expect(o.totals.shippingCents).toBe(695);
+    });
+
+    it('a collect-only Multiple order has no delivery block', () => {
+      const o = view(ctOrder({
+        shippingMode: 'Multiple', shippingInfo: undefined, lineItems: [collectLine('l1')],
+        shipping: [entry('collect-mcf-store-nyc-soho', 'mcf-collect', pickup, 0)],
+      }), 'en-US', NOW);
+      expect(o.ship).toBeNull();
+      expect(o.collect[0]?.pickupName).toBe('Maya Lopez');
+    });
+
+    it('a delivery-only Multiple order has no pickup name and no collect block', () => {
+      const o = view(ctOrder({ shippingMode: 'Multiple', shippingInfo: undefined, shipping: [entry('delivery', 'mcf-ship-standard', home, 695)] }), 'en-US', NOW);
+      expect(o.collect).toEqual([]);
+      expect(o.ship?.address).toContain('Brooklyn');
+    });
+
+    it('finds a collect entry by its key when the method is not expanded', () => {
+      const unexpanded = entry('collect-mcf-store-nyc-soho', 'mcf-collect', pickup, 0);
+      (unexpanded.shippingInfo as { shippingMethod: unknown }).shippingMethod = { typeId: 'shipping-method', id: 'sm-1' };
+      const o = view(ctOrder({ shippingMode: 'Multiple', shippingInfo: undefined, lineItems: [collectLine('l1')], shipping: [unexpanded] }), 'en-US', NOW);
+      expect(o.collect[0]?.pickupName).toBe('Maya Lopez');
+      expect(o.ship).toBeNull();
+    });
+  });
+
   it('Refund state visible: goods received and refund are separate fields', () => {
     const d = view(
       ctOrder({

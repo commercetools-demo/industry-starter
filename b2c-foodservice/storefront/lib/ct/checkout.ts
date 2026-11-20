@@ -1,12 +1,13 @@
 import 'server-only';
 import type { Cart as CtCart, CartDraft, CartUpdateAction, LineItem, LineItemDraft } from '@commercetools/platform-sdk';
 import { COLLECT_METHOD_KEY, SHIP_METHOD_KEY } from '@/lib/cart/plan';
-import { buildSingleGroupActions, collectAddress, planGroups, splitPlan, type FulfilmentGroup } from '@/lib/checkout/fulfilment-plan';
+import { isFullyAllocated } from '@/lib/cart/shipping-allocation';
+import { collectAddress, planGroups, splitPlan, type FulfilmentGroup } from '@/lib/checkout/fulfilment-plan';
 import { checkoutBlockers, type CheckoutBlocker } from '@/lib/checkout/guards';
 import { MIXED_STRATEGY } from '@/lib/checkout/strategy';
 import type { MixedStrategy } from '@/lib/types';
 import { apiRoot } from '@/lib/ct/client';
-import { buildAddLineAction, getCartView, getOwnedCartForRebuild, ownsCart, rebuildCart, type AddLineInput, type CartMarket } from '@/lib/ct/cart';
+import { buildAddLineAction, getCartView, getOwnedCartForRebuild, ownsCart, syncShipping, type AddLineInput, type CartMarket } from '@/lib/ct/cart';
 import { getStoresForCountry } from '@/lib/ct/channels';
 import { withOrderType } from '@/lib/ct/order-type';
 import { cachedPublic } from '@/lib/ct/public-cache';
@@ -181,48 +182,40 @@ export interface PreparedPayments {
 }
 
 /**
- * Prepares the cart(s) for the hosted flow. One group: the bag is paid as it is (a collect-only bag gets the store as its
- * shipping address with the pickup name, and `mcf-collect`; a delivery bag is left to the hosted flow). Several groups under
- * `complete-per-group`: one Single clone per group (collect stores first, codes on the first only, Q-K-02c).
+ * Prepares the cart(s) for the hosted flow (D-062: every bag is a `Multiple` cart).
+ *  - `complete-multiple` (the default): the bag itself is paid, whatever the number of groups. Its shipping entries are brought up
+ *    to date with the pickup name and email in every collect address (`syncShipping`); no clone carts, no order-number suffix.
+ *  - `complete-per-group` (the fallback, if the complete hosted flow refuses a `Multiple` cart, probe S13): the bag is cloned into
+ *    one `Single` cart per group, always, also for one group (collect stores first, codes on the first only, Q-K-02c). The bag is
+ *    never changed by the Review stage then.
  */
 export async function preparePayments(
   session: Session,
   market: CartMarket,
   input: { pickupName: string | null; email?: string },
+  strategy: MixedStrategy = MIXED_STRATEGY,
 ): Promise<PreparedPayments> {
   const { cart: view } = await getCartView(session, market);
   if (!view) throw new AppError('not_found', 404);
   const missing = missingForPayment(view, input.pickupName);
   if (missing.length) throw new CheckoutNotReady(missing);
   const groups = planGroups(view);
+  const label = (g: FulfilmentGroup) => (g.kind === 'collect' ? (view.groups.find((x) => x.key === g.key)?.store?.name ?? null) : null);
+
+  if (strategy !== 'complete-per-group') {
+    const raw = await getOwnedCartForRebuild(session);
+    if (!raw) throw new AppError('not_found', 404);
+    const hasCollect = groups.some((g) => g.kind === 'collect');
+    const paid = await syncShipping(raw, hasCollect && input.pickupName ? { pickup: { name: input.pickupName, ...(input.email ? { email: input.email } : {}) } } : {});
+    const first = groups[0] as FulfilmentGroup;
+    return { payments: [{ part: 0, clusterKey: first.key, label: label(first), totalCents: totalCentsOf(paid) }], payCartIds: [] };
+  }
+
   const stores = groups.some((g) => g.kind === 'collect') ? await getStoresForCountry(view.country, market.locale) : [];
   const addressOf = (g: FulfilmentGroup) => {
     const store = stores.find((s) => s.key === g.storeKey);
     return g.kind === 'collect' && store && input.pickupName ? collectAddress(store, input.pickupName, input.email) : null;
   };
-  const label = (g: FulfilmentGroup) => (g.kind === 'collect' ? (view.groups.find((x) => x.key === g.key)?.store?.name ?? null) : null);
-
-  if (groups.length === 1) {
-    const group = groups[0] as FulfilmentGroup;
-    const actions = buildSingleGroupActions(group, addressOf(group));
-    let total = view.total.centAmount;
-    if (actions.length > 0) {
-      const updated = await updateWithRetry(
-        async () => {
-          const raw = await getOwnedCartForRebuild(session);
-          if (!raw) throw new AppError('not_found', 404);
-          return raw;
-        },
-        (current) => postUpdate(current, actions as unknown as CartUpdateAction[]),
-      );
-      total = totalCentsOf(updated);
-    } else {
-      const raw = await getOwnedCartForRebuild(session);
-      if (raw) total = totalCentsOf(raw);
-    }
-    return { payments: [{ part: 0, clusterKey: group.key, label: label(group), totalCents: total }], payCartIds: [] };
-  }
-
   const raw = await getOwnedCartForRebuild(session);
   if (!raw) throw new AppError('not_found', 404);
   const payments: CheckoutPayment[] = [];
@@ -276,24 +269,15 @@ export async function removePaidLines(session: Session, paidCartId: string): Pro
 }
 
 /**
- * `complete-multiple` and `payment-only-for-collect` need a `Multiple` cart when the bag has more than one group, and the
- * shipping mode is immutable: the bag is rebuilt into a new `Multiple` cart (lines and codes carried, the old cart expires)
- * and the new `cartId` goes into the returned session. `complete-per-group` never changes the bag. NOTE: `getCartView` migrates a
- * cart whose mode differs from `CART_SHIPPING_MODE` (Q-I-21), so these strategies also need that constant set deliberately.
+ * A cart that is paid directly (no clones) and holds collect lines must already carry the pickup person at the store.
+ *  - `Multiple`: every `collect-*` entry has the store address with the pickup name, and every unit is allocated.
+ *  - `Single` (a clone of the per-group fallback): the store as shipping address and `mcf-collect`.
  */
-export async function ensureCheckoutCart(session: Session, market: CartMarket, strategy: MixedStrategy = MIXED_STRATEGY): Promise<Session> {
-  if (strategy === 'complete-per-group') return session;
-  const raw = await getOwnedCartForRebuild(session);
-  if (!raw || raw.shippingMode === 'Multiple') return session;
-  const view = await getCartView(session, market);
-  if (!view.cart || planGroups(view.cart).length < 2) return session;
-  const rebuilt = await rebuildCart(session, raw, {
-    country: raw.country ?? market.country, currency: raw.totalPrice.currencyCode, locale: market.locale, shippingMode: 'Multiple',
-  });
-  return rebuilt.session;
-}
-
-/** A cart that is paid directly (no clones) and holds collect lines must already carry the store address and `mcf-collect`. */
-export function isCollectReady(raw: Pick<CtCart, 'shippingAddress'>): boolean {
-  return Boolean(raw.shippingAddress?.additionalAddressInfo?.startsWith('Collection at'));
+export function isCollectReady(raw: Pick<CtCart, 'shippingAddress' | 'shippingMode' | 'shipping' | 'lineItems'>): boolean {
+  if (raw.shippingMode !== 'Multiple') return Boolean(raw.shippingAddress?.additionalAddressInfo?.startsWith('Collection at'));
+  const entries = raw.shipping ?? [];
+  const collect = entries.filter((e) => e.shippingKey.startsWith('collect-'));
+  const named = collect.length > 0 && collect.every((e) => e.shippingAddress.additionalAddressInfo?.startsWith('Collection at') && Boolean(e.shippingAddress.firstName || e.shippingAddress.lastName));
+  const targets = Object.fromEntries(raw.lineItems.map((l) => [l.id, l.shippingDetails?.targets.map((t) => ({ addressKey: t.addressKey, quantity: t.quantity, ...(t.shippingMethodKey ? { shippingMethodKey: t.shippingMethodKey } : {}) }))]));
+  return named && isFullyAllocated(raw.lineItems, targets, entries.map((e) => e.shippingKey));
 }

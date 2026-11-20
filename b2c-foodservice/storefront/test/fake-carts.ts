@@ -52,7 +52,7 @@ const err = (statusCode: number, errors: Obj[]) => Object.assign(new Error('ct')
 interface Line extends Obj {
   id: string; quantity: number; variant: { sku: string }; price: { value: ReturnType<typeof money> }; totalPrice: ReturnType<typeof money>;
   custom?: { fields: Obj }; supplyChannel?: { typeId: string; id: string }; recurrenceInfo?: { recurrencePolicy: { id: string } };
-  key?: string; priceMode?: string;
+  key?: string; priceMode?: string; shippingDetails?: Obj;
 }
 
 /** Lines merge like the platform: same SKU, fulfilment, store, recurrence and parent; a keyed line (a bundle) never merges (workstream V). */
@@ -76,12 +76,46 @@ function reprice(cart: Obj): void {
     info.state = code?.minNet !== undefined && net < code.minNet ? 'DoesNotMatchCart' : 'MatchesCart';
     if (info.state === 'MatchesCart' && code?.percent) net -= Math.round((net * code.percent) / 100);
   }
+  cart.totalLineItemQuantity = lines.reduce((n, l) => n + l.quantity, 0);
+  if (cart.shippingMode === 'Multiple') return repriceMultiple(cart, lines, net, currency);
   const info = cart.shippingInfo as { price: ReturnType<typeof money> } | undefined;
   if (info) info.price = money(net >= fake.freeAbove ? 0 : fake.shipRate, currency);
   const shipping = info?.price.centAmount ?? 0;
   const tax = Math.round(((net + shipping) * fake.taxPercent) / 100);
-  cart.totalLineItemQuantity = lines.reduce((n, l) => n + l.quantity, 0);
   cart.totalPrice = money(net + shipping, currency);
+  cart.taxedPrice = { totalNet: money(net + shipping, currency), totalGross: money(net + shipping + tax, currency), totalTax: money(tax, currency), taxPortions: [] };
+}
+
+interface Entry extends Obj { shippingKey: string; shippingInfo: { price: ReturnType<typeof money> }; shippingMethod: { key: string } }
+
+/** True when every unit of every line is allocated to an entry the cart has: summed target quantity, not `valid` (verified live). */
+function fullyAllocated(cart: Obj, lines: Line[]): boolean {
+  const keys = ((cart.shipping as Entry[]) ?? []).map((e) => e.shippingKey);
+  return lines.length > 0 && lines.every((l) => {
+    const targets = (l.shippingDetails as { targets: { quantity: number; shippingMethodKey: string }[] } | undefined)?.targets ?? [];
+    return targets.reduce((n, t) => n + t.quantity, 0) === l.quantity && targets.every((t) => keys.includes(t.shippingMethodKey));
+  });
+}
+
+/** `Multiple` mode like the platform: each entry is priced (collect free, delivery by the whole cart's net), tax only once fully allocated. */
+function repriceMultiple(cart: Obj, lines: Line[], net: number, currency: string): void {
+  const entries = (cart.shipping as Entry[]) ?? [];
+  for (const e of entries) {
+    const used = lines.some((l) => ((l.shippingDetails as { targets: { shippingMethodKey: string }[] } | undefined)?.targets ?? []).some((t) => t.shippingMethodKey === e.shippingKey));
+    e.shippingInfo.price = money(!used || e.shippingMethod.key === 'mcf-collect' || net >= fake.freeAbove ? 0 : fake.shipRate, currency);
+  }
+  for (const l of lines) {
+    const d = l.shippingDetails as { targets: { quantity: number; shippingMethodKey: string }[]; valid?: boolean } | undefined;
+    if (d) d.valid = d.targets.every((t) => entries.some((e) => e.shippingKey === t.shippingMethodKey));
+  }
+  const allocated = fullyAllocated(cart, lines);
+  const shipping = allocated ? entries.reduce((n, e) => n + e.shippingInfo.price.centAmount, 0) : 0;
+  cart.totalPrice = money(net + shipping, currency);
+  if (!allocated) {
+    delete cart.taxedPrice;
+    return;
+  }
+  const tax = Math.round(((net + shipping) * fake.taxPercent) / 100);
   cart.taxedPrice = { totalNet: money(net + shipping, currency), totalGross: money(net + shipping + tax, currency), totalTax: money(tax, currency), taxPortions: [] };
 }
 
@@ -154,6 +188,54 @@ function apply(cart: Obj, action: Obj): void {
         shippingMethod: { typeId: 'shipping-method', id: `sm-${String((action.shippingMethod as { key: string }).key)}`, obj: { key: (action.shippingMethod as { key: string }).key } },
       };
       break;
+    case 'addItemShippingAddress': {
+      const list = (cart.itemShippingAddresses as Obj[]) ?? (cart.itemShippingAddresses = []);
+      const address = action.address as Obj;
+      if (list.some((a) => a.key === address.key)) throw err(400, [{ code: 'InvalidOperation', message: 'duplicate address key' }]);
+      list.push({ ...address });
+      break;
+    }
+    case 'removeItemShippingAddress': {
+      const key = action.addressKey as string;
+      if (lines.some((l) => ((l.shippingDetails as { targets: { addressKey: string }[] } | undefined)?.targets ?? []).some((t) => t.addressKey === key))) {
+        throw err(400, [{ code: 'InvalidOperation', message: 'address is used by a line target' }]);
+      }
+      cart.itemShippingAddresses = ((cart.itemShippingAddresses as Obj[]) ?? []).filter((a) => a.key !== key);
+      break;
+    }
+    case 'addShippingMethod': {
+      const list = (cart.shipping as Obj[]) ?? (cart.shipping = []);
+      const key = action.shippingKey as string;
+      if (list.some((e) => e.shippingKey === key)) throw err(400, [{ code: 'InvalidOperation', message: 'duplicate shipping key' }]);
+      const methodKey = (action.shippingMethod as { key: string }).key;
+      list.push({
+        shippingKey: key, shippingAddress: { ...(action.shippingAddress as Obj) }, shippingMethod: { typeId: 'shipping-method', key: methodKey },
+        shippingInfo: {
+          shippingMethodName: methodKey, shippingMethodState: 'MatchesCart', price: money(0, currency),
+          shippingMethod: { typeId: 'shipping-method', id: `sm-${methodKey}`, obj: { key: methodKey } },
+        },
+      });
+      break;
+    }
+    case 'removeShippingMethod': {
+      const key = action.shippingKey as string;
+      if (lines.some((l) => ((l.shippingDetails as { targets: { shippingMethodKey: string }[] } | undefined)?.targets ?? []).some((t) => t.shippingMethodKey === key))) {
+        throw err(400, [{ code: 'InvalidOperation', message: 'shipping method is used by a line target' }]);
+      }
+      cart.shipping = ((cart.shipping as Obj[]) ?? []).filter((e) => e.shippingKey !== key);
+      break;
+    }
+    case 'setLineItemShippingDetails': {
+      const l = line();
+      const d = action.shippingDetails as { targets: Obj[] } | undefined;
+      const addresses = (cart.itemShippingAddresses as Obj[]) ?? [];
+      for (const t of d?.targets ?? []) {
+        if (!addresses.some((a) => a.key === t.addressKey)) throw err(400, [{ code: 'InvalidOperation', message: 'unknown address key' }]);
+      }
+      if (d) l.shippingDetails = { targets: d.targets.map((t) => ({ ...t })), valid: true };
+      else delete l.shippingDetails;
+      break;
+    }
     case 'recalculate':
       for (const l of lines) {
         const p = priceFor(l.variant.sku, currency);
@@ -195,7 +277,7 @@ export function clientModule() {
             fake.n += 1;
             const cart: Obj = {
               id: `cart-${fake.n}`, version: 1, cartState: 'Active', lineItems: [], discountCodes: [], totalLineItemQuantity: 0,
-              totalPrice: money(0, body.currency as string), ...body,
+              shipping: [], itemShippingAddresses: [], totalPrice: money(0, body.currency as string), ...body,
             };
             fake.carts.set(cart.id as string, cart);
             return { body: copy(cart) };
@@ -249,7 +331,7 @@ export function seedCart(over: Obj = {}): string {
   fake.n += 1;
   const id = `cart-${fake.n}`;
   const cart: Obj = {
-    id, version: 1, cartState: 'Active', country: 'US', locale: 'en-US', shippingMode: 'Single', anonymousId: 'anon-1', lineItems: [],
+    id, version: 1, cartState: 'Active', country: 'US', locale: 'en-US', shippingMode: 'Multiple', anonymousId: 'anon-1', lineItems: [],
     discountCodes: [], totalLineItemQuantity: 0, totalPrice: money(0, 'USD'), ...over,
   };
   reprice(cart);

@@ -11,6 +11,9 @@ const ct = vi.hoisted(() => ({
   stock: {} as Record<string, number>,
 }));
 
+// The shipping allocation that follows every write (tested in lib/cart/shipping-allocation.test.ts) is not recorded in `ct.updates`.
+const SHIPPING_ACTIONS = new Set(['addItemShippingAddress', 'removeItemShippingAddress', 'addShippingMethod', 'removeShippingMethod', 'setLineItemShippingDetails']);
+
 // A small in-memory cart engine: addLineItem and changeLineItemQuantity only.
 vi.mock('@/lib/ct/client', () => ({
   apiRoot: {
@@ -27,7 +30,7 @@ vi.mock('@/lib/ct/client', () => ({
         get: () => ({ execute: async () => ({ body: ct.carts.get(ID) }) }),
         post: ({ body }: { body: { version: number; actions: Record<string, unknown>[] } }) => ({
           execute: async () => {
-            ct.updates.push({ id: ID, actions: body.actions });
+            if (body.actions.some((a) => !SHIPPING_ACTIONS.has(a.action as string))) ct.updates.push({ id: ID, actions: body.actions });
             const c = ct.carts.get(ID) as { version: number; lineItems: Record<string, unknown>[] };
             let lines = [...c.lineItems];
             for (const a of body.actions) {

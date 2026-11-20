@@ -157,7 +157,11 @@ export function planShip(order: OrderLike, { partial }: { partial: boolean }): A
   const everythingShipped = !partial || (left.length === 1 && items[0]?.quantity === first.quantity);
   const number = order.orderNumber ?? order.id;
   const sequence = deliveriesOf(order).length + 1;
-  const shippingKey = order.shippingMode === 'Multiple' ? order.shipping?.[0]?.shippingKey : undefined;
+  // A `Multiple` order holds a collect entry per store too; the delivery is added to the delivery group's entry (key `delivery`, D-062).
+  const entries = order.shipping ?? [];
+  const shippingKey = order.shippingMode === 'Multiple'
+    ? (entries.find((e) => e.shippingKey === 'delivery') ?? entries.find((e) => !e.shippingKey.startsWith('collect-')) ?? entries[0])?.shippingKey
+    : undefined;
   return [
     {
       action: 'addDelivery',

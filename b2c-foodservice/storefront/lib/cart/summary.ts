@@ -55,7 +55,8 @@ export function taxLabel(tax: Cart['tax']): 'included' | 'estimated' | 'later' {
 }
 
 /**
- * Free-shipping progress (Q-I-03): only lines that ship (delivery, subscribe) count, because collection lines do not ship.
+ * Free-shipping progress (Q-I-03, changed by D-062): the whole bag counts toward the threshold, collect lines included, because that
+ * is what the platform compares with `freeAbove` (verified live, F-K-02); the block is shown only when a line ships.
  * Display figures only, summed from the engine's line totals. No threshold or no shippable line: `remaining` is null and
  * `reached` false (the block is hidden). The threshold itself comes from commercetools (`getFreeShippingThreshold`).
  */
@@ -63,9 +64,10 @@ export function freeShipping(
   threshold: Money | null,
   lines: ReadonlyArray<Pick<CartLine, 'fulfilment' | 'total'>>,
 ): Cart['freeShipping'] {
-  const shippable = lines.filter((l) => l.fulfilment !== 'collect');
-  if (!threshold || threshold.centAmount <= 0 || shippable.length === 0) return { threshold, remaining: null, reached: false };
-  const sum = shippable.reduce((n, l) => n + l.total.centAmount, 0);
+  // Hidden when nothing ships. The sum is the whole bag, collect lines included: that is what the platform compares with `freeAbove`
+  // (verified live on a `Multiple` cart, F-K-02), so the figure here matches the shipping price the cart then shows.
+  if (!threshold || threshold.centAmount <= 0 || !lines.some((l) => l.fulfilment !== 'collect')) return { threshold, remaining: null, reached: false };
+  const sum = lines.reduce((n, l) => n + l.total.centAmount, 0);
   if (sum >= threshold.centAmount) return { threshold, remaining: null, reached: true };
   return { threshold, remaining: { centAmount: threshold.centAmount - sum, currencyCode: threshold.currencyCode }, reached: false };
 }

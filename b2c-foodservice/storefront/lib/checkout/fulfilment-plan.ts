@@ -1,4 +1,3 @@
-import { COLLECT_METHOD_KEY } from '@/lib/cart/plan';
 import type { CartLine, GroupKey, Store } from '@/lib/types';
 import { marketForCountry } from '@/lib/utils';
 
@@ -102,75 +101,4 @@ export function collectAddress(store: Pick<Store, 'name' | 'addressLine' | 'city
     additionalAddressInfo: `Collection at ${store.name}`,
     ...(email ? { email } : {}),
   };
-}
-
-// ---------------------------------------------------------------- the update actions (plain objects, shaped like SDK actions)
-
-export type FulfilmentAction =
-  | { action: 'setLineItemShippingDetails'; lineItemId: string; shippingDetails?: { targets: { addressKey: string; quantity: number; shippingMethodKey?: string }[] } }
-  | { action: 'removeShippingMethod'; shippingKey: string }
-  | { action: 'removeItemShippingAddress'; addressKey: string }
-  | { action: 'addItemShippingAddress'; address: CollectAddress & { key: string } }
-  | { action: 'addShippingMethod'; shippingKey: string; shippingMethod: { typeId: 'shipping-method'; key: string }; shippingAddress: CollectAddress & { key: string } }
-  | { action: 'setShippingAddress'; address: CollectAddress }
-  | { action: 'setShippingMethod'; shippingMethod: { typeId: 'shipping-method'; key: string } };
-
-/** What the plan reads from a cart that may already carry shipping entries (a retry, or an earlier attempt). */
-export interface ExistingShipping {
-  shippingKeys: readonly string[];
-  addressKeys: readonly string[];
-  /** Line ids whose `shippingDetails` is set. */
-  linesWithDetails: readonly string[];
-}
-
-export interface CollectLineAllocation { lineId: string; quantity: number }
-
-export interface MultipleInput {
-  existing: ExistingShipping;
-  /** The collect groups with the store address already built (pickup name inside). */
-  collect: { group: FulfilmentGroup; address: CollectAddress; lines: CollectLineAllocation[] }[];
-}
-
-/**
- * `complete-multiple`: the actions for a `shippingMode: Multiple` cart, in an order that keeps every reference valid:
- * clear the allocations, remove the shipping entries, remove the addresses, add the collect addresses, add the collect
- * methods, allocate the collect lines. The ship lines are left for the hosted flow (probes S13 and S14).
- */
-export function buildFulfilmentActions(input: MultipleInput): FulfilmentAction[] {
-  const actions: FulfilmentAction[] = [];
-  for (const lineItemId of input.existing.linesWithDetails) actions.push({ action: 'setLineItemShippingDetails', lineItemId });
-  for (const shippingKey of input.existing.shippingKeys) actions.push({ action: 'removeShippingMethod', shippingKey });
-  for (const addressKey of input.existing.addressKeys) actions.push({ action: 'removeItemShippingAddress', addressKey });
-  for (const c of input.collect) actions.push({ action: 'addItemShippingAddress', address: { ...c.address, key: shippingKeyOf(c.group.key) } });
-  for (const c of input.collect) {
-    const key = shippingKeyOf(c.group.key);
-    actions.push({
-      action: 'addShippingMethod',
-      shippingKey: key,
-      shippingMethod: { typeId: 'shipping-method', key: COLLECT_METHOD_KEY },
-      shippingAddress: { ...c.address, key },
-    });
-  }
-  for (const c of input.collect) {
-    for (const l of c.lines) {
-      actions.push({
-        action: 'setLineItemShippingDetails',
-        lineItemId: l.lineId,
-        shippingDetails: { targets: [{ addressKey: shippingKeyOf(c.group.key), quantity: l.quantity, shippingMethodKey: shippingKeyOf(c.group.key) }] },
-      });
-    }
-  }
-  return actions;
-}
-
-/**
- * A cart that holds one group. Collect only: the store is the shipping address and the method is `mcf-collect`. Delivery
- * only: nothing is pre-set (the hosted flow asks the address and lists the delivery method).
- */
-export function buildSingleGroupActions(group: FulfilmentGroup, address: CollectAddress | null): FulfilmentAction[] {
-  if (group.kind !== 'collect' || !address) return [];
-  return [
-    { action: 'setShippingAddress', address },
-    { action: 'setShippingMethod', shippingMethod: { typeId: 'shipping-method', key: COLLECT_METHOD_KEY } },
-  ];
 }

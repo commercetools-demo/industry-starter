@@ -134,6 +134,13 @@ describe('ship', () => {
     expect((add as { items: unknown[] }).items).toEqual([{ id: 'l1', quantity: 3 }, { id: 'l2', quantity: 1 }]);
   });
 
+  it('a mixed Multiple order ships on its delivery entry, never on a collect entry listed first (D-062)', () => {
+    const o = order({ shippingMode: 'Multiple', shipping: [{ shippingKey: 'collect-mcf-store-nyc-soho', shippingInfo: {} }, { shippingKey: 'delivery', shippingInfo: {} }] });
+    expect(planShip(o, { partial: false })[0]).toMatchObject({ action: 'addDelivery', shippingKey: 'delivery' });
+    const noKey = order({ shippingMode: 'Multiple', shipping: [{ shippingKey: 'collect-x', shippingInfo: {} }, { shippingKey: 'ship-2', shippingInfo: {} }] });
+    expect(planShip(noKey, { partial: false })[0]).toMatchObject({ shippingKey: 'ship-2' });
+  });
+
   it('refuses a delivered order', () => {
     expect(() => planShip(order({ shipmentState: 'Delivered' }), { partial: false })).toThrow(/Cannot ship/);
   });

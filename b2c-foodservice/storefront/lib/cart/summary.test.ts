@@ -29,10 +29,15 @@ describe('freeShipping', () => {
     expect(freeShipping(cad(9900), [ln('delivery', 2500)])).toEqual({ threshold: cad(9900), remaining: cad(7400), reached: false });
   });
 
-  it('progress counts only shippable lines', () => {
-    const r = freeShipping(usd(7500), [ln('collect', 9000), ln('delivery', 1000), ln('subscribe', 500)]);
-    expect(r.remaining).toEqual(usd(6000));
+  it('progress counts the whole bag, collect lines included (what the platform compares with freeAbove, D-062)', () => {
+    expect(freeShipping(usd(7500), [ln('collect', 5000), ln('delivery', 1000), ln('subscribe', 500)]).remaining).toEqual(usd(1000));
+    // 9000 of collect plus 1000 of delivery is past the threshold: the platform prices the delivery entry at 0.
+    expect(freeShipping(usd(7500), [ln('collect', 9000), ln('delivery', 1000)])).toEqual({ threshold: usd(7500), remaining: null, reached: true });
+  });
+
+  it('is hidden when nothing ships', () => {
     expect(freeShipping(usd(7500), [ln('collect', 9000)])).toEqual({ threshold: usd(7500), remaining: null, reached: false });
+    expect(freeShipping(usd(7500), [])).toEqual({ threshold: usd(7500), remaining: null, reached: false });
   });
 
   it('reached at or above the threshold', () => {
