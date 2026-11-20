@@ -348,6 +348,13 @@ describe('Pay stage: hosted Checkout (K-12)', () => {
     expect(await screen.findByText(/Sign in to check out with this bag/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute('href', '/account/sign-in?redirect=%2Fcheckout');
   });
+  it('hides our order summary on the Pay stage (the hosted Checkout has its own) and shows it again on Review', async () => {
+    await toPay();
+    expect(screen.queryByTestId('checkout-total')).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Back to review' }));
+    expect(await ready()).toBeInTheDocument();
+    expect(screen.getByTestId('checkout-total')).toBeInTheDocument();
+  });
   it('Back to review unmounts the widget and a new session is created on return', async () => {
     const { stub } = await toPay();
     await userEvent.click(screen.getByRole('button', { name: 'Back to review' }));

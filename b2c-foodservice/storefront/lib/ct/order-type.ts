@@ -2,6 +2,7 @@ import 'server-only';
 import type { Cart, CartUpdateAction, CustomFields, Order, OrderUpdateAction } from '@commercetools/platform-sdk';
 import { isInstore } from '@/lib/app-mode';
 import { apiRoot } from '@/lib/ct/client';
+import { ORDER_TYPE_KEY } from '@/lib/ct/order-type-key';
 import { updateWithRetry } from '@/lib/ct/retry';
 
 /**
@@ -12,7 +13,7 @@ import { updateWithRetry } from '@/lib/ct/retry';
  * must not break: it logs once, skips the field, and the shopper notices nothing. The check reads the type by key (scope
  * `view_types`) and is cached, so creating the type needs no redeploy.
  */
-export const ORDER_TYPE_KEY = 'instore-order-type';
+export { ORDER_TYPE_KEY };
 export const ORDER_TYPE_FIELD = 'orderType';
 export const IN_STORE_PURCHASE = 'in-store-purchase';
 

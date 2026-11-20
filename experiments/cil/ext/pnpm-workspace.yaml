@@ -1,0 +1,8 @@
+packages:
+  # Each extension is a workspace member (edit its src/extension.ts). A project deploys
+  # ONE bundle, so the root `pnpm build` / `validate` / `push` scripts MERGE every
+  # extension here into that single combined bundle — never one per package.
+  - 'extensions/*'
+
+# Refuse dependency versions published less than 24h ago. Minutes; 1440 = 24h.
+minimumReleaseAge: 1440

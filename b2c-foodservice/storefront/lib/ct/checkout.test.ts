@@ -9,7 +9,9 @@ const h = vi.hoisted(() => ({
   created: [] as unknown[],
   conflictOnce: false,
   rebuild: vi.fn(),
+  address: vi.fn(),
 }));
+vi.mock('@/lib/ct/addresses', () => ({ defaultShippingAddressFor: h.address }));
 
 vi.mock('@/lib/ct/cart', async (orig) => ({
   ...(await orig<typeof import('@/lib/ct/cart')>()),
@@ -69,6 +71,8 @@ beforeEach(() => {
   h.byId = {};
   h.conflictOnce = false;
   h.rebuild.mockReset();
+  h.address.mockReset();
+  h.address.mockResolvedValue(null);
 });
 
 describe('getCheckoutState', () => {
@@ -237,5 +241,57 @@ describe('complete-per-group', () => {
     await preparePayments(session, market, { pickupName: 'Maya Lopez' });
     const skus = (h.created as { lineItems: { sku: string }[] }[]).flatMap((c) => c.lineItems.map((l) => l.sku));
     expect([...skus].sort()).toEqual(['A', 'B', 'C']);
+  });
+});
+
+describe('preparePayments: the signed-in shopper\'s default address', () => {
+  const home = { firstName: 'Maya', lastName: 'Lopez', streetName: '5 Main St', city: 'Brooklyn', postalCode: '11201', state: 'NY', country: 'US' };
+  const customer = { ...session, customerId: 'cust-1' };
+  const setAddress = () => (h.posted[0]?.body as { actions: { action: string; address?: unknown }[] } | undefined)?.actions.filter((a) => a.action === 'setShippingAddress');
+
+  it('goes on a delivery-only bag that has no street yet', async () => {
+    h.address.mockResolvedValue(home);
+    h.view = viewCart([shipLine]);
+    h.raw = ctCart({ customerId: 'cust-1', lines: [ctLine({ id: 's1', sku: 'B' })] });
+    await preparePayments(customer, market, { pickupName: null });
+    expect(h.address).toHaveBeenCalledWith('cust-1', 'US');
+    expect(setAddress()).toEqual([{ action: 'setShippingAddress', address: home }]);
+  });
+  it('never overwrites an address the shopper already typed in the hosted form', async () => {
+    h.address.mockResolvedValue(home);
+    h.view = viewCart([shipLine]);
+    const typed = { country: 'US', streetName: '9 Other Rd', city: 'Queens', postalCode: '11101' };
+    h.raw = { ...(ctCart({ customerId: 'cust-1', lines: [ctLine({ id: 's1', sku: 'B' })] }) as object), shippingAddress: typed };
+    await preparePayments(customer, market, { pickupName: null });
+    expect(h.posted).toHaveLength(0);
+  });
+  it('leaves a bag alone when the customer has no usable default address', async () => {
+    h.view = viewCart([shipLine]);
+    h.raw = ctCart({ customerId: 'cust-1', lines: [ctLine({ id: 's1', sku: 'B' })] });
+    await preparePayments(customer, market, { pickupName: null });
+    expect(h.posted).toHaveLength(0);
+  });
+  it('a guest never triggers the lookup', async () => {
+    h.view = viewCart([shipLine]);
+    h.raw = ctCart({ anonymousId: 'anon', lines: [ctLine({ id: 's1', sku: 'B' })] });
+    await preparePayments(session, market, { pickupName: null });
+    expect(h.address).not.toHaveBeenCalled();
+  });
+  it('a collect-only bag keeps the store address (the default address is not used)', async () => {
+    h.address.mockResolvedValue(home);
+    h.view = viewCart([collectLine]);
+    h.raw = ctCart({ customerId: 'cust-1', lines: [ctLine({ id: 'c1', sku: 'A', fulfilment: 'collect', channelId: 'ch-soho' })] });
+    await preparePayments(customer, market, { pickupName: 'Maya Lopez' });
+    expect(setAddress()).toMatchObject([{ address: { streetName: '1 Prince St' } }]);
+    expect(h.address).not.toHaveBeenCalled();
+  });
+  it('a mixed bag: the delivery clone starts from it, the collect clone keeps the store', async () => {
+    h.address.mockResolvedValue(home);
+    h.view = viewCart([collectLine, shipLine]);
+    h.raw = rawMixed();
+    await preparePayments(customer, market, { pickupName: 'Maya Lopez' });
+    const [collect, delivery] = h.created as { shippingAddress: { streetName?: string } }[];
+    expect(collect?.shippingAddress.streetName).toBe('1 Prince St');
+    expect(delivery?.shippingAddress).toEqual(home);
   });
 });

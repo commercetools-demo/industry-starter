@@ -202,7 +202,9 @@ export default function CheckoutPage({ resumePart, instore = false }: { resumePa
       <StepIndicator steps={steps} current={stage} onGoTo={(id) => id === 1 && goToReview()} />
     </div>
   );
-  const columns = instore ? 'grid items-start gap-6' : 'grid items-start gap-12 stack:grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)]';
+  // On the Pay stage the hosted Checkout has its own order summary: ours is hidden and the hosted flow takes the full width.
+  const paying = stage === 2;
+  const columns = instore || paying ? 'grid items-start gap-6' : 'grid items-start gap-12 stack:grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)]';
 
   if (isLoading) {
     return (
@@ -279,7 +281,7 @@ export default function CheckoutPage({ resumePart, instore = false }: { resumePa
             />
           )}
         </div>
-        <OrderSummary state={state} instore={instore} />
+        {paying ? null : <OrderSummary state={state} instore={instore} />}
       </div>
     </div>
   );

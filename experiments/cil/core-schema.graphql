@@ -1,0 +1,5684 @@
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key", "@inaccessible", "@shareable"])
+"""New Associate of the active Business Unit."""
+input AddAssociateInput {
+  """
+  Email address of the Customer to add. The Customer must already have an account in
+  the Project.
+  """
+  email: String!
+  """
+  Keys of the Associate Roles to assign. An unknown key is refused with
+  `ASSOCIATE_ROLE_NOT_FOUND`.
+  """
+  roleKeys: [String!]!
+  """
+  Inheritance mode for every role assigned here. If omitted, each assignment gets the
+  platform default, `DISABLED`. See
+  [AssociateRoleAssignmentDraft](https://docs.commercetools.com/api/projects/business-units#ctp:api:type:AssociateRoleAssignmentDraft).
+  """
+  inheritance: AssociateRoleInheritanceMode
+}
+
+"""
+A Cart line to add, used by `addCartLine` and by each entry of `addCartLines`.
+"""
+input AddCartLineInput {
+  """SKU of the Product Variant to add."""
+  sku: String!
+  """
+  Number of items to add. Must be at least `1`, otherwise the line is refused with
+  `INVALID_QUANTITY`.
+  """
+  quantity: Int! = 1
+  """
+  `id` of a distribution Channel to price this line with, instead of the
+  distribution channel of the session. Use it to pick a channel-specific price for one
+  line. If omitted, the line uses the channel selected for the session with `PUT
+  /{project}/main/session/distribution-channel`.
+  
+  The Channel must have the `ProductDistribution` role, be allowed by the Store of
+  the Cart in a store-scoped session, and have a price for the SKU. Otherwise, the
+  line is refused with `INVALID_DISTRIBUTION_CHANNEL` or `PRICE_NOT_AVAILABLE`.
+  """
+  distributionChannelIdOverride: ID
+}
+
+"""A Product Variant and quantity to save on a Shopping List."""
+input AddShoppingListLineInput {
+  """`id` of the Shopping List to add the line to."""
+  listId: ID!
+  """
+  SKU of the Product Variant to add. An unknown SKU is refused with `UNKNOWN_SKU`.
+  """
+  sku: String!
+  """
+  Number of items to add. Defaults to `1`. A quantity the platform doesn't accept is
+  refused with `INVALID_QUANTITY`.
+  """
+  quantity: Int! = 1
+}
+
+"""
+Address as stored on a Cart, an Order, or a Delivery.
+
+An Address has no `id`. Inputs that refer to a stored address take the `id` of a
+`SavedAddress`, which is the editable address book entry.
+"""
+type Address @shareable {
+  """
+  Name of the recipient. Contains the first and last name, or the company name if
+  neither is set.
+  """
+  name: String!
+  """Street name and street number."""
+  line1: String!
+  """Further information on the street address."""
+  line2: String
+  """Name of the city. Empty string if not set."""
+  city: String!
+  """
+  Name of the state, for example `Colorado`. Tax rates are selected by `state`,
+  not `region`, so in a country with state tax rates an address without `state` is
+  taxed at the country rate.
+  """
+  state: String
+  """
+  Name of the region, for locales that use one. Not used to select a tax rate.
+  """
+  region: String
+  """Postal code. Empty string if not set."""
+  postalCode: String!
+  """
+  Two-digit country code as per [ISO 3166-1
+  alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), for example `GB`.
+  """
+  country: String!
+}
+
+"""
+Address to save in an address book.
+
+When it updates an existing address, fields this input doesn't contain, such as
+`company` or `phone`, keep their stored values. Omitting `line2`, `state`, or
+`region` clears them.
+"""
+input AddressBookInput {
+  """Name of the contact."""
+  name: String!
+  """Street name and street number."""
+  line1: String!
+  """Further information on the street address."""
+  line2: String
+  """Name of the city."""
+  city: String!
+  """
+  Name of the state or province, for example `Colorado`. In a country that taxes by
+  state, tax selection matches on this value.
+  """
+  state: String
+  """Name of the region, for locales that use a region that is not a state."""
+  region: String
+  """Postal code."""
+  postalCode: String!
+  """
+  Two-letter country code as per [ISO 3166-1
+  alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), for example `GB`.
+  """
+  country: String!
+}
+
+"""
+Address to set with `setShippingAddress` or `setBillingAddress`, or to check out
+with `guestCheckout`.
+"""
+input AddressInput {
+  """Name of the recipient."""
+  name: String!
+  """Street name and street number."""
+  line1: String!
+  """Further information on the street address."""
+  line2: String
+  """Name of the city."""
+  city: String!
+  """
+  Name of the state, for example `Colorado`. Required for the address to be taxed at
+  a state rate. See `Address.state`.
+  """
+  state: String
+  """Name of the region, for locales that use one."""
+  region: String
+  """Postal code."""
+  postalCode: String!
+  """
+  Two-digit country code as per [ISO 3166-1
+  alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), in upper case, for
+  example `GB`. A value that isn't a valid code returns `INVALID_COUNTRY`. A
+  country that the project has no tax rate for returns
+  `SHIPPING_COUNTRY_NOT_SUPPORTED`.
+  """
+  country: String!
+}
+
+"""Use that a saved address can be the default for."""
+enum AddressUse {
+  """The address is used for shipping."""
+  SHIPPING
+  """The address is used for billing."""
+  BILLING
+}
+
+"""
+A discount that was applied, and what it took off the thing it is attached to. A discount that matched but was discarded, by a Best Deal or within its Discount Group, is not listed.
+"""
+type AppliedDiscount {
+  """
+  Opaque id of the discount behind this entry, the same in `discounts`, in every Portion and for the gift Line Item it added, and kept after the discount is deleted: the key to join them on. Clients never parse it.
+  """
+  id: ID!
+  """Where it came from; null once the discount behind it is deleted."""
+  source: DiscountSource
+  """
+  What it applies to; null for Product Discounts and gift discounts, which have no target, and once the discount behind it is deleted.
+  """
+  target: DiscountTarget
+  """How it reduces; null once the discount behind it is deleted."""
+  valueType: DiscountValueType
+  """
+  The Discount Code the shopper entered, for `removeDiscountCode`; set only on `DISCOUNT_CODE` entries, and null on one once its Discount Code is deleted or no longer unlocks it.
+  """
+  code: String
+  """The merchant's key for the discount, where one is set."""
+  key: String
+  """
+  The discount's name in the session's locale: the Cart Discount's or Product Discount's, never the Discount Code's. Null where it has none for that locale, and always for a Direct Discount.
+  """
+  name: String
+  """
+  The Discount Group this Cart Discount won within; null when it is in none.
+  """
+  discountGroup: DiscountGroup
+  """
+  What it took off, as a positive amount: per unit in a Portion; in a cart's, order's or quote's `discounts`, summed over everything it reduced.
+  """
+  amount: Money!
+}
+
+"""
+A typed condition of an Approval Rule. An Order must meet all conditions of an
+Approval Rule for the rule to match.
+"""
+type ApprovalCondition {
+  """What the condition tests."""
+  field: ApprovalConditionField!
+  """How the condition compares the Order value."""
+  operator: ApprovalConditionOperator!
+  """
+  Threshold amount, in the currency it was set in. Set only for `ORDER_TOTAL`.
+  """
+  threshold: Money
+  """
+  Currency code (ISO 4217) for `ORDER_CURRENCY`, or country code (ISO 3166-1
+  alpha-2) for `SHIPPING_COUNTRY`. `null` for `ORDER_TOTAL`.
+  """
+  code: String
+}
+
+"""Order value that a typed approval condition tests."""
+enum ApprovalConditionField {
+  """Total of the Order, compared against a threshold in a given currency."""
+  ORDER_TOTAL
+  """Currency of the Order."""
+  ORDER_CURRENCY
+  """
+  Country of the Order. The condition tests the `country` field of the
+  [Order](https://docs.commercetools.com/api/projects/orders#ctp:api:type:Order),
+  which is used for price selection, not the country of the shipping address.
+  """
+  SHIPPING_COUNTRY
+}
+
+"""
+A condition to set on an Approval Rule. Set the values that `field` requires:
+
+- `ORDER_TOTAL`: `amountInMinorUnits` and `currency`, with any operator.
+- `ORDER_CURRENCY` or `SHIPPING_COUNTRY`: `code`, with the `EQ` operator.
+
+Any other combination is refused with `CONDITION_NOT_SUPPORTED`. The `field` of
+the error points to the value that is wrong, except for an extra value on
+`ORDER_CURRENCY` or `SHIPPING_COUNTRY`, where it points to the condition's
+`field`.
+"""
+input ApprovalConditionInput {
+  """What the condition tests."""
+  field: ApprovalConditionField!
+  """How the condition compares the Order value."""
+  operator: ApprovalConditionOperator!
+  """
+  Threshold in the minor units of `currency`, for example `500000` for 5,000.00
+  GBP. Required for `ORDER_TOTAL`, and must be a non-negative whole number. Not
+  allowed for other fields.
+  """
+  amountInMinorUnits: Int
+  """
+  Currency code (ISO 4217) of the threshold. Required for `ORDER_TOTAL`, and the
+  condition then matches only Orders in this currency. Not allowed for other fields.
+  """
+  currency: String
+  """
+  Currency code (ISO 4217) for `ORDER_CURRENCY`, or country code (ISO 3166-1
+  alpha-2) for `SHIPPING_COUNTRY`. Must contain letters only. Not allowed for
+  `ORDER_TOTAL`.
+  """
+  code: String
+}
+
+"""
+Comparison operator of an approval condition. Which operators a field accepts is
+listed on `ApprovalConditionInput`.
+"""
+enum ApprovalConditionOperator {
+  """Greater than."""
+  GT
+  """Greater than or equal to."""
+  GTE
+  """Less than."""
+  LT
+  """Less than or equal to."""
+  LTE
+  """Equal to."""
+  EQ
+}
+
+"""
+An approval recorded on an Approval Flow. The tier that the approval satisfied isn't
+recorded. `decidedBy.roles` lists the Associate Roles of the approver.
+"""
+type ApprovalDecision {
+  """Associate who approved."""
+  decidedBy: Associate!
+  """Date and time (UTC) of the approval."""
+  decidedAt: DateTime!
+}
+
+"""
+The approval process of an Order that matched one or more Approval Rules. Created when
+the Order is placed. For more information, see [Approval
+Flows](https://docs.commercetools.com/api/projects/approval-flows).
+"""
+type ApprovalFlow implements Node {
+  """Unique identifier of the Approval Flow."""
+  id: ID!
+  """
+  Order that needs approval. `null` if the current Associate isn't allowed to view
+  the Order, for example an Order of another Associate without the
+  `VIEW_OTHERS_ORDERS` permission. The Approval Flow itself is still returned.
+  """
+  order: Order
+  """
+  Reference of the Order: its order number, or its platform ID if it has none.
+  """
+  orderReference: String!
+  """Current state of the Approval Flow."""
+  approvalState: ApprovalState!
+  """
+  Total of the Order under review. Where prices exclude tax, this is the total before
+  tax. `null` under the same conditions as `order`.
+  """
+  total: Money
+  """
+  Associate who placed the Order, with the Associate Roles they hold in the Business
+  Unit. `null` under the same conditions as `order`, or if the Order has no
+  Customer. If the Associate has left the Business Unit, the name fields and `roles`
+  are empty.
+  """
+  requestedBy: Associate
+  """Date and time (UTC) the Approval Flow was created."""
+  createdAt: DateTime!
+  """
+  Approval Rules that the Order matched. All of them must be satisfied. Each rule has
+  its own approver tiers.
+  """
+  matchedRules: [ApprovalRule!]!
+  """Associate Roles that can approve, across all matched Approval Rules."""
+  eligibleApproverRoles: [AssociateRole!]!
+  """
+  Associate Roles still required for approval, across all remaining tiers.
+  """
+  pendingApproverRoles: [AssociateRole!]!
+  """
+  Associate Roles required by the currently active tiers. More than one tier can be
+  active at once, one for each matched Approval Rule.
+  """
+  currentTierPendingApproverRoles: [AssociateRole!]!
+  """Approvals recorded so far, oldest first."""
+  decisions: [ApprovalDecision!]!
+  """
+  Rejection of the Approval Flow. `null` unless `approvalState` is `REJECTED`.
+  """
+  rejection: ApprovalRejection
+  """
+  Actions that the current Associate can take on the Approval Flow. Empty unless the
+  flow is `PENDING`, the Associate has the `UPDATE_APPROVAL_FLOWS` permission, and
+  they hold a role in `currentTierPendingApproverRoles`.
+  """
+  availableActions: [ApprovalFlowAction!]!
+}
+
+"""
+Action on an Approval Flow that `ApprovalFlow.availableActions` can offer.
+"""
+enum ApprovalFlowAction {
+  """Approve the Order with `approveOrder`."""
+  APPROVE
+  """Reject the Order with `rejectOrder`."""
+  REJECT
+}
+
+"""Paginated result of `approvals`."""
+type ApprovalFlowConnection {
+  """Approval Flows on this page, with their cursors."""
+  edges: [ApprovalFlowEdge!]!
+  """Approval Flows on this page, in the same order as `edges`."""
+  nodes: [ApprovalFlow!]!
+  """Information for getting the next or previous page."""
+  pageInfo: PageInfo!
+  """Total number of Approval Flows that match the query, across all pages."""
+  totalCount: Int!
+}
+
+"""Entry in an `ApprovalFlowConnection`."""
+type ApprovalFlowEdge {
+  """The Approval Flow."""
+  node: ApprovalFlow!
+  """
+  Opaque cursor of this item. Pass it as `after` to get the items that follow it.
+  """
+  cursor: String!
+}
+
+"""Filters for `approvals`."""
+input ApprovalFlowFilter {
+  """Matches Approval Flows in any of these states."""
+  approvalState: [ApprovalState!]
+}
+
+"""Returned by `approveOrder` and `rejectOrder`."""
+type ApprovalFlowResult {
+  """The Approval Flow after the mutation. `null` if the mutation failed."""
+  approvalFlow: ApprovalFlow
+  """Errors that prevented the mutation. Empty on success."""
+  userErrors: [UserError!]!
+}
+
+"""
+Recorded when an approver rejects an Approval Flow. A single rejection rejects the
+whole Approval Flow.
+"""
+type ApprovalRejection {
+  """Associate who rejected the Approval Flow."""
+  rejectedBy: Associate!
+  """Date and time (UTC) the Approval Flow was rejected."""
+  rejectedAt: DateTime!
+  """Reason given for the rejection."""
+  reason: String
+}
+
+"""
+A rule that defines which Orders of a Business Unit need approval, and which Associate
+Roles approve them. For more information, see [Approval
+Rules](https://docs.commercetools.com/api/projects/approval-rules).
+"""
+type ApprovalRule implements Node {
+  """Unique identifier of the Approval Rule."""
+  id: ID!
+  """
+  User-defined identifier of the Approval Rule, unique within the Business Unit.
+  `null` if no key is set.
+  """
+  key: String
+  """Name of the Approval Rule."""
+  name: String!
+  """Description of the Approval Rule."""
+  description: String
+  """State of the Approval Rule."""
+  approvalRuleState: ApprovalRuleState!
+  """
+  Typed conditions of the Approval Rule. Complete only if `conditionsFullyTyped` is
+  `true`.
+  """
+  conditions: [ApprovalCondition!]!
+  """
+  Stored [Order
+  Predicate](https://docs.commercetools.com/api/projects/predicates#order-predicates)
+  of the Approval Rule, read-only. Read it when `conditionsFullyTyped` is `false`.
+  To change the conditions, set `conditions` in the input instead.
+  """
+  predicate: String!
+  """
+  Whether `conditions` represents the whole `predicate`.
+  
+  If `false`, the Approval Rule contains clauses that this API can't express. Don't
+  present such a rule as unconditional, and don't replace its conditions.
+  """
+  conditionsFullyTyped: Boolean!
+  """Approver hierarchy of the Approval Rule, in tier order."""
+  approverTiers: [ApproverTier!]!
+  """Associate Roles whose Orders the Approval Rule applies to."""
+  requesterRoles: [AssociateRole!]!
+}
+
+"""Paginated result of `approvalRules`."""
+type ApprovalRuleConnection {
+  """Approval Rules on this page, with their cursors."""
+  edges: [ApprovalRuleEdge!]!
+  """Approval Rules on this page, in the same order as `edges`."""
+  nodes: [ApprovalRule!]!
+  """Information for getting the next or previous page."""
+  pageInfo: PageInfo!
+  """Total number of Approval Rules that match the query, across all pages."""
+  totalCount: Int!
+}
+
+"""Entry in an `ApprovalRuleConnection`."""
+type ApprovalRuleEdge {
+  """The Approval Rule."""
+  node: ApprovalRule!
+  """
+  Opaque cursor of this item. Pass it as `after` to get the items that follow it.
+  """
+  cursor: String!
+}
+
+"""Filters for `approvalRules`."""
+input ApprovalRuleFilter {
+  """Matches Approval Rules in any of these states."""
+  approvalRuleState: [ApprovalRuleState!]
+}
+
+"""
+Returned by `createApprovalRule`, `updateApprovalRule`, and
+`setApprovalRuleActive`.
+"""
+type ApprovalRuleResult {
+  """The Approval Rule after the mutation. `null` if the mutation failed."""
+  approvalRule: ApprovalRule
+  """Errors that prevented the mutation. Empty on success."""
+  userErrors: [UserError!]!
+}
+
+"""Whether an Approval Rule is in effect."""
+enum ApprovalRuleState {
+  """The Approval Rule is matched against Orders."""
+  ACTIVE
+  """The Approval Rule isn't matched against Orders."""
+  INACTIVE
+}
+
+"""Decision state of an Approval Flow."""
+enum ApprovalState {
+  """The Approval Flow isn't fully approved or rejected yet."""
+  PENDING
+  """All approvers required by the matched Approval Rules have approved."""
+  APPROVED
+  """An approver rejected the Approval Flow."""
+  REJECTED
+}
+
+"""
+A group of Associate Roles within an approver tier. An approval from an Associate who
+holds any one of these roles satisfies the group.
+"""
+type ApproverGroup {
+  """Associate Roles in the group."""
+  roles: [AssociateRole!]!
+}
+
+"""
+Group of Associate Roles to set in an approver tier. See `ApproverGroup` for when a
+group is satisfied.
+"""
+input ApproverGroupInput {
+  """
+  Keys of the Associate Roles in the group. An empty list is refused with
+  `APPROVER_TIERS_REQUIRED`, and an unknown key with `ASSOCIATE_ROLE_NOT_FOUND`.
+  """
+  roleKeys: [String!]!
+}
+
+"""
+A tier of the approver hierarchy of an Approval Rule. Tiers are approved in order.
+Within a tier, every group must be satisfied. For example, to require approval from
+both a finance role and a legal role, use two groups in one tier.
+
+Approvers are Associate Roles, not individual Associates. A tier has no name. Identify
+it by `order`.
+"""
+type ApproverTier {
+  """Position of the tier in the hierarchy, starting at `1`."""
+  order: Int!
+  """Groups that must all be satisfied to approve the tier."""
+  groups: [ApproverGroup!]!
+}
+
+"""
+Approver tier to set on an Approval Rule. See `ApproverTier` for when a tier is
+satisfied. For a tier that any of several roles can approve, pass a single group.
+"""
+input ApproverTierInput {
+  """
+  Groups of the tier. An empty list is refused with `APPROVER_TIERS_REQUIRED`.
+  """
+  groups: [ApproverGroupInput!]!
+}
+
+"""
+Digital asset of a Product Variant, such as a document, a video, or a 3D model, with
+its files in `sources`. Text fields are resolved for the session's locale.
+"""
+type Asset {
+  """
+  User-defined identifier of the Asset. Unique within the Product Variant.
+  """
+  key: String
+  """
+  Name of the Asset, for the session's locale. An empty string when the Asset has no
+  name.
+  """
+  name: String!
+  """
+  Description of the Asset, for the session's locale. Null when the Asset has no
+  description.
+  """
+  description: String
+  """
+  Keywords for categorizing and organizing Assets. Empty when the Asset has no tags.
+  """
+  tags: [String!]!
+  """
+  Files of the Asset. One Asset can have several, for example the same video in
+  different formats or resolutions.
+  """
+  sources: [AssetSource!]!
+}
+
+"""One file of an Asset."""
+type AssetSource {
+  """URI of the file."""
+  uri: String!
+  """User-defined identifier of the source. Unique within the Asset."""
+  key: String
+  """
+  Media type of the file, for example `application/pdf`. Null if not set.
+  """
+  contentType: String
+  """Width of the file. Null if not set."""
+  width: Int
+  """Height of the file. Null if not set."""
+  height: Int
+}
+
+"""
+A Customer who acts within a Business Unit. The current Associate comes from the
+session.
+"""
+type Associate implements Node {
+  """Unique identifier of the Associate within a specific Business Unit."""
+  id: ID!
+  """
+  First name of the Associate. Empty if no name is recorded. This field never contains
+  the email address, so use `email` if you want to show that instead.
+  """
+  firstName: String!
+  """
+  Middle name of the Associate. Empty if they have none, or if no name is recorded.
+  """
+  middleName: String!
+  """Last name of the Associate. Empty if no name is recorded."""
+  lastName: String!
+  """
+  `firstName`, `middleName`, and `lastName` in that order, joined by single
+  spaces, without the empty parts. For example, `Jane Doe` for a person without a
+  middle name. Empty if no name is recorded. If your locale orders names differently,
+  compose the name from its parts.
+  """
+  fullName: String!
+  """Email address of the Associate. Empty if it isn't known."""
+  email: String!
+  """
+  Associate Roles that the Associate holds in the Business Unit they were read from,
+  with the permissions each role grants.
+  """
+  roles: [AssociateRole!]!
+}
+
+"""
+Permission granted by an Associate Role. The values match the
+[Permission](https://docs.commercetools.com/api/projects/associate-roles#ctp:api:type:Permission)
+values of the platform, in upper snake case.
+
+A permission is necessary but not always sufficient. For a specific resource, its
+`availableActions` field decides what the Associate can do with it.
+"""
+enum AssociatePermission {
+  """The Associate can accept their own Quotes."""
+  ACCEPT_MY_QUOTES
+  """The Associate can accept Quotes that belong to other Associates."""
+  ACCEPT_OTHERS_QUOTES
+  """The Associate can create a child Business Unit."""
+  ADD_CHILD_UNITS
+  """The Associate can create Approval Rules."""
+  CREATE_APPROVAL_RULES
+  """The Associate can create their own Carts."""
+  CREATE_MY_CARTS
+  """The Associate can create Orders from their own Carts."""
+  CREATE_MY_ORDERS_FROM_MY_CARTS
+  """The Associate can create Orders from their own Quotes."""
+  CREATE_MY_ORDERS_FROM_MY_QUOTES
+  """The Associate can create their own payment methods."""
+  CREATE_MY_PAYMENT_METHODS
+  """
+  The Associate can create their own Quote Requests from their own Carts.
+  """
+  CREATE_MY_QUOTE_REQUESTS_FROM_MY_CARTS
+  """The Associate can create their own Shopping Lists."""
+  CREATE_MY_SHOPPING_LISTS
+  """
+  The Associate can create Orders from Carts that belong to other Associates.
+  """
+  CREATE_ORDERS_FROM_OTHERS_CARTS
+  """
+  The Associate can create Orders from Quotes that belong to other Associates.
+  """
+  CREATE_ORDERS_FROM_OTHERS_QUOTES
+  """The Associate can create Carts that belong to other Associates."""
+  CREATE_OTHERS_CARTS
+  """
+  The Associate can create payment methods that belong to other Associates.
+  """
+  CREATE_OTHERS_PAYMENT_METHODS
+  """
+  The Associate can create Shopping Lists that belong to other Associates.
+  """
+  CREATE_OTHERS_SHOPPING_LISTS
+  """
+  The Associate can create Quote Requests from Carts that belong to other Associates.
+  """
+  CREATE_QUOTE_REQUESTS_FROM_OTHERS_CARTS
+  """The Associate can decline their own Quotes."""
+  DECLINE_MY_QUOTES
+  """The Associate can decline Quotes that belong to other Associates."""
+  DECLINE_OTHERS_QUOTES
+  """The Associate can delete their own Carts."""
+  DELETE_MY_CARTS
+  """The Associate can delete their own payment methods."""
+  DELETE_MY_PAYMENT_METHODS
+  """The Associate can delete their own Shopping Lists."""
+  DELETE_MY_SHOPPING_LISTS
+  """The Associate can delete Carts that belong to other Associates."""
+  DELETE_OTHERS_CARTS
+  """
+  The Associate can delete payment methods that belong to other Associates.
+  """
+  DELETE_OTHERS_PAYMENT_METHODS
+  """
+  The Associate can delete Shopping Lists that belong to other Associates.
+  """
+  DELETE_OTHERS_SHOPPING_LISTS
+  """The Associate can reassign their own Quotes to a different Associate."""
+  REASSIGN_MY_QUOTES
+  """The Associate can reassign Quotes that belong to other Associates."""
+  REASSIGN_OTHERS_QUOTES
+  """The Associate can renegotiate their own Quotes."""
+  RENEGOTIATE_MY_QUOTES
+  """The Associate can renegotiate Quotes that belong to other Associates."""
+  RENEGOTIATE_OTHERS_QUOTES
+  """
+  The Associate can update Approval Flows, that is, approve or reject them.
+  """
+  UPDATE_APPROVAL_FLOWS
+  """The Associate can update Approval Rules."""
+  UPDATE_APPROVAL_RULES
+  """The Associate can manage other Associates of the Business Unit."""
+  UPDATE_ASSOCIATES
+  """
+  The Associate can edit the details of the Business Unit, such as its name, contact
+  email, and addresses.
+  """
+  UPDATE_BUSINESS_UNIT_DETAILS
+  """The Associate can update their own Carts."""
+  UPDATE_MY_CARTS
+  """The Associate can update their own Orders."""
+  UPDATE_MY_ORDERS
+  """The Associate can update their own payment methods."""
+  UPDATE_MY_PAYMENT_METHODS
+  """The Associate can update their own Quote Requests."""
+  UPDATE_MY_QUOTE_REQUESTS
+  """The Associate can update their own Shopping Lists."""
+  UPDATE_MY_SHOPPING_LISTS
+  """The Associate can update Carts that belong to other Associates."""
+  UPDATE_OTHERS_CARTS
+  """The Associate can update Orders that belong to other Associates."""
+  UPDATE_OTHERS_ORDERS
+  """
+  The Associate can update payment methods that belong to other Associates.
+  """
+  UPDATE_OTHERS_PAYMENT_METHODS
+  """
+  The Associate can update Quote Requests that belong to other Associates.
+  """
+  UPDATE_OTHERS_QUOTE_REQUESTS
+  """
+  The Associate can update Shopping Lists that belong to other Associates.
+  """
+  UPDATE_OTHERS_SHOPPING_LISTS
+  """
+  The Associate can assign a different parent unit to the Business Unit. The Associate
+  also needs the `ADD_CHILD_UNITS` permission in the new parent unit.
+  """
+  UPDATE_PARENT_UNIT
+  """The Associate can view their own Carts."""
+  VIEW_MY_CARTS
+  """The Associate can view their own Orders."""
+  VIEW_MY_ORDERS
+  """The Associate can view their own payment methods."""
+  VIEW_MY_PAYMENT_METHODS
+  """The Associate can view their own Quote Requests."""
+  VIEW_MY_QUOTE_REQUESTS
+  """The Associate can view their own Quotes."""
+  VIEW_MY_QUOTES
+  """The Associate can view their own Shopping Lists."""
+  VIEW_MY_SHOPPING_LISTS
+  """The Associate can view Carts that belong to other Associates."""
+  VIEW_OTHERS_CARTS
+  """The Associate can view Orders that belong to other Associates."""
+  VIEW_OTHERS_ORDERS
+  """
+  The Associate can view payment methods that belong to other Associates.
+  """
+  VIEW_OTHERS_PAYMENT_METHODS
+  """The Associate can view Quote Requests that belong to other Associates."""
+  VIEW_OTHERS_QUOTE_REQUESTS
+  """The Associate can view Quotes that belong to other Associates."""
+  VIEW_OTHERS_QUOTES
+  """The Associate can view Shopping Lists that belong to other Associates."""
+  VIEW_OTHERS_SHOPPING_LISTS
+  """
+  A permission that this API doesn't model. Reported so that the permissions of a role
+  are never under-counted. Not actionable.
+  """
+  UNKNOWN
+}
+
+"""
+Returned by `addAssociate`, `updateAssociateRoles`, and `removeAssociate`.
+"""
+type AssociateResult {
+  """
+  The Associate after the mutation. `null` if the mutation failed, and after a
+  successful `removeAssociate`.
+  """
+  associate: Associate
+  """Errors that prevented the mutation. Empty on success."""
+  userErrors: [UserError!]!
+}
+
+"""
+A named set of permissions that the merchant assigns to Associates. Inputs refer to it
+by `key`. `BusinessUnit.assignableRoles` lists the Associate Roles you can assign.
+"""
+type AssociateRole {
+  """User-defined unique identifier of the Associate Role."""
+  key: String!
+  """Name of the Associate Role. Empty if no name is set."""
+  name: String!
+  """
+  Permissions that the Associate Role grants, sorted and without duplicates. Empty if
+  it grants none.
+  """
+  permissions: [AssociatePermission!]!
+}
+
+"""
+Whether a role assignment is inherited by the child units of the Business Unit it is
+made on.
+"""
+enum AssociateRoleInheritanceMode {
+  """Child Business Units inherit the assignment."""
+  ENABLED
+  """Child Business Units don't inherit the assignment."""
+  DISABLED
+}
+
+"""
+Condition on one searchable attribute. Several entries in `ProductFilter.attributes`
+must all match.
+"""
+input AttributeFilterInput {
+  """
+  Identifier of the attribute, as reported in `Facet.code`, for example
+  `variants.attributes.finish`.
+  """
+  code: String!
+  """Matching mode for `values`. Defaults to `EXACT`."""
+  operator: AttributeFilterOperator
+  """
+  Values to match. A Product matches when it has any of them. An empty list applies no
+  filter. Ignored when `operator` is `EXISTS`.
+  """
+  values: [String!]
+}
+
+"""
+How the `values` of an `AttributeFilterInput` are matched against the attribute.
+"""
+enum AttributeFilterOperator {
+  """Matches a value exactly."""
+  EXACT
+  """
+  Matches a value with small typos. The tolerance increases with the length of the
+  value.
+  """
+  FUZZY
+  """Matches an attribute value that starts with the given text."""
+  PREFIX
+  """Matches using the `*` and `?` wildcards written in the value."""
+  WILDCARD
+  """Matches Products that have any value for the attribute."""
+  EXISTS
+}
+
+"""An attribute name paired with its display label."""
+type AttributeLabel {
+  """Name of the attribute, for example `iso45001`."""
+  name: String!
+  """
+  Display label of the attribute for the session's locale, for example `ISO 45001`.
+  Falls back to `name` when the attribute definition has no label for that locale.
+  """
+  label: String!
+}
+
+"""Numeric counterpart of `AttributeFilterInput`."""
+input AttributeRangeFilterInput {
+  """Identifier of the attribute, as reported in `Facet.code`."""
+  code: String!
+  """Lowest value to include."""
+  min: Float
+  """Highest value to include."""
+  max: Float
+}
+
+"""Business model that a session serves."""
+enum Audience {
+  """Business-to-consumer. The session has no Business Unit selected."""
+  B2C
+  """Business-to-business. The session has a Business Unit selected."""
+  B2B
+}
+
+"""
+How a Customer authenticates. Mirrors the
+[AuthenticationMode](https://docs.commercetools.com/api/projects/customers#ctp:api:type:AuthenticationMode)
+of the Customer.
+"""
+enum AuthMode {
+  """The Customer signs in with an email address and password."""
+  PASSWORD
+  """
+  The Customer is authenticated by an external system and has no password in the
+  platform.
+  """
+  EXTERNAL_AUTH
+}
+
+"""
+Stock of a Product Variant, from the
+[inventory](https://docs.commercetools.com/api/projects/inventory) of the session's
+supply channel where one is selected.
+"""
+type Availability {
+  """Whether the Product Variant is in stock."""
+  inStock: Boolean!
+  """
+  Number of items of the Product Variant that are in stock. `null` if no quantity is
+  tracked.
+  """
+  quantity: Int
+}
+
+enum BadgeEnum {
+  none
+  bestseller
+  new
+  limitededition
+}
+
+"""
+What the [Browser SDK](https://docs.commercetools.com/checkout/browser-sdk) needs to
+start Checkout for the Cart. All fields except `userErrors` are `null` if
+`userErrors` isn't empty.
+"""
+type BeginPaymentResult {
+  """
+  `id` of the Checkout Session, to pass as `sessionId` to the Browser SDK. It's
+  valid for one Cart and one payment. It isn't the session that you use to call this
+  API.
+  """
+  paymentTicket: String
+  """Key of the project, to pass as `projectKey` to the Browser SDK."""
+  projectKey: String
+  """
+  Region where the Checkout application is hosted, to pass as `region` to the
+  Browser SDK, for example `us-central1.gcp`.
+  """
+  region: String
+  """Selects the Browser SDK flow to mount for this Checkout Session."""
+  mode: CheckoutMode
+  """
+  Amount to pay, equal to `PriceTotals.grandTotal` when the Checkout Session was
+  created. Display it next to the payment form. Checkout charges the total of the Cart
+  at the time of authorization.
+  """
+  payable: Money
+  """
+  Date and time (UTC) when the Checkout Session expires. To pay after that, call
+  `beginPayment` again.
+  """
+  expiresAt: DateTime
+  """Reasons the payment couldn't start. Empty if it started."""
+  userErrors: [UserError!]!
+}
+
+"""Which side won a Best Deal."""
+enum BestDealWinner {
+  """
+  Product Discounts gave the lower total; the competing Cart Discounts were discarded.
+  """
+  PRODUCT_DISCOUNTS
+  """
+  Cart Discounts gave the lower or an equal total; Product Discounts were discarded on the Line Items those Cart Discounts reduced, and kept on the others.
+  """
+  CART_DISCOUNTS
+}
+
+enum BrandEnum {
+  malvacoffee
+  malvadrinks
+}
+
+enum BrewMethodsEnum {
+  espresso
+  filter
+  frenchpress
+  moka
+  coldbrew
+}
+
+enum BundleEnum {
+  machineonly
+  startercapsules
+}
+
+"""
+A Company or a Division that Associates buy for. For more information, see [Business
+Units](https://docs.commercetools.com/api/projects/business-units).
+"""
+type BusinessUnit implements Node {
+  """Unique identifier of the Business Unit."""
+  id: ID!
+  """User-defined unique and immutable identifier of the Business Unit."""
+  key: String!
+  """Name of the Business Unit."""
+  name: String!
+  """Type of the Business Unit."""
+  unitType: BusinessUnitType!
+  """Status of the Business Unit."""
+  status: BusinessUnitStatus!
+  """
+  Email address of the Business Unit, separate from the email addresses of its
+  Associates. `null` if none is set.
+  """
+  contactEmail: String
+  """
+  Parent unit of the Business Unit. `null` for a Company, or if the current
+  Associate can't view the parent unit.
+  """
+  parentUnit: BusinessUnit
+  """
+  Direct child units of the Business Unit. A unit with 2000 or more direct child units
+  returns an error.
+  """
+  childUnits: [BusinessUnit!]!
+  """
+  Currency codes (ISO 4217) that the Business Unit can transact in. This is the list
+  of currencies configured for the Project, the same list as
+  `Viewer.presentmentOptions.currencies`. A Store of the Business Unit might have no
+  prices in some of these currencies.
+  """
+  currencies: [String!]!
+  """
+  Stores the Business Unit is associated with, including Stores inherited from its
+  parent unit.
+  """
+  stores: [Store!]!
+  """Addresses of the Business Unit."""
+  addresses: [SavedAddress!]!
+  """
+  Associates of the Business Unit, including Associates inherited from its parent
+  unit.
+  """
+  associates: [Associate!]!
+  """
+  Associate Roles that can be assigned to Associates of this Business Unit: the roles
+  the merchant marks as assignable by a Buyer. `addAssociate` and
+  `updateAssociateRoles` accept these keys.
+  """
+  assignableRoles: [AssociateRole!]!
+  """
+  Platform identifier (UUID) of the Business Unit, for extensions that key an external
+  system such as an ERP account by it. The public `id` is an opaque global
+  identifier, so don't parse it.
+  
+  Not part of the public API: an extension can read it with `@requires`, and it is
+  removed from the composed API schema.
+  """
+  _ctId: ID! @inaccessible
+}
+
+"""
+Returned by `createBusinessUnit`, `changeBusinessUnitName`, and
+`setBusinessUnitContactEmail`.
+"""
+type BusinessUnitResult {
+  """The Business Unit after the mutation. `null` if the mutation failed."""
+  businessUnit: BusinessUnit
+  """Errors that prevented the mutation. Empty on success."""
+  userErrors: [UserError!]!
+}
+
+"""
+Status of a Business Unit, which controls whether it can be used in Carts, Orders,
+Quote Requests, and Quotes.
+"""
+enum BusinessUnitStatus {
+  """The Business Unit can be used."""
+  ACTIVE
+  """The Business Unit can't be used. It isn't deleted."""
+  INACTIVE
+}
+
+"""Position of a Business Unit in the hierarchy."""
+enum BusinessUnitType {
+  """Top-level Business Unit, without a parent unit."""
+  COMPANY
+  """
+  Business Unit with a parent unit, which is a Company or another Division.
+  """
+  DIVISION
+}
+
+"""
+The current session's shopping cart, from which checkout places an Order. See
+[Carts](https://docs.commercetools.com/api/projects/carts).
+
+A session has one active Cart for each combination of Store, currency, and country.
+The Cart is created when a mutation first changes it.
+"""
+type Cart implements Node {
+  """Unique identifier of the Cart."""
+  id: ID!
+  """Number of lines in the Cart, including custom lines."""
+  lineCount: Int!
+  """
+  Lines of the Cart, with Product Variant lines first and custom lines last.
+  """
+  lines: [CartLine!]!
+  """
+  Every applied discount, one entry per discount and target, its `amount` summed over the cart: Product Discounts included, except where a Best Deal rejected them. The non-SHIPPING entries add up to `totals.discountTotal`.
+  """
+  discounts: [AppliedDiscount!]!
+  """How Product Discounts and Cart Discounts were combined on this cart."""
+  discountCombination: DiscountCombination!
+  """The Discount Codes entered on this cart, and where each stands."""
+  discountCodes: [DiscountCodeInfo!]!
+  """Totals of the Cart, to display in the cart summary."""
+  totals: PriceTotals!
+  """
+  Shipping address of the Cart. Determines which Shipping Methods are available.
+  `null` if not set.
+  """
+  shippingAddress: Address
+  """Address the Order is billed to. `null` if not set."""
+  billingAddress: Address
+  """
+  Email address of the Customer that the Cart belongs to. A guest sets it with
+  `setCustomerEmail`. `null` if not set.
+  """
+  customerEmail: String
+  """
+  Purchase order number that the buyer assigns to the Cart. Set it with
+  `setPurchaseOrderNumber`. `null` if not set.
+  """
+  purchaseOrderNumber: String
+  """Origin of the Cart."""
+  origin: CartOrigin!
+  """Shipping Method selected for the Cart. `null` if none is selected."""
+  shippingMethod: ShippingMethod
+  """
+  What the current viewer can do with this Cart, to show or hide the matching
+  controls. Empty if the Cart has no lines.
+  """
+  availableActions: [CartAction!]!
+  """
+  Platform `id` of the Cart, for an extension that keys an external system by it,
+  such as an order management system. Read this field instead of parsing `id`.
+  
+  Not part of the public API: available to `@requires`, and removed from the
+  composed schema.
+  """
+  _ctId: ID! @inaccessible
+  custom: OrderCustom
+}
+
+"""
+Action the current viewer can take on a Cart. A value is listed only when the mutation
+behind it would run for this Cart, so the list can be narrower than what
+`Viewer.permissions` allows.
+"""
+enum CartAction {
+  """
+  Place an Order with `checkout` or `placeOrder`. Offered to a signed-in Customer.
+  In a Business Unit, the Associate also needs permission to create Orders from the
+  Cart.
+  """
+  CHECKOUT
+  """
+  Place an Order as a guest with `guestCheckout`. Offered to an anonymous session
+  outside a Business Unit.
+  """
+  GUEST_CHECKOUT
+  """
+  Remove all lines with `clearCart`. In a Business Unit, the Associate needs
+  permission to update the Cart.
+  """
+  CLEAR
+  """
+  Request a Quote for the Cart with `requestQuote`. Offered in a Business Unit when
+  the Cart has a shipping address and the Associate has permission to create Quote
+  Requests.
+  """
+  REQUEST_QUOTE
+}
+
+"""
+A line in a Cart: a Product Variant and its quantity, or a custom line that the
+merchant added.
+"""
+type CartLine implements Node {
+  """
+  Unique identifier of the Cart line. Pass it as `lineId` to change or remove the
+  line.
+  """
+  id: ID!
+  """SKU of the Product Variant. Empty string for a custom line."""
+  sku: String!
+  """
+  Name of the Product in the session's locale. For a custom line, the name of the
+  line.
+  """
+  productName: String!
+  """
+  Slug of the Product in the session's locale. Empty string for a custom line.
+  """
+  slug: String!
+  """
+  First image of the Product Variant. `null` if the Product Variant has no image,
+  and for a custom line.
+  """
+  image: Image
+  """Quantity of the Product Variant in the Cart."""
+  quantity: Int!
+  """
+  What this Line Item costs after every discount: its Portions' `unitPrice` times `quantity`, added up. On an `EXTERNAL_TOTAL` Line Item it is the total the external system set instead.
+  """
+  lineTotal: Money!
+  """
+  Stock available for this line. A custom line, or a Product Variant without tracked
+  inventory, has `inStock` set to `true` and `quantity` set to `null`.
+  """
+  availability: Availability!
+  """
+  Whether this is a free Gift Line Item the platform added. Its Portion lists the gift discount that added it, which carries the same `id` as that discount's entry in `discounts`.
+  """
+  isGift: Boolean!
+  """One unit before any discount: the Line Item's price."""
+  unitPriceBeforeDiscount: Money!
+  """How the Line Item's price was set; null for a custom line."""
+  priceMode: LinePriceMode
+  """
+  One unit after its Product Discount, and the Product Discount behind it; null when none applies. Kept where a Best Deal rejected it: see `rejectedByBestDeal`.
+  """
+  discountedPrice: LineItemDiscountedPrice
+  """
+  The Line Item's units grouped by what one unit costs after Cart Discounts; at least one.
+  """
+  portions: [Portion!]!
+  custom: LineItemCustom
+}
+
+"""
+Returned by every Cart mutation. Check `userErrors` first: if it is empty, the
+mutation succeeded.
+"""
+type CartMutationResult {
+  """
+  The Cart after the mutation. `null` if the mutation was refused before it reached
+  a Cart, or if the session has no Cart yet and the call changed nothing, for example
+  `clearCart` on a session without a Cart.
+  """
+  cart: Cart
+  """Reasons the mutation was refused. Empty if it succeeded."""
+  userErrors: [UserError!]!
+}
+
+"""Who created the Cart."""
+enum CartOrigin {
+  """Cart was created by the Customer."""
+  CUSTOMER
+  """
+  Cart was created by a merchant on behalf of the Customer, for example by a sales
+  representative.
+  """
+  MERCHANT
+  """Cart was created for a Quote during the quoting process."""
+  QUOTE
+  """Cart was created as part of a Recurring Order."""
+  RECURRING_ORDER
+}
+
+"""
+A [Category](https://docs.commercetools.com/api/projects/categories) of the Project,
+used to group Products for navigation. Pass its `slug` as
+`ProductFilter.categorySlug` to list its Products. Text fields are resolved for the
+session's locale.
+"""
+type Category implements Node {
+  """Unique identifier of the Category."""
+  id: ID!
+  """
+  Platform identifier (UUID) of the Category, for extensions that correlate a search
+  index or merchandising system by it. The public `id` is an opaque global
+  identifier, so don't parse it.
+  
+  Not part of the public API: an extension can read it with `@requires`, and it is
+  removed from the composed API schema.
+  """
+  _ctId: ID! @inaccessible
+  """User-defined unique identifier of the Category."""
+  key: String
+  """
+  User-defined identifier used as a deep-link URL to the Category, for the session's
+  locale. An empty string when the Category has no slug for that locale.
+  """
+  slug: String!
+  """
+  Name of the Category, for the session's locale. An empty string when the Category
+  has no name for that locale.
+  """
+  name: String!
+  """
+  Description of the Category, for the session's locale. Null when the Category has no
+  description for that locale.
+  """
+  description: String
+  """
+  Decimal value between 0 and 1 for ordering Categories within the same level of the
+  category tree.
+  """
+  orderHint: String!
+  """Parent Category of this Category. Null for a root Category."""
+  parent: Category
+  """
+  Child Categories of this Category, sorted by `orderHint` in ascending order. Empty
+  for a Category without children.
+  """
+  children: [Category!]!
+  custom: CategoryCustom
+}
+
+union CategoryCustom = InstoreCategoryTypeCustom
+
+"""Email change for the signed-in Customer."""
+input ChangeEmailInput {
+  """
+  Email address to set. An address already used by another Customer returns
+  `EMAIL_ALREADY_IN_USE`.
+  """
+  newEmail: String!
+}
+
+"""New quantity for a line on a Shopping List."""
+input ChangeShoppingListLineQuantityInput {
+  """`id` of the Shopping List that contains the line."""
+  listId: ID!
+  """
+  `id` of the ShoppingListLine to update. A line that isn't on the Shopping List is
+  refused with `LINE_NOT_FOUND`.
+  """
+  lineId: ID!
+  """
+  New quantity of the line. If `0`, the line is removed from the Shopping List. A
+  quantity the platform doesn't accept is refused with `INVALID_QUANTITY`.
+  """
+  quantity: Int!
+}
+
+union ChannelCustom = McfStoreCustom
+
+"""Checkout choices of a signed-in Customer. Every field is optional."""
+input CheckoutInput {
+  """
+  `id` of a SavedAddress in the Customer's address book to ship to. If omitted or
+  blank, the shipping address already on the Cart is used.
+  
+  An `id` that matches no saved address is refused with `ADDRESS_NOT_FOUND`. So is
+  an omitted `id` when the Cart has no shipping address.
+  """
+  shippingAddressId: ID
+  """
+  `id` of a SavedAddress in the Customer's address book to bill to. If omitted, the
+  billing address on the Cart is used, or the shipping address when the Cart has none.
+  An `id` that matches no saved address is refused with `ADDRESS_NOT_FOUND`.
+  """
+  billingAddressId: ID
+  """
+  `id` of the Shipping Method to set on the Cart before the Order is created. If
+  omitted or blank, the Cart keeps the Shipping Method it already has, if any. An
+  unusable Shipping Method is refused with `UNKNOWN_SHIPPING_METHOD`.
+  """
+  shippingMethodId: ID
+  """
+  Payment for the Order. If omitted, the Order is placed with no payment attached.
+  """
+  payment: PaymentInput
+}
+
+"""
+[Checkout
+mode](https://docs.commercetools.com/checkout/overview#complete-checkout-and-payment-only-modes)
+of a Checkout Session, selected by the session's country and Store.
+"""
+enum CheckoutMode {
+  """
+  Checkout collects the address, the Shipping Method, and the payment. Mount it with
+  the Browser SDK `checkoutFlow`.
+  """
+  COMPLETE
+  """
+  Checkout collects only the payment, for a Cart that already has an address and a
+  Shipping Method. Mount it with the Browser SDK `paymentFlow`.
+  """
+  PAYMENT_ONLY
+}
+
+"""Result of `checkout`."""
+type CheckoutResult {
+  """The placed Order. `null` when `userErrors` is not empty."""
+  order: Order
+  """Refusals of the checkout. Empty when the Order was placed."""
+  userErrors: [UserError!]!
+}
+
+enum ColourEnum {
+  black
+  white
+  red
+  silver
+  cream
+}
+
+"""Definition of a new Approval Rule."""
+input CreateApprovalRuleInput {
+  """
+  User-defined identifier of the Approval Rule, unique within the Business Unit.
+  """
+  key: String
+  """Name of the Approval Rule."""
+  name: String!
+  """Description of the Approval Rule."""
+  description: String
+  """
+  Conditions that an Order must meet for the Approval Rule to apply. An empty list is
+  refused with `CONDITION_NOT_SUPPORTED`.
+  """
+  conditions: [ApprovalConditionInput!]!
+  """
+  Approver hierarchy, in tier order. An empty list is refused with
+  `APPROVER_TIERS_REQUIRED`.
+  """
+  approverTiers: [ApproverTierInput!]!
+  """
+  Keys of the Associate Roles whose Orders the Approval Rule applies to. An unknown
+  key is refused with `ASSOCIATE_ROLE_NOT_FOUND`.
+  """
+  requesterRoleKeys: [String!]!
+  """Initial state of the Approval Rule. Default: `ACTIVE`."""
+  approvalRuleState: ApprovalRuleState
+}
+
+"""
+New Division under an existing Business Unit.
+
+The new Division takes its Stores from the parent unit. The current Associate is added
+to it with the roles they hold in the parent unit, so the Division never grants them
+more than the parent does. The Division is created with the status `ACTIVE`.
+"""
+input CreateBusinessUnitInput {
+  """
+  User-defined unique identifier of the new Business Unit. A key that is already in
+  use is refused with `BUSINESS_UNIT_KEY_EXISTS`.
+  """
+  key: String!
+  """Name of the new Business Unit."""
+  name: String!
+  """
+  Key of the parent Company or Division. The current Associate must hold a role there
+  that has the `ADD_CHILD_UNITS` permission. Otherwise, the mutation is refused with
+  `NOT_AUTHORIZED`.
+  """
+  parentUnitKey: String!
+  """Email address of the new Business Unit."""
+  contactEmail: String
+}
+
+"""Initial values of a new Shopping List."""
+input CreateShoppingListInput {
+  """
+  Name of the Shopping List, stored in the language of the session. A blank name is
+  refused with `INVALID_INPUT`.
+  """
+  name: String!
+  """
+  Description of the Shopping List, stored in the language of the session. If omitted
+  or empty, the Shopping List has no description.
+  """
+  description: String
+}
+
+"""Account of the signed-in Customer."""
+type Customer implements Node {
+  """Unique identifier of the Customer."""
+  id: ID!
+  """User-defined unique identifier of the Customer."""
+  key: String
+  """Given name (first name) of the Customer. Empty string if not set."""
+  firstName: String!
+  """Family name (last name) of the Customer. Empty string if not set."""
+  lastName: String!
+  """Middle name of the Customer."""
+  middleName: String
+  """Title of the Customer, for example `Dr.`."""
+  title: String
+  """Salutation of the Customer, for example `Mr.` or `Ms.`."""
+  salutation: String
+  """Date of birth of the Customer, for example `1990-05-15`."""
+  dateOfBirth: Date
+  """Company name of the Customer."""
+  companyName: String
+  """Individual VAT ID of the Customer."""
+  vatId: String
+  """
+  Customer number assigned in the platform. No mutation in this API sets it.
+  """
+  customerNumber: String
+  """Email address of the Customer."""
+  email: String!
+  """
+  Whether the email address of the Customer is
+  [verified](https://docs.commercetools.com/api/projects/customers#email-verification-of-customer).
+  """
+  emailVerified: Boolean!
+  """Authentication mode of the Customer."""
+  authMode: AuthMode!
+  """Addresses in the address book of the Customer."""
+  addresses: [SavedAddress!]!
+  """
+  Platform identifier (UUID) of the Customer, for extensions that key an external
+  system such as a CRM by it. The public `id` is an opaque global identifier, so
+  don't parse it.
+  
+  Not part of the public API: an extension can read it with `@requires`, and it is
+  removed from the composed API schema.
+  """
+  _ctId: ID! @inaccessible
+  custom: CustomerCustom
+}
+
+union CustomerCustom = InstoreCustomerTypeCustom
+
+"""Result of a mutation on the signed-in Customer."""
+type CustomerResult {
+  """The Customer after the mutation. Null if the mutation failed."""
+  customer: Customer
+  """Reasons the mutation was refused. Empty on success."""
+  userErrors: [UserError!]!
+}
+
+"""
+Calendar date without a time, in ISO 8601 format `YYYY-MM-DD`, for example
+`1990-04-12`.
+"""
+scalar Date
+
+"""
+Date and time in ISO 8601 format, in UTC, for example `2026-09-14T10:15:00.000Z`.
+"""
+scalar DateTime
+
+"""Result of the `deleteShoppingList` mutation."""
+type DeleteShoppingListResult {
+  """
+  `id` of the deleted Shopping List, as passed to the mutation. Use it to remove the
+  Shopping List from a cached collection. `null` if the mutation was refused.
+  """
+  deletedId: ID
+  """Reasons the mutation was refused. Empty if it succeeded."""
+  userErrors: [UserError!]!
+}
+
+"""
+Shipment recorded by the merchant for an Order. An Order shipped in parts has several,
+and each can be split into parcels.
+"""
+type Delivery {
+  """Date and time (UTC) the Delivery was created."""
+  recordedAt: DateTime!
+  """
+  Units the Delivery covers. When the Delivery lists no items of its own, these are
+  the contents of its parcels.
+  """
+  lines: [DeliveryLine!]!
+  """Parcels of the Delivery. Empty when none are recorded."""
+  parcels: [Parcel!]!
+  """
+  Address the parcels are delivered to. `null` when the Delivery uses the Order's
+  `shippingAddress`.
+  """
+  address: Address
+}
+
+"""Quantity of one Order line."""
+type DeliveryLine {
+  """SKU of the Product Variant. Empty for a line that has no Product."""
+  sku: String!
+  """
+  Name of the Product in the session's locale. Empty for a line that has no Product.
+  """
+  productName: String!
+  """Number of units delivered."""
+  quantity: Int!
+}
+
+"""Where a Discount Code entered on a cart or order stands."""
+type DiscountCodeInfo {
+  """
+  The code as entered, in canonical form; the value `removeDiscountCode` takes.
+  """
+  code: String!
+  """
+  The Discount Code's own name in the session's locale; null where it has none for that locale.
+  """
+  name: String
+  state: DiscountCodeState!
+}
+
+"""
+Where a Discount Code stands on a cart or order. Mirrors the platform's DiscountCodeState.
+"""
+enum DiscountCodeState {
+  """The code, or every Cart Discount it unlocks, is not active."""
+  NOT_ACTIVE
+  """The code's Cart Discounts are outside their validity dates."""
+  NOT_VALID
+  """
+  The code is usable, but neither it nor its Cart Discounts match this cart.
+  """
+  DOES_NOT_MATCH_CART
+  """
+  The code matches this cart. Under a Best Deal won by Product Discounts its Cart Discounts are still discarded: check `discountCombination.bestDealWinner`.
+  """
+  MATCHES_CART
+  """The code's overall or per-customer application limit is reached."""
+  MAX_APPLICATION_REACHED
+  """
+  A Cart Discount applied earlier stopped further discounts, so this code's Cart Discounts did not apply.
+  """
+  APPLICATION_STOPPED_BY_PREVIOUS_DISCOUNT
+  """Another Cart Discount in the same Discount Group gave a better deal."""
+  APPLICATION_STOPPED_BY_GROUP_BEST_DEAL
+}
+
+"""How the discounts on this cart or order were combined."""
+type DiscountCombination {
+  mode: DiscountCombinationMode!
+  """Which side won the Best Deal; null under `STACKING`."""
+  bestDealWinner: BestDealWinner
+}
+
+"""
+How Product Discounts and Cart Discounts combine, as the project is configured.
+"""
+enum DiscountCombinationMode {
+  """
+  Both apply: Cart Discounts reduce prices that Product Discounts have already reduced.
+  """
+  STACKING
+  """
+  Product Discounts and Cart Discounts compete, decided once for the whole cart, and the side giving the lower total applies. Gift, shipping and total-price discounts, and Direct Discounts that opt out of the comparison, apply whichever side wins.
+  """
+  BEST_DEAL
+}
+
+"""
+A Discount Group: Cart Discounts of which only the one giving the lowest cart total applies.
+"""
+type DiscountGroup {
+  key: String!
+  """
+  The Discount Group's name in the session's locale; null where it has none for that locale.
+  """
+  name: String
+}
+
+"""Where a discount comes from."""
+enum DiscountSource {
+  """
+  A Product Discount: a reduction of the product's price, present before the product reaches the cart.
+  """
+  PRODUCT_DISCOUNT
+  """A Cart Discount that applies on its own to every cart it matches."""
+  CART_DISCOUNT
+  """
+  A Cart Discount unlocked by a Discount Code the shopper entered; the only kind `removeDiscountCode` removes. One code can unlock several Cart Discounts, each its own entry.
+  """
+  DISCOUNT_CODE
+  """
+  A Direct Discount: a Cart Discount a seller set on this one cart, order or quote.
+  """
+  DIRECT_DISCOUNT
+}
+
+"""
+What a Cart Discount applies to, named as the Merchant Center's "Apply this effect to" names it.
+"""
+enum DiscountTarget {
+  """Whole Line Items matching the discount's conditions."""
+  LINE_ITEMS
+  """
+  Units discounted once a set of trigger units is in the cart: buy these, get those. A pattern target with a trigger pattern in the platform.
+  """
+  BUY_AND_GET
+  """
+  A set of units discounted together, only when the whole set is in the cart. A pattern target without a trigger pattern in the platform.
+  """
+  DISCOUNT_BUNDLE
+  """
+  Some units of matching Line Items, once enough of them are in the cart.
+  """
+  MULTIBUY_LINE_ITEMS
+  """The cart's total price; applied after every other Cart Discount."""
+  TOTAL_PRICE
+  """The delivery charge, across every shipment; not in `discountTotal`."""
+  SHIPPING
+}
+
+"""
+How a discount reduces: the discount's value type. A display hint; the money is in `amount`.
+"""
+enum DiscountValueType {
+  """Percentage off the price."""
+  RELATIVE
+  """Fixed amount off the price."""
+  ABSOLUTE
+  """Fixed final price."""
+  FIXED
+  """Free Product added to the Cart; Cart Discounts only."""
+  GIFT_LINE_ITEM
+  """A reduced price set by an external system; Product Discounts only."""
+  EXTERNAL
+}
+
+"""A product's price after its Product Discount, per unit."""
+type DiscountedPrice {
+  value: Money!
+  productDiscount: ProductDiscountInfo!
+}
+
+"""
+Filter-rail entry for one attribute of the search result.
+
+Facets are built from the Project's searchable attributes of type enum, localized
+enum, boolean, and number. To filter on a value that `options` doesn't list, pass it
+in `ProductFilter.attributes`.
+"""
+type Facet {
+  """
+  Identifier of the attribute, in the format `variants.attributes.<attributeName>`.
+  Pass it unchanged as `code` in `AttributeFilterInput` or
+  `AttributeRangeFilterInput`.
+  """
+  code: String!
+  """
+  Display label of the attribute for the session's locale. Falls back to the attribute
+  name.
+  """
+  label: String!
+  """
+  Up to 10 most common values, highest `count` first. Values with the same count are
+  sorted by `value`, so the order is stable between requests.
+  """
+  options: [FacetOption!]!
+}
+
+"""A selectable entry of a `Facet`."""
+type FacetOption {
+  """
+  Attribute value as stored, such as an enum key. Pass it in
+  `AttributeFilterInput.values` to filter on it.
+  """
+  value: String!
+  """
+  Display label of the value for the session's locale. Falls back to `value` when
+  the value has no label.
+  """
+  label: String!
+  """Number of Products in the result that have this value."""
+  count: Int!
+}
+
+enum FulfilmentEnum {
+  collect
+  delivery
+  subscribe
+}
+
+enum GrindEnum {
+  wholebean
+  espresso
+  filter
+  frenchpress
+  moka
+}
+
+"""Everything needed to place an Order without a Customer account."""
+input GuestCheckoutInput {
+  """Email address the Order is placed under."""
+  email: String!
+  """Address to ship the Order to."""
+  shippingAddress: AddressInput!
+  """
+  Address to bill the Order to. If omitted, the shipping address is used.
+  """
+  billingAddress: AddressInput
+  """
+  `id` of the Shipping Method to set on the Cart before the Order is created. If
+  omitted or blank, the Cart keeps the Shipping Method it already has, if any.
+  """
+  shippingMethodId: ID
+  """
+  Payment for the Order. If omitted, the Order is placed with no payment attached.
+  """
+  payment: PaymentInput
+}
+
+"""Result of `guestCheckout`."""
+type GuestCheckoutResult {
+  """The placed Order. `null` when `userErrors` is not empty."""
+  order: Order
+  """Refusals of the checkout. Empty when the Order was placed."""
+  userErrors: [UserError!]!
+}
+
+"""Image of a Product, Product Variant, or Cart line."""
+type Image @shareable {
+  """URL of the image in its original size."""
+  url: Url!
+  """
+  Alternative text for the image, taken from the image label. `null` if the image
+  has no label.
+  """
+  alt: String
+  """
+  Width of the original image in pixels. `null` if the dimensions are unknown.
+  """
+  width: Int
+  """
+  Height of the original image in pixels. `null` if the dimensions are unknown.
+  """
+  height: Int
+}
+
+type InstoreCategoryTypeCustom {
+  customTypeKey: String!
+  customTypeId: ID!
+  headerTitle: String
+  headerImage: String
+  instoreVisibility: InstoreVisibilityEnum
+}
+
+input InstoreCategoryTypeCustomInput {
+  headerTitle: String
+  headerImage: String
+  instoreVisibility: InstoreVisibilityEnum
+}
+
+type InstoreCustomerTypeCustom {
+  customTypeKey: String!
+  customTypeId: ID!
+  paymentAccountIds: [String!]
+  notes: [String!]
+  loyaltyPoints: Float
+}
+
+input InstoreCustomerTypeCustomInput {
+  paymentAccountIds: [String!]
+  notes: [String!]
+  loyaltyPoints: Float
+}
+
+type InstoreLineitemTypeCustom {
+  customTypeKey: String!
+  customTypeId: ID!
+  instoreTransactionId: String
+  purchaseLineItemId: String
+  returnComment: String
+  purchaseOrderId: String
+  isGift: Boolean
+  fulfillment: String
+  salespersonId: String
+  priceOverrideCode: String
+  priceOverrideApprover: String
+  priceOverrideType: String
+  priceOverrideValue: String
+  modifiers: [Product!]
+}
+
+input InstoreLineitemTypeCustomInput {
+  instoreTransactionId: String
+  purchaseLineItemId: String
+  returnComment: String
+  purchaseOrderId: String
+  isGift: Boolean
+  fulfillment: String
+  salespersonId: String
+  priceOverrideCode: String
+  priceOverrideApprover: String
+  priceOverrideType: String
+  priceOverrideValue: String
+}
+
+type InstoreOrderTypeCustom {
+  customTypeKey: String!
+  customTypeId: ID!
+  orderType: OrderTypeEnum
+  workstationId: String
+  locationId: String
+  employeeSaleId: String
+  employeeSaleRole: String
+  isEmailTriggered: Boolean
+  associateUserId: String
+  sequenceNumber: String
+  isSuspended: Boolean
+  suspendedReference: String
+  suspendedReason: String
+  receiptEmail: String
+  receiptPhone: String
+  inStoreUserId: String
+  receiptTypes: [String!]
+}
+
+input InstoreOrderTypeCustomInput {
+  orderType: OrderTypeEnum
+  workstationId: String
+  locationId: String
+  employeeSaleId: String
+  employeeSaleRole: String
+  isEmailTriggered: Boolean
+  associateUserId: String
+  sequenceNumber: String
+  isSuspended: Boolean
+  suspendedReference: String
+  suspendedReason: String
+  receiptEmail: String
+  receiptPhone: String
+  inStoreUserId: String
+  receiptTypes: [String!]
+}
+
+type InstorePaymentTypeCustom {
+  customTypeKey: String!
+  customTypeId: ID!
+  instoreTransactionId: String
+  issuerId: String
+  paymentProcessor: String
+  walletBarcode: String
+  creditAccountName: String
+  creditAccountNumber: String
+  customerNumber: String
+  purchaseOrderNumber: String
+  externalId: String
+}
+
+input InstorePaymentTypeCustomInput {
+  instoreTransactionId: String
+  issuerId: String
+  paymentProcessor: String
+  walletBarcode: String
+  creditAccountName: String
+  creditAccountNumber: String
+  customerNumber: String
+  purchaseOrderNumber: String
+  externalId: String
+}
+
+type InstoreTransactionTypeCustom {
+  customTypeKey: String!
+  customTypeId: ID!
+  instoreTransactionId: String
+  cashRounding: Boolean
+  externalId: String
+}
+
+input InstoreTransactionTypeCustomInput {
+  instoreTransactionId: String
+  cashRounding: Boolean
+  externalId: String
+}
+
+enum InstoreVisibilityEnum {
+  onlyInStore
+  onlyOnline
+  both
+  none
+  onlyBarista
+  allThree
+}
+
+"""
+One [Standalone Price](https://docs.commercetools.com/api/projects/standalone-prices)
+of a Product Variant, as returned to extensions by `Product._standalonePrices`.
+The raw price, with no [price
+selection](https://docs.commercetools.com/api/pricing-and-discounts-overview#fallback-logic)
+applied: the list includes inactive prices and prices for every scope, and choosing
+among them follows the platform's fallback order, not an exact match on the scope
+fields.
+"""
+type InternalStandalonePrice @inaccessible {
+  """SKU of the Product Variant the price applies to."""
+  sku: String!
+  """
+  Identifier of the distribution Channel the price is scoped to. Null when the price
+  has no Channel.
+  """
+  channelId: ID
+  """
+  Key of the distribution Channel the price is scoped to. Null when the price has no
+  Channel or the Channel has no key.
+  """
+  channelKey: String
+  """
+  Amount in the smallest indivisible unit of the currency, such as cents for EUR and
+  USD, or pence for GBP.
+  """
+  centAmount: Int!
+  """Currency code compliant to ISO 4217."""
+  currencyCode: String!
+  """
+  Whether the price is active. An inactive price is not considered during price
+  selection.
+  """
+  active: Boolean!
+  """
+  Country the price is scoped to, as an ISO 3166-1 alpha-2 code. Null when the price
+  applies in every country.
+  """
+  country: String
+  """
+  Identifier of the Customer Group the price is scoped to. Null when the price applies
+  to every Customer Group.
+  """
+  customerGroupId: ID
+  """
+  Key of the Customer Group the price is scoped to. Null when the price has no Customer
+  Group or the Customer Group has no key.
+  """
+  customerGroupKey: String
+  """
+  Date and time from which the price is valid. Null when it has no start.
+  """
+  validFrom: DateTime
+  """Date and time until which the price is valid. Null when it has no end."""
+  validUntil: DateTime
+  """
+  Amount after the Product Discount that applies to the price, in the smallest
+  indivisible unit of the currency. Null when no Product Discount applies.
+  """
+  discountedCentAmount: Int
+  """
+  Identifier of the Product Discount behind `discountedCentAmount`. Null when none applies.
+  """
+  productDiscountId: ID
+  """
+  Volume prices of the price, as on the platform. Empty when the price has no tiers.
+  The platform ignores them when `discountedCentAmount` is set.
+  """
+  tiers: [InternalStandalonePriceTier!]!
+}
+
+"""
+A volume price of an `InternalStandalonePrice`. From `minimumQuantity` units, each
+unit costs `centAmount` in the price's currency.
+"""
+type InternalStandalonePriceTier @inaccessible {
+  """Minimum quantity this price tier is valid for."""
+  minimumQuantity: Int!
+  """
+  Price of one unit at this quantity, in the smallest indivisible unit of the currency.
+  """
+  centAmount: Int!
+}
+
+"""
+Any JSON value, for example `{"material": "oak"}`. Used only by the `raw` field of
+the generated `<ProductType>Attributes` types, whose shape follows the project's own
+[Product Type](https://docs.commercetools.com/api/projects/productTypes).
+"""
+scalar JSON
+
+enum KindEnum {
+  cup
+  mug
+  frother
+  descaler
+  storage
+  grinderaccessory
+}
+
+union LineItemCustom = InstoreLineitemTypeCustom | McfLineFulfilmentCustom
+
+"""
+A Line Item's price after its Product Discount, per unit, and whether a Best Deal rejected it.
+"""
+type LineItemDiscountedPrice {
+  value: Money!
+  productDiscount: ProductDiscountInfo!
+  """
+  Whether a Best Deal won by Cart Discounts dropped this Product Discount from the Line Item. If so, its Portions start from `unitPriceBeforeDiscount`, and the Product Discount counts in neither `discounts` nor `discountTotal`.
+  """
+  rejectedByBestDeal: Boolean!
+}
+
+"""
+How the price of a Line Item was set. See [Line Item price mode](https://docs.commercetools.com/api/projects/carts#ctp:api:type:LineItemPriceMode).
+"""
+enum LinePriceMode {
+  """Selected by the platform from the Product Variant's prices."""
+  PLATFORM
+  """
+  One unit's price was set by an external system. Cart Discounts apply to the Line Item; Product Discounts do not.
+  """
+  EXTERNAL_PRICE
+  """
+  The Line Item's unit price and total were set by an external system. No discount reduces it, though its total counts toward the price a `TOTAL_PRICE` discount reduces.
+  """
+  EXTERNAL_TOTAL
+}
+
+type MalvaCoffeeMachineBundleAttributes implements ProductAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  bundleRef: ID
+}
+
+type McfAccessoryAttributes implements ProductAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  kind: KindEnum
+  material: String
+  capacityMl: Float
+  badge: BadgeEnum
+  subscribable: Boolean
+}
+
+type McfAccessoryVariantAttributes implements ProductVariantAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  colour: ColourEnum
+  posId: String
+  receiptText: String
+}
+
+type McfCoffeeAttributes implements ProductAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  roast: RoastEnum
+  origin: String
+  process: String
+  flavourNotes: [String!]
+  intensity: Float
+  decaf: Boolean
+  organic: Boolean
+  fairtrade: Boolean
+  brewMethods: [BrewMethodsEnum!]
+  badge: BadgeEnum
+  subscribable: Boolean
+}
+
+type McfCoffeeVariantAttributes implements ProductVariantAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  sizeGrams: Float
+  grind: GrindEnum
+  posId: String
+  receiptText: String
+}
+
+type McfDrinkVariantAttributes implements ProductVariantAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  drinkSize: String
+  posId: String
+  receiptText: String
+}
+
+type McfGiftSetAttributes implements ProductAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  contents: String
+  occasion: OccasionEnum
+  badge: BadgeEnum
+  subscribable: Boolean
+}
+
+type McfGiftSetVariantAttributes implements ProductVariantAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  posId: String
+  receiptText: String
+}
+
+type McfLineFulfilmentCustom {
+  customTypeKey: String!
+  customTypeId: ID!
+  fulfilment: FulfilmentEnum
+  brand: BrandEnum
+  parentId: String
+  bundlePreset: String
+  bundleMachineSku: String
+  bundleDiscount: Float
+  bundleWasCents: Float
+}
+
+input McfLineFulfilmentCustomInput {
+  fulfilment: FulfilmentEnum
+  brand: BrandEnum
+  parentId: String
+  bundlePreset: String
+  bundleMachineSku: String
+  bundleDiscount: Float
+  bundleWasCents: Float
+}
+
+type McfMachineAttributes implements ProductAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  system: SystemEnum
+  pressureBar: Float
+  waterTankMl: Float
+  powerWatts: Float
+  features: [String!]
+  warrantyMonths: Float
+  badge: BadgeEnum
+  subscribable: Boolean
+  extendedWarrantyOffer: Product
+}
+
+type McfMachineVariantAttributes implements ProductVariantAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  colour: ColourEnum
+  bundle: BundleEnum
+  posId: String
+  receiptText: String
+}
+
+type McfPodsAttributes implements ProductAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  system: SystemEnum2
+  intensity: Float
+  roast: RoastEnum
+  flavourNotes: [String!]
+  origin: String
+  decaf: Boolean
+  organic: Boolean
+  fairtrade: Boolean
+  badge: BadgeEnum
+  subscribable: Boolean
+}
+
+type McfPodsVariantAttributes implements ProductVariantAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  capsulesPerPack: Float
+  posId: String
+  receiptText: String
+}
+
+type McfReadyDrinkVariantAttributes implements ProductVariantAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+  size: SizeEnum
+  posId: String
+  receiptText: String
+  modifiers: ID
+}
+
+type McfReviewCustom {
+  customTypeKey: String!
+  customTypeId: ID!
+  verifiedPurchase: Boolean
+  orderNumber: String
+}
+
+input McfReviewCustomInput {
+  verifiedPurchase: Boolean
+  orderNumber: String
+}
+
+type McfStoreCustom {
+  customTypeKey: String!
+  customTypeId: ID!
+  addressLine: String
+  city: String
+  postalCode: String
+  phone: String
+  hours: String
+  collectionMinutes: Float
+}
+
+input McfStoreCustomInput {
+  addressLine: String
+  city: String
+  postalCode: String
+  phone: String
+  hours: String
+  collectionMinutes: Float
+}
+
+"""
+Monetary amount. Display `formatted`, and calculate with `amount` and
+`currencyCode`, never with `formatted`.
+"""
+type Money @shareable {
+  """
+  Decimal amount as a string, for example `89.00`. Keeps the full precision of the
+  stored amount, so a
+  [high-precision](https://docs.commercetools.com/api/types#highprecisionmoney) price
+  can have more fraction digits than its currency.
+  """
+  amount: String!
+  """
+  Currency code compliant to [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217), for
+  example `GBP`.
+  """
+  currencyCode: String!
+  """
+  Amount formatted for the session's locale, with the standard number of fraction
+  digits of the currency, for example `£89.00`.
+  """
+  formatted: String!
+}
+
+"""Root type of all mutations."""
+type Mutation {
+  """
+  Sets the Shipping Method of the Cart of the current session.
+  
+  Refused with `EMPTY_CART` if the session has no Cart yet, with
+  `SHIPPING_ADDRESS_REQUIRED` if the Cart has no shipping address, and with
+  `UNKNOWN_SHIPPING_METHOD` if the Shipping Method doesn't exist or has no rate for
+  the Cart.
+  """
+  selectShippingMethod(
+    """The Shipping Method to select."""
+    input: SelectShippingMethodInput!
+  ): CartMutationResult!
+  """
+  Removes the Shipping Method from the Cart of the current session. Removing it from a
+  Cart without one succeeds and changes nothing.
+  
+  While a Shipping Method is selected, a shipping address that the method has no rate
+  for is refused with `UNKNOWN_SHIPPING_METHOD`. To change to such an address, clear
+  the Shipping Method first and select a new one afterwards. An Order can be placed
+  without a Shipping Method, see `PlaceOrderInput.shippingMethodId`.
+  """
+  clearShippingMethod: CartMutationResult!
+  """
+  Applies a discount code to the Cart of the current session.
+  
+  Leading and trailing spaces are removed, and the rest is matched exactly, including
+  case. A code that doesn't match the Cart is removed again and reported as
+  `INVALID_DISCOUNT_CODE`, `DISCOUNT_CODE_EXPIRED`, or
+  `DISCOUNT_CODE_NOT_APPLICABLE`. A code that is already on the Cart is refused with
+  `DISCOUNT_CODE_ALREADY_APPLIED`. If the session has no Cart yet, the code is
+  refused with `EMPTY_CART`.
+  """
+  applyDiscountCode(
+    """Discount code to apply, as the shopper entered it."""
+    code: String!
+  ): CartMutationResult!
+  """
+  Remove an entered Discount Code from `discountCodes`, with every `discounts` entry it unlocked; a code not on the cart is a no-op, a blank one `INVALID_INPUT`.
+  """
+  removeDiscountCode(
+    """Discount code to remove, from `DiscountCodeInfo.code`."""
+    code: String!
+  ): CartMutationResult!
+  """
+  Adds several Product Variants to the Cart of the current session in one call, for
+  example from a quick-order form. Creates the Cart if the session has none.
+  
+  All lines are added, or none: if one entry is refused, no entry is added.
+  """
+  addCartLines(
+    """
+    One entry for each line. A refusal names its entry in `field`, for example
+    `inputs.2.sku` or `inputs.2.quantity`.
+    """
+    inputs: [AddCartLineInput!]!
+  ): CartMutationResult!
+  """
+  Adds a Product Variant to the Cart of the current session. Creates the Cart if the
+  session has none.
+  
+  A refusal is reported in `userErrors`, for example `UNKNOWN_SKU`,
+  `NOT_IN_ASSORTMENT`, `PRICE_NOT_AVAILABLE`, or `OUT_OF_STOCK`.
+  """
+  addCartLine(
+    """Line to add."""
+    input: AddCartLineInput!
+  ): CartMutationResult!
+  """Changes the quantity of a line in the Cart of the current session."""
+  updateCartLineQuantity(
+    """The line and its new quantity."""
+    input: UpdateCartLineQuantityInput!
+  ): CartMutationResult!
+  """
+  Sets Custom Fields on a line that is already in the Cart of the current session, for
+  example a pickup point chosen later in checkout. To set Custom Fields when you add a
+  line, use `addCartLine`.
+  
+  The `custom` input has the same project-specific shape that `addCartLine` takes.
+  Only the fields you pass change: a value replaces the field, `null` clears it, and
+  an omitted field keeps its value. Text, number, boolean, enum, and their set types
+  can be written. Other field types, such as money, references, and localized enums,
+  aren't in the input.
+  
+  See [Set LineItem
+  CustomField](https://docs.commercetools.com/api/projects/carts#set-lineitemcustomfield).
+  """
+  updateCartLineCustomFields(
+    """The line and the values to set."""
+    input: UpdateCartLineCustomFieldsInput!
+  ): CartMutationResult!
+  """Removes a line from the Cart of the current session."""
+  removeCartLine(
+    """The line to remove."""
+    input: RemoveCartLineInput!
+  ): CartMutationResult!
+  """
+  Removes all lines from the Cart of the current session, including custom lines.
+  Other data on the Cart, such as addresses, stays.
+  """
+  clearCart: CartMutationResult!
+  """
+  Sets the shipping address of the Cart of the current session. Creates the Cart if
+  the session has none.
+  
+  Refused with `SHIPPING_COUNTRY_NOT_SUPPORTED` if the project has no tax rate for
+  the country, and with `INVALID_COUNTRY` if `country` isn't a valid ISO 3166-1
+  alpha-2 code.
+  """
+  setShippingAddress(
+    """The address to ship to."""
+    input: AddressInput!
+  ): CartMutationResult!
+  """
+  Sets the billing address of the Cart of the current session. Creates the Cart if the
+  session has none.
+  
+  Refused with `INVALID_COUNTRY` if `country` isn't a valid ISO 3166-1 alpha-2
+  code.
+  """
+  setBillingAddress(
+    """The address to bill."""
+    input: AddressInput!
+  ): CartMutationResult!
+  """
+  Sets the email address under which a guest places the Order, on the Cart of the
+  current session.
+  
+  For guest sessions only. A signed-in session is refused with `FORBIDDEN_ACTION`:
+  its Order uses the email address of the Customer account. See [Set Customer
+  Email](https://docs.commercetools.com/api/projects/carts#set-customer-email).
+  """
+  setCustomerEmail(
+    """The guest's email address."""
+    input: SetCustomerEmailInput!
+  ): CartMutationResult!
+  """Sets the purchase order number of the Cart of the current session."""
+  setPurchaseOrderNumber(
+    """
+    If omitted, `null`, or an empty string, any existing number is removed.
+    """
+    purchaseOrderNumber: String
+  ): CartMutationResult!
+  """
+  Creates a Shopping List for the signed-in customer.
+  
+  With a Business Unit selected in the session, the Shopping List belongs to that
+  Business Unit and the Store of the session. Without one, it's a personal wishlist. A
+  missing associate permission is refused with `FORBIDDEN_ACTION`.
+  """
+  createShoppingList(
+    """The Shopping List to create."""
+    input: CreateShoppingListInput!
+  ): ShoppingListResult!
+  """
+  Changes the name or description of a Shopping List.
+  
+  Refused with `FORBIDDEN_ACTION` unless `availableActions` includes `ADD_LINE`,
+  and with `LIST_NOT_FOUND` if the list isn't visible to the session.
+  """
+  updateShoppingList(
+    """The Shopping List and the values to change."""
+    input: UpdateShoppingListInput!
+  ): ShoppingListResult!
+  """
+  Adds a Product Variant by SKU to a Shopping List.
+  
+  Refused with `FORBIDDEN_ACTION` unless `availableActions` includes `ADD_LINE`,
+  and with `LIST_NOT_FOUND` if the list isn't visible to the session.
+  """
+  addShoppingListLine(
+    """The line to add."""
+    input: AddShoppingListLineInput!
+  ): ShoppingListResult!
+  """
+  Same as `addShoppingListLine`, including its permission check and error codes, but
+  takes the values as arguments instead of an input object.
+  """
+  addToShoppingList(
+    """`id` of the Shopping List to add the line to."""
+    listId: ID!
+    """
+    SKU of the Product Variant to add. An unknown SKU is refused with `UNKNOWN_SKU`.
+    """
+    sku: String!
+    """
+    Number of items to add. Defaults to `1`. A quantity the platform doesn't accept
+    is refused with `INVALID_QUANTITY`.
+    """
+    quantity: Int! = 1
+  ): ShoppingListResult!
+  """
+  Changes the quantity of a line on a Shopping List.
+  
+  Refused with `FORBIDDEN_ACTION` unless `availableActions` includes `ADD_LINE`,
+  and with `LIST_NOT_FOUND` if the list isn't visible to the session.
+  """
+  changeShoppingListLineQuantity(
+    """The line and its new quantity."""
+    input: ChangeShoppingListLineQuantityInput!
+  ): ShoppingListResult!
+  """
+  Removes a line from a Shopping List.
+  
+  Refused with `FORBIDDEN_ACTION` unless `availableActions` includes
+  `REMOVE_LINE`, and with `LIST_NOT_FOUND` if the list isn't visible to the
+  session.
+  """
+  removeShoppingListLine(
+    """The line to remove."""
+    input: RemoveShoppingListLineInput!
+  ): ShoppingListResult!
+  """
+  Deletes a Shopping List.
+  
+  Refused with `FORBIDDEN_ACTION` unless `availableActions` includes `DELETE`,
+  and with `LIST_NOT_FOUND` if the list isn't visible to the session.
+  """
+  deleteShoppingList(
+    """`id` of the Shopping List to delete."""
+    id: ID!
+  ): DeleteShoppingListResult!
+  """
+  Requests a Quote for the Cart of the current session as it is, with its lines,
+  addresses, Shipping Method, and prices. To quote something else, change the Cart and
+  request again.
+  
+  The Cart stays active and unchanged. The Quote Request keeps its own copy of the
+  lines and totals, so later Cart changes don't affect it.
+  
+  An empty Cart is refused with `EMPTY_CART`. A Cart without a shipping address is
+  refused with `SHIPPING_ADDRESS_REQUIRED`. A Cart with a Discount Code is refused
+  with `QUOTE_CART_HAS_DISCOUNT_CODES`.
+  """
+  requestQuote(
+    """Message and purchase order number for the Quote Request."""
+    input: RequestQuoteInput!
+  ): QuoteRequestResult!
+  """
+  Cancels a Quote Request that the Buyer no longer wants answered, and sets its state
+  to `CANCELLED`.
+  
+  Only a `SUBMITTED` Quote Request can be cancelled. Other states are refused with
+  `QUOTE_REQUEST_NOT_ACTIONABLE`. An unknown ID is refused with
+  `QUOTE_REQUEST_NOT_FOUND`.
+  """
+  cancelQuoteRequest(
+    """ID of the Quote Request to cancel."""
+    quoteRequestId: ID!
+  ): QuoteRequestResult!
+  """
+  Accepts a Quote and creates an Order from it in the same step. The result returns
+  the Order in `order`.
+  
+  A Quote that isn't `PENDING` is refused with `QUOTE_NOT_ACTIONABLE`, and an
+  expired Quote with `QUOTE_EXPIRED`. If the current Associate lacks permission, the
+  mutation is refused with `FORBIDDEN_ACTION`. An unknown ID is refused with
+  `QUOTE_NOT_FOUND`.
+  """
+  acceptQuote(
+    """ID of the Quote to accept."""
+    quoteId: ID!
+  ): QuoteResult!
+  """
+  Declines a Quote and sets its state to `DECLINED`.
+  
+  Refused on the same terms as `acceptQuote`.
+  """
+  declineQuote(
+    """ID of the Quote to decline."""
+    quoteId: ID!
+    """
+    Reason for declining. Stored as the `buyerComment` of the Quote. A blank value
+    is ignored. Passing a reason also requires permission to renegotiate the Quote.
+    Without it, the mutation is refused with `FORBIDDEN_ACTION`.
+    """
+    reason: String
+  ): QuoteResult!
+  """
+  Asks the Seller to renegotiate a Quote. The Quote state changes to
+  `DECLINED_FOR_RENEGOTIATION`, and `message` is stored as its `buyerComment`.
+  
+  Refused on the same terms as `acceptQuote`.
+  """
+  renegotiateQuote(
+    """The Quote to renegotiate and the message to the Seller."""
+    input: RenegotiateQuoteInput!
+  ): QuoteResult!
+  """
+  Records the approval of the current Associate on the Approval Flow of an Order. The
+  Order itself doesn't change.
+  
+  An Order without an Approval Flow in the active Business Unit is refused with
+  `ORDER_NOT_FOUND`. If the flow can't be approved, the mutation is refused with
+  `APPROVAL_NOT_PENDING`, or with `FORBIDDEN_ACTION` if the Associate lacks
+  permission.
+  """
+  approveOrder(
+    """ID of the Order to approve."""
+    orderId: ID!
+  ): ApprovalFlowResult!
+  """
+  Rejects the Approval Flow of an Order, which ends the flow. The Order is then
+  cancelled if its state is `OPEN` or `CONFIRMED`.
+  
+  Otherwise refused on the same terms as `approveOrder`.
+  """
+  rejectOrder(
+    """ID of the Order to reject."""
+    orderId: ID!
+    """
+    Reason for the rejection. Returned in `rejection.reason` of the Approval Flow. A
+    blank value is refused with `APPROVAL_REASON_REQUIRED`.
+    """
+    reason: String!
+  ): ApprovalFlowResult!
+  """
+  Creates an Approval Rule in the active Business Unit.
+  
+  The input is checked before the Approval Rule is stored. Invalid conditions are
+  refused with `CONDITION_NOT_SUPPORTED`, missing approvers with
+  `APPROVER_TIERS_REQUIRED`, and unknown role keys with
+  `ASSOCIATE_ROLE_NOT_FOUND`.
+  """
+  createApprovalRule(
+    """The Approval Rule to create."""
+    input: CreateApprovalRuleInput!
+  ): ApprovalRuleResult!
+  """
+  Updates an Approval Rule of the active Business Unit. The input is checked the same
+  way as for `createApprovalRule`. An unknown ID is refused with
+  `APPROVAL_RULE_NOT_FOUND`.
+  """
+  updateApprovalRule(
+    """The Approval Rule to update and the fields to change."""
+    input: UpdateApprovalRuleInput!
+  ): ApprovalRuleResult!
+  """
+  Sets the state of an Approval Rule of the active Business Unit to `ACTIVE` or
+  `INACTIVE`. An unknown ID is refused with `APPROVAL_RULE_NOT_FOUND`.
+  """
+  setApprovalRuleActive(
+    """ID of the Approval Rule."""
+    id: ID!
+    """`true` for `ACTIVE`, `false` for `INACTIVE`."""
+    active: Boolean!
+  ): ApprovalRuleResult!
+  """
+  Adds the Product lines of an Order to a Cart, at their current Prices and with the
+  quantities ordered. Lines that cannot be added are listed in `unavailable`, and
+  the other lines are still added.
+  
+  An Order that does not exist or is not visible to the session is refused with
+  `ORDER_NOT_FOUND`.
+  """
+  reorder(
+    """`id` of the Order to reorder."""
+    orderId: ID!
+    """Where to add the lines."""
+    into: ReorderTarget! = ACTIVE_CART
+  ): ReorderResult!
+  """
+  Sets the `orderState` of an Order to `CANCELLED`.
+  
+  Offered when `Order.availableActions` lists `CANCEL`. An Order that is
+  `COMPLETE` or `CANCELLED` is refused with `ORDER_NOT_CANCELLABLE`. A viewer
+  without permission to cancel is refused with `FORBIDDEN_ACTION`. An Order that
+  does not exist or is not visible to the session is refused with `ORDER_NOT_FOUND`.
+  """
+  cancelOrder(
+    """`id` of the Order to cancel."""
+    orderId: ID!
+  ): OrderResult!
+  """
+  Creates a return for items of an Order, in the shipment state `ADVISED`.
+  
+  Offered when `Order.availableActions` lists `RETURN`. An Order that has not
+  shipped is refused with `RETURN_NOT_ALLOWED`. If any line is refused, no return is
+  created. An Order that does not exist or is not visible to the session is refused
+  with `ORDER_NOT_FOUND`.
+  """
+  requestReturn(
+    """Return to request."""
+    input: RequestReturnInput!
+  ): ReturnResult!
+  """
+  Places the Cart of the session as an Order, without a Customer account.
+  
+  An empty Cart is refused with `EMPTY_CART`. A session with a signed-in Customer is
+  refused with `FORBIDDEN_ACTION`. Use `checkout` instead.
+  """
+  guestCheckout(
+    """Details of the Order to place."""
+    input: GuestCheckoutInput!
+  ): GuestCheckoutResult!
+  """
+  Places the Cart of the session as an Order, for a signed-in Customer. The Order is
+  placed under the Customer's email address.
+  
+  An empty Cart is refused with `EMPTY_CART`. A session without a signed-in Customer
+  is refused with `NOT_AUTHORIZED`.
+  """
+  checkout(
+    """Details of the Order to place."""
+    input: CheckoutInput!
+  ): CheckoutResult!
+  """
+  Places the Cart of the session as a B2B Order for the selected Business Unit. The
+  result reports whether the Order matched an Approval Rule.
+  
+  An empty Cart is refused with `EMPTY_CART`. A session without a selected Business
+  Unit returns a `BUSINESS_UNIT_REQUIRED` error.
+  """
+  placeOrder(
+    """Details of the Order to place."""
+    input: PlaceOrderInput!
+  ): PlaceOrderResult!
+  """
+  Creates a Division under an existing Business Unit. Companies can't be created with
+  this API. For how the Division is set up, see `CreateBusinessUnitInput`.
+  """
+  createBusinessUnit(
+    """The Division to create."""
+    input: CreateBusinessUnitInput!
+  ): BusinessUnitResult!
+  """
+  Adds an existing Customer as an Associate of the active Business Unit, with the
+  given Associate Roles.
+  
+  Requires the `UPDATE_ASSOCIATES` permission, held directly or inherited. Without
+  it, the mutation is refused with `FORBIDDEN_ACTION`, whether or not the email
+  address exists. An email address without a Customer account is refused with
+  `CUSTOMER_NOT_FOUND`.
+  
+  The Customer is added without being asked or notified. Unless they hold
+  `UPDATE_ASSOCIATES`, they can't leave the Business Unit through this API; an
+  Associate who holds it can remove them with `removeAssociate`.
+  """
+  addAssociate(
+    """The Customer to add and the roles to assign."""
+    input: AddAssociateInput!
+  ): AssociateResult!
+  """
+  Replaces the Associate Roles that an Associate holds in the Business Unit identified
+  by `associateId`. Requires the `UPDATE_ASSOCIATES` permission in that Business
+  Unit.
+  
+  This mutation can remove `UPDATE_ASSOCIATES` from the last Associate who holds it,
+  including the current Associate. The Business Unit is then left in the same state
+  that `removeAssociate` describes: nobody can manage its Associates through this
+  API.
+  """
+  updateAssociateRoles(
+    """The Associate to update and their new roles."""
+    input: UpdateAssociateRolesInput!
+  ): AssociateResult!
+  """
+  Removes an Associate, with all their roles, from the Business Unit identified by
+  `id`. Requires the `UPDATE_ASSOCIATES` permission in that Business Unit. Without
+  it, the mutation is refused with `FORBIDDEN_ACTION`. On success, `associate` is
+  `null`.
+  
+  A Business Unit can end up with no associates at all, because no check ensures that
+  anybody remains. If no Associate with `UPDATE_ASSOCIATES` remains, directly or
+  inherited, no mutation in this API can add one back. Child units that inherit
+  Associates from this Business Unit lose the removed Associate too. Before you remove
+  the last administrator, read `BusinessUnit.associates` and assign the roles to
+  their replacement.
+  """
+  removeAssociate(
+    """ID of the Associate to remove."""
+    id: ID!
+  ): AssociateResult!
+  """
+  Adds an address to the active Business Unit and returns it. Requires the
+  `UPDATE_BUSINESS_UNIT_DETAILS` permission. Without it, the mutation is refused
+  with `FORBIDDEN_ACTION`.
+  """
+  addBusinessUnitAddress(
+    """The address to add."""
+    input: AddressBookInput!
+  ): SavedAddressResult!
+  """
+  Updates an address of the active Business Unit. Stored address fields that the input
+  doesn't cover, such as phone numbers, keep their values. An unknown address is
+  refused with `ADDRESS_NOT_FOUND`.
+  """
+  updateBusinessUnitAddress(
+    """The address to update and its new values."""
+    input: UpdateAddressInput!
+  ): SavedAddressResult!
+  """
+  Removes an address from the active Business Unit. On success, `address` is
+  `null`. An unknown address is refused with `ADDRESS_NOT_FOUND`.
+  """
+  removeBusinessUnitAddress(
+    """ID of the address to remove."""
+    id: ID!
+  ): SavedAddressResult!
+  """
+  Changes the name of the active Business Unit. Requires the
+  `UPDATE_BUSINESS_UNIT_DETAILS` permission. Without it, the mutation is refused
+  with `FORBIDDEN_ACTION`.
+  """
+  changeBusinessUnitName(
+    """New name of the Business Unit."""
+    name: String!
+  ): BusinessUnitResult!
+  """
+  Sets or removes the contact email address of the active Business Unit. Requires the
+  `UPDATE_BUSINESS_UNIT_DETAILS` permission. Without it, the mutation is refused
+  with `FORBIDDEN_ACTION`.
+  """
+  setBusinessUnitContactEmail(
+    """
+    Email address to set. If omitted or `null`, the current contact email address is
+    removed.
+    """
+    contactEmail: String
+  ): BusinessUnitResult!
+  """
+  Creates a Customer.
+  
+  It doesn't sign the Customer in. The current session stays valid and anonymous. To
+  sign in, call `POST /{project}/main/session` with the `password` grant, which
+  also moves the guest Cart to the new Customer.
+  """
+  register(
+    """Customer to create."""
+    input: RegisterInput!
+  ): CustomerResult!
+  """Changes the first name, last name, or both, of the signed-in Customer."""
+  updateProfile(
+    """Names to change."""
+    input: UpdateProfileInput!
+  ): CustomerResult!
+  """Sets the middle name of the signed-in Customer."""
+  setMiddleName(
+    """Middle name to set. Pass null to remove the existing value."""
+    middleName: String
+  ): CustomerResult!
+  """Sets the title of the signed-in Customer."""
+  setTitle(
+    """Title to set. Pass null to remove the existing value."""
+    title: String
+  ): CustomerResult!
+  """Sets the salutation of the signed-in Customer."""
+  setSalutation(
+    """Salutation to set. Pass null to remove the existing value."""
+    salutation: String
+  ): CustomerResult!
+  """Sets the date of birth of the signed-in Customer."""
+  setDateOfBirth(
+    """
+    Date of birth to set, for example `1990-05-15`. Pass null to remove the existing
+    value.
+    """
+    dateOfBirth: Date
+  ): CustomerResult!
+  """Sets the company name of the signed-in Customer."""
+  setCompanyName(
+    """Company name to set. Pass null to remove the existing value."""
+    companyName: String
+  ): CustomerResult!
+  """Sets the individual VAT ID of the signed-in Customer."""
+  setVatId(
+    """VAT ID to set. Pass null to remove the existing value."""
+    vatId: String
+  ): CustomerResult!
+  """
+  Changes the password of the signed-in Customer.
+  
+  This ends the session. Changing the password invalidates every token issued to the
+  Customer, so the next request with this session is rejected. Sign in again with the
+  new password.
+  """
+  changePassword(
+    """
+    Current password of the Customer. A wrong value returns
+    `INVALID_CURRENT_PASSWORD`.
+    """
+    currentPassword: String!
+    """Password to set."""
+    newPassword: String!
+  ): CustomerResult!
+  """
+  Changes the email address of the signed-in Customer. Unlike `changePassword`, the
+  session stays valid.
+  """
+  changeEmail(
+    """Email change to apply."""
+    input: ChangeEmailInput!
+  ): CustomerResult!
+  """
+  Adds an address to the address book of the signed-in Customer. The new address isn't
+  marked for shipping or billing.
+  
+  An unrecognized `country` code returns `SHIPPING_COUNTRY_NOT_SUPPORTED`.
+  """
+  addAddress(
+    """Address to add."""
+    input: AddressBookInput!
+  ): SavedAddressResult!
+  """
+  Updates an address in the address book of the signed-in Customer. An `addressId`
+  that isn't in the address book returns `ADDRESS_NOT_FOUND`, and an unrecognized
+  `country` code returns `SHIPPING_COUNTRY_NOT_SUPPORTED`.
+  """
+  updateAddress(
+    """Address to update and its new values."""
+    input: UpdateAddressInput!
+  ): SavedAddressResult!
+  """
+  Removes an address from the address book of the signed-in Customer. An `id` that
+  isn't in the address book returns `ADDRESS_NOT_FOUND`.
+  """
+  removeAddress(
+    """`id` of the SavedAddress to remove."""
+    id: ID!
+  ): SavedAddressResult!
+  """
+  Makes an address the default shipping or billing address of the signed-in Customer
+  and marks it for that use. An `addressId` that isn't in the address book returns
+  `ADDRESS_NOT_FOUND`.
+  """
+  setDefaultAddress(
+    """`id` of the SavedAddress to make the default."""
+    addressId: ID!
+    """
+    Whether to make it the default shipping or the default billing address.
+    """
+    use: AddressUse!
+  ): SavedAddressResult!
+  """
+  Starts payment with [Checkout](https://docs.commercetools.com/checkout/overview) for
+  the Cart of the current session. Checkout authorizes the payment and creates the
+  Order.
+  
+  Call it when the shopper reaches checkout, because the Checkout Session expires.
+  Each call creates a new Checkout Session, so call it again when you remount the
+  flow. Refused with `EMPTY_CART` if the Cart has no lines, and with
+  `CHECKOUT_NOT_CONFIGURED` if no Checkout configuration of the project matches the
+  session's country and Store.
+  """
+  beginPayment: BeginPaymentResult!
+}
+
+"""Object that the `node` query can fetch again by its `id`."""
+interface Node {
+  """
+  Globally unique identifier of the object. Treat it as an opaque string and don't
+  parse it.
+  """
+  id: ID!
+}
+
+enum OccasionEnum {
+  birthday
+  thankyou
+  housewarming
+  holiday
+  discovery
+}
+
+"""
+Purchase placed from a Cart, as returned by `order` and by the mutations that place
+or change it. `availableActions` lists what the viewer can do with it next.
+"""
+type Order implements Node {
+  """Unique identifier of the Order."""
+  id: ID!
+  """User-defined identifier of the Order. `null` when none is assigned."""
+  orderNumber: String
+  """
+  Reference to show to the shopper: `orderNumber` when set, otherwise the Order's
+  platform identifier.
+  """
+  reference: String!
+  """
+  Purchase order number of the buyer, as passed to `placeOrder`. `null` when none
+  was given.
+  """
+  purchaseOrderNumber: String
+  """Origin of the Order."""
+  origin: OrderOrigin!
+  """Whether the Order was created from a Quote."""
+  fromQuote: Boolean!
+  """Date and time (UTC) the Order was created."""
+  placedAt: DateTime!
+  """
+  Date and time (UTC) the Order was completed. `null` when none is recorded.
+  """
+  completedAt: DateTime
+  """Date and time (UTC) the Order was last updated."""
+  lastModifiedAt: DateTime!
+  """
+  Customer who placed the Order. `null` for a guest Order. For an Order outside a
+  Business Unit, or from someone who is no longer an Associate of it, the Associate
+  has no name and no roles.
+  """
+  placedBy: Associate
+  """Business Unit the Order belongs to. `null` for a B2C Order."""
+  businessUnit: BusinessUnit
+  """Store the Order belongs to. `null` when the Order belongs to no Store."""
+  store: Store
+  """State of the Order."""
+  orderState: OrderState!
+  """Shipment state of the Order. `null` when none is set."""
+  shipmentState: ShipmentState
+  """Payment state of the Order. `null` when none is set."""
+  paymentState: PaymentState
+  """
+  State of the Order in the merchant's workflow. `null` when none is set.
+  """
+  state: OrderWorkflowState
+  """
+  Email address the Order was placed under. Empty when the Order has none.
+  """
+  email: String!
+  """Lines of the Order."""
+  lines: [OrderLine!]!
+  """
+  Every discount applied when the order was placed, one entry per discount and target, its `amount` summed over the order: Product Discounts included, except where a Best Deal rejected them. The non-SHIPPING entries add up to `totals.discountTotal`.
+  """
+  discounts: [AppliedDiscount!]!
+  """How Product Discounts and Cart Discounts were combined on this order."""
+  discountCombination: DiscountCombination!
+  """The Discount Codes the order was placed with, and where each stands."""
+  discountCodes: [DiscountCodeInfo!]!
+  """Totals of the Order."""
+  totals: PriceTotals!
+  """Address the Order is shipped to."""
+  shippingAddress: Address!
+  """Address the Order is billed to."""
+  billingAddress: Address!
+  """Returns of the Order. Empty when nothing has been returned."""
+  returns: [Return!]!
+  """
+  Deliveries of the Order, in the order the platform stores them: first those of the
+  Order's shipping, then those of each additional Shipping Method. Empty until the
+  merchant records one.
+  """
+  deliveries: [Delivery!]!
+  """
+  Approval Flow that the Order started when it was placed. `null` when the Order
+  needs no approval.
+  """
+  approvalFlow: ApprovalFlow
+  """Actions the current viewer can take on the Order now."""
+  availableActions: [OrderAction!]!
+  """
+  Platform identifier (UUID) of the Order, for extensions that correlate the Order
+  with a fulfillment or accounting system. The public `id` is an opaque global
+  identifier, so don't parse it.
+  
+  Not part of the public API: an extension can read it with `@requires`, and it is
+  removed from the composed API schema.
+  """
+  _ctId: ID! @inaccessible
+  custom: OrderCustom
+}
+
+"""
+Action on an Order, as listed in `availableActions`. Resolved from the Order's
+state, the quantities still returnable, and, for a B2B Order, the viewer's Associate
+permissions.
+"""
+enum OrderAction {
+  """
+  Add the Order's lines to a Cart with `reorder`. Offered when the Order has lines.
+  Only Product lines are reordered, not custom lines.
+  """
+  REORDER
+  """
+  Return items with `requestReturn`. Offered when the Order is not canceled, is
+  `COMPLETE` or has the shipment state `SHIPPED`, `DELIVERED`, or `PARTIAL`,
+  and has units left to return.
+  """
+  RETURN
+  """
+  Cancel the Order with `cancelOrder`. Offered when the Order is `OPEN` or
+  `CONFIRMED` and, for a B2B Order, the viewer has permission to update it.
+  """
+  CANCEL
+}
+
+"""
+Approval outcome reported by `placeOrder`. Afterward, read the Approval Flow on
+`Order.approvalFlow`.
+"""
+type OrderApproval {
+  """
+  Whether the Order matched an [Approval
+  Rule](https://docs.commercetools.com/api/projects/approval-rules) when it was
+  created, so an Approval Flow was created for it.
+  """
+  required: Boolean!
+  """Current state of the Approval Flow."""
+  approvalState: ApprovalState
+  """`id` of the Approval Flow."""
+  flowId: ID
+  """Associate Roles the Approval Flow is waiting on in its current tier."""
+  currentTierPendingApproverRoles: [AssociateRole!]!
+}
+
+"""Page of order history returned by `orders`."""
+type OrderConnection {
+  """Orders on this page, with their cursors."""
+  edges: [OrderEdge!]!
+  """Orders on this page, in the same order as `edges`."""
+  nodes: [OrderListItem!]!
+  """Pagination information of this page."""
+  pageInfo: PageInfo!
+  """Total number of Orders that match the filter, across all pages."""
+  totalCount: Int!
+}
+
+union OrderCustom = InstoreOrderTypeCustom
+
+"""Edge in an OrderConnection."""
+type OrderEdge {
+  """The Order, as an order history row."""
+  node: OrderListItem!
+  """Opaque cursor of this edge. Pass it as `after` to get the next page."""
+  cursor: String!
+}
+
+"""Filter for `orders`. All set fields must match."""
+input OrderFilter {
+  """
+  Exact value to match against the Order's `reference`, `orderNumber`,
+  `purchaseOrderNumber`, or the SKU of one of its lines. Partial values do not
+  match.
+  """
+  query: String
+  """Order states to match. An Order matches if it is in any of them."""
+  orderState: [OrderState!]
+  """Matches Orders created after this date and time."""
+  placedAfter: DateTime
+  """Matches Orders created before this date and time."""
+  placedBefore: DateTime
+}
+
+"""Line of an Order as it was placed, with the units shipped so far."""
+type OrderLine implements Node {
+  """
+  Unique identifier of the Order line. Pass it as `ReturnLineInput.lineId` to return
+  units of it.
+  """
+  id: ID!
+  """
+  SKU of the Product Variant. Empty for a line that has no Product, such as a custom
+  line.
+  """
+  sku: String!
+  """Name of the Product in the session's locale."""
+  productName: String!
+  """
+  URL of the first image of the Product Variant. `null` when the variant has no
+  image.
+  """
+  imageUrl: Url
+  """Number of units ordered."""
+  quantity: Int!
+  """
+  Number of units recorded as shipped, across all deliveries of the Order. Not set on
+  custom lines, so selecting this field on an Order that has a custom line returns an
+  error.
+  """
+  shippedQuantity: Int!
+  """
+  Number of units still to ship: `quantity` minus `shippedQuantity`, and never
+  less than zero. Not set on custom lines, so selecting this field on an Order that
+  has a custom line returns an error.
+  """
+  outstandingQuantity: Int!
+  """
+  What this Line Item cost after every discount: its Portions' `unitPrice` times `quantity`, added up. On an `EXTERNAL_TOTAL` Line Item it is the total the external system set instead.
+  """
+  lineTotal: Money!
+  """
+  Whether this is a free Gift Line Item the platform added. Its Portion lists the gift discount that added it, which carries the same `id` as that discount's entry in `discounts`.
+  """
+  isGift: Boolean!
+  """
+  One unit before any discount, as the order was placed: the Line Item's price.
+  """
+  unitPriceBeforeDiscount: Money!
+  """How the Line Item's price was set; null for a custom line."""
+  priceMode: LinePriceMode
+  """
+  One unit after its Product Discount, and the Product Discount behind it; null when none applied. Kept where a Best Deal rejected it: see `rejectedByBestDeal`.
+  """
+  discountedPrice: LineItemDiscountedPrice
+  """
+  The Line Item's units grouped by what they cost after Cart Discounts; at least one.
+  """
+  portions: [Portion!]!
+  custom: LineItemCustom
+}
+
+"""
+Summary of an Order for order history. For the full Order, query `order`.
+"""
+type OrderListItem {
+  """Unique identifier of the Order. Accepted by `order(id:)`."""
+  id: ID!
+  """User-defined identifier of the Order. `null` when none is assigned."""
+  orderNumber: String
+  """
+  Reference to show to the shopper: `orderNumber` when set, otherwise the Order's
+  platform identifier.
+  """
+  reference: String!
+  """Origin of the Order."""
+  origin: OrderOrigin!
+  """Whether the Order was created from a Quote."""
+  fromQuote: Boolean!
+  """Date and time (UTC) the Order was created."""
+  placedAt: DateTime!
+  """State of the Order."""
+  orderState: OrderState!
+  """Shipment state of the Order. `null` when none is set."""
+  shipmentState: ShipmentState
+  """Payment state of the Order. `null` when none is set."""
+  paymentState: PaymentState
+  """Business Unit the Order belongs to. `null` for a B2C Order."""
+  businessUnit: BusinessUnit
+  """
+  Total charged for the Order, including tax. Same amount as
+  `Order.totals.grandTotal`.
+  """
+  total: Money!
+  """
+  Actions the current viewer can take on the Order now. Same as
+  `Order.availableActions`.
+  """
+  availableActions: [OrderAction!]!
+}
+
+"""
+Who or what placed the Order. To find out whether the Order was created from a Quote,
+read `Order.fromQuote`.
+"""
+enum OrderOrigin {
+  """Placed by the shopper."""
+  CUSTOMER
+  """Placed on the shopper's behalf, by a sales representative or agent."""
+  MERCHANT
+  """Placed from a quotation Cart."""
+  QUOTE
+  """Placed as an instalment of a recurring Order."""
+  RECURRING_ORDER
+}
+
+"""Result of `cancelOrder`."""
+type OrderResult {
+  """
+  The Order after the mutation. When the cancellation is refused for the Order's state
+  or the viewer's permissions, this is the unchanged Order. `null` when the Order
+  isn't found, and when the platform refuses the write after those checks, which is
+  returned as `FORBIDDEN_ACTION` or `ORDER_NOT_CANCELLABLE`.
+  """
+  order: Order
+  """Refusals of the cancellation. Empty when the Order was canceled."""
+  userErrors: [UserError!]!
+}
+
+"""Sort order for `orders`."""
+input OrderSort {
+  """Field to sort by."""
+  field: OrderSortField! = PLACED_AT
+  """Direction to sort in."""
+  direction: SortDirection! = DESC
+}
+
+"""Order attribute that `orders` can sort by."""
+enum OrderSortField {
+  """Sort by the date and time the Order was created."""
+  PLACED_AT
+  """
+  Sort by the total price of the Order. Where prices exclude tax, this is the total
+  before tax, so the order can differ from `OrderListItem.total`, which includes
+  tax.
+  """
+  TOTAL
+  """Sort by `orderNumber`."""
+  ORDER_NUMBER
+}
+
+"""
+Lifecycle state of an Order. Shipping and payment progress are tracked separately in
+`ShipmentState` and `PaymentState`.
+"""
+enum OrderState {
+  """Default state of a new Order."""
+  OPEN
+  """The Order is accepted and being processed."""
+  CONFIRMED
+  """The Order is fulfilled."""
+  COMPLETE
+  """The Order is canceled."""
+  CANCELLED
+}
+
+enum OrderTypeEnum {
+  normal
+  instorepurchase
+  instorereturn
+  instoreexchange
+  online
+}
+
+"""
+Custom state from the merchant's
+[State](https://docs.commercetools.com/api/projects/states) workflow, independent of
+`orderState`.
+"""
+type OrderWorkflowState {
+  """User-defined unique identifier of the State."""
+  key: String!
+  """Name of the State in the session's locale."""
+  name: String!
+}
+
+"""Paging state returned with each page of a cursor-paginated list."""
+type PageInfo @shareable {
+  """
+  Whether more items follow the current page. `false` once the page reaches the
+  deepest item the list can page to, even when `totalCount` is higher.
+  """
+  hasNextPage: Boolean!
+  """Whether items precede the current page."""
+  hasPreviousPage: Boolean!
+  """Cursor of the first item on the page. `null` if the page is empty."""
+  startCursor: String
+  """
+  Cursor of the last item on the page. Pass it as `after` to fetch the next page.
+  `null` if the page is empty.
+  """
+  endCursor: String
+}
+
+"""Physical package of a Delivery."""
+type Parcel {
+  """Date and time (UTC) the Parcel was created."""
+  recordedAt: DateTime!
+  """Identifier to track the Parcel. `null` when none is recorded."""
+  trackingId: String
+  """
+  Name of the carrier that delivers the Parcel. `null` when none is recorded.
+  """
+  carrier: String
+  """
+  Whether the Parcel is being returned to the merchant. `null` when not recorded.
+  """
+  isReturn: Boolean
+  """
+  Units in the Parcel. Empty when the delivery lists its contents instead.
+  """
+  lines: [DeliveryLine!]!
+}
+
+union PaymentCustom = InstorePaymentTypeCustom | PaymentLaunchpadPurchaseOrderCustom
+
+"""Payment method to attach to the Order at checkout."""
+input PaymentInput {
+  """
+  `key` of the payment method, as returned by `paymentMethods`. An unknown key is
+  refused with `UNKNOWN_PAYMENT_METHOD`.
+  """
+  methodKey: String!
+}
+
+type PaymentLaunchpadPurchaseOrderCustom {
+  customTypeKey: String!
+  customTypeId: ID!
+  launchpadPurchaseOrderNumber: String
+  launchpadPurchaseOrderInvoiceMemo: String
+}
+
+input PaymentLaunchpadPurchaseOrderCustomInput {
+  launchpadPurchaseOrderNumber: String
+  launchpadPurchaseOrderInvoiceMemo: String
+}
+
+"""A payment method the shopper can choose at checkout."""
+type PaymentMethodOption {
+  """
+  User-defined unique identifier of the payment method. Pass it as
+  `PaymentInput.methodKey` to pay with this method.
+  """
+  key: String!
+  """
+  Name of the payment method in the session's locale. Empty string if the payment
+  method has no name in that locale.
+  """
+  label: String!
+}
+
+"""Payment progress of an Order."""
+enum PaymentState {
+  """Payment for the Order is pending."""
+  PENDING
+  """The Order is paid for."""
+  PAID
+  """Payment for the Order has failed."""
+  FAILED
+  """Payment for the Order is made on a credit basis."""
+  CREDIT_OWED
+  """A payment balance is due for the Order."""
+  BALANCE_DUE
+}
+
+"""Order details for a B2B checkout. Every field is optional."""
+input PlaceOrderInput {
+  """Purchase order number of the buyer, stored on the Order."""
+  purchaseOrderNumber: String
+  """
+  `id` of a SavedAddress in the Business Unit's or the Associate's address book to
+  ship to. If omitted or blank, the shipping address already on the Cart is used.
+  
+  An `id` that matches no saved address is refused with `ADDRESS_NOT_FOUND`. So is
+  an omitted `id` when the Cart has no shipping address.
+  """
+  shippingAddressId: ID
+  """
+  `id` of a SavedAddress in the Business Unit's or the Associate's address book to
+  bill to. If omitted, the billing address on the Cart is used, or the shipping
+  address when the Cart has none. An `id` that matches no saved address is refused
+  with `ADDRESS_NOT_FOUND`.
+  """
+  billingAddressId: ID
+  """
+  `id` of the Shipping Method to set on the Cart before the Order is created. If
+  omitted or blank, the Cart keeps the Shipping Method it already has, if any. An
+  unusable Shipping Method is refused with `UNKNOWN_SHIPPING_METHOD`.
+  
+  An Order placed without a Shipping Method has no `totals.shipping` and its total
+  covers the lines only. A Shipping Method cannot be added to the Order afterward.
+  """
+  shippingMethodId: ID
+  """
+  Payment for the Order. If omitted, the Order is placed with no payment attached.
+  """
+  payment: PaymentInput
+}
+
+"""Result of `placeOrder`."""
+type PlaceOrderResult {
+  """The placed Order. `null` when `userErrors` is not empty."""
+  order: Order
+  """
+  Approval outcome of the placed Order. `null` when the Order needs no approval.
+  
+  If the Approval Flow cannot be looked up, this field returns a GraphQL error with
+  the code `APPROVAL_STATE_UNKNOWN`, and `order` is still returned.
+  """
+  approval: OrderApproval
+  """Refusals of the order placement. Empty when the Order was placed."""
+  userErrors: [UserError!]!
+}
+
+"""
+Units of one Line Item that cost the same after Cart Discounts: one entry of the platform's `discountedPricePerQuantity`. Every Line Item has at least one; an `EXTERNAL_TOTAL` Line Item has exactly one, of every unit at its external unit price.
+"""
+type Portion {
+  """How many of the Line Item's units are in this Portion."""
+  quantity: Int!
+  """What one of these units costs after every discount applied to it."""
+  unitPrice: Money!
+  """
+  The Cart Discounts and Direct Discounts that reduced these units, each `amount` per unit; empty when none did. Product Discounts are never listed here: see the Line Item's `discountedPrice`.
+  """
+  discounts: [AppliedDiscount!]!
+}
+
+"""
+Values for a language, country, or currency selector. The values the session currently
+uses are in `Viewer.locale` and `Viewer.currency`. Change them with `PATCH
+/{project}/main/session`, which issues a new session token and accepts only values
+from these lists.
+"""
+type PresentmentOptions {
+  """Languages of the project, as IETF language tags."""
+  languages: [String!]!
+  """Countries of the project, as ISO 3166-1 alpha-2 codes."""
+  countries: [String!]!
+  """
+  Currencies of the project, as ISO 4217 codes. Not limited to the currencies that the
+  active Store has prices in. See `Viewer.currency` for what happens without a
+  price.
+  """
+  currencies: [String!]!
+}
+
+"""
+A volume price of a Product Variant. From `minimumQuantity` units on a Cart line,
+each unit costs `price`.
+"""
+type PriceTier {
+  """
+  Minimum quantity this price tier is valid for. Always 2 or greater, since a single
+  unit costs the variant's `price`.
+  """
+  minimumQuantity: Int!
+  """Price of one unit at this quantity, not the line total."""
+  price: Money!
+}
+
+"""
+Money figures of a Cart, Order, or Quote, from the subtotal of the lines to the grand
+total that the shopper pays.
+"""
+type PriceTotals {
+  """
+  Every Line Item's `unitPriceBeforeDiscount` times its `quantity`, added up, with an `EXTERNAL_TOTAL` Line Item counted at its `lineTotal`: before any discount.
+  """
+  subtotal: Money!
+  """
+  What the applied discounts take off the goods, Product Discounts included and SHIPPING discounts excluded: the sum of the other entries in `discounts`; null when none. Each `lineTotal` already reflects it, except for `TOTAL_PRICE` discounts.
+  """
+  discountTotal: Money
+  """
+  What delivery costs, across every shipment, after any SHIPPING discount; null if no Shipping Method is selected.
+  """
+  shipping: Money
+  """
+  Total tax amount, already included in `grandTotal`. `null` until tax is
+  calculated, for example before a shipping address is set.
+  """
+  tax: Money
+  """
+  Total amount the shopper pays, including tax once tax is calculated. Display this as
+  the total, and charge this amount.
+  
+  Before tax is calculated, this is the total of the lines and shipping after
+  discounts.
+  """
+  grandTotal: Money!
+  """
+  Total amount without tax. Equals `grandTotal` until tax is calculated. Use it in a
+  summary that lists tax on its own line.
+  """
+  grandTotalNet: Money!
+}
+
+"""
+A Product in the Store's assortment.
+
+Each Project adds an `attributes` field to `Product` and `ProductVariant`,
+generated from its Product Types. It returns the `ProductAttributes` or
+`ProductVariantAttributes` interface, with one implementing
+`<ProductType>Attributes` type per Product Type, and a `raw` JSON map of the
+attribute values.
+"""
+type Product implements Node {
+  """Unique identifier of the Product."""
+  id: ID!
+  """
+  Platform identifier (UUID) of the Product, for extensions that key an external
+  system by it. The public `id` is an opaque global identifier, so don't parse it.
+  Not part of the public API: an extension can read it with `@requires`, and it's
+  removed from the composed API schema.
+  """
+  _ctId: ID! @inaccessible
+  """Categories assigned to the Product."""
+  categories: [Category!]!
+  """User-defined unique identifier of the Product."""
+  key: String
+  """
+  User-defined identifier used in a deep-link URL for the Product, for the session's
+  locale.
+  """
+  slug: String!
+  """Name of the Product, for the session's locale."""
+  productName: String!
+  """
+  Description of the Product, for the session's locale. Null when the Product has no
+  description.
+  """
+  description: String
+  """Images of the default variant."""
+  images: [Image!]!
+  """
+  Inventory of the default variant, counted as described on
+  `ProductVariant.availability`.
+  """
+  availability: Availability!
+  """
+  Axes on which the Product's variants differ, for rendering a variant picker. Empty
+  when the variants don't differ on any selectable attribute.
+  """
+  options: [ProductOption!]!
+  """
+  Variants of the Product, starting with the default variant. Variants without a SKU
+  are left out.
+  """
+  variants: [ProductVariant!]!
+  """
+  Default variant of the Product. This is the master variant, or the first variant
+  with a SKU when the master variant has none.
+  """
+  defaultVariant: ProductVariant
+  """
+  Variants that matched the `query` or `filter` of `Query.search` or
+  `Query.products`. Null when the Product was read another way.
+  """
+  matchingVariants: [ProductVariant!]
+  """
+  Labels for the Product's attributes. Use them to label attribute rows without
+  selecting a specific Product Type.
+  """
+  attributeLabels: [AttributeLabel!]!
+  """
+  This product type's attributes, typed, plus a `raw` untyped map. Null when its product type declares no attributes at this level. Display labels are `Product.attributeLabels`.
+  """
+  attributes: ProductAttributes
+  """
+  Price of the default variant, resolved as described on `ProductVariant.price`.
+  
+  `null` when the session isn't entitled to a price, or the default variant has no
+  price in the session's currency or country. `addCartLine` refuses such a variant
+  with `PRICE_NOT_AVAILABLE`. Other variants can still have a price, so check
+  `variants`.
+  """
+  price: Money
+  """The price before its Product Discount: the strike-through price."""
+  priceBeforeDiscount: Money
+  """
+  The default variant's price after its Product Discount, and the Product Discount behind it; null when no Product Discount applies. `price` then equals `discountedPrice.value`.
+  """
+  discountedPrice: DiscountedPrice
+  """
+  All [Standalone
+  Prices](https://docs.commercetools.com/api/projects/standalone-prices) of the
+  Product's variants, for extensions, including inactive prices and prices for other
+  scopes. Storefronts read `ProductVariant.price`. Not part of the public API: an
+  extension can read it with `@requires`, and it's removed from the composed API
+  schema.
+  """
+  _standalonePrices: [InternalStandalonePrice!]! @inaccessible
+}
+
+interface ProductAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+}
+
+"""A page of Products returned by `Query.products`."""
+type ProductConnection {
+  """Products on this page, with their cursors."""
+  edges: [ProductEdge!]!
+  """Products on this page, in the same order as `edges`."""
+  nodes: [Product!]!
+  """Pagination information for this page."""
+  pageInfo: PageInfo!
+  """Total number of Products that match the request, across all pages."""
+  totalCount: Int!
+}
+
+"""The Product Discount behind a discounted price."""
+type ProductDiscountInfo {
+  """
+  Opaque id of the Product Discount, the same as the `AppliedDiscount.id` it has in a cart's `discounts`. Clients never parse it.
+  """
+  id: ID!
+  """The merchant's key for the Product Discount, where one is set."""
+  key: String
+  """
+  The Product Discount's name in the session's locale; null where it has none for that locale.
+  """
+  name: String
+  """How it reduces; null once the Product Discount is deleted."""
+  valueType: DiscountValueType
+}
+
+"""Edge of a `ProductConnection` or `ProductSearchConnection`."""
+type ProductEdge @shareable {
+  """Product at this position in the list."""
+  node: Product!
+  """
+  Opaque cursor of this Product. Pass it as `after` to get the Products that follow
+  it.
+  """
+  cursor: String!
+}
+
+"""
+Conditions on a Product list or search. Each field you set narrows the result further.
+A `categorySlug` that matches no Category, or an attribute `code` the Project
+can't filter on, returns an empty page.
+"""
+input ProductFilter {
+  """
+  Slug of a Category for the session's locale. Returns only Products assigned to that
+  Category.
+  """
+  categorySlug: String
+  """
+  Whether to return only Products with a discounted price for the session (`true`),
+  or only Products without one (`false`). Decided per variant, like `priceMin`:
+  `true` can return a Product whose `Product.price` isn't discounted, and
+  `false` can return a Product that has a discounted variant.
+  """
+  onSale: Boolean
+  """
+  Lowest price to include, in major units of the session's currency, for example
+  `50` for £50.00. Discounted prices are compared per variant, as described on
+  `ProductSortField.PRICE`, so a Product can match while `Product.price` is
+  outside the range.
+  """
+  priceMin: Float
+  """
+  Highest price to include, in major units of the session's currency. Compared like
+  `priceMin`.
+  """
+  priceMax: Float
+  """
+  Filters on the Product's attributes. Accepts any value of the attribute, including
+  values that `Facet.options` doesn't list.
+  
+  Also accepts the Project's searchable text attributes, which have no facet. A
+  localized text attribute is matched on its value for the session's locale.
+  """
+  attributes: [AttributeFilterInput!]
+  """
+  Numeric range filters on the Product's attributes, by the same `code` as
+  `attributes`.
+  """
+  attributeRanges: [AttributeRangeFilterInput!]
+}
+
+"""
+A variant selection axis of a Product, such as color or size.
+
+An axis is a variant-level attribute of type text, localized text, enum, localized
+enum, number, or boolean whose value differs across the Product's variants. A Product
+with one variant has no axes. When several attributes vary, each one is reported as
+its own axis, so choose the `code` values you want to render.
+"""
+type ProductOption {
+  """Name of the attribute behind this axis."""
+  code: String!
+  """
+  Display label of the attribute for the session's locale. Falls back to `code` when
+  the attribute definition has no label for that locale.
+  """
+  label: String!
+  """
+  Distinct values of the attribute across the Product's variants, in the order in
+  which the variants first use them.
+  """
+  values: [ProductOptionValue!]!
+}
+
+"""
+A value a shopper can pick on a `ProductOption` axis. A variant has this value when
+its `SelectedOption` with the same `code` has the same `value`.
+"""
+type ProductOptionValue {
+  """
+  Attribute value as stored, such as an enum key, or localized text resolved for the
+  session's locale.
+  """
+  value: String!
+  """
+  Display label of the value for the session's locale. Falls back to `value` when
+  the value has no label.
+  """
+  label: String!
+}
+
+"""
+A page of `Query.search` results. Same as `ProductConnection`, plus `facets`.
+"""
+type ProductSearchConnection {
+  """Products on this page, with their cursors."""
+  edges: [ProductEdge!]!
+  """Products on this page, in the same order as `edges`."""
+  nodes: [Product!]!
+  """Pagination information for this page."""
+  pageInfo: PageInfo!
+  """Total number of Products that match the search, across all pages."""
+  totalCount: Int!
+  """Facets of the search result."""
+  facets: [Facet!]!
+}
+
+"""
+Sort order for `Query.products` and `Query.search`.
+
+Omitting `sort`, passing `sort: {}`, and passing `sort: {field: RELEVANCE}`
+return the same order. Products that sort equally are always returned in the same
+order, so paging doesn't repeat or skip a Product.
+"""
+input ProductSort {
+  """Field to sort by. Defaults to `RELEVANCE`."""
+  field: ProductSortField! = RELEVANCE
+  """
+  Direction of the sort. Omit it to use the default direction of `field`, listed on
+  each `ProductSortField` value. Set it only to reverse that default.
+  """
+  direction: SortDirection
+}
+
+"""Sort key of `ProductSort`. Each value has its own default direction."""
+enum ProductSortField {
+  """Relevance to the search `query`. Most relevant first by default."""
+  RELEVANCE
+  """
+  Price for the session. Cheapest first by default, and `direction: DESC` reverses
+  it.
+  
+  Ascending order uses each Product's cheapest variant price, and descending order its
+  most expensive one. This can differ from `Product.price`, which is the price of
+  the DEFAULT variant, so a Product's position may not match the price it shows. To
+  show the prices a Product was ranked on, select `variants { price }`.
+  `ProductFilter.priceMin` and `ProductFilter.priceMax` use the same per-variant
+  rule.
+  """
+  PRICE
+  """Product name for the session's locale. A to Z by default."""
+  NAME
+  """Creation date of the Product. Newest first by default."""
+  NEWEST
+}
+
+"""
+A purchasable version of a Product, such as one combination of size and color.
+"""
+type ProductVariant implements Node {
+  """Unique identifier of the Product Variant. Unique across all Products."""
+  id: ID!
+  """
+  SKU of the Product Variant. Unique across all Product Variants in a Project. Pass it
+  to `addCartLine` to add the variant to the Cart.
+  """
+  sku: String!
+  """
+  Values of this variant on the axes in `Product.options`. Axes for which the
+  variant has no value are left out.
+  """
+  selectedOptions: [SelectedOption!]!
+  """
+  Inventory of the variant for the session's supply channel. Without a supply channel,
+  the stock of all supply channels is added up.
+  """
+  availability: Availability!
+  """Images of the Product Variant."""
+  images: [Image!]!
+  """
+  Assets of the Product Variant, such as documents, videos, or 3D models. Empty when the
+  variant has no Assets, or none matches `tags`.
+  """
+  assets(
+    """
+    Tags to match, as listed in `Asset.tags`. An Asset matches when it has any of them,
+    compared case-sensitively. An empty list applies no filter.
+    """
+    tags: [String!]
+  ): [Asset!]!
+  """
+  This product type's attributes, typed, plus a `raw` untyped map. Null when its product type declares no attributes at this level. Display labels are `Product.attributeLabels`.
+  """
+  attributes: ProductVariantAttributes
+  """
+  Price of the variant for the session's currency, country, distribution channel, and
+  Customer Group, with any Product Discount applied.
+  
+  `null` if the session isn't entitled to a price, if the variant has no price for
+  the session's currency or country, or if the Store has no prices in the session's
+  currency. Adding such a variant with `addCartLine` returns
+  `PRICE_NOT_AVAILABLE`.
+  """
+  price: Money
+  """The price before its Product Discount: the strike-through price."""
+  priceBeforeDiscount: Money
+  """
+  The price after its Product Discount, and the Product Discount behind it; null when no Product Discount applies. `price` then equals `discountedPrice.value`.
+  """
+  discountedPrice: DiscountedPrice
+  """
+  Price tiers of `price`, lowest `minimumQuantity` first. Empty when the price has
+  no tiers or the variant has no price.
+  """
+  priceTiers: [PriceTier!]!
+}
+
+interface ProductVariantAttributes {
+  productTypeKey: String!
+  productTypeId: ID!
+  """
+  This product type's attribute values at this level, untyped, as a JSON map keyed by attribute name. For generic rendering and for attribute types the typed fields cannot express; prefer the typed fields. Display names are on Product.attributeLabels.
+  """
+  raw: JSON
+}
+
+"""Root type of all queries."""
+type Query {
+  """
+  Returns the Approval Flows of the active Business Unit that the current Associate
+  can view.
+  
+  Requires an active Business Unit. Without one, the query fails with a
+  `BUSINESS_UNIT_REQUIRED` error.
+  """
+  approvals(
+    """Filters the Approval Flows."""
+    filter: ApprovalFlowFilter
+    """Maximum number of results to return, from `0` to `500`. Default: `20`."""
+    first: Int! = 20
+    """
+    Cursor of the item after which the page starts. Take it from `edges.cursor` or
+    `pageInfo.endCursor`. A cursor that this API didn't issue, or one past the
+    10,000th item, fails the query.
+    """
+    after: String
+  ): ApprovalFlowConnection!
+  """
+  Returns an Approval Flow of the active Business Unit. Returns `null` if it doesn't
+  exist or the current Associate can't view it.
+  
+  Requires an active Business Unit. Without one, the query fails with a
+  `BUSINESS_UNIT_REQUIRED` error.
+  """
+  approval(
+    """ID of the Approval Flow."""
+    id: ID!
+  ): ApprovalFlow
+  """
+  Returns the Approval Rules of the active Business Unit.
+  
+  Requires an active Business Unit. Without one, the query fails with a
+  `BUSINESS_UNIT_REQUIRED` error.
+  """
+  approvalRules(
+    """Filters the Approval Rules."""
+    filter: ApprovalRuleFilter
+    """Maximum number of results to return, from `0` to `500`. Default: `20`."""
+    first: Int! = 20
+    """
+    Cursor of the item after which the page starts. Take it from `edges.cursor` or
+    `pageInfo.endCursor`. A cursor that this API didn't issue, or one past the
+    10,000th item, fails the query.
+    """
+    after: String
+  ): ApprovalRuleConnection!
+  """
+  Returns an Approval Rule of the active Business Unit. Returns `null` if it doesn't
+  exist or the current Associate can't view it.
+  
+  Requires an active Business Unit. Without one, the query fails with a
+  `BUSINESS_UNIT_REQUIRED` error.
+  """
+  approvalRule(
+    """ID of the Approval Rule."""
+    id: ID!
+  ): ApprovalRule
+  """
+  Returns the Quote Requests of the active Business Unit that the current Associate
+  can view, newest first.
+  
+  Requires an active Business Unit. Without one, the query fails with a
+  `BUSINESS_UNIT_REQUIRED` error.
+  """
+  quoteRequests(
+    """Filters the Quote Requests."""
+    filter: QuoteRequestFilter
+    """Maximum number of results to return, from `0` to `500`. Default: `20`."""
+    first: Int! = 20
+    """
+    Cursor of the item after which the page starts. Take it from `edges.cursor` or
+    `pageInfo.endCursor`. A cursor that this API didn't issue, or one past the
+    10,000th item, fails the query.
+    """
+    after: String
+  ): QuoteRequestConnection!
+  """
+  Returns a Quote Request of the active Business Unit. Returns `null` if it doesn't
+  exist or the current Associate can't view it.
+  
+  Requires an active Business Unit. Without one, the query fails with a
+  `BUSINESS_UNIT_REQUIRED` error.
+  """
+  quoteRequest(
+    """ID of the Quote Request."""
+    id: ID!
+  ): QuoteRequest
+  """
+  Returns the Quotes of the active Business Unit that the current Associate can view,
+  newest first.
+  
+  Requires an active Business Unit. Without one, the query fails with a
+  `BUSINESS_UNIT_REQUIRED` error.
+  """
+  quotes(
+    """Filters the Quotes."""
+    filter: QuoteFilter
+    """Maximum number of results to return, from `0` to `500`. Default: `20`."""
+    first: Int! = 20
+    """
+    Cursor of the item after which the page starts. Take it from `edges.cursor` or
+    `pageInfo.endCursor`. A cursor that this API didn't issue, or one past the
+    10,000th item, fails the query.
+    """
+    after: String
+  ): QuoteConnection!
+  """
+  Returns a Quote of the active Business Unit. Returns `null` if it doesn't exist or
+  the current Associate can't view it.
+  
+  Requires an active Business Unit. Without one, the query fails with a
+  `BUSINESS_UNIT_REQUIRED` error.
+  """
+  quote(
+    """ID of the Quote."""
+    id: ID!
+  ): Quote
+  """
+  Returns the Shopping Lists visible to the session, most recently modified first, up
+  to 100. With a Business Unit selected, only the lists the Associate may view are
+  returned.
+  
+  An anonymous session gets an `UNAUTHENTICATED` error.
+  """
+  shoppingLists: [ShoppingList!]!
+  """
+  Returns a Shopping List by `id`. `null` if it doesn't exist or isn't visible to
+  the session.
+  """
+  shoppingList(
+    """`id` of the Shopping List."""
+    id: ID!
+  ): ShoppingList
+  """
+  Returns the signed-in Customer. Null for an anonymous or guest session.
+  """
+  me: Customer
+  """
+  Returns the Business Units that the current Associate belongs to, directly or
+  through inheritance. An Associate of 2000 or more Business Units gets an error. To
+  walk the hierarchy, use `parentUnit` and `childUnits`.
+  
+  Requires a signed-in Customer.
+  """
+  businessUnits: [BusinessUnit!]!
+  """
+  Returns a Business Unit by its key. Returns `null` if the current Associate can't
+  view it.
+  
+  Requires a signed-in Customer.
+  """
+  businessUnit(
+    """
+    Key of the Business Unit. If omitted, returns the active Business Unit of the
+    session.
+    """
+    key: String
+  ): BusinessUnit
+  """
+  Returns the active Business Unit of the session. Returns `null` if the shopper
+  isn't signed in or hasn't selected a Business Unit. To select one, call `PUT
+  /{project}/main/session/business-unit` on the identity host.
+  """
+  activeBusinessUnit: BusinessUnit
+  """
+  Returns the Cart of the current session, without an `id` or `version`. A guest
+  session has an anonymous Cart. `null` if the session has no Cart yet.
+  """
+  cart: Cart
+  """
+  Returns the Shipping Methods that can deliver the Cart of the current session. Empty
+  if the session has no Cart or the Cart has no shipping address.
+  """
+  shippingMethodsForCart: [ShippingMethod!]!
+  """
+  Returns the payment methods that the project accepts, sorted by `key`. Lists
+  active payment methods that aren't assigned to a Customer or Business Unit. Empty if
+  the project accepts none.
+  
+  The list doesn't depend on the Cart, so you can read it at any point in checkout.
+  """
+  paymentMethods: [PaymentMethodOption!]!
+  """
+  Returns the Order history of the session. For a B2B session, these are the Orders of
+  the selected Business Unit. Otherwise, these are the shopper's own Orders that
+  belong to no Business Unit.
+  
+  Returns an empty page when the session has no shopper.
+  """
+  orders(
+    """Filter to apply."""
+    filter: OrderFilter
+    """
+    Sort order. If omitted, Orders are sorted by `PLACED_AT`, newest first.
+    """
+    sort: OrderSort
+    """
+    Number of Orders to return, from `0` to `500`. A value outside this range
+    returns a `BAD_USER_INPUT` error.
+    """
+    first: Int! = 20
+    """
+    Cursor of the edge to start after, from `OrderEdge.cursor` or
+    `pageInfo.endCursor`. A cursor that this API did not issue returns a
+    `BAD_USER_INPUT` error, as does a cursor past the 10,000th order.
+    """
+    after: String
+  ): OrderConnection!
+  """
+  Returns an Order of the session. Returns `null` when the Order does not exist or
+  is not visible to the session.
+  """
+  order(
+    """`id` of the Order. Accepts `Order.id` and `OrderListItem.id`."""
+    id: ID!
+  ): Order
+  """
+  Returns the `Viewer` of the current session. Read it again after you change the
+  Store, locale, or currency of the session.
+  """
+  viewer: Viewer!
+  """
+  Flat list of up to 500 Categories of the Project, root Categories and their
+  descendants together, in ascending `orderHint` order. Use `parent` and
+  `children` to build the tree.
+  """
+  categories: [Category!]!
+  """
+  Pass exactly one of `id` or `slug`, otherwise the query returns a
+  `BAD_USER_INPUT` error. Null when no Category matches.
+  """
+  category(
+    """Unique identifier of the Category."""
+    id: ID
+    """Slug of the Category for the session's locale."""
+    slug: String
+  ): Category
+  """
+  Lists the Products in the Store's assortment, without a search text or facets. Use
+  `search` for text search and a filter rail.
+  
+  Requires [Product
+  Search](https://docs.commercetools.com/api/projects/product-search) to be enabled
+  for the Project, otherwise the query returns a `PRODUCT_SEARCH_NOT_ENABLED` error.
+  Catalog changes appear with a short delay.
+  """
+  products(
+    """
+    Number of Products to return, from 0 to 100. A value outside this range returns a
+    `BAD_USER_INPUT` error whose `extensions` name the argument and the limit.
+    """
+    first: Int! = 20
+    """
+    Cursor after which the page starts, from `ProductEdge.cursor` or
+    `PageInfo.endCursor`. A cursor that this API didn't issue, or one at or past
+    the 10,000th result, returns a `BAD_USER_INPUT` error.
+    """
+    after: String
+    """Filters to apply to the list."""
+    filter: ProductFilter
+    """Sort order of the list."""
+    sort: ProductSort
+  ): ProductConnection!
+  """
+  Searches the Products in the Store's assortment by text and returns a page of
+  results with facets for a filter rail.
+  
+  Requires [Product
+  Search](https://docs.commercetools.com/api/projects/product-search) to be enabled
+  for the Project, otherwise the query returns a `PRODUCT_SEARCH_NOT_ENABLED` error.
+  """
+  search(
+    """
+    Number of Products to return, from 0 to 100. A value outside this range returns a
+    `BAD_USER_INPUT` error whose `extensions` name the argument and the limit.
+    """
+    first: Int! = 20
+    """
+    Cursor after which the page starts, from `ProductEdge.cursor` or
+    `PageInfo.endCursor`. A cursor that this API didn't issue, or one at or past
+    the 10,000th result, returns a `BAD_USER_INPUT` error.
+    """
+    after: String
+    """Filters to apply to the result."""
+    filter: ProductFilter
+    """Sort order of the result."""
+    sort: ProductSort
+    """
+    Text to search for in the Product name, description, slug, and search keywords for
+    the session's locale.
+    """
+    query: String
+    """Matching mode for `query`. Defaults to `FULL_TEXT`."""
+    queryMode: SearchQueryMode
+  ): ProductSearchConnection!
+  """
+  Pass exactly one of `id`, `sku`, or `slug`, otherwise the query returns a
+  `BAD_USER_INPUT` error. Null when no Product in the Store's assortment matches.
+  
+  Works without Product Search. To get several Products by ID, send one aliased
+  `product(id:)` field per ID.
+  """
+  product(
+    """Unique identifier of the Product."""
+    id: ID
+    """SKU of one of the Product's variants."""
+    sku: String
+    """Slug of the Product for the session's locale."""
+    slug: String
+  ): Product
+  """
+  Fetches an object again by its `id`. Returns `null` if the identifier is unknown
+  or malformed, or the object isn't visible to the current session.
+  """
+  node(
+    """Global identifier of the object, as returned in its `id` field."""
+    id: ID!
+  ): Node
+}
+
+"""
+An offer from the Seller in response to a Quote Request. The Buyer can accept,
+decline, or renegotiate it. For more information, see [Quotes
+overview](https://docs.commercetools.com/api/quotes-overview).
+"""
+type Quote implements Node {
+  """Unique identifier of the Quote."""
+  id: ID!
+  """
+  Reference to show for the Quote: its key, or its platform ID if no key is set.
+  """
+  reference: String!
+  """Current state of the Quote."""
+  quoteState: QuoteState!
+  """
+  Business Unit the Quote belongs to. If the session can't read that Business Unit,
+  this field returns an error, which makes the enclosing Quote `null`.
+  """
+  businessUnit: BusinessUnit!
+  """Total quantity of all lines."""
+  itemCount: Int!
+  """
+  Amount the Buyer pays if they accept the Quote, tax included. Same value as
+  `totals.grandTotal`.
+  """
+  total: Money!
+  """
+  Price breakdown behind `total`, computed the same way as for a Cart and an Order.
+  `shipping` is `null` if the Quote has no Shipping Method.
+  """
+  totals: PriceTotals!
+  """
+  Every applied discount on the quote, one entry per discount and target, its `amount` summed over the quote: Product Discounts included where applied, and a seller's Direct Discounts. The non-SHIPPING entries add up to `totals.discountTotal`.
+  """
+  discounts: [AppliedDiscount!]!
+  """Date and time (UTC) the Quote was created."""
+  createdAt: DateTime!
+  """
+  Date and time (UTC) the Quote expires. `null` if the Seller set no expiry.
+  
+  After this time, the Quote can't be acted on and `availableActions` is empty.
+  `quoteState` doesn't change when the Quote expires, so a `PENDING` Quote can be
+  expired.
+  """
+  expiresAt: DateTime
+  """
+  Buyer who requested the Quote, with the Associate Roles they hold in the Business
+  Unit. `null` if no Buyer is recorded. If the Buyer has left the Business Unit,
+  `roles` is empty.
+  """
+  requestedBy: Associate
+  """Lines of the Quote."""
+  lines: [QuoteLine!]!
+  """
+  Latest message from the Buyer: the message sent with a renegotiation request, or the
+  reason given when declining.
+  """
+  buyerComment: String
+  """Message from the Seller included in the Quote."""
+  sellerComment: String
+  """
+  Purchase order number copied unchanged from the Quote Request. It can't be changed.
+  """
+  purchaseOrderNumber: String
+  """
+  Actions that the current Associate can take on the Quote, based on their permissions
+  for their own Quotes or for Quotes of other Associates. Empty unless the Quote is
+  `PENDING` and hasn't expired. `acceptQuote`, `declineQuote`, and
+  `renegotiateQuote` refuse an action that isn't listed here.
+  """
+  availableActions: [QuoteAction!]!
+}
+
+"""Action on a Quote that `Quote.availableActions` can offer."""
+enum QuoteAction {
+  """
+  Accept the Quote with `acceptQuote`, which also creates an Order from it. Offered
+  only if the Associate has permission both to accept the Quote and to create an Order
+  from it.
+  """
+  ACCEPT
+  """Ask the Seller to renegotiate the Quote with `renegotiateQuote`."""
+  RENEGOTIATE
+  """
+  Decline the Quote with `declineQuote`. If `RENEGOTIATE` isn't offered, decline
+  without a `reason`.
+  """
+  DECLINE
+}
+
+"""Paginated result of `quotes`."""
+type QuoteConnection {
+  """Quotes on this page, with their cursors."""
+  edges: [QuoteEdge!]!
+  """Quotes on this page, in the same order as `edges`."""
+  nodes: [Quote!]!
+  """Information for getting the next or previous page."""
+  pageInfo: PageInfo!
+  """Total number of Quotes that match the query, across all pages."""
+  totalCount: Int!
+}
+
+"""Entry in a `QuoteConnection`."""
+type QuoteEdge {
+  """The Quote."""
+  node: Quote!
+  """
+  Opaque cursor of this item. Pass it as `after` to get the items that follow it.
+  """
+  cursor: String!
+}
+
+"""Filters for `quotes`. A Quote must match every field you set."""
+input QuoteFilter {
+  """
+  Matches a Quote whose `reference` equals this value. The match is exact, not a
+  substring search.
+  """
+  query: String
+  """Matches Quotes in any of these states. `UNKNOWN` matches nothing."""
+  quoteState: [QuoteState!]
+}
+
+"""
+A line of a Quote Request or Quote. Represents a Line Item or a Custom Line Item.
+"""
+type QuoteLine {
+  """SKU of the Product Variant. Empty for a Custom Line Item."""
+  sku: String!
+  """Name of the Product or Custom Line Item in the locale of the session."""
+  productName: String!
+  """Number of units on the line."""
+  quantity: Int!
+  """
+  What this Line Item costs after every discount: its Portions' `unitPrice` times `quantity`, added up. On an `EXTERNAL_TOTAL` Line Item it is the total the external system set instead.
+  """
+  lineTotal: Money!
+  """
+  Whether this is a free Gift Line Item the platform added. Its Portion lists the gift discount that added it, which carries the same `id` as that discount's entry in `discounts`.
+  """
+  isGift: Boolean!
+  """One unit before any discount: the Line Item's price on the quote."""
+  unitPriceBeforeDiscount: Money!
+  """How the Line Item's price was set; null for a custom line."""
+  priceMode: LinePriceMode
+  """
+  One unit after its Product Discount, and the Product Discount behind it; null when none applies.
+  """
+  discountedPrice: LineItemDiscountedPrice
+  """
+  The Line Item's units grouped by what one unit costs after Cart Discounts, a seller's Direct Discounts included; at least one.
+  """
+  portions: [Portion!]!
+}
+
+"""
+A request from a Buyer for the Seller to quote the contents of their Cart. Create one
+with `requestQuote`. For more information, see [Quotes
+overview](https://docs.commercetools.com/api/quotes-overview).
+"""
+type QuoteRequest implements Node {
+  """Unique identifier of the Quote Request."""
+  id: ID!
+  """
+  Reference to show for the Quote Request: its key, or its platform ID if no key is
+  set.
+  """
+  reference: String!
+  """Current state of the Quote Request."""
+  quoteRequestState: QuoteRequestState!
+  """
+  Business Unit the Quote Request belongs to. If the session can't read that Business
+  Unit, this field returns an error, which makes the enclosing Quote Request `null`.
+  """
+  businessUnit: BusinessUnit!
+  """Total quantity of all lines."""
+  itemCount: Int!
+  """
+  Total of the Quote Request, tax included. Same value as `totals.grandTotal`.
+  """
+  total: Money!
+  """
+  Price breakdown behind `total`, computed the same way as for a Cart and an Order.
+  `shipping` is `null` if the Quote Request has no Shipping Method.
+  """
+  totals: PriceTotals!
+  """
+  Every applied discount on the request, one entry per discount and target, its `amount` summed over the request: Product Discounts included where applied. The non-SHIPPING entries add up to `totals.discountTotal`.
+  """
+  discounts: [AppliedDiscount!]!
+  """Date and time (UTC) the Quote Request was created."""
+  createdAt: DateTime!
+  """
+  Buyer who created the Quote Request, with the Associate Roles they hold in the
+  Business Unit. `null` if no Buyer is recorded. If the Buyer has left the Business
+  Unit, `roles` is empty.
+  """
+  requestedBy: Associate
+  """
+  Lines for which a Quote is requested, copied from the Cart when the request was
+  created.
+  """
+  lines: [QuoteLine!]!
+  """
+  Message from the Buyer included in the Quote Request. Set from `message` in
+  `RequestQuoteInput`.
+  """
+  comment: String
+  """
+  Purchase order number that the Buyer set when requesting the Quote. It can't be
+  changed afterward, and it's copied unchanged to the resulting Quote.
+  """
+  purchaseOrderNumber: String
+}
+
+"""Paginated result of `quoteRequests`."""
+type QuoteRequestConnection {
+  """Quote Requests on this page, with their cursors."""
+  edges: [QuoteRequestEdge!]!
+  """Quote Requests on this page, in the same order as `edges`."""
+  nodes: [QuoteRequest!]!
+  """Information for getting the next or previous page."""
+  pageInfo: PageInfo!
+  """Total number of Quote Requests that match the query, across all pages."""
+  totalCount: Int!
+}
+
+"""Entry in a `QuoteRequestConnection`."""
+type QuoteRequestEdge {
+  """The Quote Request."""
+  node: QuoteRequest!
+  """
+  Opaque cursor of this item. Pass it as `after` to get the items that follow it.
+  """
+  cursor: String!
+}
+
+"""
+Filters for `quoteRequests`. A Quote Request must match every field you set.
+"""
+input QuoteRequestFilter {
+  """
+  Matches a Quote Request whose `reference` equals this value. The match is exact,
+  not a substring search.
+  """
+  query: String
+  """
+  Matches Quote Requests in any of these states. `UNKNOWN` matches nothing.
+  """
+  quoteRequestState: [QuoteRequestState!]
+}
+
+"""Returned by `requestQuote` and `cancelQuoteRequest`."""
+type QuoteRequestResult {
+  """
+  The Quote Request after the mutation. `null` if the mutation failed, except for
+  `QUOTE_REQUEST_NOT_ACTIONABLE`, which returns the unchanged Quote Request.
+  """
+  quoteRequest: QuoteRequest
+  """Errors that prevented the mutation. Empty on success."""
+  userErrors: [UserError!]!
+}
+
+"""State of a Quote Request in the negotiation process."""
+enum QuoteRequestState {
+  """
+  The Buyer submitted the Quote Request, and the Seller hasn't accepted or rejected it
+  yet. Initial state of a Quote Request.
+  """
+  SUBMITTED
+  """
+  Reserved state. A Quote Request can report it, but no operation in this API sets it.
+  """
+  UNDER_REVIEW
+  """
+  The Seller accepted the Quote Request and is preparing a Quote for the Buyer.
+  """
+  ACCEPTED
+  """The Seller rejected the Quote Request, which ends the negotiation."""
+  REJECTED
+  """
+  The Buyer withdrew the Quote Request, for example with `cancelQuoteRequest`.
+  """
+  CANCELLED
+  """
+  Final state. The Seller accepted the Quote Request, and no further action is
+  possible.
+  """
+  CLOSED
+  """
+  A state that this API doesn't model. The Quote Request is still listed. Treat it as
+  read-only.
+  """
+  UNKNOWN
+}
+
+"""Returned by `acceptQuote`, `declineQuote`, and `renegotiateQuote`."""
+type QuoteResult {
+  """
+  The Quote after the mutation. If a check before the write refuses the mutation, for
+  example because of the Quote's state or expiry, or a permission that
+  `availableActions` reflects, this is the unchanged Quote. If the platform refuses
+  the write, `quote` is `null`. For example, `declineQuote` with a `reason`
+  but without the permission to renegotiate returns `FORBIDDEN_ACTION` and a
+  `null` Quote.
+  """
+  quote: Quote
+  """Order created from the Quote. Set only by a successful `acceptQuote`."""
+  order: Order
+  """Errors that prevented the mutation. Empty on success."""
+  userErrors: [UserError!]!
+}
+
+"""
+Negotiation state of a Quote. Expiry isn't a state, see `Quote.expiresAt`.
+"""
+enum QuoteState {
+  """
+  The Seller sent the Quote, and the Buyer hasn't replied yet. Only a `PENDING`
+  Quote can be accepted, declined, or renegotiated.
+  """
+  PENDING
+  """
+  The Buyer declined the Quote and asked to renegotiate it. The Seller hasn't answered
+  yet.
+  """
+  DECLINED_FOR_RENEGOTIATION
+  """
+  The Seller answered the renegotiation request with a new Quote. This Quote offers no
+  actions.
+  """
+  RENEGOTIATION_ADDRESSED
+  """
+  The Buyer accepted the Quote. `acceptQuote` also creates an Order from it in the
+  same step.
+  """
+  ACCEPTED
+  """
+  The Buyer declined the Quote. `buyerComment` holds the reason, if the Buyer gave
+  one.
+  """
+  DECLINED
+  """The Seller withdrew the Quote before the Buyer accepted it."""
+  WITHDRAWN
+  """
+  A state that this API doesn't model. The Quote is still listed and offers no
+  `availableActions`. Treat it as read-only.
+  """
+  UNKNOWN
+}
+
+"""Profile and credentials of a new Customer."""
+input RegisterInput {
+  """Given name (first name) of the Customer."""
+  firstName: String!
+  """Family name (last name) of the Customer."""
+  lastName: String!
+  """
+  Email address of the Customer. An address already used by another Customer returns
+  `EMAIL_ALREADY_IN_USE`.
+  """
+  email: String!
+  """
+  Password of the Customer. An empty password returns `FORBIDDEN_ACTION`.
+  """
+  password: String!
+}
+
+"""Reference to the Cart line to remove."""
+input RemoveCartLineInput {
+  """
+  `id` of the Cart line, from `CartLine.id`. `LINE_NOT_FOUND` if the line isn't
+  in the Cart.
+  """
+  lineId: ID!
+}
+
+"""Identifies a line to remove from a Shopping List."""
+input RemoveShoppingListLineInput {
+  """`id` of the Shopping List that contains the line."""
+  listId: ID!
+  """
+  `id` of the ShoppingListLine to remove. A line that isn't on the Shopping List is
+  refused with `LINE_NOT_FOUND`.
+  """
+  lineId: ID!
+}
+
+"""Renegotiation request for a Quote."""
+input RenegotiateQuoteInput {
+  """ID of the Quote to renegotiate."""
+  quoteId: ID!
+  """
+  Message to the Seller that explains what to change. Stored as the `buyerComment`
+  of the Quote.
+  """
+  message: String!
+}
+
+"""Result of `reorder`."""
+type ReorderResult {
+  """Cart the lines were added to. `null` when `userErrors` is not empty."""
+  cart: Cart
+  """
+  Product lines that were not added. Empty when every Product line was added. Custom
+  lines are neither added nor listed here.
+  """
+  unavailable: [UnavailableLine!]!
+  """Refusals of the reorder. Empty when the reorder ran."""
+  userErrors: [UserError!]!
+}
+
+"""Cart that `reorder` adds the lines to."""
+enum ReorderTarget {
+  """The active Cart of the session. A Cart is created if there is none."""
+  ACTIVE_CART
+  """
+  A new Cart. Refused with `CART_NOT_EMPTY` when the active Cart already has lines.
+  """
+  NEW_CART
+}
+
+"""Buyer details for a new Quote Request."""
+input RequestQuoteInput {
+  """Message to the Seller. Stored as the `comment` of the Quote Request."""
+  message: String
+  """
+  Purchase order number of the Buyer for this request. It can't be changed after the
+  request is created.
+  """
+  purchaseOrderNumber: String
+}
+
+"""Return request for one Order."""
+input RequestReturnInput {
+  """`id` of the Order to return items from."""
+  orderId: ID!
+  """Order lines and quantities to return."""
+  lines: [ReturnLineInput!]!
+}
+
+"""Return of items from an Order. `requestReturn` creates one."""
+type Return implements Node {
+  """Unique identifier of the Return."""
+  id: ID!
+  """Date and time (UTC) the return was initiated."""
+  requestedAt: DateTime!
+  """
+  Identifier to track the return shipment. `null` until the merchant sets one.
+  """
+  returnTrackingId: String
+  """Items of the return. Each item has its own shipment and refund state."""
+  lines: [ReturnLine!]!
+}
+
+"""Returned units of one Order line."""
+type ReturnLine {
+  """
+  SKU of the returned Product Variant. Empty for a line that has no Product.
+  """
+  sku: String!
+  """
+  Name of the returned Product in the session's locale. Empty for a line that has no
+  Product.
+  """
+  productName: String!
+  """Number of units returned."""
+  quantity: Int!
+  """
+  Comment from the shopper about this item, as sent in `ReturnLineInput.comment`.
+  `null` when none was sent.
+  """
+  comment: String
+  """Shipment state of this item."""
+  shipmentState: ReturnShipmentState!
+  """Refund state of the item."""
+  paymentState: ReturnPaymentState!
+}
+
+"""Units of one Order line to return."""
+input ReturnLineInput {
+  """
+  `id` of the OrderLine to return. A custom line, or an `id` that isn't on the
+  Order, is refused with `LINE_NOT_FOUND`.
+  """
+  lineId: ID!
+  """
+  Number of units to return. Must be at least `1` and no more than the units still
+  returnable on the line. Otherwise refused with `INVALID_QUANTITY` or
+  `RETURN_NOT_ALLOWED`.
+  """
+  quantity: Int!
+  """Comment from the shopper about this item, stored on the return."""
+  comment: String
+}
+
+"""
+Lifecycle of a returned item's refund. An `ADVISED` item starts as
+`NON_REFUNDABLE` and a `RETURNED` item starts as `INITIAL`. From `INITIAL`,
+the merchant moves it to `REFUNDED` or `NOT_REFUNDED`.
+"""
+enum ReturnPaymentState {
+  """A refund can be made for the item but is not settled yet."""
+  INITIAL
+  """No refund can be made for the item."""
+  NON_REFUNDABLE
+  """The payment for the item is refunded."""
+  REFUNDED
+  """The payment for the item is not refunded."""
+  NOT_REFUNDED
+}
+
+"""Result of `requestReturn`."""
+type ReturnResult {
+  """
+  The Order after the mutation, with the new return in `returns`. When the request
+  is refused for the Order's state or a line, this is the unchanged Order. `null`
+  when the Order isn't found, and when the platform refuses the write, which is
+  returned as `RETURN_NOT_ALLOWED`.
+  """
+  order: Order
+  """Refusals of the return request. Empty when the return was created."""
+  userErrors: [UserError!]!
+}
+
+"""
+Lifecycle of a returned item's shipment. Items created by `requestReturn` start as
+`ADVISED`. A `RETURNED` item moves to `BACK_IN_STOCK` or `UNUSABLE`.
+"""
+enum ReturnShipmentState {
+  """The shopper has announced the return."""
+  ADVISED
+  """The merchant has received the item."""
+  RETURNED
+  """The item is received and restocked."""
+  BACK_IN_STOCK
+  """The item is received but cannot be restocked."""
+  UNUSABLE
+}
+
+union ReviewCustom = McfReviewCustom
+
+enum RoastEnum {
+  light
+  medium
+  mediumdark
+  dark
+}
+
+"""
+An entry in an address book: the signed-in Customer's own address book, or the address
+book of the selected Business Unit.
+
+A Customer can always change their own address book. Changing a Business Unit's
+address book requires the `UPDATE_BUSINESS_UNIT_DETAILS` permission.
+"""
+type SavedAddress implements Node {
+  """Unique identifier of the address."""
+  id: ID!
+  """
+  Name of the contact, made of the first and last name. If neither is set, contains
+  the `company` value.
+  """
+  name: String!
+  """Title of the contact, for example `Dr.`."""
+  title: String
+  """Salutation of the contact, for example `Mr.` or `Ms.`."""
+  salutation: String
+  """Name of the company."""
+  company: String
+  """Street name and street number."""
+  line1: String!
+  """Further information on the street address."""
+  line2: String
+  """Further information on the address."""
+  additionalAddressInfo: String
+  """Post office box number."""
+  poBox: String
+  """Number or name of the building."""
+  building: String
+  """Number or name of the apartment."""
+  apartment: String
+  """Name of the department."""
+  department: String
+  """Name of the city."""
+  city: String!
+  """
+  Name of the state or province, for example `Colorado`. In a country that taxes by
+  state, tax selection matches on this value.
+  """
+  state: String
+  """Name of the region, for locales that use a region that is not a state."""
+  region: String
+  """Postal code."""
+  postalCode: String!
+  """
+  Two-letter country code as per [ISO 3166-1
+  alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), for example `GB`.
+  """
+  country: String!
+  """Phone number of the contact."""
+  phone: String
+  """Mobile phone number of the contact."""
+  mobile: String
+  """Fax number of the contact."""
+  fax: String
+  """
+  Whether this address is the default shipping address of the address book.
+  """
+  isDefaultShipping: Boolean!
+  """
+  Whether this address is the default billing address of the address book.
+  """
+  isDefaultBilling: Boolean!
+  """
+  Whether the address is marked for shipping.
+  
+  The mark does not restrict anything: checkout accepts any address in the address
+  book. `setDefaultAddress` marks the address for the use it makes it the default
+  for, so a default address always reports `true`. If no address is marked, every
+  address reports `false`.
+  """
+  usableForShipping: Boolean!
+  """
+  Whether the address is marked for billing. Same rules as `usableForShipping`.
+  """
+  usableForBilling: Boolean!
+}
+
+"""Result of a mutation on an address book."""
+type SavedAddressResult {
+  """
+  The address the mutation acted on. For `removeAddress`, the removed address as it
+  was. `null` if the mutation is refused, and after a successful
+  `removeBusinessUnitAddress`. Check `userErrors` to tell these cases apart.
+  """
+  address: SavedAddress
+  """Reasons the mutation was refused. Empty on success."""
+  userErrors: [UserError!]!
+}
+
+"""
+Text matching mode of `Query.search`. A `query` equal to a variant's SKU matches
+that Product in every mode.
+"""
+enum SearchQueryMode {
+  """
+  Matches whole words: every word of `query` must appear in the field, in any order.
+  A fragment of a word does not match, so `bat` does not find `battery`. This is the
+  default.
+  """
+  FULL_TEXT
+  """
+  Matches when the text appears anywhere in the field, including inside a word (`bat`
+  finds `battery`), ignoring case.
+  """
+  CONTAINS
+  """
+  Matches with small typos. The tolerance increases with the length of `query`.
+  """
+  FUZZY
+  """Matches when the field starts with the text, ignoring case."""
+  PREFIX
+}
+
+"""The Shipping Method choice for the Cart."""
+input SelectShippingMethodInput {
+  """`id` of the Shipping Method, from `shippingMethodsForCart`."""
+  shippingMethodId: ID!
+}
+
+"""One variant's value on a `ProductOption` axis."""
+type SelectedOption {
+  """Name of the attribute, matching `ProductOption.code`."""
+  code: String!
+  """
+  Value of the variant for the attribute, in the same form as
+  `ProductOptionValue.value`, for example `#FFF`.
+  """
+  value: String!
+}
+
+"""Contact address for a guest Order."""
+input SetCustomerEmailInput {
+  """Email address of the guest."""
+  email: String!
+}
+
+"""
+Shipping progress of an Order as a whole. Returned items have their own
+`ReturnShipmentState`.
+"""
+enum ShipmentState {
+  """Shipment of the Order is pending."""
+  PENDING
+  """The Order is ready to be shipped."""
+  READY
+  """The Order is shipped."""
+  SHIPPED
+  """The Order is delivered."""
+  DELIVERED
+  """Shipment of the Order is delayed."""
+  DELAYED
+  """Items in the Order are shipped in more than one shipment."""
+  PARTIAL
+  """Items in the Order are not in stock and are delivered once restocked."""
+  BACKORDER
+  """Shipment of the Order is canceled."""
+  CANCELED
+}
+
+"""
+A delivery option for the Cart, as listed by `shippingMethodsForCart`. See [Shipping
+Methods](https://docs.commercetools.com/api/projects/shippingMethods).
+"""
+type ShippingMethod implements Node {
+  """
+  Unique identifier of the Shipping Method. Pass it as `shippingMethodId` to
+  `selectShippingMethod`.
+  """
+  id: ID!
+  """
+  User-defined unique identifier of the Shipping Method. `null` if the Shipping
+  Method has no key.
+  """
+  key: String
+  """
+  Name of the Shipping Method, localized for the session where a localized name
+  exists.
+  """
+  name: String!
+  """
+  Price of the Shipping Method for the Cart, with the free-shipping threshold of its
+  rate applied, before shipping discounts. `PriceTotals.shipping` has the price
+  after them.
+  """
+  price: Money!
+}
+
+"""
+A saved list of Products: a Customer's wishlist, or a Business Unit's purchase list.
+
+With a Business Unit selected, a session sees that Business Unit's lists. Without one,
+it sees the signed-in Customer's own lists.
+"""
+type ShoppingList implements Node {
+  """Unique identifier of the Shopping List."""
+  id: ID!
+  """
+  Name of the Shopping List in the session locale. Empty string if the list has no
+  name in that locale.
+  """
+  name: String!
+  """Description of the Shopping List in the session locale."""
+  description: String
+  """
+  Human-readable identifier of the Shopping List in the session locale, usually used
+  in deep-link URLs.
+  """
+  slug: String
+  """
+  Business Unit the purchase list belongs to. Null for a Customer's own wishlist.
+  """
+  businessUnit: BusinessUnit
+  """Number of lines on the Shopping List."""
+  lineCount: Int!
+  """Lines of the Shopping List."""
+  lines: [ShoppingListLine!]!
+  """Date and time (UTC) the Shopping List was last updated."""
+  updatedAt: DateTime!
+  """
+  Number of days after the last update before the platform deletes the Shopping List.
+  Null if the list is never deleted for inactivity.
+  """
+  deleteDaysAfterLastModification: Int
+  """
+  Identifier of the anonymous session the Shopping List was created in. Null once a
+  signed-in Customer owns the list, or if a signed-in Customer created it.
+  """
+  anonymousId: String
+  """
+  Actions the viewer can take on this Shopping List. Empty if the list is read-only
+  for the viewer.
+  
+  On a Business Unit's list, the viewer's Associate Roles decide. A role can allow
+  viewing a colleague's list without allowing changes to it.
+  """
+  availableActions: [ShoppingListAction!]!
+}
+
+"""
+Kind of change a viewer can make to a Shopping List. Each value names the mutations it
+permits.
+"""
+enum ShoppingListAction {
+  """
+  Add or change lines, and rename the list: `addShoppingListLine`,
+  `addToShoppingList`, `changeShoppingListLineQuantity`, and
+  `updateShoppingList`.
+  """
+  ADD_LINE
+  """Remove a line with `removeShoppingListLine`."""
+  REMOVE_LINE
+  """Delete the whole list with `deleteShoppingList`."""
+  DELETE
+}
+
+"""A Product Variant saved on a Shopping List, with its quantity."""
+type ShoppingListLine implements Node {
+  """Unique identifier of the Shopping List line."""
+  id: ID!
+  """SKU of the Product Variant."""
+  sku: String!
+  """
+  Name of the Product in the session locale. Empty string if the Product has no name
+  in that locale.
+  """
+  productName: String!
+  """Number of items of the Product Variant on the line."""
+  quantity: Int!
+  """
+  Price of one item in the session currency. If the Product Variant has no price in
+  that currency, contains its first price, which can be in another currency. Null if
+  the Product Variant has no price.
+  """
+  unitPrice: Money
+  """Date and time (UTC) the line was added to the Shopping List."""
+  addedAt: DateTime!
+}
+
+"""Result of a mutation that changes a Shopping List."""
+type ShoppingListResult {
+  """
+  The Shopping List after the change. `null` if the mutation was refused.
+  """
+  shoppingList: ShoppingList
+  """Reasons the mutation was refused. Empty if it succeeded."""
+  userErrors: [UserError!]!
+}
+
+enum SizeEnum {
+  small
+  large
+}
+
+"""Direction in which to sort a list."""
+enum SortDirection {
+  """Ascending order."""
+  ASC
+  """Descending order."""
+  DESC
+}
+
+"""
+[Store](https://docs.commercetools.com/api/projects/stores) that scopes a session's
+catalog, channels, and Cart.
+
+Select a Store with `PUT /{project}/main/session/scope`, in a guest, signed-in, or
+Business Unit session. A Business Unit session can only select a Store of its Business
+Unit. Selecting a Store aligns the session's country and locale with what the Store
+serves, sets the session's distribution and supply channels from the Store, and limits
+the catalog to the Store's assortment. The Cart is created in the Store, so adding a
+Product that the Store doesn't sell returns `NOT_IN_ASSORTMENT`. A Store has no
+currency of its own, so the session currency stays unchanged.
+"""
+type Store {
+  """User-defined unique identifier of the Store."""
+  key: String!
+  """
+  Name of the Store in the session's locale. Contains the `key` if the Store has no
+  name in that locale.
+  """
+  name: String!
+  """
+  Countries the Store serves, as ISO 3166-1 alpha-2 codes. Empty if the Store doesn't
+  restrict countries. When a Store is selected, the session's country is aligned with
+  this list.
+  """
+  countries: [String!]!
+  """
+  Languages the Store publishes content in, as IETF language tags, for example
+  `en-GB`. Empty if the Store doesn't restrict languages.
+  """
+  languages: [String!]!
+}
+
+enum SystemEnum {
+  original
+  vertuo
+  beantocup
+  espresso
+  filter
+  grinder
+}
+
+enum SystemEnum2 {
+  original
+  vertuo
+}
+
+union TransactionCustom = InstoreTransactionTypeCustom
+
+"""Order line skipped by `reorder`."""
+type UnavailableLine {
+  """SKU of the line. Empty when the line has no SKU."""
+  sku: String!
+  """Name of the Product in the session's locale."""
+  productName: String!
+  """Why the line was skipped."""
+  reason: UnavailableReason!
+}
+
+"""Cause of a line that `reorder` could not add."""
+enum UnavailableReason {
+  """
+  The Product is no longer sold, for example because the SKU no longer exists or is
+  not in the Store's assortment.
+  """
+  DISCONTINUED
+  """The Product is out of stock."""
+  OUT_OF_STOCK
+  """
+  The Product has no Price for the session's currency, country, or channel.
+  """
+  PRICE_CHANGED
+}
+
+"""Identifies a saved address and carries its new values."""
+input UpdateAddressInput {
+  """`id` of the SavedAddress to update."""
+  addressId: ID!
+  """New values for the address."""
+  address: AddressBookInput!
+}
+
+"""
+Changes to an Approval Rule. Only the fields you set change. Omitted and `null`
+fields keep their current value. To change the state, use `setApprovalRuleActive`.
+
+Setting `conditions` replaces the whole predicate of the Approval Rule. For a rule
+whose `conditionsFullyTyped` is `false`, this is refused with
+`CONDITION_NOT_SUPPORTED`.
+"""
+input UpdateApprovalRuleInput {
+  """ID of the Approval Rule to update."""
+  id: ID!
+  """New key of the Approval Rule."""
+  key: String
+  """New name of the Approval Rule."""
+  name: String
+  """New description of the Approval Rule."""
+  description: String
+  """
+  New conditions, which replace all current conditions. Validated the same way as in
+  `CreateApprovalRuleInput`.
+  """
+  conditions: [ApprovalConditionInput!]
+  """New approver hierarchy, which replaces the current one."""
+  approverTiers: [ApproverTierInput!]
+  """New requester role keys, which replace the current ones."""
+  requesterRoleKeys: [String!]
+}
+
+"""New role assignment of an existing Associate."""
+input UpdateAssociateRolesInput {
+  """
+  ID of the Associate to update. The Business Unit is taken from this ID, so an
+  Associate of a child unit is updated in that child unit.
+  """
+  associateId: ID!
+  """
+  Keys of the Associate Roles that the Associate holds after the update. Replaces all
+  current roles. An unknown key is refused with `ASSOCIATE_ROLE_NOT_FOUND`.
+  """
+  roleKeys: [String!]!
+  """
+  Inheritance mode for every role assigned here. If omitted, a role the Associate
+  already holds keeps its current mode, and a newly assigned role gets the platform
+  default, `DISABLED`.
+  """
+  inheritance: AssociateRoleInheritanceMode
+}
+
+"""Custom Field values for one Cart line."""
+input UpdateCartLineCustomFieldsInput {
+  """
+  `id` of the Cart line, from `CartLine.id`. `LINE_NOT_FOUND` if the line isn't
+  in the Cart.
+  """
+  lineId: ID!
+}
+
+"""A quantity change for one Cart line."""
+input UpdateCartLineQuantityInput {
+  """
+  `id` of the Cart line, from `CartLine.id`. `LINE_NOT_FOUND` if the line isn't
+  in the Cart.
+  """
+  lineId: ID!
+  """
+  New quantity of the line. `0` removes the line. A negative value is refused with
+  `INVALID_QUANTITY`.
+  """
+  quantity: Int!
+}
+
+"""
+Names to change on the signed-in Customer. Fields you omit or pass as null keep their
+current value.
+"""
+input UpdateProfileInput {
+  """New given name (first name) of the Customer."""
+  firstName: String
+  """New family name (last name) of the Customer."""
+  lastName: String
+}
+
+"""Changes to the name or description of a Shopping List."""
+input UpdateShoppingListInput {
+  """`id` of the Shopping List to update."""
+  listId: ID!
+  """
+  New name of the Shopping List, stored in the language of the session. If omitted,
+  the current name is kept. A blank name is refused with `INVALID_INPUT`.
+  """
+  name: String
+  """
+  New description of the Shopping List, stored in the language of the session. If
+  omitted, the current description is kept. An empty string removes the description.
+  """
+  description: String
+}
+
+"""
+Absolute URL, for example `https://images.example.com/oak-dining-chair.jpg`.
+"""
+scalar Url
+
+"""
+Refusal of a mutation that the caller can correct or act on. Check the `userErrors`
+list of every mutation result before you read its resource field.
+
+Top-level GraphQL errors are used for transport errors and unexpected failures.
+"""
+type UserError @shareable {
+  """Kind of error. Handle each case in your client by this code."""
+  code: UserErrorCode!
+  """
+  Description of the error that you can display or log. To localize the error, map
+  from `code` instead. Don't parse the message: platform identifiers and permission
+  names are removed from it, and its structure isn't stable.
+  """
+  message: String!
+  """
+  Dotted path to the input value that caused the error. The path starts with the
+  argument name of the mutation, followed by nested input fields and list indices. For
+  example, `input.postalCode` on `setShippingAddress`, `inputs.2.sku` on
+  `addCartLines`, or `orderId` on `cancelOrder`.
+  
+  `null` if no input value is at fault, for example for a missing permission, the
+  state of the resource, or a missing precondition such as
+  `SHIPPING_ADDRESS_REQUIRED`.
+  """
+  field: String
+  """
+  Correlation ID of the request that returned the error. Include it in a support
+  request to identify the request across all services it reached.
+  
+  If you send an `X-Correlation-ID` header, this is usually the value you sent.
+  Otherwise, it's the ID generated for the request. All entries of one `userErrors`
+  list have the same value. `null` for an error raised outside a request.
+  """
+  correlationId: String
+}
+
+"""Kinds of refusal that a mutation can return in `UserError.code`."""
+enum UserErrorCode {
+  """A line of the Cart is out of stock."""
+  OUT_OF_STOCK
+  """The Store doesn't sell this Product."""
+  NOT_IN_ASSORTMENT
+  """
+  The Store sells this Product but has no price for it in the session's currency,
+  country, or distribution channel. Another currency or distribution channel may make
+  it available.
+  """
+  PRICE_NOT_AVAILABLE
+  """The quantity isn't allowed, for example because it's zero or negative."""
+  INVALID_QUANTITY
+  """No line with this ID exists on the Cart, Shopping List, or Order."""
+  LINE_NOT_FOUND
+  """No published Product has this SKU."""
+  UNKNOWN_SKU
+  """The session has no Cart, or the Cart has no line items."""
+  EMPTY_CART
+  """
+  The Shipping Method doesn't exist, the ID isn't valid, or the Shipping Method has no
+  rate for the Cart's shipping address.
+  """
+  UNKNOWN_SHIPPING_METHOD
+  """
+  `PaymentInput.methodKey` names a payment method that the project doesn't accept.
+  The accepted methods can change during checkout, so read `paymentMethods` again
+  and retry.
+  """
+  UNKNOWN_PAYMENT_METHOD
+  """
+  No Checkout configuration of the project matches the session's country and Store,
+  so `beginPayment` can't start a payment.
+  """
+  CHECKOUT_NOT_CONFIGURED
+  """
+  The Cart has no shipping address. Set the shipping address before you select a
+  Shipping Method or request a Quote.
+  """
+  SHIPPING_ADDRESS_REQUIRED
+  """
+  The project has no tax rate for the country of the address, so the address can't be
+  used on a Cart. `addAddress` and `updateAddress` return this code for a country
+  that isn't a valid country code.
+  """
+  SHIPPING_COUNTRY_NOT_SUPPORTED
+  """
+  The country isn't a valid two-letter ISO 3166-1 alpha-2 code in upper case, such as
+  `GB`.
+  """
+  INVALID_COUNTRY
+  """
+  The distribution channel given for the line can't select a price for it, because the
+  channel doesn't exist, the ID isn't valid, or the channel doesn't have the
+  `ProductDistribution` role. See
+  `AddCartLineInput.distributionChannelIdOverride`.
+  """
+  INVALID_DISTRIBUTION_CHANNEL
+  """
+  The project's line item extension returned an error for this line, so nothing was
+  added to the Cart. The message doesn't carry the extension's own error.
+  """
+  LINE_ITEM_HOOK_FAILED
+  """
+  The request contains an invalid value that no more specific code covers, for example
+  a blank ID. `message` describes the problem.
+  """
+  INVALID_INPUT
+  """The viewer doesn't have the permission for this action."""
+  FORBIDDEN_ACTION
+  """
+  The operation requires a signed-in Customer, and the session has none.
+  `createBusinessUnit` also returns it when the session lacks permission in the
+  parent Business Unit, with `field` set to `input.parentUnitKey`.
+  """
+  NOT_AUTHORIZED
+  """
+  The operation requires a selected Business Unit and Store, and the session is
+  missing one of them.
+  """
+  BUSINESS_UNIT_REQUIRED
+  """The discount code doesn't exist, isn't active, or isn't valid."""
+  INVALID_DISCOUNT_CODE
+  """The discount code is outside its validity period."""
+  DISCOUNT_CODE_EXPIRED
+  """
+  The discount code exists but can't be applied to this Cart, for example because it
+  doesn't match the Cart or has reached its maximum number of applications.
+  """
+  DISCOUNT_CODE_NOT_APPLICABLE
+  """The discount code is already on the Cart."""
+  DISCOUNT_CODE_ALREADY_APPLIED
+  """No Order with this ID is visible to the current session."""
+  ORDER_NOT_FOUND
+  """
+  The Order can't be returned in its current state, or a quantity exceeds what can
+  still be returned.
+  """
+  RETURN_NOT_ALLOWED
+  """
+  The Order can't be cancelled in its current state, for example because it's complete
+  or already cancelled.
+  """
+  ORDER_NOT_CANCELLABLE
+  """
+  The active Cart already has items. To add the items to it, retry `reorder` with
+  `into: ACTIVE_CART`, or clear the Cart first.
+  """
+  CART_NOT_EMPTY
+  """
+  No Quote with this ID is visible to the current session, because it doesn't exist or
+  belongs to a Business Unit that the session hasn't selected.
+  """
+  QUOTE_NOT_FOUND
+  """
+  The state of the Quote doesn't allow the action. Only a `PENDING` Quote can be
+  accepted, declined, or renegotiated. A missing permission returns
+  `FORBIDDEN_ACTION`, and an expired Quote returns `QUOTE_EXPIRED`.
+  """
+  QUOTE_NOT_ACTIONABLE
+  """
+  The Quote is past its `expiresAt`, so it can no longer be accepted, declined, or
+  renegotiated. Its `quoteState` is still `PENDING`, and its `availableActions`
+  is empty.
+  """
+  QUOTE_EXPIRED
+  """
+  The Cart has discount codes, and a Quote can't be requested for a Cart with discount
+  codes. Remove the codes and try again. The Cart is unchanged.
+  """
+  QUOTE_CART_HAS_DISCOUNT_CODES
+  """
+  No Quote Request with this ID is visible to the current session, because it doesn't
+  exist or belongs to a Business Unit that the session hasn't selected.
+  """
+  QUOTE_REQUEST_NOT_FOUND
+  """
+  The state of the Quote Request doesn't allow the action. Only a `SUBMITTED` Quote
+  Request can be cancelled.
+  """
+  QUOTE_REQUEST_NOT_ACTIONABLE
+  """
+  The approval can't be approved or rejected, for example because it's no longer
+  pending.
+  """
+  APPROVAL_NOT_PENDING
+  """Rejecting an Order requires a `reason`, and none was given."""
+  APPROVAL_REASON_REQUIRED
+  """No Approval Rule with this ID is visible to the current session."""
+  APPROVAL_RULE_NOT_FOUND
+  """
+  No Associate Role with this key exists in the project. `field` points to the
+  entry.
+  """
+  ASSOCIATE_ROLE_NOT_FOUND
+  """
+  The approval condition can't be expressed with `ApprovalConditionInput`, the
+  `conditions` list is empty, or you replaced the conditions of an Approval Rule
+  whose `conditionsFullyTyped` is `false`. `field` names the condition,
+  `message` says what is supported, and the stored Approval Rule is unchanged.
+  """
+  CONDITION_NOT_SUPPORTED
+  """
+  The Approval Rule has no approver tiers, a tier without approver groups, or a group
+  without Associate Roles. Such a rule would block every matching Order, because
+  nobody could approve it.
+  """
+  APPROVER_TIERS_REQUIRED
+  """No Shopping List with this ID is visible to the current session."""
+  LIST_NOT_FOUND
+  """
+  No Customer in the project has this email address. You can only add an Associate who
+  already has a Customer account.
+  """
+  CUSTOMER_NOT_FOUND
+  """A Business Unit with this key already exists."""
+  BUSINESS_UNIT_KEY_EXISTS
+  """
+  No saved address with this ID exists, or no ID was given and the Cart has no
+  shipping address to use.
+  """
+  ADDRESS_NOT_FOUND
+  """The current password is incorrect."""
+  INVALID_CURRENT_PASSWORD
+  """Another Customer already uses this email address."""
+  EMAIL_ALREADY_IN_USE
+}
+
+"""
+Context of the current session. Queries and mutations return data for this context.
+"""
+type Viewer {
+  """
+  Store selected for the session. `null` if the session has no Store, which is a
+  valid state.
+  """
+  store: Store
+  """
+  Locale of the session, as an IETF language tag, for example `en-GB`. Localized
+  values in responses use this locale.
+  """
+  locale: String!
+  """
+  Country of the session, as an ISO 3166-1 alpha-2 code, for example `GB`.
+  """
+  country: String!
+  """
+  Default currency of the session, as an ISO 4217 code, for example `GBP`. Each Cart
+  and Order has its own currency.
+  
+  Selecting a Store doesn't change the currency. If the Store has no prices in this
+  currency, Product prices are `null` and `addCartLine` returns
+  `PRICE_NOT_AVAILABLE`. Change it with `PATCH /{project}/main/session` to any
+  value of `PresentmentOptions.currencies`.
+  """
+  currency: String!
+  """Audience of the session."""
+  audience: Audience!
+  """Customer who is signed in. `null` for a guest session."""
+  customer: Customer
+  """Business Unit selected for the session. `null` for a B2C session."""
+  businessUnit: BusinessUnit
+  """
+  Permissions of the viewer in the selected Business Unit: all permissions of the
+  Associate Roles the viewer holds there.
+  
+  Use it to show or hide navigation and empty states. For a specific resource, its
+  `availableActions` field is authoritative and can allow less. Empty if no Business
+  Unit is selected.
+  """
+  permissions: [AssociatePermission!]!
+  """Languages, countries, and currencies the session can switch to."""
+  presentmentOptions: PresentmentOptions!
+  """
+  [Checkout
+  mode](https://docs.commercetools.com/checkout/overview#complete-checkout-and-payment-only-modes)
+  for the session's country and Store. `beginPayment` returns the same mode.
+  
+  `null` if no Checkout configuration of the project matches the session. In that
+  case, `beginPayment` can't start a payment.
+  """
+  checkoutMode: CheckoutMode
+}
+extend type Product @key(fields: "id") @key(fields: "key")
+extend type Cart @key(fields: "id")
+extend type Order @key(fields: "id")
+extend type Customer @key(fields: "id") @key(fields: "key")
+extend type BusinessUnit @key(fields: "id") @key(fields: "key")
+extend type Category @key(fields: "id") @key(fields: "key")
+extend type Quote @key(fields: "id")
+extend type QuoteRequest @key(fields: "id")
+extend type ShoppingList @key(fields: "id")
+extend type ApprovalFlow @key(fields: "id")
+extend type ApprovalRule @key(fields: "id") @key(fields: "key")
+extend type AssociateRole @key(fields: "key")
+
+"What a storefront handed over to authenticate with. Opaque to this layer."
+input CilLoginInput @inaccessible {
+  code: String!
+}
+
+"Who the shopper is, as the project's extension resolved it. Carries no commercetools customer id: this layer maps the external identity to a customer."
+type CilLoginResult @inaccessible {
+  "The stable external identity — matched to a customer's externalId."
+  externalId: String! @shareable
+  email: String @shareable
+  firstName: String @shareable
+  lastName: String @shareable
+  phone: String @shareable
+  "An opaque value handed back at revalidation. Sealed into the session, never exposed to the browser."
+  anchorToken: String @shareable
+  "Anchor lifetime in seconds. Absent means the session's own TTL governs."
+  expiresIn: Int @shareable
+}
+
+"What this layer asks about when an extension-anchored session refreshes."
+input CilRevalidateInput @inaccessible {
+  externalId: String!
+  anchorToken: String
+}
+
+"Whether the session may continue, and optionally a rotated anchor."
+type CilRevalidateResult @inaccessible {
+  active: Boolean! @shareable
+  anchorToken: String @shareable
+  expiresIn: Int @shareable
+}
