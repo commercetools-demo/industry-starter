@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const jar = vi.hoisted(() => ({ store: new Map<string, string>() }));
 const cart = vi.hoisted(() => ({ get: vi.fn() }));
@@ -17,6 +17,8 @@ import { GET } from './route';
 import { SESSION_COOKIE, createSessionToken, verifySessionToken } from '@/lib/session';
 
 const call = () => GET(new Request('http://x/api/cart/count'), { params: Promise.resolve({}) });
+
+afterEach(() => vi.unstubAllEnvs());
 
 beforeEach(() => {
   jar.store.clear();
@@ -60,5 +62,27 @@ describe('GET /api/cart/count', () => {
     const res = await call();
     expect(await res.json()).toEqual({ count: 0 });
     expect(res.headers.get('set-cookie')).toContain('malva-session=');
+  });
+  describe('an In-store order cart (custom type instore-order-type)', () => {
+    const instoreCart = { cartState: 'Active', totalLineItemQuantity: 3, lineItems: [{ quantity: 3 }], custom: { type: { typeId: 'type', id: 't1', obj: { key: 'instore-order-type' } }, fields: { orderType: 'in-store-purchase' } } };
+
+    it('is no cart for the website: count 0, and the type is expanded so its key can be read', async () => {
+      jar.store.set(SESSION_COOKIE, await createSessionToken({ cartId: 'c1' }));
+      cart.get.mockResolvedValue({ body: instoreCart });
+      expect(await (await call()).json()).toEqual({ count: 0 });
+    });
+
+    it('is still the cart in the In-store companion', async () => {
+      vi.stubEnv('APP_MODE', 'instore');
+      jar.store.set(SESSION_COOKIE, await createSessionToken({ cartId: 'c1' }));
+      cart.get.mockResolvedValue({ body: instoreCart });
+      expect(await (await call()).json()).toEqual({ count: 3 });
+    });
+
+    it('a cart with another custom type is the shopper\'s cart', async () => {
+      jar.store.set(SESSION_COOKIE, await createSessionToken({ cartId: 'c1' }));
+      cart.get.mockResolvedValue({ body: { ...instoreCart, custom: { type: { typeId: 'type', id: 't2', obj: { key: 'other' } } } } });
+      expect(await (await call()).json()).toEqual({ count: 3 });
+    });
   });
 });

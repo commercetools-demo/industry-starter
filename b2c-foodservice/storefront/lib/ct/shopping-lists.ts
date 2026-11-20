@@ -2,6 +2,7 @@ import 'server-only';
 import type { ShoppingList, ShoppingListUpdateAction } from '@commercetools/platform-sdk';
 import { apiRoot } from '@/lib/ct/client';
 import { ownsCart } from '@/lib/ct/cart';
+import { isHiddenInstoreCart } from '@/lib/ct/order-type-key';
 import { updateWithRetry } from '@/lib/ct/retry';
 import { AppError } from '@/lib/errors';
 import { isProductId } from '@/lib/reviews/validate';
@@ -102,8 +103,8 @@ export async function removeProduct(customerId: string, productId: string): Prom
 export async function cartProductIds(session: Session): Promise<string[]> {
   if (!session.cartId) return [];
   try {
-    const { body } = await apiRoot.carts().withId({ ID: session.cartId }).get().execute();
-    if (body.cartState !== 'Active' || !ownsCart(body, session)) return [];
+    const { body } = await apiRoot.carts().withId({ ID: session.cartId }).get({ queryArgs: { expand: 'custom.type' } }).execute();
+    if (body.cartState !== 'Active' || !ownsCart(body, session) || isHiddenInstoreCart(body)) return [];
     return [...new Set(body.lineItems.map((l) => l.productId))];
   } catch (e) {
     if ((e as { statusCode?: number })?.statusCode === 404) return [];

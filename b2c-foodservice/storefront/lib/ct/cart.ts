@@ -13,6 +13,7 @@ import { apiRoot } from '@/lib/ct/client';
 import { getBrandChannelId, getStoresForCountry } from '@/lib/ct/channels';
 import { getInventoryDetail, getStoreStock } from '@/lib/ct/inventory';
 import { orderTypeCartActions, withOrderType } from '@/lib/ct/order-type';
+import { isHiddenInstoreCart } from '@/lib/ct/order-type-key';
 import { getProductBrand } from '@/lib/ct/product-selections';
 import { getProductBySku, getRecurrencePolicies, getRecurrencePolicyByKey } from '@/lib/ct/product-detail';
 import { updateWithRetry } from '@/lib/ct/retry';
@@ -52,10 +53,14 @@ export async function getCartUnitCount(cartId: string): Promise<number | null> {
   return cart ? mapCartSummary(cart).count : null;
 }
 
+/** Expansion that lets `isHiddenInstoreCart` read the custom type's key. */
+const ORDER_TYPE_EXPAND = 'custom.type';
+
+/** The shopper's Active cart, or null when it is gone, not Active, or an In-store order seen from the website (never fetched as the bag). */
 async function getActiveCart(cartId: string): Promise<Cart | null> {
   try {
-    const { body } = await apiRoot.carts().withId({ ID: cartId }).get().execute();
-    return body.cartState === 'Active' ? body : null;
+    const { body } = await apiRoot.carts().withId({ ID: cartId }).get({ queryArgs: { expand: ORDER_TYPE_EXPAND } }).execute();
+    return body.cartState === 'Active' && !isHiddenInstoreCart(body) ? body : null;
   } catch (e) {
     if ((e as { statusCode?: number })?.statusCode === 404) return null;
     throw e;
@@ -386,7 +391,7 @@ export interface CartViewResult {
 }
 
 /** Expanded on every read and write: the code objects (code text and name) and the shipping method (its key). */
-const CART_EXPAND = ['discountCodes[*].discountCode', 'shippingInfo.shippingMethod'];
+const CART_EXPAND = ['discountCodes[*].discountCode', 'shippingInfo.shippingMethod', ORDER_TYPE_EXPAND];
 
 /** A cart belongs to the session that created it: same anonymous id, or same customer. Anything else is "no cart". */
 export function ownsCart(cart: Pick<Cart, 'anonymousId' | 'customerId'>, session: Pick<Session, 'anonymousId' | 'customerId'>): boolean {
@@ -399,7 +404,7 @@ async function readOwnedCart(session: Session): Promise<Cart | null> {
   if (!session.cartId) return null;
   try {
     const { body } = await apiRoot.carts().withId({ ID: session.cartId }).get({ queryArgs: { expand: CART_EXPAND } }).execute();
-    return body.cartState === 'Active' && ownsCart(body, session) ? body : null;
+    return body.cartState === 'Active' && ownsCart(body, session) && !isHiddenInstoreCart(body) ? body : null;
   } catch (e) {
     if ((e as { statusCode?: number })?.statusCode === 404) return null;
     throw e;
