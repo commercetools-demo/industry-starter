@@ -33,20 +33,14 @@ describe('GET /api/cart/count', () => {
 
   it('sums quantities: 3 units across 2 lines is 3', async () => {
     jar.store.set(SESSION_COOKIE, await createSessionToken({ cartId: 'c1' }));
-    cart.get.mockResolvedValue({ body: { cartState: 'Active', shippingMode: 'Multiple', totalLineItemQuantity: 3, lineItems: [{ quantity: 2 }, { quantity: 1 }] } });
+    cart.get.mockResolvedValue({ body: { cartState: 'Active', totalLineItemQuantity: 3, lineItems: [{ quantity: 2 }, { quantity: 1 }] } });
     expect(await (await call()).json()).toEqual({ count: 3 });
   });
 
   it('falls back to summing the lines when the total is absent', async () => {
     jar.store.set(SESSION_COOKIE, await createSessionToken({ cartId: 'c1' }));
-    cart.get.mockResolvedValue({ body: { cartState: 'Active', shippingMode: 'Multiple', lineItems: [{ quantity: 2 }, { quantity: 1 }] } });
+    cart.get.mockResolvedValue({ body: { cartState: 'Active', lineItems: [{ quantity: 2 }, { quantity: 1 }] } });
     expect(await (await call()).json()).toEqual({ count: 3 });
-  });
-
-  it('counts an old Single cart as no cart (D-062: only Multiple carts are read)', async () => {
-    jar.store.set(SESSION_COOKIE, await createSessionToken({ cartId: 'c1' }));
-    cart.get.mockResolvedValue({ body: { cartState: 'Active', shippingMode: 'Single', totalLineItemQuantity: 3, lineItems: [{ quantity: 3 }] } });
-    expect(await (await call()).json()).toEqual({ count: 0 });
   });
 
   it('returns 0 and clears a non-active cart', async () => {

@@ -248,38 +248,18 @@ function reprice(cart) {
   if (percent > 0) for (const l of lines) l.totalPrice = centMoney(currency, Math.round(l.price.value.centAmount * l.quantity * (1 - percent / 100)));
   const net = lines.reduce((n, l) => n + l.totalPrice.centAmount, 0);
   const rule = MOCK_SHIPPING[currency] ?? MOCK_SHIPPING.USD;
-  let shipping = 0;
-  let allocated = true;
-  if (cart.shippingMode === 'Multiple') {
-    // Like the platform (verified live, F-K-02): each entry is priced (collect free, delivery by the whole cart's net), and shipping
-    // price and tax appear only once every unit of every line is allocated to an entry the cart has.
-    const entries = cart.shipping ?? [];
-    for (const l of lines) {
-      const d = l.shippingDetails;
-      if (d) d.valid = d.targets.every((t) => entries.some((e) => e.shippingKey === t.shippingMethodKey));
-    }
-    allocated = lines.length > 0 && lines.every((l) => {
-      const targets = l.shippingDetails?.targets ?? [];
-      return targets.reduce((n, t) => n + t.quantity, 0) === l.quantity && targets.every((t) => entries.some((e) => e.shippingKey === t.shippingMethodKey));
-    });
-    for (const e of entries) {
-      const used = lines.some((l) => (l.shippingDetails?.targets ?? []).some((t) => t.shippingMethodKey === e.shippingKey));
-      const collect = e.shippingInfo.shippingMethod?.obj?.key === 'mcf-collect';
-      e.shippingInfo.price = centMoney(currency, !used || collect || freeShipping || net >= rule.freeAbove ? 0 : rule.rate);
-    }
-    shipping = allocated ? entries.reduce((n, e) => n + e.shippingInfo.price.centAmount, 0) : 0;
-  } else if (cart.shippingInfo) {
+  if (cart.shippingInfo) {
     const collect = cart.shippingInfo.shippingMethod?.obj?.key === 'mcf-collect';
     cart.shippingInfo.price = centMoney(currency, collect || freeShipping || net >= rule.freeAbove ? 0 : rule.rate);
     cart.shippingInfo.shippingMethodState = 'MatchesCart';
-    shipping = cart.shippingInfo.price.centAmount;
   }
+  const shipping = cart.shippingInfo?.price.centAmount ?? 0;
   const taxRate = MOCK_TAX[cart.country] ?? 0;
   for (const l of lines) l.taxRate = { name: 'mock', amount: taxRate, includedInPrice: false, country: cart.country };
   const tax = Math.round((net + shipping) * taxRate);
   cart.totalLineItemQuantity = lines.reduce((n, l) => n + l.quantity, 0);
   cart.totalPrice = centMoney(currency, net + shipping);
-  cart.taxedPrice = lines.length === 0 || !allocated ? undefined : {
+  cart.taxedPrice = lines.length === 0 ? undefined : {
     totalNet: centMoney(currency, net + shipping), totalGross: centMoney(currency, net + shipping + tax), totalTax: centMoney(currency, tax), taxPortions: [],
   };
   if (!cart.taxedPrice) delete cart.taxedPrice;
@@ -291,7 +271,7 @@ const demoLine = (cart, sku, quantity, id) => {
   return newLine(cart, found, { sku, quantity, custom: { fields: { fulfilment: 'delivery' } } }, priceFor(found.variant, cart.country, cart.totalPrice.currencyCode), id);
 };
 const baseCart = (id, owner, extra = {}) => ({
-  id, version: 1, cartState: 'Active', country: 'US', locale: 'en-US', shippingMode: 'Multiple', shipping: [], itemShippingAddresses: [], lineItems: [], discountCodes: [],
+  id, version: 1, cartState: 'Active', country: 'US', locale: 'en-US', shippingMode: 'Single', lineItems: [], discountCodes: [],
   totalPrice: centMoney('USD', 0), ...owner, ...extra,
 });
 const CARTS = new Map();
@@ -380,49 +360,6 @@ function updateCart(cart, body) {
           shippingMethod: { typeId: 'shipping-method', id: `sm-${action.shippingMethod.key}`, obj: { key: action.shippingMethod.key } },
         };
         break;
-      case 'addItemShippingAddress': {
-        next.itemShippingAddresses = next.itemShippingAddresses ?? [];
-        if (next.itemShippingAddresses.some((a) => a.key === action.address.key)) return ctError(400, [{ code: 'InvalidOperation', message: 'duplicate address key' }]);
-        next.itemShippingAddresses.push({ ...action.address });
-        break;
-      }
-      case 'removeItemShippingAddress': {
-        if (next.lineItems.some((l) => (l.shippingDetails?.targets ?? []).some((t) => t.addressKey === action.addressKey))) {
-          return ctError(400, [{ code: 'InvalidOperation', message: 'address is used by a line target' }]);
-        }
-        next.itemShippingAddresses = (next.itemShippingAddresses ?? []).filter((a) => a.key !== action.addressKey);
-        break;
-      }
-      case 'addShippingMethod': {
-        next.shipping = next.shipping ?? [];
-        if (next.shipping.some((e) => e.shippingKey === action.shippingKey)) return ctError(400, [{ code: 'InvalidOperation', message: 'duplicate shipping key' }]);
-        const key = action.shippingMethod.key;
-        next.shipping.push({
-          shippingKey: action.shippingKey, shippingAddress: { ...action.shippingAddress },
-          shippingInfo: {
-            shippingMethodName: key === 'mcf-collect' ? 'Collect in store' : 'Standard', price: centMoney(currency, 0), shippingMethodState: 'MatchesCart',
-            shippingMethod: { typeId: 'shipping-method', id: `sm-${key}`, obj: { key } },
-          },
-        });
-        break;
-      }
-      case 'removeShippingMethod': {
-        if (next.lineItems.some((l) => (l.shippingDetails?.targets ?? []).some((t) => t.shippingMethodKey === action.shippingKey))) {
-          return ctError(400, [{ code: 'InvalidOperation', message: 'shipping method is used by a line target' }]);
-        }
-        next.shipping = (next.shipping ?? []).filter((e) => e.shippingKey !== action.shippingKey);
-        break;
-      }
-      case 'setLineItemShippingDetails': {
-        const l = lineOf(action.lineItemId);
-        if (!l) return ctError(400, [{ code: 'InvalidOperation', message: 'line item not found' }]);
-        for (const t of action.shippingDetails?.targets ?? []) {
-          if (!(next.itemShippingAddresses ?? []).some((a) => a.key === t.addressKey)) return ctError(400, [{ code: 'InvalidOperation', message: 'unknown address key' }]);
-        }
-        if (action.shippingDetails) l.shippingDetails = { targets: action.shippingDetails.targets.map((t) => ({ ...t })), valid: true };
-        else delete l.shippingDetails;
-        break;
-      }
       case 'recalculate':
         for (const l of next.lineItems) {
           const found = VARIANT_BY_SKU.get(l.variant.sku);
@@ -611,9 +548,6 @@ createServer({ key: readFileSync(join(dir, 'key.pem')), cert: readFileSync(join(
   }
   if (path === `/${PROJECT}/carts` && req.method === 'POST') {
     const body = await readBody(req);
-    if (body.shippingMode === 'Multiple' && (body.shippingAddress || body.shippingMethod)) {
-      return json(res, 400, { statusCode: 400, message: 'Cannot set shipping address, method or rate with shipping mode Multiple.', errors: [{ code: 'InvalidOperation', message: 'Cannot set shipping address, method or rate with shipping mode Multiple.' }] });
-    }
     cartSeq += 1;
     const cart = reprice(baseCart(`cart-${cartSeq}`, {
       ...(body.anonymousId ? { anonymousId: body.anonymousId } : {}), ...(body.customerId ? { customerId: body.customerId } : {}),

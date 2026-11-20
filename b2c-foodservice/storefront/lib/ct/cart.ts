@@ -4,7 +4,6 @@ import { getTranslations } from 'next-intl/server';
 import { BRANDS, DEFAULT_BRAND, brandOfLineFields, type BrandSlug } from '@/lib/brands';
 import { isCodeRejectionReason, type CodeRejectionReason } from '@/lib/cart/discount-reasons';
 import { planFulfilmentSwitch, planStoreChange, shippingMethodKeyFor, type PlanLine, type PlanOp } from '@/lib/cart/plan';
-import { planAllocation, type AllocationInput, type AllocationLine } from '@/lib/cart/shipping-allocation';
 import { getCartEnrichment } from '@/lib/ct/cart-enrich';
 import { getBundleView } from '@/lib/ct/preset-bundles';
 import { buildPresetBundleActions, buildRaiseBundleActions } from '@/lib/ct/preset-bundle-cart';
@@ -56,19 +55,11 @@ export async function getCartUnitCount(cartId: string): Promise<number | null> {
 async function getActiveCart(cartId: string): Promise<Cart | null> {
   try {
     const { body } = await apiRoot.carts().withId({ ID: cartId }).get().execute();
-    return isLiveCart(body) ? body : null;
+    return body.cartState === 'Active' ? body : null;
   } catch (e) {
     if ((e as { statusCode?: number })?.statusCode === 404) return null;
     throw e;
   }
-}
-
-/**
- * The only carts the shop reads: Active, and in `CART_SHIPPING_MODE` (D-062). A cart of the other mode (an old `Single` cart) counts
- * as no cart and is never migrated: the shopper simply gets a new one on the next add.
- */
-export function isLiveCart(cart: Pick<Cart, 'cartState' | 'shippingMode'>): boolean {
-  return cart.cartState === 'Active' && cart.shippingMode === CART_SHIPPING_MODE;
 }
 
 export async function getCartForSession(session: Session): Promise<CartSummary | null> {
@@ -91,8 +82,7 @@ async function createRawCart(
     shippingMode,
     ...(next.customerId ? { customerId: next.customerId } : { anonymousId: next.anonymousId }),
     deleteDaysAfterLastModification: 30,
-    // A `Multiple` cart refuses a cart-level address (verified live): its addresses are written by `syncShipping` per group.
-    ...(shippingMode === 'Single' ? { shippingAddress: { country: market.country } } : {}),
+    shippingAddress: { country: market.country },
     taxMode: 'Platform' as const,
   });
   const { body } = await apiRoot.carts().post({ body: draft }).execute();
@@ -260,10 +250,10 @@ export async function addLine(
       async (current) => {
         // A cart that exists without the order type (made before the mode, or before the type) gets it in the same update (D-042).
         const actions: CartUpdateAction[] = [action, ...(await orderTypeCartActions(current))];
-        return (await apiRoot.carts().withId({ ID: cartId }).post({ body: { version: current.version, actions }, queryArgs: { expand: CART_EXPAND } }).execute()).body;
+        return (await apiRoot.carts().withId({ ID: cartId }).post({ body: { version: current.version, actions } }).execute()).body;
       },
     );
-    return { cart: mapCartSummary(await syncShipping(updated)), session: next };
+    return { cart: mapCartSummary(updated), session: next };
   } catch (e) {
     const code = (e as CtErrorLike)?.body?.errors?.[0]?.code;
     if (input.fulfilment === 'subscribe' && code === 'MissingPriceForProduct') throw new LineRejected('price_unavailable', 422);
@@ -377,10 +367,10 @@ export async function addPresetBundle(
           podSkus,
         });
       const all: CartUpdateAction[] = [...actions, ...(await orderTypeCartActions(current))];
-      return (await apiRoot.carts().withId({ ID: cartId }).post({ body: { version: current.version, actions: all }, queryArgs: { expand: CART_EXPAND } }).execute()).body;
+      return (await apiRoot.carts().withId({ ID: cartId }).post({ body: { version: current.version, actions: all } }).execute()).body;
     },
   );
-  return { cart: mapCartSummary(await syncShipping(updated)), session: next };
+  return { cart: mapCartSummary(updated), session: next };
 }
 
 // ---------------------------------------------------------------- workstream I: the full cart
@@ -395,8 +385,8 @@ export interface CartViewResult {
   session: Session;
 }
 
-/** Expanded on every read and write: the code objects (code text and name) and the shipping methods (their keys). */
-const CART_EXPAND = ['discountCodes[*].discountCode', 'shippingInfo.shippingMethod', 'shipping[*].shippingInfo.shippingMethod'];
+/** Expanded on every read and write: the code objects (code text and name) and the shipping method (its key). */
+const CART_EXPAND = ['discountCodes[*].discountCode', 'shippingInfo.shippingMethod'];
 
 /** A cart belongs to the session that created it: same anonymous id, or same customer. Anything else is "no cart". */
 export function ownsCart(cart: Pick<Cart, 'anonymousId' | 'customerId'>, session: Pick<Session, 'anonymousId' | 'customerId'>): boolean {
@@ -404,12 +394,12 @@ export function ownsCart(cart: Pick<Cart, 'anonymousId' | 'customerId'>, session
   return Boolean(session.anonymousId && cart.anonymousId === session.anonymousId);
 }
 
-/** The session's cart with expansions, or null when it is gone, not Active, of another shipping mode or belongs to someone else. */
+/** The session's cart with expansions, or null when it is gone, not Active or belongs to someone else. */
 async function readOwnedCart(session: Session): Promise<Cart | null> {
   if (!session.cartId) return null;
   try {
     const { body } = await apiRoot.carts().withId({ ID: session.cartId }).get({ queryArgs: { expand: CART_EXPAND } }).execute();
-    return isLiveCart(body) && ownsCart(body, session) ? body : null;
+    return body.cartState === 'Active' && ownsCart(body, session) ? body : null;
   } catch (e) {
     if ((e as { statusCode?: number })?.statusCode === 404) return null;
     throw e;
@@ -462,14 +452,12 @@ async function mutateCart(session: Session, build: (current: Cart) => Promise<Ca
 }
 
 /**
- * Prices shipping after a write. Failures are swallowed: the cart then shows "calculated at checkout" and the next write retries.
- *  - `Multiple` (every cart the shop reads, D-062): allocates every line to one shipping entry per fulfilment group, because the
- *    platform only prices shipping and taxes the lines once every unit is allocated (`planAllocation`, lib/cart/shipping-allocation.ts).
- *    `opts.pickup` writes the pickup name and email into the collect addresses (checkout).
- *  - `Single` (only the per-group fallback's clone carts, Q-I-04): the standard method when any line is delivery or subscribe, else collect.
+ * Prices shipping (`Single` mode, Q-I-04): the standard method when any line is delivery or subscribe, else the collect
+ * method. Writes only when the cart's method differs. Failures are swallowed: the cart then shows "calculated at checkout".
+ * `Multiple` mode is K's: nothing happens.
  */
-export async function syncShipping(cart: Cart, opts: { pickup?: { name: string; email?: string } } = {}): Promise<Cart> {
-  if (cart.shippingMode === 'Multiple') return syncAllocation(cart, opts.pickup);
+export async function syncShippingMethod(cart: Cart): Promise<Cart> {
+  if (cart.shippingMode === 'Multiple') return cart;
   const wanted = shippingMethodKeyFor(cart.lineItems.map(fulfilmentOf));
   if (!wanted) return cart;
   const info = cart.shippingInfo;
@@ -486,48 +474,6 @@ export async function syncShipping(cart: Cart, opts: { pickup?: { name: string; 
   }
 }
 
-/** The cart read as the planner's input. Pure given the stores. */
-export function allocationInputOf(cart: Cart, stores: Store[], pickup?: { name: string; email?: string }): AllocationInput {
-  const lines: AllocationLine[] = cart.lineItems.map((l) => {
-    const fulfilment = fulfilmentOf(l);
-    const store = fulfilment === 'collect' ? stores.find((s) => s.id === l.supplyChannel?.id) : undefined;
-    return { id: l.id, quantity: l.quantity, fulfilment, ...(store ? { storeKey: store.key } : {}) };
-  });
-  return {
-    country: cart.country ?? 'US',
-    lines,
-    entries: (cart.shipping ?? []).map((e) => ({
-      shippingKey: e.shippingKey,
-      ...(e.shippingInfo?.shippingMethod?.obj?.key ? { methodKey: e.shippingInfo.shippingMethod.obj.key } : {}),
-      ...(e.shippingAddress ? { address: e.shippingAddress } : {}),
-    })),
-    addresses: (cart.itemShippingAddresses ?? []).map((a) => ({ ...a })),
-    targets: Object.fromEntries(
-      cart.lineItems.map((l) => [l.id, l.shippingDetails?.targets.map((t) => ({ addressKey: t.addressKey, quantity: t.quantity, ...(t.shippingMethodKey ? { shippingMethodKey: t.shippingMethodKey } : {}) }))]),
-    ),
-    stores,
-    ...(pickup ? { pickup } : {}),
-  } as AllocationInput;
-}
-
-async function syncAllocation(cart: Cart, pickup?: { name: string; email?: string }): Promise<Cart> {
-  try {
-    const needsStores = cart.lineItems.some((l) => fulfilmentOf(l) === 'collect');
-    const stores = needsStores ? await getStoresForCountry(cart.country ?? 'US', cart.locale ?? 'en-US') : [];
-    return await updateWithRetry(
-      async () => (await apiRoot.carts().withId({ ID: cart.id }).get({ queryArgs: { expand: CART_EXPAND } }).execute()).body,
-      async (current) => {
-        // Plan against the latest cart (a 409 re-reads and plans again), so a plan is never applied to stale state.
-        const actions = planAllocation(allocationInputOf(current, stores, pickup));
-        return actions.length === 0 ? current : postUpdate(current.id, current.version, actions as CartUpdateAction[]);
-      },
-    );
-  } catch (e) {
-    console.warn(JSON.stringify({ event: 'cart_allocation_failed', code: (e as CtErrorLike)?.body?.errors?.[0]?.code ?? 'unknown' }));
-    return cart;
-  }
-}
-
 /** `recalculate` with `updateProductData` so changed variant prices reach the lines. Returns the updated cart. */
 export async function refreshPrices(cart: Cart): Promise<Cart> {
   return updateWithRetry(
@@ -537,31 +483,37 @@ export async function refreshPrices(cart: Cart): Promise<Cart> {
 }
 
 /**
- * The full cart view for a page or drawer load. Verifies ownership (a foreign, missing, non Active or other-mode cart is "no cart" and its
- * id leaves the session; nothing is migrated, D-062), allocates and prices shipping, and runs the
+ * The full cart view for a page or drawer load. Verifies ownership (a foreign, missing or non Active cart is "no cart" and its
+ * id leaves the session), migrates a cart whose shipping mode differs from `CART_SHIPPING_MODE`, prices shipping, and runs the
  * price check: when a line's stored price differs from the price the shopper would get now, the cart is recalculated once and
  * the line is marked `price-updated` with the previous price. The count endpoint never calls this.
  */
 export async function getCartView(session: Session, market: CartMarket): Promise<CartViewResult> {
   if (!session.cartId) return { cart: null, session };
-  let ct = await readOwnedCart(session);
+  let current = session;
+  let ct = await readOwnedCart(current);
   if (!ct) return { cart: null, session: withoutCart(session) };
 
+  if (ct.shippingMode !== CART_SHIPPING_MODE) {
+    const rebuilt = await rebuildCart(current, ct, { country: ct.country ?? market.country, currency: ct.totalPrice.currencyCode, locale: market.locale });
+    current = rebuilt.session;
+    ct = (await readOwnedCart(current)) ?? ct;
+  }
   ct = await tagOrderType(ct);
   const country = ct.country ?? market.country;
   const enrichment = await getCartEnrichment(ct, {
     locale: market.locale, country, currency: ct.totalPrice.currencyCode,
-    ...(session.collectionStoreKey ? { sessionStoreKey: session.collectionStoreKey } : {}),
+    ...(current.collectionStoreKey ? { sessionStoreKey: current.collectionStoreKey } : {}),
   });
   const changes = detectPriceChanges(ct, enrichment);
   if (Object.keys(changes).length > 0) ct = await refreshPrices(ct);
-  ct = await syncShipping(ct);
+  ct = await syncShippingMethod(ct);
   const t = await variantTranslator(market.locale);
   const cart = mapCart(ct, enrichment, {
     locale: market.locale, t, collection: Boolean(marketForCountry(country)?.collection), minOrder: MIN_ORDER_VALUE[ct.totalPrice.currencyCode],
     previousPrices: changes,
   });
-  return { cart, session };
+  return { cart, session: current };
 }
 
 /**
@@ -586,7 +538,7 @@ function withoutCart(session: Session): Session {
 
 /** Writes, then prices shipping, then returns the view of the cart as the engine now has it. */
 async function finish(session: Session, market: CartMarket, ct: Cart): Promise<CartView> {
-  return viewOf(await syncShipping(ct), session, market, {});
+  return viewOf(await syncShippingMethod(ct), session, market, {});
 }
 
 function lineOrThrow(cart: Cart, lineId: string) {

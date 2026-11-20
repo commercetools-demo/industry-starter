@@ -22,11 +22,10 @@ export const COLLECTION_MINUTES_FALLBACK = 30;
 export const CART_CARRY_OVER_ENABLED = true;
 
 /**
- * Shipping mode of every new cart (D-062, replaces D-024). `Multiple`: one shipping entry per fulfilment group (each collect
- * store, and delivery), allocated after every write by `syncShipping` (lib/ct/cart.ts, plan in lib/cart/shipping-allocation.ts).
- * Settable only when a cart is created. A cart of the other mode is never read: it counts as no cart and is not migrated.
+ * Shipping mode of every new cart (D-024). Settable only when a cart is created; workstream K may flip it to
+ * 'Multiple' after its mixed-bag spike. Added by workstream G.
  */
-export const CART_SHIPPING_MODE: 'Single' | 'Multiple' = 'Multiple';
+export const CART_SHIPPING_MODE: 'Single' | 'Multiple' = 'Single';
 
 // Workstream H: product detail.
 

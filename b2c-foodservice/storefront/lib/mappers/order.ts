@@ -171,23 +171,14 @@ export function orderTypeOf(custom: Pick<NonNullable<Order['custom']>, 'fields'>
   return v === 'in-store-purchase' || v === 'online' ? v : null;
 }
 
-/** A `Multiple` order's shipping entry of a collect group: the collect method, or our `collect-<store>` key (method not expanded). */
-function isCollectEntry(e: NonNullable<Order['shipping']>[number]): boolean {
-  return e.shippingInfo.shippingMethod?.obj?.key === COLLECT_METHOD_KEY || e.shippingKey.startsWith('collect-');
-}
-
 export function mapOrder(o: Order, ctx: OrderMapContext): OrderView {
   // The rows: a bundle's parts are folded into the bundle row (workstream V, D8).
   const lines = o.lineItems.filter((l) => !isBundleChild(l)).map((l) => {
     const line = mapLine(l, ctx.locale);
     return isBundleParent(l) ? withBundle(line, l, childrenOf(o.lineItems, l), ctx.locale) : line;
   });
-  // Shipping: a `Single` order has one `shippingInfo`; a `Multiple` order (D-062) has one `shipping[]` entry per fulfilment group.
-  const entries = o.shipping ?? [];
-  const multiple = entries.length > 0;
-  const collectEntries = entries.filter(isCollectEntry);
-  const deliveryEntry = entries.find((e) => !isCollectEntry(e));
-  const collectOrder = multiple ? collectEntries.length > 0 : o.shippingInfo?.shippingMethod?.obj?.key === COLLECT_METHOD_KEY;
+  const methodKey = o.shippingInfo?.shippingMethod?.obj?.key;
+  const collectOrder = methodKey === COLLECT_METHOD_KEY;
 
   const stores = new Map<string, Store>();
   for (const l of o.lineItems) {
@@ -202,8 +193,7 @@ export function mapOrder(o: Order, ctx: OrderMapContext): OrderView {
     const channel = l.supplyChannel?.obj;
     return fulfilmentOf(l) === 'collect' && channel && !stores.has(channel.id) ? [channel] : [];
   });
-  const nameOf = (a: { firstName?: string; lastName?: string } | undefined) => [a?.firstName, a?.lastName].filter(Boolean).join(' ') || null;
-  const pickupName = !collectOrder ? null : multiple ? nameOf(collectEntries[0]?.shippingAddress) : nameOf(o.shippingAddress);
+  const pickupName = collectOrder ? [o.shippingAddress?.firstName, o.shippingAddress?.lastName].filter(Boolean).join(' ') || null : null;
   const collect: OrderView['collect'] = [...stores.values()].map((s) => ({
     storeKey: s.key,
     storeName: s.name,
@@ -211,7 +201,7 @@ export function mapOrder(o: Order, ctx: OrderMapContext): OrderView {
     hours: hoursLabel(todayHours(s, ctx.now, s.timeZone)),
     phone: s.phone ?? null,
     readyMinutes: s.collectionMinutes,
-    pickupName: multiple ? (nameOf(collectEntries.find((e) => e.shippingKey === `collect-${s.key}`)?.shippingAddress) ?? pickupName) : pickupName,
+    pickupName,
     lat: s.geo?.lat ?? null,
     lng: s.geo?.lng ?? null,
   }));
@@ -226,24 +216,21 @@ export function mapOrder(o: Order, ctx: OrderMapContext): OrderView {
   const names = new Map(o.lineItems.map((l) => [l.id, getLocalizedString(l.name, ctx.locale)]));
   const deliveries = deliveriesOf(o, names);
   const shipsSomething = o.lineItems.some((l) => fulfilmentOf(l) !== 'collect');
-  // The delivery group's shipping: the `delivery` entry of a `Multiple` order, else the order's own `shippingInfo` (not for a collect order).
-  const info = multiple ? deliveryEntry?.shippingInfo : o.shippingInfo;
-  const shipAddress = multiple ? deliveryEntry?.shippingAddress : o.shippingAddress;
+  const info = o.shippingInfo;
   const estimate = info?.shippingMethod?.obj?.localizedDescription;
   const ship: OrderView['ship'] =
-    shipsSomething && info && (multiple || !collectOrder)
+    shipsSomething && info && !collectOrder
       ? {
           methodName: info.shippingMethodName,
           estimate: estimate ? getLocalizedString(estimate, ctx.locale) || null : null,
-          address: addressLine(shipAddress),
-          recipient: recipientOf(shipAddress),
+          address: addressLine(o.shippingAddress),
+          recipient: recipientOf(o.shippingAddress),
         }
       : null;
 
   const goods = o.lineItems.reduce((n, l) => n + l.totalPrice.centAmount, 0);
   const saved = o.lineItems.reduce((n, l) => n + Math.max(0, effectivePrice(l).centAmount * l.quantity - l.totalPrice.centAmount), 0);
-  const priceOf = (i: { discountedPrice?: { value: { centAmount: number } }; price?: { centAmount: number } }) => i.discountedPrice?.value.centAmount ?? i.price?.centAmount ?? 0;
-  const shippingCents = multiple ? entries.reduce((n, e) => n + priceOf(e.shippingInfo), 0) : o.shippingInfo ? priceOf(o.shippingInfo) : 0;
+  const shippingCents = info ? (info.discountedPrice?.value.centAmount ?? info.price.centAmount) : 0;
   const taxCents = o.taxedPrice?.totalTax?.centAmount ?? 0;
   const totalCents = o.taxedPrice ? o.taxedPrice.totalGross.centAmount : o.totalPrice.centAmount + shippingCents;
 

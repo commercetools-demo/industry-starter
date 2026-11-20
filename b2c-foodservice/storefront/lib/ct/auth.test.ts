@@ -1,9 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const h = vi.hoisted(() => ({
-  /** Mode of the guest cart, and of the customer's latest Active cart (null: the customer has none, 'fail': the lookup throws). */
-  guestMode: 'Multiple' as string,
-  latestMode: null as string | null | 'fail',
   loginPost: vi.fn(),
   customersPost: vi.fn(),
   inStore: vi.fn(),
@@ -11,17 +8,7 @@ const h = vi.hoisted(() => ({
 vi.mock('@/lib/ct/client', () => ({
   apiRoot: {
     login: () => ({ post: (a: unknown) => ({ execute: async () => ({ body: await h.loginPost(a) }) }) }),
-    carts: () => ({
-      get: () => ({
-        execute: async () => {
-          if (h.latestMode === 'fail') throw new Error('boom');
-          return { body: { results: h.latestMode ? [{ shippingMode: h.latestMode }] : [] } };
-        },
-      }),
-      withId: () => ({ get: () => ({ execute: async () => ({ body: { cartState: 'Active', shippingMode: h.guestMode } }) }) }),
-    }),
     customers: () => ({
-      get: () => ({ execute: async () => ({ body: { results: [{ id: 'c1' }] } }) }),
       post: (a: unknown) => ({ execute: async () => ({ body: await h.customersPost(a) }) }),
       withId: () => ({ get: () => ({ execute: async () => ({ body: { id: 'c1' } }) }) }),
     }),
@@ -33,9 +20,7 @@ import { createCustomer, signIn } from '@/lib/ct/auth';
 
 beforeEach(() => {
   vi.clearAllMocks();
-  h.guestMode = 'Multiple';
-  h.latestMode = null;
-  h.loginPost.mockResolvedValue({ customer: { id: 'c1' }, cart: { id: 'cart1', shippingMode: 'Multiple' } });
+  h.loginPost.mockResolvedValue({ customer: { id: 'c1' }, cart: { id: 'cart1' } });
   h.customersPost.mockResolvedValue({ customer: { id: 'c1' } });
 });
 
@@ -51,39 +36,6 @@ describe('lib/ct/auth', () => {
     expect(without).not.toHaveProperty('anonymousCart');
     expect(without).not.toHaveProperty('anonymousCartSignInMode');
     expect(without).not.toHaveProperty('anonymousId');
-  });
-
-  it('merges into the customer\'s latest cart when it is Multiple', async () => {
-    h.latestMode = 'Multiple';
-    await signIn('a@example.com', 'pw', { cartId: 'g1' });
-    expect(h.loginPost.mock.calls[0][0].body.anonymousCartSignInMode).toBe('MergeWithExistingCustomerCart');
-  });
-
-  it('uses the guest cart as the new cart when the customer\'s latest cart is an old Single one (never merged into it)', async () => {
-    h.latestMode = 'Single';
-    await signIn('a@example.com', 'pw', { cartId: 'g1' });
-    expect(h.loginPost.mock.calls[0][0].body).toMatchObject({ anonymousCart: { id: 'g1' }, anonymousCartSignInMode: 'UseAsNewActiveCustomerCart' });
-  });
-
-  it('does not merge when the cart lookup fails', async () => {
-    h.latestMode = 'fail';
-    await signIn('a@example.com', 'pw', { cartId: 'g1' });
-    expect(h.loginPost.mock.calls[0][0].body.anonymousCartSignInMode).toBe('UseAsNewActiveCustomerCart');
-  });
-
-  it('does not send a guest cart that is not Multiple', async () => {
-    h.guestMode = 'Single';
-    await signIn('a@example.com', 'pw', { cartId: 'g1', anonymousId: 'anon' });
-    const body = h.loginPost.mock.calls[0][0].body;
-    expect(body).not.toHaveProperty('anonymousCart');
-    expect(body).not.toHaveProperty('anonymousCartSignInMode');
-    expect(body.anonymousId).toBe('anon');
-  });
-
-  it('returns the cart of the result only when it is Multiple (an old Single customer cart means no bag)', async () => {
-    expect((await signIn('a@example.com', 'pw')).cart).toMatchObject({ id: 'cart1' });
-    h.loginPost.mockResolvedValue({ customer: { id: 'c1' }, cart: { id: 'old', shippingMode: 'Single' } });
-    expect(await signIn('a@example.com', 'pw')).not.toHaveProperty('cart');
   });
 
   it('signIn never calls the in-store endpoint', async () => {

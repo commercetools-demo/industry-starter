@@ -121,26 +121,20 @@ describe('GET /api/cart (I-03)', () => {
     expect((await cartOf(await get())).id).toBe(mine);
   });
 
-  it('allocates a mixed bag: a delivery entry and a store entry, shipping priced, tax computed, and nothing is written twice', async () => {
+  it('shipping method standard when any shippable line else collect', async () => {
     const id = await bag([{ id: 'a', sku: 'S1' }, { id: 'b', sku: 'S2', fulfilment: 'collect', channelId: 'ch-soho' }]);
     const view = await cartOf(await get());
-    const cart = fake.carts.get(id) as unknown as { shipping: { shippingKey: string; shippingInfo: { shippingMethod: { obj: { key: string } } } }[]; taxedPrice?: unknown };
-    expect(cart.shipping.map((e) => [e.shippingKey, e.shippingInfo.shippingMethod.obj.key])).toEqual([
-      [`collect-${STORE_SOHO.key}`, 'mcf-collect'], ['delivery', 'mcf-ship-standard'],
-    ]);
-    expect(cart.taxedPrice).toBeDefined();
-    // Collect is free, delivery pays the rate: the sum of the entries.
+    expect(fake.updates).toHaveLength(1);
+    expect(fake.updates[0].actions).toEqual([{ action: 'setShippingMethod', shippingMethod: { typeId: 'shipping-method', key: 'mcf-ship-standard' } }]);
     expect(view.shipping).toEqual({ amount: { centAmount: 695, currencyCode: 'USD' }, isFree: false });
-    const writes = fake.updates.length;
-    await get(); // already allocated: no write
-    expect(fake.updates).toHaveLength(writes);
-  });
+    await get(); // already right: no write
+    expect(fake.updates).toHaveLength(1);
 
-  it('a collect-only bag gets one store entry and no delivery entry', async () => {
-    const id = await bag([{ id: 'b', sku: 'S2', fulfilment: 'collect', channelId: 'ch-soho' }]);
+    fake.reset();
+    await bag([{ id: 'b', sku: 'S2', fulfilment: 'collect', channelId: 'ch-soho' }]);
     await get();
-    const cart = fake.carts.get(id) as unknown as { shipping: { shippingKey: string }[] };
-    expect(cart.shipping.map((e) => e.shippingKey)).toEqual([`collect-${STORE_SOHO.key}`]);
+    expect(fake.updates[0].actions[0]).toMatchObject({ shippingMethod: { key: 'mcf-collect' } });
+    expect(id).toBeTruthy();
   });
 
   it('price check recalculates once and flags the line', async () => {
@@ -175,18 +169,15 @@ describe('GET /api/cart (I-03)', () => {
     expect((await errOf(res)).code).toBe('upstream_unavailable');
   });
 
-  it('a Single cart is no cart: it is not read, not migrated, and its id leaves the session (D-062)', async () => {
-    const old = await bag([{ id: 'a', sku: 'S1', quantity: 2 }], { shippingMode: 'Single' });
+  it('a cart whose shipping mode differs from the constant is rebuilt in the configured mode', async () => {
+    const old = await bag([{ id: 'a', sku: 'S1', quantity: 2 }], { shippingMode: 'Multiple' });
     const res = await get();
-    expect(await res.json()).toEqual({ cart: null });
-    expect((await sessionOf(res))?.cartId).toBeUndefined();
-    expect(fake.carts.size).toBe(1);
-    expect(fake.carts.get(old)!.deleteDaysAfterLastModification).toBeUndefined();
-    expect(fake.updates).toHaveLength(0);
-    // and a write against it is a 404, never a silent change of the old cart
-    await setSession({ cartId: old, anonymousId: 'anon-1' });
-    expect((await patchL('a', { quantity: 3 })).status).toBe(404);
-    expect(fake.updates).toHaveLength(0);
+    const view = await cartOf(res);
+    expect(view.shippingMode).toBe('Single');
+    expect(view.id).not.toBe(old);
+    expect(view.lines).toMatchObject([{ sku: 'S1', quantity: 2 }]);
+    expect((await sessionOf(res))?.cartId).toBe(view.id);
+    expect(fake.carts.get(old)!.deleteDaysAfterLastModification).toBe(1);
   });
 
   it('without a cart returns null and no cookie change', async () => {
@@ -360,23 +351,13 @@ describe('fulfilment switch and store change (I-05)', () => {
     expect((await errOf(res)).code).toBe('subscribe_line_not_switchable');
   });
 
-  it('switching the last shipping line to collect moves the allocation: the delivery entry goes, the store entry comes', async () => {
-    const id = await bag([{ id: 'a', sku: 'S2' }]);
-    await get(); // delivery entry allocated
-    expect((fake.carts.get(id) as unknown as { shipping: unknown[] }).shipping).toHaveLength(1);
+  it('switching the last shipping line to collect prices shipping with the collect method', async () => {
+    await bag([{ id: 'a', sku: 'S2' }]);
+    await get(); // standard method set
+    fake.updates = [];
     await patchL('a', { fulfilment: 'collect', storeKey: STORE_SOHO.key });
-    const cart = fake.carts.get(id) as unknown as { shipping: { shippingKey: string }[]; lineItems: { shippingDetails: { targets: { addressKey: string; quantity: number }[] } }[] };
-    expect(cart.shipping.map((e) => e.shippingKey)).toEqual([`collect-${STORE_SOHO.key}`]);
-    expect(cart.lineItems[0]!.shippingDetails.targets).toMatchObject([{ addressKey: `collect-${STORE_SOHO.key}`, quantity: 1 }]);
-  });
-
-  it('a quantity change re-allocates the line (the platform keeps the old target and still says valid)', async () => {
-    const id = await bag([{ id: 'a', sku: 'S1', quantity: 1 }]);
-    await get();
-    await patchL('a', { quantity: 4 });
-    const cart = fake.carts.get(id) as unknown as { lineItems: { shippingDetails: { targets: { quantity: number }[] } }[]; taxedPrice?: unknown };
-    expect(cart.lineItems[0]!.shippingDetails.targets).toMatchObject([{ quantity: 4 }]);
-    expect(cart.taxedPrice).toBeDefined();
+    expect(fake.updates).toHaveLength(2);
+    expect(fake.updates[1].actions[0]).toMatchObject({ action: 'setShippingMethod', shippingMethod: { key: 'mcf-collect' } });
   });
 
   it('change store moves collect lines and merges duplicates', async () => {

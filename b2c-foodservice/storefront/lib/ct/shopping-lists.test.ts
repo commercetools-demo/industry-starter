@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const sdk = vi.hoisted(() => ({ query: vi.fn(), create: vi.fn(), get: vi.fn(), post: vi.fn(), cart: vi.fn() }));
 vi.mock('@/lib/env', () => ({ getEnv: () => ({}) }));
 vi.mock('@/lib/ct/cart', () => ({
-  isLiveCart: (c: { cartState: string; shippingMode?: string }) => c.cartState === 'Active' && c.shippingMode === 'Multiple',
   ownsCart: (cart: { customerId?: string; anonymousId?: string }, s: { customerId?: string; anonymousId?: string }) =>
     Boolean(s.customerId && cart.customerId === s.customerId) || Boolean(s.anonymousId && cart.anonymousId === s.anonymousId),
 }));
@@ -113,17 +112,14 @@ describe('addProducts and removeProduct', () => {
 
 describe('cartProductIds', () => {
   it('reads the distinct product ids of the session own active bag', async () => {
-    sdk.cart.mockResolvedValue({ body: { cartState: 'Active', shippingMode: 'Multiple', customerId: 'c1', lineItems: [{ productId: P1 }, { productId: P1 }, { productId: P2 }] } });
+    sdk.cart.mockResolvedValue({ body: { cartState: 'Active', customerId: 'c1', lineItems: [{ productId: P1 }, { productId: P1 }, { productId: P2 }] } });
     expect(await cartProductIds({ customerId: 'c1', cartId: 'cart1' })).toEqual([P1, P2]);
   });
 
   it("someone else's bag, an ordered bag and no bag are empty", async () => {
-    sdk.cart.mockResolvedValue({ body: { cartState: 'Active', shippingMode: 'Multiple', customerId: 'other', lineItems: [{ productId: P1 }] } });
+    sdk.cart.mockResolvedValue({ body: { cartState: 'Active', customerId: 'other', lineItems: [{ productId: P1 }] } });
     expect(await cartProductIds({ customerId: 'c1', cartId: 'cart1' })).toEqual([]);
-    sdk.cart.mockResolvedValue({ body: { cartState: 'Ordered', shippingMode: 'Multiple', customerId: 'c1', lineItems: [{ productId: P1 }] } });
-    expect(await cartProductIds({ customerId: 'c1', cartId: 'cart1' })).toEqual([]);
-    // an old Single bag is no bag (D-062)
-    sdk.cart.mockResolvedValue({ body: { cartState: 'Active', shippingMode: 'Single', customerId: 'c1', lineItems: [{ productId: P1 }] } });
+    sdk.cart.mockResolvedValue({ body: { cartState: 'Ordered', customerId: 'c1', lineItems: [{ productId: P1 }] } });
     expect(await cartProductIds({ customerId: 'c1', cartId: 'cart1' })).toEqual([]);
     expect(await cartProductIds({ customerId: 'c1' })).toEqual([]);
     sdk.cart.mockRejectedValue({ statusCode: 404 });

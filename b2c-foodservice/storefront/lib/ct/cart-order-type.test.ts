@@ -9,11 +9,6 @@ const ct = vi.hoisted(() => ({
   n: 0,
 }));
 
-const SHIPPING_ACTIONS = new Set(['addItemShippingAddress', 'removeItemShippingAddress', 'addShippingMethod', 'removeShippingMethod', 'setLineItemShippingDetails']);
-/** The updates without the shipping allocation that follows every add (tested in lib/cart/shipping-allocation.test.ts). */
-const writes = () =>
-  ct.updates.map((u) => ({ ...u, actions: u.actions.filter((a) => !SHIPPING_ACTIONS.has(a.action as string)) })).filter((u) => u.actions.length > 0);
-
 vi.mock('@/lib/ct/client', () => ({
   apiRoot: {
     types: () => ({
@@ -96,13 +91,13 @@ describe('The cart carries the order type in the In-store companion (D-042)', ()
     expect(ct.created[0]?.custom).toEqual(MINE);
     // the existing cart already has it: the second add is one action
     await addLine(session, market, input);
-    expect(writes().at(-1)?.actions.map((a) => a.action)).toEqual(['addLineItem']);
+    expect(ct.updates.at(-1)?.actions.map((a) => a.action)).toEqual(['addLineItem']);
   });
 
   it('an existing cart without the field gets setCustomType in the same update as the line', async () => {
-    ct.carts.set('cart-old', { id: 'cart-old', version: 4, cartState: 'Active', lineItems: [], totalPrice: { centAmount: 0, currencyCode: 'USD' }, anonymousId: 'a1', shippingMode: 'Multiple' });
+    ct.carts.set('cart-old', { id: 'cart-old', version: 4, cartState: 'Active', lineItems: [], totalPrice: { centAmount: 0, currencyCode: 'USD' }, anonymousId: 'a1' });
     await addLine({ anonymousId: 'a1', cartId: 'cart-old' }, market, input);
-    const actions = writes()[0]?.actions ?? [];
+    const actions = ct.updates[0]?.actions ?? [];
     expect(actions.map((a) => a.action)).toEqual(['addLineItem', 'setCustomType']);
     expect(actions[1]).toMatchObject({ type: MINE.type, fields: MINE.fields });
     expect((ct.carts.get('cart-old') as { custom: { fields: unknown } }).custom.fields).toEqual(MINE.fields);
@@ -110,21 +105,21 @@ describe('The cart carries the order type in the In-store companion (D-042)', ()
 
   it('a cart with our type and another value gets setCustomField', async () => {
     ct.carts.set('cart-old', {
-      id: 'cart-old', version: 4, cartState: 'Active', lineItems: [], totalPrice: { centAmount: 0, currencyCode: 'USD' }, anonymousId: 'a1', shippingMode: 'Multiple',
+      id: 'cart-old', version: 4, cartState: 'Active', lineItems: [], totalPrice: { centAmount: 0, currencyCode: 'USD' }, anonymousId: 'a1',
       custom: { type: { typeId: 'type', id: 'type-1' }, fields: { orderType: 'online' } },
     });
     await addLine({ anonymousId: 'a1', cartId: 'cart-old' }, market, input);
-    expect(writes()[0]?.actions.map((a) => a.action)).toEqual(['addLineItem', 'setCustomField']);
+    expect(ct.updates[0]?.actions.map((a) => a.action)).toEqual(['addLineItem', 'setCustomField']);
   });
 
   it('reading a cart that predates the type tags it, and a second read does not write again', async () => {
-    ct.carts.set('cart-old', { id: 'cart-old', version: 4, cartState: 'Active', lineItems: [], totalPrice: { centAmount: 0, currencyCode: 'USD' }, anonymousId: 'a1', shippingMode: 'Multiple' });
+    ct.carts.set('cart-old', { id: 'cart-old', version: 4, cartState: 'Active', lineItems: [], totalPrice: { centAmount: 0, currencyCode: 'USD' }, anonymousId: 'a1', shippingMode: 'Single' });
     const session = { anonymousId: 'a1', cartId: 'cart-old' };
     await getCartView(session, market);
-    expect(writes()).toHaveLength(1);
-    expect(writes()[0]?.actions[0]).toMatchObject({ action: 'setCustomType' });
+    expect(ct.updates).toHaveLength(1);
+    expect(ct.updates[0]?.actions[0]).toMatchObject({ action: 'setCustomType' });
     await getCartView(session, market);
-    expect(writes()).toHaveLength(1);
+    expect(ct.updates).toHaveLength(1);
   });
 
   it('the cart rebuilt on a market switch is born with the field', async () => {
@@ -139,7 +134,7 @@ describe('The cart carries the order type in the In-store companion (D-042)', ()
     const first = await addLine({ anonymousId: 'a1' }, market, input);
     await addLine(first.session, market, input);
     expect(ct.created[0]?.custom).toBeUndefined();
-    expect(writes().every((u) => u.actions.every((a) => a.action === 'addLineItem'))).toBe(true);
+    expect(ct.updates.every((u) => u.actions.every((a) => a.action === 'addLineItem'))).toBe(true);
     const logged = warn.mock.calls.filter((c: unknown[]) => String(c[0]).includes('instore_order_type_missing'));
     expect(logged).toHaveLength(1);
   });
@@ -149,6 +144,6 @@ describe('The cart carries the order type in the In-store companion (D-042)', ()
     const { session } = await addLine({ anonymousId: 'a1' }, market, input);
     await addLine(session, market, input);
     expect(ct.created[0]?.custom).toBeUndefined();
-    expect(writes().flatMap((u) => u.actions.map((a) => a.action))).toEqual(['addLineItem', 'addLineItem']);
+    expect(ct.updates.flatMap((u) => u.actions.map((a) => a.action))).toEqual(['addLineItem', 'addLineItem']);
   });
 });

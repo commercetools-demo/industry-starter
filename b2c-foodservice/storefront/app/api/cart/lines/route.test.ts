@@ -45,13 +45,7 @@ vi.mock('@/lib/ct/client', () => ({
               throw Object.assign(new Error('conflict'), { statusCode: 409 });
             }
             const c = ct.carts.get(ID) as { version: number; lineItems: unknown[] };
-            // Only `addLineItem` changes this fake's lines; the shipping allocation that follows every add is just versioned.
-            const a = body.actions.find((x) => x.action === 'addLineItem') as { sku: string; quantity: number } | undefined;
-            if (!a) {
-              const same = { ...c, version: c.version + 1 };
-              ct.carts.set(ID, same);
-              return { body: same };
-            }
+            const a = body.actions[0] as { sku: string; quantity: number };
             const next = { ...c, version: c.version + 1, lineItems: [...c.lineItems, { id: `li-${c.lineItems.length + 1}`, quantity: a.quantity, variant: { sku: a.sku }, productId: 'p-1', name: { 'en-US': 'x' }, productSlug: { 'en-US': 'x' }, price: { value: { centAmount: 100, currencyCode: 'USD' } }, totalPrice: { centAmount: 100 * a.quantity, currencyCode: 'USD' } }] };
             ct.carts.set(ID, next);
             return { body: next };
@@ -81,8 +75,6 @@ const sessionOf = async (res: Response) => {
 };
 const setSession = async (s: Record<string, string>) => jar.store.set(SESSION_COOKIE, await createSessionToken(s));
 const ok = { sku: 'MCF-POD-EMBER-10', quantity: 1, fulfilment: 'delivery' };
-/** The `addLineItem` writes only (every add is followed by a shipping-allocation write, tested in lib/cart/shipping-allocation.test.ts). */
-const adds = () => ct.updates.filter((u) => u.body.actions[0]?.action === 'addLineItem');
 
 beforeEach(() => {
   jar.store.clear();
@@ -100,9 +92,7 @@ describe('POST /api/cart/lines', () => {
     await setSession({ country: 'CA', currency: 'CAD', locale: 'en-CA' });
     const res = await post(ok);
     expect(res.status).toBe(200);
-    expect(ct.created[0]).toMatchObject({ currency: 'CAD', country: 'CA', locale: 'en-CA', shippingMode: 'Multiple', taxMode: 'Platform', deleteDaysAfterLastModification: 30 });
-    // A `Multiple` cart refuses a cart-level address (verified live): it is written per group after the add.
-    expect(ct.created[0]).not.toHaveProperty('shippingAddress');
+    expect(ct.created[0]).toMatchObject({ currency: 'CAD', country: 'CA', locale: 'en-CA', shippingMode: 'Single', taxMode: 'Platform', shippingAddress: { country: 'CA' }, deleteDaysAfterLastModification: 30 });
   });
   it('uses anonymousId for a guest and customerId when signed in', async () => {
     await post(ok);
@@ -119,7 +109,7 @@ describe('POST /api/cart/lines', () => {
     const { cart } = (await res.json()) as { cart: { count: number; lines: unknown[] } };
     expect(cart.count).toBe(3);
     expect(cart.lines).toHaveLength(1);
-    expect(adds()[0]!.body.actions[0]).toMatchObject({
+    expect(ct.updates[0]!.body.actions[0]).toMatchObject({
       action: 'addLineItem', sku: ok.sku, quantity: 3,
       custom: { type: { typeId: 'type', key: 'mcf-line-fulfilment' }, fields: { fulfilment: 'delivery' } },
     });
@@ -132,7 +122,7 @@ describe('POST /api/cart/lines', () => {
   it('retries once on 409 then succeeds', async () => {
     ct.conflicts = 1;
     expect((await post(ok)).status).toBe(200);
-    expect(adds()).toHaveLength(2);
+    expect(ct.updates).toHaveLength(2);
   });
   it('retries once on 409 then reports conflict', async () => {
     ct.conflicts = 2;

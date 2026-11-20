@@ -15,7 +15,6 @@ export const ORDER_EXPAND = [
   'lineItems[*].supplyChannel',
   'lineItems[*].recurrenceInfo.recurrencePolicy',
   'shippingInfo.shippingMethod',
-  'shipping[*].shippingInfo.shippingMethod',
 ];
 
 /** Numbers this app creates (`MC-` plus 10 base32 characters, optional part suffix). Anything else is never put in a query. */

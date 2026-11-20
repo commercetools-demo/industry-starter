@@ -71,8 +71,7 @@ export function codeSavings(cart: SavingsCart, locale: string): DiscountCodeView
         for (const inc of e.discountedPrice.includedDiscounts) if (ids.has(inc.discount.id)) saving += inc.discountedAmount.centAmount * e.quantity;
       }
     }
-    // `shipping[]` is empty on a cart that is not allocated yet (and on every `Single` cart): then `shippingInfo` is the one entry.
-    const shipping = cart.shipping?.length ? cart.shipping.map((s) => s.shippingInfo) : cart.shippingInfo ? [cart.shippingInfo] : [];
+    const shipping = cart.shipping?.map((s) => s.shippingInfo) ?? (cart.shippingInfo ? [cart.shippingInfo] : []);
     for (const s of shipping) for (const inc of s.discountedPrice?.includedDiscounts ?? []) if (ids.has(inc.discount.id)) saving += inc.discountedAmount.centAmount;
     const applied = d.state === 'MatchesCart';
     const name = d.discountCode.obj?.name;

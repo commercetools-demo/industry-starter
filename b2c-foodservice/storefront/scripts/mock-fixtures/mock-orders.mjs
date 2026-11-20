@@ -38,24 +38,12 @@ function orderFromCart(cart, body, deps) {
         deliveries: [],
       }
     : undefined;
-  // A `Multiple` cart: one entry per fulfilment group, the delivery entry with its method description and no deliveries yet (D-062).
-  const shipping = (cart.shipping ?? []).map((e) => ({
-    ...e,
-    shippingInfo: {
-      ...e.shippingInfo,
-      ...(e.shippingInfo.shippingMethod?.obj?.key === 'mcf-ship-standard'
-        ? { shippingMethod: { ...e.shippingInfo.shippingMethod, obj: { key: 'mcf-ship-standard', localizedDescription: { 'en-US': '2-4 business days', 'en-CA': '2-4 business days' } } } }
-        : {}),
-      deliveries: [],
-    },
-  }));
   const order = {
     id: `ord-${seq}`, version: 1, orderNumber: body.orderNumber, createdAt: new Date().toISOString(), lastModifiedAt: new Date().toISOString(),
     locale: cart.locale, country: cart.country, customerEmail: body.email ?? 'guest@example.com', ...(cart.customerId ? { customerId: cart.customerId } : {}),
     ...(cart.anonymousId ? { anonymousId: cart.anonymousId } : {}),
     lineItems, totalPrice: cart.totalPrice, ...(cart.taxedPrice ? { taxedPrice: cart.taxedPrice } : {}),
-    shippingMode: cart.shippingMode ?? 'Single', shipping, ...(cart.itemShippingAddresses ? { itemShippingAddresses: cart.itemShippingAddresses } : {}),
-    ...(info ? { shippingInfo: info } : {}), ...(cart.shippingMode === 'Multiple' ? {} : { shippingAddress: body.address ?? cart.shippingAddress ?? { country: cart.country } }),
+    ...(info ? { shippingInfo: info } : {}), shippingAddress: body.address ?? cart.shippingAddress ?? { country: cart.country },
     orderState: 'Open', paymentState: 'Paid', shipmentState: 'Pending',
     // Workstream R: whether the platform copies the cart's custom fields to the order is not documented; MOCK_ORDER_COPIES_CART_CUSTOM=0 leaves them off.
     ...(cart.custom && process.env.MOCK_ORDER_COPIES_CART_CUSTOM !== '0' ? { custom: cart.custom } : {}),
