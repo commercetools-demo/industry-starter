@@ -1,3 +1,4 @@
+import 'server-only';
 import type { Cart } from '@commercetools/platform-sdk';
 import { isInstore } from '@/lib/app-mode';
 
