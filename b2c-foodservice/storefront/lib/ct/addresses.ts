@@ -1,5 +1,5 @@
 import 'server-only';
-import type { Address, Customer, CustomerUpdateAction } from '@commercetools/platform-sdk';
+import type { Address, BaseAddress, Customer, CustomerUpdateAction } from '@commercetools/platform-sdk';
 import { afterDeleteDefault, DEFAULT_ADDRESS_AFTER_DELETE } from '@/lib/account/address-policy';
 import { apiRoot } from '@/lib/ct/client';
 import { updateWithRetry } from '@/lib/ct/retry';
@@ -120,4 +120,22 @@ export async function setDefaultShipping(customerId: string, addressId: string):
       return [{ action: 'setDefaultShippingAddress', addressId }];
     })
   ).customer;
+}
+
+/**
+ * The customer's default shipping address as a cart address, for the hosted Checkout to start from (it shows what the cart
+ * holds; nothing links it to the customer record). Only an address in the market's country counts (a cart is bound to one
+ * country). The nickname (`additionalAddressInfo`, Q-L-03), `id` and `key` stay behind. Never throws: no address is a normal answer.
+ */
+export async function defaultShippingAddressFor(customerId: string, country: string): Promise<BaseAddress | null> {
+  try {
+    const c = await readCustomer(customerId);
+    const a = c.addresses.find((x) => x.id === c.defaultShippingAddressId);
+    if (!a || a.country !== country || !a.streetName || !a.city || !a.postalCode) return null;
+    const { id: _id, key: _key, additionalAddressInfo: _label, ...rest } = a;
+    void _id; void _key; void _label;
+    return rest;
+  } catch {
+    return null;
+  }
 }

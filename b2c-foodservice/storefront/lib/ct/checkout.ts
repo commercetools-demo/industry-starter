@@ -1,10 +1,11 @@
 import 'server-only';
-import type { Cart as CtCart, CartDraft, CartUpdateAction, LineItem, LineItemDraft } from '@commercetools/platform-sdk';
+import type { BaseAddress, Cart as CtCart, CartDraft, CartUpdateAction, LineItem, LineItemDraft } from '@commercetools/platform-sdk';
 import { COLLECT_METHOD_KEY, SHIP_METHOD_KEY } from '@/lib/cart/plan';
 import { buildSingleGroupActions, collectAddress, planGroups, splitPlan, type FulfilmentGroup } from '@/lib/checkout/fulfilment-plan';
 import { checkoutBlockers, type CheckoutBlocker } from '@/lib/checkout/guards';
 import { MIXED_STRATEGY } from '@/lib/checkout/strategy';
 import type { MixedStrategy } from '@/lib/types';
+import { defaultShippingAddressFor } from '@/lib/ct/addresses';
 import { apiRoot } from '@/lib/ct/client';
 import { buildAddLineAction, getCartView, getOwnedCartForRebuild, ownsCart, rebuildCart, type AddLineInput, type CartMarket } from '@/lib/ct/cart';
 import { getStoresForCountry } from '@/lib/ct/channels';
@@ -150,7 +151,7 @@ export function sameLine(a: LineItem, b: LineItem): boolean {
   );
 }
 
-interface PartContext { raw: CtCart; group: FulfilmentGroup; applyCodes: boolean; address: ReturnType<typeof collectAddress> | null }
+interface PartContext { raw: CtCart; group: FulfilmentGroup; applyCodes: boolean; address: BaseAddress | null }
 
 async function createPartCart(c: PartContext): Promise<CtCart> {
   const { raw } = c;
@@ -200,20 +201,30 @@ export async function preparePayments(
     const store = stores.find((s) => s.key === g.storeKey);
     return g.kind === 'collect' && store && input.pickupName ? collectAddress(store, input.pickupName, input.email) : null;
   };
+  // A signed-in shopper's default address starts the delivery group's address (the hosted form shows what the cart holds).
+  const deliveryAddress = session.customerId && groups.some((g) => g.kind === 'delivery') ? await defaultShippingAddressFor(session.customerId, view.country) : null;
+  const addressFor = (g: FulfilmentGroup): BaseAddress | null => (g.kind === 'delivery' ? deliveryAddress : addressOf(g));
   const label = (g: FulfilmentGroup) => (g.kind === 'collect' ? (view.groups.find((x) => x.key === g.key)?.store?.name ?? null) : null);
 
   if (groups.length === 1) {
     const group = groups[0] as FulfilmentGroup;
-    const actions = buildSingleGroupActions(group, addressOf(group));
+    const actions: CartUpdateAction[] = buildSingleGroupActions(group, addressOf(group)) as unknown as CartUpdateAction[];
     let total = view.total.centAmount;
-    if (actions.length > 0) {
+    if (actions.length > 0 || (group.kind === 'delivery' && deliveryAddress)) {
       const updated = await updateWithRetry(
         async () => {
           const raw = await getOwnedCartForRebuild(session);
           if (!raw) throw new AppError('not_found', 404);
           return raw;
         },
-        (current) => postUpdate(current, actions as unknown as CartUpdateAction[]),
+        (current) => {
+          // The default address only fills a bare cart: an address the shopper already typed in the hosted form stays.
+          const fill = group.kind === 'delivery' && deliveryAddress && !current.shippingAddress?.streetName
+            ? [{ action: 'setShippingAddress', address: deliveryAddress } as CartUpdateAction]
+            : [];
+          const all = [...actions, ...fill];
+          return all.length ? postUpdate(current, all) : Promise.resolve(current);
+        },
       );
       total = totalCentsOf(updated);
     } else {
@@ -228,7 +239,7 @@ export async function preparePayments(
   const payments: CheckoutPayment[] = [];
   const payCartIds: string[] = [];
   for (const part of splitPlan(groups)) {
-    const created = await createPartCart({ raw, group: part.group, applyCodes: part.applyCodes, address: addressOf(part.group) });
+    const created = await createPartCart({ raw, group: part.group, applyCodes: part.applyCodes, address: addressFor(part.group) });
     payCartIds.push(created.id);
     payments.push({ part: part.part, clusterKey: part.group.key, label: label(part.group), totalCents: totalCentsOf(created) });
   }
