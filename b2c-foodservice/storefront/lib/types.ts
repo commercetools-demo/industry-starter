@@ -133,6 +133,8 @@ export interface CartSummary { id: string; version: number; count: number; lines
 export type ProductShape = 'pods' | 'coffee' | 'machine' | 'accessory' | 'gift' | 'drink' | 'presetBundle' | 'readyDrink';
 /** A modifier a ready-made coffee can take (a `coffee-modifiers` product listed by the drink's modifiers configuration). */
 export interface ModifierOption { id: string; name: string }
+/** A coffee pod flavor a ready-made coffee can be made with (a product of the configuration's flavor category). */
+export interface FlavorOption { id: string; name: string; description: string }
 export type VariantAttrValue = string | number | boolean;
 export interface PriceTier { minimumQuantity: number; value: Money }
 export interface VariantPrice { value: Money; discounted?: Money; discountName?: string; tiers: PriceTier[] }
@@ -213,6 +215,8 @@ export interface ProductPageData {
   bundle?: BundleView | null;
   /** Ready-made coffee: the modifiers the shopper can pick (any number); null when the configuration cannot be read. Absent for other shapes. */
   modifiers?: ModifierOption[] | null;
+  /** Ready-made coffee in the In-store companion: the pod flavors the shopper picks from (one); null when they cannot be read. Absent otherwise. */
+  flavors?: FlavorOption[] | null;
 }
 
 // Workstream M: reviews and ratings (no moderation, D-037: every review is published on creation).

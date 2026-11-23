@@ -21,7 +21,7 @@ import type { DomainErrorCode } from '@/lib/api-domain';
 import { AppError } from '@/lib/errors';
 import { detectPriceChanges, fulfilmentOf, mapCart, mapCartSummary } from '@/lib/mappers/cart';
 import { fulfilmentFieldOf, instoreLineCustom, lineModifierIds, modifiersKeyOf, normaliseModifierChoice } from '@/lib/mappers/drink-modifiers';
-import { getAllowedModifierIds } from '@/lib/ct/drink-modifiers';
+import { getDrinkChoiceIds } from '@/lib/ct/drink-modifiers';
 import { ensureAnonymousId, type Session } from '@/lib/session';
 import { CART_MAX_LINE_QUANTITY, CART_SHIPPING_MODE, MIN_ORDER_VALUE } from '@/lib/shop-config';
 import type { VariantTranslator } from '@/lib/cart/summary';
@@ -222,7 +222,8 @@ async function resolveModifiers(projection: ProductProjection, chosen: string[] 
     return undefined;
   }
   if (!chosen || chosen.length === 0) return [];
-  const checked = normaliseModifierChoice(chosen, await getAllowedModifierIds(projection));
+  const { allowed, flavorIds } = await getDrinkChoiceIds(projection);
+  const checked = normaliseModifierChoice(chosen, allowed, flavorIds);
   if (!checked) throw new AppError('validation_failed', 400);
   return checked;
 }

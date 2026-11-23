@@ -7,6 +7,8 @@ import type { LineItem } from '@commercetools/platform-sdk';
 const OAT = '572a1c72-24e1-4a96-a693-d022be0cd867';
 const ALMOND = 'f8716393-8508-46cb-865a-7dac4731e22a';
 const FOREIGN = 'b0b0b0b0-0000-4000-8000-000000000000';
+const INTENSO = '6ffa00e9-1b2e-4cea-846f-8f045923fa49';
+const ODACIO = '46619109-4f3c-4837-af97-1a13d63f8a8a';
 const DRINK = 'MCF-RD-AMERICANO-SMALL';
 const POD = 'MCF-POD-ORIGINAL-X';
 
@@ -81,7 +83,7 @@ vi.mock('@/lib/ct/product-detail', () => ({
   getRecurrencePolicies: async () => [],
   getRecurrencePolicyByKey: async () => null,
 }));
-vi.mock('@/lib/ct/drink-modifiers', () => ({ getAllowedModifierIds: async () => [OAT, ALMOND] }));
+vi.mock('@/lib/ct/drink-modifiers', () => ({ getDrinkChoiceIds: async () => ({ allowed: [OAT, ALMOND, INTENSO, ODACIO], flavorIds: [INTENSO, ODACIO] }) }));
 vi.mock('@/lib/ct/product-selections', () => ({ getProductBrand: async () => 'malva-coffee' }));
 vi.mock('@/lib/ct/preset-bundles', () => ({ getBundleView: async () => null }));
 vi.mock('@/lib/ct/inventory', () => ({
@@ -137,6 +139,21 @@ describe('ready-made coffee: adding a drink', () => {
     await expect(addLine(session(), MARKET, { sku: POD, quantity: 1, fulfilment: 'delivery', modifiers: [OAT] }))
       .rejects.toSatisfy((e: unknown) => e instanceof AppError && e.code === 'validation_failed');
     expect(ct.updates).toHaveLength(0);
+  });
+
+  it('takes one pod flavor with the modifiers on the same line field, and refuses two flavors', async () => {
+    const { session: bag } = await addLine(session(), MARKET, { sku: DRINK, quantity: 1, fulfilment: 'delivery', modifiers: [OAT, INTENSO] });
+    const add = ct.updates[0].actions[0] as { custom: { fields: { modifiers: { id: string }[] } } };
+    expect(add.custom.fields.modifiers.map((m) => m.id)).toEqual([OAT, INTENSO].sort());
+    expect(linesOf(bag)).toHaveLength(1);
+    await expect(addLine(session(), MARKET, { sku: DRINK, quantity: 1, fulfilment: 'delivery', modifiers: [INTENSO, ODACIO] }))
+      .rejects.toSatisfy((e: unknown) => e instanceof AppError && e.code === 'validation_failed');
+  });
+
+  it('two flavors of the same drink are two lines', async () => {
+    const first = await addLine(session(), MARKET, { sku: DRINK, quantity: 1, fulfilment: 'delivery', modifiers: [INTENSO] });
+    await addLine(first.session, MARKET, { sku: DRINK, quantity: 1, fulfilment: 'delivery', modifiers: [ODACIO] });
+    expect(linesOf(first.session)).toHaveLength(2);
   });
 
   it('other products keep the storefront line type', () => {
