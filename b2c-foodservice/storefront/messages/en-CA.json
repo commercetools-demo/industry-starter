@@ -1796,7 +1796,9 @@
         "title": "Coffee pod flavor",
         "titleWithValue": "Coffee pod flavor - {value}",
         "hint": "Choose one",
-        "choice": "coffee pod flavor"
+        "choice": "coffee pod flavor",
+        "swipe": "Swipe →",
+        "intensity": "Intensity {n}/{max}"
       }
     },
     "bag": {
@@ -1813,8 +1815,9 @@
       "each": "{price} each",
       "barLabel": "Bag total and checkout",
       "total": "{count, plural, one {Total, # item} other {Total, # items}}",
-      "note": "Delivery and tax are added at checkout.",
-      "checkout": "Checkout"
+      "note": "Complimentary for booth visitors. No payment needed.",
+      "checkout": "Checkout",
+      "totalFree": "Free"
     },
     "scan": {
       "open": "Scan a barcode",
@@ -1873,6 +1876,54 @@
         "error": "We couldn't add that to your bag. Please try again.",
         "moreChoices": "See sizes and options"
       }
+    },
+    "checkout": {
+      "title": "Checkout",
+      "back": "Back to bag",
+      "summary": "Order summary",
+      "totalLabel": "Total",
+      "freeWord": "Free",
+      "free": {
+        "title": "It's on us.",
+        "body": "Checkout is free at the booth. No payment needed."
+      },
+      "chooseOne": "Choose one",
+      "who": {
+        "title": "Who is this order for?",
+        "name": "Enter my name",
+        "badge": "Scan my badge",
+        "nameLabel": "Your name",
+        "namePlaceholder": "e.g. Sam Rivera",
+        "badgeScan": "Hold badge to camera",
+        "badgeDone": "Badge scanned"
+      },
+      "notify": {
+        "title": "How do we tell you it's ready?",
+        "email": "Email",
+        "phone": "Phone number",
+        "emailLabel": "Email address",
+        "phoneLabel": "Phone number"
+      },
+      "hint": {
+        "name": "Enter your name to continue",
+        "badge": "Scan your badge to continue",
+        "email": "Enter a valid email to continue",
+        "phone": "Enter a valid phone number to continue",
+        "blocked": "Something in your bag needs attention"
+      },
+      "place": "Place free order",
+      "placing": "Placing your order…",
+      "error": "We couldn't place your order. Please try again.",
+      "barLabel": "Place your order",
+      "scanAnother": "Scan another item"
+    },
+    "confirmation": {
+      "title": "Your coffee is being prepared",
+      "body": "Thanks, our barista is making it now. We'll let you know when it's ready.",
+      "bodyNamed": "{name}, our barista is making it now. We'll let you know when it's ready.",
+      "order": "Order",
+      "notify": "We will notify you at",
+      "again": "Start a new order"
     }
   },
   "assistant": {

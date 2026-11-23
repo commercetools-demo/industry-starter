@@ -50,7 +50,8 @@ async function readFlavorProducts(categoryId: string, locale: string): Promise<F
     .sort((a, b) => intensity(b) - intensity(a) || getLocalizedString(a.name, locale).localeCompare(getLocalizedString(b.name, locale)))
     .flatMap((p) => {
       const name = getLocalizedString(p.name, locale);
-      return name ? [{ id: p.id, name, description: p.description ? getLocalizedString(p.description, locale) : '' }] : [];
+      const level = intensity(p);
+      return name ? [{ id: p.id, name, description: p.description ? getLocalizedString(p.description, locale) : '', ...(level >= 0 ? { intensity: level } : {}) }] : [];
     });
 }
 

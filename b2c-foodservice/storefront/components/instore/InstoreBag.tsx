@@ -58,7 +58,7 @@ export default function InstoreBag({ initialCart }: { initialCart?: Cart | null 
   if (isLoading) {
     return (
       <div className="px-4 pt-5">
-        <h1 className="m-0 mb-4 font-display text-[28px] font-extrabold tracking-[-0.02em]">{t('title')}</h1>
+        <h1 className="m-0 mb-4 font-display text-[40px] font-bold leading-[1.05] tracking-[-0.02em]">{t('title')}</h1>
         <div role="status" aria-label={t('loading')} className="flex flex-col gap-3">
           <div className="h-32 animate-pulse rounded-card bg-canvas-2" />
           <div className="h-32 animate-pulse rounded-card bg-canvas-2" />
@@ -69,7 +69,7 @@ export default function InstoreBag({ initialCart }: { initialCart?: Cart | null 
   if (!cart && error) {
     return (
       <div role="alert" className="flex flex-col items-start gap-3 px-4 pt-5">
-        <h1 className="m-0 font-display text-[28px] font-extrabold tracking-[-0.02em]">{t('title')}</h1>
+        <h1 className="m-0 font-display text-[40px] font-bold leading-[1.05] tracking-[-0.02em]">{t('title')}</h1>
         <p className="m-0 text-[16px]">{t('loadError')}</p>
         <Button size="lg" variant="ghost" onClick={() => void mutate()} className="min-h-14">
           {t('retry')}
@@ -83,7 +83,7 @@ export default function InstoreBag({ initialCart }: { initialCart?: Cart | null 
         <span className="text-ink-3">
           <Icon name="bag" size={56} />
         </span>
-        <h1 className="m-0 font-display text-[26px] font-extrabold tracking-[-0.02em]">{t('empty.title')}</h1>
+        <h1 className="m-0 font-display text-[32px] font-bold tracking-[-0.02em]">{t('empty.title')}</h1>
         <p className="m-0 max-w-[32ch] text-[16px] text-ink-2">{t('empty.body')}</p>
         <Button size="lg" variant="accent" className="min-h-14 w-full max-w-[320px]" onClick={open}>
           <Icon name="camera" size={22} />
@@ -98,7 +98,7 @@ export default function InstoreBag({ initialCart }: { initialCart?: Cart | null 
 
   return (
     <div className="flex flex-col gap-4 px-4 pb-4 pt-5" data-testid="instore-bag">
-      <h1 className="m-0 font-display text-[28px] font-extrabold tracking-[-0.02em]">{t('title')}</h1>
+      <h1 className="m-0 font-display text-[40px] font-bold leading-[1.05] tracking-[-0.02em]">{t('title')}</h1>
       {message ? (
         <p role="status" data-testid="bag-message" className="m-0 rounded-field bg-canvas-2 px-4 py-3 text-[14.5px] font-medium text-ink">
           {message}
@@ -108,7 +108,7 @@ export default function InstoreBag({ initialCart }: { initialCart?: Cart | null 
         {cart.lines.map((line) => {
           const pending = mutations.isPending(line.id);
           return (
-            <li key={line.id} data-testid="bag-line" data-sku={line.sku} className="flex flex-col gap-3 rounded-card border border-line-2 bg-surface p-3">
+            <li key={line.id} data-testid="bag-line" data-sku={line.sku} className="flex flex-col gap-3 rounded-card border border-line bg-surface p-3.5">
               <div className="flex gap-3">
                 <LineImage {...(line.imageUrl ? { url: line.imageUrl } : {})} alt="" width={80} height={96} />
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -117,7 +117,7 @@ export default function InstoreBag({ initialCart }: { initialCart?: Cart | null 
                   </Link>
                   {line.variantSummary ? <p className="m-0 text-[14px] text-ink-2">{line.variantSummary}</p> : null}
                   <p className="m-0 mt-1 flex items-baseline gap-2 text-[16px] font-semibold text-ink">
-                    <span data-testid="line-total">{fmt(line.total)}</span>
+                    <span data-testid="line-total" className="font-display text-accent">{fmt(line.total)}</span>
                     {line.quantity > 1 ? <span className="text-[13px] font-normal text-ink-3">{t('each', { price: fmt(line.unitPrice) })}</span> : null}
                   </p>
                   {line.notices.map((n) => (
@@ -155,8 +155,9 @@ export default function InstoreBag({ initialCart }: { initialCart?: Cart | null 
         <div className="flex items-center gap-4">
           <div className="flex min-w-0 flex-col">
             <span className="text-[13px] font-medium text-ink-3">{t('total', { count: cart.count })}</span>
-            <span className="font-display text-[24px] font-extrabold leading-none text-ink" data-testid="bag-total">
-              {fmt(cart.total)}
+            <span className="flex items-baseline gap-2" data-testid="bag-total">
+              <span className="instore-free text-[30px] leading-none">{t('totalFree')}</span>
+              <s className="text-[14px] text-ink-3">{fmt(cart.total)}</s>
             </span>
           </div>
           <Link

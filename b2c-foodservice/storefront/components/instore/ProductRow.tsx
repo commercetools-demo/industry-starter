@@ -19,14 +19,14 @@ export default function ProductRow({ row }: { row: InstoreRow }) {
     <Link
       href={`/p/${encodeURIComponent(row.slug)}/${encodeURIComponent(row.sku)}`}
       data-testid="instore-row"
-      className="transition-press flex min-h-24 items-center gap-4 rounded-card border border-line-2 bg-surface p-3 text-ink no-underline hover:border-ink active:scale-[0.99]"
+      className="transition-press flex min-h-24 items-center gap-4 rounded-card border border-line bg-surface p-3 text-ink no-underline hover:border-ink active:scale-[0.99]"
     >
-      <span className="relative h-[84px] w-[84px] shrink-0 overflow-hidden rounded-field bg-canvas-2">
+      <span className="relative instore-arch h-[84px] w-[84px] shrink-0 overflow-hidden bg-canvas-2">
         {row.imageUrl ? <Image src={transformThumbnailImageUrl(row.imageUrl)} alt="" fill sizes="84px" className="object-cover" /> : null}
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-1">
-        <span className="font-display text-[17px] font-bold leading-tight">{row.name}</span>
-        <span className="text-[16px] font-semibold" data-testid="row-price">
+        <span className="font-display text-[21px] font-bold leading-tight">{row.name}</span>
+        <span className="font-display text-[18px] font-bold text-accent" data-testid="row-price">
           {money ? (price?.fromIsRange ? t('priceFrom', { price: money }) : money) : <span className="text-[14px] font-medium text-ink-2">{t('noPrice')}</span>}
         </span>
         <StockLine state={row.availability} />

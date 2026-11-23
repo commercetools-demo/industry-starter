@@ -22,13 +22,13 @@ export default function InstoreShell({ children }: { children: ReactNode }) {
       >
         {common('skipToContent')}
       </a>
-      <header className="instore-header sticky top-0 z-40 border-b border-line-2 bg-surface" data-testid="instore-header">
-        <div className="flex h-[68px] items-center gap-3 px-4">
+      <header className="instore-header sticky top-0 z-40 bg-canvas" data-testid="instore-header">
+        <div className="flex h-[72px] items-center gap-2 pl-6 pr-4">
           <Link href="/" className="flex min-h-12 min-w-0 flex-1 items-center gap-2.5 text-ink no-underline">
-            <span className="wordmark truncate text-[19px]">{t('header.brand')}</span>
+            <span className="truncate font-display text-[26px] font-bold">{t('header.brand')}</span>
             <span
               data-testid="instore-badge"
-              className="shrink-0 rounded-pill bg-ink px-3 py-1 text-[12px] font-bold uppercase tracking-[0.08em] text-surface"
+              className="shrink-0 rounded-pill border-[1.5px] border-ink px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-ink"
             >
               {t('badge')}
             </span>

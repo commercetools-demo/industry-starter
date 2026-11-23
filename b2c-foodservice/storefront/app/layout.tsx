@@ -1,6 +1,6 @@
 import { getBrand } from '@/lib/brand-server';
 import type { Metadata, Viewport } from 'next';
-import { Archivo, Roboto, Roboto_Mono } from 'next/font/google';
+import { Archivo, DM_Sans, Fraunces, Roboto, Roboto_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { TrackerScripts } from '@ct-demos/demotools/tracker';
@@ -26,6 +26,11 @@ const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',
   display: 'swap',
 });
+
+// The In-store "Roastery" look (D-062): a serif for headings and prices, a clean sans for the rest. `app/instore.css` points the
+// font tokens at these two, so the website never uses them (preload off: only In-store pages show them).
+const fraunces = Fraunces({ subsets: ['latin'], weight: ['600', '700'], variable: '--font-fraunces', display: 'swap', preload: false });
+const dmSans = DM_Sans({ subsets: ['latin'], weight: ['400', '500', '700'], variable: '--font-dm-sans', display: 'swap', preload: false });
 
 /**
  * In-store companion (workstream R): the page covers the whole screen of a phone (`viewport-fit=cover`, the safe-area insets are in
@@ -57,7 +62,12 @@ export default async function RootLayout({
   // The proxy sets the brand of the URL; it selects the colour token set (`html[data-brand]`, see tokens.css).
   const brand = await getBrand();
   return (
-    <html lang={locale} data-brand={brand.theme} className={`${archivo.variable} ${roboto.variable} ${robotoMono.variable}`}>
+    <html
+      lang={locale}
+      data-brand={brand.theme}
+      {...(isInstore() ? { 'data-app-mode': 'instore' } : {})}
+      className={`${archivo.variable} ${roboto.variable} ${robotoMono.variable} ${fraunces.variable} ${dmSans.variable}`}
+    >
       <head>
         <TrackerScripts gate={false} />
       </head>
