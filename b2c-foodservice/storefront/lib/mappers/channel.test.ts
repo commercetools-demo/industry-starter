@@ -41,6 +41,16 @@ describe('channel mapper', () => {
     expect(stores.map((s) => s.key)).toEqual(['mcf-store-nyc-astoria']);
   });
 
+  it('reads the seed text form: a window or "closed"', () => {
+    const hours = parseHours('{"mon":"07:30-18:30","sat":"08:00-18:30","sun":"closed"}');
+    expect(hours?.mon).toEqual({ open: '07:30', close: '18:30' });
+    expect(hours?.sat).toEqual({ open: '08:00', close: '18:30' });
+    expect(hours?.sun).toBeNull();
+    expect(hours?.tue).toBeNull();
+    expect(parseHours('{"mon":"18:30-07:30"}')).toBeNull();
+    expect(parseHours('{"mon":"soon"}')).toBeNull();
+  });
+
   it('rejects malformed hour windows', () => {
     expect(parseHours('{"mon":{"open":"9am","close":"18:00"}}')).toBeNull();
     expect(parseHours('{"mon":{"open":"18:00","close":"07:00"}}')).toBeNull();

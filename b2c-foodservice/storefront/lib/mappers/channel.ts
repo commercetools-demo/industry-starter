@@ -10,7 +10,8 @@ export const STORE_KEY_PREFIX = 'mcf-store-';
 const TIME = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 /**
- * Parses the `hours` custom field: JSON text by weekday, `{"mon":{"open":"07:00","close":"18:00"},"sun":null}`.
+ * Parses the `hours` custom field: JSON text by weekday. A day is `{"open":"07:00","close":"18:00"}`, `null`, or text as the seed
+ * writes it: `"07:00-18:00"` or `"closed"` (`{"mon":"07:00-18:00","sun":"closed"}`).
  * A missing day is closed. Anything malformed returns null so the caller can log and close the week.
  */
 export function parseHours(raw: unknown): OpeningHours | null {
@@ -27,6 +28,14 @@ export function parseHours(raw: unknown): OpeningHours | null {
   for (const day of WEEKDAYS) {
     const value = record[day];
     if (value === undefined || value === null) continue;
+    // The seed writes a day as text: "07:30-18:30", or "closed".
+    if (typeof value === 'string') {
+      if (value.trim().toLowerCase() === 'closed') continue;
+      const m = /^(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})$/.exec(value.trim());
+      if (!m || !TIME.test(m[1]!) || !TIME.test(m[2]!) || m[1]! >= m[2]!) return null;
+      out[day] = { open: m[1]!, close: m[2]! };
+      continue;
+    }
     if (typeof value !== 'object') return null;
     const { open, close } = value as { open?: unknown; close?: unknown };
     if (typeof open !== 'string' || typeof close !== 'string' || !TIME.test(open) || !TIME.test(close)) return null;
