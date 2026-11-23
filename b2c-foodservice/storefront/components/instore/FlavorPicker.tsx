@@ -32,7 +32,7 @@ export default function FlavorPicker({ flavors, value, onChange }: { flavors: Fl
         role="radiogroup"
         aria-labelledby={labelId}
         aria-describedby={descriptionId}
-        className="-mx-6 grid snap-x snap-mandatory auto-cols-[136px] grid-flow-col gap-3 overflow-x-auto px-6 pb-6 pt-3.5"
+        className="grid snap-x snap-mandatory auto-cols-[136px] grid-flow-col gap-3 overflow-x-auto px-6 pb-6 pt-3.5"
       >
         {flavors.map((f) => {
           const on = f.id === value;
