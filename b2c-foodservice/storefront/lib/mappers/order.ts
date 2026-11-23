@@ -250,6 +250,9 @@ export function mapOrder(o: Order, ctx: OrderMapContext): OrderView {
     currency: o.totalPrice.currencyCode,
     customerId: o.customerId ?? null,
     ...(orderTypeOf(o.custom) ? { orderType: orderTypeOf(o.custom) } : {}),
+    ...(orderTypeOf(o.custom) === 'in-store-purchase'
+      ? { buyer: { name: [o.shippingAddress?.firstName, o.shippingAddress?.lastName].filter(Boolean).join(' ') || null, phone: o.shippingAddress?.phone ?? null } }
+      : {}),
     state,
     paymentState: o.paymentState ?? null,
     shipmentState: o.shipmentState ?? null,

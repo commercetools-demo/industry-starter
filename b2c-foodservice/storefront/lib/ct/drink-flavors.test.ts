@@ -45,7 +45,7 @@ describe('ready-made coffee: pod flavors', () => {
     const flavors = await getFlavorOptions(drink, 'en-US');
     expect(ct.queries[0]).toMatchObject({ staged: false, where: `categories(id="${CATEGORY}")` });
     expect(flavors.map((f) => f.name)).toEqual(['Intenso', 'Odacio', 'Melozio', 'Double Espresso Chiaro']);
-    expect(flavors[0]).toEqual({ id: 'intenso', name: 'Intenso', description: 'Intenso is deep.' });
+    expect(flavors[0]).toEqual({ id: 'intenso', name: 'Intenso', description: 'Intenso is deep.', intensity: 9 });
     expect(flavors[1]?.description).toBe('');
   });
 

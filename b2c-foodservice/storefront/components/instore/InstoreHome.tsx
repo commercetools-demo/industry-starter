@@ -48,10 +48,10 @@ export default function InstoreHome({ rows }: { rows: InstoreRow[] }) {
   const t = useTranslations('instore.home');
   return (
     <div className="flex flex-col gap-6 px-4 pb-6 pt-5">
-      <h1 className="m-0 font-display text-[28px] font-extrabold leading-tight tracking-[-0.02em] text-ink">{t('title')}</h1>
+      <h1 className="m-0 font-display text-[40px] font-bold leading-[1.05] tracking-[-0.02em] text-ink">{t('title')}</h1>
       <ScanHeroButton />
       <section aria-labelledby="instore-drinks" className="flex flex-col gap-3">
-        <h2 id="instore-drinks" className="m-0 text-[15px] font-semibold text-ink-2">
+        <h2 id="instore-drinks" className="m-0 text-[13px] font-bold uppercase tracking-[0.12em] text-ink-2">
           {t('drinks')}
         </h2>
         {rows.length > 0 ? (

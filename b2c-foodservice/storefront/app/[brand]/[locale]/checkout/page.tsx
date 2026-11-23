@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import CheckoutPage from '@/components/checkout/CheckoutPage';
+import InstoreCheckout from '@/components/instore/InstoreCheckout';
 import { isInstore } from '@/lib/app-mode';
 
 /** The checkout is per person and changes with every write: rendered per request, never cached, never indexed. */
@@ -25,8 +26,10 @@ export default async function CheckoutRoute({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  // In-store: the order is free, so there is no hosted Checkout (D-062).
+  if (isInstore()) return <InstoreCheckout />;
   const { resume, part } = await searchParams;
   const n = Number(part);
   const resumePart = resume === '1' && Number.isInteger(n) && n >= 0 && n < 8 ? n : undefined;
-  return <CheckoutPage {...(resumePart === undefined ? {} : { resumePart })} {...(isInstore() ? { instore: true } : {})} />;
+  return <CheckoutPage {...(resumePart === undefined ? {} : { resumePart })} />;
 }

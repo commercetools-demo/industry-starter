@@ -5,7 +5,7 @@ import type { MetadataRoute } from 'next';
  * literal colours (it is not CSS), so these two mirror the tokens `--canvas` and `--ink`; `manifest.test.ts` fails when
  * `app/tokens.css` changes and these do not.
  */
-export const MANIFEST_COLOURS = { background: '#FBF9F5', theme: '#191741' } as const;
+export const MANIFEST_COLOURS = { background: '#F4EBDD', theme: '#2B1A12' } as const;
 
 export function instoreManifest(): MetadataRoute.Manifest {
   return {

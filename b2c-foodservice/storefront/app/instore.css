@@ -46,3 +46,44 @@
 .instore-checkout .wrap {
   padding-inline: 16px;
 }
+
+/* The "Roastery" look of the In-store companion (D-062), from the owner's design (MalvaOrderFlow). Only tokens change, so every
+   component re-skins at once; `data-app-mode` is set on <html> by the root layout. The attribute pair outranks the brand's colour
+   set. The manifest colours (lib/instore/manifest.ts) mirror --canvas and --ink. */
+html[data-app-mode='instore'][data-brand] {
+  --ink: #2b1a12;
+  --ink-2: #5a3a28;
+  --ink-3: #6b5444;
+  --canvas: #f4ebdd;
+  --canvas-2: #e6d8c3;
+  --surface: #fffaf2;
+  --line: #e3d3bb;
+  --line-2: #d9c8b0;
+  --accent: #b5502a;
+  --accent-press: #8f3d1d;
+  --radius-card: 20px;
+  --radius-field: 14px;
+  --font-archivo: var(--font-fraunces);
+  --font-roboto: var(--font-dm-sans);
+  --instore-green: #2f6b4b;
+  --instore-green-bg: #dde8d8;
+  --instore-green-ink: #1f4a33;
+}
+
+/* Serif headings and prices (display font), a sturdy tag on the header, and a soft arch for product pictures. */
+html[data-app-mode='instore'] h1,
+html[data-app-mode='instore'] h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+.instore-arch {
+  border-radius: 38px 38px 12px 12px;
+}
+.instore-arch-lg {
+  border-radius: 100px 100px 20px 20px;
+}
+.instore-free {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--instore-green);
+}

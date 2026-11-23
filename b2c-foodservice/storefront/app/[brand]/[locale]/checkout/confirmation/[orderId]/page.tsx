@@ -1,8 +1,10 @@
 import { brandOf } from '@/lib/brands';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import InstoreConfirmation from '@/components/instore/InstoreConfirmation';
 import NoRecentOrder from '@/components/order/NoRecentOrder';
 import OrderConfirmation from '@/components/order/OrderConfirmation';
+import { isInstore } from '@/lib/app-mode';
 import { redirect } from '@/i18n/routing';
 import { ORDER_ID_PATTERN } from '@/lib/checkout/order-access';
 import { loadOrderForPage } from '@/lib/checkout/load-order';
@@ -32,5 +34,6 @@ export default async function ConfirmationRoute({ params }: { params: Promise<{ 
     redirect({ href: signInHref(`/checkout/confirmation/${orderId}`), locale, brand: brandOf(brand).slug });
   }
   if (loaded.kind !== 'ok') return null;
+  if (isInstore() && loaded.order.orderType === 'in-store-purchase') return <InstoreConfirmation order={loaded.order} />;
   return <OrderConfirmation initial={loaded.order} guest={loaded.guest} />;
 }

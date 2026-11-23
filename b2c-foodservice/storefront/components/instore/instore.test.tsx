@@ -233,9 +233,9 @@ describe('In-store bag', () => {
 
 describe('Manifest and messages', () => {
   it('manifest colours mirror tokens.css', () => {
-    const css = readFileSync('app/tokens.css', 'utf8');
-    expect(css).toContain(`--canvas: ${MANIFEST_COLOURS.background}`);
-    expect(css).toContain(`--ink: ${MANIFEST_COLOURS.theme}`);
+    const css = readFileSync('app/instore.css', 'utf8').toLowerCase();
+    expect(css).toContain(`--canvas: ${MANIFEST_COLOURS.background.toLowerCase()}`);
+    expect(css).toContain(`--ink: ${MANIFEST_COLOURS.theme.toLowerCase()}`);
     expect(instoreManifest()).toMatchObject({ display: 'standalone', start_url: '/' });
   });
 

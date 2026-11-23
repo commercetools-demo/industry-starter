@@ -134,7 +134,7 @@ export type ProductShape = 'pods' | 'coffee' | 'machine' | 'accessory' | 'gift' 
 /** A modifier a ready-made coffee can take (a `coffee-modifiers` product listed by the drink's modifiers configuration). */
 export interface ModifierOption { id: string; name: string }
 /** A coffee pod flavor a ready-made coffee can be made with (a product of the configuration's flavor category). */
-export interface FlavorOption { id: string; name: string; description: string }
+export interface FlavorOption { id: string; name: string; description: string; /** Roast intensity (the product's `intensity` attribute), when it has one. */ intensity?: number }
 export type VariantAttrValue = string | number | boolean;
 export interface PriceTier { minimumQuantity: number; value: Money }
 export interface VariantPrice { value: Money; discounted?: Money; discountName?: string; tiers: PriceTier[] }
@@ -376,6 +376,8 @@ export interface OrderView {
   id: string; orderNumber: string; createdAt: string; email: string | null; locale: string; currency: string; customerId: string | null;
   /** `orderType` custom field (workstream R, D-042); absent on orders that never had one. */
   orderType?: 'in-store-purchase' | 'online' | null;
+  /** In-store order (D-062): who it is for and how to reach them, from the order's shipping address. Absent on other orders. */
+  buyer?: { name: string | null; phone: string | null };
   state: OrderState | null; paymentState: string | null; shipmentState: string | null;
   status: OrderStatusKind;
   /** Derived from the lines: some line is collected / some line is shipped or subscribed. */

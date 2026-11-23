@@ -42,6 +42,7 @@ const TABLE: Record<string, 'customer' | 'session' | 'public' | 'owner-or-guest'
   channels: 'public',
   checkout: 'session',
   'checkout/complete': 'session',
+  'checkout/free': 'session',
   'checkout/pickup': 'session',
   'checkout/session': 'session',
   contact: 'public',
