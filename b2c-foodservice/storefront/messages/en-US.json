@@ -1765,7 +1765,8 @@
       "title": "What are you looking for?",
       "scan": "Scan a barcode",
       "scanHint": "Point your camera at the code on the product.",
-      "categories": "Browse a category"
+      "drinks": "Our coffee",
+      "empty": "No coffee is on the menu right now."
     },
     "category": {
       "backTo": "Back to {name}",
@@ -1790,7 +1791,13 @@
     "product": {
       "backTo": "Back to {name}",
       "home": "All categories",
-      "barLabel": "Add to bag"
+      "barLabel": "Add to bag",
+      "flavor": {
+        "title": "Coffee pod flavor",
+        "titleWithValue": "Coffee pod flavor - {value}",
+        "hint": "Choose one",
+        "choice": "coffee pod flavor"
+      }
     },
     "bag": {
       "title": "Your bag",

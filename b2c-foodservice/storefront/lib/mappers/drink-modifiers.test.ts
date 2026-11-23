@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { planFulfilmentSwitch, type PlanLine } from '@/lib/cart/plan';
 import { mapCart } from '@/lib/mappers/cart';
 import {
-  fulfilmentFieldOf, instoreLineCustom, lineModifierIds, modifierConfigIdOf, modifiersKeyOf, normaliseModifierChoice, parseModifierConfig,
+  fulfilmentFieldOf, instoreLineCustom, lineModifierIds, modifierConfigIdOf, modifiersKeyOf, normaliseModifierChoice, parseFlavorCategoryId, parseModifierConfig,
 } from '@/lib/mappers/drink-modifiers';
 import { ctCart, ctLine, enrichment, vt } from '@/test/cart';
 
@@ -84,5 +84,27 @@ describe('ready-made coffee lines in the bag', () => {
     expect(plan).toMatchObject({ kind: 'ops', ops: [{ kind: 'merge', keepId: 'oat-collect', removeId: 'oat' }] });
     const alone = planFulfilmentSwitch(lines.slice(0, 2), 'oat', { fulfilment: 'collect', channelId: 'ch-soho' });
     expect(alone).toMatchObject({ kind: 'ops', ops: [{ kind: 'set', lineId: 'oat' }] });
+  });
+});
+
+describe('ready-made coffee: pod flavor', () => {
+  const CATEGORY = 'e8d9dfc7-e5bc-441f-8324-9bf9c5c2f153';
+  const INTENSO = '6ffa00e9-1b2e-4cea-846f-8f045923fa49';
+  const ODACIO = '46619109-4f3c-4837-af97-1a13d63f8a8a';
+
+  it('reads the flavor category of the configuration, and nothing else', () => {
+    const withFlavor = { bundleConfiguration: { possibleModifiers: [], flavor: { typeId: 'category', id: CATEGORY } } };
+    expect(parseFlavorCategoryId(withFlavor)).toBe(CATEGORY);
+    expect(parseFlavorCategoryId(CONFIG)).toBeNull();
+    expect(parseFlavorCategoryId({ bundleConfiguration: { flavor: { typeId: 'product', id: CATEGORY } } })).toBeNull();
+    expect(parseFlavorCategoryId({ bundleConfiguration: { flavor: { typeId: 'category', id: 'nope' } } })).toBeNull();
+    expect(parseFlavorCategoryId(null)).toBeNull();
+  });
+
+  it('a choice may hold one flavor with any modifiers, never two', () => {
+    const allowed = [OAT, INTENSO, ODACIO];
+    expect(normaliseModifierChoice([OAT, INTENSO], allowed, [INTENSO, ODACIO])).toEqual([OAT, INTENSO].sort());
+    expect(normaliseModifierChoice([INTENSO, ODACIO], allowed, [INTENSO, ODACIO])).toBeNull();
+    expect(normaliseModifierChoice([INTENSO, INTENSO], allowed, [INTENSO, ODACIO])).toEqual([INTENSO]);
   });
 });

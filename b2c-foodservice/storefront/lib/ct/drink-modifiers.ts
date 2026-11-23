@@ -2,8 +2,8 @@ import 'server-only';
 import type { ProductProjection } from '@commercetools/platform-sdk';
 import { apiRoot } from '@/lib/ct/client';
 import { getKeyValueDocumentValue } from '@/lib/ct/preset-bundles';
-import { modifierConfigIdOf, parseModifierConfig } from '@/lib/mappers/drink-modifiers';
-import type { ModifierOption } from '@/lib/types';
+import { modifierConfigIdOf, parseFlavorCategoryId, parseModifierConfig } from '@/lib/mappers/drink-modifiers';
+import type { FlavorOption, ModifierOption } from '@/lib/types';
 import { getLocalizedString } from '@/lib/utils';
 
 /**
@@ -34,4 +34,41 @@ export async function getModifierOptions(projection: Pick<ProductProjection, 'ma
   const ids = await getAllowedModifierIds(projection);
   const names = await getModifierNames(ids, locale);
   return ids.flatMap((id) => (names[id] ? [{ id, name: names[id] }] : []));
+}
+
+/** The pod products of a drink's flavor category (published, one read), with the owner's order: roast intensity high to low, then name. */
+async function readFlavorProducts(categoryId: string, locale: string): Promise<FlavorOption[]> {
+  const { body } = await apiRoot
+    .productProjections()
+    .get({ queryArgs: { staged: false, where: `categories(id="${categoryId}")`, limit: 50 } })
+    .execute();
+  const intensity = (p: ProductProjection) => {
+    const v = p.masterVariant.attributes?.find((a) => a.name === 'intensity')?.value;
+    return typeof v === 'number' ? v : -1;
+  };
+  return [...body.results]
+    .sort((a, b) => intensity(b) - intensity(a) || getLocalizedString(a.name, locale).localeCompare(getLocalizedString(b.name, locale)))
+    .flatMap((p) => {
+      const name = getLocalizedString(p.name, locale);
+      return name ? [{ id: p.id, name, description: p.description ? getLocalizedString(p.description, locale) : '' }] : [];
+    });
+}
+
+/** The flavor category id of a drink's configuration, or null when it names none. */
+async function flavorCategoryIdOf(projection: Pick<ProductProjection, 'masterVariant'>): Promise<string | null> {
+  const configId = modifierConfigIdOf(projection.masterVariant?.attributes);
+  return configId ? parseFlavorCategoryId(await getKeyValueDocumentValue(configId)) : null;
+}
+
+/** The pod flavors a drink offers (the products of its configuration's flavor category). Empty when the configuration names none. */
+export async function getFlavorOptions(projection: Pick<ProductProjection, 'masterVariant'>, locale: string): Promise<FlavorOption[]> {
+  const categoryId = await flavorCategoryIdOf(projection);
+  return categoryId ? readFlavorProducts(categoryId, locale) : [];
+}
+
+/** Every product id the cart accepts on a drink line: its modifiers and its flavors, with the flavors apart (a line takes at most one). */
+export async function getDrinkChoiceIds(projection: Pick<ProductProjection, 'masterVariant'>): Promise<{ allowed: string[]; flavorIds: string[] }> {
+  const [modifierIds, flavors] = await Promise.all([getAllowedModifierIds(projection), getFlavorOptions(projection, 'en-US')]);
+  const flavorIds = flavors.map((f) => f.id);
+  return { allowed: [...modifierIds, ...flavorIds.filter((id) => !modifierIds.includes(id))], flavorIds };
 }

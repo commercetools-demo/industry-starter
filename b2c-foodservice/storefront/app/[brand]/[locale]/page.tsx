@@ -44,7 +44,7 @@ export default async function HomePage({ params }: Props) {
   setRequestLocale(locale);
   if (isInstore()) {
     const { loadInstoreHome } = await import('@/lib/instore/category');
-    return <InstoreHome tree={await loadInstoreHome(locale)} />;
+    return <InstoreHome rows={await loadInstoreHome(locale)} />;
   }
   const [t, { ctx, collection, tree, store, figures, featured }] = await Promise.all([
     getTranslations({ locale, namespace: 'common' }),

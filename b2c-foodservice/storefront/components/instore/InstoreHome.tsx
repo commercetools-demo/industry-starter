@@ -1,8 +1,10 @@
 import { useTranslations } from 'next-intl';
+import ProductRow from '@/components/instore/ProductRow';
 import { ScanHeroButton } from '@/components/instore/ScanButtons';
 import Icon from '@/components/ui/Icon';
 import { Link } from '@/i18n/routing';
 import { categoryIcon } from '@/lib/instore/category-icons';
+import type { InstoreRow } from '@/lib/instore/category';
 import type { Category } from '@/lib/types';
 
 /**
@@ -38,20 +40,33 @@ export function CategoryTile({ name, slug, rootKey }: { name: string; slug: stri
 }
 
 /**
- * The In-store home (workstream R): one question, a big scan button and the root categories as large tiles. Everything else the
- * website's home carries (hero, bestsellers, editorial, subscribe) is left out on purpose: less to read, less to download.
+ * The In-store home (workstream R): one question, a big scan button and the coffee drinks themselves, as product rows. The
+ * categories the In-store visibility lets through (the barista menu) are not tiles to walk into: their products are listed here.
+ * Everything else the website's home carries (hero, bestsellers, editorial, subscribe) is left out on purpose.
  */
-export default function InstoreHome({ tree }: { tree: Category[] }) {
+export default function InstoreHome({ rows }: { rows: InstoreRow[] }) {
   const t = useTranslations('instore.home');
   return (
     <div className="flex flex-col gap-6 px-4 pb-6 pt-5">
       <h1 className="m-0 font-display text-[28px] font-extrabold leading-tight tracking-[-0.02em] text-ink">{t('title')}</h1>
       <ScanHeroButton />
-      <section aria-labelledby="instore-categories" className="flex flex-col gap-3">
-        <h2 id="instore-categories" className="m-0 text-[15px] font-semibold text-ink-2">
-          {t('categories')}
+      <section aria-labelledby="instore-drinks" className="flex flex-col gap-3">
+        <h2 id="instore-drinks" className="m-0 text-[15px] font-semibold text-ink-2">
+          {t('drinks')}
         </h2>
-        <CategoryTileGrid categories={tree} />
+        {rows.length > 0 ? (
+          <ul className="m-0 flex list-none flex-col gap-3 p-0">
+            {rows.map((row) => (
+              <li key={row.id}>
+                <ProductRow row={row} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p role="status" className="m-0 py-6 text-center text-[16px] text-ink-2">
+            {t('empty')}
+          </p>
+        )}
       </section>
     </div>
   );

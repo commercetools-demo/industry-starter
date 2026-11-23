@@ -5,6 +5,9 @@
  *  - a drink (product type `mcf-ready-drink`) has the SameForAll attribute `modifiers`, a reference to a key-value document
  *    made by the configurable-bundles app (container `configurable-bundles_items`);
  *  - the document's `value.bundleConfiguration.possibleModifiers` is a set of product references (type `coffee-modifiers`);
+ *  - the same document may carry `bundleConfiguration.flavor`, a reference to a category whose products are the coffee pods the
+ *    drink can be made with (owner, 2026-11-23). The shopper picks at most one; it is stored on the line like a modifier (the
+ *    `modifiers` field is a set of product references), so no line field is added;
  *  - the drink line is added at the drink's own price with the line type `instore-lineitem-type`; the chosen modifiers are its
  *    custom field `modifiers` (Set of Reference product) and the fulfilment is its field `fulfillment` (US spelling).
  */
@@ -34,6 +37,13 @@ export function parseModifierConfig(value: unknown): string[] | null {
   return ids;
 }
 
+/** The id of the pod-flavor category a configuration names (`bundleConfiguration.flavor`), or null. */
+export function parseFlavorCategoryId(value: unknown): string | null {
+  if (!isRecord(value) || !isRecord(value.bundleConfiguration)) return null;
+  const ref = value.bundleConfiguration.flavor;
+  return isRecord(ref) && (ref.typeId === undefined || ref.typeId === 'category') && isUuid(ref.id) ? ref.id : null;
+}
+
 /** The configuration id on a drink's attributes (master variant; the attribute is SameForAll), or null. */
 export function modifierConfigIdOf(attributes: { name: string; value?: unknown }[] | undefined): string | null {
   const value = attributes?.find((a) => a.name === MODIFIERS_ATTRIBUTE)?.value;
@@ -41,13 +51,14 @@ export function modifierConfigIdOf(attributes: { name: string; value?: unknown }
 }
 
 /**
- * The shopper's choice checked against the drink's configuration: every id must be offered. Duplicates are dropped and the
- * ids are sorted, so the same set in another order is the same line (commercetools merges lines with equal custom fields).
- * Returns null when an id is not offered.
+ * The shopper's choice checked against the drink's configuration: every id must be offered, and at most one of them a pod flavor
+ * (`flavorIds`, which `allowed` includes). Duplicates are dropped and the ids are sorted, so the same set in another order is
+ * the same line (commercetools merges lines with equal custom fields). Returns null when an id is not offered or two flavors are chosen.
  */
-export function normaliseModifierChoice(chosen: readonly string[], allowed: readonly string[]): string[] | null {
+export function normaliseModifierChoice(chosen: readonly string[], allowed: readonly string[], flavorIds: readonly string[] = []): string[] | null {
   const set = [...new Set(chosen)];
   if (!set.every((id) => allowed.includes(id))) return null;
+  if (set.filter((id) => flavorIds.includes(id)).length > 1) return null;
   return set.sort();
 }
 

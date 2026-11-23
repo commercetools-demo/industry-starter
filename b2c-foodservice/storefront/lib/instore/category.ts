@@ -63,9 +63,16 @@ export function toRows(items: ProductSummary[], online: Record<string, number> |
   });
 }
 
-/** The root categories, for the home tiles (cached public data, one read). */
-export async function loadInstoreHome(locale: string): Promise<Category[]> {
-  return instoreVisibleTree(await getCategoryTree(locale));
+/**
+ * The In-store home: the products of every category the In-store visibility lets through (`onlyBarista`, `allThree`), one list
+ * without repeats, in the order the categories and their listings give. Each root is read like its own category page (page one);
+ * a barista menu is a handful of drinks, so the home does not page.
+ */
+export async function loadInstoreHome(locale: string): Promise<InstoreRow[]> {
+  const roots = instoreVisibleTree(await getCategoryTree(locale));
+  const views = await Promise.all(roots.map((c) => loadInstoreCategory(locale, c.slug, undefined)));
+  const seen = new Set<string>();
+  return views.flatMap((v) => v.rows).filter((r) => (seen.has(r.id) ? false : (seen.add(r.id), true)));
 }
 
 /** The name of a category, for the page title; null when unknown. */

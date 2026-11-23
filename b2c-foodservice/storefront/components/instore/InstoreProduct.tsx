@@ -2,8 +2,10 @@
 
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
+import { useState } from 'react';
 import { SWRConfig, unstable_serialize } from 'swr';
 import BigStepper from '@/components/instore/BigStepper';
+import FlavorPicker from '@/components/instore/FlavorPicker';
 import InstoreBottomBar from '@/components/instore/InstoreBottomBar';
 import StockLine from '@/components/instore/StockLine';
 import ModifierPicker from '@/components/pdp/ModifierPicker';
@@ -52,14 +54,20 @@ function Body() {
   const { data, variant, preview, quantity, setQuantity, minQty, maxQty, missing, modifiers } = usePdp();
   const { add, isAdding, error } = useAddToCart();
   const { product } = data;
+  // Ready-made coffee: one pod flavor is needed before the drink can be added (when the configuration offers any).
+  const flavors = data.flavors ?? [];
+  const [flavorChoice, setFlavorChoice] = useState<string | null>(null);
+  const flavor = flavors.find((f) => f.id === flavorChoice)?.id ?? null;
   const fmt = (m: Money) => formatMoney(m.centAmount, m.currencyCode, locale);
 
   const crumb = product.breadcrumb[product.breadcrumb.length - 1];
   const image = preview.images[0] ?? product.variants.find((v) => v.images[0])?.images[0];
 
+  const missingFlavor = flavors.length > 0 && !flavor;
   const choice = missing && tp.has(`selector.choice.${missing.attr}`) ? tp(`selector.choice.${missing.attr}`) : (missing?.attr ?? '');
+  const missingChoice = missing ? choice : missingFlavor ? t('flavor.choice') : undefined;
   const state = addButtonState({
-    ...(missing ? { missingChoice: choice } : {}),
+    ...(missingChoice !== undefined ? { missingChoice } : {}),
     variant,
     fulfilment: 'delivery',
     quantity,
@@ -84,12 +92,13 @@ function Body() {
 
   const stockState = variant ? (data.inventoryFailed ? null : availabilityState(variant.stock.online, LOW_STOCK_THRESHOLD)) : undefined;
   const total = state.showTotal && variant?.price ? lineTotal(variant.price, quantity) : null;
-  const base = tp(`add.${state.key}`, { choice });
+  const base = tp(`add.${state.key}`, { choice: missingChoice ?? '' });
   const label = total ? tp('add.withTotal', { label: base, total: fmt(total) }) : base;
 
   const onAdd = async () => {
     if (!variant || state.disabled || isAdding) return;
-    const cart = await add({ sku: variant.sku, quantity, fulfilment: 'delivery', ...(modifiers.length > 0 ? { modifiers } : {}) });
+    const chosen = flavor ? [...modifiers, flavor] : modifiers;
+    const cart = await add({ sku: variant.sku, quantity, fulfilment: 'delivery', ...(chosen.length > 0 ? { modifiers: chosen } : {}) });
     if (cart) toast.show(tShell('added'));
   };
 
@@ -119,6 +128,8 @@ function Body() {
       {product.selectors.map((s) => (
         <OptionGroup key={s.attr} selector={s} large />
       ))}
+
+      <FlavorPicker flavors={flavors} value={flavor} onChange={setFlavorChoice} />
 
       <ModifierPicker large />
 
